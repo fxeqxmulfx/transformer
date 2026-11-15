@@ -70,3 +70,30 @@ prlimit --as=68719476736:68719476736 -- "$FREEZE/convex-stress-frequency-data" p
 `prefix-programs/original-v1/report.json` under the storage runs root. Exact
 pins are in `protocol.json`. Also run direct `lake build`, the global axiom
 audit, native INDEX check, reference-source hashes and the forbidden scan.
+
+Producer `952b37ca` is reviewed. Its freeze preserves427 source inputs. Original
+and independent inventories match complete SHA256
+`21d0c176efdfe08b8bc04bdf83b62c91987e542d2e799160905dbea05d32c5ae`.
+The entire retained334 report compares equal. Both runs exit0, taking3m22.07s
+and3m09.32s with peak RSS7887260/7887088KiB (7.52GiB). The prospective buffer
+allowance is46361964544 bytes. Six native checks, formatting, Clippy, release,
+source hashes, full Lean, global axioms, native INDEX and forbidden checks pass
+at the producer. Existing36 unfinished Lean statements remain explicit.
+
+| Case | Unseen target occurrences, short test | Length32 | Length64 |
+| --- | ---: | ---: | ---: |
+| histogram-bos | 11 | 657 | 2792 |
+| histogram-no-bos | 11 | 657 | 2792 |
+| histogram2 | 6 | 0 | 0 |
+| mode-none | 9 | 5 | 6 |
+| mode-counts | 0 | 53 | 179 |
+| mode-itemized | 0 | 53 | 179 |
+| most_freq | 0 | 0 | 0 |
+
+These counts concern labels absent from training **outputs**, not necessarily
+absent from inputs: mode-none can use a declared copy prior. Numeric count
+labels need a separate identifying assumption. Task338 investigates a supplied
+class-coordinate prior in Lean before any such model extension. Complete
+inventories and review evidence are preserved under `frequency-data/` and
+`freezes/frequency-data-v1/` on storage. No new model pass follows from this data
+review; all seven evaluations remain outstanding.

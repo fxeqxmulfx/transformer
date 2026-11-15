@@ -6910,3 +6910,13 @@ metrics. Longer outputs include raw count labels absent from short training;
 record them as an explicit decoder-coverage gap. Data-only preparation adds no
 pass and leaves114 additional cases unmeasured. Freeze before original/repeat
 inventories under64GiB; source and scoring rules stay outside learned predictors.
+
+Task337 is reviewed at952b37ca. Both complete inventories match SHA256
+21d0c176efdfe08b8bc04bdf83b62c91987e542d2e799160905dbea05d32c5ae;
+the whole334 report remains equal. All native/source/Lean checks pass. Runs
+3m22.07s/3m09.32s, peak7.52GiB. Numeric label coverage is a substantial gap:
+each histogram length64 test has2792 targets absent from training outputs.
+Task338 is claimed for an explicit class-coordinate identifying prior, with
+training-only two-anchor fitting and affine complete-head CE. Flatness alone
+still cannot identify arbitrary unseen class names. Seven new model evaluations
+remain outstanding;114 additional catalog cases remain unmeasured.
