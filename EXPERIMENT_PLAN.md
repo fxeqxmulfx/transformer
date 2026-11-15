@@ -6854,3 +6854,22 @@ parameters, full coefficient costs and ordinary convex CE. A proposed shallow
 partition is learned only from training boundary diagnostics and then fixed
 during CE. It is not a jointly convex tree-discovery procedure or an unseen-label
 identification theorem. No revised native result exists yet.
+
+The full335 affine-descriptor failure now reproduces exactly across28 JSON
+artifacts. Six inspections finish in16m27.27s and independent repeat16m26.27s,
+peak3.60GiB. Primary training4494/4513/4501 and supplement4300/4305/4310 for
+forward/full/mini all trail331. Full128 and mini304 steps lower final CE;
+forward0. Preserve complete summary1b40f427e1ec6607d7e49fcccc88ebc42d6b6d350eac466b9975eb7aaceaf18d
+and all original/independent evidence in the boundary-geometry-v1 freeze.
+
+`convex_stress_partitioned_boundary` extends that component after Lean-first
+47ba037f. The declared library adds boundary regression trees of maximum depth1
+or2, fixed during CE, with all attempted descriptor splits retained. At most
+four regions and52 compact parameters share the complete complex head. Seven
+native checks pass; the6144 configurations,2304 fold states and18432 scores
+are fixed before production. Full-vocabulary CE scores use exact absent-class
+multiplicity algebra, checked against actual full vectors; gradients retain
+full vectors. The prospective12T work cap includes all split searches and
+replays; buffers remain56GiB and processes64GiB. Freeze sources and run six
+training-only inspections plus an independent repeat, retaining all failed335
+data/state/score artifacts. Original heldout comparison336 remains separate.

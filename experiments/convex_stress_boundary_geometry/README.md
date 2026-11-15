@@ -84,3 +84,37 @@ the committed source and repeat the frozen driver into another fresh directory;
 compare every relative JSON hash. Keep complete evidence on storage, outside
 the worktree. Never edit a running driver or executable. Generated reports and
 logs remain ignored. Full Lean, global axioms and native INDEX checks apply.
+
+## Reproduced failure
+
+Frozen source `c09c06bdfb20c3d445b287c5b71c3e3fcd5debdb` completes all six
+training-only inspections and their internal replays. The independent repeat
+reproduces all28 JSON artifacts exactly, including complete331/332 references.
+Both complete summaries hash to
+`1b40f427e1ec6607d7e49fcccc88ebc42d6b6d350eac466b9975eb7aaceaf18d`.
+
+| Mode | Primary training correct/4704 | Primary CE | Supplement correct/4704 | Supplement CE |
+| --- | ---: | ---: | ---: | ---: |
+| Forward | 4494 | 0.2504598 | 4300 | 0.2953495 |
+| Full | 4513 | 0.2478481 | 4305 | 0.2951052 |
+| Mini | 4501 | 0.2454519 | 4310 | 0.2952899 |
+
+Conditional fold scores are4512/4704 primary and4417/4704 supplement, identical
+across optimization modes. The best raw primary result anywhere in the entire
+3072-configuration bank is4513/4704, below the old331 fold result4623/4704.
+The minimum-CE primary choice uses global interval regression on whole-grid
+diagonal extrema, direction9, ridge1e-6, gain8/common8. The supplement chooses
+global moments on nonmodal-box diagonal extrema, direction1, with the same
+ridge/gain/common. Full128 and mini304 steps are effective; forward0. Both
+gradient modes lower final ordinary CE but do not repair the representation.
+There is no new original heldout evaluation and no improvement claim.
+
+The complete fit takes16m27.27s; repeat16m26.27s. Peak RAM is3,771,064 and
+3,770,564KiB, about3.60GiB. Five native checks and full Lean/axiom/INDEX checks
+pass independently. Evidence is preserved in storage `boundary-geometry`
+and `freezes/boundary-geometry-v1/findings-review`; relative manifest SHA-256 is
+`dfb6b2e57ba1a470afb01b103ab39b645f5ee22222025969baa459d61e6bf16b`.
+Training-only boundary diagnostics show discontinuities missed by the single
+affine map. The next declared revision is
+[`convex_stress_partitioned_boundary`](../convex_stress_partitioned_boundary),
+which keeps this failure intact and checks fixed partition sharing in Lean first.
