@@ -23,6 +23,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_bilinear_sequence`](convex_bilinear_sequence) | Prospective five-case, two-mode seed-1 cohort | CM86 learned complex encoders, CM88 complete Mini/forward-only updates, original raw metrics and complete checkpoint replay. Native controls pass; new stress measurements pending. |
 | [`convex_learned_sequence`](convex_learned_sequence) | Complete 128-pattern and 16-pattern model/update controls | Actual complex inference, certified projection/query geometry, complete Mini and forward-only Mini steps with full query replay; thirty-nine controls pass. Sealed training and accuracy evaluation remain unfinished. |
 | [`convex_stress_reduced_compare`](convex_stress_reduced_compare) | Complete54-case reduced wide-family adapter | CM65/66/67/68 checkpoints and packed observations, full complex-head reconstruction, actual three-mode CE, sealed training and complete raw replay. Packing independently reviewed; protocol pins the verified102-artifact wider probe. Prospective original/repeat comparison still required for accuracy credit. |
 | [`convex_stress_wide_latents`](convex_stress_wide_latents) | Complete 299,551-member input family | Frozen original and independent repeat match all102 artifacts:43/48 nonempty training supports versus41 previously,42 legacy model admissions,5 empty supports and6 unavailable sources retained. Zero heldout measurements or accuracy credit. Eight native controls and separate packed/expanded equivalence checks pass. |

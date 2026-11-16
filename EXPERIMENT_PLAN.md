@@ -8503,3 +8503,17 @@ complete pullback; zero joint columns also give zero learned context rows and
 zero Gram contributions. Implement implicit zeros, retain all nonzero entries
 and singular directions, and report numerical factor/replay residuals. Verify
 these identities and native update kernels before prospective stress scoring.
+
+### 2026-11-16: native CM86–88 original stress pilot
+
+Implement `convex_bilinear_sequence` with the complete joint complex domain,
+actual recovered learned encoders, every original class, exact zero support,
+and complete Mini/forward-only Mini pullbacks. The source protocol fixes five
+original cases and both modes at seed1 before scoring. Use original batches,
+target masks and short tails; finish all ten endpoints before any held-out
+measurement. Preserve source success flags and separate raw/exact99 fields.
+Replay every raw logit and metric from each saved endpoint in a separate
+process. This initial diagnostic is not an independent training repeat or a
+completed35/165 claim. The long parity control retains the proved family
+restriction. Keep all frozen producers unchanged and enforce the 110 GB
+aggregate RAM and both-disk admission limits without further cleanup.

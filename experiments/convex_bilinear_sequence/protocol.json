@@ -1,0 +1,28 @@
+{
+  "name": "learned-bilinear-stress-probe-v1",
+  "model": "CM86 complete complex rectangular matrices with balanced recovered learned encoders; CM88 exact zero support and forward-query reuse",
+  "data": "original frozen35 native generators and fingerprints; data seed1",
+  "modes": ["mini", "forward"],
+  "seeds": [1],
+  "learning_rate": 0.01,
+  "forward_query_step": 0.0001,
+  "model_reservation_bytes": 80000000000,
+  "aggregate_ram_limit_bytes": 110000000000,
+  "minimum_workspace_free_bytes": 2147483648,
+  "minimum_storage_free_bytes": 17179869184,
+  "blas_threads": 1,
+  "initialization": "all complete joint parameters zero; every original class retained",
+  "sampler": "original example batches and tails; Random(seed+10000) shuffles each epoch; all supervised records in each example retained",
+  "training": "ordinary full-vocabulary CE; complete coordinate SGD; no task-dependent model features or answer rules",
+  "stopping": "fixed update budget; no held-out labels inspected until every original endpoint in this cohort is sealed",
+  "success": "retain original success metric and threshold; additionally require both raw token and exact sequence accuracy >=99% for new sequence-case credit",
+  "baseline": "preserve existing transformer results; no matched timing or new transformer run is claimed",
+  "cases": [
+    {"name":"suite-boolean-and-shift", "maximum_updates":1000, "purpose":"short task"},
+    {"name":"suite-boolean-and-random", "maximum_updates":1000, "purpose":"short task"},
+    {"name":"arithmetic-add", "maximum_updates":200, "purpose":"raw labels; no arithmetic features"},
+    {"name":"gpt-probe-key-value-binding", "maximum_updates":200, "purpose":"short associative recall"},
+    {"name":"basis-parity16", "maximum_updates":128, "purpose":"long task and known family-capacity negative control"}
+  ],
+  "limitations": "initial diagnostic seed1 cohort; it is not a three-seed completed35 or165 claim; finite differences and spectral recovery are numerical approximations; current four-object parity restriction remains"
+}
