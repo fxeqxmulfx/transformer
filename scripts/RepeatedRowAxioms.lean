@@ -1,0 +1,29 @@
+import Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows
+
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.mem_encode
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.read_encode
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.encode_injective
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.slots_constant
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.slots_le_card
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.exceptions_subset
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.slots_le_exceptions
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.unpack_pack
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.pack_injective
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.expand_unpack_pack
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.projection_distance
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.full_domain_coverage
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.unpack_packHead
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.complete_head
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.complex_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.complex_batch_ce
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.complex_budget
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.table_column_agreement
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.head_slots_bound
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.uniform_unknown_head_slots
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_uniform_slots
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_nonuniform_slots
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_opposite_answers
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_imaginary_coefficient
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_head_slots
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_word_roundtrip
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.witness_word_distinct

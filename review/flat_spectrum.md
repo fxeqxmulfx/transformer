@@ -19798,3 +19798,73 @@ accuracy. Any native storage follow-up must represent arbitrary nonuniform
 rows as well, preserve all compatible candidates and original records, charge
 the actual complete complex head, and test its numeric behavior separately.
 The frozen task355 comparison remains unchanged.
+
+## CM70. Lossless repeated values in the complete decoder and complex head
+
+CM69 gives a conditional symmetry of exact projections over the full domain.
+It does not permit replacing that domain by uniform unknown rows. A separate
+representation result can reduce storage while still accepting every arbitrary
+unknown row, including nonuniform proposals and feasible completions.
+
+For a finite class type `C`, a row `x : C -> A` and a baseline `b : A`, store
+`b` together with the finite set `{c | x[c] != b}` and the value at each such
+class. Reading an exceptional class returns its stored value; reading every
+other class returns `b`. Exact equality suffices: no arithmetic structure on
+`A` is needed. Reading after encoding is the identity and encoding at a fixed
+baseline is injective. Therefore this also applies to exact 64-bit words,
+where positive and negative zero remain distinct words.
+
+Count stored values separately from the native container and index overhead.
+A constant row takes one value. If `b = x[c0]` for an actual class `c0`, the
+exception set omits `c0`, so baseline plus exceptions use at most `card C`
+values. If `x` equals `b` outside a declared finite set `E`, all stored
+exceptions lie in `E` and at most `1 + card E` values are stored. A completely
+nonuniform row is still represented exactly; no class is removed.
+
+Apply this encoding to every CM65 unknown row and keep every program mass.
+Decoding recovers the entire reduced tensor for arbitrary baselines and
+arbitrary real coordinates, without nonnegativity, uniformity or positive-mass
+assumptions. Expand the decoded tensor with the original observed dictionary.
+The image of stored points whose decodings satisfy the original reduced
+constraints is exactly the full CM64 feasible set. All compatible programs,
+observed anchors, mass bounds and nonuniform unknown completions remain.
+Full-coordinate squared distance to an arbitrary proposal is identical; the
+known-row weights from CM65/66 and every unknown term are still present.
+Storage tags are an implementation choice, not new learned variables on which
+convexity or a different Euclidean geometry is asserted.
+
+The same encoding applies to every complete realified complex head row.
+After decoding both parameter and head storage, every real and imaginary
+coefficient, every query logit and every ordinary indexed CE is unchanged.
+Original record IDs, repeated observations and the actual short-batch
+denominator are retained. Under the existing unitary and feasible-domain
+hypotheses the full logical head still satisfies `2 * R * card S`; repeated
+coefficients continue to count in that norm even if their values share storage.
+
+There is a sharper conditional storage bound for the actual head. Fix one
+source column `f` supported on a state set `A`. Two raw decoder columns that
+agree on `A` give equal conjugate coefficients at `f`, in both components.
+When unknown decoder rows are class-uniform, only the known raw labels inside
+`A` can differ from a class outside that label set. Each real or imaginary
+head row therefore needs at most one shared value plus those exceptional
+classes. This is conditional on actual source support, row equality and the
+existence of an outside class; otherwise the general lossless encoding remains.
+It does not identify an unseen answer or assume that all future proposals
+stay uniform.
+
+Nonconstant witnesses retain the original opposite unseen answers `(4,0)`
+and `(0,4)`, a balanced unknown row `(2,2)`, and an actual imaginary Fourier
+coefficient `-1`. A four-state, five-class table with two observed raw labels
+needs at most three values per real or imaginary Fourier row while preserving
+all five logical classes. A word-level witness preserves positive zero,
+negative zero and the least positive subnormal as distinct original words.
+Examples also cover zero mass, duplicated original IDs and a singleton tail.
+
+Formalization: `ConvexDepth/RepeatedRows/{Basic,Model,Complex,Witness}.lean`,
+27 direct checks in `scripts/RepeatedRowAxioms.lean`. These are representation
+identities and explicit logical value-count bounds. They do not prove a native
+container's peak memory, Rust safety, IEEE arithmetic refinement, unchanged
+finite training trajectories or new task accuracy. The native follow-up must
+retain arbitrary explicit fallback, preserve coefficient and parameter bits
+and original operation order, charge every live allocation under 110 GB RAM,
+and stop on shortage of either disk. Every frozen running producer stays fixed.

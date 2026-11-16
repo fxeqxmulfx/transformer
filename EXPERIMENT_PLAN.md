@@ -7712,3 +7712,21 @@ and pinned. Then finalize, check, commit and freeze before original fitting,
 seal every training endpoint before scoring, and independently rebuild/repeat
 the complete cohort. The running351/355/358 sources and outputs stay immutable.
 No new heldout result or catalog credit follows from this adapter work.
+
+### 2026-11-16: task360 lossless repeated-row theory before native storage
+
+The full composed p97 constant probe retains all962806 candidates but exceeds
+the existing complete-buffer forecast. CM70 proves generic baseline/exception
+row reconstruction, injectivity and explicit value-count bounds before changing
+the numerical implementation. Apply the codec to every unknown decoder row and
+every complete real and imaginary head row: the full CM64 domain, projection
+distance, original logits, logical budget and indexed ordinary CE are unchanged.
+Uniform unknown rows give a conditional head-storage bound based on the known
+labels in an actual source column's support; arbitrary nonuniform rows remain
+fully representable. Nonconstant, opposite-answer, imaginary-coefficient,
+word-level signed-zero/subnormal, duplicate-record and short-tail witnesses
+accompany all27 theorems. Check the complete Lean build, axioms and generated
+INDEX before committing. Native bitwise equivalence, actual memory admission,
+independent review and a new frozen original/repeat remain required. Existing
+351/355/358/359 sources and outcomes stay immutable; no accuracy credit follows
+from representation theory alone.

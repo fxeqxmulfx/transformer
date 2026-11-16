@@ -36,6 +36,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FamilyExtension
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PackedRecords
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -155,4 +156,8 @@ agree; valid numerator enclosures can certify a strict winner. A feasible
 two-program witness retains an exact unseen tie and opposite realizable targets.
 The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
 record why this lifting is needed. No convexity of raw transformer parameters is claimed.
+CM70 stores repeated decoder and complete head values with explicit exceptions,
+preserving every logical coordinate, the full feasible set and original CE.
+Uniform unknown rows permit a conditional head-storage bound without restricting
+arbitrary nonuniform completions or reducing the charged logical head budget.
 -/
