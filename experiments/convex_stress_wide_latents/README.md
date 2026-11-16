@@ -57,6 +57,35 @@ all candidates while explicitly refusing its oversized model buffers. These
 tests measure no original-task accuracy and supply no target-realizability
 certificate.
 
+The frozen original producer `2b55e14f` and an independently rebuilt repeat
+completed all 48 available training extracts. All 102 deterministic artifacts
+match exactly, including the ordered training inputs, complete selections,
+state/dictionary audits and summary. The manifest SHA256 is
+`5e5f40d4cd3c8a756d552d0012839daca09c53bffb60a8c80a8f695adf83e674`;
+verification SHA256 is
+`9806e609908625c357a8463d3ebd26a565c46abc04adabb7c177b7bbdc0f6447`.
+
+| Original-cohort outcome | Count |
+| --- | ---: |
+| Original inventory, including unavailable sources | 54 |
+| Available training extracts, all independently repeated | 48 |
+| Nonempty compatible support | 43 (previous bank: 41) |
+| Models admitted by the original expanded-record forecast | 42 |
+| Empty compatible support | 5 |
+| Source unavailable | 6 |
+| Training updates / heldout pools / accuracy measurements | 0 / 0 / 0 |
+
+The additional compatible cases are `arithmetic-cubic-mixed` and
+`arithmetic-quadratic`, each with one surviving candidate. The remaining empty
+supports are `arithmetic-floor-product`, `arithmetic-mixed`,
+`arithmetic-parity-cubic-blind`, `arithmetic-parity-cubic`, and
+`arithmetic-quadratic-linear`. The 193-class constant control retains every
+candidate but exceeds the original model-memory forecast. Its refusal remains
+in the probe; CM68's subsequently reviewed packed path supplies a separate
+89,281,189,304-byte comparison forecast. Neither compatibility nor refined
+memory admission earns an accuracy pass. The full comparison has its own
+protocol, producer freeze, training seal, raw replay and independent repeat.
+
 The executable control also verifies the complete output partition, absence of
 expanded record allocation, refusal of extra input fields and preservation of
 an existing report. It exercises the actual guarded file-writing path.

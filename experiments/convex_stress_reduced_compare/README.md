@@ -50,12 +50,15 @@ training barriers and changed seals; free unseen completions with identical obse
 prospective production pins; and disk shortages on either filesystem, shared
 filesystem accounting, overflow, bounded writes and overwrite refusal.
 
-The production protocol is deliberately not ready: the two task354 probe
-reference hashes remain null until that frozen training-only probe and its
-independent repeat have been verified. Production entry points and the freeze
-script reject this state. This component has not read new original heldout
-labels and adds no stress-task pass or catalog credit. The frozen task351 and
-task354 producers remain unchanged.
+The production protocol now pins the verified task354 manifest
+`5e5f40d4cd3c8a756d552d0012839daca09c53bffb60a8c80a8f695adf83e674`
+and verification
+`9806e609908625c357a8463d3ebd26a565c46abc04adabb7c177b7bbdc0f6447`.
+All 102 probe artifacts match its independent rebuild/repeat. The packed path
+at `e5ef378a` has also passed a fresh source/build review: 15 core, eight family
+and thirteen comparison controls. Original model fitting still requires the
+prospective freeze below. These prerequisites add no stress-task pass or
+catalog credit. The frozen task351 and task354 producers remain unchanged.
 
 Run the native checks from the repository root:
 
@@ -66,12 +69,10 @@ cargo clippy --offline --locked --all-targets --manifest-path experiments/convex
 cargo build --offline --locked --release --manifest-path experiments/convex_stress_reduced_compare/Cargo.toml
 ```
 
-Before the full comparison, independently review task356's packed path and
-complete task354 verification. Preserve the original probe audit and report
-the refined comparison admission separately. Then bind
-its exact manifest and verification digests in
-`protocol.json`, mark the protocol ready, rerun the checks and commit before
-freezing. `freeze.sh NEW_FREEZE RELEASE_BINARY` saves the native and Lean source
+The packed-path review and task354 verification are complete, and their exact
+digests are bound in `protocol.json`. Preserve the original probe audit and
+report refined comparison admission separately. Rerun the checks and commit
+before freezing. `freeze.sh NEW_FREEZE RELEASE_BINARY` saves the native and Lean source
 closure. Use the copied executable and scripts for both original and repeat:
 
 ```sh

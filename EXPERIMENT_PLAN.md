@@ -7651,3 +7651,19 @@ and the task354 probe repeat is verified. Then pin those exact results, commit
 and freeze before any original fitting. Existing task351/354 producers remain
 immutable. Both disks must continue to fit original/repeat outputs under the
 110 GB process RAM limit; otherwise stop and retain partial evidence.
+
+### 2026-11-16: task354 independently verified; finalize task355 protocol
+
+The frozen wider-family original and independent source rebuild/repeat match
+all102 artifacts. All48 available training extracts completed:43 nonempty
+supports versus41 previously,42 legacy memory admissions,5 empty supports and
+6 unavailable sources within the54-case inventory. The added compatible cases
+are arithmetic-cubic-mixed and arithmetic-quadratic. No heldout labels, training
+updates or accuracy measurements were used. The probe's p193 memory refusal
+remains recorded even though the separately reviewed packed representation
+admits its complete model. Task356 is done at e5ef378a after independent native
+and Lean checks. The task355 protocol now pins the exact verified probe digests.
+Check and commit it, freeze from clean source, then execute all54 cases and all
+three modes with the complete pre-heldout training seal. Rebuild frozen source
+independently and repeat/replay everything before catalog credit. Keep the
+running351 producer and its queued repeat unchanged.
