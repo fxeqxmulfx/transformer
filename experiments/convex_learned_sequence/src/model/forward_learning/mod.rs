@@ -1,4 +1,4 @@
-//! Complete forward-only Mini, from CM79--CM82 (Lean ba4b4b93).
+//! Complete forward-only Mini, from CM79--CM83 (Lean ce6970ab).
 //!
 //! Every certified basis direction is queried through actual recovered complex
 //! forwards and ordinary indexed mean CE. There is no analytic pullback in this
@@ -14,7 +14,7 @@ mod run;
 pub use plan::{ForwardLimits, ForwardPlan};
 
 use super::learning::Record;
-use super::{ComplexModel, ProjectedModel, Renaming};
+use super::{ComplexModel, Output, ProjectedModel, Renaming};
 use crate::geometry::{ConeGeometry, GeometryLimits};
 use crate::{Rational, Refusal};
 use num_bigint::BigInt;
@@ -114,21 +114,10 @@ impl ComplexModel {
         records: &[Record],
         renaming: Option<&Renaming>,
     ) -> Result<f64, Refusal> {
-        if records.is_empty() {
-            return Err(Refusal::EmptyBatch);
-        }
-        let mut sum = 0.0;
-        for record in records {
-            let output = match renaming {
-                Some(r) => self.paired_forward(&record.tokens, r)?,
-                None => self.forward(&record.tokens)?,
-            };
-            sum += output.cross_entropy(record.target)?;
-            if !sum.is_finite() {
-                return Err(Refusal::NonFinite);
-            }
-        }
-        Ok(sum / records.len() as f64)
+        indexed_mean_loss(records, |tokens| match renaming {
+            Some(r) => self.paired_forward(tokens, r),
+            None => self.forward(tokens),
+        })
     }
 
     fn forward_query_loss(
@@ -138,12 +127,11 @@ impl ComplexModel {
         records: &[Record],
         renaming: Option<&Renaming>,
     ) -> Result<f64, Refusal> {
-        let mut parameters = self.parameters.clone();
-        parameters[first..first + vector.len()].clone_from_slice(vector);
-        // This checks every original inequality, recovers both complex factors,
-        // executes actual inference, then drops the query model on return.
-        self.with_parameters(parameters)?
-            .forward_mean_loss(records, renaming)
+        let query = self.component_query(first, vector)?;
+        indexed_mean_loss(records, |tokens| match renaming {
+            Some(r) => query.paired_forward(tokens, r),
+            None => query.forward(tokens),
+        })
     }
 
     fn forward_pairing(&self, step: &Rational, plus: f64, minus: f64) -> Result<Rational, Refusal> {
@@ -159,6 +147,25 @@ impl ComplexModel {
         arithmetic.check(&value)?;
         Ok(value)
     }
+}
+
+/// The original record order, multiplicities and actual tail normalization.
+/// The forward callback sees only immutable input objects; the target enters CE.
+fn indexed_mean_loss(
+    records: &[Record],
+    mut forward: impl FnMut(&[usize]) -> Result<Output, Refusal>,
+) -> Result<f64, Refusal> {
+    if records.is_empty() {
+        return Err(Refusal::EmptyBatch);
+    }
+    let mut sum = 0.0;
+    for record in records {
+        sum += forward(&record.tokens)?.cross_entropy(record.target)?;
+        if !sum.is_finite() {
+            return Err(Refusal::NonFinite);
+        }
+    }
+    Ok(sum / records.len() as f64)
 }
 
 #[cfg(test)]

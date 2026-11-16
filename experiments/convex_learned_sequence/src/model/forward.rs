@@ -2,6 +2,7 @@
 //! All learned representations and readouts are evaluated. Binary64 factors
 //! approximate exact rational parameters; arithmetic failures are explicit.
 
+use super::query::ComponentQuery;
 use super::{Complex64, ComplexModel};
 use crate::{Rational, Refusal};
 use num_traits::{ToPrimitive, Zero};
@@ -182,15 +183,23 @@ impl Output {
 }
 
 impl ComplexModel {
-    fn scores(&self, tokens: &[usize]) -> Result<Vec<Complex64>, Refusal> {
+    fn scores(
+        &self,
+        tokens: &[usize],
+        query: Option<&ComponentQuery<'_>>,
+    ) -> Result<Vec<Complex64>, Refusal> {
         self.domain.input_index(tokens)?;
         let plan = self.domain.plan();
         let mut scores = vec![Complex64::new(0.0, 0.0); plan.objects];
         for mask in 0..plan.patterns {
             for (class, score) in scores.iter_mut().enumerate() {
                 let index = (mask * plan.objects + class) * 2;
-                let positive = self.recovered[index].evaluate(tokens, plan.objects)?;
-                let negative = self.recovered[index + 1].evaluate(tokens, plan.objects)?;
+                let neuron = |i| match query {
+                    Some(query) => query.neuron(i),
+                    None => &self.recovered[i],
+                };
+                let positive = neuron(index).evaluate(tokens, plan.objects)?;
+                let negative = neuron(index + 1).evaluate(tokens, plan.objects)?;
                 *score = finite(*score + positive - negative)?;
             }
         }
@@ -198,22 +207,45 @@ impl ComplexModel {
     }
 
     pub fn forward(&self, tokens: &[usize]) -> Result<Output, Refusal> {
-        Output::from_scores(self.scores(tokens)?)
+        Output::from_scores(self.scores(tokens, None)?)
     }
 
     pub fn paired_forward(&self, tokens: &[usize], renaming: &Renaming) -> Result<Output, Refusal> {
+        self.paired_output(tokens, renaming, None)
+    }
+
+    fn paired_output(
+        &self,
+        tokens: &[usize],
+        renaming: &Renaming,
+        query: Option<&ComponentQuery<'_>>,
+    ) -> Result<Output, Refusal> {
         if renaming.permutation.len() != self.domain.plan().objects {
             return Err(Refusal::InvalidRenaming);
         }
-        let mut first = self.scores(tokens)?;
+        let mut first = self.scores(tokens, query)?;
         let renamed: Vec<_> = tokens
             .iter()
             .map(|&object| renaming.permutation[object])
             .collect();
-        let second = self.scores(&renamed)?;
+        let second = self.scores(&renamed, query)?;
         for (class, score) in first.iter_mut().enumerate() {
             *score = finite((*score + second[renaming.permutation[class]]) * 0.5)?;
         }
         Output::from_scores(first)
+    }
+}
+
+impl ComponentQuery<'_> {
+    pub(super) fn forward(&self, tokens: &[usize]) -> Result<Output, Refusal> {
+        Output::from_scores(self.model().scores(tokens, Some(self))?)
+    }
+
+    pub(super) fn paired_forward(
+        &self,
+        tokens: &[usize],
+        renaming: &Renaming,
+    ) -> Result<Output, Refusal> {
+        self.model().paired_output(tokens, renaming, Some(self))
     }
 }

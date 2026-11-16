@@ -1,6 +1,6 @@
 //! Native update primitives for the complete learned complex sequence family.
 //!
-//! Source: `review/flat_spectrum.md`, CM75--CM82, especially the checked Lean
+//! Source: `review/flat_spectrum.md`, CM75--CM83, especially the checked Lean
 //! projection and actual CE direction theorems. No benchmark accuracy is
 //! asserted by this library. Exact rational arithmetic verifies feasibility;
 //! bounded active-set search refuses rather than weakening its constraints.

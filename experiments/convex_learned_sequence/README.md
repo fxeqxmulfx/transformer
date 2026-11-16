@@ -112,8 +112,9 @@ original row supplies its absolute-response bound; a tight row with nonzero
 response refuses the query. The final two points and every bound are independently
 replayed. Positive centre mixtures are available to open non-forced boundary
 rows. Mixing changes the iterate and can increase loss, as recorded in CM80.
-All returned points remain rational. To execute them, the full model constructor
-checks the whole parameter array before actual recovered complex inference.
+All returned points remain rational. Full models pass the complete constructor;
+single-component queries use the equivalent CM83 local replacement described
+below before actual recovered complex inference.
 
 `recover_pairings` solves the complete basis Gram system, retaining all
 off-diagonal entries, and reconstructs a vector in the full equality kernel.
@@ -177,10 +178,10 @@ The whole mixed array passes the original model constructor and factor recovery.
 Old and mixed mean CE are both retained: mixing may increase the loss.
 
 Every basis direction of every cell receives two exact feasible queries. Each
-query is embedded in the full array, checked against every original inequality,
-and evaluated by the actual recovered complex forward and full-class CE over
+query replaces its whole component vector, preserves every original inequality,
+and is evaluated by the actual recovered complex forward and full-class CE over
 every indexed batch record. Paired predictions use the same two complete shared
-passes as ordinary inference. One query model is live at a time; no model mask,
+passes as ordinary inference. One query replacement is live at a time; no model mask,
 class, component or input coordinate is omitted. Every cell has a receipt,
 including an empty list only when its certified kernel has no directions.
 
@@ -210,6 +211,32 @@ geometry workspace is reused sequentially. These explicit counts and memory
 reservations complement aggregate RAM and both-disk guards; they do not promise
 a wall-clock runtime. Generation and independent replay are separate admitted
 operations. Records remain indexed and a short batch uses its actual length.
+
+## Local query reconstruction
+
+CM83, Lean commit `ce6970ab`, proves that replacing one complete real or
+imaginary vector preserves the full complex domain when the old model is
+feasible and the new vector satisfies every original row of its selected cone.
+It also proves the full complex forward equals the original per-slot sum with
+one whole neuron replaced. No unchanged model coordinate or constraint is removed.
+
+`model::query` implements a private validated replacement tied by an immutable
+borrow to its original model. It checks the full vector length, aligned cell
+address, coefficient limits and every original oriented row. It then recovers
+the entire changed complex neuron using the new component and the old opposite
+component. Both the learned representation and readout can change. Every other
+neuron uses its existing learned factors. The scorer retains the original
+mask/class/sign order and evaluates every actual complex product, with the same
+replacement in both paired passes and the same full-class softmax and CE.
+
+For P real parameters, D coordinates per component and K raw prefixes, query
+validation changes from checking P*K row terms to D*K; factor recovery changes
+from P/(2*D) whole neurons to one. Actual forward evaluation still visits every
+neuron. The original conservative `ForwardPlan` bounds remain in force, including
+the larger full-reconstruction reservation. The exponential family size is
+unchanged. This is reuse of unchanged learned factors, not a fixed task-feature
+cache or a new training rule. Binary64 comparison to the previous reconstruction
+is separate from the exact Lean proof and from numerical error relative to it.
 
 ## Findings and validation
 
@@ -285,8 +312,20 @@ and overflow is checked. Analytic gradients appear only in test comparisons,
 never in the forward-only implementation. These are local implementation
 controls; they provide no new stress-case or sealed-pilot accuracy credit.
 
+Five local-replacement controls bring the library total to forty-four. All
+192 component cells of the complete three-object family are checked with both
+zero and nonzero replacements: 384 full reconstructions, each evaluated on all
+four prefixes, base and paired. Every complex score component, probability,
+original object and every class CE agrees bit for bit. A complete two-position
+model also checks every basis probe in a forced-equality nonorthogonal cell,
+for both signs/components and both classes. A separate test compares all 256
+cell/batch/pairing combinations of repeated records and one-record tails.
+Shape and index errors, a violation only at the last original row, coefficient
+budget, numerical overflow/underflow, invalid inputs and renaming all refuse.
+These tests retain the public full constructor as their slow reference.
+
 Development tests, strict all-target Clippy and a release build pass. The Lean
-projection/query/learning components independently pass the full build, ninety-five
+projection/query/learning/replacement components independently pass the full build, 107
 direct axiom checks, global audit, native INDEX verification and forbidden-source
 scan. Existing 36 `sorry` declarations remain; no new `sorry` or extra axiom was added.
 Evidence and failed development logs stay ignored under
@@ -304,6 +343,7 @@ prlimit --as=4294967296:4294967296 -- cargo build --offline --locked --release -
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ProjectionHingeAxioms.lean
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/QueryGeometryAxioms.lean
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/QueryBasisAxioms.lean
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/ReplacementHingeAxioms.lean
 ```
 
 The development/review wrappers check aggregate RSS plus the process allowance
@@ -358,7 +398,7 @@ prlimit --as=4294967296:4294967296 -- "$INDEPENDENT_BINARY" verify \
   "$ORIGINAL_OUT" "$REPEAT_OUT" "$VERIFIED_REPORT"
 ```
 
-All thirty-nine model/update controls and five protocol controls pass. The
+All forty-four model/update controls and five protocol controls pass. The
 protocol controls include exact trace roundtrips for both modes, altered CE or
 probe rejection, missing-seal refusal before evaluation data is opened, and a
 complete hashed inventory whose fake minibatch sequence fails actual replay.
@@ -367,7 +407,7 @@ these protocol checks alone are not accuracy evidence.
 
 ## Remaining work
 
-Run and independently verify the prospective sealed pilot for both required minibatch modes. The
+Complete independent verification of the frozen pilot for both required minibatch modes. The
 forward-only rule now queries the actual model and respects its whole domain;
 a gated surrogate evaluated outside that domain would not inherit the CE theorem.
 CM80 derives a centre by summing certified projections of every original
@@ -385,8 +425,11 @@ equality rows. The Lean reconstruction theorem proves full kernel coverage and
 unique coefficients from those checks. Native elimination generates and
 independently verifies them, and full Gram recovery checks every supplied basis
 pairing. CM82 derives the actual loss derivative, and both complete native
-proposal rules now retain every record and short tail. Next freeze the small
-prospective producer and evaluate the actual training trajectories independently.
+proposal rules now retain every record and short tail. The original producer
+is frozen at `7881eb5d`; its workflow retains independent training and raw replay.
+Freeze a separate optimized producer after independent native review. Retain
+both source identities and compare every deterministic step and raw output
+against the original, in addition to each producer's own repeat and full replay.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy

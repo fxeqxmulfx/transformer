@@ -9,6 +9,7 @@ mod forward;
 pub mod forward_learning;
 pub mod learning;
 mod physical;
+mod query;
 mod update;
 
 use crate::domain::{DomainLimits, DomainPlan, RawDomain};

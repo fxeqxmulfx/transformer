@@ -81,6 +81,47 @@ fn records() -> [Record; 3] {
 }
 
 #[test]
+fn local_queries_preserve_complete_repeated_and_tail_batch_ce_bits() {
+    let zero = model(2, 1);
+    let batch = records();
+    let renaming = Renaming::new(vec![1, 0]).unwrap();
+    let old = zero
+        .mini_step(&batch, None, &ratio(1, 16), mini_limits())
+        .unwrap()
+        .projected
+        .model;
+    let plan = old.domain.plan();
+    let mut checked = 0;
+    for mask in 0..plan.patterns {
+        let geometry = old.forward_geometry(mask, limits().geometry).unwrap();
+        let value: Vec<_> = geometry.centre().iter().map(|x| x * ratio(1, 16)).collect();
+        for class in 0..plan.objects {
+            for sign in 0..2 {
+                for component in 0..2 {
+                    let first = old
+                        .parameter_index(mask, class, sign, component, 0)
+                        .unwrap();
+                    let mut parameters = old.parameters.clone();
+                    parameters[first..first + plan.coordinates].clone_from_slice(&value);
+                    let slow = old.with_parameters(parameters).unwrap();
+                    for records in [&batch[..], &batch[2..]] {
+                        for rename in [None, Some(&renaming)] {
+                            let actual = old
+                                .forward_query_loss(first, &value, records, rename)
+                                .unwrap();
+                            let expected = slow.forward_mean_loss(records, rename).unwrap();
+                            assert_eq!(actual.to_bits(), expected.to_bits());
+                            checked += 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    assert_eq!(checked, 256);
+}
+
+#[test]
 fn complete_forward_mini_matches_cm82_repeated_batch_slope_and_replays_all_queries() {
     let old = model(2, 1);
     let batch = records();

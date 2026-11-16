@@ -8324,3 +8324,28 @@ failure before interpreting outcomes. The unseen example relies explicitly on
 task equivariance. It earns no stress-case credit and does not replace the
 all-165 raw/exact 99% goal. Complete-family exponential cost and applicability
 beyond that restricted toy remain open. Older frozen producers stay unchanged.
+
+### 2026-11-16: proved local replacement for full complex loss queries
+
+CM83 (`ce6970ab`) proves exact replacement of one learned real/imaginary
+component, preservation of every original complex-domain constraint, and the
+full complex forward with only the entire changed neuron reconstructed. Both
+signs and components have nonzero witnesses. All twelve new theorems, the full
+build, global audit and generated INDEX pass an independent main-checkout review;
+existing 36 `sorry` declarations remain unchanged.
+
+The native local query checks the complete new vector and all its original
+rows, reconstructs the whole affected neuron, and evaluates every neuron in
+the original summation order. Both paired passes, all classes, ordinary CE,
+indexed records and tails remain unchanged. Forty-four library controls and
+five protocol controls pass, including bitwise full-reconstruction comparison
+at every three-object cell and in a degenerate nonorthogonal two-position cone.
+The original conservative work/storage limits remain in force.
+
+The frozen `7881eb5d` original/repeat workflow continues unchanged. After a
+separate checked commit and independent native review, freeze a new optimized
+producer, independently repeat it and replay every raw output. Also compare
+every full training-step artifact against the old producer, explicitly retaining
+and accounting for the different source identities. Local equivalence controls
+alone give no accuracy or speed claim. The all-165 target, complete-family
+exponential cost and general unseen-label conditions remain open.
