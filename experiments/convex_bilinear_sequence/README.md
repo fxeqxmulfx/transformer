@@ -7,6 +7,10 @@ experiment implements the family proved in
 CM87 identification and CM88 update identities. The manuscripts are CM86–88
 in `review/flat_spectrum.md`; the proof commits are `ed9d359d`, `e9ac5beb` and
 `e50d3691`. The older `convex_learned_sequence` experiment uses another family.
+The seed-1 pilot is complete: both required modes pass two of the five original
+primary tests. The additional scaled addition run fits every training answer
+but gets no held-out answers correct. All twelve saved models reproduce every
+scored raw-logit vector and metric on reload. The overall99% target is unmet.
 
 For vocabulary size V and context cap T, the complete joint domain has
 2 V (V+1) (1+TV+1[T≥2]V²) real coordinates. Immutable object identities,
@@ -56,7 +60,7 @@ CM86 already proves a four-object parity restriction. Long parity is therefore
 a capacity negative control. CM87 identifies an unseen answer only when the
 observed constraints imply its margin within this family; it does not promise
 that every original task supplies such constraints. Failures must remain in
-the report. Native controls pass; held-out stress measurements remain pending.
+the report. Native controls pass; measured held-out results are recorded below.
 Proof controls supply no stress-case credit.
 
 Run from the repository root with native tooling and OpenBLAS installed:
@@ -133,3 +137,72 @@ lookup reference, replace the direct class slice with the equivalent
 `stored.iter().flat_map(|&d| (0..q).map(move |i| joint_ref.entry(class,i,d)))`
 using `joint_ref=&joint`, as in commit7031f56b. Generated timing reports remain
 local and ignored.
+
+## Verified pilot findings, 2026-11-16
+
+The frozen original producer is commit `36eba937`, stored under
+`/run/media/misha/storage/transformer-runs/freezes/bilinear-stress-v1`.
+Its complete source fingerprint is
+`ff4a22405bd0382eed871dcd0dcbc1bb8588427fcf0e07a36094c53c0b8e6f68`.
+The scaled addition producer is commit `7031f56b`, frozen as
+`bilinear-scaled-v1`, with source fingerprint
+`49342511119dce26c454d049cc1af261aa0aa08ddc3a6644b45e84e0c793041d`.
+Generated metadata, training traces, checkpoints, scores and replay receipts
+remain in the ignored `runs/original-v1` and `runs/scaled-v1` directories, backed
+by that external storage. Both scoring queues finished with exit0.
+
+All ten original endpoints were sealed before any held-out observation.
+The scaled comparison also finished both endpoints before scoring. Every one
+of the twelve separate checkpoint replays matched all metrics and complete
+raw-logit digests. Mini and forward-only Mini have identical reported accuracy
+counts in every split; their small CE differences remain in the raw reports.
+This is a checkpoint/inference replay, not an independent repeat of training.
+
+The table uses each unchanged original primary split, at seed1. Percentages
+and CE are shown for Mini; forward-only Mini gives the same accuracies and CE
+to the displayed precision. Historical transformer values are the original
+first99 observations in `convex_stress/suite.json`, not new matched-budget runs.
+
+| Original case | Primary examples | Updates | Raw token accuracy | Exact sequence accuracy | CE | Original success | Historical transformer exact |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| Boolean AND, shift | 7 | 1000 | 100% | 100% | 0.0223324 | Yes | 100% at250 updates |
+| Boolean AND, random | 8 | 1000 | 100% | 100% | 0.0252671 | Yes | 100% at250 updates |
+| Modular addition | 4705 | 200 | 0.021254% | 0.021254% | 4.575985 | No | 99.1073% at3250 updates |
+| Key-value binding / MQAR | 512 | 200 | 30.2734% | 30.2734% | 4.354632 | No | 99.2188% at500 updates |
+| Parity, up to16 bits | 157 | 128 | 77.0701% | 54.1401% | 0.349339 | No | 99.3631% at9750 updates |
+
+The original success flags are retained, so the two Boolean primary passes
+count as passes. They do not imply all-split99 performance. The random-AND
+ordinary test has95.3125% exact accuracy. On length32/64 and position-shifted
+length probes, exact accuracy ranges from28.125% to68.75% across these two
+tasks. In parity, every generated EOS is correct; raw token accuracy therefore
+overstates answer correctness, which is85/157 on the primary split.
+
+The fixed budgets are diagnostic and substantially shorter than the historical
+transformer runs on addition and parity. Parity visits2048 of20000 training
+examples, or0.1024 epochs. No conclusion about matched training speed or a
+complete convergence comparison follows from this table. The CM86 global
+four-object restriction nevertheless remains an independent expressivity
+limitation of the family.
+
+Input-only scaling isolates a different failure in addition:
+
+| Addition update geometry | Training raw/exact | Full training CE | Held-out raw/exact | Held-out CE |
+| --- | ---: | ---: | ---: | ---: |
+| Unscaled | 4.42177% | 4.572614 | 1/4705 =0.021254% | 4.575985 |
+| CM89 frequency scaled | 100% | 2.604803 | 0/4705 =0% | 4.654385 |
+
+Both modes give these same counts with unchanged200-update budgets, rate0.01,
+seed, samples, original classes and ordinary CE. Scaling improves fitting;
+it does not recover missing answers. CM90 (`8a7283d7`, `Updates/Unobserved.lean`)
+provides a precise related diagnosis: each unseen ordered two-object input
+has a coordinate silent on every other observed pair. A fitting parameter can
+change its query margin arbitrarily without changing any training logits.
+The theorem is not a proof that every possible algorithm must fail; additional
+structure or a different selection bias may favor the correct completion.
+
+The next research problem is to connect unseen interactions through trainable
+shared structure, and to supply sufficient context interactions for parity and
+length transfer. More capacity or faster fitting alone is not an identification
+argument. This pilot does not add35-task,165-task or three-seed coverage, and it
+does not inherit the older fixed-family comparison's accuracy claims.

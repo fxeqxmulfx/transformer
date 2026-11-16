@@ -8546,3 +8546,29 @@ ordered two-object input has such a coordinate in the complete CM86 family.
 This distinguishes optimization progress from identification; it does not prove
 that no algorithm or additional inductive bias can learn the task. Retain
 nonempty feasible examples and all original stress outcomes.
+
+### 2026-11-16: learned bilinear stress pilot completed and replayed
+
+All ten original cells and both scaled addition cells have sealed endpoints
+and exact separate-process raw-logit/metric replays. Both mode queues exit0.
+The original five-case seed1 cohort passes2/5 primary tests in each mode:
+both Boolean AND cases100% raw/exact; addition1/4705, key-value binding155/512,
+parity242/314 raw tokens and85/157 exact sequences. Long Boolean probe exact
+accuracy ranges28.125–68.75%, and random-AND ordinary test exact is95.3125%.
+Preserve original success flags while reporting these transfer failures.
+
+CM89 scaling keeps the addition control's rate,batches,seed and200 updates.
+It raises training accuracy4.42177%→100% and lowers full training CE4.572614→
+2.604803, while held-out accuracy falls1/4705→0/4705 and CE4.575985→4.654385.
+The observation confirms that fixing fitting is insufficient for this tested
+update rule. CM90's silent-coordinate theorem diagnoses missing constraints,
+without asserting that every possible learning algorithm must fail.
+
+Historical transformer results remain unchanged and passed all five primary
+cases at their original first99 observations. The new run is a fixed-budget
+diagnostic, not a matched-budget or matched-time baseline comparison; parity
+visits only0.1024 epochs. There is no three-seed,35/165-completion or independent
+training-repeat claim. Save authored findings and commands in the experiment
+README; keep generated evidence in external storage. Before broader runs on a
+new family, establish how shared trainable structure constrains unseen answers
+and how its context interactions address the proved parity restriction.
