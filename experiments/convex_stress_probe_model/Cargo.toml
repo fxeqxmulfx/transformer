@@ -1,0 +1,21 @@
+[package]
+name = "convex-stress-probe-model"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+joint = { package = "convex-stress-compact-latent", path = "../convex_stress_compact_latent" }
+probes = { package = "convex-stress-probe-data", path = "../convex_stress_probe_data" }
+serde = { version = "=1.0.229", features = ["derive"] }
+
+[dev-dependencies]
+reference_model = { package = "convex-stress-reduced-latent", path = "../convex_stress_reduced_latent" }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
