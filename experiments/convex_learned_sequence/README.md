@@ -523,6 +523,38 @@ LAKE_ARTIFACT_CACHE=false lake env lean scripts/LearnedQuadraticAxioms.lean
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/Axioms.lean
 ```
 
+## Rectangular learned pair/query family: CM86
+
+CM86 proves an exact rectangular alternative with two actual learned complex
+encoders and a learned nuclear-norm readout. The last immutable input object
+is the query. Earlier objects read learned position weights and a shared table
+of adjacent-pair weights; repetitions and overlaps remain. Output classes are
+the original objects. Ordinary CE and indexed minibatch means are jointly
+convex in the full complex matrices, with both encoders recovered together.
+
+For vocabulary size V and context cap T (total prefix cap T+1), query width is
+q=1+V and context dimension d=1+TV+eV², where e=1 exactly when T>=2. Dense
+joint storage is 2Vqd real coordinates; recovered L,R add V(q²+dq) complex
+entries before normalization copies, gradients, data and spectral workspace.
+Recovery uses the q-by-q query Gram matrix. No all-case 110 GB admission or
+native solver claim is made. Physical coverage permits arbitrary finite
+two-encoder width but does not preserve a smaller fixed rank or encoders tied
+across classes.
+
+Lean proves observable geometry changes in both recovered encoders, readout
+5 -> 10, and an imaginary-weight contribution to the actual real output.
+The raw family represents three-object parity, but cannot strictly classify
+four-object parity even with the last object fixed. This explicitly limits
+the extension; it is not the full-suite architecture. Flat-spectrum bounds
+constrain approximation and exact physical width for the complex coefficient
+operator. They do not identify missing original-object answers.
+
+These are proof controls, with no new native producer or accuracy credit.
+The formalization is `ConvexChannel/LearnedBilinear`, checked by the direct
+Lean build and `scripts/LearnedBilinearAxioms.lean`. Numerical recovery,
+unseen-label identification, richer composition, and Mini/forward-only Mini
+update certification remain separate obligations.
+
 ## Remaining work
 
 CM84 (`4b67e11b`) now proves that the existing complete family can interpolate

@@ -21172,3 +21172,154 @@ not a solution of the all-165 99% target. Unseen-answer identification, richer
 interactions for the full suite, numerical factor recovery, certified Mini and
 forward-only Mini updates, and prospective sealed experiments remain open.
 No producer, stress-case coverage or raw accuracy changes in this extension.
+
+## CM86. Rectangular learned encoders, shared pair interactions and the next depth limit
+
+The interface remains a sequence of immutable objects followed by one original
+object. No numeric value, key/value role, arithmetic operation or answer rule is
+attached to an object by the model. CM85's three-bit obstruction motivates a
+richer reader and a rectangular joint lift, without squaring the larger context
+dimension. This is an explicitly restricted learned family, not a complete
+replacement for every task in the stress suite.
+
+For a prefix of length at most T+1, use its last visible object as the query
+and its preceding list as the context of length at most T. The empty prefix
+reads learned biases on both sides. With V=|O|, put
+
+```
+Q = Option O,                                   q = 1 + V,
+P = Fin (if T >= 2 then 1 else 0) x O x O,
+D = Option ((Fin T x O) + P),                    d = 1 + T V + e V^2,
+e = 1 if T >= 2, otherwise 0,
+M_c in C^(Q x D),                               c in O.
+```
+
+The full joint domain is the real vector space of every such complex matrix
+for every original output class. No rank constraint, label-dependent cone,
+observed-pair pruning or independent complete-prefix table is imposed. The
+zero-sized pair type when T<2 removes no possible occurrence: there are then
+no adjacent positions, as `no_pair_position` proves. Every position/object
+coordinate and every ordered object pair is otherwise retained.
+
+For any rectangular M, diagonalize the query-sized positive matrix M M*.
+Write U for the full unitary eigenbasis and sigma for the complete list of
+singular values of M*. Lemma 1 supplies actual balanced factors
+
+```
+L = U diag(sqrt(sigma)),
+R = M* U diag(1 / sqrt(sigma)),
+L R* = M,
+||L||_F^2 = ||R||_F^2 = ||M||_S1 = a.
+```
+
+Inverse zero is zero. All q singular directions remain represented, including
+zeros; exact recovery holds for zero and rank-deficient matrices. Set
+E=L/sqrt(a), F=R/sqrt(a). The readout magnitude a is learned with both factors.
+For each hidden coordinate, actual inference reads the learned bias and final
+object entry of E*, and the learned bias, every earlier position/object entry,
+and every visible adjacent-pair entry of F*. Pair weights are shared across
+positions, while overlapping occurrences and repeated pairs contribute separate
+summands. In particular the context [false,true,false,true] reads false/true
+twice and true/false once. No key/value-specific filtering occurs.
+
+If these learned query and context responses are u and v, the complex class
+output is `a (1+i) sum_h conj(u_h) v_h`. Its real part is the logit. Softmax
+retains every original object, is positive and normalized, and `nextObject`
+returns a maximizing original object. A strict winner is returned for every
+tie selection. The vocabulary witness establishes nonemptiness, not a target;
+native inference must declare a deterministic full-vocabulary tie order.
+
+For arbitrary complex diagnostic inputs x,y, exact recovery proves
+
+```
+forward_M(x,y) = a (1+i) <E* x, F* y> = (1+i) x* M y.
+```
+
+The raw reader identities prove that this is the actual sequence computation.
+Inference is defined by the learned lookups, encoders, interaction and readout;
+the linear identity is a theorem about that path. Thus all joint coordinates
+have affine real logits, ordinary original-object CE is convex, and every
+indexed mean minibatch is convex with all records, multiplicities and tails.
+This says nothing about convexity when L,R,a are varied independently. Their
+recovery couples them through M; no claim that affine logits are necessary
+for convex CE is used. An executable numerical factor recovery and its error
+certificate are not supplied by a noncomputable spectral definition.
+
+Coverage is exact for arbitrary finite-width complex two-encoder interactions:
+given physical L0,R0, jointly choose M=L0 R0*. Recovery through q hidden
+coordinates reproduces `(1+i)<L0* x,R0* y>` on every complex x,y. An independent
+scalar readout can be absorbed into a physical factor. This may widen a smaller
+imposed bottleneck; it does not preserve a fixed low rank or one encoder tied
+across classes. Class-specific encoders share their learned tables across all
+input prefixes. At the minimal three-object cap the permitted pair/query
+coefficient table can distinguish every triple, but there is no parameter
+indexed by a whole prefix of arbitrary length.
+
+The encoder geometry is not merely a parameter-dependent hidden rotation.
+`left_hidden_gram` and `right_hidden_gram` give the identical full hidden Gram
+`diag(sigma)`. Consequently
+
+```
+L L* = sqrt(M M*),                  R R* = sqrt(M* M).
+```
+
+For square positive M, both equal M and both normalized covariances equal
+M/||M||_S1. The two positive joint points [[4,i],[-i,1]] and [[1,i],[-i,9]]
+have learned readouts 5 and 10. In both actual normalized encoders, the first
+object's covariance entry changes from 4/5 to 1/10. These observables do not
+depend on an arbitrary eigenbasis choice and cannot change under a hidden
+unitary rotation alone. Removing the imaginary entries changes the actual
+real output on the off-diagonal basis probe from -1 to 0. These are feasible
+comparisons, not an optimizer trajectory or raw stress accuracy.
+
+The complete dense joint storage is exactly
+
+```
+2 V (1+V) (1 + T V + e V^2) real coordinates.
+```
+
+It includes every class and both complex components, before factors, gradients,
+optimizer state, data or solver workspace. The recovered hidden width is q per
+class, total Vq. A direct spectral implementation forms q-by-q Gram matrices,
+with dense per-class work O(q^2 d + q^3) for Gram/eigendecomposition/recovery;
+this is an algorithmic cost estimate, not a measured or Lean-verified runtime.
+Caching all L,R costs V(q^2+dq) complex entries before any extra normalized
+copies. A cached physical forward reads O(Vq(n+1)) entries for n visible
+objects, including overlapping pairs, then scans all V outputs. No claim
+that these buffers fit every stress case within 110 GB, or that complete
+forward-only coordinate queries are affordable, follows from polynomial size.
+The complete case dimensions and all peak buffers must be checked before runs.
+
+The capacity gain and its limit are both explicit. `Parity.parameters` is a
+chosen feasible point, not part of the architecture: class false has logit
+zero, while class true reads coefficient +1 or -1 at (last object, preceding
+ordered pair). Through the actual raw learned path this yields the original
+three-bit parity answer as strict winner on all eight triples. In contrast,
+fixing the final object to false in a four-object prefix leaves three varying
+context bits. Their complete address vector has zero third mixed difference:
+singleton entries and adjacent pairs each depend on at most two of those bits.
+The actual recovered logits preserve that identity. `parity_not_realizable`
+therefore rules out strict classification even on these eight four-bit parity
+inputs. More learned composition is still needed; this extension alone cannot
+be advertised as the all-165 solution.
+
+Flatness is used only as a bound. Complete complex basis probes of the actual
+recovered forward identify M, including its fixed nonzero phase. R3 gives
+
+```
+s (min(q,d)-h) <= ||M - L0 R0*||_F^2
+```
+
+for an s-flat M and physical encoders of width h. Reproducing all complex
+coefficient probes exactly requires h>=min(q,d). These are coefficient probes,
+not extra supervised raw sequences; equality of raw real logits alone is not
+claimed to identify the full complex matrix. No missing answers are obtained
+from flatness. All conditional statements have inhabited examples.
+
+Formalization: `ConvexChannel/LearnedBilinear/{Basic,Model,Reader,Sequence,
+Geometry,Witness,Parity,Restriction,Spectral}`; direct audit:
+`scripts/LearnedBilinearAxioms.lean`. Remaining work includes richer learned
+composition, explicit unseen-prefix identification assumptions, numerical
+spectral residual certification, Mini and forward-only Mini updates, memory
+admission and prospective independent sealed runs. No native producer or
+stress-case credit changes in this extension.

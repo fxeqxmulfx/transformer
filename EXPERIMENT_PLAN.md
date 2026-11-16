@@ -8431,3 +8431,25 @@ identification conditions, numerical PSD/factor certification and both native
 minibatch modes are not supplied by this proof. No new training producer or
 stress-case credit is authorized by proof witnesses alone. Existing frozen
 producers, independent repeats and raw-replay requirements stay unchanged.
+
+### 2026-11-16: rectangular learned pair/query interaction and its depth limit
+
+CM86 uses a query-sized balanced factorization of full rectangular complex
+matrices. Both actual raw encoders and the readout are recovered jointly;
+ordinary original-object CE and indexed minibatch means are convex. Learned
+position/object and shared adjacent-pair entries retain all occurrences and
+all output classes. With total prefix cap T+1 and vocabulary V, the dense
+joint count is 2V(1+V)(1+TV+eV²), e=1 for T>=2. Recovery width is 1+V per
+class; factor, optimizer and numerical workspace are additional.
+
+The actual recovered encoder geometries both change at nonzero complex
+parameter points. The raw model represents three-bit parity but fails on a
+fixed-query slice of four-bit parity, so it remains an explicitly restricted
+building block. Complete complex coefficient probes identify the joint matrix,
+allowing R3 width/error bounds; raw real labels alone do not identify that
+matrix or unseen answers. There is no native or stress accuracy increment.
+
+The user now requests a separate Lean sorry and board task connecting capacity
+to observable identification of unseen original objects. Prepare that handoff,
+then wait for review. Preserve the existing frozen producers and the completed
+proof work; do not launch broader training on this restricted family.
