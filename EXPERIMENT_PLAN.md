@@ -8349,3 +8349,29 @@ every full training-step artifact against the old producer, explicitly retaining
 and accounting for the different source identities. Local equivalence controls
 alone give no accuracy or speed claim. The all-165 target, complete-family
 exponential cost and general unseen-label conditions remain open.
+
+### 2026-11-16: independently verified learned pilot and identical faster trajectory
+
+Both frozen producers (`7881eb5d` full reconstruction and `719ba30b` certified
+local replacement) completed original/repeat training, all-training seals before
+evaluation reads, and independent full trajectory/raw replay. Each matches all
+34 deterministic training artifacts within its source version. Both Mini and
+forward-only Mini score 3/3 original objects in both repeats; mean evaluation
+CE is respectively 0.2491072676434611 and 0.1530963328629868. The unseen prefix
+is covered only under the declared task-equivariant involution.
+
+Across source versions, all 32 full step traces are byte-identical, and every
+raw prediction, complex score, probability and CE bit agrees. Only the documented
+source/configuration identity fields and corresponding seal identity differ.
+The full identities, hashes and normalized comparisons are preserved locally;
+the experiment README records findings and exact reproduction commands.
+Training plus sealing, replay and scoring fell from 808.66/817.93 seconds for
+the original/repeat to 28.13/27.98 seconds. These local pilot observations do not
+provide a general performance guarantee.
+
+This pilot adds zero stress cases. Keep task 366 and the all-165 raw/exact 99%
+goal open. Next address complete-pattern growth while retaining the original
+object-sequence interface and the stated all-trainable path requirement. Prove
+any exact sharing/compression, or explicitly name a new family's restrictions
+and loss of expressivity, before treating it as a scalable replacement. Continue
+both required minibatch modes and the 110 GB aggregate RAM/two-disk guards.

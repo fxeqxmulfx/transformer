@@ -405,9 +405,83 @@ complete hashed inventory whose fake minibatch sequence fails actual replay.
 Measured pilot outcomes require the frozen original/repeat execution below;
 these protocol checks alone are not accuracy evidence.
 
+## Sealed three-object pilot results
+
+The optimized producer is frozen at `719ba30b`, source-manifest SHA-256
+`09828527dc913c26c37f8245ca946ba1c03ef07b9a0886715abffb15def91c14`.
+It and a fresh independent build each completed both modes, sealed every
+training artifact before reading evaluation inputs, and passed full training
+and raw-output replay. All 34 deterministic training artifacts agree between
+the original and repeat: configuration, three indexed training records and
+sixteen complete step traces for each mode. The final raw outputs retain all
+three class probabilities and both complex score components for every record.
+
+| Required mode | Original raw accuracy | Independent repeat | Mean evaluation CE |
+| --- | --- | --- | --- |
+| Mini | 3/3 (100%) | 3/3 (100%) | 0.2491072676434611 |
+| Forward-only Mini | 3/3 (100%) | 3/3 (100%) | 0.1530963328629868 |
+
+Both modes return the original objects `0`, `1`, `2` for prefixes `[0]`, `[1]`,
+`[2]`. Only the last prefix is unseen in training. Its transfer relies on the
+declared involution and the task's equivariance; this is not arbitrary missing
+label identification. The test is a tiny prospective learned-sequence control,
+not any of the 165 stress cases. It adds zero stress-case coverage and does
+not meet the broader 99% raw/exact requirement.
+
+For the optimized original/repeat, training plus sealing, full replay and scoring
+took 28.13/27.98 seconds, with maximum process RSS 6948/7376 KiB. Independent
+verification of both complete runs took 17.28 seconds. These are local pilot
+observations under concurrent workloads, not a general throughput or RAM bound.
+The original frozen producer `7881eb5d` took 808.66/817.93 seconds for its
+original/repeat training-and-scoring runs and 540.63 seconds for independent
+verification of both. It also passes complete independent training and raw
+replay, with the same accuracy and CE. Both producers' original/repeat binary
+hashes match despite coming from separate fresh build directories.
+
+After each producer's independent replay succeeded, cross-version comparison
+matched all 32 complete step artifacts byte for byte, including every rational
+coordinate, projection certificate, query, pairing and CE-bit receipt. Training
+and evaluation inputs also match. Configuration comparison accounts explicitly
+for the different `revision` and `source_sha`; raw score comparison accounts for
+`training_seal_sha`. Every remaining byte agrees, including every original object,
+complex score component, probability and CE bit. Both full identities and seals
+are retained. This establishes trajectory equivalence on this pilot, not a
+universal floating-point refinement theorem.
+
+Evidence remains local under
+`/run/media/misha/storage/transformer-runs/learned-sequence-pilot/`;
+`verified-v1.json` and `verified-v2.json` record independent recounts and binary
+hashes. `compare-v1-v2/` preserves the full source identities, checked hashes,
+normalized copies and the list of all 32 matched steps. Frozen sources and
+binaries remain in sibling `freezes/learned-sequence-pilot-v1/` and `-v2/`.
+The protocol above reproduces this pilot in fresh output directories; no old
+output or frozen producer is overwritten.
+
+After the two separate native `verify` commands above have succeeded, the core
+cross-version comparisons can be reproduced with Bash (`task_old` and `task_new`
+name their original run directories). The `sed` operations remove only the
+explicitly retained identity lines of the producer's canonical JSON; all numeric
+bit receipts are compared as text, avoiding any JSON-to-float conversion.
+
+```sh
+set -euo pipefail
+cmp "$task_old/training.json" "$task_new/training.json"
+cmp "$task_old/evaluation.json" "$task_new/evaluation.json"
+for task_mode in mini forward; do
+  for task_index in {0..15}; do
+    printf -v task_trace '%s-%04d.json' "$task_mode" "$task_index"
+    cmp "$task_old/$task_trace" "$task_new/$task_trace"
+  done
+done
+cmp <(sed '/^  "revision": "/d; /^  "source_sha": "/d' "$task_old/config.json") \
+    <(sed '/^  "revision": "/d; /^  "source_sha": "/d' "$task_new/config.json")
+cmp <(sed '/^  "training_seal_sha": "/d' "$task_old/score.json") \
+    <(sed '/^  "training_seal_sha": "/d' "$task_new/score.json")
+```
+
 ## Remaining work
 
-Complete independent verification of the frozen pilot for both required minibatch modes. The
+Extend beyond the small pilot while preserving a declared learned family. The
 forward-only rule now queries the actual model and respects its whole domain;
 a gated surrogate evaluated outside that domain would not inherit the CE theorem.
 CM80 derives a centre by summing certified projections of every original
@@ -425,13 +499,14 @@ equality rows. The Lean reconstruction theorem proves full kernel coverage and
 unique coefficients from those checks. Native elimination generates and
 independently verifies them, and full Gram recovery checks every supplied basis
 pairing. CM82 derives the actual loss derivative, and both complete native
-proposal rules now retain every record and short tail. The original producer
-is frozen at `7881eb5d`; its workflow retains independent training and raw replay.
-Freeze a separate optimized producer after independent native review. Retain
-both source identities and compare every deterministic step and raw output
-against the original, in addition to each producer's own repeat and full replay.
+proposal rules now retain every record and short tail. Both frozen producers
+have completed independent training and raw replay, and all cross-version
+step artifacts and raw outputs agree. The next architecture must address
+complete-family growth with an exact representation or explicit restrictions,
+accounting for shared coordinates, dimensions and computation costs. A finite
+choice of convenient masks does not establish equivalence to the whole family.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
-Complete training, all-training sealing before heldout scoring, a separate
-producer freeze, independent repeat and full raw replay precede any accuracy
-claim. This small kernel does not replace the 99% raw/exact target on all 165
+Each further accuracy claim still requires a separate producer freeze, complete
+training seal before heldout scoring, independent repeat and full raw replay.
+This small kernel does not replace the 99% raw/exact target on all 165
 stress cases or solve the exponential full-family storage and search cost.
