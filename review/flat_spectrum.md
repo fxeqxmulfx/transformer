@@ -19868,3 +19868,61 @@ finite training trajectories or new task accuracy. The native follow-up must
 retain arbitrary explicit fallback, preserve coefficient and parameter bits
 and original operation order, charge every live allocation under 110 GB RAM,
 and stop on shortage of either disk. Every frozen running producer stays fixed.
+
+## CM71. Identical complete columns share ordered computations exactly
+
+CM70 saves storage by retaining a baseline and every exceptional head column.
+It still evaluates the complete class vocabulary. The same representation can
+also identify computations whose results agree exactly, without deleting any
+class, coefficient, unknown completion or term of the logical head norm.
+
+Let an ordered list index the original operations, including repeated indices.
+For each index and class, an event is either absent (the original loop skips
+that class) or contains the complete payload to a deterministic accumulator
+update. Start every class with the same initial value. If two classes have the
+same event at every actual occurrence, induction on the ordered list proves
+that their final accumulators agree. This statement holds for arbitrary value
+and payload types and arbitrary deterministic updates. In particular, they may
+be exact words; no associativity or commutativity is required.
+
+An inactive skip remains a skip. It is not replaced by adding zero, which need
+not preserve a machine accumulator word. Payload equality for the actual
+complex contraction includes the source and coefficient components in both
+real and imaginary parts. Retain each class's original program/frequency order,
+including multiplication, subtraction and accumulation. The proof neither
+reorders operations nor replaces repeated additions by multiplication.
+
+A conservative sufficient condition follows from CM70's block storage. Form a
+global exceptional class set containing every explicit coefficient exception
+and every active class in each known-only block. Any two classes outside this
+set receive the same baseline payload in every all-class block and are both
+inactive in every known-only block. Their complete event sequences agree for
+every query. Evaluate the exceptional classes independently and one outside
+representative, then copy the representative's final word to every other
+outside class. Expanding gives exactly the entire original class function.
+If no outside class exists, the original complete evaluation is the fallback.
+Arbitrary nonuniform parameters can cause that fallback; none are excluded.
+
+Every subsequent computation of the complete output vector is unchanged,
+including ordinary CE in its original class summation order, raw argmax and
+record/minibatch accumulation. Coefficient storage, audits, gradients,
+projections and checkpoint interpretation remain separate. The full complex
+head and its previously proved norm bound still count every logical class.
+An implementation must reconstruct the sharing plan when its head changes.
+
+A nonconstant four-class witness retains one exceptional class, three shared
+classes, a known-only block and repeated operations. Decimal accumulation gives
+7897 for the exceptional class and 242 for each shared class. Deleting the
+exception, ignoring an active zero update, reordering or dropping a repeated
+operation gives explicit counterexamples. Exact UInt64 instances also retain
+the sign-bit word and the least positive-subnormal word as distinct values;
+these examples use xor and do not identify xor with floating-point addition.
+
+Formalization: `ConvexDepth/SharedColumns/{Basic,Witness}.lean`, with 12 direct
+checks in `scripts/SharedColumnAxioms.lean`. This proves conditional equality of
+ordered executions and complete expansion, not IEEE implementation refinement,
+a runtime speedup, convergence, target identification or additional accuracy.
+Native controls must compare every logit/CE/update word and original work count,
+charge simultaneous plan construction and storage, and measure actual runtime
+under the existing RAM and both-disk limits. Frozen producers remain unchanged;
+new original measurements require a new source freeze and independent repeat.

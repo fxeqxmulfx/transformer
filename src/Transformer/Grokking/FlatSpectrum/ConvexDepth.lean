@@ -37,6 +37,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FamilyExtension
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PackedRecords
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows
 public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows
+public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns
 
 /-!
 # Nonlinear residual depth with convex joint path training
@@ -160,4 +161,7 @@ CM70 stores repeated decoder and complete head values with explicit exceptions,
 preserving every logical coordinate, the full feasible set and original CE.
 Uniform unknown rows permit a conditional head-storage bound without restricting
 arbitrary nonuniform completions or reducing the charged logical head budget.
+CM71 shares computations only for complete columns with equal ordered active
+events. Expanding representatives preserves every output word, skipped update
+and class. A conservative exception union supports arbitrary nonuniform fallback.
 -/
