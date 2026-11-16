@@ -8206,3 +8206,22 @@ complete-family training or universal task compatibility. Keep task 366 open,
 all 165 cases and the 99% raw/exact target. Native Mini and forward-only Mini,
 complete resource admission, frozen training/evaluation separation, independent
 repeat and full raw replay are still required before any empirical credit.
+
+### 2026-11-16: certified feasible updates for the complete learned model
+
+CM79 gives exact finite projection certificates: primal feasibility, dual
+nonnegativity, complementarity and stationarity imply global nearest-point
+optimality. The rows are proved equal to the actual raw bias and position/
+object lookup constraints. Component certificates enforce every class, sign,
+pattern and complex coordinate on the entire bounded-prefix domain, and their
+distance inequalities sum to the whole-model projection guarantee.
+
+This is an update primitive, not an optimizer oracle or a trained-model result.
+A separate projected-step descent theorem keeps its actual-loss quadratic bound
+as an explicit hypothesis. Native Mini and forward-only Mini need their own
+proposal rules, full-domain checks, actual forwards and measured outcomes.
+Next implement an exact rational certificate checker with explicit resource
+and failed-search refusals. Small complete-domain controls must retain every
+pattern; they do not replace the all-165-case objective or earn accuracy credit.
+Do not omit constraints or accept floating-point feasibility tolerances as
+proof of the Lean premises. Existing frozen comparison producers stay unchanged.

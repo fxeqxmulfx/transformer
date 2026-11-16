@@ -20549,3 +20549,80 @@ sequence path with ordinary CE and an original-object output. Task 366 remains
 open for the complete efficient family and executable Mini and forward-only
 Mini. Task symmetry is not assumed for all 165 stress cases. No accuracy
 credit follows from these proofs, and the 99% raw/exact target remains.
+
+## CM79. Checkable projection certificates for complete learned-path updates
+
+A usable Mini or forward-only Mini update needs to remain in the declared
+activation domain. Convexity alone does not make an arbitrary update feasible.
+This extension gives finite arithmetic conditions that certify a projection
+onto that domain. It is a proof about a supplied certificate, not an assumed
+projection oracle, solver completeness or a completed training trajectory.
+
+Let a[r] be every oriented row of a real activation cone, v the proposed
+parameter vector and u a candidate updated vector. Retain every coordinate
+and every constraint, including redundant rows. The certificate supplies
+one multiplier lambda[r] per row and checks four conditions:
+
+```
+lambda[r] >= 0,
+a[r] dot u >= 0,
+lambda[r] * (a[r] dot u) = 0,
+u[d] = v[d] + sum(r, lambda[r] * a[r,d]).
+```
+
+These are predicates of the supplied arrays; they do not encode optimality
+as a structure field or presumed conclusion. For every other feasible z,
+stationarity and complementarity give (u-v) dot (z-u) >= 0. The exact squared
+distance identity then proves
+
+```
+||v-u||_2^2 + ||u-z||_2^2 <= ||v-z||_2^2.
+```
+
+In particular u is a globally nearest feasible point. Checking finitely many
+arithmetic conditions therefore certifies a statement over every feasible
+competitor. A nonidentity example projects proposal -1 to 0 in the nonnegative
+half-line with multiplier one. A feasible point has an identity certificate
+with all multipliers zero. These statements do not require that the active
+rows be linearly independent or that redundant inequalities be discarded.
+
+For the actual raw model, the bias row coefficient is one. At coordinate
+(i,o) it is one exactly when the immutable input has object o at position i,
+zero otherwise. Its inner product with learned real weights is proved equal
+to the unchanged raw input computation. Multiplying the row by the mask sign
+gives exactly the original activation inequality. The proof also connects
+both components of the original complex input to their real coordinate reads.
+These rows describe constraint geometry; they are not task features supplied
+to a replacement inference program.
+
+A certificate for every slot, output object, readout sign and real/imaginary
+component proves that the complete updated complex model belongs to the old
+domain on every admitted raw prefix. Summing the component distance inequalities
+proves the strong projection inequality for the whole array against any other
+feasible complex model. Nothing is projected out of the complex forward, and
+no output class, pattern, prefix or parameter coordinate is omitted. This is
+Euclidean distance in joint coordinates, not preservation of arbitrary
+penalties on the recovered factors or their representation-recovery norm.
+
+For a proposal v=x-eta*g from a feasible x, the checked projection u obeys
+eta * g dot (u-x) <= -||u-x||_2^2. If the actual chosen loss satisfies the
+explicit step bound
+
+```
+F(u) <= F(x) + g dot (u-x) + (L/2) ||u-x||_2^2,
+```
+
+and eta>0, eta*L<=1, then eta*F(u)<=eta*F(x)-||u-x||_2^2/2. The upper bound is
+an explicit hypothesis. CE convexity or flatness alone is not presented as
+its proof, nor is an arbitrary forward-query direction called a gradient.
+The feasibility and projection certificates apply to proposals from either
+update mode independently of how those proposals are formed.
+
+Formalization: `ConvexChannel/LearnedHinge/Projection`; direct command:
+`LAKE_ARTIFACT_CACHE=false lake env lean scripts/ProjectionHingeAxioms.lean`.
+The next native component should verify these conditions exactly over rational
+arrays, refuse failed or over-budget certificates and retain the complete raw
+domain. Searching active sets may be exponential; accepting a checked result
+does not prove that a search implementation will always find one. No native
+training, convergence, new stress coverage or full-suite resource admission is
+claimed by this proof. Task 366 and the original 99% target remain open.
