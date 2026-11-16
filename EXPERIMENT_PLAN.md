@@ -8375,3 +8375,32 @@ object-sequence interface and the stated all-trainable path requirement. Prove
 any exact sharing/compression, or explicitly name a new family's restrictions
 and loss of expressivity, before treating it as a scalable replacement. Continue
 both required minibatch modes and the 110 GB aggregate RAM/two-disk guards.
+
+### 2026-11-16: complete-family capacity explains the compression limit
+
+CM84 (`4b67e11b`) extends CM77's actual learned singleton neurons to arbitrary
+full-word logit tables, placed by CM76 in the same complete feasible family.
+The complete actual response operator has Gram matrix `10 I` and exact energy
+gain ten. Thus flatness supplies a bound while its dimension can be `|O|^T`.
+
+Exact affine compression of every class contrast in this family requires at
+least `|O|^T` real dimensions, even if its encoder is arbitrary and nonlinear.
+For a fixed finite-code forward, preserving every strict classification requires
+at least `|O|^T` stored model bits; below that budget one fixed feasible point's
+classification defeats every code. The existing R1 information bound supplies
+this second implication. Each conditional theorem has an inhabited example.
+These are whole-family limits, not task-specific lower bounds, a RAM-only
+obstruction, or an impossibility result for nonlinear convex-CE architectures.
+
+All fifteen new theorems pass independent main-checkout validation: full build,
+direct source elaboration, direct/global axioms, native generated INDEX and
+forbidden-source checks. Existing 36 `sorry` declarations remain. Evidence stays
+local under `.kanban/artifacts/366/interpolation-hinge-*`; no producer changed.
+The latest upstream fetch remains `fa130a5e`.
+
+Keep task 366 and all-165 raw/exact99% open. The next positive construction
+must provide compact learned sharing suitable for the stress tasks, with any
+restriction of the current universal family stated explicitly. Selecting a
+smaller fixed feature bank, an independent whole-prefix table, or an unimplemented
+pricing oracle still does not meet the architecture requirement. No additional
+test accuracy or stress-case coverage follows from CM84.

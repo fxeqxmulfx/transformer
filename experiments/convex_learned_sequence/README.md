@@ -481,6 +481,24 @@ cmp <(sed '/^  "training_seal_sha": "/d' "$task_old/score.json") \
 
 ## Remaining work
 
+CM84 (`4b67e11b`) now proves that the existing complete family can interpolate
+every full-word logit table. Its actual singleton-neuron response operator has
+Gram matrix `10 I`, so a flat spectrum can coexist with `|O|^T` independent
+word responses. Exact affine compression of every relative prediction needs
+at least `|O|^T` real dimensions. Any fixed finite-code forward preserving all
+strict classifications in the family needs at least `|O|^T` stored model bits;
+below that budget one feasible model's classification cannot be preserved.
+The latter permits nonlinear inference and concerns total stored information,
+not peak resident RAM. Neither result lower-bounds one structured task or the
+165-case stress suite. Affine logits are not necessary for convex ordinary CE.
+
+The full build, fifteen direct axiom checks, global audit and generated INDEX
+pass independently for CM84, with no new unfinished proof. This identifies a
+limit on preserving the entire current family, not a new trained architecture.
+Removing or sampling masks alone does not prove an equivalent compact model.
+Any next restriction must retain the requested learned sequence path, describe
+what functions it excludes, and demonstrate the required stress-task behavior.
+
 Extend beyond the small pilot while preserving a declared learned family. The
 forward-only rule now queries the actual model and respects its whole domain;
 a gated surrogate evaluated outside that domain would not inherit the CE theorem.
