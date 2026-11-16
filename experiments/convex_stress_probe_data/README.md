@@ -113,3 +113,22 @@ gap. Do not submit361 as complete until every original numeric teacher matches.
 Required repository checks use direct `LAKE_ARTIFACT_CACHE=false lake build`,
 `lake env lean scripts/Axioms.lean`, native INDEX checking and forbidden-source
 checking. This data/scoring change makes no new Lean theorem or optimizer claim.
+
+Producer `a707943659d964e43c0673e316274389eb7cce1c` was frozen with65 source files
+and9543 native runtime/header files. A separate Cargo build and C++ rebuild pass
+all nine controls in default and release profiles, with strict Clippy. Original
+and independent repeat preserve all15 splits of the five accepted probes and
+the routing refusal. Their complete inventory bytes agree at SHA256
+`12fd36f6076b922aa959ab0b9c0a9ace11d34a0df3f0579e5445ac107e3f9033`.
+The verifier explicitly records `all_datasets_verified=false`; both preparation
+commands retain exit1. No checkpoint, gradient update or model measurement exists.
+
+Original preparation takes13.17 seconds and repeat12.60 seconds, peaking at
+163080/163084KiB RSS. Both runs recheck the frozen runtime before and after use.
+Evidence is retained under `transformer-runs/probe-data/{original-v1,review-v1}`
+and `.kanban/artifacts/361`; the source/runtime freeze is
+`transformer-runs/freezes/probe-data-v1`. The full Lean build passes13995 jobs;
+the audit remains36 `sorry`, zero dependent rests and zero extra axioms. The
+native index check reports4898 modules,25678 theorems and no vacuous/placeholder
+declarations. These checks validate the infrastructure while routing's original
+numeric teacher and future learned accuracy remain open.
