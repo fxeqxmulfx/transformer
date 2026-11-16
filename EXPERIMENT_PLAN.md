@@ -8180,3 +8180,29 @@ unseen inputs without freezing the representations or output mapping. Any
 such condition must state which tasks satisfy it and its cost; it cannot be
 assumed for all 165 cases. Executable complete-family Mini and forward-only
 Mini updates under 110 GB, the 99% target and full raw replay remain required.
+
+### 2026-11-16: conditional transfer with two shared learned passes
+
+CM78 defines an actual paired complex forward from an immutable object sequence
+to a next object from the same set. Both calls share every learned coordinate;
+the second consistently renames input and output objects. Ordinary full-class
+CE and its indexed minibatch sum are jointly convex on the full-prefix domain.
+The mathematical predictor returns a maximizing original object and keeps all
+classes, duplicates and tails.
+
+For an involutive renaming, an observed CE below log 2 forces the renamed next
+object at the renamed prefix, including genuinely unseen prefixes. This is
+correct for a task only when its answer rule respects that renaming. A
+three-object example fits two different observed labels and identifies a third
+object at an unseen sequence. A separate theorem shows why fixed inputs cannot
+have unique moved targets. Control identities and the symmetry assumption must
+match the data; no answer rule is inserted into inference.
+
+This explicitly restricts the original function family. Exact lifting holds
+for the declared paired physical model; arbitrary original functions are not
+claimed unchanged. Two actual forwards share the original exponential complete
+parameter domain. This closes a conditional identification gap, not practical
+complete-family training or universal task compatibility. Keep task 366 open,
+all 165 cases and the 99% raw/exact target. Native Mini and forward-only Mini,
+complete resource admission, frozen training/evaluation separation, independent
+repeat and full raw replay are still required before any empirical credit.

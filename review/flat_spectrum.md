@@ -20446,3 +20446,106 @@ There are no new unproved inputs. Task 366 remains open. A positive repair
 needs an explicit relation between observed and unseen answers, as well as a
 resource-bounded full model and actual Mini and forward-only Mini updates.
 These results add no empirical pass or accuracy credit and change no producer.
+
+## CM78. Conditional unseen transfer through two shared learned complex passes
+
+CM77 leaves a genuine identification gap: independently changing a missing
+prefix is allowed by the complete learned family. One positive repair is an
+explicit relation between observed and unseen outputs. Here the relation is
+an involutive renaming sigma of the original immutable object set. It is an
+architecture assumption whose applicability must be checked for the task;
+flatness does not establish it or select a suitable renaming.
+
+For an original sequence x, map sigma over every position to obtain sigma x.
+Length, order and the object type remain unchanged. With the same learned
+parameter point p in both calls, the actual full complex forward is
+
+```
+S_p(x,c) = (F_p(x,c) + F_p(sigma x, sigma c)) / 2.
+z_p(x,c) = Re S_p(x,c).
+```
+
+Both F calls perform the original learned embedding lookup, nonlinear complex
+activation and recovered learned readout. The alignment and factor 1/2 are
+fixed architecture operations. Neither the target nor an answer rule enters
+inference. The loss is the usual full-vocabulary cross-entropy on z; all output
+objects retain positive normalized softmax probabilities. The mathematical
+predictor returns a maximizing original object, rather than returning a vector
+as its external output. Classical choice supplies a mathematical maximum;
+native inference still needs a documented tie order and a full class scan.
+Strict-winner results are independent of that tie rule and of the fixed witness
+object used only to establish a nonempty vocabulary.
+
+Because sigma is an involution, swapping the two calls proves
+S_p(sigma x,sigma c)=S_p(x,c) for every p. This is an actual restriction on a
+fixed trained function. It is stronger than the usual observation that one
+can rename a model's inputs, outputs and parameters simultaneously. If an
+original base function already obeys this relation, the average preserves it
+exactly. Arbitrary old functions are changed; this construction is not called
+an exact replacement of the unrestricted CM75–CM76 prediction family.
+
+Every physical paired network in the declared phased two-layer family is
+represented exactly by the CM76 joint lift. Its whole complex prediction is
+preserved. The earlier class/sign-specific widening and fixed complex phase
+remain; no equivalence with arbitrary free complex transformers is claimed.
+Both passes share the complete parameter point, rather than acquiring an
+independent table per input or a fixed-feature classifier.
+
+The input-only cone domain includes every admitted bounded prefix, so it
+constrains both x and sigma x. Convex parameter combinations pass through both
+actual logit computations. The aligned average therefore has jointly convex
+ordinary answer CE on that same domain. Every indexed minibatch sum is convex,
+retaining duplicates, all output classes and short tails. This is a sufficient
+construction, not an assertion that affine logits are necessary for convex CE,
+and not a proof of a particular optimizer's feasible updates or convergence.
+
+All classes are permuted bijectively, so ordinary CE is exactly equal at
+(x,y) and (sigma x,sigma y). If observed CE at (x,y) is below log 2, every
+competitor has a strictly lower logit, and the model returns sigma y at
+sigma x. The latter prefix need not be in the observations. If two models
+agree on all logits at x, they agree on all logits at sigma x; the independent
+CM77 missing-prefix shift is no longer possible within that pair.
+Correctness for an actual task requires the explicit data condition
+answer(sigma x)=sigma(answer(x)). The answer function occurs only in this
+correctness hypothesis and never in the model forward. No statement identifies
+prefixes outside the observed renaming pairs or infers this task condition
+from spectrum, convexity or empirical fit alone.
+
+There is a necessary limitation. If sigma x=x while sigma y differs from y,
+then those two logits are tied and CE for y is at least log 2. Applying a
+fixed-point-free object swap to an empty input cannot fit a unique moved
+answer. Control objects therefore need appropriate fixed identities when
+the data require them. This restriction is checked rather than silently
+omitting the empty input, output class or conflicted record.
+
+An inhabited nonconstant example uses O=Option Bool and cap T=1. `none` is an
+ordinary fixed control object; `some false` and `some true` swap. The observed
+sequences are [some false] with next object some false, and [none] with next
+object none. The evaluation sequence [some true] differs from both observations.
+Two allowed learned directions supply a base logit four at the first observed
+prefix/class and two at the control prefix/class, zero elsewhere. Actual
+paired averaging gives target margin two on both observed records. Each
+three-class CE is log(1+2 exp(-2)), below log 2 with both competitors retained.
+The mathematical predictor consequently returns some true at the unseen
+sequence. A head-object rule with default none inhabits the required data
+symmetry on every admitted input, including empty inputs; that rule is not
+executed by the network. This is a feasible point and a transfer theorem,
+not a learned trajectory or a stress-test result.
+
+The architecture uses two full forwards with shared parameters, plus an
+O(T) object-renaming pass and O(|O|) output alignment and average. It adds no
+trainable coordinates. With K=|Prefix(O,T)| the complete real parameter count
+remains 4 |O| (1+T|O|) 2^K. All scalar patterns, original classes and component
+coordinates remain. The finite existence proof does not produce a compact
+complete optimizer; recovered-factor caches, cone constraints, optimizer state
+and both pass buffers still need native resource accounting. The bound from
+CM77 remains a bound on its stated actual observed operator, not a claim that
+symmetrization preserves every matrix's flat spectrum.
+
+Formalization: `ConvexChannel/LearnedHinge/Renaming`; direct check:
+`LAKE_ARTIFACT_CACHE=false lake env lean scripts/RenamingHingeAxioms.lean`.
+The positive condition has now been proved on an actual trainable complex
+sequence path with ordinary CE and an original-object output. Task 366 remains
+open for the complete efficient family and executable Mini and forward-only
+Mini. Task symmetry is not assumed for all 165 stress cases. No accuracy
+credit follows from these proofs, and the 99% raw/exact target remains.
