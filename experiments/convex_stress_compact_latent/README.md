@@ -326,6 +326,15 @@ add no original-data accuracy or guarantee about a larger model's runtime.
 Projection and full audits remain material costs. The original single-run
 measurements and every alternating pair remain under `.kanban/artifacts/364/`.
 
+An independent rebuild at `240cb9b4` repeats all 49 controls in both profiles,
+all 32 dependent runner controls, strict Clippy and formatting. Its 28 fresh
+fixture pairs again preserve every endpoint word and work count. The complete
+forward median ratios are 1.28–1.31× and minibatch ratios 1.24–1.28×; both sets
+of timings are retained. The full Lean build and nine direct checks pass, with
+the global audit still at 36 existing sorry, zero resting declarations and zero
+extra axioms. This completes task 364's review. CM64's confidence-only loss
+limitation remains; task 365 follows the shared answer-loss learning plan.
+
 With separately built and retained profilers, run:
 
 ```sh

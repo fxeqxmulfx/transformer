@@ -7858,9 +7858,12 @@ and checkpoints. Seven alternating before/after profiles on one CPU retain
 every fixture pair and bind all endpoint words and work counts. Synthetic
 complete forward runs improve by 1.30–1.34× and minibatch runs by 1.24–1.26×;
 construction and certification gains are larger but are reported separately.
-Projection and full audits remain costs. The dependent runners pass all 32
-controls and strict Clippy. Independently rebuild and review before using this producer in any
-new complete original freeze/repeat. Existing frozen producers remain fixed,
+Projection and full audits remain costs. Independent review at `240cb9b4`
+passes all 49 controls in both profiles, the 32 dependent controls, strict
+Clippy, full Lean build and audits. Another 28 paired fixtures preserve all
+words and work, with complete forward ratios 1.28–1.31× and minibatch ratios
+1.24–1.28×. A new complete original freeze/repeat remains necessary for new
+accuracy credit. Existing frozen producers remain fixed,
 the verified historical two-mode union remains 79/165, and routing's data gap
 remains task 361. No synthetic timing is counted as a stress-test pass.
 
