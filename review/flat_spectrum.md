@@ -21523,3 +21523,42 @@ coordinate queries, finite-difference reuse, analytic controls, zero storage,
 all original classes and short minibatch tails. Numerical SVD, finite differences
 and binary64 CE require measured residual/error reporting; these exact Lean
 identities are not a proof that floating-point evaluations are bit-identical.
+
+## CM89. Training-input scaling without reducing the learned family
+
+The initial native CM86 stress control fits short Boolean examples, while
+plain SGD at rate0.01 barely reduces the modular-addition training CE within
+200 updates. These are training observations, not held-out scores. Rare joint
+input responses motivate a separate update-geometry diagnostic.
+
+For N indexed training prefixes define, on every complete real coordinate z,
+
+```
+w(z) = (N+1) / (1 + sum_i response(x_i,z)^2).
+```
+
+This scale reads training inputs only, retains duplicate records, and squares
+the full adjacent-pair multiplicity. Every w is strictly positive. Class-bias
+coordinates have w=1; coordinates absent from all training inputs have w=N+1
+and still receive zero complete pullback. The scale is the same for every
+output class and for the two complex components of a given query/context
+address. No small response, class or possible parameter is removed.
+
+The diagonal coordinate map r ↦ w*r is linear and invertible when every w is
+nonzero, and complete real coordinates decode linearly to the original
+complex joint matrices. Consequently ordinary CE through the actual two
+learned encoders remains jointly convex in these scaled coordinates. This
+does not replace inference or assert independent-factor convexity.
+
+A preconditioned update uses r_z - rate*w(z)*g_z for the entire pullback g.
+For forward-only Mini, w times the CM88 direction is exactly the indexed
+mean of w times every coordinate's actual finite CE difference at its
+response-scaled step. The original record count and all repetitions remain.
+Exact zero-support preservation therefore continues to hold. A repeated-pair
+control has response two twice and w=3/(1+8)=1/3, showing that multiplicity
+is not replaced with binary presence.
+
+Formalization: `LearnedBilinear/Updates/Scaling`. These are geometry and exact
+query identities, not a convergence theorem, a step-size guarantee, a new
+identification condition or accuracy credit. Any native comparison must use
+a new frozen protocol and leave the original stress-control producer intact.

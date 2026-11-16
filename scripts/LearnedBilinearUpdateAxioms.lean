@@ -16,3 +16,13 @@ import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.rightFactor_zero_column
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.rightRepresentation_zero_column
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.gram_supported_columns
+
+-- CM89: positive input-only coordinate scaling preserves the complete family.
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.frequencyScale_pos
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.frequencyScale_unseen
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.frequencyScale_bias
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.frequencyScale_same_address
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.diagonal_inverse
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.scaled_loss_convex
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.scaled_zero_update
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.scaled_forward_complete

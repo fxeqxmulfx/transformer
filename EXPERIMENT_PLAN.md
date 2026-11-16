@@ -8517,3 +8517,14 @@ process. This initial diagnostic is not an independent training repeat or a
 completed35/165 claim. The long parity control retains the proved family
 restriction. Keep all frozen producers unchanged and enforce the 110 GB
 aggregate RAM and both-disk admission limits without further cleanup.
+
+### 2026-11-16: CM89 input-only update scaling
+
+The frozen native control now fits both short Boolean training sets, while
+addition's training CE barely changes in200 updates. Before changing native
+updates, prove positive training-response scaling on every complete real and
+imaginary coordinate, preservation of the actual joint-convex family, complete
+finite-query means, duplicate/pair multiplicities and zero support. Implement
+any subsequent optimization diagnostic as a separate prospective cohort;
+the original control continues unchanged. Training-only improvements do not
+establish unseen-answer identification or original-task success.

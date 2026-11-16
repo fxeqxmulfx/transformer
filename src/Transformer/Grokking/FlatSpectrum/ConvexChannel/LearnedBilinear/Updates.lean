@@ -3,6 +3,7 @@ module
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.Basic
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.Forward
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.Support
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.Scaling
 
 /-!
 # Complete finite-query minibatch updates and exact zero storage
