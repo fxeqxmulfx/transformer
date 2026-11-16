@@ -7,16 +7,19 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unseen
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renaming
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Projection
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learning
 
 /-!
 # Shared learned complex ReLU representations with explicit convexity scope
 
-Source: `review/flat_spectrum.md`, CM75–CM79. Exact learned-factor recovery,
+Source: `review/flat_spectrum.md`, CM75–CM82. Exact learned-factor recovery,
 raw object prefixes, ordinary next-object CE on input activation cones,
 complete pattern coverage and its exponential cost, and a counterexample
 to extending the convexity theorem outside its declared input region;
 exact pattern reduction and actual unseen-answer ambiguity despite flatness.
 A shared two-pass restriction provides conditional transfer under renaming.
 Finite projection certificates enforce the whole original complex domain.
+Complete feasible-query bases retain every admissible direction. Full ordinary
+CE pullbacks justify base and shared-pass indexed minibatch update directions.
 No native training convergence or stress-test accuracy is claimed.
 -/

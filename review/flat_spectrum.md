@@ -20777,3 +20777,98 @@ Its generation, coefficient growth, complete storage and operation budgets
 remain implementation obligations. The result is not a verified Rust solver,
 finite-difference error theorem, convergence result or stress accuracy claim.
 Task 366, both required minibatch modes and all 165 cases remain open.
+
+## CM82. Actual complex CE derivatives and complete minibatch directions
+
+CM79--81 certify feasible projection and complete query directions. They do
+not by themselves identify the derivative of the actual model loss. This
+extension derives that derivative from ordinary full-vocabulary next-object
+cross-entropy, through the complete learned complex computation of CM75 and
+both shared passes of CM78. Objects and their sequence order remain immutable;
+only the learned joint parameter array is perturbed. No target appears in the
+forward map, activation constraints or input representation.
+
+For a fixed complete activation domain, write L_x(v) for the difference of
+the real and imaginary gated linear forwards applied to a joint direction v.
+The equality of the actual recovered complex logits with this expression is
+derived on the original domain. In particular, for feasible p and q,
+
+```
+z_x(q) - z_x(p) = L_x(q-p).
+```
+
+The direction v need not itself be a feasible model. With the actual full-class
+residual g[c] = softmax(z_x(p))[c] - [c=y], ordinary CE gives
+
+```
+CE_x,y(q) >= CE_x,y(p) + sum(c, g[c] * L_x(q-p)[c]).
+```
+
+This supporting inequality holds at boundary points as well. If p and both
+p +/- r*v are feasible for r>0, convexity of the unchanged domain supplies
+every intermediate query with |t|<=r. On this whole neighbourhood the actual
+loss agrees with CE(z_x(p)+t*L_x(v)). Its derivative at t=0 is therefore
+sum(c,g[c]*L_x(v)[c]), using the previously proved ordinary CE derivative.
+Two feasible isolated probes alone are not used as a differentiability premise.
+
+For raw object sequences, let x[d] be the exact bias/position/object read row
+from CM79. The full real-coordinate pullback is
+
+```
+G[j,c,s,k,d] = g[c] * sign(s) * sign(k) * gated(mask[j,x,k], x[d]),
+sign(true)=1, sign(false)=-1.
+```
+
+Here s selects the readout sign, and k selects the real or imaginary component.
+The minus sign for the imaginary contribution follows from the actual complex
+readout. Every slot, original output object, readout sign, component and input
+coordinate is retained. Its pairing with v, summed over all those indices, is
+proved equal to the actual CE slope. The raw row describes where an immutable
+object reads a learned value; it does not supply fixed task features or freeze
+the learned representation. The formula is not claimed to differentiate an
+outside-domain unconstrained factorization.
+
+For the shared prediction, define
+
+```
+z_pair[c] = (z_x[c] + z_(sigma x)[sigma(c)]) / 2,
+g[c] = softmax(z_pair)[c] - [c=y].
+```
+
+The first full parameter pullback uses g/2, and the second uses
+g[sigma.inverse(c)]/2 at the renamed prefix. Both pullbacks update the same
+array. A finite sum reindexing proves that their combined work is the derivative
+of the single CE on z_pair; it is not the sum of two separately supervised
+losses. This derivative and supporting inequality require no involutivity.
+The separate unseen-transfer theorem still has CM78's explicit involutive
+renaming and task-equivariance assumptions.
+
+Nonempty minibatches are indexed by Fin(N+1). Their actual mean loss and
+complete update array use the same factor 1/(N+1) and the same full indexed
+sum. Supporting inequalities and feasible-query derivatives are proved for
+both the base and shared-pass mean losses. Equal records are not merged,
+and the actual size of a short batch determines its normalization. The
+native learner can form a full proposal from this array and apply the already
+certified whole-model projection. Forward-only Mini instead evaluates the
+actual batch CE at the certified queries and must account for its finite-step
+and numerical estimation error; the nonzero-step difference is not asserted
+equal to the exact derivative.
+
+Inhabited controls use a learned complex bias 3+3i, zero at the other retained
+position/object addresses, in the positive neuron for one of two objects.
+Its two actual logits are initially zero. Adding a real bias direction changes
+only that object's logit; both radius-one endpoint models are feasible for
+every admitted prefix. The true-target CE slope is -1/2 and the false-target
+slope is +1/2. An indexed three-record batch with targets true,false,true has
+mean slope -1/6. Deduplicating its repeated record would incorrectly give zero.
+Every theorem with conditional premises has an instantiated example; a
+one-record batch also instantiates the short-tail case. These are proof
+controls, not trained benchmark outcomes.
+
+Formalization: `ConvexChannel/LearnedHinge/Learning`; direct audit:
+`LAKE_ARTIFACT_CACHE=false lake env lean scripts/LearningHingeAxioms.lean`.
+This closes the symbolic loss-to-update link needed for native Mini and
+forward-only Mini. It does not prove finite-difference error bounds, a global
+optimizer rate, numerical correctness of Rust, arbitrary unseen-label
+identification, tractable complete pattern enumeration, or 99% stress accuracy.
+Task 366 and the all-165 target remain open.
