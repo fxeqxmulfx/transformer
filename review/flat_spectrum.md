@@ -21323,3 +21323,100 @@ composition, explicit unseen-prefix identification assumptions, numerical
 spectral residual certification, Mini and forward-only Mini updates, memory
 admission and prospective independent sealed runs. No native producer or
 stress-case credit changes in this extension.
+
+## CM87. Open bridge from learned capacity to observable unseen-answer certificates
+
+The user explicitly requested one Lean `sorry` and a new board task on
+2026-11-16. Task 367 concerns identification in CM86's actual learned sequence
+family. It is separate from coding-discovery tasks 196/197 and the fixed-encoding
+controls 148/365. The mathematical target is a finite margin-certificate theorem,
+not an unconditional claim that a flat spectrum determines missing labels.
+
+Let p range over every complete joint complex matrix in CM86. For a raw prefix
+x and original objects a,b, define the actual margin
+
+```
+m(p,x,a,b) = sequenceLogits(p,x,a) - sequenceLogits(p,x,b).
+```
+
+Given indexed observed prefixes x_i and their original labels y_i, let F be the
+set of p with m(p,x_i,y_i,c)>=1 for every i and c!=y_i. Assume F is nonempty.
+This is consistency of the observed constraints, not a successful optimizer,
+an attained unregularized CE minimum, or a correct unseen answer. A two-class
+inhabited example is included independently of the open theorem.
+
+Expose the finite real coordinates z=(imaginary flag,class,query address,
+context address), keeping both complex components and every output class.
+The diagnostic coefficient vector v(x,a,b) is
+
+```
+(1[class=a] - 1[class=b]) * (1 for real, -1 for imaginary)
+  * Re(queryRow(x)[query address] * contextRow(past(x))[context address]).
+```
+
+The row values here are real counts embedded in C. Proving that these finite
+coefficients give the actual recovered margin is part of the task, not a new
+inference definition or an assumption about unknown target weights.
+
+For any query prefix u, candidate objects a,b and requested bound beta, prove
+`forced_margin_iff_certificate`:
+
+```
+[for every p in F, m(p,u,a,b) >= beta]
+  iff there exist finite weights w[i,c] such that
+    w[i,c] >= 0,                    w[i,y_i] = 0,
+    sum_{i,c} w[i,c] >= beta,
+    v(u,a,b) = sum_{i,c} w[i,c] v(x_i,y_i,c).
+```
+
+The right side has finitely many scalar inequalities and coefficient equalities.
+It uses only observed labels and prefixes plus the input u and proposed classes;
+it neither reads u's true answer nor assumes that all completions agree. The
+nonempty F hypothesis is necessary to avoid false certificates from vacuous
+universal statements. Finite real alternative/duality theorems are a possible
+proof route; their applicability to this actual learned parameter space must
+be proved. No executable linear-program solver is supplied by this statement.
+
+Positive bounds for every competitor force a unique original-object answer at
+u for every model consistent with the observations. To call that answer correct
+for a real task still requires explicit realizability in the stated family; the
+target rule and its parameters need not be supplied to the certificate checker.
+The query need not be held out in the general equivalence, but the positive
+acceptance witness must be genuinely unseen with nonconstant observed labels.
+
+A suggested witness uses context cap3 and fixed final object false. Observe
+[false,false,false,false]->false, [true,false,false,false]->true and
+[false,false,true,false]->true. Withhold [true,false,true,false]. The varying
+context positions are nonadjacent, so the query's raw address product is the
+sum of the two positive-prefix address products minus the negative-prefix one.
+Consequently its true-versus-false margin functional is the sum of all three
+observed correct-versus-incorrect margin functionals, with nonnegative weights
+one and total mass three. The task must prove feasibility, this identity, the
+certificate, strict prediction and held-out status. A different held-out prefix must exhibit two
+consistent parameters giving different answers, hence refusal. These are proof
+controls, not an original stress-test score or an assumed task formula.
+
+The capacity connection must distinguish rank from directional information.
+CM86/R3 controls possible representation width and approximation error. The
+observed-margin coefficient matrix describes which directions the data constrain.
+Its rank or span alone does not provide the nonnegative certificate or guarantee
+an unseen class margin. State the relevant evaluation operator and quotient out
+common-logit and complex unobservable directions when appropriate; do not apply
+a flat coefficient-operator bound directly to real labels without that bridge.
+A quantitative spectral conditioning bound can control certificate sensitivity
+when its assumptions hold, but those assumptions must be independently checked.
+
+The task also owes the ordinary CE bridge and a robust version. A per-record
+CE upper bound can imply each observed class margin; signed real-logit values
+are not observed labels. If certified observed margins hold only up to known
+errors, charge their weighted sum using the full certificate coefficients and
+retain a positive query margin. Distinguish certificate existence/checking,
+structural family discovery, and Mini or forward-only Mini convergence. None
+is implied by capacity alone, and no optimizer convergence is requested here.
+
+Formalization starts at `ConvexChannel/LearnedBilinear/Identification.lean`.
+Exactly its central equivalence is intentionally unfinished. Completing task
+367 must remove that `sorry`, preserve all36 older unfinished statements, supply
+inhabited examples, run direct/global Lean axiom checks, and regenerate INDEX
+with the native generator. No new native experiment, accuracy credit or change
+to frozen producers accompanies this handoff.

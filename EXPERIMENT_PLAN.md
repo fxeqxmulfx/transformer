@@ -8453,3 +8453,19 @@ The user now requests a separate Lean sorry and board task connecting capacity
 to observable identification of unseen original objects. Prepare that handoff,
 then wait for review. Preserve the existing frozen producers and the completed
 proof work; do not launch broader training on this restricted family.
+
+### 2026-11-16: new identification goal and task 367 handoff
+
+The user cleared the earlier goal and requested a new goal connecting
+flat-spectrum capacity to training-only unseen next-object identification.
+CM87 now contains one explicitly requested open Lean statement,
+`LearnedBilinear.Identification.forced_margin_iff_certificate`. It characterizes
+forced original-object margins by finite nonnegative combinations of observed
+margin coefficients in the complete actual learned family. Feasibility excludes
+inconsistent-data vacuity; a separate two-class example inhabits that premise.
+
+Task367 owns removing this sorry and proving the coefficient identity, finite
+checker/duality, capacity-versus-observation connection, CE and robust margin
+bridges, a nonconstant held-out witness and an ambiguous refusal. The full-suite
+goal is no longer active; task366 itself is not marked complete. The new theory
+goal is to pause for user review after this handoff. Do not launch training.

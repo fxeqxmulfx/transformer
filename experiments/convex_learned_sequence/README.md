@@ -555,6 +555,26 @@ Lean build and `scripts/LearnedBilinearAxioms.lean`. Numerical recovery,
 unseen-label identification, richer composition, and Mini/forward-only Mini
 update certification remain separate obligations.
 
+## Open identification bridge: task 367
+
+The user requested one explicit Lean `sorry` for the missing connection from
+capacity to unseen answers. CM87 and `LearnedBilinear/Identification.lean`
+state a margin-duality theorem for the actual learned raw path. Under observed
+unit-margin feasibility, a query class margin is forced for every consistent
+joint parameter iff a finite nonnegative combination of observed margin
+coefficients certifies it. The certificate reads observed labels and the query
+input, with every original class and complex coordinate retained.
+
+Task 367 must prove the finite coefficient identity, soundness/completeness,
+ordinary-CE and numerical-error bridges, a nonconstant genuinely held-out
+success example and an ambiguous refusal. It must distinguish adequate model
+capacity from sufficient observed information. Correctness for a real task
+still needs explicit family realizability; neither unknown target parameters
+nor held-out labels may be fed to the checker. The statement is unfinished,
+and no proved declaration depends on it. No experiment or new accuracy is
+claimed. Audit it with `scripts/LearnedIdentificationAxioms.lean` and the global
+axiom script; the requested starting count is37, with the older36 unchanged.
+
 ## Remaining work
 
 CM84 (`4b67e11b`) now proves that the existing complete family can interpolate
