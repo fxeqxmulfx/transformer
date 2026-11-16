@@ -49,7 +49,7 @@ blocks retain their sorted observed classes, and any block with an unknown row
 still visits all raw classes, including zero-valued and repeated columns.
 Neither form adds a uniformity constraint to the feasible model domain.
 
-Thirty-nine native controls pass. Mixed shared and explicit rows retain every word,
+Forty native controls pass. Mixed shared and explicit rows retain every word,
 including duplicate original rows and two distinct zero words. Stateful zipped
 operations see every coordinate, and a floating sum matches the full original
 sequence bit for bit. A sum of a thousand copies of 0.1 also demonstrates why
@@ -90,6 +90,16 @@ operation counts and all 64 query answers agree bit for bit with the prior
 complete reduced model. A separate full/minibatch replay compares every
 intermediate parameter, gradient and head. Neither original records nor
 arbitrary unknown coordinates are removed.
+
+Following the user's 2026-11-16 priority, forward-only now processes its CE
+passes in batches of the configured size127, retaining zero gradient updates.
+Every original row still contributes in its original order, and division by
+the complete record count happens only after the final addition. A separate
+control with different losses in a127-row batch and its three-row tail checks
+exact CE bits and logical work for batch sizes1,7,127 and65536, on both expanded
+and packed inputs. It also demonstrates that equally averaging the two batch
+means would give the wrong result. Existing full-batch and minibatch numerical
+controls remain unchanged; the new comparison treats full batch as optional.
 
 Projection controls also cover arbitrary proposals, all three multiplier
 boundary cases, fully anchored programs and mixtures of uniform/nonuniform

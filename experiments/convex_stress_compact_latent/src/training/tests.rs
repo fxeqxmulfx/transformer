@@ -331,3 +331,46 @@ fn simultaneous_training_buffers_are_charged_beyond_the_final_model() {
         &train(&d, &rows, cfg, 65_536, &mut work()).unwrap(),
     );
 }
+
+#[test]
+fn forward_minibatches_keep_original_ce_additions_and_an_unequal_tail() {
+    let (d, _) = fixture(130);
+    let q = Parameters::initial(&d, 8., LIMIT, &mut work()).unwrap();
+    let head = Head::build(&d, &q, LIMIT, &mut work()).unwrap();
+    let queries: Vec<_> = (0..130)
+        .map(|i| {
+            if i < 127 {
+                Record {
+                    states: vec![0, 0],
+                    label: 0,
+                }
+            } else {
+                Record {
+                    states: vec![7, 7],
+                    label: 4,
+                }
+            }
+        })
+        .collect();
+    let packed = Packed::from_records(d.shape, &queries, LIMIT, &mut work()).unwrap();
+    for source in [Source::Expanded(&queries), Source::Packed(&packed)] {
+        for batch in [1, 7, 127, 65536] {
+            let (mut a, mut b) = (work(), work());
+            let old = loss_source(&head, source, 0..130, &mut a).unwrap();
+            let new = loss_minibatches(&head, source, batch, &mut b).unwrap();
+            assert_eq!(old.to_bits(), new.to_bits());
+            assert_eq!(a.used, b.used);
+        }
+        let incorrect = (loss_source(&head, source, 0..127, &mut work()).unwrap()
+            + loss_source(&head, source, 127..130, &mut work()).unwrap())
+            / 2.;
+        assert_ne!(
+            incorrect.to_bits(),
+            loss_minibatches(&head, source, 127, &mut work())
+                .unwrap()
+                .to_bits()
+        );
+    }
+    assert!(loss_minibatches(&head, Source::Packed(&packed), 0, &mut work()).is_err());
+    assert!(loss_minibatches(&head, Source::Expanded(&[]), 127, &mut work()).is_err());
+}

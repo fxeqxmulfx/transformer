@@ -12,8 +12,10 @@ use crate::{
 };
 pub use legacy::training::{Config, Mode, Step};
 use std::mem::size_of;
+mod loss;
 #[cfg(test)]
 mod tests;
+pub use loss::{loss, loss_minibatches, loss_source};
 
 #[derive(Debug)]
 pub struct Trained {
@@ -27,28 +29,6 @@ pub struct Trained {
     pub operations: u64,
     pub target_realizability_certified: bool,
     pub exact_real_projection_certified: bool,
-}
-pub fn loss(head: &Head, records: &[Record], work: &mut Work) -> Result<f64> {
-    loss_source(head, Source::Expanded(records), 0..records.len(), work)
-}
-pub fn loss_source(
-    head: &Head,
-    records: Source<'_>,
-    range: std::ops::Range<usize>,
-    work: &mut Work,
-) -> Result<f64> {
-    if range.is_empty() {
-        return Err("empty ordinary CE batch".into());
-    }
-    records.check_shape(head.shape())?;
-    let count = range.len();
-    let mut total = 0.;
-    records.visit(range, work, |row, work| {
-        Domain::record(head.shape(), row)?;
-        total += ce(&head.logits(&row.states, work)?, row.label);
-        Ok(())
-    })?;
-    Ok(total / count as f64)
 }
 pub fn gradient(
     domain: &Domain,
@@ -187,7 +167,7 @@ pub fn train_from_source(
         room(parameters.allocation_bytes() as u128)?,
         work,
     )?;
-    let initial_ce = loss_source(&head, records, 0..records.len(), work)?;
+    let initial_ce = loss::endpoint(&head, records, &config, work)?;
     let mut steps = memory::vector(step_count, limit)?;
     for epoch in 0..config.epochs {
         for first in (0..records.len()).step_by(batch) {
@@ -240,7 +220,7 @@ pub fn train_from_source(
             head = next;
         }
     }
-    let final_ce = loss_source(&head, records, 0..records.len(), work)?;
+    let final_ce = loss::endpoint(&head, records, &config, work)?;
     let audit = head.audit(domain, &parameters, work)?;
     Ok(Trained {
         config,
