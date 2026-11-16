@@ -7604,3 +7604,19 @@ reserves original and repeat outputs. Freeze this source before probing the
 48 original training extracts; preserve all 54 inventory outcomes and give no
 heldout accuracy credit. A separately frozen complete comparison remains
 required after independent probe reproduction.
+
+### 2026-11-16: task355 reduced wide-family comparison adapter
+
+CM65/66/67 now have a complete native comparison adapter for the original
+54-case cohort. It preserves every unknown coordinate, reconstructs and audits
+the full complex head from bound binary64 checkpoints, uses the original
+full/minibatch/forward schedules and enforces the pre-heldout training seal.
+Memory refusals retain their complete support and original denominators.
+Thirteen boundary controls pass, including corruption, tails, raw99 thresholds,
+wrong scoring labels, incomplete seals and either-disk exhaustion. Both runs
+are forecast before writing under the 110 GB process cap. The production
+protocol remains disabled until task354's independently repeated training-only
+probe supplies its final immutable digests. Commit and freeze that finalized
+protocol before fitting any original case; no new heldout accuracy or catalog
+credit follows from this component work. The existing task351/354 freezes stay
+unchanged.
