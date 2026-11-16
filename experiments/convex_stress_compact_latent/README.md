@@ -11,10 +11,13 @@ The current Rust component implements parameter storage, direct compact
 initialization, the complete complex head and actual projected ordinary CE
 training in full-batch, minibatch and forward-only modes. Numerical audits,
 interval certificates, exact dyadic fallback and compatible streaming
-checkpoints are retained. Whole-process memory admission and the new original-cohort comparison
-remain to be implemented and verified. It still uses the prior domain builder
-and its conservative admission; this component alone does not admit a larger
-original model.
+checkpoints are retained. The input-aware budget now counts the complete
+dictionary, packed observations and an explicit caller-owned storage reserve
+alongside the local training buffers. Compact dictionary construction and
+validation use actual capacities instead of the prior dense-model estimate.
+The complete runner's external allocation inventory, process admission,
+measured peak memory and new original-cohort comparison remain to be integrated
+and verified; an input forecast alone does not admit a larger original model.
 There is no new accuracy result or original-data production entry point here.
 
 | Property | Current behavior |
@@ -32,6 +35,9 @@ There is no new accuracy result or original-data production entry point here.
 | Projection | Preserve weighted proposals, every unknown gradient coordinate, all scalar root iterations and the full numerical KKT audit |
 | Training | Preserve the original dictionary check, every original record, duplicates, batch tails, CE guards and step metrics in all three modes |
 | Checkpoints | Stream every logical value in the exact prior RDLT6401 format; admit the complete read dictionary, compact output, scratch and fallback before allocation |
+| Dictionary | Retain the original labels, sorted unknown IDs, offsets, known multiplicities and logical head bound; validate every canonical index without cloning the dictionary |
+| Observations | Retain every original UInt16 state and label, callback order, duplicate ID and batch tail; admit actual capacities and one expanded row |
+| Combined budget | Subtract full input capacities and caller-owned storage before each local training call; retain at least 2 GiB runtime reserve within the 110 GB process ceiling |
 
 The parameter codec specializes CM70's general baseline/exception scheme:
 a nonuniform row uses a full explicit fallback even when some of its values
@@ -43,7 +49,7 @@ blocks retain their sorted observed classes, and any block with an unknown row
 still visits all raw classes, including zero-valued and repeated columns.
 Neither form adds a uniformity constraint to the feasible model domain.
 
-Twenty-eight native controls pass. Mixed shared and explicit rows retain every word,
+Thirty-nine native controls pass. Mixed shared and explicit rows retain every word,
 including duplicate original rows and two distinct zero words. Stateful zipped
 operations see every coordinate, and a floating sum matches the full original
 sequence bit for bit. A sum of a thousand copies of 0.1 also demonstrates why
@@ -101,7 +107,37 @@ and old/new head before building another. Projection separately charges all
 plans, class scratch and simultaneous multiplier/mass/KKT vectors. Controls
 reject both a cap too small for initialization and one that fits the initial
 model but cannot fit its update buffers. Original caller-owned inputs and
-runtime/process reserves still need the complete runner's admission.
+runtime/process reserves must also be supplied by the complete runner.
+
+`admission::Budget` takes an explicit process ceiling and external storage
+reservation. Its packing, dictionary and training methods account for every
+owned input capacity before delegating to the checked local constructors. The
+core allowance is at most 96 GB, with at least 2 GiB left for runtime storage.
+Caller-owned candidates, interpreters, original input records and persistence
+buffers must be counted in the external reservation. Expanded slices do not
+reveal their owning vector's spare capacity, so this combined training entry
+point accepts the owned packed representation. Component APIs remain available
+for comparison controls with explicit caller accounting.
+
+New controls compare dictionary indices and work charges with the prior
+implementation, including spare label capacity. Malformed public dictionary
+fields are rejected before indexing. Packed construction preserves every word
+and callback invocation, and visits preserve original IDs, duplicates and
+singleton tails. Tight caps refuse before invoking a state callback; conversion
+also reserves its temporary label vector. A 524,288-row all-unknown dictionary
+actually constructs below 32 MiB while the old dense-model estimate refuses it.
+Every unknown coordinate remains present logically; this is a dictionary-only
+measurement, not a trained original model.
+
+The combined budget reproduces all three packed training policies bit for bit
+and refuses a case when external storage exhausts the room that the local
+trainer alone would accept. Input forecasts for both 962,806-candidate constant
+cases retain all 4,656/18,528 original records and all 5,112,868/7,324,366 unknown
+rows. With an illustrative 1 GiB external reservation, each leaves more than
+50 GB of the core allowance for the model. This does not establish that every
+head, arbitrary fallback or update fits; their actual simultaneous allocations
+still determine admission. The prospective runner must inventory its own
+external data and account for other live processes before launching.
 
 Checkpoint controls compare every serialized byte and SHA256 digest against
 the prior implementation, read each format with both implementations and
@@ -117,15 +153,14 @@ truncated data and infeasible/nonfinite parameters even after rehashing. The
 declared unknown-row count is checked before allocating derived dictionary
 indices. File writes reuse the prior guard for both disks, independent-repeat
 reserve, exact length and refusal to overwrite; injected write/flush failures
-propagate as errors. The current legacy dictionary's conservative model
-admission still applies during loading and will need the complete process
-admission before a larger original run.
+propagate as errors. Loading now uses compact dictionary admission and validates
+all original indices, independently of the old dense-model estimate.
 
 The component storage limit is at most 96 GB. Standalone parameter/head
 constructors charge their output and scratch; projection and training charge
 their nested live buffers as described above. A complete original-data runner
-must additionally charge caller-owned dictionaries, packed inputs, persistence
-and runtime reserves under the 110000000000-byte process RAM cap,
+must use the combined input budget, charge its remaining caller-owned data and
+persistence buffers, enforce the 110000000000-byte process RAM cap,
 preserve the original operation order and ordinary CE policies, and stop when
 either disk cannot fit the complete original and independent repeated outputs.
 

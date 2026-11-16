@@ -3,6 +3,7 @@
 //! policies remain. Local admission includes every live training output,
 //! dictionary-rebuild scratch and nested projection/head buffers. Original
 //! input dictionaries/records and process/runtime reserves are caller-owned.
+use crate::{domain::Domain, records::Source};
 use crate::{
     head::{Audit, Head},
     memory,
@@ -10,7 +11,6 @@ use crate::{
     *,
 };
 pub use legacy::training::{Config, Mode, Step};
-use legacy::{domain::Domain, records::Source};
 use std::mem::size_of;
 #[cfg(test)]
 mod tests;
@@ -77,11 +77,7 @@ pub fn gradient_source(
     if range.is_empty() || head.shape() != domain.shape {
         return Err("invalid observed CE gradient batch".into());
     }
-    records.admit(
-        domain.shape,
-        domain.unknown.len(),
-        domain.head_columns_bound,
-    )?;
+    records.check_shape(domain.shape)?;
     let output_room = memory::remaining(
         limit,
         4096 + 2 * memory::vector_bytes::<f64>(domain.shape.classes)
@@ -173,11 +169,12 @@ pub fn train_from_source(
     room(parameters.allocation_bytes() as u128)?;
     let start = work.used;
     if *domain
-        != Domain::from_source(
+        != domain::from_source(
             domain.shape,
             records,
             domain.minimum_mass,
             domain.maximum_mass,
+            memory::remaining(limit, parameters.allocation_bytes() as u128 + 4096)?,
             work,
         )?
     {
@@ -264,11 +261,7 @@ fn workspace(
     records: Source<'_>,
     config: &Config,
 ) -> Result<(usize, usize, u128)> {
-    records.admit(
-        domain.shape,
-        domain.unknown.len(),
-        domain.head_columns_bound,
-    )?;
+    records.check_shape(domain.shape)?;
     if records.is_empty() {
         return Err("empty original training records".into());
     }

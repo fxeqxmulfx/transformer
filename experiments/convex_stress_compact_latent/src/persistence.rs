@@ -3,11 +3,10 @@
 //! Read admission includes its complete dictionary, compact parameters and
 //! construction scratch; the reader's own storage belongs to the caller.
 //! Guarded file writes retain the prior both-disk/repeat/overwrite rules.
+use crate::domain::Domain;
 use crate::{memory, *};
-use legacy::domain::Domain;
 use sha2::{Digest, Sha256};
 use std::io::{Read, Write};
-use std::mem::size_of;
 const MAGIC: &[u8; 8] = b"RDLT6401";
 #[cfg(test)]
 mod tests;
@@ -21,7 +20,7 @@ pub fn write_file(
     remaining_cohort_bytes: u64,
     work: &mut Work,
 ) -> Result<[u8; 32]> {
-    domain.validate(work)?;
+    domain::validate(domain, work)?;
     q.check(domain, 1e-8, work)?;
     let length = bytes(domain);
     let reserve =
@@ -47,7 +46,7 @@ pub fn write<W: Write>(
     mut writer: W,
     work: &mut Work,
 ) -> Result<[u8; 32]> {
-    domain.validate(work)?;
+    domain::validate(domain, work)?;
     q.check(domain, 1e-8, work)?;
     work.charge(64 * bytes(domain) as u128)?;
     let mut hash = Sha256::new();
@@ -108,11 +107,8 @@ pub fn read<R: Read>(
         states: dims[1],
         classes: dims[2],
     };
-    sh.admit(0, dims[3], 0)?;
-    let dictionary_bytes = size_of::<Domain>() as u128
-        + sh.rows() as u128 * (size_of::<Option<usize>>() + size_of::<usize>()) as u128
-        + dims[3] as u128 * size_of::<(usize, usize)>() as u128
-        + sh.programs as u128 * size_of::<usize>() as u128;
+    sh.validate()?;
+    let dictionary_bytes = domain::dictionary_bytes(sh, sh.rows(), dims[3])?;
     // Count every dictionary vector and mass before reading or allocating
     // them; the row builder charges all class scratch and fallback growth.
     let row_room = memory::remaining(
@@ -133,15 +129,11 @@ pub fn read<R: Read>(
     if labels.iter().filter(|label| label.is_none()).count() != dims[3] {
         return Err("unknown-row count differs from dictionary before allocation".into());
     }
-    let domain = Domain::from_labels(sh, labels, minimum, maximum, work)?;
+    let domain = domain::from_labels(sh, labels, minimum, maximum, limit, work)?;
     if domain.unknown.len() != dims[3] {
         return Err("unknown-row count differs from dictionary".into());
     }
-    let actual_dictionary = size_of::<Domain>() as u128
-        + domain.labels.capacity() as u128 * size_of::<Option<usize>>() as u128
-        + domain.offsets.capacity() as u128 * size_of::<usize>() as u128
-        + domain.unknown.capacity() as u128 * size_of::<(usize, usize)>() as u128
-        + domain.known.capacity() as u128 * size_of::<usize>() as u128;
+    let actual_dictionary = domain::allocation_bytes(&domain);
     if actual_dictionary != dictionary_bytes {
         return Err("checkpoint dictionary capacities differ from admission".into());
     }

@@ -1,13 +1,13 @@
 //! CM66/70 complete weighted projection, ported from reduced_latent at
 //! b3aa191c. All numerical root iterations, coordinates and KKT checks remain.
 //! The local limit includes plans, output and simultaneous temporary vectors;
-//! input tensors and the legacy dictionary validation belong to the caller.
+//! input tensors and the dictionary belong to the caller.
+use crate::domain::Domain;
 use crate::{
     memory,
     rows::{Builder, Rows},
     *,
 };
-use legacy::domain::Domain;
 mod solver;
 use solver::Plan;
 mod target;
@@ -30,7 +30,7 @@ pub fn project(
     limit: u64,
     work: &mut Work,
 ) -> Result<Projection> {
-    domain.validate(work)?;
+    domain::validate(domain, work)?;
     target.validate(domain)?;
     // Three multiplier vectors may coexist with the final mass vector and
     // KKT scratch. The row builder separately charges its full class scratch.

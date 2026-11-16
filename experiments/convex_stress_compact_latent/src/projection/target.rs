@@ -15,7 +15,7 @@ impl Target {
         limit: u64,
         work: &mut Work,
     ) -> Result<Self> {
-        domain.validate(work)?;
+        domain::validate(domain, work)?;
         old.validate(domain)?;
         let mut linear = memory::vector(domain.shape.programs, limit)?;
         linear.extend_from_slice(&old.linear);

@@ -1,10 +1,10 @@
 //! CM70 parameter representation after cc6931a4. Anchor expansion, checks and
 //! weighted distance follow reduced_latent at 6797e8ab in original order.
+use crate::domain::{self, Domain};
 use crate::{
     Result, Work,
     rows::{Builder, Rows},
 };
-use legacy::domain::Domain;
 use std::mem::size_of;
 
 #[derive(Debug)]
@@ -50,7 +50,7 @@ impl Parameters {
         limit: u64,
         work: &mut Work,
     ) -> Result<Self> {
-        domain.validate(work)?;
+        domain::validate(domain, work)?;
         source.validate(domain)?;
         let (mut masses, remaining) = allocate_masses(domain.shape.programs, limit)?;
         masses.extend_from_slice(&source.values[..domain.shape.programs]);
@@ -62,7 +62,7 @@ impl Parameters {
         Ok(Self { masses, free })
     }
     pub fn initial(domain: &Domain, total: f64, limit: u64, work: &mut Work) -> Result<Self> {
-        domain.validate(work)?;
+        domain::validate(domain, work)?;
         if !total.is_finite() || total < domain.minimum_mass || total > domain.maximum_mass {
             return Err("initial confidence outside bounded domain".into());
         }

@@ -1,5 +1,6 @@
 use super::*;
-use legacy::records::Packed;
+use crate::records::Packed;
+use legacy::records::{Packed as LegacyPacked, Source as LegacySource};
 const LIMIT: u64 = 32 * 1024 * 1024;
 fn work() -> Work {
     Work::new(2_000_000_000_000).unwrap()
@@ -163,8 +164,12 @@ fn result(a: &legacy::training::Trained, b: &Trained) {
 fn all_three_policies_match_complete_training_with_original_duplicates_and_tails() {
     for count in [128, 130] {
         let (d, rows) = fixture(count);
-        let packed = Packed::from_records(d.shape, &rows, &mut work()).unwrap();
-        for source in [Source::Expanded(&rows), Source::Packed(&packed)] {
+        let packed = Packed::from_records(d.shape, &rows, LIMIT, &mut work()).unwrap();
+        let old_packed = LegacyPacked::from_records(d.shape, &rows, &mut work()).unwrap();
+        for (old_source, source) in [
+            (LegacySource::Expanded(&rows), Source::Expanded(&rows)),
+            (LegacySource::Packed(&old_packed), Source::Packed(&packed)),
+        ] {
             for mode in [Mode::Forward, Mode::Full, Mode::Mini] {
                 for rate in [3., 1e6] {
                     for nonuniform in [false, true] {
@@ -175,7 +180,7 @@ fn all_three_policies_match_complete_training_with_original_duplicates_and_tails
                         let (mut wa, mut wb) = (work(), work());
                         let a = legacy::training::train_from_source(
                             &d,
-                            source,
+                            old_source,
                             cfg.clone(),
                             old,
                             &mut wa,
@@ -218,7 +223,7 @@ fn every_intermediate_parameter_and_head_matches_actual_full_and_mini_updates() 
                 let (la, ga) = legacy::training::gradient_source(
                     &d,
                     &a,
-                    Source::Expanded(&rows),
+                    LegacySource::Expanded(&rows),
                     range.clone(),
                     &mut wa,
                 )
@@ -270,7 +275,7 @@ fn compact_initialization_gradient_tail_and_rejections_remain_original() {
         let a = legacy::training::gradient_source(
             &d,
             &old,
-            Source::Expanded(&rows),
+            LegacySource::Expanded(&rows),
             range.clone(),
             &mut work(),
         )

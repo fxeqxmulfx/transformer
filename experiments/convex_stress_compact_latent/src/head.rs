@@ -1,8 +1,8 @@
 //! CM70 complete complex head, after Lean cc6931a4. This is the arithmetic
 //! of reduced_latent at 6797e8ab with lossless shared column storage. Unknown
 //! blocks still visit every class in every contraction and spectral audit.
+use crate::domain::{self, Domain};
 use crate::{Parameters, Result, Shape, Work};
-use legacy::domain::Domain;
 pub use legacy::head::{
     Audit, Certificate, Prediction, PredictionBudget, reference_source, source,
 };
@@ -26,7 +26,7 @@ impl Head {
     /// The limit covers this head and construction buffers; the caller must
     /// additionally charge input parameters, dictionaries and query scratch.
     pub fn build(domain: &Domain, q: &Parameters, limit: u64, work: &mut Work) -> Result<Self> {
-        domain.validate(work)?;
+        domain::validate(domain, work)?;
         q.validate(domain)?;
         work.charge(160 * domain.head_columns_bound as u128 + 16 * domain.shape.rows() as u128)?;
         let sh = domain.shape;
@@ -99,7 +99,7 @@ impl Head {
         Ok(logits)
     }
     pub fn audit(&self, domain: &Domain, q: &Parameters, work: &mut Work) -> Result<Audit> {
-        domain.validate(work)?;
+        domain::validate(domain, work)?;
         q.validate(domain)?;
         self.validate_support(domain)?;
         work.charge(400 * domain.head_columns_bound as u128 + 32 * self.shape.rows() as u128)?;

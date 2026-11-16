@@ -3,12 +3,15 @@
 //! Logical arithmetic remains that of the complete reduced model. The
 //! whole-process admission and original-cohort integration remain separate.
 pub use legacy::{Record, Result, Shape, Work, ce};
+pub mod admission;
+pub mod domain;
 pub mod head;
 mod memory;
 mod parameters;
 pub use parameters::Parameters;
 pub mod persistence;
 pub mod projection;
+pub mod records;
 pub mod rows;
 #[cfg(test)]
 mod tests;
