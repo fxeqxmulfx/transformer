@@ -1,0 +1,20 @@
+[package]
+name = "convex-stress-compact-compare"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+joint = { package = "convex-stress-compact-latent", path = "../convex_stress_compact_latent" }
+pairs = { package = "convex-stress-composed-latents", path = "../convex_stress_composed_latents" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.10.9"
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
