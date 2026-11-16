@@ -71,6 +71,14 @@ impl ProjectionProblem {
         &self.normals
     }
 
+    pub fn dimension(&self) -> usize {
+        self.dimension
+    }
+
+    pub fn limits(&self) -> ProjectionLimits {
+        self.limits
+    }
+
     /// Check the exact CM79 predicates, independently of candidate generation.
     pub fn verify(&self, proposal: &[Rational], result: &Projection) -> Result<(), Refusal> {
         if proposal.len() != self.dimension

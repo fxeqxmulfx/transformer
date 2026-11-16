@@ -1,11 +1,12 @@
 //! Native update primitives for the complete learned complex sequence family.
 //!
-//! Source: `review/flat_spectrum.md`, CM75--CM79, especially the checked Lean
+//! Source: `review/flat_spectrum.md`, CM75--CM81, especially the checked Lean
 //! `LearnedHinge.Projection` certificates. No training or accuracy is asserted
 //! by this library component. Exact rational arithmetic verifies feasibility;
 //! bounded active-set search refuses rather than weakening its constraints.
 
 pub mod domain;
+pub mod geometry;
 pub mod model;
 pub mod projection;
 
@@ -30,6 +31,12 @@ pub enum Refusal {
     NoCertificate,
     InvalidRenaming,
     NumericalUnderflow,
+    GeometryCertificate,
+    BasisKernel,
+    BasisCoordinates,
+    BasisRecovery,
+    QueryDirection,
+    QueryStep,
 }
 
 impl std::fmt::Display for Refusal {

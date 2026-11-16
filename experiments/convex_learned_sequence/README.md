@@ -7,7 +7,9 @@ CM79, commit `945603c5`, under
 `src/Transformer/Grokking/FlatSpectrum/ConvexChannel/LearnedHinge/Projection`.
 
 The native model now executes the full learned complex forward and projects
-the whole parameter array with retained component certificates. Mini and
+the whole parameter array with retained component certificates. Complete cone
+centres, direction bases and feasible queries now have native generators and
+independent exact certificate checks. Mini and
 forward-only Mini proposal rules and training remain unfinished. Known feasible
 points used by controls are not learned outcomes; no stress accuracy is claimed.
 
@@ -86,6 +88,39 @@ cone workspace is reused sequentially; no model pattern is removed. A
 conservative working-memory reservation charges old/proposed/new state,
 certificates, rational work and factor caches, with external RSS guards retained.
 
+## Complete geometry for feasible forward queries
+
+`ConeGeometry` implements CM80 and CM81, Lean commits `eb1634bd` and `2d2ca3ae`.
+It projects every original normal, retains every full dual certificate and sums
+the projected points. Independent replay checks the projections, complete centre
+sum, all row slacks and forced-equality flags. Zero and redundant original rows
+stay present. The auxiliary equality matrix zeros only non-forced rows; the
+original cone remains intact in every feasibility and query check.
+
+Exact Gauss–Jordan elimination retains the entire equality matrix and its full
+row-operation matrix. It proposes full-coordinate basis vectors, free-coordinate
+indices and recovery coefficients against every equality row. A separate checker
+tests all three CM81 identities: kernel membership, identity on free coordinates,
+and reconstruction of every original coordinate residual. The Lean theorem
+then establishes coverage and uniqueness, rather than trusting a generated rank.
+Deleting a feasible basis direction fails the reconstruction check.
+
+Queries accept a complete direction and a positive rational step cap. Every
+original row supplies its absolute-response bound; a tight row with nonzero
+response refuses the query. The final two points and every bound are independently
+replayed. Positive centre mixtures are available to open non-forced boundary
+rows. Mixing changes the iterate and can increase loss, as recorded in CM80.
+All returned points remain rational. To execute them, the full model constructor
+checks the whole parameter array before actual recovered complex inference.
+
+`GeometryPlan` admits the number of normal projections, the worst-case total
+active-subset candidates, rational entry count and conservative byte reservation
+before further construction. The reservation includes projection workspace,
+normal certificates, elimination transforms, basis/recovery arrays and replay
+buffers. It describes one complete cone, not an all-pattern training-memory or
+runtime guarantee. Full-family caching and optimizer state need their own total
+admission; the 110 GB aggregate RSS and both-disk guards remain applicable.
+
 ## Findings and validation
 
 All ten native controls pass. They include an independent 125-point orthant
@@ -107,10 +142,23 @@ measurement. A full 768-coordinate projection retains and replays 192 component
 certificates. Corrupted or incomplete certificates, infeasible arrays, invalid
 objects/renamings and numerical/resource failures are rejected atomically.
 
+Nine further geometry controls pass, for twenty-eight total. They cover the
+degenerate diagonal cone, a slanted plane with rational nonorthogonal basis
+vectors and recovery, zero and unconstrained cones, lineality, boundary
+mixing, malformed queries, resource refusals and individual certificate
+corruptions. Every one of the 144 patterns across the two complete domains
+gets checked geometry. Across these controls, all 960 normal projections carry
+their full certificates, and every certified basis direction is tested with
+feasible queries. A full model with
+all sixteen three-object patterns executes two actual complex query forwards:
+the selected real and imaginary score changes are both `1/16`, with ordinary
+full-class CE changing in the expected directions on every original prefix.
+This is a known feasible control, not training or a new accuracy measurement.
+
 Development tests, strict all-target Clippy and a release build pass. The Lean
-component independently passes the full build, sixteen direct axiom checks,
-global audit, native INDEX verification and forbidden-source scan. Existing
-36 `sorry` declarations remain; no new unproved input or extra axiom was added.
+projection/query components independently pass the full build, fifty-seven
+direct axiom checks, global audit, native INDEX verification and forbidden-source
+scan. Existing 36 `sorry` declarations remain; no new `sorry` or extra axiom was added.
 Evidence and failed development logs stay ignored under
 `.kanban/artifacts/366/`; generated output is not committed.
 
@@ -124,6 +172,8 @@ prlimit --as=4294967296:4294967296 -- cargo test --offline --locked --manifest-p
 prlimit --as=4294967296:4294967296 -- cargo clippy --offline --locked --all-targets --manifest-path experiments/convex_learned_sequence/Cargo.toml -- -D warnings
 prlimit --as=4294967296:4294967296 -- cargo build --offline --locked --release --manifest-path experiments/convex_learned_sequence/Cargo.toml
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ProjectionHingeAxioms.lean
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/QueryGeometryAxioms.lean
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/QueryBasisAxioms.lean
 ```
 
 The development/review wrappers check aggregate RSS plus the process allowance
@@ -142,14 +192,17 @@ equalities; their joint nullspace describes the feasible two-sided query
 directions. Degenerate cones retain every coordinate and constraint. A positive
 mixture of the current point with this centre admits those directions, with
 explicit displacement and convex-loss bounds because mixing can increase loss.
-The native centre construction and complete direction basis remain to implement;
+The native centre and complete direction basis now implement these certificates;
 no finite-difference gradient identity or convergence follows from domain safety.
 CM81 supplies a finite basis-completeness certificate: every proposed direction
 annihilates every forced row, its selected free coordinates form an identity,
 and every original coordinate residual is an explicit combination of retained
 equality rows. The Lean reconstruction theorem proves full kernel coverage and
-unique coefficients from those checks. Native elimination must generate and
-independently verify them; merely finding feasible directions is insufficient.
+unique coefficients from those checks. Native elimination generates and
+independently verifies them. Next connect the complete family of these queries
+to actual minibatch loss evaluations and update proposals. A nonorthogonal
+basis requires recovery of a direction from its measured pairings; raw directional
+values cannot simply be treated as Euclidean gradient coefficients.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy

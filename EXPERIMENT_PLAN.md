@@ -8273,3 +8273,16 @@ positive iterate mixtures. A native basis generator must retain a recovery
 certificate and pass a separate exact verifier; sampled successful directions
 are not a complete replacement. Exact pairing agreement is explicitly required
 for its work identity and is not inferred from numerical finite differences.
+
+The native model now constructs and independently checks CM80--CM81 cone geometry.
+All original normal projections, complete multipliers, equality rows, basis
+coordinates and recovery certificates remain present. Exact rational queries
+check every original inequality and absolute-response bound; positive centre
+mixtures handle non-forced boundaries. Twenty-eight controls pass, including all
+144 small-domain patterns with 960 certified normal projections, missing-basis
+rejection, rational nonorthogonal directions and actual complex model queries.
+This supplies executable domain-safe queries, not either completed minibatch
+optimizer. Next recover update directions from all measured basis pairings,
+retain every record/multiplicity/tail, and connect both proposal modes to atomic
+whole-model projection. Full-family resource admission and the separately frozen,
+independently repeated training pilot remain required before accuracy credit.
