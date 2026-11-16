@@ -19983,3 +19983,100 @@ integer clones, and compare every certificate field and training trajectory to
 the complete prior model. Bounded synthetic timings are separate from original
 fits. Existing frozen producers stay fixed; new original results require a new
 freeze, complete training seal, independent repeat and raw replay.
+
+## CM73. Shared categorical interactions learned through ordinary answer loss
+
+CM64's observed-label equations force every observed CE to depend only on
+total confidence. CM71-CM72 preserve that model exactly and cannot repair its
+identification limitation. Here the observations enter only ordinary CE.
+Reuse CC1's complete joint tensor and MF3's input alignment, but train one
+shared block `A : K x V x C -> R` on finite nonempty categorical alphabets:
+
+```
+A(k,v,c) >= 0,
+sum_c A(k,v,c) = rho(k), independent of v,
+sum_k rho(k) = 1,
+z_A(q,D,c) = sum_k A(k, D(align(q)^(-1)(k)), c).
+```
+
+The routing mass is a marginal of A, not a separately multiplied learned
+factor. All `|K||V||C|` coordinates are optimized jointly. The feasible set and
+uniform initialization `A(k,v,c)=1/(|K||C|)` have no labels or sample-dependent
+constraints. CC2 and MF3 prove convexity of this domain and ordinary CE in
+every coordinate. A fixed positive logit scale preserves convexity by MF3;
+the identification result below uses scale one and does not learn a scale.
+At scale one total logit mass is one, so perfect argmax accuracy does not mean
+zero CE. Contradictory labels do not make this domain empty; realizability is
+a hypothesis of the identification theorem, not a feasibility requirement.
+
+The input encoding is declared categorical slots and a visible query, with
+one fixed query-dependent slot permutation. Interaction order is one: the
+forward adds slot contributions. The alignment, categorical identities and
+sharing across queries are explicit priors. This is a restricted subfamily of
+the full query-indexed channel, and is not an unrestricted learned encoder or
+a universal model of arbitrary multi-slot interactions. There is no parameter
+per complete dictionary and no target program or target formula in the forward.
+
+Suppose an unknown slot r and unknown categorical decoder g realize the actual
+observed labels on aligned dictionaries E_s. Assume at least two classes and:
+
+```
+y_s = g(E_s(r)),
+for every v, some observed s has E_s(r)=v,
+for every k != r, some observed s,t have E_s(k)=E_t(k) and y_s!=y_t.
+```
+
+These are explicit observation and target-family conditions, with no premise
+about successful learned predictions. The selected joint vertex at r with
+decoder g is feasible and attains the ideal sample CE. For any feasible A with
+no greater total loss, nonnegative sample loss gaps all vanish. CR3's strict
+CE inequality therefore forces target mass one on every observed record.
+
+For a wrong slot k, take its collision pair. Each class differs from at least
+one of the two answers, so every coordinate of that shared value row is zero.
+Value-independent routing mass makes the entire slot's mass zero at every
+other value too. Nonnegativity then removes every coordinate of that slot.
+Coverage of r determines every remaining decoder row. Thus every global CE
+optimizer equals the selected vertex and has the correct strict raw argmax
+on every aligned dictionary, including completely unobserved input combinations
+and queries. This strengthens CC5 for this shared family by using one observed
+collision per wrong slot instead of a separate observation for every wrong atom.
+
+The nonconstant example has three Boolean slots, two classes and twelve joint
+coordinates. Its four dictionaries are `000,011,101,110`, with labels
+`true,true,false,false`, all at query false. The declared alignment is identity
+at false and swaps the first two slots at true. Both value coverage and every
+wrong-slot collision are proved. Dictionary `111` and query true are absent,
+yet every empirical optimizer answers that new input correctly. Selecting the
+wrong slot gives strictly larger observed CE at exactly the same total logit
+mass. This is a change of relative predictions, not confidence-only learning.
+
+The ambiguity control observes only `000 -> true` and `111 -> false`.
+Every slot has both values and both answer labels occur. Selecting either of
+the first two slots with negation is feasible and globally CE-optimal; their
+strict answers on `100` are opposite. Their actual signed query-by-dictionary
+operators, over both queries and all eight dictionaries, are both flat with
+squared singular value eight. Flatness cannot select the missing answer.
+
+For the actual complex implementation, fix a unitary value code U independently
+of labels. Slot k's complete head is `H_k=U* A_k`; read its full real and
+imaginary coefficients against the source row at the aligned categorical value.
+Expanding every product gives exactly z_A. The actual complex CE is convex and
+has the same identification theorem. Every source coordinate is bounded by one;
+the complete per-class head budget is at most `2|V|`, while storage still holds
+`2|K||V||C|` real coordinates. A four-point Fourier witness retains nonzero
+imaginary source and head entries. CC6's rank/error bound applies to the actual
+represented output operator, without making a target-identification assumption.
+
+Formalization: `ConvexChannel/SharedLearning`, with direct checks in
+`scripts/SharedLearningAxioms.lean`. Record indices retain duplicate observations.
+No convergence of a native minibatch loop or floating-point refinement is
+claimed. MF1's singleton-oracle failure still applies to unsuitable update
+rules; MF2's stale-gradient memory alone is not a general convergence proof.
+CF3-CF6 supply a possible finite forward-only consistency learner and persistent
+minibatch scan under their explicit conditions. Any native implementation must
+state its actual observation-dependent parameter updates, retain original
+multiplicities and short tails, test relative prediction changes at fixed
+confidence, and preserve contradictory-label failures. Compare the anchored
+reference, a free decoder on fixed features and the shared learner before any
+separately frozen original pilot. This theorem supplies no new catalog credit.

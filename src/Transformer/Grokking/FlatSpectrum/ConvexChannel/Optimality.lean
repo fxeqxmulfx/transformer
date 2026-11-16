@@ -17,7 +17,7 @@ namespace Transformer.Grokking.FlatSpectrum.ConvexChannel
 open scoped BigOperators
 open Landscape.Neural (crossEntropy)
 
-variable {K V C S : Type*} [Fintype K] [Fintype C] [Fintype S]
+variable {Q K V C S : Type*} [Fintype K] [Fintype C] [Fintype S]
   [Nonempty V] [DecidableEq K] [DecidableEq C]
 
 /-- The generated rule's ideal logits minimize CE on each input (CC5). -/
@@ -78,9 +78,10 @@ theorem sample_target_mass_one [Nontrivial C] (g : K → V → C)
 
 omit [DecidableEq K] in
 /-- A sample with unit target mass gives zero weight to every active
-parameter atom predicting a different class (CC5). -/
-theorem atom_eq_zero {W : Channel K K V C} (hW : Feasible W)
-    (q : K) (D : K → V) (t : C) (ht : logits W q D t = 1)
+parameter atom predicting a different class (CC5). CM73 makes the query type
+independent of the slot type; the same nonnegative-sum proof applies. -/
+theorem atom_eq_zero {W : Channel Q K V C} (hW : Feasible W)
+    (q : Q) (D : K → V) (t : C) (ht : logits W q D t = 1)
     (k : K) (c : C) (hc : c ≠ t) : W q k (D k) c = 0 := by
   have hs := Finset.sum_erase_add Finset.univ (logits W q D) (Finset.mem_univ t)
   rw [sum_logits hW q D, ht] at hs

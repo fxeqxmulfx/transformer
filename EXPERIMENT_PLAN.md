@@ -7960,3 +7960,31 @@ Acceptance proceeds in this order:
 The first deliverable is the explicit shared domain, its convex answer loss
 and the inhabited identification theorem. A compact general learner for all
 165 cases is a later objective, not an assumed consequence of this task.
+
+### 2026-11-16: task 365, shared answer-loss identification in Lean
+
+CM73 formalizes the first theory deliverable using the complete joint
+`Channel Unit K V C` domain and a declared input-only slot alignment. Labels
+enter ordinary CE, with no observed-label anchors in feasibility or uniform
+initialization. Empirical optimality, realizability, value coverage and an
+observed collision at each wrong slot identify every routing/output coordinate.
+The nonconstant four-record example predicts genuinely unobserved dictionaries
+and queries; wrong routing has strictly worse CE at the same total confidence.
+The ambiguous counterpart has two global optima with opposite unseen answers,
+both producing flat output operators with squared singular value eight.
+
+The actual full complex head has the same logits, convex CE and identification
+theorem. Every real and imaginary coordinate is retained and its norm/storage
+bound is stated. The full 14006-job build, 37 direct axiom checks and global
+audit pass: 36 existing sorry, zero resting declarations and zero extra axioms.
+Generated INDEX has 4909 modules and 25735 theorems, with no vacuous or placeholder
+entries. Independent review is next. No native optimizer convergence, learned
+raw-token encoder or additional catalog accuracy follows from this result.
+
+The next implementation must specify the categorical/causal encoding before
+fitting and use genuine minibatch CE updates of the shared joint tensor. Its
+forward-only minibatch mode must update learned parameters from observations.
+Prove any new update identity first; retain MF1's failure and avoid treating
+stale-gradient memory as a general convergence proof. Run the planned anchored,
+free-decoder and shared-learner controls before a separately frozen original
+pilot. The broader 165-case objective remains unchanged.
