@@ -3,6 +3,7 @@
 //! runner, heldout fitting or new accuracy result is enabled by this component.
 pub use joint::{Result, Work};
 pub mod preparation;
+pub mod work;
 /// User priority2026-11-16: minibatch and forward-only minibatch processing.
 /// Full-batch numerical controls remain available as optional references.
 pub const REQUIRED_MODES: [joint::training::Mode; 2] =

@@ -32,6 +32,17 @@ preparation allowance would leave too little work for complete materialization.
 The separate passes retain every old charge and a bounded total of 80 trillion.
 The older frozen producers and their counters remain unchanged.
 
+The prospective endpoint work ceiling is 256 trillion, separately from
+preparation. For the largest original constant input, the existing 127-record
+minibatch policy needs 146 updates. Their mandatory charges alone total
+54,949,599,919,456, before scalar solves, contractions, initialization, audits
+and checkpointing. Thus the former 40-trillion allowance cannot complete this
+policy. The new limit changes admission only: every charge, update and short
+tail remains, and releasing a checkpoint reserve never resets used work. It
+is a bounded allowance, not a claim that every model will fit or finish.
+Native controls compare the lower bound with actual training counters and
+check complete tail updates and hard-limit rejection.
+
 Native controls compare the entire materialization with the prior encoder:
 every state and raw label, exact dictionary fields and the sum of both work
 counters. A four-record control includes duplicates and a singleton interval.
