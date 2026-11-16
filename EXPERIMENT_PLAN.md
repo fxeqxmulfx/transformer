@@ -7788,3 +7788,22 @@ oversized fallback without changing the proposal. Commit after required native
 and Lean checks, then rebuild independently. Whole-process input/runtime memory
 admission, persistence and a separately frozen original/repeat remain required;
 no new original-data accuracy is claimed and task360 remains open.
+
+### 2026-11-16: task360 compatible compact checkpoint streaming
+
+After compact training at47db6ff5, keep the exact RDLT6401 checkpoint format
+while streaming every logical parameter into and out of compact storage.
+Admission includes the complete read dictionary, masses, class scratch and
+arbitrary nonuniform fallback. Verify the declared unknown-row count before
+allocating derived indices. Keep the existing both-disk guard, independent
+repeat reserve, exact-length check and refusal to overwrite.
+
+Twenty-eight native controls now pass: serialized bytes and hashes match the
+prior complete model; both readers reconstruct every word and complex product.
+Corrupt dimensions/counts/hashes, rehashed invalid parameters, incomplete data,
+oversized complete fallback and injected write/flush failures are rejected.
+The uniform1024-class stream remains over1MB on disk while loading under24KiB
+of local output/scratch; input bytes belong to the caller. Commit after native
+and Lean checks and rebuild independently. The conservative legacy domain
+admission still blocks larger original models; complete input/runtime/process
+admission and a frozen original/repeat remain required before accuracy credit.

@@ -7,6 +7,7 @@ pub mod head;
 mod memory;
 mod parameters;
 pub use parameters::Parameters;
+pub mod persistence;
 pub mod projection;
 pub mod rows;
 #[cfg(test)]

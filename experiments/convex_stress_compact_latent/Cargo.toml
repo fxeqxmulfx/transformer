@@ -11,6 +11,7 @@ legacy = { package = "convex-stress-reduced-latent", path = "../convex_stress_re
 num-bigint = "=0.4.8"
 num-rational = "=0.4.2"
 num-traits = "=0.2.19"
+sha2 = "=0.10.9"
 
 [profile.test]
 opt-level = 2

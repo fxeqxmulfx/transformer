@@ -10,8 +10,8 @@ frozen comparisons remain the numerical references.
 The current Rust component implements parameter storage, direct compact
 initialization, the complete complex head and actual projected ordinary CE
 training in full-batch, minibatch and forward-only modes. Numerical audits,
-interval certificates and exact dyadic fallback are retained. Whole-process
-memory admission, checkpoints and the new original-cohort comparison
+interval certificates, exact dyadic fallback and compatible streaming
+checkpoints are retained. Whole-process memory admission and the new original-cohort comparison
 remain to be implemented and verified. It still uses the prior domain builder
 and its conservative admission; this component alone does not admit a larger
 original model.
@@ -31,6 +31,7 @@ There is no new accuracy result or original-data production entry point here.
 | Prediction | Preserve forward and reverse contractions, interval enclosures, exact dyadic ties, raw winners and ordinary CE |
 | Projection | Preserve weighted proposals, every unknown gradient coordinate, all scalar root iterations and the full numerical KKT audit |
 | Training | Preserve the original dictionary check, every original record, duplicates, batch tails, CE guards and step metrics in all three modes |
+| Checkpoints | Stream every logical value in the exact prior RDLT6401 format; admit the complete read dictionary, compact output, scratch and fallback before allocation |
 
 The parameter codec specializes CM70's general baseline/exception scheme:
 a nonuniform row uses a full explicit fallback even when some of its values
@@ -42,7 +43,7 @@ blocks retain their sorted observed classes, and any block with an unknown row
 still visits all raw classes, including zero-valued and repeated columns.
 Neither form adds a uniformity constraint to the feasible model domain.
 
-Twenty-three native controls pass. Mixed shared and explicit rows retain every word,
+Twenty-eight native controls pass. Mixed shared and explicit rows retain every word,
 including duplicate original rows and two distinct zero words. Stateful zipped
 operations see every coordinate, and a floating sum matches the full original
 sequence bit for bit. A sum of a thousand copies of 0.1 also demonstrates why
@@ -101,6 +102,24 @@ plans, class scratch and simultaneous multiplier/mass/KKT vectors. Controls
 reject both a cap too small for initialization and one that fits the initial
 model but cannot fit its update buffers. Original caller-owned inputs and
 runtime/process reserves still need the complete runner's admission.
+
+Checkpoint controls compare every serialized byte and SHA256 digest against
+the prior implementation, read each format with both implementations and
+reconstruct all coefficient words and 64 query products. Signed zero and the
+least subnormal survive. The wire format retains all logical coordinates;
+reading the uniform 128-state/1024-class stream needs less than 24 KiB of
+admitted output and scratch, while its input stream exceeds 1 MB. Caller-owned
+input bytes are separate. A nonuniform stream of the same shape is refused at
+that small cap and loads losslessly with sufficient room.
+
+Readers reject corrupt dimensions, dictionary counts, hashes, trailing or
+truncated data and infeasible/nonfinite parameters even after rehashing. The
+declared unknown-row count is checked before allocating derived dictionary
+indices. File writes reuse the prior guard for both disks, independent-repeat
+reserve, exact length and refusal to overwrite; injected write/flush failures
+propagate as errors. The current legacy dictionary's conservative model
+admission still applies during loading and will need the complete process
+admission before a larger original run.
 
 The component storage limit is at most 96 GB. Standalone parameter/head
 constructors charge their output and scratch; projection and training charge
