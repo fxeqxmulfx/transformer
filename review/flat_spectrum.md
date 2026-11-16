@@ -19926,3 +19926,60 @@ Native controls must compare every logit/CE/update word and original work count,
 charge simultaneous plan construction and storage, and measure actual runtime
 under the existing RAM and both-disk limits. Frozen producers remain unchanged;
 new original measurements require a new source freeze and independent repeat.
+
+## CM72. Shared construction and independent certification preserve complete words
+
+CM71 applies to arbitrary deterministic accumulator types and ordered update
+payloads. Two further uses address work outside the ordinary forward logit
+contraction. Neither changes the full convex domain or constrains its unknown
+rows to remain uniform.
+
+First consider anchored expansion as a function of exact words. At a known
+label, its class receives the mass word and every other class the specified zero
+word. At an unknown state, every class retains its actual stored word. Fix a
+construction block and a set containing every known label in that block. Two
+classes outside this set receive the same expanded word at every state if the
+current unknown rows are class-uniform as words. This does not identify two
+representations of a numerically equal value, such as signed zero words.
+
+The head-construction event contains the operation index and this raw decoder
+word. The index can include both frequency and state; the accumulator can hold
+all four real and four imaginary words. Apply the original source products and
+additions in their original frequency/state order. CM71 then proves equality
+of the entire accumulator outside the known-label set. Compute those known
+classes and one outside class, then expand the result before storing the full
+logical head. Fully known blocks keep their original active-class support.
+If any unknown row has unequal words, the complete original class loop remains
+available. This conditional shortcut never discards that row or its classes.
+
+Second, a prediction certificate may use multiple interpretations of the saved
+coefficient events. An outward interval pass preserves inactive skips. An
+independent dense coefficient pass may explicitly read zero at an inactive
+class and perform its original exact addition. A deterministic recoding of
+equal events remains equal within each pass, even when it maps an absent event
+to an explicit payload. The reverse pass retains its own reversed schedule.
+Each pass may share equal columns and expand its full class vector afterward.
+
+A joint readout of those complete expanded vectors is unchanged. It can retain
+the original residual and enclosure checks, exact integer comparison, every tied
+raw maximizer, and ordinary CE over the entire class vocabulary. The theorem
+does not require forward and reverse answers to agree; their discrepancy stays
+available to the certificate. It does not replace exact dyadic checking with a
+rounded argmax or delete equally scoring classes.
+
+A concrete three-state, four-class example has two known labels, one unknown
+row and a repeated operation. Paired accumulators give distinct exceptional
+columns `(5405,5525)` and `(470,590)`, with shared columns `(400,520)`. A separate
+forward/reverse witness deliberately produces different answers and preserves
+both. Making the unknown row nonuniform gives a counterexample to the shortcut;
+the full fallback still represents it exactly.
+
+Formalization: `SharedColumns/{Construction,ConstructionWitness}.lean`, nine
+direct checks in `scripts/SharedConstructionAxioms.lean`. The results prove
+conditional ordered identities, not native IEEE refinement, speed, convergence
+or target identification. The implementation must test actual word equality,
+rebuild plans for changed heads, account for full class vectors and simultaneous
+integer clones, and compare every certificate field and training trajectory to
+the complete prior model. Bounded synthetic timings are separate from original
+fits. Existing frozen producers stay fixed; new original results require a new
+freeze, complete training seal, independent repeat and raw replay.
