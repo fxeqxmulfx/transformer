@@ -7863,3 +7863,97 @@ controls and strict Clippy. Independently rebuild and review before using this p
 new complete original freeze/repeat. Existing frozen producers remain fixed,
 the verified historical two-mode union remains 79/165, and routing's data gap
 remains task 361. No synthetic timing is counted as a stress-test pass.
+
+### 2026-11-16: learn shared convex interactions from ordinary answer loss
+
+Status: planned, following the user's request to move beyond fixed program
+discovery and reread the flat-spectrum results. The task is to develop a shared
+convex learner whose answer loss learns routing and output interactions from
+categorical inputs. Begin with a nonconstant identification example and native
+controls before a separately frozen original-task pilot. Existing comparison
+producers, recorded failures and the historical 77/165 coverage remain intact.
+
+The mathematical starting points are [flat spectrum](review/flat_spectrum.md),
+CR1-CR7, CC1-CC8, MF1-MF5, SB1-SB3 and CM64-CM70. Theorem A concerns
+minimum-nuclear-norm recovery of a specified flat kernel; it does not prohibit
+all convex learning. CC1-CC2 already learn the complete joint tensor
+`W(q,k,v,c)`, with logits `sum_k W(q,k,D(k),c)` and a label-independent convex
+domain. [CC5](src/Transformer/Grokking/FlatSpectrum/ConvexChannel/Identification.lean)
+identifies routing and generation under explicit realizability and separation
+conditions. Those hypotheses and the supplied input representation must remain
+visible. Flatness and sufficient rank alone do not identify unseen answers.
+
+The current CM64 model imposes
+`gamma[j,p_j(x_i),c] = w[j] * 1[c=y_i]` before CE optimization. Its theorem
+[`observed_batch_ce`](src/Transformer/Grokking/FlatSpectrum/ConvexDepth/BoundedLatent/Confidence.lean)
+therefore makes every nonempty observed batch loss exactly
+`log(1 + (V - 1) * exp(-sum_j w[j]))`. The loss distinguishes total confidence,
+but neither compatible programs nor unknown decoder completions at equal
+confidence. Increasing epochs, widening the grammar or compressing its storage
+does not change this identification limitation. Projection can move additional
+coordinates without making the empirical loss informative about them.
+
+The proposed learning problem must meet these requirements:
+
+1. Specify a common categorical or causal input encoding, its interaction order
+   and resource bounds before fitting. Task identifiers, target formulas,
+   selected answer programs and held-out labels must not enter its forward map.
+   Any fixed positional, pairing, copying or class-coordinate prior must be
+   declared. Removing label anchors while retaining the existing program bank
+   is a fixed-feature control, not completion of this task.
+2. Learn shared joint interaction and output coordinates with ordinary original
+   answer CE. Replace hard observed-label anchor equations by supervision in the
+   loss; use a label-independent feasible domain and initialization. Prove
+   convexity in every optimized coordinate and preserve the actual complex-head
+   computation where used. Products of separately learned factors need their
+   own justification; the current joint-coordinate theorem does not cover them.
+3. Establish sufficient representational capacity without assuming that a
+   spectral bound determines the answer. Use the flat-spectrum rank/error
+   bounds on the actual represented operator. Any spectral radius, sharing map
+   or regularizer must be specified without missing labels. A table with an
+   independent parameter for every input is only a capacity control until a
+   sharing and identification argument connects observed and unseen inputs.
+4. Prove a small nonconstant learning result: state the target family and an
+   explicit observation/separation condition, then derive correct predictions
+   on previously unobserved inputs from empirical optimality. Include an example
+   satisfying every premise and retain an ambiguous-data counterexample. Keep
+   parameter identification, decoded-answer identification and convergence of
+   the actual update rule distinct. Fixed categorical input features do not
+   establish unrestricted learned-encoder or full-catalog generalization.
+5. Implement the proved model and its training in Rust/Kernite. Minibatch CE
+   must update routing/output interactions rather than only total confidence;
+   preserve original record multiplicities and short tails. Address MF1's
+   singleton-oracle failure explicitly; stale gradient memory alone is not a
+   convergence proof. A forward-only method must specify how observations
+   change its learned parameters. Full-batch is an optional reference. Report
+   any unresolved learning or convergence obligation as such.
+
+Acceptance proceeds in this order:
+
+- Theory: reread all new statements beside the cited sections; build the new
+  modules and full library with `LAKE_ARTIFACT_CACHE=false`; run direct and
+  global axiom checks, native forbidden checks, and generate `INDEX.md` for
+  every `src/` change. Preserve the repository's existing unfinished results.
+- Native controls: check derivatives or the claimed forward-only update,
+  independent predictions, feasibility, actual parameter movement, initialization
+  independence from labels, contradictory-label behavior, duplicate/tail
+  handling, checkpoint replay and complete memory/work accounting. Demonstrate
+  a change in relative class predictions from training at fixed confidence,
+  rather than treating a lower confidence-only CE as representation learning.
+- Learning controls: compare the anchored fixed-program reference, a free
+  decoder on fixed features, and the proposed shared learner on the proved
+  example and its ambiguous counterpart. Separate fit, optimization gap and
+  unseen accuracy, and keep every refusal and failed control.
+- Original pilot: after theory and native review, freeze the producer and a
+  small original-task protocol with declared seeds, budgets and unchanged
+  inputs, splits, full-vocabulary CE and evaluation criteria. Require minibatch
+  and forward-only endpoints; retain full-batch as an optional reference.
+  Rebuild independently and repeat raw scoring before crediting new coverage.
+  Preserve each task's original success flag and separately report raw99 and
+  exact99 across held-out splits, with the earlier three-mode union identified
+  separately. Keep generated evidence local and authored findings in the new
+  experiment README.
+
+The first deliverable is the explicit shared domain, its convex answer loss
+and the inhabited identification theorem. A compact general learner for all
+165 cases is a later objective, not an assumed consequence of this task.
