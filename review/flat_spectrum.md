@@ -20080,3 +20080,89 @@ multiplicities and short tails, test relative prediction changes at fixed
 confidence, and preserve contradictory-label failures. Compare the anchored
 reference, a free decoder on fixed features and the shared learner before any
 separately frozen original pilot. This theorem supplies no new catalog credit.
+
+## CM74. Hidden-path supervision, joint repair, and shared-decoder obstruction
+
+The requested interface is a constant object sequence followed by the next
+object, with representation, interactions and output mapping all trained from
+ordinary answer CE. A proof about fully observed internal paths is insufficient
+for that objective. The existing `GPTMini.Convex.Structured.TensorStackTraining`
+uses a complete `MixedConfiguration` as its target and explicitly excludes
+output-only CE. The following controls identify the mathematical gap without
+claiming a new proof about that entire older stack.
+
+First fix one input and learn two scalar parameters a,b. An encoder chooses a
+hidden bit h with probabilities sigmoid(a) and sigmoid(-a). A decoder keeps h
+with probability sigmoid(b) and flips it otherwise. Every complete pair (h,y)
+has positive probability, and the four probabilities sum to one. Its complete
+NLL is a sum of two softplus terms, hence convex jointly in a,b. It is also
+exactly ordinary CE on the four path categories. A target in that vocabulary
+reveals h as well as the actual next object y.
+
+With only y observed, actual output probabilities instead sum the two paths
+ending at y. Their normalized log probabilities are the logits supplied to
+the usual full-vocabulary log-sum-exp CE. At (a,b)=(log 3,log 3) and
+(-log 3,-log 3), P(y=true)=5/8. At the midpoint (0,0), P(y=true)=1/2. The midpoint
+CE is therefore strictly larger than the average endpoint CE. This proves
+nonconvexity for this learned two-stage answer model, despite its convex
+complete-path loss. It does not assert that affine logits are necessary or
+rule out every possible nonlinear convex sequence family.
+
+A constructive repair at one input learns a full joint table J(h,c), with
+
+```
+J(h,c) > 0,             sum_h sum_c J(h,c) = 1,
+E_J(h) = sum_c J(h,c),  D_J(h,c) = J(h,c) / E_J(h),
+P_J(c) = sum_h E_J(h) D_J(h,c).
+```
+
+The domain is convex and label independent. Neither E_J nor D_J is frozen;
+they are conditional distributions coupled through the same learned joint
+coordinates. Their actual products equal J(h,c), so P_J is its output marginal.
+Every P_J(c) is positive and the full vocabulary normalizes. Consequently
+ordinary CE on logits log(P_J(c)) equals -log(P_J(y)) and is jointly convex
+in J on the declared domain. No internal-path labels enter this loss.
+
+For a single input this is an exact parameterization of all positive stochastic
+encoders E and arbitrary positive conditional decoder rows D: J=E D lies in
+the joint domain, and recovering its row marginals and conditionals returns
+E and D exactly. This larger family does not impose the earlier counterexample's
+keep/flip tie. Strict positivity also means a finite optimum is not guaranteed
+for separable data; no optimizer convergence theorem is asserted.
+
+An inhabited two-state/two-class comparison starts from all J entries 1/4.
+In false/true row and column order, another feasible point is
+[[1/2,1/8],[1/4,1/8]]. The false-state encoder mass changes from 1/2 to 5/8,
+its false-output decoder probability changes from 1/2 to 4/5, and the actual
+false-output probability increases from 1/2 to 3/4. Ordinary answer CE strictly
+decreases. This is a feasible change in both stages, not a proof that an
+optimizer finds it or that the loss uniquely identifies latent parameters.
+
+Sharing a learned decoder across distinct inputs is an additional constraint.
+For two inputs, two hidden states and two outputs, consider joint tables
+
+```
+T(x,h,c) = E(x,h) D(h,c),
+E(x,.) and D(h,.) strictly positive normalized rows.
+```
+
+At each fixed h, its input/output minor must vanish. Let both stage tables
+have diagonal 3/4 and off-diagonal 1/4 at one endpoint; reverse those entries
+in both stages at the other endpoint. Both are genuine shared-decoder models
+and their actual output probabilities agree at every input. Their joint
+midpoint has minor 1/16 at h=false, so no common decoder represents it. Yet
+each input of that midpoint remains in the positive joint simplex. Thus this
+exact shared-decoder image is nonconvex, even with all entries positive.
+Independent joint tables per prefix would silently relax the sharing that is
+needed for the proposed sequence model. The identical endpoint answers also
+show why internal state labels are not identified by output supervision.
+
+Formalization: `ConvexChannel/HiddenPath/{Basic,Boundary,Joint,Recovery,Witness,Sharing}`;
+direct axiom checks: `scripts/HiddenPathAxioms.lean`.
+These are exact finite controls with inhabited hypotheses, not a completed
+causal sequence architecture, a compact complex implementation, or a native
+learning result. The remaining construction must specify an executable shared
+representation, prove the intended joint convexity without substituting
+complete-path targets, and derive unseen-prefix predictions under explicit
+conditions. Flat-spectrum bounds apply to its actual output operator; they
+do not remove this parameter-sharing or identification obligation.

@@ -8069,3 +8069,32 @@ The old tensor-stack likelihood proof also needs observed internal paths, so
 it does not supply the requested ordinary next-object CE theorem. Continue with
 the complete causal representation/interaction/readout construction in Lean;
 do not substitute either restricted model for the clarified architecture.
+
+### 2026-11-16: hidden-path likelihood and the shared-decoder constraint
+
+CM74 supplies finite controls for task 366. With two learned stochastic stages,
+complete-path CE is jointly convex, but ordinary next-object CE after summing
+the hidden paths is not: two endpoints give probability 5/8 for the same answer,
+while their midpoint gives 1/2. This prevents transferring the older
+fully-observed-path theorem to the requested answer-only objective.
+
+At one fixed input, learning a strictly positive joint hidden/output table gives
+an exact parameterization of all positive untied stochastic encoder/decoder
+pairs. Both recovered stages can change while ordinary answer CE decreases,
+and that CE is convex in the joint coordinates. The construction has no claim
+of optimizer convergence or identification of the hidden-state names. It also
+does not preserve the first counterexample's keep/flip tie.
+
+A two-input counterexample proves the remaining sharing issue. Two positive
+models with a common decoder have a joint midpoint whose input/output minor is
+1/16, whereas every shared-decoder factorization requires zero. The midpoint
+still belongs to the independent joint simplex at each input. Thus independent
+joint tables per prefix relax parameter sharing; they do not complete the
+shared learned sequence architecture. Flatness does not remove that constraint.
+
+The new source is `ConvexChannel/HiddenPath`, with direct checks in
+`scripts/HiddenPathAxioms.lean` and source discussion in `review/flat_spectrum.md`
+CM74. Task 366 remains open: construct the actual shared causal computation,
+establish its ordinary CE geometry, and connect observed training sequences to
+genuinely unseen prefixes under explicit conditions before native learning.
+These controls add no stress-test accuracy credit.
