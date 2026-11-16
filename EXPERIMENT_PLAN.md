@@ -7667,3 +7667,16 @@ Check and commit it, freeze from clean source, then execute all54 cases and all
 three modes with the complete pre-heldout training seal. Rebuild frozen source
 independently and repeat/replay everything before catalog credit. Keep the
 running351 producer and its queued repeat unchanged.
+
+### 2026-11-16: task357 uniform projections over the unchanged full domain
+
+CM69 proves the exact row variance decomposition and its consequence for every
+full Euclidean minimizer with class-uniform unknown proposal rows. It retains
+the entire CM64 domain and CM66 weighted mass objective. Nonconstant complex
+witnesses exhibit an unseen tie and surviving opposite nonuniform completions;
+a nonuniform self-projection shows why the proposal condition is necessary.
+The 27 theorems include zero mass and actual raw-class cardinality. Check the
+direct axioms, full build, native index and global audit before landing. Any
+future native storage change must retain arbitrary nonuniform coordinates and
+receive its own controls and producer freeze. No running comparison changes,
+general-iterate uniformity claim or new catalog credit follows from this proof.

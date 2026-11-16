@@ -19731,3 +19731,70 @@ The native follow-up must compare all decoded states, full domains, complex
 coefficients, objective values, actual update ranges and saved parameters with
 the existing expanded-record implementation, and preserve the frozen training
 probe's original audits separately from any refined memory forecast.
+
+## CM69. Uniform unknown rows at exact projections over the complete domain
+
+CM65 leaves every unobserved decoder coordinate free. A particular projection
+can nevertheless have uniform unknown rows when its proposal has that symmetry.
+This is a conditional property of a minimizer over the original feasible set;
+it is not permission to replace that set by a uniform-row subspace.
+
+Let the finite raw-class type be nonempty, with actual cardinality `n > 0`.
+For any real row `x` with sum `m`, and any scalar proposal value `u`,
+
+```
+sum_c (x[c] - u)^2
+  = sum_c (x[c] - m/n)^2 + n * (m/n - u)^2.
+```
+
+The first term is nonnegative and vanishes exactly when every entry is `m/n`.
+The identity and fixed-mass uniqueness include `m = 0` and arbitrary real `u`.
+Nonnegativity of the row is unnecessary for this identity.
+
+For a feasible CM65 reduced tensor `r`, let `B(r)` keep its masses and replace
+each unknown row by `r.w[j]/n`. Since the masses are nonnegative, `B(r)` remains
+in the same complete domain, including its support, anchors and mass interval.
+For a reduced proposal `v` whose class entries agree within each unknown row,
+CM66's weighted distance satisfies the exact decomposition
+
+```
+D(r,v) = D(B(r),v)
+           + sum_j sum_(s in Unknown_j) sum_c (r.u[j,s,c] - r.w[j]/n)^2,
+
+D(B(r),v) = sum_j [k_j * (r.w[j] - v.w[j])^2
+                      + sum_(s in Unknown_j) n * (r.w[j]/n - v.u[j,s,c0])^2],
+k_j = 1 + card(Known_j).
+```
+
+Here `c0` is any actual raw class. Different unknown proposal rows may have
+different values. Every unknown row contributes to the mass-only objective;
+the anchored-copy weight `k_j` is retained. Comparing a global minimizer with
+its feasible point `B(r)` forces the complete nonnegative remainder to zero.
+Therefore every exact minimizer has each unknown entry equal to its mass
+divided by `n`. No existence theorem is claimed.
+
+CM66 transfers this result to the original full joint tensor. The full proposal
+can violate mass constraints and observed anchors and can have arbitrary
+off-label coordinates on known rows. Only its unknown rows must be uniform.
+The conclusion concerns a minimizer of the original full Euclidean objective
+over the entire CM64 bounded domain. All other feasible completions remain.
+
+The nonconstant two-class witness retains distinct observed labels at three
+states. At mass four, its unknown balanced row is `(2,2)`, and the complete
+complex head gives logits `(2,2)` at the unseen query. A head coordinate has
+imaginary component `-1`, so the example uses the complete complex construction.
+The two prior feasible completions `(4,0)` and `(0,4)` remain in exactly the
+same domain and still give opposite strict unseen answers. One such nonuniform
+tensor is also a global projection of itself, proving that the uniform-proposal
+condition matters. Examples cover every conditional theorem, zero mass, full
+complex coefficient bounds, duplicate indexed observations and a singleton CE
+batch tail.
+
+Formalization: `ConvexDepth/UniformRows/{Basic,Projection,Witness}.lean`, with
+27 direct axiom checks in `scripts/UniformRowAxioms.lean`. These are exact-real
+projection results. They do not identify unseen answers, prove general update
+trajectories uniform, supply a floating-point minimizer, or establish new test
+accuracy. Any native storage follow-up must represent arbitrary nonuniform
+rows as well, preserve all compatible candidates and original records, charge
+the actual complete complex head, and test its numeric behavior separately.
+The frozen task355 comparison remains unchanged.

@@ -1,0 +1,29 @@
+import Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows
+
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.card_pos
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.sum_mean
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.sum_centered
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.square_decomposition
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.square_remainder_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.square_remainder_zero_iff
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.uniform_row_closest
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.uniform_row_unique
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.balanced_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.variance_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.variance_zero_iff
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.distance_decomposition
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.minimizer_uniform
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.balanced_objective
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.weightedDistance_nonneg
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.full_minimizer_uniform
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witnessBalanced_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witnessBalanced_uniform
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witnessBalanced_values
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witness_nonuniform_feasible
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witness_positive_variance
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witnessFull_entry
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witnessFull_mem
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witnessFull_minimum
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witness_unseen_tie
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witness_nonuniform_self_projection
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.witness_imaginary_head
