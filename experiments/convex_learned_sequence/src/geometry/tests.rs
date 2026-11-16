@@ -237,6 +237,63 @@ fn independent_geometry_checker_rejects_missing_or_corrupt_certificates() {
 }
 
 #[test]
+fn nonorthogonal_pairing_recovery_uses_the_complete_gram_system() {
+    let geometry = ConeGeometry::new(
+        ProjectionProblem::new(
+            3,
+            vec![vector(&[2, 1, 1]), vector(&[-2, -1, -1])],
+            arithmetic(),
+        )
+        .unwrap(),
+        limits(),
+    )
+    .unwrap();
+    let pairings = vector(&[2, 4]);
+    let recovered = geometry.recover_pairings(&pairings).unwrap();
+    assert_eq!(recovered, vector(&[-2, 1, 3]));
+    geometry.verify_pairings(&recovered, &pairings).unwrap();
+    let wrong = geometry.combine(&pairings).unwrap();
+    assert_eq!(wrong, vector(&[-3, 2, 4]));
+    assert_eq!(
+        geometry.verify_pairings(&wrong, &pairings),
+        Err(Refusal::QueryPairing)
+    );
+    assert_eq!(
+        geometry.recover_pairings(&vector(&[2])),
+        Err(Refusal::Shape)
+    );
+    assert_eq!(
+        geometry.verify_pairings(&vector(&[0, 1, 3]), &pairings),
+        Err(Refusal::QueryDirection)
+    );
+}
+
+#[test]
+fn certified_empty_basis_pairing_recovery_keeps_the_full_zero_vector() {
+    let geometry = ConeGeometry::new(
+        ProjectionProblem::new(
+            2,
+            vec![
+                vector(&[1, 0]),
+                vector(&[-1, 0]),
+                vector(&[0, 1]),
+                vector(&[0, -1]),
+            ],
+            arithmetic(),
+        )
+        .unwrap(),
+        limits(),
+    )
+    .unwrap();
+    assert_eq!(geometry.recover_pairings(&[]).unwrap(), vector(&[0, 0]));
+    geometry.verify_pairings(&vector(&[0, 0]), &[]).unwrap();
+    assert_eq!(
+        geometry.verify_pairings(&vector(&[1, 0]), &[]),
+        Err(Refusal::QueryDirection)
+    );
+}
+
+#[test]
 fn geometry_limits_and_malformed_queries_refuse_explicitly() {
     let problem =
         ProjectionProblem::new(2, vec![vector(&[1, -1]), vector(&[-1, 1])], arithmetic()).unwrap();
@@ -306,6 +363,14 @@ fn every_pattern_has_complete_geometry_and_feasible_basis_queries() {
             }
             let mixed = geometry
                 .mixture(&point, &Rational::new(1.into(), 3.into()))
+                .unwrap();
+            let pairings: Vec<_> = (0..geometry.basis().vectors.len())
+                .map(|i| integer(2 * i as i64 - 3))
+                .collect();
+            let recovered = geometry.recover_pairings(&pairings).unwrap();
+            geometry.verify_pairings(&recovered, &pairings).unwrap();
+            geometry
+                .symmetric_queries(&mixed, &recovered, &Rational::new(1.into(), 8.into()))
                 .unwrap();
             for direction in &geometry.basis().vectors {
                 let query = geometry

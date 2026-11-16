@@ -37,6 +37,7 @@ pub enum Refusal {
     BasisRecovery,
     QueryDirection,
     QueryStep,
+    QueryPairing,
 }
 
 impl std::fmt::Display for Refusal {

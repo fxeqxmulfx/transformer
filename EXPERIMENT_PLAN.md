@@ -8286,3 +8286,12 @@ optimizer. Next recover update directions from all measured basis pairings,
 retain every record/multiplicity/tail, and connect both proposal modes to atomic
 whole-model projection. Full-family resource admission and the separately frozen,
 independently repeated training pilot remain required before accuracy credit.
+
+Native basis-pairing recovery now solves the complete exact Gram system and
+independently verifies the resulting full vector against every supplied pairing
+and kernel reconstruction. Off-diagonal entries are retained. Thirty controls
+pass, including nonorthogonal and empty-kernel cases and complete recovery/query
+checks for all 144 small-domain patterns. This supplies a direction from provided
+numerical values; it does not prove those values are true CE derivatives. Actual
+Mini/forward-only Mini proposals, whole-family budgets and a sealed learning
+pilot are still next, with no new empirical accuracy credit.

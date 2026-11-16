@@ -113,6 +113,15 @@ rows. Mixing changes the iterate and can increase loss, as recorded in CM80.
 All returned points remain rational. To execute them, the full model constructor
 checks the whole parameter array before actual recovered complex inference.
 
+`recover_pairings` solves the complete basis Gram system, retaining all
+off-diagonal entries, and reconstructs a vector in the full equality kernel.
+Independent acceptance rechecks its kernel reconstruction and every supplied
+pairing. A certified empty kernel returns a full zero vector; missing pairings
+refuse. This implements CM81's exact-pairing premise for supplied rational
+values. It does not establish that numerical finite differences equal true
+loss derivatives. Merely using the measured pairings as basis coefficients
+gives the wrong result on a nonorthogonal basis.
+
 `GeometryPlan` admits the number of normal projections, the worst-case total
 active-subset candidates, rational entry count and conservative byte reservation
 before further construction. The reservation includes projection workspace,
@@ -154,6 +163,13 @@ all sixteen three-object patterns executes two actual complex query forwards:
 the selected real and imaginary score changes are both `1/16`, with ordinary
 full-class CE changing in the expected directions on every original prefix.
 This is a known feasible control, not training or a new accuracy measurement.
+
+Two pairing-recovery controls bring the total to thirty. On the plane
+`2x+y+z=0`, requested pairings `(2,4)` recover `(-2,1,3)` exactly; the naive
+coefficient interpretation produces `(-3,2,4)` and is rejected. Empty-kernel,
+missing-pairing and invalid-direction cases are checked. The complete-pattern
+control now also recovers all supplied pairings and makes a feasible query
+along the recovered vector for every one of the 144 patterns.
 
 Development tests, strict all-target Clippy and a release build pass. The Lean
 projection/query components independently pass the full build, fifty-seven
@@ -199,10 +215,9 @@ annihilates every forced row, its selected free coordinates form an identity,
 and every original coordinate residual is an explicit combination of retained
 equality rows. The Lean reconstruction theorem proves full kernel coverage and
 unique coefficients from those checks. Native elimination generates and
-independently verifies them. Next connect the complete family of these queries
-to actual minibatch loss evaluations and update proposals. A nonorthogonal
-basis requires recovery of a direction from its measured pairings; raw directional
-values cannot simply be treated as Euclidean gradient coefficients.
+independently verifies them, and full Gram recovery checks every supplied basis
+pairing. Next connect the complete family of these queries to actual minibatch
+loss evaluations and update proposals, retaining every record and short tail.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy

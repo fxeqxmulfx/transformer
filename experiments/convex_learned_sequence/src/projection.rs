@@ -180,13 +180,21 @@ impl ProjectionProblem {
     }
 }
 
-/// Exact Gauss--Jordan elimination of an augmented square active Gram system.
-/// A singular system is a rejected candidate, never a removed model constraint.
-fn solve(
+/// Exact Gauss--Jordan elimination of an augmented square system. Shared by
+/// projection candidates and basis-pairing recovery; singularity is a refusal
+/// of the candidate, never a removed model constraint or query direction.
+pub(crate) fn solve(
     mut matrix: Vec<Vec<Rational>>,
     limits: ProjectionLimits,
 ) -> Result<Option<Vec<Rational>>, Refusal> {
     let size = matrix.len();
+    let width = size.checked_add(1).ok_or(Refusal::Overflow)?;
+    if matrix.iter().any(|row| row.len() != width) {
+        return Err(Refusal::Shape);
+    }
+    for value in matrix.iter().flatten() {
+        limits.check(value)?;
+    }
     for column in 0..size {
         let Some(pivot) = (column..size).find(|&row| !matrix[row][column].is_zero()) else {
             return Ok(None);

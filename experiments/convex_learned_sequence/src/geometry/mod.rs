@@ -4,6 +4,7 @@
 //! tested against Lean specifications, not extracted or formally verified Rust.
 
 mod basis;
+mod pairings;
 mod queries;
 
 pub use basis::BasisCertificate;
