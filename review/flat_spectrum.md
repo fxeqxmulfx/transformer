@@ -21460,3 +21460,66 @@ No new native experiment, accuracy credit or change to frozen producers
 accompanies this extension. Task-family discovery and Mini/forward-only Mini
 convergence remain separate open work; correctness for the unknown target
 continues to require explicit family realizability.
+
+## CM88. Complete forward-only queries and exact zero-column storage
+
+The user's request to resume GPT stress testing requires a native CM86 model;
+the existing CM75--83 pilot implements a different family. The following exact
+identities support the new implementation without discarding coordinates or
+using an analytic CE derivative in the forward-only loss-query calculation.
+
+Let r encode every real and imaginary joint coefficient, and let z identify
+one coordinate, including its original output class c. The actual logit
+coefficient is zero for every other class; for c it is the signed response
+
+```
+s(x,z) = (1 for real, -1 for imaginary)
+         * Re(queryRow(x)[q]) * Re(contextRow(past(x))[d]).
+```
+
+The actual recovered output after changing r_z by t changes only logit c, by
+t*s(x,z). The real bias coordinate (c,none,none) has response one on every
+prefix, including the empty prefix. Consequently a complete coordinate query
+at step t equals the class-bias query at step t*s for this record, before and
+after ordinary full-vocabulary CE. This is proved from CM86's actual complex
+path through its exact finite coordinate expansion.
+
+Write D_z(h) for the central difference of this record's ordinary CE after
+the two complete parameter perturbations plus/minus h at coordinate z. For
+nonzero h and nonzero response s, CM88 proves
+
+```
+D_z(h/s) = s * D_bias(c)(h).
+```
+
+If s=0 then D_z(t)=0 for every t. Thus two bias loss queries for every
+original class and every indexed supervised record give the complete vector
+of coordinate differences, with a response-dependent coordinate step. They
+are not selected-coordinate estimates. The resulting mean uses every record
+and its actual batch length, retaining duplicates and short tails. It is the
+mean of per-record coordinate differences at those steps, not a claim of one
+common coordinate step for the entire batch loss. No exact-derivative,
+finite-step error or convergence theorem is asserted. A repeated-pair witness
+has response two; a genuinely absent query address supplies a zero response.
+
+For either analytic residuals or measured bias loss differences, define the
+complete pullback by N^-1 sum_i s(x_i,z)*scalar[i,c]. If a coordinate has zero
+response on every record, its pullback is exactly zero. A zero parameter at
+that coordinate stays zero after a complete update. This permits a sparse
+storage representation whose absent entries mean exact zeros in the full
+unchanged domain. It does not permit deleting small nonzero parameters.
+
+The actual spectral rightFactor has a zero context row whenever the joint
+matrix's corresponding context column is zero; rightRepresentation retains
+that zero after normalization. The full query Gram matrix M*M* equals the
+sum over stored columns whenever every other column is exactly zero. The
+remaining singular directions and both original encoders are retained. These
+facts justify avoiding arithmetic and storage of zero columns; they do not
+justify singular-value thresholding or numerical rank truncation.
+
+Formalization: `LearnedBilinear/Updates/{Basic,Forward,Support}`. Native tests
+must separately compare actual recovered complex inference, complete direct
+coordinate queries, finite-difference reuse, analytic controls, zero storage,
+all original classes and short minibatch tails. Numerical SVD, finite differences
+and binary64 CE require measured residual/error reporting; these exact Lean
+identities are not a proof that floating-point evaluations are bit-identical.

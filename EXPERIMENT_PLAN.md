@@ -8491,3 +8491,15 @@ pilot; the existing CM75--83 pilot is a different exponential family. Preserve
 all full joint coordinates, complex factors, classes and minibatch tails, and
 report the known four-object parity restriction alongside actual measurements.
 Keep the 110 GB aggregate RAM limit, both-disk guards and frozen producers.
+
+### 2026-11-16: complete CM88 query reuse before native stress runs
+
+CM88 proves coordinate changes of the actual learned logits and exact reuse
+of per-record class-bias CE queries for every real/imaginary coordinate. The
+forward-only Mini rule averages all per-record coordinate differences using
+response-dependent steps. It does not call an analytic CE derivative and does
+not assert finite-difference convergence. Exact zero support persists under the
+complete pullback; zero joint columns also give zero learned context rows and
+zero Gram contributions. Implement implicit zeros, retain all nonzero entries
+and singular directions, and report numerical factor/replay residuals. Verify
+these identities and native update kernels before prospective stress scoring.

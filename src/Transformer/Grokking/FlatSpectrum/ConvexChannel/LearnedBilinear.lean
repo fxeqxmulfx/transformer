@@ -10,6 +10,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Pa
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Restriction
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Spectral
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Identification
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates
 
 /-!
 # A learned rectangular complex sequence family with exact convex answer loss
@@ -21,6 +22,7 @@ interaction returns probabilities over the original objects. Exact physical
 coverage and joint CE convexity are proved, alongside changed encoder geometry,
 three-object parity capacity, a four-object parity obstruction and flat-spectrum
 width bounds. These results do not provide native training or stress credit.
-CM87 adds one explicitly open observed-margin identification bridge, requested
-by the user as the starting statement for task 367. No proved result uses it.
+CM87 proves observed-margin identification with a complete finite certificate,
+ordinary CE/error bridges and unseen success/refusal controls. CM88 proves
+complete forward-query reuse and exact zero-column storage for native updates.
 -/
