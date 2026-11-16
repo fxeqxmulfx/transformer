@@ -8156,3 +8156,27 @@ Keep task 366 open and the 99% raw/exact target on all 165 cases. Native Mini
 and forward-only Mini still need executable feasible updates and complete
 resource accounting. A representation witness neither replaces those duties
 nor identifies unseen answers. Flatness must bound the actual learned operator.
+
+### 2026-11-16: actual learned-prefix ambiguity and a flat observed operator
+
+CM77 proves the missing-answer gap inside the CM75–CM76 complex network. A
+permitted learned bias and position/object vector isolates one complete prefix.
+Both complex components enter the original raw forward. Conic addition changes
+one chosen missing-prefix logit by any real amount while preserving the whole
+complex output at every other prefix. For any already fitted feasible point,
+all original observed logits and indexed ordinary CE remain exactly equal.
+Two alternative binary answers at the omitted prefix are therefore possible.
+
+A nonconstant two-label witness has observed CE strictly below log 2 for both
+labels and still permits the opposite unseen preferences. An operator made
+from three actual neuron forwards has observed-row Gram matrix 10I, an exact
+energy identity and a retained nonzero direction invisible to the observed
+rows. Thus flatness is an actual operator bound here, not an identification
+principle or permission to remove the missing coordinate.
+
+No frozen pipeline or empirical coverage changes. Keep task 366 open. Next,
+test explicit sharing conditions that transfer observed answers to genuinely
+unseen inputs without freezing the representations or output mapping. Any
+such condition must state which tasks satisfy it and its cost; it cannot be
+assumed for all 165 cases. Executable complete-family Mini and forward-only
+Mini updates under 110 GB, the 99% target and full raw replay remain required.

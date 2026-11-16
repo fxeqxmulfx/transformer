@@ -20373,3 +20373,76 @@ a resource-bounded complete sequence family, executable Mini and forward-only
 Mini updates, identification from actual observations, and flat-spectrum
 bounds on the actual operator. This removes one concrete storage obstruction;
 task 366 and the 99%-accuracy objective remain open, with no new test credit.
+
+## CM77. Missing-answer ambiguity inside the actual learned sequence family
+
+The interface remains a sequence of immutable objects and one next object from
+that same set. Parameters used to represent, combine and predict those objects
+are learned. CM75–CM76's exact physical coverage and convex CE do not identify
+an unobserved answer. This claim now has a constructive proof inside their
+actual complex raw-sequence model, including perturbations of any fitted point.
+
+Fix an object set O, cap T and a complete raw prefix v of length T. The learned
+bias is 1-T and its position/object weight at (i,o) is one when o=v[i], zero
+otherwise. The original raw lookup computes 1-T plus the number of matching
+positions. At v this is one; every other admitted prefix, including shorter
+ones, gives a nonpositive value. Its ReLU therefore isolates v exactly. The
+comparison with v occurs in the proof of this permitted parameter choice;
+it is not a task-specific program substituted into the model's forward.
+
+Multiply the whole real vector by 2+i. Both real and imaginary preactivations
+are rectified by the unchanged actual complex neuron. The recovered readout
+phase 1+i makes its whole complex response 1+3i at v and zero elsewhere.
+The output's real part is one. Arbitrary signed real readouts and exact CM76
+coverage place this direction in the complete reduced domain, for any chosen
+output class and any real amplitude r. No original class or pattern is removed.
+
+The activation domain is a cone. Adding two feasible points preserves every
+constraint, and the whole complex prediction adds on every admitted raw prefix.
+Thus for any feasible p there is a feasible q with exactly the same complex
+prediction everywhere except the chosen prefix/class, where it changes by
+r(1+3i). The selected real logit changes by r. Recovered factors may change;
+this is an exact forward identity, not a claim about preserving their norms.
+
+If every observed input omits v, every observed logit and ordinary next-object
+CE remains equal. Every indexed sum is equal, retaining duplicates and short
+tails. For binary objects, choose r relative to p's two missing-prefix logits:
+one feasible point then strictly prefers false, another strictly prefers true,
+while both keep all of p's observed logits and loss. This holds even when p is
+already fitted. It is an identification failure, not an optimizer-divergence
+claim or a claim that a particular regularized learner must choose badly.
+
+The hypotheses are inhabited with genuinely different observed answers:
+[false,false] has next object false and [false,true] has next object true.
+Two permitted neuron directions produce any common positive target margin r.
+Each ordinary CE equals log(1+exp(-r)), strictly below log 2. Opposite answers
+at the omitted [true,true] preserve that exact nonconstant fit. No hidden-path
+labels are used. This witness does not assume a task rule for the missing label.
+
+For the flatness connection, form an operator from actual raw forward calls:
+three rows are prefixes [false,false], [false,true], [true,true], and the three
+columns are their actual learned singleton neurons. Its complete complex
+matrix is (1+3i)I. Retain all three columns but observe only the first two rows,
+calling the resulting matrix A. Direct multiplication proves A A* = 10 I2.
+For every complex coefficient vector w,
+
+```
+||A w||_2^2 + 10 |w[2]|^2 = 10 ||w||_2^2,
+||A w||_2^2 <= 10 ||w||_2^2.
+```
+
+The retained direction (0,0,1) is nonzero, gives zero observed response and
+changes the missing-prefix response by 1+3i. It is real and hence also an
+allowed signed-readout direction, although the energy theorem holds on the
+larger complex linear coefficient space. This is the observed response
+operator at a specific actual learned-neuron configuration. It is not a
+flatness theorem about every learned weight tensor or a training trajectory.
+The positive observed-row spectrum is exactly flat while an unseen direction
+remains; flatness supplies the displayed bound, not the missing label.
+
+Formalization: `ConvexChannel/LearnedHinge/Unseen`; direct axioms command:
+`LAKE_ARTIFACT_CACHE=false lake env lean scripts/UnseenHingeAxioms.lean`.
+There are no new unproved inputs. Task 366 remains open. A positive repair
+needs an explicit relation between observed and unseen answers, as well as a
+resource-bounded full model and actual Mini and forward-only Mini updates.
+These results add no empirical pass or accuracy credit and change no producer.
