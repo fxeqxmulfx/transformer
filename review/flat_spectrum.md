@@ -20713,3 +20713,67 @@ allocation. Search failure remains an explicit refusal. This does not resolve
 the exponential all-pattern cost or earn any stress accuracy. Actual Mini and
 forward-only Mini training, independent producer/replay evidence and the 99%
 raw/exact target on all 165 cases remain open under task 366.
+
+## CM81. Checked completeness of the forward-query basis
+
+CM80 identifies the admissible direction space, but an arbitrary native list
+of feasible directions need not cover it. To avoid silently restricting
+forward-only training, the next certificate proves that a supplied basis spans
+the entire kernel of the forced equality rows. The certificate contains finite
+coordinate identities, not a presumed spanning or optimizer conclusion.
+
+Let E retain every original row index. It equals the original normal at a
+centre-zero row and the zero row elsewhere. This auxiliary equality matrix
+does not replace the original cone: all original inequalities remain in every
+projection and query-radius check. A proposed basis b[j], selected free
+coordinate f[j], and recovery array A[d,r] must satisfy
+
+```
+E[r] dot b[j] = 0                         for every j,r,
+b[j,f[k]] = [j=k]                        for every j,k,
+e[d] - sum(j, b[j,d]*e[f[j]]) = sum(r, A[d,r]*E[r])  for every d.
+```
+
+Here e[d] is the original coordinate row. All coordinates of each identity
+are checked. Zero or dependent original rows are retained; the certificate
+does not require an independent row subset. The basis may be empty when the
+full equality kernel is zero.
+
+Dotting the last identity with an arbitrary v gives
+
+```
+v[d] - sum(j, b[j,d]*v[f[j]]) = sum(r, A[d,r]*(E[r] dot v)).
+```
+
+Therefore every v in the equality kernel is exactly
+sum(j,v[f[j]]*b[j]). Conversely every basis combination lies in that kernel
+by the first certificate condition. The second condition recovers each
+coefficient from its free coordinate, proving uniqueness. These conclusions
+range over all vectors, not just a finite collection of numerical probes.
+
+The actual E constructed from CM80's certified centre has a kernel equal to
+the directions vanishing on every universally forced original row. Combining
+the two proofs shows that the checked basis represents exactly the directions
+admitting positive two-sided queries at the centre. Every basis combination
+also admits feasible queries after any positive centre mixture of a feasible
+iterate. No original model coordinate, activation pattern or inequality is
+removed by using coordinates for this direction space.
+
+The opposed diagonal example is inhabited by b=(1,1), one free coordinate,
+and recovery of the other coordinate using the retained opposite normal.
+All basis and actual-query theorems have instantiated examples. Equal pairings
+of two proposed gradient vectors against every certified basis direction imply
+equal work against every kernel direction. The example (2,0) versus (1,1)
+shows that the vectors themselves need not be equal. This statement has an
+explicit exact-pairing hypothesis; finite differences do not establish it
+automatically. A nonorthogonal basis also does not justify treating its raw
+directional values as Euclidean gradient coefficients.
+
+Formalization: `ConvexChannel/LearnedHinge/Projection/KernelBasis`;
+direct audit: `LAKE_ARTIFACT_CACHE=false lake env lean scripts/QueryBasisAxioms.lean`.
+A native elimination routine can retain its full row-operation matrix and
+produce this finite certificate, which an independent exact checker must verify.
+Its generation, coefficient growth, complete storage and operation budgets
+remain implementation obligations. The result is not a verified Rust solver,
+finite-difference error theorem, convergence result or stress accuracy claim.
+Task 366, both required minibatch modes and all 165 cases remain open.

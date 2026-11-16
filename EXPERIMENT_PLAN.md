@@ -8264,3 +8264,12 @@ account for complete basis work/storage, and query the actual complex forward.
 This is domain safety, not a finite-difference error or convergence theorem.
 Both actual minibatch proposal rules and the independent training pilot remain
 pending; no stress accuracy follows from CM80 or its constructed controls.
+
+CM81 adds finite certificates for complete feasible-query bases. Kernel checks,
+free-coordinate identity and explicit coordinate reconstruction from every
+retained equality row prove full coverage and unique coefficients. The actual
+centre-derived matrix is connected to CM80's two-sided query directions and
+positive iterate mixtures. A native basis generator must retain a recovery
+certificate and pass a separate exact verifier; sampled successful directions
+are not a complete replacement. Exact pairing agreement is explicitly required
+for its work identity and is not inferred from numerical finite differences.

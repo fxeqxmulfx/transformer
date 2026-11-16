@@ -144,6 +144,12 @@ mixture of the current point with this centre admits those directions, with
 explicit displacement and convex-loss bounds because mixing can increase loss.
 The native centre construction and complete direction basis remain to implement;
 no finite-difference gradient identity or convergence follows from domain safety.
+CM81 supplies a finite basis-completeness certificate: every proposed direction
+annihilates every forced row, its selected free coordinates form an identity,
+and every original coordinate residual is an explicit combination of retained
+equality rows. The Lean reconstruction theorem proves full kernel coverage and
+unique coefficients from those checks. Native elimination must generate and
+independently verify them; merely finding feasible directions is insufficient.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy
