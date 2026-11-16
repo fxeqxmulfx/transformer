@@ -8,13 +8,14 @@ numeric output codecs are absent from the model boundary. The feature family is
 an explicit structural prior. A flat-spectrum bound does not supply this prior
 or guarantee unseen answers.
 
-The first implementation has no original-data production entry point or new
-accuracy result. The prospective comparison must include all six source cases,
-retain the unresolved routing teacher refusal, freeze the producer, seal every
-training endpoint before heldout scoring, and independently repeat and replay
-the full cohort. The three older probe controls remain in that comparison.
-Raw-token99%, exact-sequence99% and the original numeric MSE criterion must be
-reported separately. Synthetic controls cannot add stress-test coverage.
+The separate [`convex_stress_probe_compare`](../convex_stress_probe_compare)
+runner now independently verifies this model on all six source entries. Five
+available probes reach 100% raw and exact accuracy on every original split in
+both required modes on seed 1; routing retains its exact teacher-data refusal.
+The producer was frozen before fitting and every endpoint sealed before
+heldout scoring. All 66 original/repeat artifacts and full raw replay match.
+The three older controls remain. Raw-token 99%, exact-sequence 99% and original
+numeric MSE are separate metrics; synthetic controls add no coverage.
 
 | Part | Fixed behavior |
 | --- | --- |

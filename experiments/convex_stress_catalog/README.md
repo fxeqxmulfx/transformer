@@ -6,6 +6,18 @@ This native inventory reconciles all 165 catalog cases with the original plan,
 the historical GPT snapshot and the existing 35-task manifest. It identifies
 130 additional cases. No model is trained or evaluated by this inventory.
 
+As of 2026-11-16, the latest independently verified
+[`convex_stress_probe_compare`](../convex_stress_probe_compare/README.md) adds
+conditional amplitudes and order discrimination. Both reach 100% raw and exact
+accuracy on every original split in forward-only and minibatch modes; three
+older controls also remain at 100%, and routing keeps its teacher-data refusal.
+All 66 artifacts match an independent repeat with full raw-score replay.
+The historical 77-case union therefore becomes 79/165 under the user's current
+two-mode requirement, across separate seed 1 cohorts. The older three-mode total
+remains 77. Full batch is optional for new work, the aggregate RAM limit is 110 GB,
+and shortage on either disk stops a run. Earlier experiment descriptions below
+retain their historical protocols and counts.
+
 The catalog and original plan are pinned to DiffGPT commit
 `5a37c515639f23037d191b0659a5a0853984328d`. `protocol.json` pins the SHA-256 of
 each input and keeps the historical model identity separately. The historical

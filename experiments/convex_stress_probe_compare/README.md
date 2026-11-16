@@ -88,7 +88,70 @@ bash experiments/convex_stress_probe_compare/run.sh "$review_binary" "$workspace
 "$review_binary" verify "$workspace" "$original_output" "$repeat_output" "$verification_output"
 ```
 
-Generated artifacts stay outside the checkout. This first runner version has
-not yet produced an original-probe accuracy result. A verified comparison still
-requires the frozen original and independent repeat; it cannot establish an
-extra seed, unconditional unseen-label identification or full catalog coverage.
+Generated artifacts stay outside the checkout. The frozen original and
+independent repeat are now complete and verified. They establish this cohort
+on seed 1; they do not establish an extra seed, unconditional unseen-label
+identification or a unified model covering the complete catalog.
+
+## Verified original results, 2026-11-16
+
+Producer `1c67b444ce763c9b7674c2ef4b15c12b68583e1e` was frozen with 7290
+source paths and independently prepared original/review data. A fresh build
+passed all 16 model/runner controls in both profiles and strict Clippy. All 66
+artifacts match across the complete runs. Both runs replayed every raw call;
+the final verifier independently recomputed the scores again.
+
+All five available probes achieve **100% raw-token and exact-sequence accuracy
+in both forward-only and minibatch modes on every original split**. Each mode
+scores 52,720/52,720 heldout label occurrences and 3568/3568 complete heldout
+examples. These totals retain the original overlapping validation/novel subsets;
+they are not counts of independent samples. All original numeric/classification
+success criteria also hold. Routing remains an explicit source-data refusal.
+
+| Original probe | Retained programs | New raw / exact, both modes | Recorded transformer raw / exact |
+| --- | ---: | ---: | ---: |
+| Branch amplitudes |9|100% /100%|100% /100% test |
+| Conditional amplitudes |1|100% /100%|99.929% /97.656% test |
+| Linear transport |18|100% /100%|100% /100% test |
+| Order discrimination |4|100% /100%|94.355% /94.355% validation |
+| Key-value binding |2|100% /100%|99.609% /99.609% test |
+| Routing mixture |Source refused|Unmeasured|99.173% /87.109% test |
+
+The transformer measurements are the preserved original snapshot, without
+retraining or changing its success flags. The new model has an explicit fixed
+causal feature prior. Conditional amplitudes retain exactly the five-chunk
+contiguous feature with input context position 0. Its raw decoder labels come
+from training. The prior is not supplied by a spectral bound, and the result
+does not certify target realizability for arbitrary future inputs.
+
+Forward CE lies between 0.0225552 and 0.0326712 across these tasks. Minibatch CE
+rounds to zero in the current float64 evaluator; finite logits do not give
+mathematically zero CE. Maximum unquantized numeric MSE is approximately
+4.26×10⁻¹⁵, far below the unchanged 0.001 criterion. The full original run took
+101.40 s and its independent repeat 99.31 s; peak RSS was 68.3 MiB. Each complete run
+occupies about 281 MB. The prospective disk upper bound was 1,509,314,313 bytes per
+run, separate from the 110 GB aggregate RAM limit and both-disk reserves.
+
+Conditional amplitudes and order discrimination add two catalog cases to the
+historically verified 77 under the current **forward+minibatch** requirement:
+79/165 across separate seed 1 cohorts, with 86 unmeasured or not passing. The
+older three-mode total remains 77; no full-batch result is claimed for the two
+additions. The three other measured probes are retained controls. Older
+bounded/reduced/composed comparisons are separate and gain no credit here.
+
+Verification SHA256:
+`9bd2c2d9489c8421beecb3b29148e148fe9f1a831cc49d1eb875db1bc4924d3f`.
+Training seal SHA256:
+`5b3bf514de5559665ec937ccac13e968808b18725b990fb12852addb378c3d57`.
+Original executable SHA256:
+`b5611711855760bcb39c4691e6bcb5bb02268de21296ddb21028b35a28c099df`.
+Independent executable SHA256:
+`b266829b53ff109bbb8ef83c16b8e2cc0d722a53816ac449f0806b83d1d5fde2`.
+The full generated evidence remains under
+`/run/media/misha/storage/transformer-runs/probe-compare/`.
+Regenerate the count/CE summary with:
+
+```sh
+jq -f experiments/convex_stress_probe_compare/analyze.jq \
+  /run/media/misha/storage/transformer-runs/probe-compare/verified-v1.json
+```
