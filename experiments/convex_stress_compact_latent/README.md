@@ -251,3 +251,29 @@ This is component timing, not a new original fit or an end-to-end speedup.
 Frozen producers for tasks 351, 355, 360 and 362 remain unchanged. Any future
 comparison using CM71 needs a new committed source freeze, complete training
 seal, independent rebuild/repeat and raw replay before accuracy credit.
+
+The fixed `examples/phase_profile.rs` measures the remaining costs separately
+before further optimization. Four synthetic fixtures use 128/512 programs,
+97/193 classes, eight states and all 130 records with a 127+3 minibatch tail.
+Three repetitions report median construction, loss, gradient, proposal,
+projection, interval/exact prediction and complete forward/minibatch times.
+Endpoint digests bind every parameter, complex coefficient, CE and step word;
+these and logical work counts permit comparison after a representation change.
+Both filesystem guards and a 4 GiB reservation within aggregate 110 GB RAM are
+checked before each timing block. No original data or task accuracy is involved.
+
+At CM71, the 512-program, 193-class fixture took approximately 21.1 ms to build
+the head, 33.0 ms for projection, 4.46 ms for interval prediction and 36.4 ms for
+exact prediction. Complete forward/minibatch runs took 63.7/217.8 ms. The earlier
+forward-contraction factor therefore cannot describe complete training speed.
+These initial timings were collected alongside the older live comparisons;
+generated evidence is local in `.kanban/artifacts/364/phase-before-v1.jsonl`.
+
+```sh
+cargo build --offline --locked --release \
+  --manifest-path experiments/convex_stress_compact_latent/Cargo.toml \
+  --example phase_profile -j2
+# Use the two SHARED_COLUMNS_* paths above and the configured Cargo target.
+prlimit --as=4294967296:4294967296 -- \
+  "$CARGO_TARGET_DIR/release/examples/phase_profile"
+```
