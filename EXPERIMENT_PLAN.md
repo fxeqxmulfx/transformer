@@ -8535,3 +8535,14 @@ It keeps the addition control's seed,200 updates,rate0.01 and original batches
 unchanged. Eight native controls include all complete coordinate changes under
 both update modes, repeated responses and a one-record tail. Score both sealed
 endpoints and replay every raw logit separately; retain the unscaled producer.
+
+### 2026-11-16: CM90 silent-coordinate diagnosis
+
+The scaled addition training curve improves while the original pilot continues.
+Before interpreting future held-out scores, formalize an actual parameter
+countermodel: a coordinate silent on every training input can move a responding
+query margin arbitrarily without changing training logits. Every unseen raw
+ordered two-object input has such a coordinate in the complete CM86 family.
+This distinguishes optimization progress from identification; it does not prove
+that no algorithm or additional inductive bias can learn the task. Retain
+nonempty feasible examples and all original stress outcomes.

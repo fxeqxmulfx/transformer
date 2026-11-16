@@ -21562,3 +21562,36 @@ Formalization: `LearnedBilinear/Updates/Scaling`. These are geometry and exact
 query identities, not a convergence theorem, a step-size guarantee, a new
 identification condition or accuracy credit. Any native comparison must use
 a new frozen protocol and leave the original stress-control producer intact.
+
+## CM90. A silent coordinate diagnoses missing-answer ambiguity
+
+Improving the optimizer does not strengthen the observations themselves.
+Suppose a complete real coordinate z has zero CM88 response on every indexed
+training prefix. Changing that coordinate leaves every actual recovered
+training logit unchanged. It therefore preserves the ordinary training loss
+and all observed unit margins. If the same coordinate responds nontrivially
+to a query and belongs to original class a, its change shifts the a-versus-b
+query margin by t*response(query,z) for every b≠a. Starting from any fitting
+parameter, choose t to set that margin to any prescribed real number.
+
+Thus no finite lower-margin certificate can exist for that comparison when
+the observations are feasible. This is an explicit countermodel construction
+in the actual learned family, rather than a count of parameters or a flatness
+heuristic. It does not say that every learning algorithm must predict the
+wrong answer: additional structure or selection bias may choose a completion.
+
+For ordered two-object inputs [u,v], the real coordinate of class a at query
+address `some v` and context address `position0,u` has response one exactly
+on that ordered input and zero on every different ordered two-object input.
+Every missing pair therefore has a silent responding coordinate. Feasible
+training labels on other pairs do not force any finite query-margin bound
+in the complete unconstrained CM86 family. The statement uses only immutable
+object identities and applies to arbitrary two-object tasks, not an arithmetic
+operation. It also explains why zero initialization and complete training-only
+pullbacks leave these particular unseen interaction entries zero.
+
+Formalization: `LearnedBilinear/Updates/Unobserved`. Inhabited controls include
+the earlier nonconstant three-record CM87 example and a separate nonempty
+two-object training example. The result diagnoses an observation/structure gap;
+it is not an empirical held-out result, a general impossibility of learning,
+or an assertion that increasing optimization speed closes that gap.

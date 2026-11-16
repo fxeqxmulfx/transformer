@@ -26,3 +26,11 @@ import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.scaled_loss_convex
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.scaled_zero_update
 #print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.scaled_forward_complete
+
+-- CM90: explicit silent-coordinate countermodels, including missing raw pairs.
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.silent_logits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.silent_fits
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.silent_margin_arbitrary
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.silent_no_certificate
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.pair_response
+#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates.missing_pair_no_certificate
