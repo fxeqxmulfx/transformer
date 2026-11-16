@@ -20166,3 +20166,128 @@ representation, prove the intended joint convexity without substituting
 complete-path targets, and derive unseen-prefix predictions under explicit
 conditions. Flat-spectrum bounds apply to its actual output operator; they
 do not remove this parameter-sharing or identification obligation.
+
+## CM75. Learned complex ReLU factors, activation cones, and exact pattern coverage
+
+CM74 rules out transferring complete-path convexity to an arbitrary learned
+hidden-state marginal. A different construction uses deterministic learned
+ReLU representations and ordinary answer CE. This is an original extension,
+not the fixed random gated activation of arXiv:2211.11052v1, §3.4, Theorem 3.
+The distinction and the activation-domain restrictions below are essential.
+
+For a vector u in a real normed space, set
+
+```
+a(u) = sqrt(norm(u)),       e(u) = u / a(u),
+neuron(u,L) = a(u) * max(L(e(u)), 0),
+```
+
+using inverse zero equal to zero. Then a(u) e(u)=u, norm(e(u))=a(u), and the
+actual neuron equals max(L(u),0) at every input functional L. Conversely, a
+physical neuron with representation w and nonnegative amplitude a is exactly
+represented by u=a w, on every possible input. Recovery fixes its scaling
+gauge; it does not claim convexity in independently optimized a and w. The
+balance uses the declared ambient norm. No original weight-decay penalty is
+silently transferred to these coordinates.
+
+For complex representations, use the actual componentwise activation
+sigma(z)=max(Re z,0)+i max(Im z,0), and learned complex readout a(u)(1+i).
+The full product is computed before taking its real part. Positive real
+scaling commutes with sigma, giving the exact identity
+
+```
+a(u)(1+i) sigma(L(e(u))) = (1+i) sigma(L(u)).
+```
+
+Its real logit is max(Re L(u),0)-max(Im L(u),0). Thus imaginary representation
+coordinates contribute to the actual answer logit. The readout phase is fixed
+architecture, while its two components change with a(u). Its norm is sqrt(2)
+times the amplitude used in the balance identity. This is a specified phased
+complex ReLU family, not an equivalence to every independently parameterized
+complex transformer.
+
+The complete model has vectors u[j,c,s], where j is a hidden slot, c is an
+original output object, and s is a positive or negative readout sign. Each
+class logit sums the positive complex neuron products minus the negative ones.
+All sequences use this same parameter table. Its usual full-vocabulary
+softmax is positive and normalized; the target occurs only in ordinary
+log-sum-exp CE. No hidden-path target or label-derived input is supplied.
+
+For a declared input region R, impose one real and one imaginary sign mask
+per slot and input. An active component requires its preactivation to be
+nonnegative; an inactive component requires it to be nonpositive. Zero belongs
+to either case. All constraints are linear in u and independent of answer
+labels, so their intersection is convex. At an input in R, each actual ReLU
+equals its indicated linear branch. The resulting complete complex logits
+respect convex parameter combinations, and ordinary CE is jointly convex.
+Every indexed minibatch sum has the same property; repeated records and short
+tails retain their original indices. This proves neither a projection/update
+algorithm nor convergence while changing masks.
+
+The raw interface receives a list of immutable objects with length at most a
+declared cap T. An input object at position i addresses a learned complex
+coordinate (i,o); one extra coordinate is a learned bias. Inference reads and
+sums those actual learned embeddings, applies sigma, multiplies the learned
+readouts, and predicts over the same object type. Longer lists cannot inhabit
+the input type, rather than being silently truncated. There are
+4 |J| |O| (1+T |O|) real joint coordinates before optimizer buffers and recovered
+factor caches. Recovering all factor norms costs a full parameter scan; once
+cached, a prefix forward reads its visible coordinates in each of the
+2 |J| |O| neurons. No arithmetic features or task-specific answer programs are
+part of this interface.
+
+An inhabited complex comparison uses two input reads, the two coordinate
+projections. Joint points (4,i) and (i,9) have recovered amplitudes two and
+three, and representations (2,i/2) and (i/3,3). A positive neuron for one
+class with a zero competing logit gives that class's logits (4,-1) at the
+first point and (-1,9) at the second. Both points satisfy the same component
+cones. With next-object labels (false,true), relative preferences reverse
+and both answer CEs strictly decrease. This demonstrates changed representation
+direction and readout, not only a positive confidence rescaling. It is a comparison of
+feasible points, not a measured or proved optimizer trajectory.
+
+The exactness statement for independent factors is deliberately scoped.
+Given physical representations w[j] and arbitrary signed real readouts
+a[j,c] with the declared complex phase, use
+u[j,c,+]=max(a[j,c],0)w[j] and u[j,c,-]=max(-a[j,c],0)w[j]. The complete complex
+prediction is equal at every input. Recovery uses 2 |J| |C| class-specific
+neurons; it enlarges the original low-width representation sharing. The
+source does not rename that factorization constraint as a convex one.
+
+Each physical representation defines an input-only sign mask. Keeping every
+Boolean mask on a finite region X gives one common domain with slots
+J times (X times Bool -> Bool). Put each lifted physical neuron in its actual
+mask slot and retain every other slot at zero. This point is feasible, and
+summing all slots reproduces the entire physical function, even outside X.
+The full pattern index has 2^(2 |X|) elements, including redundant assignments.
+Recovered width is 2 |J| |C| 2^(2 |X|). Even one binary64 complex coordinate
+per pattern for twenty region inputs exceeds 110,000,000,000 bytes. This is
+the cost of naive complete enumeration, not a lower bound against every
+implicit or sparse exact algorithm. Sampling masks does not inherit the full
+coverage theorem.
+
+Taking X to be the entire finite universe of raw object prefixes of length
+at most T gives the complete version: one full-pattern domain has convex
+next-object CE at every admitted prefix, and every independently specified
+physical model in the declared phased family has exactly the same predictions
+at every bounded raw prefix after expansion. The real coordinate count becomes
+4 |J| |O| (1+T |O|) 2^(2 |Prefix(O,T)|). The global statement retains this full
+cost; it is not a training-only result presented as a practical full model.
+
+Fixing a finite mask family still yields a fixed gated linear expression on
+R, despite the exact learned-factor interpretation. It does not settle the
+user's requirement for an efficiently trained unrestricted sequence path.
+An explicit boundary example prevents overstating its guarantee: points
+(1,0) and (0,1) satisfy the two observed positive-coordinate cones, but at the
+missing difference read L(z)=z1-z2 their actual answer CE violates the midpoint
+convexity inequality. Exact factor recovery is global; cone convexity is only
+at inputs constrained by the domain. For convexity at every admitted raw prefix,
+the constraints must cover that full region rather than only training inputs.
+
+Formalization: `ConvexChannel/LearnedHinge`; direct checks in
+`scripts/LearnedHingeAxioms.lean`. No new stress-test credit follows. The next
+obligations are a resource-bounded method for the complete learned family,
+actual Mini and forward-only Mini updates, unseen-prefix identification under
+explicit observations, and bounds for the relevant actual operator. Flatness
+does not supply missing labels or justify discarding patterns, coordinates,
+or class components. Task 366 and the 99%-accuracy objective remain open.

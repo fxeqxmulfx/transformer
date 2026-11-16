@@ -8098,3 +8098,38 @@ CM74. Task 366 remains open: construct the actual shared causal computation,
 establish its ordinary CE geometry, and connect observed training sequences to
 genuinely unseen prefixes under explicit conditions before native learning.
 These controls add no stress-test accuracy credit.
+
+### 2026-11-16: exact learned complex ReLU recovery and activation scope
+
+CM75 constructs a shared complex ReLU family from raw bounded object prefixes.
+Joint neuron coordinates recover both learned representation vectors and
+readout amplitudes, with an exact full complex forward identity at every
+input. Ordinary next-object CE is jointly convex on explicit input-only
+activation cones. A nonconstant witness changes representation direction,
+readout amplitude and relative predictions while both desired CEs decrease.
+Indexed minibatch objectives retain duplicate records and short tails.
+
+The lifting preserves every original phased two-layer prediction but widens
+the recovered network to class-specific signed neurons. All-pattern expansion
+places every such physical model in one common convex domain for the declared
+input region and retains its predictions outside that region. It requires
+2^(2N) Boolean patterns for N region inputs before any exact redundancy
+elimination. Naive enumeration exceeds the 110 GB RAM cap at N=20 even with
+only one complex coordinate per pattern. No dense original run is admitted
+from this construction; no sampled mask family receives its coverage claim.
+
+The complete raw-prefix theorem takes the region to be every object list of
+length at most the cap. Its single domain has convex CE at every such prefix
+and exact physical-model coverage there, with the full exponential coordinate
+count retained. This global finite construction does not prove compact storage
+or an efficient optimizer.
+
+The restriction remains material: on a fixed cone the logits are a fixed gated
+linear expression. A checked two-input example violates answer-CE convexity
+at a missing input, despite exact factor recovery there. This is constructive
+progress toward all-path training, not a completed efficient architecture or
+an unseen-answer identification theorem. Keep task 366 open. The next work
+must handle the complete learned family within resource limits, specify real
+Mini and forward-only Mini updates, and derive the required identification
+and actual-operator bounds before a separately frozen native pilot. Preserve
+all 165 cases, the 99% target and the existing frozen comparison pipelines.

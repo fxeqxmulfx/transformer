@@ -15,6 +15,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Minibatch
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Shared
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.SharedLearning
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Adaptive
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Completion
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Counts
