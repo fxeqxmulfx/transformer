@@ -20291,3 +20291,85 @@ actual Mini and forward-only Mini updates, unseen-prefix identification under
 explicit observations, and bounds for the relevant actual operator. Flatness
 does not supply missing labels or justify discarding patterns, coordinates,
 or class components. Task 366 and the 99%-accuracy objective remain open.
+
+## CM76. Exact component-pattern aggregation for the full complex sequence family
+
+CM75's Cartesian product of real and imaginary patterns contains an exact
+prediction redundancy. It can be removed without sampling patterns or changing
+ordinary CE. This is a quotient of predictions on the declared input universe,
+not a recovery map for the old individual parameters.
+
+For real learned-neuron coordinates with a common sign pattern, ReLU equals
+the indicated linear branch at every region input. Their vector sum therefore
+has the same sum of actual neuron predictions there and remains in that cone.
+Aggregate separately for each output class and positive/negative slot. Every
+old vector enters its group's sum.
+
+The complex raw input reads its real and imaginary coordinates using the same
+real linear map L. This follows from the learned bias and position/object
+lookups. An arbitrary real linear map into complex numbers need not have this
+property; the extension does not assume it for such maps. For full vectors
+p[j,c,s], let mR[j] and mI[j] be their component masks on a finite universe X.
+For each scalar Boolean pattern m:X->Bool define, coordinatewise,
+
+```
+Re q[m,c,s,d] = sum(j with mR[j]=m, Re p[j,c,s,d]),
+Im q[m,c,s,d] = sum(j with mI[j]=m, Im p[j,c,s,d]).
+```
+
+Both components of q obey pattern m. Before taking a real logit, the whole
+complex forward is (1+i) times the complex number formed from the two signed
+real-neuron sums. Each sum is preserved by its own aggregation, so the entire
+complex prediction is equal at every input in X. Norms, recovered amplitudes
+and representations are computed anew; CM75's exact factor identities retain
+the actual complex products. All classes and both output signs remain present.
+Every indexed minibatch CE is equal, including duplicates and short tails,
+and ordinary CE remains jointly convex on the reduced domain. This does not
+prove an optimizer trajectory or unrestricted updates across cone boundaries.
+
+The reverse embedding puts q[m] in the old complex pattern whose real and
+imaginary masks both equal m, and zero in every other pattern. For any nonempty
+old hidden-slot index, put this point in one distinguished old slot and zero
+in the others. It satisfies every old constraint and has the same full complex
+function at every linear input read. Thus the two prediction families on X
+are equal for nonempty old hidden indices. The empty old model only predicts
+zero logits, so that qualification cannot be omitted.
+
+For raw sequences take X to be every prefix of length at most T. The encoder
+is unchanged. Every feasible CM75 complete point, hence every original phased
+physical network covered by CM75, has the same complex prediction at every
+admitted raw prefix after reduction. Every reduced point embeds back into the
+old complete family. This is stronger than equality on observed examples.
+If X were only the training inputs, forward aggregation would guarantee
+equality only there; the theorem does not silently extend it outside X.
+
+With K=|X| and d learned complex input coordinates, the original real parameter
+count is 4 |J| |C| d 2^(2K), and the reduced count is 4 |C| d 2^K. The recovered
+width is 2 |C| 2^K. All scalar patterns remain, including unrealizable ones;
+old hidden-slot multiplicity disappears by exact sums. This quotient preserves
+ordinary CE, not an arbitrary penalty on old separate factors. It also does
+not prove binary64 summation-order identity. No frozen producer is changed.
+
+For fifteen region inputs, two classes, seven complex input coordinates and
+one old hidden slot, complete binary64 parameter storage falls from
+481,036,337,152 to 14,680,064 bytes. These are finite input counts, not a
+stress-cohort admission or a native peak-memory measurement. Optimizer state,
+factor caches, cone constraints and evaluation buffers must still be charged.
+Even after reduction, one complex binary64 coordinate per scalar pattern at
+thirty-three inputs exceeds 110,000,000,000 bytes. Exponential growth remains.
+
+A nonconstant witness uses two vectors, in false/true input-coordinate order,
+(-2+7i,5-6i) and (-1-4i,2+3i). Both real masks are the input Boolean, while their
+imaginary masks differ. Put both vectors in class true's positive slot and
+retain zero vectors in the other class and negative slots. The full complex
+class-true outputs before and after reduction are (-7+7i,4+10i); the competing
+class has zero output. Relative preferences select different next objects at
+the two inputs. This checks nonzero imaginary values and differing masks, not
+a fitted learner or identification of missing answers.
+
+Formalization: `ConvexChannel/LearnedHinge/PatternReduction`; direct checks in
+`scripts/PatternReductionAxioms.lean`. Remaining work keeps CM75's full scope:
+a resource-bounded complete sequence family, executable Mini and forward-only
+Mini updates, identification from actual observations, and flat-spectrum
+bounds on the actual operator. This removes one concrete storage obstruction;
+task 366 and the 99%-accuracy objective remain open, with no new test credit.

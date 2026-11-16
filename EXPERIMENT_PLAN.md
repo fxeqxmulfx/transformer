@@ -8133,3 +8133,26 @@ must handle the complete learned family within resource limits, specify real
 Mini and forward-only Mini updates, and derive the required identification
 and actual-operator bounds before a separately frozen native pilot. Preserve
 all 165 cases, the 99% target and the existing frozen comparison pipelines.
+
+### 2026-11-16: exact reduction of the full complex pattern family
+
+CM76 removes the Cartesian real/imaginary pattern redundancy and duplicate
+hidden slots by exact sums. At every admitted bounded raw prefix, the entire
+complex prediction is unchanged. A reverse embedding proves that the new
+family does not relax the old complete prediction class when its hidden index
+is nonempty. All classes, signs, components and scalar patterns are retained;
+indexed ordinary CE preserves every duplicate and short tail.
+
+Real coordinates fall from 4 |J| |O| (1+T |O|) 2^(2K) to
+4 |O| (1+T |O|) 2^K, where K counts every bounded raw prefix. A finite example
+with fifteen inputs, two classes and seven complex coordinates needs
+14,680,064 binary64 parameter bytes instead of 481,036,337,152. This is not a
+native peak-memory result or a stress admission. The remaining exponent,
+cone constraints, optimizer state and updates are still unresolved for the
+full suite. Parameter penalties and floating-point summation order need not
+be preserved; do not retrofit this into frozen comparisons.
+
+Keep task 366 open and the 99% raw/exact target on all 165 cases. Native Mini
+and forward-only Mini still need executable feasible updates and complete
+resource accounting. A representation witness neither replaces those duties
+nor identifies unseen answers. Flatness must bound the actual learned operator.

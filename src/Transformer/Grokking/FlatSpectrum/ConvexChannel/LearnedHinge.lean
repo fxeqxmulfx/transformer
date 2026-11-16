@@ -3,6 +3,7 @@ module
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Sequence
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Complete
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Boundary
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.PatternReduction
 
 /-!
 # Shared learned complex ReLU representations with explicit convexity scope
