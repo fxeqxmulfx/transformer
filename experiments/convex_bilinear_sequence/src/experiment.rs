@@ -10,6 +10,7 @@ use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::path::Path;
 pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub const SCALED_PROTOCOL: &str = include_str!("../scaled_protocol.json");
 pub const SUITE: &str = include_str!("../../convex_stress/suite.json");
 
 pub fn hash(bytes: &[u8]) -> String {
@@ -28,6 +29,7 @@ pub fn fingerprint() -> String {
         include_bytes!("model.rs"),
         include_bytes!("train.rs"),
         include_bytes!("guard.rs"),
+        include_bytes!("scaling.rs"),
         include_bytes!("experiment.rs"),
         include_bytes!("experiment/train_run.rs"),
         include_bytes!("experiment/score.rs"),
@@ -42,6 +44,7 @@ pub fn fingerprint() -> String {
         include_bytes!("../../convex_stress/src/vendor/blake.rs"),
         include_bytes!("../../convex_stress/src/channel.rs"),
         PROTOCOL.as_bytes(),
+        SCALED_PROTOCOL.as_bytes(),
         SUITE.as_bytes(),
     ] {
         hash.update((source.len() as u64).to_le_bytes());
@@ -51,7 +54,11 @@ pub fn fingerprint() -> String {
 }
 
 pub fn case(name: &str) -> Result<(Value, Value, Task)> {
-    let protocol: Value = serde_json::from_str(PROTOCOL)?;
+    case_in(name, PROTOCOL)
+}
+
+pub fn case_in(name: &str, protocol_text: &str) -> Result<(Value, Value, Task)> {
+    let protocol: Value = serde_json::from_str(protocol_text)?;
     let config = protocol["cases"]
         .as_array()
         .ok_or("missing cohort")?

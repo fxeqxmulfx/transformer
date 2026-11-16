@@ -8528,3 +8528,10 @@ finite-query means, duplicate/pair multiplicities and zero support. Implement
 any subsequent optimization diagnostic as a separate prospective cohort;
 the original control continues unchanged. Training-only improvements do not
 establish unseen-answer identification or original-task success.
+
+CM89 is now proved and independently rechecked. The native scaled diagnostic
+uses `scaled_protocol.json`, a new frozen binary and separate output directory.
+It keeps the addition control's seed,200 updates,rate0.01 and original batches
+unchanged. Eight native controls include all complete coordinate changes under
+both update modes, repeated responses and a one-record tail. Score both sealed
+endpoints and replay every raw logit separately; retain the unscaled producer.

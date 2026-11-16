@@ -21,7 +21,11 @@ pub fn read(path: &Path) -> Result<Value> {
 }
 
 pub fn sealed(cohort: &Path) -> Result<()> {
-    let protocol: Value = serde_json::from_str(PROTOCOL)?;
+    sealed_with_protocol(cohort, PROTOCOL)
+}
+
+pub fn sealed_with_protocol(cohort: &Path, protocol_text: &str) -> Result<()> {
+    let protocol: Value = serde_json::from_str(protocol_text)?;
     for config in protocol["cases"].as_array().ok_or("missing cases")? {
         let name = config["name"].as_str().ok_or("case name")?;
         for mode in protocol["modes"].as_array().ok_or("missing modes")? {
@@ -115,12 +119,12 @@ pub fn run(
     name: &str,
     mode_name: &str,
     seed: u64,
-    replay: bool,
+    (protocol_text, replay): (&str, bool),
 ) -> Result<()> {
     guard::admit(0, workspace, storage)?;
-    sealed(cohort)?;
-    let protocol: Value = serde_json::from_str(PROTOCOL)?;
-    let (_, original, task) = case(name)?;
+    sealed_with_protocol(cohort, protocol_text)?;
+    let protocol: Value = serde_json::from_str(protocol_text)?;
+    let (_, original, task) = case_in(name, protocol_text)?;
     mode(mode_name)?;
     if !protocol["seeds"]
         .as_array()

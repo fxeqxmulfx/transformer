@@ -6,6 +6,73 @@ use crate::{
 };
 const BUDGET: u64 = 500_000_000;
 
+#[test]
+fn frequency_scaling_keeps_full_coordinate_updates_multiplicities_and_tails() {
+    use crate::scaling::FrequencyScale;
+    let shape = Shape::new(3, 4).unwrap();
+    let records = [
+        Record {
+            prefix: &[0, 1, 0, 1, 0],
+            target: 1,
+        },
+        Record {
+            prefix: &[0, 1, 0, 1, 0],
+            target: 1,
+        },
+        Record {
+            prefix: &[2, 0],
+            target: 2,
+        },
+    ];
+    let scaling = FrequencyScale::from_prefixes(shape, records.iter().map(|r| r.prefix)).unwrap();
+    assert_eq!(scaling.records, 3);
+    assert_eq!(scaling.value(0, 0).unwrap(), 1.);
+    assert_eq!(scaling.value(3, 0).unwrap(), 4.);
+    // Pair (0,1) appears twice in each of the two repeated records: 2²+2².
+    assert!((scaling.value(0, 1 + 4 * 3 + 1).unwrap() - 4. / 9.).abs() < 1e-15);
+    assert!(FrequencyScale::from_prefixes(shape, std::iter::empty()).is_err());
+    let model = Model::recover(point(shape), BUDGET).unwrap();
+    for mode in [Mode::Mini, Mode::ForwardMini] {
+        for batch in [&records[..], &records[2..]] {
+            let (plain, plain_receipt) = train::step(&model, batch, mode, 0.01, 1e-4).unwrap();
+            let (scaled, receipt) =
+                train::step_scaled(&model, batch, mode, 0.01, 1e-4, Some(&scaling)).unwrap();
+            assert_eq!(receipt.records, batch.len());
+            assert_eq!(receipt.bias_loss_queries, plain_receipt.bias_loss_queries);
+            assert!(receipt.diagonal_scaling);
+            for q in 0..shape.queries {
+                for d in 0..shape.columns {
+                    // Independent dense input-response count, without the sparse scale map.
+                    let sum: f64 = records
+                        .iter()
+                        .map(|r| {
+                            let a = shape.addresses(r.prefix).unwrap();
+                            let response = if a.queries.contains(&q) {
+                                a.columns
+                                    .iter()
+                                    .find(|&&(column, _)| column == d)
+                                    .map_or(0., |&(_, n)| n as f64)
+                            } else {
+                                0.
+                            };
+                            response * response
+                        })
+                        .sum();
+                    let scale = 4. / (1. + sum);
+                    for c in 0..shape.objects {
+                        let original = model.joint.entry(c, q, d);
+                        let expected = original + (plain.joint.entry(c, q, d) - original) * scale;
+                        assert!((scaled.joint.entry(c, q, d) - expected).norm() < 1e-12);
+                    }
+                }
+            }
+        }
+    }
+    let wrong = FrequencyScale::from_prefixes(Shape::new(3, 3).unwrap(), [&[0i64][..]].into_iter())
+        .unwrap();
+    assert!(train::step_scaled(&model, &records, Mode::Mini, 0.01, 1e-4, Some(&wrong)).is_err());
+}
+
 fn example() -> baseline::data::Example {
     baseline::data::Example {
         task: "control".into(),

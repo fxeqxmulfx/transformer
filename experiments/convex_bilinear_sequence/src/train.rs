@@ -5,6 +5,7 @@
 use crate::{
     C, Result,
     model::{Model, cross_entropy},
+    scaling::FrequencyScale,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -31,6 +32,7 @@ pub struct Receipt {
     pub balance_error: f64,
     pub stored_columns: usize,
     pub reserved_bytes: u64,
+    pub diagonal_scaling: bool,
 }
 
 /// Forward-only scalar queries: no analytic residual or CE derivative.
@@ -73,10 +75,26 @@ pub fn step(
     rate: f64,
     h: f64,
 ) -> Result<(Model, Receipt)> {
+    step_scaled(model, records, mode, rate, h, None)
+}
+
+/// CM89 scales the complete averaged direction; it does not select records,
+/// classes or coordinates. The original unscaled control remains available.
+pub fn step_scaled(
+    model: &Model,
+    records: &[Record<'_>],
+    mode: Mode,
+    rate: f64,
+    h: f64,
+    scaling: Option<&FrequencyScale>,
+) -> Result<(Model, Receipt)> {
     if records.is_empty() || !rate.is_finite() || rate <= 0. {
         return Err("empty minibatch or invalid rate".into());
     }
     let shape = model.joint.shape;
+    if scaling.is_some_and(|s| s.shape != shape) {
+        return Err("scaling domain mismatch".into());
+    }
     let inputs: Vec<_> = records
         .iter()
         .map(|record| shape.addresses(record.prefix))
@@ -134,8 +152,18 @@ pub fn step(
             .columns
             .entry(d)
             .or_insert_with(|| vec![C::default(); width]);
-        for (x, g) in column.iter_mut().zip(gradient) {
-            *x -= rate * g;
+        if let Some(scaling) = scaling {
+            for q in 0..shape.queries {
+                let scale = scaling.value(q, d)?;
+                for c in 0..shape.objects {
+                    let i = c * shape.queries + q;
+                    column[i] -= rate * scale * gradient[i];
+                }
+            }
+        } else {
+            for (x, g) in column.iter_mut().zip(gradient) {
+                *x -= rate * g;
+            }
         }
     }
     let next = Model::recover(joint, model.max_bytes)?;
@@ -157,6 +185,7 @@ pub fn step(
         balance_error: next.balance_error,
         stored_columns: next.joint.columns.len(),
         reserved_bytes,
+        diagonal_scaling: scaling.is_some(),
     };
     Ok((next, receipt))
 }

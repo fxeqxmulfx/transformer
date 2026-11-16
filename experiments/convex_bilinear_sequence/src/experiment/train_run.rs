@@ -15,9 +15,10 @@ pub fn run(
     mode_name: &str,
     seed: u64,
     output: &Path,
+    protocol_text: &str,
 ) -> Result<()> {
     let started = Instant::now();
-    let protocol: Value = serde_json::from_str(PROTOCOL)?;
+    let protocol: Value = serde_json::from_str(protocol_text)?;
     if !protocol["seeds"]
         .as_array()
         .ok_or("missing seeds")?
@@ -25,7 +26,7 @@ pub fn run(
     {
         return Err("seed outside prospective protocol".into());
     }
-    let (config, original, task) = case(name)?;
+    let (config, original, task) = case_in(name, protocol_text)?;
     let shape = shape(&task)?;
     let mode = mode(mode_name)?;
     let max_bytes = protocol["model_reservation_bytes"]
@@ -35,6 +36,28 @@ pub fn run(
     algebra::set_threads(protocol["blas_threads"].as_i64().ok_or("threads")? as i32)?;
     let mut model = Model::recover(Joint::zero(shape), max_bytes)?;
     let training = &task.splits["train"];
+    let scaling = match protocol["diagonal_scaling"].as_str() {
+        None => None,
+        Some("training-response-frequency") => {
+            let records = records(training, &(0..training.len()).collect::<Vec<_>>())?;
+            let mut columns = BTreeSet::new();
+            for record in &records {
+                columns.extend(
+                    shape
+                        .addresses(record.prefix)?
+                        .columns
+                        .into_iter()
+                        .map(|(d, _)| d),
+                );
+            }
+            guard::admit(shape.reservation(columns.len())?, workspace, storage)?;
+            Some(crate::scaling::FrequencyScale::from_prefixes(
+                shape,
+                records.iter().map(|r| r.prefix),
+            )?)
+        }
+        Some(_) => return Err("unknown diagonal scaling".into()),
+    };
     let batch_size = original["case"]["batch"].as_u64().ok_or("original batch")? as usize;
     let updates = config["maximum_updates"].as_u64().ok_or("update budget")? as usize;
     let rate = protocol["learning_rate"].as_f64().ok_or("learning rate")?;
@@ -79,7 +102,8 @@ pub fn run(
             );
         }
         let rss = guard::admit(shape.reservation(active.len())?, workspace, storage)?;
-        let (next, receipt) = train::step(&model, &records, mode, rate, query_step)?;
+        let (next, receipt) =
+            train::step_scaled(&model, &records, mode, rate, query_step, scaling.as_ref())?;
         examples_seen += end - cursor;
         targets_seen += records.len();
         queries += receipt.bias_loss_queries;

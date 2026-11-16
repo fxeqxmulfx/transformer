@@ -10,6 +10,7 @@ pub mod domain;
 pub mod experiment;
 pub mod guard;
 pub mod model;
+pub mod scaling;
 pub mod train;
 
 #[cfg(test)]

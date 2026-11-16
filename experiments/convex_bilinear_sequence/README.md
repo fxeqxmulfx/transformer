@@ -56,8 +56,8 @@ CM86 already proves a four-object parity restriction. Long parity is therefore
 a capacity negative control. CM87 identifies an unseen answer only when the
 observed constraints imply its margin within this family; it does not promise
 that every original task supplies such constraints. Failures must remain in
-the report. The initial native controls pass, but stress measurements have
-not yet been obtained. Proof controls supply no stress-case credit.
+the report. Native controls pass; held-out stress measurements remain pending.
+Proof controls supply no stress-case credit.
 
 Run from the repository root with native tooling and OpenBLAS installed:
 
@@ -82,3 +82,29 @@ aggregate process RSS plus a conservative allocation reservation against
 workspace filesystem and 16 GiB on storage. Insufficient RAM/disk stops the
 operation without cleanup or model reduction. The model reservation ceiling
 is 80 GB. Existing frozen producers must not be changed or restarted.
+
+## Input-frequency update diagnostic
+
+CM89 (`2a9bc07b`, `Updates/Scaling.lean`) proves positive input-only scaling
+`w(z)=(N+1)/(1+sum_i response(x_i,z)^2)` on every complete coordinate. Bias
+scales stay one. Repeated records and repeated pairs have their original
+multiplicities; the latter are squared in the denominator. Scaling is shared
+across classes and real/imaginary components only through the proved identical
+squared response. It changes neither the model nor ordinary CE. The native
+implementation checks integer counts before converting to binary64, retains
+positive scales for unobserved coordinates and scales the complete batch mean.
+
+The frozen unscaled control (`36eba937`, `bilinear-stress-v1`) finishes the
+two short Boolean training runs at CE0.0260/0.0263 in both modes. Addition's
+last training batch is CE4.5727 after200 updates, starting at4.5747. These
+training observations motivate `scaled_protocol.json`: only addition, with
+the same seed, 200 updates, rate0.01, batches, tails and query step. No
+held-out metric was used to choose the change. The rescaling has no proved
+convergence or unseen-answer guarantee.
+
+Use `plan-scaled`, `train-scaled`, `score-scaled` and `verify-scaled` with a
+fresh cohort directory and newly frozen executable. Both scaled endpoints
+must be sealed before scoring. The eighth native control independently
+compares all real/imaginary coordinate changes, duplicate responses and a
+one-record tail against the complete unscaled update in both modes. This
+comparison is separate from the unchanged original five-case producer.

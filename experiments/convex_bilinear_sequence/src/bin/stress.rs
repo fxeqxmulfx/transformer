@@ -8,11 +8,17 @@ use std::path::Path;
 
 fn run() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    if args.first().map(String::as_str) == Some("plan") && args.len() == 1 {
-        let protocol: Value = serde_json::from_str(experiment::PROTOCOL)?;
+    let command = args.first().map(String::as_str).unwrap_or("");
+    let protocol_text = if command.ends_with("-scaled") {
+        experiment::SCALED_PROTOCOL
+    } else {
+        experiment::PROTOCOL
+    };
+    if matches!(command, "plan" | "plan-scaled") && args.len() == 1 {
+        let protocol: Value = serde_json::from_str(protocol_text)?;
         for case in protocol["cases"].as_array().ok_or("cases")? {
             let name = case["name"].as_str().ok_or("name")?;
-            let (_, original, task) = experiment::case(name)?;
+            let (_, original, task) = experiment::case_in(name, protocol_text)?;
             let shape = experiment::shape(&task)?;
             let mut support = std::collections::BTreeSet::new();
             for example in &task.splits["train"] {
@@ -39,29 +45,30 @@ fn run() -> Result<()> {
         return Ok(());
     }
     if args.len() != 7 {
-        return Err("usage: stress plan | stress train|score|verify WORKSPACE STORAGE COHORT CASE mini|forward SEED".into());
+        return Err("usage: stress plan[-scaled] | stress train|score|verify[-scaled] WORKSPACE STORAGE COHORT CASE mini|forward SEED".into());
     }
     let workspace = Path::new(&args[1]);
     let storage = Path::new(&args[2]);
     let cohort = Path::new(&args[3]);
     let (name, mode, seed) = (&args[4], &args[5], args[6].parse()?);
     match args[0].as_str() {
-        "train" => train_run::run(
+        "train" | "train-scaled" => train_run::run(
             workspace,
             storage,
             name,
             mode,
             seed,
             &score::cell(cohort, name, mode, seed),
+            protocol_text,
         ),
-        "score" | "verify" => score::run(
+        "score" | "verify" | "score-scaled" | "verify-scaled" => score::run(
             workspace,
             storage,
             cohort,
             name,
             mode,
             seed,
-            args[0] == "verify",
+            (protocol_text, command.starts_with("verify")),
         ),
         _ => Err("unknown command".into()),
     }
