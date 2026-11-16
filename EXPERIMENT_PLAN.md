@@ -8295,3 +8295,32 @@ checks for all 144 small-domain patterns. This supplies a direction from provide
 numerical values; it does not prove those values are true CE derivatives. Actual
 Mini/forward-only Mini proposals, whole-family budgets and a sealed learning
 pilot are still next, with no new empirical accuracy credit.
+
+### 2026-11-16: actual CE updates and prospective learned-sequence pilot
+
+CM82 (`ba4b4b93`) now proves the actual ordinary CE slope, supporting inequality
+and feasible-query derivative for every raw joint coordinate, both shared passes
+and nonempty indexed mean minibatches. A nonzero complex witness and repeated
+record/tail examples inhabit every conditional theorem. The full build, 38 direct
+axiom checks, global audit and native INDEX check pass independently; existing
+36 `sorry` declarations remain. No finite-step or numerical error guarantee is inferred.
+
+Native Mini (`282f4ff1`) and forward-only Mini (`3fdba35e`) now implement complete
+proposals and atomic certified projection. Forward-only code uses actual complex
+loss queries along every certified direction and full Gram recovery, with no
+analytic gradient path. It records the centre-mixture cost and supports complete
+independent query/update replay. Total-family work/storage bounds retain all
+patterns, classes, components, coordinates, record multiplicities and short tails.
+Thirty-nine controls pass in fresh independent builds, including a nonorthogonal
+forced-equality cell and forged receipt/certificate rejection.
+
+The next authorized run is the separate small prospective pilot in
+`experiments/convex_learned_sequence`: complete O=3,T=1, both required minibatch
+modes, shared involution [0,2,1], eight epochs and batches of two, including a
+repeated record and one-record tail. Commit/freeze producer and fixtures first;
+all training and complete persisted update replay precede any evaluation-data
+read. Independently rebuild, repeat, replay all raw outputs/CE, and retain every
+failure before interpreting outcomes. The unseen example relies explicitly on
+task equivariance. It earns no stress-case credit and does not replace the
+all-165 raw/exact 99% goal. Complete-family exponential cost and applicability
+beyond that restricted toy remain open. Older frozen producers stay unchanged.

@@ -311,9 +311,63 @@ against 110,000,000,000 bytes and require free space on both disks before each
 heavy command. Matrix-entry, rational-bit and active-subset limits are internal
 representation/work limits, not a claimed end-to-end RAM forecast.
 
+## Prospective sealed pilot protocol
+
+`learned-sequence-pilot` uses the complete three-object, one-position family:
+four prefixes, sixteen patterns and 768 real parameters. Both Mini and
+forward-only Mini use the shared involution `[0,2,1]`, zero initialization,
+eight epochs, ordered batches of size two, rate `1/32`, and ordinary mean CE.
+Forward-only Mini uses centre mixture `1/1024` and query cap `1/16384`.
+Every update retains and replays the full persisted trace before accepting the
+next point. The three indexed training records in `fixtures/pilot_train.json`
+have targets `1,0,1`; the repeated record supplies a one-record tail each epoch.
+The separate evaluation fixture includes original objects `0,1,2`, with prefix
+`[2]` unseen in training. Its interpretation explicitly assumes the task respects
+the declared renaming. This pilot is not one of the 165 stress cases.
+
+The `train` command receives no evaluation path. It writes all sixteen updates
+per mode, the full coordinates, gradients/proposals, component certificates and
+forward query receipts. Its all-training seal hashes every training artifact
+and records both endpoints and zero evaluated heldout pools. The `score` command
+checks that seal and fully replays both training trajectories before opening
+the evaluation file. Raw output retains every original input and target,
+predicted object, all complex scores/probabilities and ordinary CE as exact
+binary64 bit patterns. A plausible seal/file inventory alone does not pass:
+all indexed trajectories must replay with correct repetitions and tail sizes.
+
+The `verify` command independently replays both complete training runs and both
+raw score sets, compares every deterministic training artifact and raw output,
+and recounts correct/total and mean CE. Source identity and each actual producer
+binary hash are retained. Resource checks before each heavy update/replay test
+aggregate RSS plus a 4 GiB allowance against 110 GB and require free space on
+both disks. Shortage stops without cleanup. Output creation is exclusive;
+existing or failed runs are not overwritten.
+
+Commit and freeze the entire crate and fixture inputs before fitting. Hash the
+frozen source manifest and producer binary, then use a separate independently
+rebuilt binary for the repeat. The CLI is:
+
+```sh
+# SOURCE_SHA is the SHA-256 of the frozen relative-path source manifest.
+# REVISION is its committed 40-character Git revision. Neither changes mid-run.
+bash experiments/convex_learned_sequence/run_pilot.sh \
+  "$ORIGINAL_BINARY" "$FROZEN_SOURCE" "$ORIGINAL_OUT" "$REVISION" "$SOURCE_SHA"
+bash experiments/convex_learned_sequence/run_pilot.sh \
+  "$INDEPENDENT_BINARY" "$FROZEN_SOURCE" "$REPEAT_OUT" "$REVISION" "$SOURCE_SHA"
+prlimit --as=4294967296:4294967296 -- "$INDEPENDENT_BINARY" verify \
+  "$ORIGINAL_OUT" "$REPEAT_OUT" "$VERIFIED_REPORT"
+```
+
+All thirty-nine model/update controls and five protocol controls pass. The
+protocol controls include exact trace roundtrips for both modes, altered CE or
+probe rejection, missing-seal refusal before evaluation data is opened, and a
+complete hashed inventory whose fake minibatch sequence fails actual replay.
+Measured pilot outcomes require the frozen original/repeat execution below;
+these protocol checks alone are not accuracy evidence.
+
 ## Remaining work
 
-Implement prospective sealed training for both required minibatch modes. The
+Run and independently verify the prospective sealed pilot for both required minibatch modes. The
 forward-only rule now queries the actual model and respects its whole domain;
 a gated surrogate evaluated outside that domain would not inherit the CE theorem.
 CM80 derives a centre by summing certified projections of every original
