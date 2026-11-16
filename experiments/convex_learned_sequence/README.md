@@ -9,8 +9,9 @@ CM79, commit `945603c5`, under
 The native model now executes the full learned complex forward and projects
 the whole parameter array with retained component certificates. Complete cone
 centres, direction bases and feasible queries now have native generators and
-independent exact certificate checks. Mini and
-forward-only Mini proposal rules and training remain unfinished. Known feasible
+independent exact certificate checks. The Mini proposal rule now uses the full
+actual CE direction and certified projection. Forward-only Mini proposals and
+sealed training remain unfinished. Known feasible
 points used by controls are not learned outcomes; no stress accuracy is claimed.
 
 ## Complete domains and controls
@@ -130,6 +131,41 @@ buffers. It describes one complete cone, not an all-pattern training-memory or
 runtime guarantee. Full-family caching and optimizer state need their own total
 admission; the 110 GB aggregate RSS and both-disk guards remain applicable.
 
+## Complete ordinary CE Mini updates
+
+CM82, Lean commit `ba4b4b93`, derives the actual CE first-order bound and
+feasible-query derivative for every raw coordinate, both shared passes and
+indexed mean minibatches. `model::learning` implements the complete analytic
+proposal. Actual complex inference supplies the full-class softmax residual;
+the input-only row, readout sign, component sign and activation branch pull
+that residual through every joint coordinate. The target enters only this
+ordinary loss calculation. A shared prediction has one CE residual from its
+averaged logits; half is pulled through each pass, with inverse class alignment
+on the renamed pass. Native renamings are checked involutions.
+
+Each binary64 probability is imported as its exact dyadic value, and the
+subtraction of the target, pullback, record accumulation, actual-batch mean and
+learning-rate proposal then use checked rational arithmetic. This makes the
+residual a numerical approximation to the Lean derivative; it does not establish
+an exact floating derivative or a rounding-error bound. Inference continues to
+recover and evaluate the entire learned complex computation.
+
+`Record` slices preserve all occurrence indices. Empty batches refuse;
+one-record tails normalize by one. `MiniPlan` admits all records, both passes
+when selected, every coordinate contribution and the worst-case active-subset
+count across every projected cell. Its storage reservation adds the retained
+gradient/proposal and residual buffers to the complete model/projection plan.
+These accounting limits complement external aggregate RSS and both-disk guards;
+they are not a wall-clock or measured allocator bound. No full-family cache is
+introduced, and no mask, coordinate, class or record is sampled away.
+
+`mini_step` forms the complete proposal and calls the existing atomic whole-model
+projection. The returned result keeps the proposal, complete gradient, mean
+training CE, resource plan, new model and every component certificate, allowing
+independent replay. Failed admission, invalid records/renaming/rate, coefficient
+growth or projection refusal leaves the original model intact. A step does not
+by itself guarantee loss reduction at an arbitrary learning rate.
+
 ## Findings and validation
 
 All ten native controls pass. They include an independent 125-point orthant
@@ -171,8 +207,21 @@ missing-pairing and invalid-direction cases are checked. The complete-pattern
 control now also recovers all supplied pairings and makes a feasible query
 along the recovered vector for every one of the 144 patterns.
 
+Four Mini controls bring the total to thirty-four. The CM82 nonzero witness
+reproduces the exact full-coordinate mean bias slope -1/6 for targets
+true,false,true; deduplicating gives zero and the one-record tail gives -1/2.
+Both complex signs/components and the distinct visible object coordinates are
+checked. A nonuniform three-class paired prediction agrees with independent
+actual-CE central differences along all 48 coordinates of its all-active cells,
+including the inverse output alignment. These finite probes validate the native
+implementation locally; they do not replace CM82's general exact derivative.
+Base and paired Mini steps both reduce the observed batch CE in their small
+controls, retain all 768 parameters and 192 component certificates, and replay
+every certificate. Empty/invalid records, a mismatched renaming, nonpositive
+rate, overflow and each complete work/storage limit refuse atomically.
+
 Development tests, strict all-target Clippy and a release build pass. The Lean
-projection/query components independently pass the full build, fifty-seven
+projection/query/learning components independently pass the full build, ninety-five
 direct axiom checks, global audit, native INDEX verification and forbidden-source
 scan. Existing 36 `sorry` declarations remain; no new `sorry` or extra axiom was added.
 Evidence and failed development logs stay ignored under
@@ -199,7 +248,7 @@ representation/work limits, not a claimed end-to-end RAM forecast.
 
 ## Remaining work
 
-Implement proposals and training for both required minibatch modes. A
+Implement the forward-only proposal and sealed training for both required minibatch modes. A
 forward-only rule must query the actual model and respect its domain; a gated
 surrogate evaluated outside that domain does not inherit the CE theorem.
 CM80 derives a centre by summing certified projections of every original
@@ -216,8 +265,9 @@ and every original coordinate residual is an explicit combination of retained
 equality rows. The Lean reconstruction theorem proves full kernel coverage and
 unique coefficients from those checks. Native elimination generates and
 independently verifies them, and full Gram recovery checks every supplied basis
-pairing. Next connect the complete family of these queries to actual minibatch
-loss evaluations and update proposals, retaining every record and short tail.
+pairing. CM82 now derives the actual loss derivative and complete Mini proposal.
+Next connect the complete family of forward queries to actual minibatch loss
+evaluations and numerical directional proposals, retaining every record and short tail.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy

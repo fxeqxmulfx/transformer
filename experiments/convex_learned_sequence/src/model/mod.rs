@@ -6,6 +6,7 @@
 //! All constructors check the complete domain and refuse numerical failures.
 
 mod forward;
+pub mod learning;
 mod physical;
 mod update;
 

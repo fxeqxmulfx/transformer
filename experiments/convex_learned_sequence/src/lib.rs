@@ -1,8 +1,8 @@
 //! Native update primitives for the complete learned complex sequence family.
 //!
-//! Source: `review/flat_spectrum.md`, CM75--CM81, especially the checked Lean
-//! `LearnedHinge.Projection` certificates. No training or accuracy is asserted
-//! by this library component. Exact rational arithmetic verifies feasibility;
+//! Source: `review/flat_spectrum.md`, CM75--CM82, especially the checked Lean
+//! projection and actual CE direction theorems. No benchmark accuracy is
+//! asserted by this library. Exact rational arithmetic verifies feasibility;
 //! bounded active-set search refuses rather than weakening its constraints.
 
 pub mod domain;
@@ -38,6 +38,8 @@ pub enum Refusal {
     QueryDirection,
     QueryStep,
     QueryPairing,
+    EmptyBatch,
+    LearningRate,
 }
 
 impl std::fmt::Display for Refusal {
