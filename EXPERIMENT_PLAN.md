@@ -7680,3 +7680,18 @@ direct axioms, full build, native index and global audit before landing. Any
 future native storage change must retain arbitrary nonuniform coordinates and
 receive its own controls and producer freeze. No running comparison changes,
 general-iterate uniformity claim or new catalog credit follows from this proof.
+
+### 2026-11-16: task358 fixed compositions for remaining empty supports
+
+Reapply CM67's proved inclusion theorem before native work: its thirteen axiom
+checks pass at ac16339c. The new crate retains the entire 299,551-member family
+and adds complete finite grammars for conditional inputs, residue composition,
+integer digit extraction and four-term nonnegative-exponent polynomials, for
+962,806 candidates. Selection and packed materialization reuse the reviewed
+engine with this new family; no decoder coordinate or record is removed. Check
+independent interpretation, complete enumeration, every collision, actual
+three-mode complex training and resource refusal before committing. Then freeze
+and independently repeat the full 48-pool training-only probe, retaining all
+54 inventory outcomes. No new heldout result follows from compatibility. Keep
+the running 351 and 355 producers and queued repeats unchanged. A future full
+comparison requires another freeze and a complete training seal.

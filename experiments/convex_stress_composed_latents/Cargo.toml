@@ -1,0 +1,21 @@
+[package]
+name = "convex-stress-composed-latents"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+joint = { package = "convex-stress-reduced-latent", path = "../convex_stress_reduced_latent" }
+pairs = { package = "convex-stress-pair-latents", path = "../convex_stress_pair_latents" }
+wide = { package = "convex-stress-wide-latents", path = "../convex_stress_wide_latents" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.10.9"
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"
