@@ -20872,3 +20872,65 @@ forward-only Mini. It does not prove finite-difference error bounds, a global
 optimizer rate, numerical correctness of Rust, arbitrary unseen-label
 identification, tractable complete pattern enumeration, or 99% stress accuracy.
 Task 366 and the all-165 target remain open.
+
+## CM83. Certified replacement of one learned complex component
+
+Forward-only Mini queries change one full real or imaginary vector in one
+slot, original object class and readout sign. Reconstructing and checking
+every unchanged vector for each query repeats work. This extension proves
+the exact local replacement that an implementation may use while retaining
+the original model, every activation pattern and every constraint.
+
+Write `project(k,w)` for the real component when k is true, and the imaginary
+component otherwise. The replacement `component(k,u,w)` combines the complete
+new real vector u with the unchanged opposite component of w. For either q,
+
+```
+project(q, component(k,u,w)) = if q=k then u else project(q,w).
+```
+
+Let p satisfy the full raw-prefix complex domain, and replace only its
+slot j, object c, sign s component k. Check u against every original oriented
+row for j,k, including dependent and zero rows. At the chosen cell these
+checks are precisely the original complex activation inequalities, by CM79.
+At every other cell the corresponding real vector is unchanged. The whole
+replacement model therefore satisfies the same full domain. This argument
+does not weaken the domain to observed prefixes or sampled inequalities.
+
+The complete changed neuron must be recovered again. Its norm determines
+both representation and readout; changing its real component can change
+the recovered imaginary representation as well. Retaining just the old
+opposite factor would not implement the joint parameterization. Every other
+whole complex vector, its recovered factors and its actual neuron output
+are unchanged. The original full complex forward is consequently equal to
+the original per-slot sum with just that whole neuron substituted. All class
+outputs and both signed terms remain evaluated.
+
+An additional complex identity gives the change in each object's score:
+
+```
+forward(replace(p,j,c,s,k,u), x)[b] = forward(p,x)[b]
+  + [b=c] * sign(s) * (neuron(component(k,u,p[j,c,s]),x) - neuron(p[j,c,s],x)).
+```
+
+Here sign(true)=1 and sign(false)=-1. This identity is over exact complex
+numbers. A floating implementation should retain the original summation
+order rather than infer that reassociation preserves binary64 results.
+For the paired model, use the same replacement in both complete passes
+before the original alignment and ordinary full-vocabulary CE.
+
+Nonzero witnesses start from the zero full model with all-positive masks
+and replace the chosen object's bias by one. A real replacement gives
+complex output 1+i, an imaginary replacement gives -1+i, and a negative
+readout sign negates the result. Every admitted prefix satisfies the full
+cone, and the other original object retains zero output. Both conditional
+theorems have explicit inhabited examples.
+
+Formalization: `ConvexChannel/LearnedHinge/Replacement`; direct audit:
+`LAKE_ARTIFACT_CACHE=false lake env lean scripts/ReplacementHingeAxioms.lean`.
+This proves exact local replacement, not a Rust refinement or a binary64
+error theorem. The native path must independently check dimensions, indices,
+arithmetic limits and every selected row, reconstruct the entire changed
+neuron and compare every output against full reconstruction. Existing
+frozen producers remain unchanged. The exponential pattern cost, general
+unseen-answer conditions and all-165 accuracy target remain open.
