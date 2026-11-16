@@ -8225,3 +8225,15 @@ and failed-search refusals. Small complete-domain controls must retain every
 pattern; they do not replace the all-165-case objective or earn accuracy credit.
 Do not omit constraints or accept floating-point feasibility tolerances as
 proof of the Lean premises. Existing frozen comparison producers stay unchanged.
+
+The native `experiments/convex_learned_sequence` component now implements CM79's
+exact rational certificate checks and finite active-set candidate generation.
+Ten controls pass, including every128pattern of the complete two-object,
+two-position domain (two proposals each), every16pattern of the three-object,
+one-position domain, nonbinary rational outputs, degenerate constraints and
+corrupted certificates. All original rows remain in every verification. Domain
+and search budgets refuse the whole request rather than sampling constraints.
+Strict Clippy and release build pass. This is a component, not a model fit:
+the whole complex forward and both minibatch proposal rules are still pending.
+Follow the experiment README's commands and preserve the complete family and
+resource limits before a separately frozen, independently repeated pilot.
