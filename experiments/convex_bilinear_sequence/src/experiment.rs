@@ -140,13 +140,15 @@ impl baseline::metrics::Predictor for Scorer<'_> {
 
 pub fn write_json(path: &Path, value: &impl serde::Serialize) -> Result<()> {
     use std::io::Write;
-    let mut file = std::fs::OpenOptions::new()
+    let file = std::fs::OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(path)?;
+    let mut file = std::io::BufWriter::new(file);
     serde_json::to_writer(&mut file, value)?;
     writeln!(file)?;
-    file.sync_all()?;
+    file.flush()?;
+    file.get_ref().sync_all()?;
     Ok(())
 }
 

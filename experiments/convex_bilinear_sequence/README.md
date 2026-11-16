@@ -108,3 +108,28 @@ must be sealed before scoring. The eighth native control independently
 compares all real/imaginary coordinate changes, duplicate responses and a
 one-record tail against the complete unscaled update in both modes. This
 comparison is separate from the unchanged original five-case producer.
+
+## Recovery and storage cost control
+
+Recovery now reads each complete class slice directly from the ordered column
+map, avoiding a separate tree lookup for every query coordinate. The SVD inputs,
+singular directions and reconstruction checks are unchanged. Checkpoint JSON
+uses a buffered writer with the same create-new, newline, flush and disk-sync
+semantics. Neither change is applied to an already frozen producer.
+
+`recovery_bench WORKSPACE STORAGE` constructs100 original classes,101 query
+coordinates and3255 dense stored columns. The complete recovered model is
+checked at1200 input-only controls, including the empty prefix and maximum
+length, retaining every output class and both complex components. Before and
+after direct slice extraction, the output digest and both reconstruction and
+balance residuals match exactly. One active-machine timing was19.26s versus
+18.71s; this small difference does not establish a stress-training speedup.
+The control is independent of stress data and supplies no accuracy credit.
+
+Regenerate with `cargo build --offline --release --manifest-path
+experiments/convex_bilinear_sequence/Cargo.toml --bin recovery_bench` and run
+the resulting executable with the workspace/storage paths. To reproduce the
+lookup reference, replace the direct class slice with the equivalent
+`stored.iter().flat_map(|&d| (0..q).map(move |i| joint_ref.entry(class,i,d)))`
+using `joint_ref=&joint`, as in commit7031f56b. Generated timing reports remain
+local and ignored.

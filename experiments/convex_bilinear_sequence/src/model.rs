@@ -96,10 +96,13 @@ impl Model {
             let mut right = vec![C::default(); n * q];
             let mut amplitude = 0.;
             if n > 0 {
-                let joint_ref = &joint;
-                let matrix: Vec<_> = stored
-                    .iter()
-                    .flat_map(|&d| (0..q).map(move |i| joint_ref.entry(class, i, d)))
+                // BTreeMap values have the same order as `stored`. Read each
+                // validated full class slice once instead of looking up its
+                // column separately for every query coordinate.
+                let matrix: Vec<_> = joint
+                    .columns
+                    .values()
+                    .flat_map(|column| column[class * q..(class + 1) * q].iter().copied())
                     .collect();
                 let decomposition = algebra::svd(q, n, &matrix)?;
                 amplitude = decomposition.values.iter().sum();
