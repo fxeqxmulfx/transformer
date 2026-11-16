@@ -555,25 +555,35 @@ Lean build and `scripts/LearnedBilinearAxioms.lean`. Numerical recovery,
 unseen-label identification, richer composition, and Mini/forward-only Mini
 update certification remain separate obligations.
 
-## Open identification bridge: task 367
+## Proved identification bridge: task 367
 
 The user requested one explicit Lean `sorry` for the missing connection from
 capacity to unseen answers. CM87 and `LearnedBilinear/Identification.lean`
-state a margin-duality theorem for the actual learned raw path. Under observed
+now prove the requested margin-duality theorem for the actual learned raw path. Under observed
 unit-margin feasibility, a query class margin is forced for every consistent
 joint parameter iff a finite nonnegative combination of observed margin
 coefficients certifies it. The certificate reads observed labels and the query
 input, with every original class and complex coordinate retained.
 
-Task 367 must prove the finite coefficient identity, soundness/completeness,
-ordinary-CE and numerical-error bridges, a nonconstant genuinely held-out
-success example and an ambiguous refusal. It must distinguish adequate model
-capacity from sufficient observed information. Correctness for a real task
+The proof includes the exact full coordinate identity, soundness/completeness,
+ordinary-CE and weighted-margin-error bridges, an exact rational certificate
+checker, a nonconstant genuinely held-out success example and an ambiguous
+refusal. The observation operator bounds independent constrained directions
+and exposes common-logit and complex null directions. Correctness for a real task
 still needs explicit family realizability; neither unknown target parameters
-nor held-out labels may be fed to the checker. The statement is unfinished,
-and no proved declaration depends on it. No experiment or new accuracy is
+nor held-out labels are fed to the checker. The central statement is unchanged
+and proved without `sorry`. No experiment or new accuracy is
 claimed. Audit it with `scripts/LearnedIdentificationAxioms.lean` and the global
-axiom script; the requested starting count is37, with the older36 unchanged.
+axiom script; the requested new placeholder is removed, with the older36 unchanged.
+
+The success control observes 0000->false, 1000->true and 0010->true, then
+certifies the held-out 1010->true with margin at least3 for every fitting model.
+At the other unseen input0100, two fitting models return opposite objects;
+neither object admits a positive certificate. Per-record ordinary CE at most
+log(1+exp(-1)) supplies unit margins. If each margin has error at most e,
+this certificate guarantees query margin at least3-3e. These are proved controls,
+not measured training accuracy. Certificate discovery, task-family discovery,
+numerical factor recovery and convergence still require their own evidence.
 
 ## Remaining work
 

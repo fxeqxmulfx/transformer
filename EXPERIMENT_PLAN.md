@@ -8468,4 +8468,26 @@ Task367 owns removing this sorry and proving the coefficient identity, finite
 checker/duality, capacity-versus-observation connection, CE and robust margin
 bridges, a nonconstant held-out witness and an ambiguous refusal. The full-suite
 goal is no longer active; task366 itself is not marked complete. The new theory
-goal is to pause for user review after this handoff. Do not launch training.
+goal initially requested a wait after this handoff. The later user request
+`try proof it` supersedes that wait. Do not launch training for this proof task.
+
+### 2026-11-16: task 367 identification proof
+
+The unchanged CM87 equivalence is now proved through a finite linear margin
+alternative and the actual learned complex coordinate identity. The extension
+adds exact rational checking, observation-rank/kernel accounting, ordinary-CE
+and weighted-error margin transfer, and nonconstant unseen success/refusal
+controls. Preserve all36 older sorry and complete direct/global axiom and native
+INDEX checks before landing. No numerical producer or stress credit changes.
+The remaining model-development gap is discovering sufficient task structure
+and reaching certified margins with Mini or forward-only Mini, not a theorem
+that width or flatness alone supplies unseen labels.
+
+The user subsequently requested renewed GPT stress testing. After task367's
+proof review, resume native implementation and prospective stress experiments
+with Mini and forward-only Mini, keeping the transformer baseline and original
+splits/metrics. The CM86 bilinear model has not yet been ported to the native
+pilot; the existing CM75--83 pilot is a different exponential family. Preserve
+all full joint coordinates, complex factors, classes and minibatch tails, and
+report the known four-object parity restriction alongside actual measurements.
+Keep the 110 GB aggregate RAM limit, both-disk guards and frozen producers.

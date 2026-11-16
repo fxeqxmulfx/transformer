@@ -21324,10 +21324,10 @@ spectral residual certification, Mini and forward-only Mini updates, memory
 admission and prospective independent sealed runs. No native producer or
 stress-case credit changes in this extension.
 
-## CM87. Open bridge from learned capacity to observable unseen-answer certificates
+## CM87. Learned capacity and observable unseen-answer certificates
 
-The user explicitly requested one Lean `sorry` and a new board task on
-2026-11-16. Task 367 concerns identification in CM86's actual learned sequence
+The user initially requested one Lean `sorry` and a new board task on
+2026-11-16, then asked to prove it. Task 367 concerns identification in CM86's actual learned sequence
 family. It is separate from coding-discovery tasks 196/197 and the fixed-encoding
 controls 148/365. The mathematical target is a finite margin-certificate theorem,
 not an unconditional claim that a flat spectrum determines missing labels.
@@ -21343,7 +21343,8 @@ Given indexed observed prefixes x_i and their original labels y_i, let F be the
 set of p with m(p,x_i,y_i,c)>=1 for every i and c!=y_i. Assume F is nonempty.
 This is consistency of the observed constraints, not a successful optimizer,
 an attained unregularized CE minimum, or a correct unseen answer. A two-class
-inhabited example is included independently of the open theorem.
+inhabited example is included independently of the theorem. The central
+equivalence below is now proved with its original statement unchanged.
 
 Expose the finite real coordinates z=(imaginary flag,class,query address,
 context address), keeping both complex components and every output class.
@@ -21354,11 +21355,12 @@ The diagnostic coefficient vector v(x,a,b) is
   * Re(queryRow(x)[query address] * contextRow(past(x))[context address]).
 ```
 
-The row values here are real counts embedded in C. Proving that these finite
-coefficients give the actual recovered margin is part of the task, not a new
-inference definition or an assumption about unknown target weights.
+The row values here are real counts embedded in C. `margin_expansion` proves
+that these finite coefficients give the actual recovered margin. This is not
+a new inference definition or an assumption about unknown target weights.
+Encoding and decoding the complete real coordinates are mutually inverse.
 
-For any query prefix u, candidate objects a,b and requested bound beta, prove
+For any query prefix u, candidate objects a,b and requested bound beta,
 `forced_margin_iff_certificate`:
 
 ```
@@ -21373,9 +21375,29 @@ The right side has finitely many scalar inequalities and coefficient equalities.
 It uses only observed labels and prefixes plus the input u and proposed classes;
 it neither reads u's true answer nor assumes that all completions agree. The
 nonempty F hypothesis is necessary to avoid false certificates from vacuous
-universal statements. Finite real alternative/duality theorems are a possible
-proof route; their applicability to this actual learned parameter space must
-be proved. No executable linear-program solver is supplied by this statement.
+universal statements. The proof first establishes a general finite linear
+margin alternative, then applies it to the complete actual coordinate forms.
+No executable linear-program solver is supplied by this statement.
+
+The completeness proof has four steps. A forced lower bound is nonnegative
+on every feasible recession direction. Homogenizing the constraints with a
+scale t>=0 then gives nonnegativity of f(p)-beta*t on the cone
+(t, (A_i p-t)_i)>=0, including t=0. A feasible unit-margin point p0 gives
+a strictly positive observation vector at (2*p0,1). Mathlib's M. Riesz positive
+extension theorem extends the objective from the observation map's range;
+its finite coordinate coefficients are nonnegative. Evaluating at (p,0)
+gives f=sum_i w_i A_i, and at (0,1) gives beta<=sum_i w_i. Kernel
+well-definedness and the extension's cofinality condition are proved explicitly.
+No closed-cone assumption, attained CE minimum or optimizer oracle is added.
+
+Self-label comparisons are restored with weight zero. The original record
+indices remain, so repeated examples and all competitors retain their sums.
+`rationalCoefficient_cast` proves that the signed rational counts equal the
+full real coefficients. `checkCertificate_iff` proves correctness of the finite
+exact-rational Boolean checker on rational supplied weights and bounds. This
+does not assert a certificate-search algorithm or rational completeness of
+the real existential theorem. Direct Lean evaluation is a reproducible checker
+run; the correctness theorem itself uses only standard Lean axioms.
 
 Positive bounds for every competitor force a unique original-object answer at
 u for every model consistent with the observations. To call that answer correct
@@ -21384,39 +21406,57 @@ target rule and its parameters need not be supplied to the certificate checker.
 The query need not be held out in the general equivalence, but the positive
 acceptance witness must be genuinely unseen with nonconstant observed labels.
 
-A suggested witness uses context cap3 and fixed final object false. Observe
+A proved witness uses context cap3 and fixed final object false. Observe
 [false,false,false,false]->false, [true,false,false,false]->true and
 [false,false,true,false]->true. Withhold [true,false,true,false]. The varying
 context positions are nonadjacent, so the query's raw address product is the
 sum of the two positive-prefix address products minus the negative-prefix one.
 Consequently its true-versus-false margin functional is the sum of all three
 observed correct-versus-incorrect margin functionals, with nonnegative weights
-one and total mass three. The task must prove feasibility, this identity, the
-certificate, strict prediction and held-out status. A different held-out prefix must exhibit two
-consistent parameters giving different answers, hence refusal. These are proof
+one and total mass three. Lean proves feasibility, this identity, the
+certificate, strict original-object prediction and held-out status. The finite
+rational checker accepts this certificate. Explicit parameters have false
+logit zero and true logit -1+2*a+r*b+2*c on [a,b,c,false]. Every r fits the
+three observed unit margins. On the other unseen prefix [false,true,false,false],
+r=0 predicts false and r=2 predicts true. Consequently neither candidate has
+any positive certificate there. These are proof
 controls, not an original stress-test score or an assumed task formula.
 
 The capacity connection must distinguish rank from directional information.
 CM86/R3 controls possible representation width and approximation error. The
 observed-margin coefficient matrix describes which directions the data constrain.
 Its rank or span alone does not provide the nonnegative certificate or guarantee
-an unseen class margin. State the relevant evaluation operator and quotient out
-common-logit and complex unobservable directions when appropriate; do not apply
-a flat coefficient-operator bound directly to real labels without that bridge.
-A quantitative spectral conditioning bound can control certificate sensitivity
-when its assumptions hold, but those assumptions must be independently checked.
+an unseen class margin. `observationOperator` evaluates all observed margins;
+`observation_rank_bound` bounds its rank by both the complete CM86 real
+coordinate count and the indexed competitor count. Labels impose inequalities
+on its outputs; they are not measurements of exact real logits. Every certified
+query functional annihilates this operator's kernel. Common class matrices and
+equal real/imaginary increments are proved null directions of every raw margin.
+These coordinates remain present; no quotient is silently substituted for the
+learned model. CM86's flat coefficient bounds continue to concern physical
+representation width and coefficient-probe approximation. They do not supply
+the nonnegative directional identity required by this theorem.
 
-The task also owes the ordinary CE bridge and a robust version. A per-record
-CE upper bound can imply each observed class margin; signed real-logit values
-are not observed labels. If certified observed margins hold only up to known
-errors, charge their weighted sum using the full certificate coefficients and
-retain a positive query margin. Distinguish certificate existence/checking,
+The ordinary CE bridge is explicit: for a competitor c!=y,
+CE(z,y)<=log(1+exp(-m)) implies z_y-z_c>=m. Thus the threshold with m=1
+on every indexed record implies the feasibility constraints. The same threshold
+on a minibatch mean alone is not used. The concrete feasible witness attains
+that CE threshold on all three records. If observed margins are only at least
+1-e[i,c], `certificate_robust` proves query margin at least
+beta-sum_{i,c} w[i,c]*e[i,c]. A uniform error e is charged as e*sum w;
+for the mass-three example this gives 3-3*e. Distinguish certificate existence/checking,
 structural family discovery, and Mini or forward-only Mini convergence. None
 is implied by capacity alone, and no optimizer convergence is requested here.
 
 Formalization starts at `ConvexChannel/LearnedBilinear/Identification.lean`.
-Exactly its central equivalence is intentionally unfinished. Completing task
-367 must remove that `sorry`, preserve all36 older unfinished statements, supply
-inhabited examples, run direct/global Lean axiom checks, and regenerate INDEX
-with the native generator. No new native experiment, accuracy credit or change
-to frozen producers accompanies this handoff.
+Its `Identification/` modules contain the general alternative, exact coordinates,
+duality, rational checker, observation geometry, CE/error bridges, and success/
+refusal witnesses. The requested `sorry` is removed; the older36 unfinished
+statements remain. Conditional results have inhabited examples. Reproduce the
+proof checks with `LAKE_ARTIFACT_CACHE=false lake build`, direct Lean compilation
+of these modules, `lake env lean scripts/LearnedIdentificationAxioms.lean`, and
+`lake env lean scripts/Axioms.lean`; regenerate INDEX with the native generator.
+No new native experiment, accuracy credit or change to frozen producers
+accompanies this extension. Task-family discovery and Mini/forward-only Mini
+convergence remain separate open work; correctness for the unknown target
+continues to require explicit family realizability.
