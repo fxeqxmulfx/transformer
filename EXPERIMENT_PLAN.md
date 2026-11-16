@@ -7765,3 +7765,26 @@ larger original models fit. Next integrate actual optimizer and checkpoint
 paths, aggregate all live memory, then independently rebuild and freeze the
 complete three-mode original/repeat. No new accuracy credit follows; task360
 stays open and all live351/355/358 producers stay immutable.
+
+### 2026-11-16: task360 compact projection and actual CE training
+
+Port the complete CM66 weighted proposal, scalar projection, numerical KKT audit
+and all three ordinary CE policies onto CM70 storage. Keep every arbitrary
+unknown coordinate and the original arithmetic. Entirely uniform programs
+retain repeated-add prefix totals; mixed programs keep all sorted/prefix arrays.
+Charge the full fallback, concurrent multiplier vectors and class scratch.
+Training reserves dictionary reconstruction, packed record expansion and every
+step before initialization, then subtracts all simultaneously live parameters,
+gradients, proposals and old/new heads at each nested allocation.
+
+Twenty-three native controls cover48 complete training combinations with
+original duplicates, singleton/three-record minibatch tails, both record
+representations, uniform/nonuniform starts and learning rates3 and1000000.
+Final parameters, complex coefficients, step metrics, CE, operations and queries
+match the prior reduced implementation bit for bit. Separate actual-step replay
+checks every intermediate parameter and head. Projection controls preserve
+all multiplier regimes and rounding-sensitive uniform prefix sums and reject
+oversized fallback without changing the proposal. Commit after required native
+and Lean checks, then rebuild independently. Whole-process input/runtime memory
+admission, persistence and a separately frozen original/repeat remain required;
+no new original-data accuracy is claimed and task360 remains open.

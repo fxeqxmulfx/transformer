@@ -146,6 +146,12 @@ impl Builder {
 }
 
 impl Rows {
+    /// Exact word equality, established by the builder; this reports storage
+    /// without restricting what values an arbitrary row may contain.
+    pub(crate) fn repeated(&self, row: usize) -> Option<f64> {
+        let row = self.rows.get(row)?;
+        (row.offset == SHARED).then_some(row.value)
+    }
     pub fn try_clone(&self, limit: u64) -> Result<Self> {
         let mut out = Builder::new(self.classes, self.rows(), limit)?;
         for row in &self.rows {

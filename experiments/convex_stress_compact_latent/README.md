@@ -8,9 +8,10 @@ identity and conditional head-storage bounds. The existing full model and
 frozen comparisons remain the numerical references.
 
 The current Rust component implements parameter storage, direct compact
-initialization and the complete complex head, including numerical audits,
-interval certificates and exact dyadic fallback. Optimizer integration,
-whole-model memory admission, checkpoints and the new original-cohort comparison
+initialization, the complete complex head and actual projected ordinary CE
+training in full-batch, minibatch and forward-only modes. Numerical audits,
+interval certificates and exact dyadic fallback are retained. Whole-process
+memory admission, checkpoints and the new original-cohort comparison
 remain to be implemented and verified. It still uses the prior domain builder
 and its conservative admission; this component alone does not admit a larger
 original model.
@@ -28,6 +29,8 @@ There is no new accuracy result or original-data production entry point here.
 | Parameters | Preserve every mass, arbitrary unknown row, anchored expansion, original feasibility sums and the full distance with known-row multiplicities |
 | Complex head | Share an eight-word column only when all four real and four imaginary coefficient words agree; retain every exception and the original logical active-class sequence |
 | Prediction | Preserve forward and reverse contractions, interval enclosures, exact dyadic ties, raw winners and ordinary CE |
+| Projection | Preserve weighted proposals, every unknown gradient coordinate, all scalar root iterations and the full numerical KKT audit |
+| Training | Preserve the original dictionary check, every original record, duplicates, batch tails, CE guards and step metrics in all three modes |
 
 The parameter codec specializes CM70's general baseline/exception scheme:
 a nonuniform row uses a full explicit fallback even when some of its values
@@ -39,7 +42,7 @@ blocks retain their sorted observed classes, and any block with an unknown row
 still visits all raw classes, including zero-valued and repeated columns.
 Neither form adds a uniformity constraint to the feasible model domain.
 
-Fifteen native controls pass. Mixed shared and explicit rows retain every word,
+Twenty-three native controls pass. Mixed shared and explicit rows retain every word,
 including duplicate original rows and two distinct zero words. Stateful zipped
 operations see every coordinate, and a floating sum matches the full original
 sequence bit for bit. A sum of a thousand copies of 0.1 also demonstrates why
@@ -71,13 +74,39 @@ Each output head and parameter container occupies less than 8 KiB, excluding
 inputs and construction/query scratch. All 1024 classes remain in every query
 and the audit charges all 262144 logical coefficients. This measured synthetic
 storage reduction is not an original-model memory or accuracy result.
-Actual full/minibatch/forward training with compressed storage still requires
-the complete integration and independent comparison.
+Actual training controls cover 48 combinations: full-batch, minibatch and
+forward-only policies; learning rates 3 and 1000000; uniform or mixed nonuniform
+initial unknown rows; expanded or packed records; and 128 or 130 original
+records. Minibatches retain size 127 with singleton or three-record tails.
+Final parameters, complete complex coefficients, all step metrics, CE, logical
+operation counts and all 64 query answers agree bit for bit with the prior
+complete reduced model. A separate full/minibatch replay compares every
+intermediate parameter, gradient and head. Neither original records nor
+arbitrary unknown coordinates are removed.
 
-The storage limit is local to an output parameter table or head and its construction scratch,
-with a maximum of 96 GB. Input tables, other model tensors, dictionaries and
-heads remain separately owned by the caller. A future complete runner must
-charge their simultaneous peak under the 110000000000-byte process RAM cap,
+Projection controls also cover arbitrary proposals, all three multiplier
+boundary cases, fully anchored programs and mixtures of uniform/nonuniform
+programs. The complete objective and numerical KKT residual match exactly.
+An entirely uniform program needs only each row's final prefix sum; it is still
+computed by the original repeated additions. A 1000-class control detects the
+rounding change that multiplication would introduce. Mixed programs keep the
+complete sorted values and every prefix entry, including their uniform rows.
+An oversized fallback is refused while the original proposal remains intact.
+
+Training admission reserves dictionary reconstruction, original packed-record
+expansion, all step metadata and class scratch before initialization. It then
+subtracts every simultaneously live parameter, gradient, proposal, projection
+and old/new head before building another. Projection separately charges all
+plans, class scratch and simultaneous multiplier/mass/KKT vectors. Controls
+reject both a cap too small for initialization and one that fits the initial
+model but cannot fit its update buffers. Original caller-owned inputs and
+runtime/process reserves still need the complete runner's admission.
+
+The component storage limit is at most 96 GB. Standalone parameter/head
+constructors charge their output and scratch; projection and training charge
+their nested live buffers as described above. A complete original-data runner
+must additionally charge caller-owned dictionaries, packed inputs, persistence
+and runtime reserves under the 110000000000-byte process RAM cap,
 preserve the original operation order and ordinary CE policies, and stop when
 either disk cannot fit the complete original and independent repeated outputs.
 

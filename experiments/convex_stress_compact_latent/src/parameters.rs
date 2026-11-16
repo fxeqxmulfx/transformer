@@ -13,7 +13,7 @@ pub struct Parameters {
     free: Rows,
 }
 
-fn allocate_masses(programs: usize, limit: u64) -> Result<(Vec<f64>, u64)> {
+pub(crate) fn allocate_masses(programs: usize, limit: u64) -> Result<(Vec<f64>, u64)> {
     if limit == 0 || limit > 96_000_000_000 {
         return Err("invalid compact parameter storage limit".into());
     }
@@ -31,6 +31,17 @@ fn allocate_masses(programs: usize, limit: u64) -> Result<(Vec<f64>, u64)> {
 }
 
 impl Parameters {
+    pub(crate) fn from_parts(
+        domain: &Domain,
+        masses: Vec<f64>,
+        free: Rows,
+        limit: u64,
+    ) -> Result<Self> {
+        let out = Self { masses, free };
+        crate::memory::remaining(limit, out.allocation_bytes() as u128)?;
+        out.validate(domain)?;
+        Ok(out)
+    }
     /// Reference import; the full input tensor is separately owned and must
     /// be charged by the caller. Production initialization never expands it.
     pub fn from_legacy(
