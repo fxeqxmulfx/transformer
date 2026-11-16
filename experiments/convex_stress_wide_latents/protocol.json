@@ -1,0 +1,31 @@
+{
+  "name": "pair-laurent3-three-terms-integer14-v1",
+  "predecessor_manifest_sha256": "be74842434db9570fd47264b1f68f1e7c83d10ffd3e01001d41f9b7402d5a11c",
+  "predecessor_verification_sha256": "5f74832775362214ca247795235dfc6627c94c2d138f35d0f89641f08d632019",
+  "data348_inventory_sha256": "13957c45cf3e58a17bb9e9b1106e6b739155b05ad09f5a34ea24a337626f4064",
+  "data348_verification_sha256": "58340eda892c8017035698b8263e76e100991c7f0b94af0cddda4fa842256ca5",
+  "fixed_family": {
+    "old_prefix": "Every existing4767 pair-laurent3-two-terms-integer14-v1 candidate, in its original order",
+    "monomial_exponents": [-3, -2, -1, 0, 1, 2, 3],
+    "added_programs": "Every lexicographic triple of distinct exponent vectors, first coefficient1, second and third coefficients independently in[-2,-1,1,2]",
+    "added_count": 294784,
+    "total": 299551,
+    "field_inverse_at_zero": 0,
+    "zero_exponent_at_zero": 1,
+    "integer_division_by_zero": 0,
+    "integer_remainder_by_zero": "numerator",
+    "states": "Every result modulo the prime vocabulary, with the state space padded to a multiple of4"
+  },
+  "selection": "Keep every observationally consistent candidate. Every rejected block retains two conflicting original record IDs checked by the independent interpreter. Every surviving state on every original row is also independently checked.",
+  "model_input": "Vocabulary and ordered rows[a,b,label] only; no task identity, target syntax, generator seed, oracle or heldout labels.",
+  "lean": "CM64 exact zero-block elimination, CM65/66 reduced complete domain and full projection geometry, CM67 old-family embedding. These do not supply target realizability.",
+  "flat_spectrum_role": "Capacity bound on the complete complex head, independently of the fixed input-program structural prior.",
+  "training": {"minimum_mass": 1, "maximum_mass": 32, "initial_mass": 8, "learning_rate": 1000000, "full_epochs": 4, "mini_epochs": 1, "mini_batch_size": 127, "forward_updates": 0},
+  "audit": "Stream program-major original states and every dictionary entry, including unknown padded states. The later materializing boundary must recompute the full selection and both hashes, and check exact agreement with the reduced domain.",
+  "operation_cap": 40000000000000,
+  "buffer_cap_bytes": 96000000000,
+  "process_cap_bytes": 110000000000,
+  "report_cap_bytes": 67108864,
+  "disk_reserve": "Both original and repeat:96*(64MiB report+8MiB input)+1GiB metadata, plus2GiB workspace and16GiB storage slack; sum requirements on a shared filesystem.",
+  "scope": "Training-only compatibility, interpreter audit and complete reduced-buffer forecasts on all48 available original pools, preserving all54 inventory entries. Zero heldout scoring and zero accuracy credit. Any full comparison requires another prospective freeze and training seal."
+}

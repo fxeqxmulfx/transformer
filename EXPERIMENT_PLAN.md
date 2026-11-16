@@ -7590,3 +7590,17 @@ family and independently probe all original training sets with reduced-buffer
 admission. Freeze before reading those training rows. Keep the task351 producer
 and its queued repeat unchanged; a later full wider-family comparison requires
 its own freeze and all training outcomes sealed before heldout scoring.
+
+### 2026-11-15: task354 complete three-term native family
+
+The new fixed bank retains the old 4,767-member prefix and all 294,784 declared
+three-term additions. Eight native controls pass, including complete family
+enumeration, independent interpreters, pairwise conflicts, label renaming,
+duplicates, forged-subset refusal, full reduced-domain reconstruction and three
+actual training modes. The probe streams every observed state and complete
+dictionary before forecasting expanded model buffers; it can retain a complete
+audit and refuse an oversized model without allocating it. Both-disk admission
+reserves original and repeat outputs. Freeze this source before probing the
+48 original training extracts; preserve all 54 inventory outcomes and give no
+heldout accuracy credit. A separately frozen complete comparison remains
+required after independent probe reproduction.

@@ -23,6 +23,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`convex_stress_wide_latents`](convex_stress_wide_latents) | Complete 299,551-member input family | CM67 preserves the full old class while adding every declared three-term combination. Eight native controls cover all candidates, independent interpreters, exact conflicts, unknown rows, real training, streamed memory refusals and guarded executable output. Original training-only probe requires a prospective freeze and independent repeat. |
 | [`convex_stress_reduced_latent`](convex_stress_reduced_latent) | CM65/66 reduced decoder component | Exact anchored-row elimination, complete sparse complex heads, weighted projections and genuine full/mini/forward CE. Twelve controls cover dense equivalence, derivatives, arbitrary proposals, tails, persistence and both-disk stops. Wider-family original comparison remains separate. |
 | [`convex_stress_bounded_compare`](convex_stress_bounded_compare) | Complete54-case CM64 comparison | All three policies, complete binary64 tensors, training seal, raw CE/count replay and both-disk admission. Ten native controls pass; original/repeat forecast60.5GB plus reserves. Full heldout measurements remain pending. |
 | [`convex_stress_pair_latents`](convex_stress_pair_latents) | Fixed4,767-member pair-state bank | All99 artifacts independently repeat.41/48 pools encode: all22 old controls and19 additions; seven empty-support refusals retain every witness. All4,767 candidates remain for constant controls. Peak691MiB; no heldout score. |
