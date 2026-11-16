@@ -59,7 +59,7 @@ exact-integer and interval scratch, and two raw answers during replay. State
 construction moves training metadata rather than cloning it. The caller must
 subtract all original inputs and runner metadata before these nested limits.
 
-Eleven native controls cover complete preparation, work limits, real checkpoint
+Sixteen native controls cover complete preparation, work limits, real checkpoint
 files, two required mode forecasts, and both-disk refusal. Complete old and new
 models agree on parameters, CE, actual update traces, every queried answer and
 work charge. The 130-record control keeps the 127-record minibatch and three-row
@@ -67,16 +67,65 @@ tail. Raw readback preserves 99/100 and 98/100 distinctions, all wrong-label and
 numerical-refusal denominators, and rejects rehashed logit corruption and oversized
 lines before prediction. These are synthetic controls, not original-task results.
 
-No production runner or original heldout evaluation is enabled yet. Remaining work is
-complete phase/resource accounting in the runner, prospective protocol pins
-after task358 independent verification, all training endpoints and their seal,
-full original scoring and an independent repeat. The future disk forecast must
-reserve every full logical checkpoint and raw prediction for both runs. A
-shortage of either disk stops execution. This component adds no accuracy claim.
+The complete runner is implemented. It retains all 54 case entries and requires
+both training endpoints for each case before the global heldout barrier. Typed
+probe metadata and the exact original input hashes are checked; every legacy
+probe refusal remains visible beside the compact input forecast. The forecast
+admits inputs only. Each training, save, read and prediction phase still needs
+its full local capacity check. Preparation counters are preserved in training,
+scoring and replay, and scoring must reconstruct the same complete inputs.
+
+The caller ledger counts actual inventory, dataset and endpoint capacities,
+with conservative tree-node, parser and serialization reservations. Before a
+new large run, existing experiment pipelines must finish; their wrappers are
+checked as well as their current child processes. Other process RSS and a 2 GiB
+growth reserve are subtracted from the 110 GB allowance. Runtime limits and
+measured process peaks go in local logs. These checks are native resource
+controls, not a Lean theorem about RSS.
+
+A synthetic runner control uses 130 distinct training inputs and 159 heldout
+inputs. Training succeeds while the heldout file contains invalid JSON, scoring
+fails before the global barrier, and the barrier rejects a missing case among
+54 synthetic entries. After restoring the bound dataset and sealing all 108
+required endpoints, the runner scores and replays every row. It checks omitted
+modes, erased preparation charges, changed metadata and the two-mode report
+fields. Its other 53 entries are explicit synthetic refusals; this control does
+not stand in for the original 48 available datasets.
+
+Production remains disabled until task358's complete independent verification
+is pinned and the checked producer is committed and frozen. No original fitting
+or new accuracy claim exists yet. The disk forecast reserves every full logical
+checkpoint and raw prediction for both runs. A shortage of either disk stops
+execution. New coverage fields explicitly refer to the two required modes;
+historical three-mode coverage stays separately identified.
+
+The typed probe reader also retains complete reports above the former 64 MiB
+limit while enforcing the pinned 128 MiB cap. It rejects changed work counters,
+metadata, hashes, unknown fields, and a complete-length but forged partition.
 
 ```sh
 export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/compact-compare-v1
 cargo test --offline --locked --manifest-path experiments/convex_stress_compact_compare/Cargo.toml -j2
 cargo clippy --offline --locked --all-targets --manifest-path experiments/convex_stress_compact_compare/Cargo.toml -j2 -- -D warnings
 cargo test --offline --locked --release --manifest-path experiments/convex_stress_compact_compare/Cargo.toml -j2
+bash -n experiments/convex_stress_compact_compare/run.sh experiments/convex_stress_compact_compare/freeze.sh
 ```
+
+After pinning the verified probe, rerun the checks, commit, build the release
+binary from that clean commit and create a fresh freeze before original fitting:
+
+```sh
+cargo build --offline --locked --release --manifest-path experiments/convex_stress_compact_compare/Cargo.toml -j2
+bash experiments/convex_stress_compact_compare/freeze.sh NEW_FREEZE RELEASE_BINARY
+bash NEW_FREEZE/source/experiments/convex_stress_compact_compare/run.sh \
+  NEW_FREEZE/convex-stress-compact-compare WORKSPACE NEW_ORIGINAL original \
+  ORIGINAL_DATA VERIFIED_COMPOSITION_PROBE RETAINED_SUMMARIES PRODUCER_COMMIT
+bash NEW_FREEZE/source/experiments/convex_stress_compact_compare/run.sh \
+  INDEPENDENTLY_REBUILT_BINARY WORKSPACE NEW_REPEAT repeat NEW_ORIGINAL
+INDEPENDENTLY_REBUILT_BINARY verify WORKSPACE NEW_ORIGINAL NEW_REPEAT NEW_VERIFICATION_JSON
+```
+
+The independent rebuild uses the frozen sources and a separate Cargo target
+directory. Before new coverage is credited, compare the complete deterministic
+input, checkpoint, trace, raw prediction and summary manifests. Keep generated
+outputs outside Git and preserve the existing bounded/reduced/composed runs.

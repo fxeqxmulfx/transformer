@@ -11,6 +11,10 @@ use std::{
 };
 #[path = "tests/model.rs"]
 mod model_tests;
+#[path = "tests/probe.rs"]
+mod probe_tests;
+#[path = "tests/runner.rs"]
+mod runner_tests;
 static NEXT: AtomicU64 = AtomicU64::new(0);
 const ROOM: u64 = 2 * 1024 * 1024 * 1024;
 struct Fixture {

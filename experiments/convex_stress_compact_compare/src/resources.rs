@@ -8,6 +8,8 @@ use std::{
     path::{Path, PathBuf},
     process::Command,
 };
+mod process;
+pub use process::process_limit;
 
 #[derive(Debug)]
 pub struct ResourceStop(pub String);
@@ -85,6 +87,19 @@ fn used(path: &Path) -> Result<u64> {
             .ok_or("run-byte count overflow")?;
     }
     Ok(total)
+}
+
+pub fn standalone(workspace: &Path, parent: &Path, output_limit: u64) -> Result<Guard> {
+    Ok(Guard {
+        workspace: workspace.into(),
+        storage: parent.into(),
+        run: parent.into(),
+        output_budget: used(parent)?
+            .checked_add(output_limit)
+            .ok_or("standalone output budget overflow")?,
+        workspace_reserve: 2 * 1024u64.pow(3),
+        storage_reserve: 16 * 1024u64.pow(3),
+    })
 }
 
 #[derive(Clone, Debug)]

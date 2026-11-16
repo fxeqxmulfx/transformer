@@ -1,6 +1,7 @@
 //! Separate prospective CM70 comparison. The preparation boundary retains
-//! the complete task358 input-only family and original audits. No production
-//! runner, heldout fitting or new accuracy result is enabled by this component.
+//! the complete task358 input-only family and original audits. Production
+//! requires verified probe pins and a fresh freeze; native controls are not
+//! evidence of new original-task accuracy.
 pub use joint::{Result, Work};
 #[path = "../../convex_stress_reduced_compare/src/disk.rs"]
 pub mod disk;
@@ -9,7 +10,9 @@ mod memory;
 pub mod model;
 pub mod preparation;
 pub mod resources;
+pub mod runner;
 pub mod tensor;
+pub const RAM_LIMIT_BYTES: u64 = joint::admission::PROCESS_BYTES;
 #[cfg(test)]
 mod tests;
 pub mod work;
