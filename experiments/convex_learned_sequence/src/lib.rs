@@ -40,6 +40,7 @@ pub enum Refusal {
     QueryPairing,
     EmptyBatch,
     LearningRate,
+    ForwardTrace,
 }
 
 impl std::fmt::Display for Refusal {

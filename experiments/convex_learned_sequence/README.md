@@ -10,8 +10,9 @@ The native model now executes the full learned complex forward and projects
 the whole parameter array with retained component certificates. Complete cone
 centres, direction bases and feasible queries now have native generators and
 independent exact certificate checks. The Mini proposal rule now uses the full
-actual CE direction and certified projection. Forward-only Mini proposals and
-sealed training remain unfinished. Known feasible
+actual CE direction and certified projection. Forward-only Mini now queries
+every certified basis direction and supports complete independent update replay.
+Sealed training remains unfinished. Known feasible
 points used by controls are not learned outcomes; no stress accuracy is claimed.
 
 ## Complete domains and controls
@@ -166,6 +167,50 @@ independent replay. Failed admission, invalid records/renaming/rate, coefficient
 growth or projection refusal leaves the original model intact. A step does not
 by itself guarantee loss reduction at an arbitrary learning rate.
 
+## Forward-only ordinary CE Mini updates
+
+`model::forward_learning` composes CM79--82 without calling the analytic gradient
+or pullback. `ForwardConfig` fixes a positive rate, positive centre mixture at
+most one, and positive query cap. The update constructs every pattern's checked
+geometry and mixes each original class/sign/component vector with its centre.
+The whole mixed array passes the original model constructor and factor recovery.
+Old and mixed mean CE are both retained: mixing may increase the loss.
+
+Every basis direction of every cell receives two exact feasible queries. Each
+query is embedded in the full array, checked against every original inequality,
+and evaluated by the actual recovered complex forward and full-class CE over
+every indexed batch record. Paired predictions use the same two complete shared
+passes as ordinary inference. One query model is live at a time; no model mask,
+class, component or input coordinate is omitted. Every cell has a receipt,
+including an empty list only when its certified kernel has no directions.
+
+The two binary64 mean losses are imported as exact dyadics, subtracted, and
+divided rationally by twice the exact query step. Complete Gram recovery yields
+a direction in the full forced-equality kernel. A proposal from the mixed
+iterate, using all recovered coordinates, goes through atomic whole-model
+projection. All pairings, steps, query losses, full gradient/proposal, mixed and
+new models, projection certificates and final CE are retained in `ForwardUpdate`.
+Finite differences remain numerical estimates of CM82's exact derivative;
+there is no finite-step, rounding-error or convergence guarantee.
+
+`verify_forward_update` does not call the update generator or an analytic
+gradient. It regenerates each checked geometry, checks the entire mixture,
+reconstructs every feasible query, re-evaluates every actual batch CE with exact
+binary64 receipt comparison, verifies each pairing and the recovered kernel
+vector, and checks the full proposal and projection certificates. The final
+model is reconstructed under the original model's arithmetic limits. Replacing
+it with a model admitted under looser limits cannot bypass replay checks.
+
+`ForwardPlan` admits two complete geometry constructions per pattern, all
+normal-projection and final-projection candidates, the full upper bound on basis
+directions, all batch evaluations and original forward passes, full-coordinate
+forward work, every query-model inequality check, and simultaneous storage for
+models, factors, receipts, gradient, proposal and certificates. The per-cone
+geometry workspace is reused sequentially. These explicit counts and memory
+reservations complement aggregate RAM and both-disk guards; they do not promise
+a wall-clock runtime. Generation and independent replay are separate admitted
+operations. Records remain indexed and a short batch uses its actual length.
+
 ## Findings and validation
 
 All ten native controls pass. They include an independent 125-point orthant
@@ -220,6 +265,26 @@ controls, retain all 768 parameters and 192 component certificates, and replay
 every certificate. Empty/invalid records, a mismatched renaming, nonpositive
 rate, overflow and each complete work/storage limit refuse atomically.
 
+Five forward-only controls bring the total to thirty-nine. A complete two-object,
+one-position update retains 192 coordinates, 64 cells and all 192 basis probes,
+matches the CM82 repeated-record mean slope and the analytic direction within
+the stated numerical test tolerance, lowers the observed batch CE, and replays
+all queries and projection certificates. The three-object paired control retains
+768 coordinates, 192 cells and all 768 probes on a nonuniform prediction and a
+one-record tail. Its centre mixture measurably increases CE; its update lowers
+CE relative to that mixed point. The complete trace replays independently.
+
+A separate cell control finds a forced-equality cone with a nonorthogonal basis
+inside the complete two-position raw domain, queries all of that cell's feasible
+directions through the full model, and checks every recovered pairing against
+actual CE work. It is a cell control, not a whole two-position training run.
+Replay rejects missing cells/directions, wrong coordinate identities, altered
+steps/losses/pairings, corrupted gradient/mixture/proposal/certificates and false
+final loss or plan. Every total work/storage limit, invalid input/configuration,
+and overflow is checked. Analytic gradients appear only in test comparisons,
+never in the forward-only implementation. These are local implementation
+controls; they provide no new stress-case or sealed-pilot accuracy credit.
+
 Development tests, strict all-target Clippy and a release build pass. The Lean
 projection/query/learning components independently pass the full build, ninety-five
 direct axiom checks, global audit, native INDEX verification and forbidden-source
@@ -248,9 +313,9 @@ representation/work limits, not a claimed end-to-end RAM forecast.
 
 ## Remaining work
 
-Implement the forward-only proposal and sealed training for both required minibatch modes. A
-forward-only rule must query the actual model and respect its domain; a gated
-surrogate evaluated outside that domain does not inherit the CE theorem.
+Implement prospective sealed training for both required minibatch modes. The
+forward-only rule now queries the actual model and respects its whole domain;
+a gated surrogate evaluated outside that domain would not inherit the CE theorem.
 CM80 derives a centre by summing certified projections of every original
 constraint normal. Its zero-slack rows are exactly the universally forced
 equalities; their joint nullspace describes the feasible two-sided query
@@ -265,9 +330,9 @@ and every original coordinate residual is an explicit combination of retained
 equality rows. The Lean reconstruction theorem proves full kernel coverage and
 unique coefficients from those checks. Native elimination generates and
 independently verifies them, and full Gram recovery checks every supplied basis
-pairing. CM82 now derives the actual loss derivative and complete Mini proposal.
-Next connect the complete family of forward queries to actual minibatch loss
-evaluations and numerical directional proposals, retaining every record and short tail.
+pairing. CM82 derives the actual loss derivative, and both complete native
+proposal rules now retain every record and short tail. Next freeze the small
+prospective producer and evaluate the actual training trajectories independently.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy
