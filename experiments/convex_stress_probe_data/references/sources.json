@@ -1,0 +1,26 @@
+{
+  "diff_gpt_commit": "5a37c515639f23037d191b0659a5a0853984328d",
+  "diff_gpt_files": {
+    "research/current_grokking/probes.py": "ed31e85afcfd8d95b40959e6c0c58678964a5954427e0881839ba74b93254e18",
+    "research/current_grokking/data.py": "39f33f090ff29a71fb3bc8c458946c0db42c26c49fa0351ee4c82723e7d8e718",
+    "research/current_grokking/run.py": "28e3399f479c668e660dabca3d28076a764cfcd5285f8260f15e835c8fb0247d",
+    "research/current_grokking/plan.json": "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7",
+    "research/current_grokking/results/probes_seed1.json": "b65d870a40fdb76c74716924ca1c887b453e5024ed049ae700fc532aee55a573"
+  },
+  "local_reference_commit": "6c9671ba8229b73912f1b8492fa7e225e19c2ca3",
+  "local_files": {
+    "python/src/lab/infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+    "python/src/lab/infrastructure/benchmarks/synthetic/training.py": "aa27192db84915cac75cfd834e07eac204393020fd334eff0968a9ace40b0115",
+    "python/src/lab/infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+    "python/src/lab/infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7"
+  },
+  "native_runtime": {
+    "version": "2.14.1+cu126",
+    "git_version": "5c4886908584029761b579af026dcfb627c84070",
+    "libtorch_cpu.so": "0341b39fc44ec6533c42861e8dd602dfa4182fdba1ceef02a2b9187bb5001112",
+    "libc10.so": "63b97230854de82cd0730dab4b874372a1fbca5e9082ab0e72bdedaf3337ada1",
+    "ATEN_CPU_CAPABILITY": "avx2",
+    "intraop_threads": 2,
+    "interop_threads": 1
+  }
+}
