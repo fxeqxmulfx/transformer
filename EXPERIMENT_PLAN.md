@@ -7978,13 +7978,59 @@ theorem. Every real and imaginary coordinate is retained and its norm/storage
 bound is stated. The full 14006-job build, 37 direct axiom checks and global
 audit pass: 36 existing sorry, zero resting declarations and zero extra axioms.
 Generated INDEX has 4909 modules and 25735 theorems, with no vacuous or placeholder
-entries. Independent review is next. No native optimizer convergence, learned
-raw-token encoder or additional catalog accuracy follows from this result.
+entries. Independent root review of `c9304c8f` repeats the full build, directly
+elaborates all five new implementation modules without warnings, and passes
+all 37 direct axiom checks and the global audit. Task 365 is approved. No native
+optimizer convergence, learned raw-token encoder or additional catalog accuracy
+follows from this result.
 
-The next implementation must specify the categorical/causal encoding before
-fitting and use genuine minibatch CE updates of the shared joint tensor. Its
-forward-only minibatch mode must update learned parameters from observations.
-Prove any new update identity first; retain MF1's failure and avoid treating
-stale-gradient memory as a general convergence proof. Run the planned anchored,
-free-decoder and shared-learner controls before a separately frozen original
-pilot. The broader 165-case objective remains unchanged.
+The subsequent user clarification below changes the next architecture target;
+resolve the entire trainable path before selecting its native implementation.
+Retain CM73 for the planned restricted controls. Any implementation must use
+genuine minibatch CE updates, and forward-only minibatch must update learned
+parameters from observations. Prove new update identities first; retain MF1's
+failure and avoid treating stale-gradient memory as a general convergence
+proof. Run the planned controls before a separately frozen original pilot.
+The broader 165-case objective remains unchanged.
+
+### 2026-11-16: constant object sequences with the entire model path trained
+
+The user clarified the interface and learning requirement: the model receives
+an immutable sequence of objects and predicts the next object. The input and
+target objects are constants with respect to optimization. Their numerical
+representation does not require a frozen feature extractor. Representation,
+sequence interactions and the output mapping must all participate in training
+from ordinary next-object cross-entropy. Treat CM73 as a proved restricted
+control, not as completion of this requirement. Do not implement its fixed
+categorical encoding as the proposed final architecture.
+
+The next theory task must define the entire trainable computation and its
+parameter domain before choosing a native optimizer. It must identify what is
+fixed by the architecture or object serialization, what is learned, and how
+every learned component affects actual next-object probabilities. Merely
+renaming a fixed feature bank or optimizing only its output coefficients does
+not satisfy the clarified requirement. A joint lifting must state whether it
+exactly represents the layered family or relaxes it; a prediction-space convex
+hull alone does not prove an efficient trainable representation or inference
+procedure. Keep parameter count and execution cost explicit.
+
+Do not infer joint convexity from immutable inputs or convexity of individual
+layers with other weights held fixed. Also do not impose affine logits as a
+necessary condition: the existing
+`GPTMini.Convex.Likelihood.threeRouteCrossEntropy_convex` and
+`threeRouteLogits_non_affine_witness` prove a normalized nonlinear categorical
+example with jointly convex ordinary CE. This example has no sequence inputs
+or learned embedding/interaction coupling. Its accompanying
+`productRouteCrossEntropy_not_convex` proves that introducing two independent
+query/key factors can destroy convexity. These positive and negative controls
+guide the new construction; neither settles the requested architecture.
+
+Preserve the rest of the acceptance path: Lean first, an inhabited nonconstant
+identification result with explicit assumptions and an ambiguous counterpart,
+flat-spectrum bounds on the actual operator, then Rust/Kernite minibatch and
+forward-only minibatch controls. Use the original next-object targets only in
+the loss, retain original multiplicities and short tails, and show that training
+changes internal representations and relative predictions. No new catalog
+credit follows from this clarification or the restricted CM73 theorem. Existing
+frozen comparisons, the 99% raw/exact target and the full 165-case objective
+remain unchanged.
