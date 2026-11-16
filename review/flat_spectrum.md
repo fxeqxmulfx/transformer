@@ -19663,3 +19663,71 @@ added candidate with positive mass is not the zero-block embedding. Any wider
 native bank must retain all compatible members, audit every interpreter and
 decoder entry, account for complete memory and work, and undergo a new frozen
 comparison before new heldout accuracy is credited.
+
+## CM68. Lossless packed observations preserve the full training problem
+
+The candidate count affects stored observations as well as learned parameters.
+An encoded training record contains the state of every retained input-only
+program and its original raw label. Keeping those state indices in 64-bit
+machine words costs `8 * N * P` bytes before storing the joint decoder or its
+complex head. This cost can be reduced without identifying candidates, merging
+observations or restricting an unknown decoder row.
+
+Let the state and raw-class counts be `s,c <= 65536`. Represent an original row
+as `(J -> Fin s) * Fin c`, and encode each natural value with `UInt16.ofNat`.
+For these explicit bounds, every word's `toNat` is exactly its original value.
+All encoded words are in their declared domains, decoding returns the entire
+original row, and encoding is injective. Conversely, reencoding any valid word
+row gives exactly that word row. A checked decoder returns `none` exactly when
+a stored state or class lies outside its declared domain. Being representable
+in 16 bits alone does not make a value a valid state of a smaller vocabulary.
+
+Precomputing all fixed program outputs at an original observation preserves
+the first-observed raw decoder lookup and the complete ordered consistency
+filter. It also preserves the exact full bounded joint feasible set: every
+anchor equation, shared row mass, nonnegative coordinate, support constraint
+and total-mass bound is unchanged. All unknown raw-class coordinates remain
+free. Packing and decoding those observations preserves the same set.
+
+Every complete realified complex product is identical at the decoded input,
+for an arbitrary complete joint tensor and arbitrary complex source matrix.
+No unitary hypothesis is necessary for this representation identity. Every
+ordinary indexed batch CE is therefore identical with its actual denominator.
+Distinct original IDs can carry equal observations; they are not coalesced.
+An ordered ID list retains every occurrence, and a singleton final batch stays
+a singleton. No target formula or heldout label enters these identities.
+
+The nonconstant witness has two input-coordinate programs, five original IDs,
+duplicate observations, distinct raw classes and a singleton tail. It uses the
+four-point Fourier source and a complete head with nonzero imaginary entries.
+A separate range witness preserves state 4095 and label 65535. A word with state 4
+is rejected when the declared state count is 4. Examples instantiate every
+conditional theorem; none assumes a recovered target or a trained optimum.
+
+For the complete bank of 299,551 candidates, 18,528 records and 193 classes with 196 padded
+states, the existing conservative core-buffer forecast is at least
+110,475,896,672 bytes, even with only the mandatory three padded unknown states
+per program. Its observed state matrix alone occupies44,400,647,424 bytes.
+Replacing only those indices by UInt16 would save33,300,485,568 bytes; it does not
+change the sizes of masses, unknown decoder entries or complex coefficients.
+This arithmetic is a prospective storage forecast, not a measured Rust peak.
+The native implementation must still account for row-decoding scratch and all
+simultaneously live buffers under the 110 GB limit, and stop on either disk's
+admission failure.
+
+The completed first task354 training-only probe subsequently reports 1,126,298
+unknown rows and 137,825,884 bounded head columns for this control. Applying the
+existing forecast to those complete counts gives122,579,278,464 bytes. Replacing
+only the state-index storage and adding one decoded row gives89,281,189,304 bytes.
+This candidate forecast fits the 96 GB core admission; implementing and testing
+the representation, then measuring the original run, are still required. The
+probe's original refusal and original audit must not be overwritten.
+
+Formalization: `ConvexDepth/PackedRecords/{Basic,Observations,Complex,Witness}.lean`,
+21 theorems audited directly by `scripts/PackedRecordAxioms.lean`. These are
+exact integer and exact-real semantic identities. They do not prove Rust
+memory safety, IEEE-754 refinement or unchanged optimization convergence.
+The native follow-up must compare all decoded states, full domains, complex
+coefficients, objective values, actual update ranges and saved parameters with
+the existing expanded-record implementation, and preserve the frozen training
+probe's original audits separately from any refined memory forecast.

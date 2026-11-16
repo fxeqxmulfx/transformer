@@ -55,7 +55,11 @@ cargo clippy --offline --locked --all-targets --manifest-path experiments/convex
 cargo build --offline --locked --release --manifest-path experiments/convex_stress_reduced_compare/Cargo.toml
 ```
 
-After task354 verification, bind its exact manifest and verification digests in
+Before the full comparison, integrate and independently review task356's
+packed observation path: the first task354 probe refuses the constant
+control with 193 classes and expanded records. Preserve that original probe audit and report
+the refined comparison admission separately. After task354 verification, bind
+its exact manifest and verification digests in
 `protocol.json`, mark the protocol ready, rerun the checks and commit before
 freezing. `freeze.sh NEW_FREEZE RELEASE_BINARY` saves the native and Lean source
 closure. Use the copied executable and scripts for both original and repeat:

@@ -7620,3 +7620,17 @@ probe supplies its final immutable digests. Commit and freeze that finalized
 protocol before fitting any original case; no new heldout accuracy or catalog
 credit follows from this component work. The existing task351/354 freezes stay
 unchanged.
+
+### 2026-11-16: task356 packed observations, Lean before native memory changes
+
+The complete large constant control's conservative expanded-record forecast
+already exceeds 110 GB at its minimum padding cost. CM68 proves lossless UInt16
+encoding under explicit range bounds, valid-word rejection, identical observed
+dictionaries and retained candidates, the same full joint domain, every complex
+logit and ordinary indexed batch CE. It retains original IDs, duplicates and
+tails, with nonconstant complex and boundary witnesses. Implement packed
+observations next, preserving all free decoder coordinates and actual numeric
+policies. Compare against the expanded record path, account for decoded row
+scratch, and keep the original task354 audit distinct from refined comparison
+admission. No existing frozen run changes and no benchmark credit follows from
+these prospective memory identities.
