@@ -1,0 +1,16 @@
+[package]
+name = "convex-stress-compact-latent"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+legacy = { package = "convex-stress-reduced-latent", path = "../convex_stress_reduced_latent" }
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

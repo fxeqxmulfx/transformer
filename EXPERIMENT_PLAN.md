@@ -7730,3 +7730,19 @@ INDEX before committing. Native bitwise equivalence, actual memory admission,
 independent review and a new frozen original/repeat remain required. Existing
 351/355/358/359 sources and outcomes stay immutable; no accuracy credit follows
 from representation theory alone.
+
+### 2026-11-16: task360 native row storage foundation
+
+CM70 is committed at cc6931a4 with27 direct standard-axiom checks and no
+warnings. The Rust parameter codec now shares exactly equal binary64 words
+and retains a full explicit fallback for every nonuniform row. It preserves
+original row IDs and visits every logical class coordinate in original order.
+Local admission includes container capacities, scratch and both old and new
+dense buffers during growth. Six controls pass, including signed zero,
+subnormals, arbitrary nonuniform fallback, stateful mapped updates, repeated
+floating sums, allocation refusal and full prior-model complex reconstruction.
+Commit this bounded storage component after native and mandatory Lean checks.
+Continue with complete head storage and actual optimizer/checkpoint integration;
+aggregate all live allocations under110 GB before admitting original models.
+The full three-mode comparison and independent repeat are still required for
+task360, and verified catalog coverage remains77/165.
