@@ -6,6 +6,7 @@
 //! bounded active-set search refuses rather than weakening its constraints.
 
 pub mod domain;
+pub mod model;
 pub mod projection;
 
 use num_rational::BigRational;
@@ -27,6 +28,8 @@ pub enum Refusal {
     Complementarity,
     Stationarity,
     NoCertificate,
+    InvalidRenaming,
+    NumericalUnderflow,
 }
 
 impl std::fmt::Display for Refusal {

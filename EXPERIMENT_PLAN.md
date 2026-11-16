@@ -8237,3 +8237,18 @@ Strict Clippy and release build pass. This is a component, not a model fit:
 the whole complex forward and both minibatch proposal rules are still pending.
 Follow the experiment README's commands and preserve the complete family and
 resource limits before a separately frozen, independently repeated pilot.
+
+The native model now executes the original recovered complex representation,
+componentwise activation and learned complex readout. It retains every joint
+coordinate and checks the complete raw domain. CM76 physical lifting and CM78
+paired inference preserve their stated scope. Stable full-class ordinary CE
+uses targets only in the loss, and prediction returns an original object index.
+Atomic whole-model projection retains and independently replays every component
+certificate; failure leaves the old model intact. Rational parameters remain
+exact while recovered factors and inference are qualified binary64 approximations.
+Nineteen controls cover full complex reference outputs, paired equivariance,
+signed readouts, empty inputs, complete certificate replay and numerical/resource
+refusals. These are constructed feasible points, not model training. Next derive
+and implement actual Mini and forward-only Mini proposal rules. Forward queries
+must stay feasible even on lower-dimensional cones; no boundary derivative from
+an outside-domain gated surrogate is authorized as a replacement.

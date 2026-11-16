@@ -6,10 +6,10 @@ The first component implements the exact projection certificate proved in
 CM79, commit `945603c5`, under
 `src/Transformer/Grokking/FlatSpectrum/ConvexChannel/LearnedHinge/Projection`.
 
-This component projects real component vectors. Lean proves how certificates
-for every component combine into a feasible update of the whole complex model.
-The native whole-model forward, Mini trainer and forward-only Mini trainer are
-not implemented here yet. No stress case or model accuracy is claimed.
+The native model now executes the full learned complex forward and projects
+the whole parameter array with retained component certificates. Mini and
+forward-only Mini proposal rules and training remain unfinished. Known feasible
+points used by controls are not learned outcomes; no stress accuracy is claimed.
 
 ## Complete domains and controls
 
@@ -49,6 +49,43 @@ explicit errors. Rational arithmetic uses the pinned `num-bigint` and
 `num-rational` crates. This Rust implementation is tested against the Lean
 specification; it is not itself a compiled or formally verified Lean program.
 
+## Actual complex model and atomic updates
+
+`ComplexModel` retains all rational coordinates in pattern/class/readout-sign/
+component/coordinate order. Native sign zero denotes Lean's positive (`true`)
+readout, and component zero denotes the real (`true`) component. Constructors
+check every original prefix inequality before accepting the parameter array.
+
+Each complex vector `u` recovers amplitude `sqrt(norm(u))` and representation
+`u/amplitude`. The norm is the maximum coordinate complex magnitude, matching
+Lean's function-space instance; the projection metric remains Euclidean in
+joint coordinates. The forward reads the recovered learned bias and visible
+position/object values, rectifies both components, multiplies by the complex
+readout `amplitude*(1+i)` and sums signed neurons. It executes both learned
+stages. A gated linear expression is not substituted for inference.
+
+The physical-to-joint constructor follows CM76's exact component-pattern
+aggregation. The optional CM78 paired forward calls the same model twice,
+renames every input object, aligns every output class and averages complete
+complex outputs. The renaming must be an involutive permutation of the entire
+original object set. It is an explicit task restriction, not a universal fix.
+
+Real logits enter stable full-class softmax and ordinary cross-entropy. Only
+the loss accepts a target. The predictor returns an original object index;
+ties select the first index while retaining every output class. Rational
+parameters remain authoritative. Factor recovery, complex multiplication and
+probabilities use binary64 and are qualified numerical approximations to the
+Lean model. Nonfinite conversion/evaluation and detected underflow are refused;
+no strict numerical-error enclosure or exact binary64 equivalence is claimed.
+
+Whole-model projection checks every pattern/class/sign/component, retains every
+full dual array and verifies that every certificate point matches the new
+parameter array. Construction and independent replay must succeed before a
+new model is returned. Failure leaves the old immutable model untouched. One
+cone workspace is reused sequentially; no model pattern is removed. A
+conservative working-memory reservation charges old/proposed/new state,
+certificates, rational work and factor caches, with external RSS guards retained.
+
 ## Findings and validation
 
 All ten native controls pass. They include an independent 125-point orthant
@@ -59,6 +96,16 @@ refusals and all-pattern coverage. Two distinct proposals are certified for
 every one of the 128 two-object patterns; a further proposal is certified for
 each of the 16 three-object patterns. These 272 checks retain every row in their
 respective domains. They are projection controls, not learning outcomes.
+
+Nine additional model controls pass, for nineteen total. Actual recovered
+forwards reproduce CM76's complex outputs `-7+7i` and `4+10i` with differing
+component masks, as well as signed class readouts and empty-input behavior.
+The CM78 feasible witness returns its two observed objects and the renamed
+unseen object, with all three class CEs and whole complex equivariance checked.
+This is construction of the proved witness, not a trained model or an accuracy
+measurement. A full 768-coordinate projection retains and replays 192 component
+certificates. Corrupted or incomplete certificates, infeasible arrays, invalid
+objects/renamings and numerical/resource failures are rejected atomically.
 
 Development tests, strict all-target Clippy and a release build pass. The Lean
 component independently passes the full build, sixteen direct axiom checks,
@@ -86,8 +133,7 @@ representation/work limits, not a claimed end-to-end RAM forecast.
 
 ## Remaining work
 
-Implement the unchanged actual complex forward with recovered learned factors,
-the full parameter array and proposals for both required minibatch modes. A
+Implement proposals and training for both required minibatch modes. A
 forward-only rule must query the actual model and respect its domain; a gated
 surrogate evaluated outside that domain does not inherit the CE theorem.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
