@@ -60,10 +60,19 @@ impl Sharing {
     pub fn heap_bytes(&self) -> usize {
         (self.representatives.capacity() + self.duplicates.capacity()) * size_of::<u16>()
     }
-    pub fn expand(&self, values: &mut [f64]) {
-        let word = values[self.representative as usize];
+    pub fn expand<T: Clone>(&self, values: &mut [T]) {
+        // Borrow the original representative. BigInt expansion creates only
+        // each original output column's allocation, with no extra integer copy.
+        let representative = self.representative as usize;
         for &c in &self.duplicates {
-            values[c as usize] = word;
+            let c = c as usize;
+            if c > representative {
+                let (left, right) = values.split_at_mut(c);
+                right[0].clone_from(&left[representative]);
+            } else {
+                let (left, right) = values.split_at_mut(representative);
+                left[c].clone_from(&right[0]);
+            }
         }
     }
     pub fn validate(&self, head: &Head) -> Result<()> {
@@ -112,6 +121,19 @@ impl Sharing {
 }
 
 impl Head {
+    /// Complete representatives for a dense coefficient-reading pass. That
+    /// pass still performs its own explicit zero operations in inactive blocks.
+    pub(super) fn computation_classes(&self) -> impl Iterator<Item = usize> + '_ {
+        let n = self
+            .sharing
+            .as_ref()
+            .map_or(self.shape.classes, |s| s.representatives.len());
+        (0..n).map(|i| {
+            self.sharing
+                .as_ref()
+                .map_or(i, |s| s.representatives[i] as usize)
+        })
+    }
     /// Physical columns evaluated once per Fourier term. Logical work still
     /// charges every original active class; this diagnostic changes no budget.
     pub fn evaluated_columns(&self, states: &[usize]) -> Result<usize> {

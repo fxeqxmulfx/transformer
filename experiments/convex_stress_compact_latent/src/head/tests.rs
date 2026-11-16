@@ -8,7 +8,7 @@ fn work() -> Work {
 fn bits(values: impl IntoIterator<Item = f64>) -> Vec<u64> {
     values.into_iter().map(f64::to_bits).collect()
 }
-fn prediction(a: &Prediction, b: &Prediction) {
+pub(super) fn prediction(a: &Prediction, b: &Prediction) {
     assert_eq!(
         bits(a.logits.iter().copied()),
         bits(b.logits.iter().copied())

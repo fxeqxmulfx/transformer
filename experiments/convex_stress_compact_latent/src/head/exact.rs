@@ -1,8 +1,9 @@
 //! All nonzero source entries are signed halves. A common denominator2^1075
 //! represents every such product of a finite binary64 coefficient, including
 //! subnormals. Bounds/ordering concern the saved tensor, not an ideal decoder.
-//! Ported from reduced_latent at 6797e8ab. Shared columns are still visited
-//! separately; no arithmetic is replaced by multiplying their multiplicity.
+//! Ported from reduced_latent at 6797e8ab. CM72 (Lean 1279ab89) shares equal
+//! columns within each independent ordered pass, then expands ALL integers.
+//! No arithmetic is replaced by multiplying a class multiplicity.
 use super::*;
 use num_bigint::BigInt;
 use num_rational::BigRational;
@@ -33,19 +34,25 @@ pub(super) fn predict(head: &Head, states: &[usize], work: &mut Work) -> Result<
             + head.shape.programs as u128 * head.shape.classes as u128)
             + 1_000_000 * head.shape.classes as u128,
     )?;
+    let (real, independent) = numerators(head, states)?;
+    finish(head, real, independent)
+}
+
+pub(super) fn numerators(head: &Head, states: &[usize]) -> Result<(Vec<BigInt>, Vec<BigInt>)> {
     let mut real = vec![BigInt::zero(); head.shape.classes];
     let mut independent = vec![BigInt::zero(); head.shape.classes];
     for (p, &s) in states.iter().enumerate() {
         for f in s / 4 * 4..s / 4 * 4 + 4 {
             let (u, v) = source(s, f);
             let b = &head.blocks[(p * head.shape.states + s) / 4];
-            for (c, value) in head.columns(b) {
+            for (c, value) in head.computation_columns(b) {
                 real[c] += half_numerator(value[f % 4], (2. * u) as i8);
                 real[c] += half_numerator(value[4 + f % 4], (-2. * v) as i8);
             }
         }
     }
-    for (c, z) in independent.iter_mut().enumerate() {
+    for c in head.computation_classes() {
+        let z = &mut independent[c];
         for (p, &s) in states.iter().enumerate().rev() {
             for f in (s / 4 * 4..s / 4 * 4 + 4).rev() {
                 let (u, v) = reference_source(s, f);
@@ -54,6 +61,14 @@ pub(super) fn predict(head: &Head, states: &[usize], work: &mut Work) -> Result<
             }
         }
     }
+    if let Some(sharing) = &head.sharing {
+        sharing.expand(&mut real);
+        sharing.expand(&mut independent);
+    }
+    Ok((real, independent))
+}
+
+fn finish(head: &Head, real: Vec<BigInt>, independent: Vec<BigInt>) -> Result<Prediction> {
     if real != independent || real.iter().any(|n| n.bits() > 8192) {
         return Err("independent exact block products disagree or exceed 8192 bits".into());
     }

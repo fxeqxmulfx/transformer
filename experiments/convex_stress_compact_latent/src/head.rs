@@ -9,7 +9,9 @@ pub use legacy::head::{
 };
 mod storage;
 use storage::{ALL, Block, Builder, Exception, Support};
+mod construction;
 mod exact;
+use construction::Construction;
 #[path = "../../convex_stress_reduced_latent/src/head/interval.rs"]
 mod interval;
 mod predict;
@@ -38,16 +40,29 @@ impl Head {
         for row in (0..sh.rows()).step_by(4) {
             let (p, base) = (row / sh.states, row % sh.states);
             let support = Support::new(domain, row);
+            let plan = Construction::new(domain, q, row, &support);
             out.scratch[..support.len()].fill([0.; 8]);
             for f in 0..4 {
                 for s in base..base + 4 {
                     let (re, im) = source(s, base + f);
-                    for (i, c) in support.iter().enumerate() {
+                    let mut accumulate = |i: usize, c: usize| {
                         let g = q.gamma(domain, p, s, c);
                         out.scratch[i][f] += re * g;
                         out.scratch[i][4 + f] -= im * g;
+                    };
+                    if let Some(plan) = &plan {
+                        for &c in plan.classes() {
+                            accumulate(c, c);
+                        }
+                    } else {
+                        for (i, c) in support.iter().enumerate() {
+                            accumulate(i, c);
+                        }
                     }
                 }
+            }
+            if let Some(plan) = plan {
+                plan.expand(&mut out.scratch);
             }
             out.push(&support)?;
         }

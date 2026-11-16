@@ -52,7 +52,7 @@ blocks retain their sorted observed classes, and any block with an unknown row
 still represents all raw classes, including zero-valued and repeated columns.
 Neither form adds a uniformity constraint to the feasible model domain.
 
-Forty-six native controls pass. Mixed shared and explicit rows retain every word,
+Forty-nine native controls pass. Mixed shared and explicit rows retain every word,
 including duplicate original rows and two distinct zero words. Stateful zipped
 operations see every coordinate, and a floating sum matches the full original
 sequence bit for bit. A sum of a thousand copies of 0.1 also demonstrates why
@@ -200,7 +200,7 @@ blocks. All classes outside this union have the same complete column and skip
 the same blocks. Evaluate one such class, preserving every operation in its
 original order, and copy its final word to the other outside classes.
 
-The Rust change applies this only to `Head::logits`. Every raw output class is
+The CM71 change applied this only to `Head::logits`. Every raw output class is
 materialized before ordinary CE; its class summation order is unchanged.
 Reverse contractions, interval enclosures, exact dyadics, full norm audits,
 gradients, projections and checkpoint format remain their original algorithms.
@@ -277,3 +277,64 @@ cargo build --offline --locked --release \
 prlimit --as=4294967296:4294967296 -- \
   "$CARGO_TARGET_DIR/release/examples/phase_profile"
 ```
+
+## Shared construction and certification, CM72
+
+Lean `1279ab89` extends the ordered identities before this native change.
+Construction may share a block's outside classes only when every unknown row
+in that block stores one repeated exact word. Actual known labels and one
+outside representative retain all frequency/state operations. Expand the eight
+component words to every original class, then use the original complete head
+storage. A nonuniform row, including a single different signed-zero word,
+retains the full construction loop. Fully known blocks keep their original
+active support. The additional fixed construction metadata is reserved in the
+builder's peak allowance; its full scratch row remains charged.
+
+Interval, reverse and both exact integer passes now use the certified global
+column plan. Each pass retains its own order and zero/skip behavior, including
+the dense reverse exact reader. Complete class vectors are expanded before the
+unchanged certificate checks, exact maxima, rational conversion and ordinary CE.
+Expansion borrows the representative and clones directly into each existing
+output slot; it creates no additional complete integer column. Every tied class,
+certificate field, parameter and coefficient remains present. Logical work,
+projection, checkpoint format and original minibatch records are unchanged.
+
+Three new controls compare every coefficient, interval endpoint, reverse word
+and exact integer on uniform signed-zero/subnormal/negative fixtures, mixed
+fallback blocks and 2/3/4/5/7/97/193 classes. Actual predictions match the prior
+complete model, including all 193 tied maximizers. The existing training controls
+continue to compare every intermediate update and complete checkpoint. All 49
+controls pass in both profiles with strict Clippy.
+
+Initial phase timings had inconsistent complete-training ratios. The declared
+follow-up therefore alternated immutable before/after binaries on CPU 2 for
+seven complete pairs, retaining every pair. Each binary evaluates the same four
+fixtures and three internal repetitions; both disks, aggregate RAM and the
+4 GiB process ceiling remain guarded. `compare_phases.jq` rejects missing cases,
+changed endpoint words or changed work counts. The resulting median ratios are:
+
+| Complete fixture | Head construction | Interval prediction | Exact prediction | Forward total | Minibatch total |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 128 programs, 97 classes | 4.03× | 17.40× | 17.35× | 1.30× | 1.24× |
+| 128 programs, 193 classes | 4.27× | 32.98× | 9.43× | 1.32× | 1.26× |
+| 512 programs, 97 classes | 4.03× | 23.34× | 30.38× | 1.32× | 1.25× |
+| 512 programs, 193 classes | 4.24× | 41.23× | 26.76× | 1.34× | 1.26× |
+
+All 28 fixture pairs preserve both endpoint digests and complete logical work.
+These are synthetic measurements alongside the older live comparisons; they
+add no original-data accuracy or guarantee about a larger model's runtime.
+Projection and full audits remain material costs. The original single-run
+measurements and every alternating pair remain under `.kanban/artifacts/364/`.
+
+With separately built and retained profilers, run:
+
+```sh
+bash experiments/convex_stress_compact_latent/examples/paired_profile.sh \
+  /absolute/path/to/before /absolute/path/to/after /new/output/directory 2
+```
+
+The output directory must be new. The script records both executable hashes,
+checks every pair and summarizes all seven ratios, including their ranges.
+Existing frozen 351/355/360/362 producers remain unchanged. A new original
+comparison still requires committed-source freeze, a complete training seal,
+independent rebuild/repeat and raw replay before accuracy credit.

@@ -53,6 +53,12 @@ impl Support {
     pub fn len(&self) -> usize {
         if self.all { self.classes } else { self.count }
     }
+    pub fn all_classes(&self) -> bool {
+        self.all
+    }
+    pub fn known(&self) -> &[usize] {
+        &self.known[..self.count]
+    }
     pub fn iter(&self) -> impl ExactSizeIterator<Item = usize> + '_ {
         (0..self.len()).map(|i| if self.all { i } else { self.known[i] })
     }
@@ -114,6 +120,7 @@ impl Builder {
             + blocks as u128 * size_of::<Block>() as u128
             + classes as u128 * size_of::<Column>() as u128
             + size_of::<Support>() as u128
+            + size_of::<Option<Construction>>() as u128
             + 2 * size_of::<Column>() as u128
     }
     pub fn new(shape: Shape, limit: u64) -> Result<Self> {

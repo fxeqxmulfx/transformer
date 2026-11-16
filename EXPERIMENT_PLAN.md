@@ -7841,3 +7841,25 @@ producers and outputs stay immutable. New original measurements require a new
 source freeze, complete training seal and independent repeat/replay. Continue
 under aggregate 110 GB RAM and stop on shortage of either disk; no new accuracy
 credit follows from a proof or synthetic timing result.
+
+### 2026-11-16: task 364, complete construction and certified prediction
+
+CM72 is proved first at `1279ab89`, following the fixed phase profiler at
+`90a2d178`. Nine additional theorems cover word-level anchored construction,
+conditional uniform-row sharing, independently recoded/reversed certificate
+passes and complete joint readouts. Nonuniform unknown rows retain a witnessed
+fallback. Full build, direct axiom checks, audit and generated INDEX pass with
+36 existing sorry, zero resting declarations and zero extra axioms.
+
+The native extension keeps every coefficient and class while sharing only the
+proved equal computations. Forty-nine controls compare complex words, interval
+endpoints, exact integers, all tied maximizers, original training trajectories
+and checkpoints. Seven alternating before/after profiles on one CPU retain
+every fixture pair and bind all endpoint words and work counts. Synthetic
+complete forward runs improve by 1.30–1.34× and minibatch runs by 1.24–1.26×;
+construction and certification gains are larger but are reported separately.
+Projection and full audits remain costs. The dependent runners pass all 32
+controls and strict Clippy. Independently rebuild and review before using this producer in any
+new complete original freeze/repeat. Existing frozen producers remain fixed,
+the verified historical two-mode union remains 79/165, and routing's data gap
+remains task 361. No synthetic timing is counted as a stress-test pass.
