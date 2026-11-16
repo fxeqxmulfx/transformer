@@ -92,9 +92,11 @@ modes, erased preparation charges, changed metadata and the two-mode report
 fields. Its other 53 entries are explicit synthetic refusals; this control does
 not stand in for the original 48 available datasets.
 
-Production remains disabled until task358's complete independent verification
-is pinned and the checked producer is committed and frozen. No original fitting
-or new accuracy claim exists yet. The disk forecast reserves every full logical
+Task358's complete independent verification is now pinned in the protocol:
+all 102 artifacts match and all 48 available training supports are nonempty.
+Production is enabled only for these exact inputs; commit and freeze the checked
+producer before original fitting. No original fitting or new accuracy claim
+exists yet. The disk forecast reserves every full logical
 checkpoint and raw prediction for both runs. A shortage of either disk stops
 execution. New coverage fields explicitly refer to the two required modes;
 historical three-mode coverage stays separately identified.

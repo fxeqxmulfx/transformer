@@ -243,7 +243,10 @@ fn complete_training_barrier_then_real_scoring_and_replay_keep_both_modes_and_ta
 #[test]
 fn production_pins_and_capacity_checks_do_not_treat_input_forecast_as_a_fitted_model() {
     let mut p = runner::protocol().unwrap();
-    assert!(runner::validate_production(&p).is_err());
+    runner::validate_production(&p).unwrap();
+    let mut disabled = p.clone();
+    disabled["production_ready"] = json!(false);
+    assert!(runner::validate_production(&disabled).is_err());
     p["production_ready"] = json!(true);
     p["references"]["probe-manifest.sha256"] = json!("0".repeat(64));
     p["references"]["probe-verified.json"] = json!("1".repeat(64));

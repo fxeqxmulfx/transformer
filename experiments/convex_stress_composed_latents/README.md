@@ -86,14 +86,30 @@ bash NEW_FREEZE/source/experiments/convex_stress_composed_latents/probe.sh FROZE
 bash NEW_FREEZE/source/experiments/convex_stress_composed_latents/verify.sh NEW_ORIGINAL NEW_REPEAT NEW_VERIFICATION_JSON
 ```
 
-Current findings are limited to implementation controls. Original training
-compatibility and heldout accuracy of the added features are not yet measured.
+The complete original training-only probe and its independently rebuilt repeat
+finished on 2026-11-16 at producer `cbde1e2d9fc10813f254982c1f52a9bad5884c18`.
+All 102 deterministic artifacts match exactly. All 48 available original
+training sets have nonempty compatible support. The old full-model memory
+forecast admits 46 and refuses the two large constant controls; those refusals
+and the six unavailable source definitions remain in the 54-case inventory.
+Both constant controls retain all 962,806 candidates. The 97-class control has
+5,112,868 unknown rows, and the 193-class control has 7,324,366. These counts
+motivate separate compact storage, not removal of candidates or free classes.
+
+The verified manifest SHA256 is
+`86e01a783bfe712e096ce6e6dd3175ec1003d8a27d4062f1d668024879b87f60`;
+the verification receipt SHA256 is
+`3067b3e4bd17d4666c1c321ed5758557cf5578cc62e679f18e02f67db8fa880c`.
+Frozen source and generated evidence remain under storage `composed-latents/`
+and `freezes/composed-latents-v1/`. The probe reads zero heldout pools, performs
+zero model updates and measures zero accuracy. Heldout accuracy of this added
+family remains unmeasured until a separate complete model comparison.
 The old zero-block embedding is a representational inclusion; initializing
 every added candidate with positive mass can change actual predictions.
 
 All nine library controls and the executable boundary control pass, as do
 formatting, strict Clippy and the release build. The complete 193-class
 constant probe with 18,528 original rows is charged at 38,699,598,835,200
-operations, below the declared 40-trillion cap. This is a work forecast; it
-does not assert that the complete model's buffers will be admitted or that a
-fitted model reaches any heldout target.
+operations in both original and repeated probes, below the declared 40-trillion
+cap. This charged work does not assert that the complete model's buffers will
+be admitted or that a fitted model reaches any heldout target.
