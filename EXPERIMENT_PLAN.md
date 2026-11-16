@@ -7746,3 +7746,22 @@ Continue with complete head storage and actual optimizer/checkpoint integration;
 aggregate all live allocations under110 GB before admitting original models.
 The full three-mode comparison and independent repeat are still required for
 task360, and verified catalog coverage remains77/165.
+
+### 2026-11-16: task360 complete compact complex head
+
+After the CM70 proofs and row codec, implement actual compact parameter
+initialization, anchored expansion, feasibility sums and the full CM65 distance.
+The complete head stores one eight-word baseline per Fourier block and every
+exceptional raw class; it preserves the prior logical active support and all
+original floating operations. Interval separation and exact dyadic predictions
+use every logical column. Fifteen native controls compare every coefficient,
+all64 mixed-domain queries, ordinary CE, certificates and operation charges,
+including nonuniform rows, zero mass, subnormals and arbitrary proposals.
+The 128-state/1024-class uniform control stores256 head words rather than262144
+while visiting every class. Both old and new buffers count during growth.
+Complete the required native/Lean checks and commit this coherent head change.
+The current legacy dictionary admission remains unchanged; do not claim that
+larger original models fit. Next integrate actual optimizer and checkpoint
+paths, aggregate all live memory, then independently rebuild and freeze the
+complete three-mode original/repeat. No new accuracy credit follows; task360
+stays open and all live351/355/358 producers stay immutable.

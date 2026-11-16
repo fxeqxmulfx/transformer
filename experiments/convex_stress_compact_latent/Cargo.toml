@@ -8,6 +8,9 @@ publish = false
 
 [dependencies]
 legacy = { package = "convex-stress-reduced-latent", path = "../convex_stress_reduced_latent" }
+num-bigint = "=0.4.8"
+num-rational = "=0.4.2"
+num-traits = "=0.2.19"
 
 [profile.test]
 opt-level = 2

@@ -39,6 +39,9 @@ name = "convex-stress-compact-latent"
 version = "0.1.0"
 dependencies = [
  "convex-stress-reduced-latent",
+ "num-bigint",
+ "num-rational",
+ "num-traits",
 ]
 
 [[package]]
