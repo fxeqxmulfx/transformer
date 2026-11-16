@@ -20934,3 +20934,106 @@ arithmetic limits and every selected row, reconstruct the entire changed
 neuron and compare every output against full reconstruction. Existing
 frozen producers remain unchanged. The exponential pattern cost, general
 unseen-answer conditions and all-165 accuracy target remain open.
+
+## CM84. Full-word capacity and limits of exact complete-family compression
+
+CM83 removes repeated reconstruction work without changing the complete
+learned complex family. Its remaining cost cannot be understood solely by
+counting redundant activation masks. This extension identifies a large class
+of functions already present in that family and derives two precise limits
+on representations that preserve the entire class. Neither limit is a lower
+bound for one structured task or for the requested finite stress suite.
+
+Let W be the full words `Fin(T) -> O`, so `|W|=|O|^T`, and turn each word into
+the original immutable prefix by `List.ofFn`. CM77 constructs an actual learned
+bias and position/object weight vector for each needle v. The unchanged raw
+lookup, complex activation and recovered readout give whole complex response
+1+3i at v and zero at every other admitted prefix. These are permitted weight
+settings, not a comparison program inserted into inference.
+
+For any real table `a:W x O -> R`, use the needle representations and signed
+class readouts a in the original physical model. Its full-word outputs are
+
+```
+factoredForward(weights,a,word)[c] = a[word,c] * (1+3i).
+```
+
+CM76's exact coverage theorem places this physical network in the same
+complete reduced convex domain, which still enforces every bounded prefix.
+The real logits therefore equal a at every full word. In particular, for
+any two distinct original objects, every real table of their logit differences
+is attainable. Setting the target logit to one and every other class to zero
+also strictly realizes every possible full-word next-object label table.
+This construction describes the existing model's expressivity. Supplying its
+needle weights as fixed features, or training an independent table, would not
+meet the user's all-trainable-path architecture requirement.
+
+The response matrix A has rows for all full words and columns for all these
+actual learned neurons. Its entries, whole complex multiplication and energy
+are proved directly from the raw forward:
+
+```
+A[word,needle] = (1+3i) * [word=needle],
+A A* = 10 I,
+A v = (1+3i) v,
+sum(word, |(A v)[word]|^2) = 10 * sum(word, |v[word]|^2).
+```
+
+Thus this configuration has a perfectly flat positive Gram spectrum at every
+dimension |O|^T. The norm identity is the bound supplied by flatness. It does
+not make the dimension small, identify labels, or characterize a training
+trajectory. CM77 still supplies the observed-row blind-direction counterpart.
+
+First consider an alternative finite-dimensional real parameter space V and
+a fixed affine full-word margin readout `L(v)+b`, with L linear. Suppose every
+feasible point of the current family has the same selected-object contrast
+under some v. The encoding from the old point to v need not be linear,
+continuous, unique, or supplied by an algorithm. For any desired table f,
+interpolate f+b in the actual old model, then apply the exact-coverage premise.
+Its representing v satisfies `L(v)+b=f+b`, hence `L(v)=f`. L is surjective,
+and finite-dimensional rank gives
+
+```
+|O|^T <= real_dimension(V).
+```
+
+For an actual real-coordinate array `D -> R`, this is `|O|^T <= |D|`. It applies
+to preserving relative predictions, rather than counting a common softmax
+shift as useful information. It does not prohibit more compact representations
+of restricted tasks, nor establish a lower bound for arbitrary nonlinear
+readouts. CM74's nonlinear convex-CE examples remain valid: affine logits are
+not required by convexity of ordinary cross-entropy.
+
+Second, allow any fixed forward score computation whose entire varying model
+code is `D -> Fin(2^b)`. The decoder and architecture are fixed before selecting
+a label table; inference may be nonlinear and may use exact arithmetic after
+decoding. Preserving every strict classification in the current family implies
+universal classification of W. Applying the existing R1 information bound gives
+
+```
+|O|^T <= b*|D|                when |O| >= 2.
+```
+
+Below that budget, there exists one fixed feasible point of the current learned
+family and one label table it strictly classifies, for which every available
+code fails to preserve that entire strict classification. The counterexample
+point and table are quantified before the competing code. This is a stored
+information bound, not a bound on peak resident RAM; disk-backed representations
+must count their stored information but are not excluded by a RAM-only cap.
+The result makes no optimizer-rate or task-specific accuracy assertion.
+
+Every conditional theorem has an inhabited example. Full-dimensional identity
+readouts with a nonconstant offset witness the affine premises. A four-word,
+four-bit lookup witnesses the information bound at equality; a one-bit code
+with two-word-position inputs witnesses the strict-budget counterexample.
+These are proof controls, not proposed learners or new benchmark passes.
+
+Formalization: `ConvexChannel/LearnedHinge/Interpolation`; direct audit:
+`LAKE_ARTIFACT_CACHE=false lake env lean scripts/InterpolationHingeAxioms.lean`.
+The results explain why eliminating unused masks alone does not justify a
+compact exact replacement of the whole current family. A next architecture
+may impose task-relevant sharing or other explicit restrictions, with their
+loss of expressivity, dimensions and execution costs stated and proved. The
+immutable object-sequence interface, all-trainable-path requirement, ordinary
+CE, both required minibatch modes and all-165 target remain unchanged. No
+producer or empirical coverage changes in this extension.
