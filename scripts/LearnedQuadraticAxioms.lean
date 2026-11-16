@@ -1,0 +1,50 @@
+import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic
+
+open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic
+
+#print axioms energy_gram
+#print axioms energy_smul
+#print axioms network_eq
+#print axioms factor_gram
+#print axioms network_factor
+#print axioms physical_coverage
+#print axioms factor_of_gram
+#print axioms weighted_energy
+#print axioms weighted_coverage
+#print axioms quadratic_combination
+#print axioms domain_convex
+#print axioms zero_mem
+#print axioms branch_eq
+#print axioms logits_eq
+#print axioms logits_combination
+#print axioms loss_convex
+#print axioms probability_pos
+#print axioms probability_sum
+#print axioms batchLoss_convex
+#print axioms inputRow_read
+#print axioms sequenceBranch_eq
+#print axioms sequenceLogits_eq
+#print axioms sequenceLoss_convex
+#print axioms sequence_probability_sum
+#print axioms nextObject_max
+#print axioms nextObject_of_unique
+#print axioms sequence_real_coordinate_count
+#print axioms Witness.physical_psd
+#print axioms Witness.physical_norm
+#print axioms Witness.factor_joint
+#print axioms Witness.stages_change
+#print axioms Witness.representations_not_proportional
+#print axioms Witness.parameters_mem
+#print axioms Witness.raw_logits
+#print axioms Witness.imaginary_contributes
+#print axioms Witness.predictions_reverse
+#print axioms Witness.losses_improve
+#print axioms Restriction.third_difference
+#print axioms Restriction.cube_row
+#print axioms Restriction.raw_third_difference
+#print axioms Restriction.logit_third_difference
+#print axioms Restriction.parity_not_realizable
+#print axioms Spectral.quadratic_real
+#print axioms Spectral.output_factorization
+#print axioms Spectral.flat_error_bound
+#print axioms Spectral.flat_width_necessary

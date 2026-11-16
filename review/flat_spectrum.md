@@ -21037,3 +21037,138 @@ loss of expressivity, dimensions and execution costs stated and proved. The
 immutable object-sequence interface, all-trainable-path requirement, ordinary
 CE, both required minibatch modes and all-165 target remain unchanged. No
 producer or empirical coverage changes in this extension.
+
+## CM85. Learned quadratic sequence factors with polynomial storage and a depth limit
+
+CM84 prevents an exact compact replacement of the entire complete hinge family.
+Here is a different, explicitly restricted family. An input is still a list
+of immutable objects from a finite set O, of length at most T, and the output
+is one original object from O. Objects address learned weights; their identities
+are not arithmetic values or supplied numerical features. Put
+
+```
+D = Option (Fin T x O),                 d = 1 + T |O|,
+p(c,s) in complex Hermitian PSD(D),     c in O, s in {positive,negative}.
+```
+
+Every full matrix is trained jointly. The domain is the product of these PSD
+cones and has no labels, observed-prefix constraints, activation masks, fixed
+rank, or independent parameter for a complete prefix. Both branches of every
+class remain present. The exact zero state is feasible.
+
+For one joint matrix M, recover the positive matrix square root W and the
+balanced factors
+
+```
+W = sqrt(M),       a = sqrt(||W||_entrywise_max),       E = W / a,
+r_h(tokens) = E[h,bias] + sum_visible_positions_i E[h,(i,object_i)],
+B_M(tokens) = a^2 (1+i) sum_h |r_h(tokens)|^2.
+```
+
+At zero the inverse scale is zero. CM75's recovery identity gives a E = W
+and ||E|| = a; here the activation is degree two, so the learned readout is
+a^2(1+i). Its phase is fixed architecture. Both real and imaginary source
+coordinates enter each squared magnitude. Inference performs the learned raw
+lookup, complete complex summation, activation and complex readout. It does
+not replace them with a joint quadratic expression in its definition.
+
+For any complex input vector x, `energy_gram`, `network_eq` and `factor_gram`
+prove
+
+```
+a^2 sum_h |(E x)_h|^2 = sum_h |(W x)_h|^2 = Re(x* M x),
+W* W = M.
+```
+
+`inputRow_read` identifies the raw lookup with the bias/visible-address row
+only for this proof. Signed real logits are
+`Re(B_p(c,+)(tokens) - B_p(c,-)(tokens))`. Their usual full-vocabulary softmax
+is positive and normalized. `nextObject` returns an original maximizing
+object, and every strict winner is returned regardless of tie selection.
+Its fixed vocabulary witness establishes nonemptiness and is not a target.
+Only ordinary CE receives the observed next object. A native predictor must
+specify a deterministic tie order and retain every output class.
+
+The actual logits respect joint parameter combinations on the entire domain
+at every admitted prefix. Consequently ordinary answer CE is jointly convex,
+as is every indexed mean minibatch, retaining repetitions and short tails.
+This is convexity in the coupled matrices, not independent convexity in W, E
+and a. No claim that affine logits are necessary for convex CE is used.
+
+The physical coverage is exact for finite squared-response networks. Given
+any hidden width H, complex weights V[h,d], and nonnegative independent physical
+readouts b[h], absorb each sqrt(b[h]) into its full row. The resulting Gram
+matrix is PSD, and its recovered network has exactly the original weighted
+sum of squared responses on every input. Signed outputs use the two branches.
+Conversely each PSD point recovers an actual physical factor of width d.
+This equivalence concerns functions with unrestricted physical width; it does
+not preserve a smaller fixed-width bottleneck, a fixed rank, or one hidden
+representation tied across every output class. The recovered branches have
+class-specific factors shared across all input sequences. Their total width
+is 2 |O| d. A native matrix-square-root implementation, numerical residual
+bounds and PSD update certification remain required; the exact Lean square
+root is not a completed native solver.
+
+The full dense storage count, retaining Hermitian redundancy, is
+
+```
+4 |O| (1 + T |O|)^2 real coordinates.
+```
+
+This charges both components, signs and all original classes, before factors,
+optimizer state and solver workspace. It is polynomial in the declared cap
+and vocabulary, not a guarantee of fitting the 110 GB aggregate limit for
+every stress case. Given cached recovered factors, each prefix reads its
+visible addresses in every retained hidden row. Factor recovery must still
+process the complete matrices; no low-rank shortcut or runtime claim follows
+from the coordinate count.
+
+A nonconstant raw witness uses O=Bool and T=1. On the two object coordinates
+(with the bias row/column zero), positive physical factors are
+
+```
+W0 = [[4, i],[-i,1]],       W1 = [[1,i],[-i,9]].
+```
+
+Each is the Gram of the row (1,i) plus a nonnegative diagonal, hence PSD; its
+joint point is W*W. Their exact entrywise norms are four and nine, so learned
+amplitudes are two and three. The first diagonal representation coordinate
+changes from 2 to 1/3, while the imaginary coordinate changes from i/2 to i/3;
+the representation directions are therefore different. The positive physical
+energy at [false] is 17; removing imaginary weights makes it 16, proving that
+the complex computation is used. Class false has zero logits. Class true uses
+the positive point and negative matrix 4I, giving logits (9,-6) at W0 and
+(-6,74) at W1 on [false],[true]. Both relative preferences reverse. The second
+point returns the original input objects and strictly lowers both ordinary
+answer CEs. These feasible comparisons are not trained outcomes.
+
+The expressivity restriction is proved, not left implicit. Every quadratic
+form has zero third mixed difference. The raw one-hot address row for three
+Boolean objects is affine in the three bits, so the actual recovered logits
+inherit that identity. `parity_not_realizable` proves that no feasible point
+strictly classifies all eight three-bit parity prefixes. This is a concrete
+function lost relative to the complete hinge family. It is not a conclusion
+about one MQAR split or a proof against a deeper architecture. Simply adding
+unrestricted independently trained layers does not inherit this CE proof.
+
+Finally, expand the actual complex class-by-prefix output diagnostically
+through every ordered address pair. `output_factorization` proves this exact
+identity for the recovered complex forward. R3 then bounds its error to a
+flat target of squared singular value s>0 by
+
+```
+s (min(|O|, |X|) - d^2) <= ||target - actual_complex_output||_F^2.
+```
+
+Exact representation of a nonzero flat target requires the corresponding
+width. When the lower bound is nonpositive it gives no positive error floor.
+These are bounds on the actual operator, not labels or a feature-learning
+algorithm. All conditional statements have inhabited examples.
+
+Formalization: `ConvexChannel/LearnedQuadratic/{Basic,Model,Sequence,Witness,
+Restriction,Spectral}`; direct audit: `scripts/LearnedQuadraticAxioms.lean`.
+This construction supplies a polynomial-size learned quadratic building block,
+not a solution of the all-165 99% target. Unseen-answer identification, richer
+interactions for the full suite, numerical factor recovery, certified Mini and
+forward-only Mini updates, and prospective sealed experiments remain open.
+No producer, stress-case coverage or raw accuracy changes in this extension.

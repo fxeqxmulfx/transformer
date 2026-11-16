@@ -8404,3 +8404,30 @@ restriction of the current universal family stated explicitly. Selecting a
 smaller fixed feature bank, an independent whole-prefix table, or an unimplemented
 pricing oracle still does not meet the architecture requirement. No additional
 test accuracy or stress-case coverage follows from CM84.
+
+### 2026-11-16: a learned quadratic block with explicit polynomial cost and depth limit
+
+CM85 supplies a positive alternative to complete activation-mask enumeration.
+The new `LearnedQuadratic` family jointly learns complete complex PSD matrices,
+recovers actual balanced representations and readouts, processes immutable raw
+sequences through squared complex responses, and returns an original object.
+Ordinary answer CE and indexed mean minibatches are convex on its entire domain.
+Exact physical coverage allows finite squared-response networks, with recovered
+width `1 + T|O|` per signed class branch. This does not preserve a smaller fixed
+rank or one representation tied across all classes. Full dense real storage is
+`4|O|(1+T|O|)^2`, before recovery and optimizer memory.
+
+A nonzero raw witness changes representation direction and readout, uses its
+imaginary weights, reverses object preferences and lowers ordinary CEs. Flat
+spectrum remains only a bound on the actual output operator. The price of the
+restriction is formal: every logit has zero third mixed difference, and no
+feasible point strictly classifies all eight three-bit parity prefixes.
+This is a learned building block, not an adequate full-suite architecture.
+
+Keep task 366 and the all-165 raw/exact 99% objective open. Next prove richer
+shared interactions with their actual convexity, recovery and cost; do not
+infer convexity merely by stacking learned quadratic factors. The new family's
+identification conditions, numerical PSD/factor certification and both native
+minibatch modes are not supplied by this proof. No new training producer or
+stress-case credit is authorized by proof witnesses alone. Existing frozen
+producers, independent repeats and raw-replay requirements stay unchanged.

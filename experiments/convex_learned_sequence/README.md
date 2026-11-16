@@ -12,8 +12,9 @@ centres, direction bases and feasible queries now have native generators and
 independent exact certificate checks. The Mini proposal rule now uses the full
 actual CE direction and certified projection. Forward-only Mini now queries
 every certified basis direction and supports complete independent update replay.
-Sealed training remains unfinished. Known feasible
-points used by controls are not learned outcomes; no stress accuracy is claimed.
+Sealed pilot training and independent full replay are complete, as recorded
+below. Known feasible points used by controls are not learned outcomes; the
+pilot adds no stress-case accuracy credit.
 
 ## Complete domains and controls
 
@@ -477,6 +478,49 @@ cmp <(sed '/^  "revision": "/d; /^  "source_sha": "/d' "$task_old/config.json") 
     <(sed '/^  "revision": "/d; /^  "source_sha": "/d' "$task_new/config.json")
 cmp <(sed '/^  "training_seal_sha": "/d' "$task_old/score.json") \
     <(sed '/^  "training_seal_sha": "/d' "$task_new/score.json")
+```
+
+## Proved quadratic alternative; no new native run
+
+CM85 specifies a separate learned complex quadratic family in
+`src/Transformer/Grokking/FlatSpectrum/ConvexChannel/LearnedQuadratic`.
+The input remains an immutable object sequence and the output an original
+object. Each class retains positive and negative full PSD matrices. Their
+matrix square roots recover learned object representations and readouts;
+actual inference sums the learned position/object entries, squares complete
+complex magnitudes and performs the learned readout. The factors are coupled
+through the joint matrices, whose ordinary answer CE and indexed minibatch
+means are convex on the full label-independent domain.
+
+Exact physical coverage allows arbitrary finite squared-response width and
+nonnegative independent row readouts, split into positive/negative branches.
+Recovery has width `d = 1 + T|O|` per branch, or `2|O|d` in total. It does
+not preserve a smaller fixed-rank bottleneck or one hidden representation tied
+across classes. Dense storage is `4|O|d^2` real coordinates before factors,
+optimizer state and solver workspace; no family coordinate is discarded.
+
+The nonzero raw witness changes both learned stages, including representation
+direction, and reverses original-object preferences while lowering their CEs.
+Its imaginary weights demonstrably change the actual energy. These are feasible
+proof comparisons, not training results. R3 bounds approximation error of the
+actual complex output through the proved full ordered-address-pair expansion;
+flatness supplies no missing labels.
+
+The smaller family loses real expressivity: Lean proves that none of its
+points strictly classifies all three-bit parity prefixes. Therefore this
+single quadratic stage cannot replace the complete hinge family or be claimed
+as a solution of the full stress suite. Richer learned interactions need their
+own exact convexity/coverage/cost proof. Unseen-label identification, numerical
+matrix-square-root recovery, certified Mini and forward-only Mini updates,
+and prospective independent training/replay remain unfinished for this family.
+No native producer changed and no new stress or raw-accuracy credit is added.
+
+The formalization can be checked without Python:
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/LearnedQuadraticAxioms.lean
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/Axioms.lean
 ```
 
 ## Remaining work
