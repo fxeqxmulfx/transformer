@@ -7695,3 +7695,20 @@ and independently repeat the full 48-pool training-only probe, retaining all
 54 inventory outcomes. No new heldout result follows from compatibility. Keep
 the running 351 and 355 producers and queued repeats unchanged. A future full
 comparison requires another freeze and a complete training seal.
+
+### 2026-11-16: task359 complete composition comparison adapter
+
+Recheck CM67 before applying the original comparison to all 962,806 fixed
+candidates. Reuse the reviewed complete model, checkpoint, resource, scoring
+and summary modules; retain every compatible candidate and arbitrary unknown
+coordinate. The new strict typed probe reader preserves all report fields and
+checks the complete candidate partition without cloning a generic JSON tree.
+Fifteen native controls cover the larger report limit, tampering, all three
+actual training modes, original duplicates and tails, genuine unseen ambiguity,
+raw99, training seals and both-disk stops. Complete oversized supports remain
+refusals; a larger input family alone cannot guarantee memory admission.
+Keep production disabled until task358's full independent probe is verified
+and pinned. Then finalize, check, commit and freeze before original fitting,
+seal every training endpoint before scoring, and independently rebuild/repeat
+the complete cohort. The running351/355/358 sources and outputs stay immutable.
+No new heldout result or catalog credit follows from this adapter work.
