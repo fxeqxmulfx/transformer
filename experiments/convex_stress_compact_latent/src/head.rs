@@ -1,6 +1,7 @@
 //! CM70 complete complex head, after Lean cc6931a4. This is the arithmetic
-//! of reduced_latent at 6797e8ab with lossless shared column storage. Unknown
-//! blocks still visit every class in every contraction and spectral audit.
+//! of reduced_latent at 6797e8ab with lossless shared column storage.
+//! CM71 (Lean 91281572) shares identical ordered column computations while
+//! expanding every output class. Coefficients and spectral audits stay complete.
 use crate::domain::{self, Domain};
 use crate::{Parameters, Result, Shape, Work};
 pub use legacy::head::{
@@ -12,6 +13,8 @@ mod exact;
 #[path = "../../convex_stress_reduced_latent/src/head/interval.rs"]
 mod interval;
 mod predict;
+mod sharing;
+use sharing::Sharing;
 #[cfg(test)]
 mod tests;
 
@@ -21,6 +24,7 @@ pub struct Head {
     blocks: Vec<Block>,
     exceptions: Vec<Exception>,
     active: Vec<u16>,
+    sharing: Option<Sharing>,
 }
 impl Head {
     /// The limit covers this head and construction buffers; the caller must
@@ -88,10 +92,13 @@ impl Head {
             let b = &self.blocks[(p * self.shape.states + s) / 4];
             for f in 0..4 {
                 let (re, im) = source(s, s / 4 * 4 + f);
-                for (c, value) in self.columns(b) {
+                for (c, value) in self.computation_columns(b) {
                     logits[c] += re * value[f] - im * value[4 + f];
                 }
             }
+        }
+        if let Some(sharing) = &self.sharing {
+            sharing.expand(&mut logits);
         }
         if logits.iter().any(|x| !x.is_finite()) {
             return Err("nonfinite complete sparse logit".into());

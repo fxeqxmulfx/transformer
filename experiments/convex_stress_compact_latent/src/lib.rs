@@ -2,6 +2,8 @@
 //! and arbitrary nonuniform rows retain a complete explicit fallback.
 //! Logical arithmetic remains that of the complete reduced model. The
 //! whole-process admission and original-cohort integration remain separate.
+//! CM71 (Lean 91281572) additionally shares identical ordered head computations,
+//! expanding every original class before ordinary CE without changing any word.
 pub use legacy::{Record, Result, Shape, Work, ce};
 pub mod admission;
 pub mod domain;

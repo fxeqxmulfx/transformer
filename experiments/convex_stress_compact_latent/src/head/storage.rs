@@ -129,6 +129,7 @@ impl Builder {
             blocks: Vec::new(),
             exceptions: Vec::new(),
             active: Vec::new(),
+            sharing: None,
         };
         head.blocks.try_reserve_exact(shape.rows() / 4)?;
         let mut scratch = Vec::new();
@@ -198,10 +199,18 @@ impl Builder {
         self.head.blocks.push(block);
         Ok(())
     }
-    pub fn finish(self) -> Result<Head> {
+    pub fn finish(mut self) -> Result<Head> {
         if self.head.blocks.len() != self.head.shape.rows() / 4 {
             return Err("missing complete head blocks".into());
         }
+        // The Fourier construction row dies before any grouping scratch is
+        // allocated. Charge the entire existing head and builder stack too.
+        drop(self.scratch);
+        let room = crate::memory::remaining(
+            self.limit,
+            self.head.allocation_bytes() as u128 + size_of::<Self>() as u128,
+        )?;
+        self.head.sharing = Sharing::build(&self.head, room)?;
         Ok(self.head)
     }
 }
@@ -211,7 +220,8 @@ impl Head {
         (size_of::<Self>()
             + self.blocks.capacity() * size_of::<Block>()
             + self.exceptions.capacity() * size_of::<Exception>()
-            + self.active.capacity() * size_of::<u16>()) as u64
+            + self.active.capacity() * size_of::<u16>()
+            + self.sharing.as_ref().map_or(0, Sharing::heap_bytes)) as u64
     }
     pub(super) fn columns<'a>(&'a self, b: &'a Block) -> Columns<'a> {
         Columns {
@@ -219,7 +229,15 @@ impl Head {
             block: b,
             next: 0,
             exception: b.exception_start,
+            selected: None,
         }
+    }
+    pub(super) fn computation_columns<'a>(&'a self, b: &'a Block) -> Columns<'a> {
+        let mut columns = self.columns(b);
+        if b.active_start == ALL {
+            columns.selected = self.sharing.as_ref().map(Sharing::representatives);
+        }
+        columns
     }
     pub(super) fn column<'a>(&'a self, b: &'a Block, c: usize) -> &'a Column {
         let exceptions = &self.exceptions[b.exception_start..b.exception_start + b.exception_len];
@@ -276,6 +294,9 @@ impl Head {
         if active != self.active.len() || exceptions != self.exceptions.len() {
             return Err("unreferenced complete head storage".into());
         }
+        if let Some(sharing) = &self.sharing {
+            sharing.validate(self)?;
+        }
         Ok(())
     }
 }
@@ -285,14 +306,17 @@ pub(super) struct Columns<'a> {
     block: &'a Block,
     next: usize,
     exception: usize,
+    selected: Option<&'a [u16]>,
 }
 impl<'a> Iterator for Columns<'a> {
     type Item = (usize, &'a Column);
     fn next(&mut self) -> Option<Self::Item> {
-        if self.next == self.block.active_len {
+        if self.next == self.selected.map_or(self.block.active_len, <[u16]>::len) {
             return None;
         }
-        let c = if self.block.active_start == ALL {
+        let c = if let Some(selected) = self.selected {
+            selected[self.next] as usize
+        } else if self.block.active_start == ALL {
             self.next
         } else {
             self.head.active[self.block.active_start + self.next] as usize
@@ -309,7 +333,7 @@ impl<'a> Iterator for Columns<'a> {
         Some((c, value))
     }
     fn size_hint(&self) -> (usize, Option<usize>) {
-        let n = self.block.active_len - self.next;
+        let n = self.selected.map_or(self.block.active_len, <[u16]>::len) - self.next;
         (n, Some(n))
     }
 }

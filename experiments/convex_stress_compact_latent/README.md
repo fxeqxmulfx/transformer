@@ -15,10 +15,12 @@ checkpoints are retained. The input-aware budget now counts the complete
 dictionary, packed observations and an explicit caller-owned storage reserve
 alongside the local training buffers. Compact dictionary construction and
 validation use actual capacities instead of the prior dense-model estimate.
-The complete runner's external allocation inventory, process admission,
-measured peak memory and new original-cohort comparison remain to be integrated
-and verified; an input forecast alone does not admit a larger original model.
-There is no new accuracy result or original-data production entry point here.
+The separate complete runners inventory their external allocations and enforce
+process admission; an input forecast alone does not admit a larger original
+model. The original compact comparison remains queued, while the separate
+[`probe comparison`](../convex_stress_probe_compare) has independently verified
+five available original probes. This component has no original-data production
+entry point and its synthetic controls add no accuracy credit.
 
 | Property | Current behavior |
 | --- | --- |
@@ -26,12 +28,13 @@ There is no new accuracy result or original-data production entry point here.
 | Nonuniform row | Complete explicit class row; arbitrary unknown completions remain representable |
 | Row identity | Every original row, its order and class count survive; equal rows are not merged |
 | Numeric words | Preserve signed zero, subnormal words and NaN payloads as raw storage; model-level finite-value validation remains required |
-| Iteration | Visit every original logical class entry in order, including repeated values |
+| Parameter iteration | Visit every original logical class entry in order, including repeated values |
 | Transformation | Apply a zipped operation at every original coordinate; rows can move in either direction between shared and explicit storage |
 | Allocation | Bound metadata, actual capacities, one scratch row and old-plus-new buffers during moving growth; checked cloning requires an explicit limit |
 | Parameters | Preserve every mass, arbitrary unknown row, anchored expansion, original feasibility sums and the full distance with known-row multiplicities |
 | Complex head | Share an eight-word column only when all four real and four imaginary coefficient words agree; retain every exception and the original logical active-class sequence |
 | Prediction | Preserve forward and reverse contractions, interval enclosures, exact dyadic ties, raw winners and ordinary CE |
+| Shared computation | After Lean CM71, identical complete columns may share their ordered forward accumulator; expand every original class before CE or argmax |
 | Projection | Preserve weighted proposals, every unknown gradient coordinate, all scalar root iterations and the full numerical KKT audit |
 | Training | Preserve the original dictionary check, every original record, duplicates, batch tails, CE guards and step metrics in all three modes |
 | Checkpoints | Stream every logical value in the exact prior RDLT6401 format; admit the complete read dictionary, compact output, scratch and fallback before allocation |
@@ -46,10 +49,10 @@ The head uses the more general exception representation for each four-state
 Fourier block. A baseline class outside the block's observed labels is preferred
 when one exists; any other distinct column remains explicitly stored. Known-only
 blocks retain their sorted observed classes, and any block with an unknown row
-still visits all raw classes, including zero-valued and repeated columns.
+still represents all raw classes, including zero-valued and repeated columns.
 Neither form adds a uniformity constraint to the feasible model domain.
 
-Forty native controls pass. Mixed shared and explicit rows retain every word,
+Forty-six native controls pass. Mixed shared and explicit rows retain every word,
 including duplicate original rows and two distinct zero words. Stateful zipped
 operations see every coordinate, and a floating sum matches the full original
 sequence bit for bit. A sum of a thousand copies of 0.1 also demonstrates why
@@ -186,3 +189,65 @@ cargo build --offline --locked --release --manifest-path experiments/convex_stre
 Keep task351, task355, task358 and task359 sources and outputs unchanged.
 The final compact producer needs its own complete checks, immutable source
 freeze, pre-heldout training seal and independent original-cohort repeat.
+
+## Ordered column sharing, CM71
+
+Lean commit `91281572` proves equality of ordered accumulators for arbitrary
+deterministic word operations when every active event and complete payload
+agrees. It proves a sufficient criterion for CM70's actual storage: take the
+union of all explicit column exceptions and all active classes of known-only
+blocks. All classes outside this union have the same complete column and skip
+the same blocks. Evaluate one such class, preserving every operation in its
+original order, and copy its final word to the other outside classes.
+
+The Rust change applies this only to `Head::logits`. Every raw output class is
+materialized before ordinary CE; its class summation order is unchanged.
+Reverse contractions, interval enclosures, exact dyadics, full norm audits,
+gradients, projections and checkpoint format remain their original algorithms.
+The full coefficient tensor remains accessible. Every new head rebuilds its
+plan; arbitrary nonuniform coefficients remain representable. When fewer than
+two outside classes remain, evaluation uses the complete original loop. The
+conservative union can miss other equal columns, especially when the stored
+baseline is an unusual value; no maximal grouping or universal speedup is claimed.
+
+The plan adds two UInt16 lists whose total length equals the raw class count,
+plus container metadata. Construction first drops the Fourier scratch row,
+then admits the complete existing head, a class marker vector and both lists
+together. `allocation_bytes` includes actual plan capacities. No per-query plan
+allocation is needed. Logical `Work` remains the original complete charge;
+`evaluated_columns` separately reports the physical forward columns.
+
+Six additional controls cover global support unions, nonuniform fallback,
+signed zeros, subnormals, imaginary coefficients, complete output/CE equality,
+metadata rejection and simultaneous allocation refusal. Actual 97-class
+training keeps a nonuniform explicit class and a shared complement. Full,
+minibatch and forward-only controls compare every final parameter/coefficient,
+step metric, checkpoint byte and work charge with the prior complete model at
+learning rates 3 and 1000000. Separate minibatch replay compares intermediate
+gradients, projected parameters and rebuilt heads, including the 127+3 tail.
+
+An explicitly selected synthetic benchmark compares the same complete tensor
+with and without its computation plan, checking every output word and CE first.
+It uses 128/512/2048 programs, eight states, 97/193 classes, 16 queries and seven
+alternating timing rounds. Both filesystem guards and aggregate 110 GB RAM
+admission are checked before each bounded timing block. Run it separately:
+
+```sh
+export SHARED_COLUMNS_WORKSPACE=/home/misha/lean_projects/transformer
+export SHARED_COLUMNS_STORAGE=/run/media/misha/storage/transformer-runs
+prlimit --as=4294967296:4294967296 -- cargo test --offline --locked --release \
+  --manifest-path experiments/convex_stress_compact_latent/Cargo.toml \
+  benchmark_complete_column_sharing -- --ignored --nocapture --test-threads=1
+```
+
+On the current CPU, median forward contraction was 23.4–24.2 times faster at
+97 classes and 41.0–43.6 times faster at 193 classes. The largest case evaluates
+4096 columns per Fourier term instead of 395264 while returning all 193 logits.
+The complete bounded benchmark finished in 4.11 s; peak RSS, including the Cargo
+launcher, was 34612 KiB. Generated logs remain in `.kanban/artifacts/363/` outside
+the worktree. These timings occurred alongside the older live comparisons.
+
+This is component timing, not a new original fit or an end-to-end speedup.
+Frozen producers for tasks 351, 355, 360 and 362 remain unchanged. Any future
+comparison using CM71 needs a new committed source freeze, complete training
+seal, independent rebuild/repeat and raw replay before accuracy credit.

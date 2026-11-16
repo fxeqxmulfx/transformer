@@ -1,6 +1,8 @@
 use super::*;
 use crate::records::Packed;
 use legacy::records::{Packed as LegacyPacked, Source as LegacySource};
+#[path = "sharing_tests.rs"]
+mod sharing_tests;
 const LIMIT: u64 = 32 * 1024 * 1024;
 fn work() -> Work {
     Work::new(2_000_000_000_000).unwrap()

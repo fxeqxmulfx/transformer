@@ -7807,3 +7807,37 @@ of local output/scratch; input bytes belong to the caller. Commit after native
 and Lean checks and rebuild independently. The conservative legacy domain
 admission still blocks larger original models; complete input/runtime/process
 admission and a frozen original/repeat remain required before accuracy credit.
+
+### 2026-11-16: verified probes and the current two-mode requirement
+
+The user permits new work to require minibatch and forward-only minibatch,
+with full batch optional. Task 362 is independently verified at producer
+`1c67b444`, with findings at `31c209ed`: five available original probes reach
+100% raw and exact accuracy in both modes on every original split. All 66
+artifacts match the complete independent repeat and raw replay. Routing retains
+its original teacher-data refusal in task 361. Conditional amplitudes and order
+discrimination add two cases, giving a historical union of 79/165 across
+separate seed 1 cohorts under the two-mode requirement; the older three-mode
+total remains 77. This is not a unified model or an additional seed. Preserve
+all existing Transformer records and their original success criteria.
+
+### 2026-11-16: task 363, exact ordered column computation
+
+CM71 is proved first at `91281572`: identical complete event sequences yield
+identical accumulator words without reordering updates or replacing inactive
+skips by zero additions. A conservative global union of coefficient exceptions
+and known-only active classes supplies a sufficient sharing condition. The
+complete class vector, arbitrary fallback, coefficient tensor and norm remain.
+The full Lean build, 12 direct axiom checks, audit and generated INDEX pass with
+no new sorry or extra axioms.
+
+The corresponding bounded native forward contraction passes 46 controls,
+preserving every logit/CE/update/checkpoint word and original work charge against
+the full model. Actual shared nonuniform training and memory refusals are
+covered. Bounded synthetic constant-shaped contractions improve by 23–44 times;
+this is not an end-to-end training speedup. Commit after native checks and retain
+the generated evidence outside the worktree. Existing frozen 351/355/360/362
+producers and outputs stay immutable. New original measurements require a new
+source freeze, complete training seal and independent repeat/replay. Continue
+under aggregate 110 GB RAM and stop on shortage of either disk; no new accuracy
+credit follows from a proof or synthetic timing result.
