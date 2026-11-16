@@ -12,7 +12,7 @@ use pairs::{
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-mod memory;
+pub(crate) mod memory;
 #[cfg(test)]
 mod tests;
 

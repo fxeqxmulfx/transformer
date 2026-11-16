@@ -13,6 +13,10 @@ serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.10.9"
 
+[dev-dependencies]
+legacy = { package = "convex-stress-reduced-latent", path = "../convex_stress_reduced_latent" }
+reference = { package = "convex-stress-composed-compare", path = "../convex_stress_composed_compare" }
+
 [profile.test]
 opt-level = 2
 

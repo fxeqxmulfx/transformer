@@ -1,4 +1,4 @@
-# Complete compact comparison preparation
+# Complete compact comparison
 
 Can the CM70 compact model receive the entire fixed composition family and
 every original record under the 110 GB RAM limit, including cases refused by
@@ -51,7 +51,23 @@ before candidate work, a missing candidate is rejected, and malformed or
 over-budget phase counters fail. Fixed scratch reservations are checked against
 the pinned grammar size and bounded interpreter tables.
 
-No production runner or heldout evaluation is enabled yet. Remaining work is
+Checkpoint and input-only prediction boundaries also use compact admission.
+Reading reserves the additional stored dictionary until comparison, retained
+parameters during head construction, and I/O/audit scratch. Prediction reserves
+the full family generator, selected program capacities, query states, bounded
+exact-integer and interval scratch, and two raw answers during replay. State
+construction moves training metadata rather than cloning it. The caller must
+subtract all original inputs and runner metadata before these nested limits.
+
+Eleven native controls cover complete preparation, work limits, real checkpoint
+files, two required mode forecasts, and both-disk refusal. Complete old and new
+models agree on parameters, CE, actual update traces, every queried answer and
+work charge. The 130-record control keeps the 127-record minibatch and three-row
+tail. Raw readback preserves 99/100 and 98/100 distinctions, all wrong-label and
+numerical-refusal denominators, and rejects rehashed logit corruption and oversized
+lines before prediction. These are synthetic controls, not original-task results.
+
+No production runner or original heldout evaluation is enabled yet. Remaining work is
 complete phase/resource accounting in the runner, prospective protocol pins
 after task358 independent verification, all training endpoints and their seal,
 full original scoring and an independent repeat. The future disk forecast must

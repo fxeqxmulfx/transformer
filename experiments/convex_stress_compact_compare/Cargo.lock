@@ -39,7 +39,9 @@ name = "convex-stress-compact-compare"
 version = "0.1.0"
 dependencies = [
  "convex-stress-compact-latent",
+ "convex-stress-composed-compare",
  "convex-stress-composed-latents",
+ "convex-stress-reduced-latent",
  "serde",
  "serde_json",
  "sha2",
@@ -53,6 +55,17 @@ dependencies = [
  "num-bigint",
  "num-rational",
  "num-traits",
+ "sha2",
+]
+
+[[package]]
+name = "convex-stress-composed-compare"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-composed-latents",
+ "convex-stress-reduced-latent",
+ "serde",
+ "serde_json",
  "sha2",
 ]
 
