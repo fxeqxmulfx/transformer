@@ -7634,3 +7634,20 @@ policies. Compare against the expanded record path, account for decoded row
 scratch, and keep the original task354 audit distinct from refined comparison
 admission. No existing frozen run changes and no benchmark credit follows from
 these prospective memory identities.
+
+### 2026-11-16: task356 native packing and separate comparison admission
+
+The Rust path now stores every observed state and label as a checked UInt16
+word and decodes at most one original row per visit. Fifteen core controls and
+eight wider-family controls preserve complete domains, all coefficient bits,
+ordinary CE, actual update traces and saved parameters across expanded and
+packed storage. The original state and dictionary digests, selected support
+and legacy memory refusal remain unchanged. Thirteen comparison controls
+exercise separate packed admission while retaining oversized-unknown refusals
+and all original denominators. The large constant control's forecast becomes
+89,281,189,304 bytes; no actual peak or new accuracy has been measured. Keep
+production disabled until this change is independently rebuilt and reviewed
+and the task354 probe repeat is verified. Then pin those exact results, commit
+and freeze before any original fitting. Existing task351/354 producers remain
+immutable. Both disks must continue to fit original/repeat outputs under the
+110 GB process RAM limit; otherwise stop and retain partial evidence.

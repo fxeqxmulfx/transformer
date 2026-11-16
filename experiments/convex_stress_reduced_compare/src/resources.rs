@@ -138,7 +138,7 @@ pub fn case_budget(
     unknown: usize,
     head_columns: usize,
 ) -> Result<CaseBudget> {
-    shape.admit(training, unknown, head_columns)?;
+    shape.admit_packed(training, unknown, head_columns)?;
     if validation == 0 || validation > 65536 {
         return Err("invalid original validation size".into());
     }

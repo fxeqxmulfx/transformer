@@ -35,6 +35,17 @@ training audit fits easily. The materializing API recomputes the complete
 candidate partition, then verifies both hashes and all counts against the
 constructed reduced domain. A forged surviving subset is rejected.
 
+The separate `encode_packed` API follows the CM68 proof at `84a455b7`. It preserves
+the original selection and audit, including any expanded-record memory refusal,
+while computing packed-buffer admission separately. It checks every stored
+UInt16 word after decoding against the original program-major state digest,
+then reconstructs and checks the complete dictionary. No candidate, unknown
+coordinate or original record is removed. Controls compare every complex
+coefficient bit, CE, parameters and update traces against expanded encoding
+in all three modes; reordered observations and forged audits are rejected.
+This API is for a prospectively frozen comparison. The existing task354 probe
+continues to use its original expanded-record forecast.
+
 Eight native controls pass. They enumerate the complete family independently,
 check both interpreters for every candidate and all nine input pairs at prime 3,
 and sample boundary inputs at primes 17, 193 and 1021. An independent pairwise

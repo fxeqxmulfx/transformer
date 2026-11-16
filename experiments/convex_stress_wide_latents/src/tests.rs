@@ -163,9 +163,11 @@ fn all_compatible_candidates_survive_and_forged_subsets_are_rejected() {
     let mut missing = a.clone();
     missing.retained.pop();
     assert!(encoding::encode(&data, &missing, &mut work()).is_err());
+    assert!(encoding::encode_packed(&data, &missing, &mut work()).is_err());
     let mut bad = a.clone();
     bad.audit.unknown_rows -= 1;
     assert!(encoding::encode(&data, &bad, &mut work()).is_err());
+    assert!(encoding::encode_packed(&data, &bad, &mut work()).is_err());
     let encoded = serde_json::to_vec(&a).unwrap();
     let loaded: selection::Selection = serde_json::from_slice(&encoded).unwrap();
     assert_eq!(loaded, a);
@@ -195,6 +197,18 @@ fn streamed_audit_matches_the_complete_materialized_domain_and_actual_training()
     assert!(!selected.retained.is_empty());
     assert!(selected.retained.iter().any(|&i| i >= pairs::PROGRAMS));
     let (domain, records) = encoding::encode(&data, &selected, &mut work()).unwrap();
+    let (packed_domain, packed) = encoding::encode_packed(&data, &selected, &mut work()).unwrap();
+    assert_eq!(domain, packed_domain);
+    let source = joint::records::Source::Packed(&packed);
+    let mut index = 0;
+    source
+        .visit(0..records.len(), &mut work(), |row, _| {
+            assert_eq!(row, &records[index]);
+            index += 1;
+            Ok(())
+        })
+        .unwrap();
+    assert_eq!(index, records.len());
     assert_eq!(records.len(), data.rows.len());
     assert_eq!(domain.unknown.len(), selected.audit.unknown_rows);
     assert!(domain.unknown.len() >= domain.shape.programs); // The padded state remains free.
@@ -203,7 +217,40 @@ fn streamed_audit_matches_the_complete_materialized_domain_and_actual_training()
         let mut config = policy(mode);
         config.batch_size = 4;
         config.learning_rate = 3.;
-        let fitted = joint::training::train(&domain, &records, config, &mut work()).unwrap();
+        let fitted =
+            joint::training::train(&domain, &records, config.clone(), &mut work()).unwrap();
+        let packed_fit =
+            joint::training::train_source(&packed_domain, source, config, &mut work()).unwrap();
+        assert_eq!(
+            serde_json::to_vec(&fitted.steps).unwrap(),
+            serde_json::to_vec(&packed_fit.steps).unwrap()
+        );
+        assert_eq!(fitted.initial_ce.to_bits(), packed_fit.initial_ce.to_bits());
+        assert_eq!(fitted.final_ce.to_bits(), packed_fit.final_ce.to_bits());
+        assert_eq!(
+            fitted
+                .parameters
+                .values
+                .iter()
+                .map(|x| x.to_bits())
+                .collect::<Vec<_>>(),
+            packed_fit
+                .parameters
+                .values
+                .iter()
+                .map(|x| x.to_bits())
+                .collect::<Vec<_>>()
+        );
+        assert_eq!(fitted.audit, packed_fit.audit);
+        for p in 0..domain.shape.programs {
+            for s in 0..domain.shape.states {
+                for c in 0..domain.shape.classes {
+                    let (a, b) = fitted.head.coefficient(p, s, c).unwrap();
+                    let (x, y) = packed_fit.head.coefficient(p, s, c).unwrap();
+                    assert_eq!((a.to_bits(), b.to_bits()), (x.to_bits(), y.to_bits()));
+                }
+            }
+        }
         assert_eq!(fitted.audit.logical_coefficients, domain.shape.cells() * 2);
         assert!(!fitted.target_realizability_certified);
         if mode == Mode::Forward {
@@ -225,6 +272,7 @@ fn streamed_audit_matches_the_complete_materialized_domain_and_actual_training()
     let mut changed = data.clone();
     changed.rows.reverse();
     assert!(encoding::encode(&changed, &selected, &mut work()).is_err());
+    assert!(encoding::encode_packed(&changed, &selected, &mut work()).is_err());
 }
 
 #[test]

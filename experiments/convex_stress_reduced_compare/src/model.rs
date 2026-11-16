@@ -3,9 +3,10 @@
 //! the runner. Every consistent member of the fixed family remains present.
 use crate::*;
 use joint::{
-    Parameters, Record, Shape, Work,
+    Parameters, Shape, Work,
     domain::Domain,
     head::{Audit, Head, Prediction, PredictionBudget},
+    records::{Packed, Source},
     training::{Config, Mode, Step, Trained},
 };
 use pairs::{
@@ -34,11 +35,16 @@ pub fn original_mode(mode: Mode) -> &'static str {
 pub struct Prepared {
     pub selection: Selection,
     pub domain: Domain,
-    pub records: Vec<Record>,
+    pub records: Packed,
+}
+impl Prepared {
+    pub fn source(&self) -> Source<'_> {
+        Source::Packed(&self.records)
+    }
 }
 pub fn prepare(training: &Training, expected: &Selection, work: &mut Work) -> Result<Prepared> {
     // encode independently repeats the complete partition and streamed audit.
-    let (domain, records) = pairs::encoding::encode(training, expected, work)?;
+    let (domain, records) = pairs::encoding::encode_packed(training, expected, work)?;
     Ok(Prepared {
         selection: expected.clone(),
         domain,

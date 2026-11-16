@@ -10,6 +10,7 @@ pub mod domain;
 pub mod head;
 pub mod persistence;
 pub mod projection;
+pub mod records;
 pub mod resources;
 #[cfg(test)]
 mod tests;
@@ -40,6 +41,30 @@ impl Shape {
         self.rows() * self.classes
     }
     pub fn admit(self, records: usize, unknown: usize, head_columns: usize) -> Result<u64> {
+        self.admit_storage(
+            records,
+            unknown,
+            head_columns,
+            records as u128 * (8 * self.programs as u128 + 64),
+        )
+    }
+    /// CM68: all original state words plus at most one expanded row.
+    /// The legacy forecast remains unchanged for frozen probe audits.
+    pub fn admit_packed(self, records: usize, unknown: usize, head_columns: usize) -> Result<u64> {
+        self.admit_storage(
+            records,
+            unknown,
+            head_columns,
+            records as u128 * (2 * self.programs as u128 + 64) + 8 * self.programs as u128,
+        )
+    }
+    pub(crate) fn admit_storage(
+        self,
+        records: usize,
+        unknown: usize,
+        head_columns: usize,
+        record_bytes: u128,
+    ) -> Result<u64> {
         self.validate()?;
         if records > 65536 || unknown > self.rows() || head_columns > self.cells() / 4 {
             return Err("invalid reduced allocation counts".into());
@@ -52,7 +77,7 @@ impl Shape {
             + 4 * (72 * head_columns as u128 + 96 * (self.rows() / 4) as u128)
             + 48 * self.rows() as u128
             + 64 * self.programs as u128
-            + records as u128 * (8 * self.programs as u128 + 64)
+            + record_bytes
             + 2 * 1024u128.pow(3);
         if bytes > MAX_BYTES {
             return Err("reduced buffers exceed 96 GB before allocation".into());

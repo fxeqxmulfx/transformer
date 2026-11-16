@@ -77,6 +77,8 @@ pub struct Case {
     pub support: usize,
     pub shape: Option<joint::Shape>,
     pub audit: Option<pairs::selection::Audit>,
+    pub comparison_buffer_bytes: Option<u64>,
+    pub comparison_refusal: Option<String>,
     pub source_refusal: Option<String>,
     pub forecast: Option<resources::CaseBudget>,
 }

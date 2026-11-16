@@ -28,7 +28,7 @@ trajectories are compared with explicit tolerances, not claimed bit-identical.
 The mathematical CE derivative uses the proved Fourier Gram identity, as in
 the dense component; finite differences independently check its reduced form.
 
-Twelve native tests cover all coefficients and all 64 queries of a nonconstant
+Fifteen native tests cover all coefficients and all 64 queries of a nonconstant
 two-program fixture, known and unknown rows, imaginary coordinates, all raw
 classes, exact tie handling, adjacent floating values, and finite work refusals.
 Twenty arbitrary off-domain proposals exercise nonuniform unknown rows, unequal
@@ -42,6 +42,24 @@ bytes, nonfinite data, checksum changes and rehashed corruption. A coefficient
 perturbed by 1e-3 and a missing sparse column fail the independent full-head audit.
 Both-disk controls include a shared filesystem, overflow, refusal before file
 creation and preservation of an existing checkpoint.
+
+CM68, proved first at `84a455b7`, adds checked UInt16 storage for every original
+state and raw label. One reusable row is decoded during iteration; original
+indices, duplicate records and short tails stay intact. The expanded APIs remain
+available. The packed controls reproduce complete domains, all complex coefficient
+bits, CE, gradients, full/minibatch/forward update traces and checkpoint bytes.
+Invalid words, shape changes, index ranges and exhausted work budgets are refused.
+The wider-family controls independently rederive the original state/dictionary
+hashes and repeat the same comparisons for a noninjective three-term decoder.
+Packing adds decoding work, so charged operation counts intentionally differ.
+
+The legacy memory formula remains unchanged for frozen probe audits. Packed
+admission replaces only `N * (8P + 64)` observation bytes by
+`N * (2P + 64) + 8P`, including one decoded row; every unknown raw-class
+coordinate and all head/projection buffers remain charged. For the first probe's
+193-class constant control, the complete forecast changes from 122,579,278,464
+to 89,281,189,304 bytes. This is a forecast, not measured original-run peak RAM
+or accuracy. The complete support remains 299,551 candidates.
 
 A separate synthetic storage control has 128 programs, 196 states and 193 raw
 classes, with all states anchored at three labels. It retains all 9,683,968
@@ -72,6 +90,7 @@ prlimit --as=68719476736:68719476736 -- cargo clippy --offline --locked --manife
 prlimit --as=68719476736:68719476736 -- cargo build --offline --locked --release --manifest-path experiments/convex_stress_reduced_latent/Cargo.toml -j2
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ObservedRowAxioms.lean
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ObservedProjectionAxioms.lean
+LAKE_ARTIFACT_CACHE=false lake env lean scripts/PackedRecordAxioms.lean
 ```
 
 The component never certifies target realizability or exact-real numerical

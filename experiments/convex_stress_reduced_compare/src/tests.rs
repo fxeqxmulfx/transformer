@@ -231,8 +231,8 @@ fn compact_forecasts_keep_every_unknown_class_and_all_three_modes() {
             },
             18528,
             18528,
-            299551 * 3,
-            299551 * (48 * 4 + 193)
+            299551 * 196,
+            299551 * 49 * 193
         )
         .is_err()
     );

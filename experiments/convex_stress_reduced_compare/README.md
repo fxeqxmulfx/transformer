@@ -4,7 +4,8 @@ Does the complete 299,551-program input family improve raw heldout accuracy
 when trained through the CM65/66 reduced joint decoder? This runner ports the
 54-case comparison at `ca6a4977`, uses the independently reviewed reduced
 component at `bff278c4`, and uses the fixed wider bank at `2b55e14f`. CM65/66/67
-were proved before these changes. No further mathematical reduction is made.
+were proved before these changes. CM68 (`84a455b7`) proves the subsequent
+lossless UInt16 observation representation before its native implementation.
 Flat spectrum bounds the complete complex head; it does not identify unseen
 labels or certify that the chosen family contains the target.
 
@@ -12,6 +13,7 @@ labels or certify that the chosen family contains the target.
 | --- | --- |
 | Input family | Every compatible member of the fixed 299,551-program bank; no task identity, target formula, seed, oracle or heldout label enters the model |
 | Parameters | All shared masses and every raw-class entry of every unknown decoder row; observed rows use CM65's exact affine reconstruction |
+| Observations | Every original program state and label stored as a checked UInt16 word, with one decoded row during iteration; original IDs and multiplicities preserved |
 | Full batch | Four projected CE updates, learning rate 1,000,000 |
 | Minibatch | One original-order epoch, batches of 127 including the final short batch |
 | Forward only | Initial total mass eight, no updates |
@@ -28,6 +30,15 @@ cases, empty support, training failures and prediction failures remain explicit.
 I/O or disk exhaustion stops execution and retains partial evidence. The
 checkpoint forecast charges every free class coordinate and all three modes;
 only reconstructible observed copies and deterministic head storage are omitted.
+
+The immutable probe audit keeps its legacy expanded-record memory forecast and
+refusal. Separate `comparison_buffer_bytes` and `comparison_refusal` fields
+record complete packed-buffer admission. The first probe's 193-class constant
+control keeps all 299,551 candidates; its forecast changes from 122,579,278,464
+to 89,281,189,304 bytes, including scratch for one decoded row. This admits the
+model under the 96 GB core limit; actual fitting, work limits, peak RAM and
+accuracy still require the original run. Oversized unknown tensors remain
+explicit refusals. Reports count both legacy and current memory refusals.
 
 Thirteen native controls pass: bit-exact coordinates including negative zero and
 a subnormal; every reconstructed real and imaginary coefficient; changed
@@ -55,10 +66,9 @@ cargo clippy --offline --locked --all-targets --manifest-path experiments/convex
 cargo build --offline --locked --release --manifest-path experiments/convex_stress_reduced_compare/Cargo.toml
 ```
 
-Before the full comparison, integrate and independently review task356's
-packed observation path: the first task354 probe refuses the constant
-control with 193 classes and expanded records. Preserve that original probe audit and report
-the refined comparison admission separately. After task354 verification, bind
+Before the full comparison, independently review task356's packed path and
+complete task354 verification. Preserve the original probe audit and report
+the refined comparison admission separately. Then bind
 its exact manifest and verification digests in
 `protocol.json`, mark the protocol ready, rerun the checks and commit before
 freezing. `freeze.sh NEW_FREEZE RELEASE_BINARY` saves the native and Lean source

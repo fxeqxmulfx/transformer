@@ -27,7 +27,8 @@ fn complete_saved_models_keep_actual_full_mini_and_forward_policies() {
     for mode in model::MODES {
         let mut work = Work::new(crate::MAX_WORK).unwrap();
         let trained =
-            joint::training::train(&p.domain, &p.records, pairs::policy(mode), &mut work).unwrap();
+            joint::training::train_source(&p.domain, p.source(), pairs::policy(mode), &mut work)
+                .unwrap();
         let path = fixture.root.join(format!("{}.bin", model::name(mode)));
         let artifact = tensor::save(
             &path,
@@ -86,9 +87,9 @@ fn raw_counts_keep_wrong_labels_and_99_boundary_and_reject_rehashed_tampering() 
     let input = training();
     let p = prepared(&input);
     let mut work = Work::new(crate::MAX_WORK).unwrap();
-    let trained = joint::training::train(
+    let trained = joint::training::train_source(
         &p.domain,
-        &p.records,
+        p.source(),
         pairs::policy(Mode::Forward),
         &mut work,
     )
@@ -167,9 +168,9 @@ fn numerical_refusals_keep_all_targets_and_disk_failure_stops_before_scoring() {
     let input = training();
     let p = prepared(&input);
     let mut work = Work::new(crate::MAX_WORK).unwrap();
-    let trained = joint::training::train(
+    let trained = joint::training::train_source(
         &p.domain,
-        &p.records,
+        p.source(),
         pairs::policy(Mode::Forward),
         &mut work,
     )
@@ -227,6 +228,8 @@ fn training_barrier_rejects_missing_cases_and_changed_sealed_metadata() {
             support: 0,
             shape: None,
             audit: None,
+            comparison_buffer_bytes: None,
+            comparison_refusal: None,
             source_refusal: Some("source unavailable".into()),
             forecast: None,
         })
@@ -337,6 +340,8 @@ fn original_split_and_protocol_controls_are_explicit() {
         support: 1,
         shape: None,
         audit: None,
+        comparison_buffer_bytes: None,
+        comparison_refusal: None,
         source_refusal: None,
         forecast: None,
     };
@@ -367,7 +372,7 @@ fn production_requires_complete_prospective_pins() {
 }
 
 #[test]
-fn oversized_complete_support_is_retained_as_an_explicit_model_refusal() {
+fn packed_admission_preserves_legacy_refusals_and_rejects_oversized_unknown_tensors() {
     let shape = Shape {
         programs: pairs::PROGRAMS,
         states: 196,
@@ -408,12 +413,36 @@ fn oversized_complete_support_is_retained_as_an_explicit_model_refusal() {
     assert_eq!(case.support, pairs::PROGRAMS);
     assert_eq!(case.shape, Some(shape));
     assert_eq!(case.validation_records, 18528);
-    assert!(case.source_refusal.is_none() && case.forecast.is_none());
+    assert!(case.source_refusal.is_none() && case.forecast.is_some());
+    assert!(case.comparison_refusal.is_none());
+    assert_eq!(
+        case.comparison_buffer_bytes,
+        Some(shape.admit_packed(18528, unknown, columns).unwrap())
+    );
     assert_eq!(case.audit.unwrap().admission_refusal, Some(refusal));
     selected.audit.admission_refusal = None;
     assert!(runner::inputs::specification(&row, Some(&selected)).is_err());
     selected.audit.complete_buffer_forecast = Some(1);
     assert!(runner::inputs::specification(&row, Some(&selected)).is_err());
+    selected.audit.known_rows = shape.programs;
+    selected.audit.unknown_rows = shape.rows() - shape.programs;
+    selected.audit.head_columns_bound = shape.cells() / 4;
+    selected.audit.complete_buffer_forecast = None;
+    selected.audit.admission_refusal = Some(
+        shape
+            .admit(
+                18528,
+                selected.audit.unknown_rows,
+                selected.audit.head_columns_bound,
+            )
+            .unwrap_err()
+            .to_string(),
+    );
+    let refused = runner::inputs::specification(&row, Some(&selected)).unwrap();
+    assert_eq!(refused.support, pairs::PROGRAMS);
+    assert_eq!(refused.validation_records, 18528);
+    assert!(refused.comparison_buffer_bytes.is_none() && refused.forecast.is_none());
+    assert!(refused.comparison_refusal.unwrap().contains("96 GB"));
 }
 
 #[test]
@@ -469,8 +498,20 @@ fn free_unseen_completions_keep_observed_ce_and_report_genuine_ties() {
     domain.check(&parameters, 1e-8, &mut work).unwrap();
     let completed = Head::build(domain, &parameters, &mut work).unwrap();
     assert_eq!(
-        joint::training::loss(&head, &prepared.records, &mut work).unwrap(),
-        joint::training::loss(&completed, &prepared.records, &mut work).unwrap()
+        joint::training::loss_source(
+            &head,
+            prepared.source(),
+            0..prepared.records.len(),
+            &mut work
+        )
+        .unwrap(),
+        joint::training::loss_source(
+            &completed,
+            prepared.source(),
+            0..prepared.records.len(),
+            &mut work
+        )
+        .unwrap()
     );
     let mut predictor =
         model::Predictor::new(&completed, domain, &prepared.selection, 1, &mut work).unwrap();

@@ -1,6 +1,6 @@
 {
   "name": "reduced-wide-joint-original54-v1",
-  "lean_basis": "FlatSpectrum CM64/65/66/67: exact observed-row coordinates, weighted full-coordinate projection and fixed-family inclusion",
+  "lean_basis": "FlatSpectrum CM64/65/66/67/68: exact observed-row coordinates, weighted full-coordinate projection, fixed-family inclusion and lossless indexed UInt16 observations",
   "fixed_family": "pair-laurent3-three-terms-integer14-v1",
   "family_sha256": "bb6b612a5c13bda3608f4fb758628a847521678a91247b853b5e576369e6ebfc",
   "references": {
@@ -50,5 +50,6 @@
   "raw_records": "Every ordered train and validation row, original target, all class logits, exact maximizers, numerical certificate and conditional anchor coverage. No target enters prediction.",
   "repeat": "Independently rebuild frozen source and repeat every training and scoring phase. Recount saved raw rows and compare every deterministic input, model, trace, raw artifact and summary hash.",
   "scope": "No target-realizability or floating-point projection theorem. Flat spectrum supplies a head-capacity bound; the fixed input-only family supplies a separate structural prior. Historical transformer scores remain reference results, without new transformer training.",
-  "production_ready": false
+  "production_ready": false,
+  "observation_encoding": "All original states and labels stored as checked UInt16 words, decoded one original row at a time. Original program-major state and complete dictionary hashes and legacy probe admission remain unchanged. Separate comparison_buffer_bytes and comparison_refusal use complete packed-buffer admission. No candidate pruning or record deduplication."
 }

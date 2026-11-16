@@ -86,7 +86,15 @@ pub(crate) fn specification(
         {
             return Err("complete wide-buffer admission or audit changed".into());
         }
-        let forecast = if bytes.is_some() {
+        let packed = shape.map_or_else(
+            || Err("empty compatible support in the complete fixed family".into()),
+            |sh| sh.admit_packed(train, s.audit.unknown_rows, s.audit.head_columns_bound),
+        );
+        let (comparison_buffer_bytes, comparison_refusal) = match packed {
+            Ok(n) => (Some(n), None),
+            Err(e) => (None, Some(e.to_string())),
+        };
+        let forecast = if comparison_buffer_bytes.is_some() {
             Some(resources::case_budget(
                 s.shape(),
                 train,
@@ -107,6 +115,8 @@ pub(crate) fn specification(
             support: s.retained.len(),
             shape,
             audit: Some(s.audit.clone()),
+            comparison_buffer_bytes,
+            comparison_refusal,
             source_refusal: None,
             forecast,
         })
@@ -124,6 +134,8 @@ pub(crate) fn specification(
             support: 0,
             shape: None,
             audit: None,
+            comparison_buffer_bytes: None,
+            comparison_refusal: None,
             source_refusal: Some(row["refusal"].as_str().ok_or("source refusal")?.into()),
             forecast: None,
         })

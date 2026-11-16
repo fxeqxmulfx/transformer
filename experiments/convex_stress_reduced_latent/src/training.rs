@@ -7,6 +7,7 @@ use crate::{
     domain::Domain,
     head::{Audit, Head},
     projection::{self, Target},
+    records::Source,
     *,
 };
 pub use dense::training::{Config, Mode, Step};
@@ -25,15 +26,26 @@ pub struct Trained {
     pub exact_real_projection_certified: bool,
 }
 pub fn loss(head: &Head, records: &[Record], work: &mut Work) -> Result<f64> {
-    if records.is_empty() {
+    loss_source(head, Source::Expanded(records), 0..records.len(), work)
+}
+pub fn loss_source(
+    head: &Head,
+    records: Source<'_>,
+    range: std::ops::Range<usize>,
+    work: &mut Work,
+) -> Result<f64> {
+    if range.is_empty() {
         return Err("empty ordinary CE batch".into());
     }
+    records.check_shape(head.shape)?;
+    let count = range.len();
     let mut total = 0.;
-    for row in records {
+    records.visit(range, work, |row, work| {
         Domain::record(head.shape, row)?;
         total += ce(&head.logits(&row.states, work)?, row.label);
-    }
-    Ok(total / records.len() as f64)
+        Ok(())
+    })?;
+    Ok(total / count as f64)
 }
 pub fn gradient(
     domain: &Domain,
@@ -41,17 +53,35 @@ pub fn gradient(
     records: &[Record],
     work: &mut Work,
 ) -> Result<(f64, Parameters)> {
-    if records.is_empty() || head.shape != domain.shape {
+    gradient_source(
+        domain,
+        head,
+        Source::Expanded(records),
+        0..records.len(),
+        work,
+    )
+}
+pub fn gradient_source(
+    domain: &Domain,
+    head: &Head,
+    records: Source<'_>,
+    range: std::ops::Range<usize>,
+    work: &mut Work,
+) -> Result<(f64, Parameters)> {
+    if range.is_empty() || head.shape != domain.shape {
         return Err("invalid observed CE gradient batch".into());
     }
-    domain.admit(records.len())?;
+    records.admit(
+        domain.shape,
+        domain.unknown.len(),
+        domain.head_columns_bound,
+    )?;
     work.charge(
-        8 * domain.parameters() as u128
-            + 16 * records.len() as u128 * domain.shape.programs as u128,
+        8 * domain.parameters() as u128 + 16 * range.len() as u128 * domain.shape.programs as u128,
     )?;
     let (mut total, mut selected) = (0., 0.);
-    let scale = 1. / records.len() as f64;
-    for row in records {
+    let scale = 1. / range.len() as f64;
+    records.visit(range, work, |row, work| {
         Domain::record(domain.shape, row)?;
         for (p, &s) in row.states.iter().enumerate() {
             if domain.labels[p * domain.shape.states + s] != Some(row.label) {
@@ -63,7 +93,8 @@ pub fn gradient(
         let top = logits.iter().copied().fold(f64::NEG_INFINITY, f64::max);
         let sum: f64 = logits.iter().map(|x| (x - top).exp()).sum();
         selected += ((logits[row.label] - top).exp() / sum - 1.) * scale;
-    }
+        Ok(())
+    })?;
     let mut values = vec![0.; domain.parameters()];
     values[..domain.shape.programs].fill(selected);
     Ok((total * scale, Parameters { values }))
@@ -74,22 +105,43 @@ pub fn train(
     config: Config,
     work: &mut Work,
 ) -> Result<Trained> {
+    train_source(domain, Source::Expanded(records), config, work)
+}
+pub fn train_source(
+    domain: &Domain,
+    records: Source<'_>,
+    config: Config,
+    work: &mut Work,
+) -> Result<Trained> {
     config.validate()?;
     let initial = domain.initial(config.initial_mass, work)?;
-    train_from(domain, records, config, initial, work)
+    train_from_source(domain, records, config, initial, work)
 }
 pub fn train_from(
     domain: &Domain,
     records: &[Record],
     config: Config,
+    parameters: Parameters,
+    work: &mut Work,
+) -> Result<Trained> {
+    train_from_source(domain, Source::Expanded(records), config, parameters, work)
+}
+pub fn train_from_source(
+    domain: &Domain,
+    records: Source<'_>,
+    config: Config,
     mut parameters: Parameters,
     work: &mut Work,
 ) -> Result<Trained> {
     config.validate()?;
-    domain.admit(records.len())?;
+    records.admit(
+        domain.shape,
+        domain.unknown.len(),
+        domain.head_columns_bound,
+    )?;
     let start = work.used;
     if *domain
-        != Domain::new(
+        != Domain::from_source(
             domain.shape,
             records,
             domain.minimum_mass,
@@ -101,7 +153,7 @@ pub fn train_from(
     }
     domain.check(&parameters, 1e-10, work)?;
     let mut head = Head::build(domain, &parameters, work)?;
-    let initial_ce = loss(&head, records, work)?;
+    let initial_ce = loss_source(&head, records, 0..records.len(), work)?;
     let batch = if config.mode == Mode::Mini {
         config.batch_size
     } else {
@@ -111,13 +163,13 @@ pub fn train_from(
     for epoch in 0..config.epochs {
         for first in (0..records.len()).step_by(batch) {
             let end = (first + batch).min(records.len());
-            let rows = &records[first..end];
-            let (before_ce, derivative) = gradient(domain, &head, rows, work)?;
+            let (before_ce, derivative) =
+                gradient_source(domain, &head, records, first..end, work)?;
             let proposal =
                 Target::step(domain, &parameters, &derivative, config.learning_rate, work)?;
             let result = projection::project(domain, &proposal, work)?;
             let next = Head::build(domain, &result.parameters, work)?;
-            let after_ce = loss(&next, rows, work)?;
+            let after_ce = loss_source(&next, records, first..end, work)?;
             if after_ce > before_ce + 1e-8 {
                 return Err("observed CE increased after weighted projection".into());
             }
@@ -143,7 +195,7 @@ pub fn train_from(
             head = next;
         }
     }
-    let final_ce = loss(&head, records, work)?;
+    let final_ce = loss_source(&head, records, 0..records.len(), work)?;
     let audit = head.audit(domain, &parameters, work)?;
     Ok(Trained {
         config,

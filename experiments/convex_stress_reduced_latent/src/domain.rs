@@ -1,6 +1,6 @@
 //! Explicit reduced CM65 domain. Its dictionaries are rechecked against
 //! every original record before training. No unseen completion is imposed.
-use crate::*;
+use crate::{records::Source, *};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Domain {
@@ -30,7 +30,16 @@ impl Domain {
         maximum: f64,
         work: &mut Work,
     ) -> Result<Self> {
-        shape.admit(records.len(), 0, 0)?;
+        Self::from_source(shape, Source::Expanded(records), minimum, maximum, work)
+    }
+    pub fn from_source(
+        shape: Shape,
+        records: Source<'_>,
+        minimum: f64,
+        maximum: f64,
+        work: &mut Work,
+    ) -> Result<Self> {
+        records.admit(shape, 0, 0)?;
         if records.is_empty() {
             return Err("empty original training records".into());
         }
@@ -38,7 +47,7 @@ impl Domain {
             16 * shape.rows() as u128 + 8 * records.len() as u128 * shape.programs as u128,
         )?;
         let mut labels = vec![None; shape.rows()];
-        for row in records {
+        records.visit(0..records.len(), work, |row, _| {
             Self::record(shape, row)?;
             for (p, &s) in row.states.iter().enumerate() {
                 let slot = &mut labels[p * shape.states + s];
@@ -49,9 +58,10 @@ impl Domain {
                 }
                 *slot = Some(row.label);
             }
-        }
+            Ok(())
+        })?;
         let out = Self::from_labels(shape, labels, minimum, maximum, work)?;
-        out.admit(records.len())?;
+        records.admit(shape, out.unknown.len(), out.head_columns_bound)?;
         Ok(out)
     }
     pub fn from_labels(

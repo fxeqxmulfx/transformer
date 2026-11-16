@@ -101,6 +101,9 @@ pub fn build(root: &Path, inv: &Inventory) -> Result<Value> {
     Ok(
         json!({"complete":true,"producer_commit":inv.producer_commit,"protocol":inv.protocol,"data_seed":1,
         "cases":records,"modes":modes,"new_all_modes_all_heldout99_cases":additions,
+        "legacy_probe_memory_refusals":inv.cases.iter().filter(|c|c.support>0&&c.audit.as_ref().is_some_and(|a|a.complete_buffer_forecast.is_none())).count(),
+        "packed_comparison_memory_refusals":inv.cases.iter().filter(|c|c.support>0&&c.comparison_refusal.is_some()).count(),
+        "complete_packed_models_admitted":inv.cases.iter().filter(|c|c.comparison_buffer_bytes.is_some()).count(),
         "new_nonconstant_cases":nonconstant,"new_constant_controls":constants,"regressed_old_controls":regressions,
         "baseline_historical_verified_catalog_cases":77,"candidate_catalog_union_cases":77+additions.len(),
         "candidate_catalog_with_revised_cohort":77+additions.len()-regressions.len(),"catalog_total_cases":165,

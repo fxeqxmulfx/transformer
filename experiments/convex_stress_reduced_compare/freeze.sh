@@ -16,6 +16,7 @@ git ls-files -- experiments/convex_stress_bounded_latent experiments/convex_stre
     experiments/convex_stress_reduced_latent experiments/convex_stress_wide_latents \
     experiments/convex_stress_reduced_compare src scripts/BoundedLatentAxioms.lean \
     scripts/ObservedRowAxioms.lean scripts/ObservedProjectionAxioms.lean scripts/FamilyExtensionAxioms.lean \
+    scripts/PackedRecordAxioms.lean \
     scripts/Axioms.lean scripts/native_index lakefile.toml lake-manifest.json \
     lean-toolchain INDEX.md AGENTS.md EXPERIMENT_PLAN.md experiments/README.md \
     review/flat_spectrum.md > "$freeze/source-paths.txt"

@@ -39,7 +39,12 @@ pub fn run(root: &Path, workspace: &Path, name: &str) -> Result<()> {
         None
     };
     if let Some(p) = &prepared
-        && Some(p.domain.shape) != case.shape
+        && (Some(p.domain.shape) != case.shape
+            || Some(p.source().admit(
+                p.domain.shape,
+                p.domain.unknown.len(),
+                p.domain.head_columns_bound,
+            )?) != case.comparison_buffer_bytes)
     {
         return Err("actual model allocation differs from forecast".into());
     }
@@ -58,7 +63,12 @@ pub fn run(root: &Path, workspace: &Path, name: &str) -> Result<()> {
                 .ok_or("checkpoint work reserve exceeds phase limit")?,
         )?;
         let endpoint = if let Some(p) = &prepared {
-            match joint::training::train(&p.domain, &p.records, pairs::policy(mode), &mut work) {
+            match joint::training::train_source(
+                &p.domain,
+                p.source(),
+                pairs::policy(mode),
+                &mut work,
+            ) {
                 Ok(trained) => {
                     work.limit = crate::MAX_WORK;
                     let residual = p.domain.check(&trained.parameters, 1e-8, &mut work)?;
@@ -93,11 +103,7 @@ pub fn run(root: &Path, workspace: &Path, name: &str) -> Result<()> {
                 refusal: Some(
                     case.source_refusal
                         .clone()
-                        .or_else(|| {
-                            case.audit
-                                .as_ref()
-                                .and_then(|a| a.admission_refusal.clone())
-                        })
+                        .or_else(|| case.comparison_refusal.clone())
                         .ok_or("unsupported case has no explicit source or model refusal")?,
                 ),
                 charged_work: 0,
@@ -140,6 +146,8 @@ pub fn validate_stage(value: &Stage, case: &Case) -> Result<()> {
             (Some(state), None)
                 if case.source_refusal.is_none()
                     && case.forecast.is_some()
+                    && case.comparison_buffer_bytes.is_some()
+                    && case.comparison_refusal.is_none()
                     && case.shape == Some(state.shape)
                     && case
                         .audit
