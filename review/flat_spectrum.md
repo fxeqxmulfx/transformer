@@ -20626,3 +20626,90 @@ domain. Searching active sets may be exponential; accepting a checked result
 does not prove that a search implementation will always find one. No native
 training, convergence, new stress coverage or full-suite resource admission is
 claimed by this proof. Task 366 and the original 99% target remain open.
+
+## CM80. Complete feasible directions for forward-only queries
+
+CM79 certifies an update after a proposal is supplied. It does not justify
+central finite differences outside an activation cone. At a boundary, even
+individual coordinate perturbations may leave the domain on which the actual
+learned complex forward has convex CE. Some complete patterns have cones with
+empty ordinary interior. Discarding these patterns or treating a failed
+coordinate probe as proof that its coordinate is irrelevant is unjustified.
+
+There is an exact finite certificate construction for this geometry. For each
+original oriented row a[r], obtain a CM79 certificate for y[r], its projection
+onto the whole cone C. Stationarity and complementarity imply
+
+```
+(y[r] - a[r]) dot y[r] = 0,
+a[r] dot y[r] = ||y[r]||_2^2.
+```
+
+If y[r]=0, the variational inequality gives a[r] dot z<=0 for every feasible z;
+the original constraint gives the reverse inequality. Thus this row vanishes
+on all of C. Conversely a row vanishing on C vanishes on its own projection,
+so the energy identity forces that projection to be zero. This detects
+universal equality from exact certificates, rather than from sampled points.
+Every original row, multiplier and coordinate remains present.
+
+Set c=sum(r,y[r]), including zero projected normals. Feasibility is closed
+under this sum. For each row its response at c is a sum of nonnegative terms.
+A zero sum forces its own projected response to zero, hence its projection
+to zero. Consequently
+
+```
+a[r] dot c = 0  iff  forall z in C, a[r] dot z = 0.
+```
+
+The centre has positive slack exactly on the rows that can have positive
+slack anywhere in C. This is a proved statement about the constructed point;
+strict feasibility is not assumed as a structure field or new premise.
+
+For any feasible point p and direction v, checking every bound
+
+```
+eta >= 0,
+eta * abs(a[r] dot v) <= a[r] dot p
+```
+
+certifies that both p+eta*v and p-eta*v lie in C. If each zero slack has zero
+directional response, a positive common eta exists: start with radius one,
+keep it at zero-slack rows, and take its minimum with
+slack/(abs(response)+1) at every positive-slack row. This uses the entire
+finite constraint collection. At the certified centre such two-sided queries
+exist exactly for directions that vanish on the universally forced rows.
+
+An inhabited degenerate example has the two opposed rows (1,-1),(-1,1).
+Both projected normals and their centre are zero. Nevertheless v=(1,1)
+admits positive two-sided queries: both coordinates move together on the
+diagonal. This illustrates why independent coordinate probes must not freeze
+all coordinates of a cone with empty ordinary interior. No original constraint
+or model parameter is deleted.
+
+After a projected learning step, the current point may again lie on a
+boundary. For 0<delta<=1, the complete mixture
+p_delta=(1-delta)*p+delta*c stays feasible and has positive slack on every
+non-forced row. Every direction respecting the universally forced equalities
+then admits two-sided queries at p_delta. Mixing changes the point, and the
+proof records both costs explicitly:
+
+```
+||p-p_delta||_2^2 = delta^2 * ||p-c||_2^2,
+F(p_delta) <= (1-delta)*F(p) + delta*F(c)   when F is convex on C.
+```
+
+The objective can increase. No unchanged-trajectory or automatic-descent claim
+is made. The actual ordinary CE or indexed Mini CE can supply the convexity
+premise on its established full model domain. These geometric results neither
+turn a finite difference into an exact gradient nor establish its error bound,
+the accuracy of floating complex inference or optimizer convergence.
+
+Formalization: `ConvexChannel/LearnedHinge/Projection/{Geometry,Centre,Queries,Mixture}`;
+direct audit: `LAKE_ARTIFACT_CACHE=false lake env lean scripts/QueryGeometryAxioms.lean`.
+Native construction must retain and verify the normal-projection certificates,
+use all zero-slack equations when constructing query directions, check every
+query against the complete domain and charge the work and storage before
+allocation. Search failure remains an explicit refusal. This does not resolve
+the exponential all-pattern cost or earn any stress accuracy. Actual Mini and
+forward-only Mini training, independent producer/replay evidence and the 99%
+raw/exact target on all 165 cases remain open under task 366.

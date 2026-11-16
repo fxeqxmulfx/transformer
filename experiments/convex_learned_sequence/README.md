@@ -136,6 +136,14 @@ representation/work limits, not a claimed end-to-end RAM forecast.
 Implement proposals and training for both required minibatch modes. A
 forward-only rule must query the actual model and respect its domain; a gated
 surrogate evaluated outside that domain does not inherit the CE theorem.
+CM80 derives a centre by summing certified projections of every original
+constraint normal. Its zero-slack rows are exactly the universally forced
+equalities; their joint nullspace describes the feasible two-sided query
+directions. Degenerate cones retain every coordinate and constraint. A positive
+mixture of the current point with this centre admits those directions, with
+explicit displacement and convex-loss bounds because mixing can increase loss.
+The native centre construction and complete direction basis remain to implement;
+no finite-difference gradient identity or convergence follows from domain safety.
 CM79's quantitative descent result retains its actual-loss upper-bound premise.
 Complete training, all-training sealing before heldout scoring, a separate
 producer freeze, independent repeat and full raw replay precede any accuracy

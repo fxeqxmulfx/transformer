@@ -8252,3 +8252,15 @@ refusals. These are constructed feasible points, not model training. Next derive
 and implement actual Mini and forward-only Mini proposal rules. Forward queries
 must stay feasible even on lower-dimensional cones; no boundary derivative from
 an outside-domain gated surrogate is authorized as a replacement.
+
+CM80 extends the Lean update foundation with certified forward-query geometry.
+Project every original constraint normal and sum those projections. The centre's
+zero-slack rows are proved to be precisely the universally forced equalities.
+Their joint nullspace characterizes two-sided feasible query directions, including
+degenerate cones where individual coordinate probes fail. Positive centre mixtures
+admit every such direction and retain explicit displacement and convex-loss costs.
+The native implementation must keep all normal certificates and original rows,
+account for complete basis work/storage, and query the actual complex forward.
+This is domain safety, not a finite-difference error or convergence theorem.
+Both actual minibatch proposal rules and the independent training pilot remain
+pending; no stress accuracy follows from CM80 or its constructed controls.
