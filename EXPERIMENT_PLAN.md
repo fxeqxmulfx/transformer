@@ -8034,3 +8034,38 @@ changes internal representations and relative predictions. No new catalog
 credit follows from this clarification or the restricted CM73 theorem. Existing
 frozen comparisons, the 99% raw/exact target and the full 165-case objective
 remain unchanged.
+
+### 2026-11-16: task 351 complete comparison and named coverage audit
+
+The original and independent repeat at frozen producer `ca6a4977` have finished.
+All 686 deterministic artifacts and complete raw replays agree. Each of
+Forward, Full and Mini passes 41 of the 54 retained cases: 22 old controls and
+19 additions, with no old pass-status regression. Six source refusals and seven
+empty-support refusals remain; there are no further training or numerical
+prediction refusals. The 19 additions comprise 16 nonconstant cases and three
+constant power-zero controls. The worst passing accuracy is 99.9362% on
+`arithmetic-max` (three errors in 4,705 validation targets).
+
+The scored aggregate is 238,927 / 238,930 validation targets, or 99.9987%; counting
+unanswered available targets as wrong gives 87.8844%. Weighted validation CE is
+0.0436100 in Forward and 0.0000765866 in Full/Mini. The largest recorded process
+RSS across both runs is 11.41 GiB. Complete source/binary hashes, 26 native
+controls, strict Clippy, direct CM64 axioms and a fresh full-manifest verifier
+are rechecked before task completion. Authored findings and exact regeneration
+commands are in `experiments/convex_stress_bounded_compare/README.md`.
+
+The native named-case audit reconstructs the old 77 from its preserved cohort
+summaries, checks every required mode and heldout pass flag, and finds no overlap
+with the 19 additions. Coverage becomes 96/165 for all three historical modes,
+or 98/165 under the current Mini and Forward-only requirement after including
+the two independently verified new probes. There are 67 cases without that
+credit. The audit rejects missing modes/splits, overlapping additions and raw99
+failures even when original success is true. This is a union of separate seed-1
+cohorts; historical raw files deleted at the user's request are not reverified.
+
+CM64 remains a fixed-family reference whose observed CE learns confidence.
+These benchmark results do not close task 366's entire-trainable-path requirement.
+The old tensor-stack likelihood proof also needs observed internal paths, so
+it does not supply the requested ordinary next-object CE theorem. Continue with
+the complete causal representation/interaction/readout construction in Lean;
+do not substitute either restricted model for the clarified architecture.

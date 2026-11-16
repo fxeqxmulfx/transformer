@@ -6,16 +6,23 @@ This native inventory reconciles all 165 catalog cases with the original plan,
 the historical GPT snapshot and the existing 35-task manifest. It identifies
 130 additional cases. No model is trained or evaluated by this inventory.
 
-As of 2026-11-16, the latest independently verified
+As of 2026-11-16, the independently verified
+[`convex_stress_bounded_compare`](../convex_stress_bounded_compare/README.md)
+adds nineteen cases, including three constant controls, with all 686 artifacts
+matching its independent repeat and complete raw replay. Forty-one of its 54
+original cases pass in all three modes; seven empty-support and six source
+refusals remain. Its 22 older controls retain their pass status. The named-case
+audit establishes 96/165 across the three-mode historical cohorts.
+
+The separately verified
 [`convex_stress_probe_compare`](../convex_stress_probe_compare/README.md) adds
-conditional amplitudes and order discrimination. Both reach 100% raw and exact
-accuracy on every original split in forward-only and minibatch modes; three
-older controls also remain at 100%, and routing keeps its teacher-data refusal.
-All 66 artifacts match an independent repeat with full raw-score replay.
-The historical 77-case union therefore becomes 79/165 under the user's current
-two-mode requirement, across separate seed 1 cohorts. The older three-mode total
-remains 77. Full batch is optional for new work, the aggregate RAM limit is 110 GB,
-and shortage on either disk stops a run. Earlier experiment descriptions below
+conditional amplitudes and order discrimination, both at 100% raw/exact on
+every original split in forward-only and minibatch modes. The current two-mode
+union is therefore **98/165**, with 67 cases still lacking credit. These are
+separate seed-1 cohorts, not a universal checkpoint or three-seed evidence.
+The new fully trained sequence-to-next-object architecture remains a separate
+theory task. Full batch is optional for new work, aggregate RAM is limited to
+110 GB, and shortage on either disk stops a run. Earlier descriptions below
 retain their historical protocols and counts.
 
 The catalog and original plan are pinned to DiffGPT commit
@@ -34,7 +41,7 @@ metric and success flag is retained independently, including the historical
 CE targets are not converted to an accuracy percentage. Aggregate accuracy
 does not substitute for the per-task goal.
 
-The current 35-task results and their conventional and recorded DiffGPT
+The earliest 35-task results and their conventional and recorded DiffGPT
 baselines remain intact. Their original success flag is 35/35 in every mode;
 Fibonacci's approximately 98% raw accuracy remains below the new raw target.
 The signed-kernel component at `99a42652` improves training-only diagnostics,
