@@ -18,6 +18,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Adaptive
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Completion
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Counts
@@ -35,6 +36,9 @@ feature width and approximation error; it does not identify unseen labels.
 An exact linear minimization oracle supports convex feasible updates.
 Observed-feature reconstruction certificates identify unseen predictions
 and bound error amplification; see the companion derivation O1-O4.
-No arithmetic features, factorized learned embeddings, or claim that an
-arbitrary flat task generalizes from an arbitrary sample are introduced.
+CM76-CM95 add actual learned complex encoders and recurrence while retaining
+every original output object. Their convexity statements concern joint tensor
+or function domains, not independently varied physical factor arrays. No
+arithmetic features or claim that an arbitrary flat task generalizes from an
+arbitrary sample are introduced.
 -/

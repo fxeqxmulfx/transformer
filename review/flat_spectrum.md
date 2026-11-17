@@ -21821,3 +21821,61 @@ afresh from the complete current gradient, preserve their original order and
 compare contractions and objectives with the dense implementation. It must not
 apply this rule to merely small values. This supplies no global component-oracle
 or optimization theorem and no new held-out accuracy claim by itself.
+
+## CM95. Learned complex recurrent depth on immutable object sequences
+
+CM86's pair/query reader has a proved fixed-interaction restriction: even a
+four-object parity slice cannot be strictly classified. Capacity scaling cannot
+remove that algebraic identity. A separate candidate gives each original
+object a learned complex linear transition on a state space E, with learned
+initial state and one learned linear readout for each original output object.
+Execute the transitions from left to right on the input list, then read the
+complete complex output vector and use its real scores for next-object CE.
+For native use E is finite dimensional. No object ID has numeric meaning and
+no transition or answer program is supplied to the learner.
+
+Require initial norm, every transition operator norm and every readout operator
+norm to be at most one. The actual hidden-state norm then never exceeds the
+initial norm, and every complex output has norm at most one, for all lengths.
+If transitions are isometries, hidden-state norm is exactly preserved at every
+depth. This is the role of a flat operator spectrum: a capacity/execution bound,
+not a set of prescribed semantic features or a source of missing answers.
+Real and imaginary parameter entries remain part of the executed path.
+
+Take the convex hull of all B-scaled score functions from these learned unit
+components. This is a convex joint function domain with finite executed mixture
+representations; ordinary full-vocabulary CE is convex there. It is not a claim
+that independently varied transition matrices and readout arrays have a convex
+parameterization or that component discovery has an efficient global oracle.
+The domain is defined on every object list, rather than a table of observed
+training prefixes. No held-out target appears in its construction.
+
+Finite CE queries use an actual bias recurrence on the same state space.
+Choose v and a linear readout L with norm(v)<=1, norm(L)<=1 and L(v)=1.
+Identity transitions keep v unchanged; output c is s*L when c is the queried
+class and zero otherwise, with abs(s)<=1. This is admissible and changes only
+that class's real score by s on every sequence. Thus the two mixture points
+(1-eta)r+eta*B*bias(+1/-1) stay feasible for0<=eta<=1 and have centre logits
+with one class shifted by+/-eta*B. Their ordinary full-vocabulary CE values
+give the finite bias difference, without equating it to an analytic derivative.
+The nonzero state/readout requirement is explicit: in E=complex numbers take
+v=1 and L=identity. A zero-dimensional space is not silently assumed to admit it.
+
+The one-dimensional subfamily uses learned complex scalars a,t[o],u[c] and
+executes u[c]*a*product_o t[o] in input occurrence order. Scalars commute, so
+this subfamily alone is not a general order-dependent sequence architecture;
+higher-dimensional transitions retain order. As an expressivity witness only,
+take Boolean objects with a=i, t[false]=1,t[true]=-1 and u[false]=-i,u[true]=i.
+All parameter norms are one and every transition spectrum is flat. The actual
+complex and real scores are+1 for the parity object and-1 for its competitor
+at every input length. The same budget-one domain point therefore predicts
+arbitrary-length parity with margin2 and is nonconstant. Erasing its imaginary
+initial state/readouts destroys this execution. These weights are not supplied
+to a learner; this is a witness that the fixed-interaction obstruction has
+been removed, not a new stress result, optimizer theorem or identification
+guarantee from incomplete data. Native learning remains separate work.
+
+Formalization: `ConvexChannel/LearnedRecurrent`. The input/output contract
+remains an immutable-object sequence to one next original object. General
+unseen-answer correctness still needs target-family assumptions and training
+evidence; bounded recurrent depth alone cannot determine arbitrary labels.

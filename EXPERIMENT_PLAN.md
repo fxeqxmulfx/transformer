@@ -8629,3 +8629,14 @@ coordinates, all30 endpoints and every original split; seal the whole cohort
 before scoring. Compare the repeated addition seed1 raw logits with the prior
 successful dense producer. Keep the known parity limitation and training budget
 visible, and do not convert a diagnostic failure into a reduced task definition.
+
+Task370 formalizes CM95 learned complex recurrence while task369's frozen
+cohort trains unchanged. Every input object indexes a learned complex operator;
+initial state and all original-class readouts are learned. Operator capacity
+bounds actual outputs independently of length, with exact state-norm preservation
+for isometric transitions. The convex joint function domain has finite executed
+mixtures, ordinary CE convexity and actual feasible finite bias queries.
+A nonconstant complex parameter witness realizes parity at every length with
+margin2, removing CM86's fixed-interaction obstruction. It is not supplied to
+training and provides no new stress score or optimizer-discovery guarantee.
+Implement and evaluate learning only after the complete Lean checks pass.
