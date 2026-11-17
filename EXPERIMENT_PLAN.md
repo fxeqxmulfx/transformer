@@ -8791,3 +8791,13 @@ many nonzero off-diagonals, so diagonal collapse does not explain this equality.
 Preserve all failures and distinguish improved update stability from solving
 fitting or generalization. Further work needs to diagnose component discovery,
 geometry and budget rather than assume another rotary formula supplies labels.
+
+Task378 adds a training-only diagnosis of the unchanged frequencies. Reconstruct
+the frozen cautious learned-rotary trajectories exactly, requiring all128 batch
+hashes/receipts and final checkpoint bytes to match, then reproduce the exact
+last component criterion. Compare the complete original frequency grid with
+all finer dyadic signed steps through2^-20, retaining all88 directions, actual
+state responses, fixed/refitted readout CE and independently executed feasible
+mixture CE. Use no held-out labels, accept no new model, and give no accuracy
+credit. Existing CM98 bounds cover arbitrary finite frequencies; any future
+architecture or optimizer guarantee still requires its own proof and test.

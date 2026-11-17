@@ -3,6 +3,7 @@
 pub use bilinear::{C, Result};
 pub mod atom;
 mod coordinates;
+pub mod diagnostic;
 pub mod experiment;
 pub mod model;
 pub mod proposal;

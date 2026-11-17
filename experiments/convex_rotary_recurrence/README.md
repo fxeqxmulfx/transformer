@@ -263,3 +263,40 @@ These are descriptive concurrent-run timings, not matched transformer budgets.
 The next investigation should distinguish insufficient component discovery,
 state/readout geometry and training budget before adding another positional
 formula. The broader generalization goal and99% recall target remain unresolved.
+
+## Training-only frequency search diagnosis
+
+The `diagnose` binary reads the immutable cautious learned-rotary cell, recreates
+all128 original batches and numerical updates, and requires every deterministic
+receipt and the final checkpoint bytes to match exactly. It retains the exact
+pre-update query centre of the last step. This uses only the original training
+split; no held-out target or score selects a perturbation. The source producer
+fingerprint is checked explicitly.
+
+On the last selected component and its original final minibatch, the diagnostic
+refits the same complete original-class readouts and requires the recorded
+component-comparison CE to match exactly. It then measures both frequency
+coordinates, both signs, and every dyadic radius from2 through2^-20:88 directions
+in total. The first six radii are the original search grid; the rest test finer
+resolution. Every direction and loss is retained, including no improvement.
+The coarse directions are measured at the final component, whereas the original
+search visited some of them earlier with different content parameters.
+
+For each direction, report CE both before and after refitting the readouts,
+complete actual state response and numerical capacity excess. A separately
+constructed feasible mixture model checks the component-comparison CE to2e-12.
+All matrix/readout entries, original classes and records remain present.
+CM98's frequency-independent Unit bound justifies these model queries without
+a new architecture assumption. The diagnostic accepts no update, measures no
+new held-out accuracy and makes no global optimizer claim. Its scope is the
+last chosen component, not every component or every point in the full domain.
+
+```sh
+cargo build --offline --locked --release --manifest-path experiments/convex_rotary_recurrence/Cargo.toml --bin diagnose
+"$CARGO_TARGET_DIR/release/diagnose" WORKSPACE STORAGE CAUTIOUS_COHORT FRESH_OUTPUT mini
+"$CARGO_TARGET_DIR/release/diagnose" WORKSPACE STORAGE CAUTIOUS_COHORT OTHER_FRESH_OUTPUT forward
+```
+
+Freeze this diagnostic executable, source archive, commit and binary hash before
+running it. It writes a byte-replay record and all direction measurements outside
+the worktree. The existing110GB RAM and both-disk guards apply throughout replay.
