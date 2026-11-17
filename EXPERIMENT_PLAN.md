@@ -9244,3 +9244,29 @@ CM110 validation passes the full14210-job build, warning-free direct checks
 and all23 standard-axiom checks. Generated INDEX has5113modules26803theorems,
 with36existing sorry and0rests/extra/vacuous/placeholder. The nonempty singleton
 zero-component example satisfies the uniform-error hypothesis at epsilon1.
+
+Task400 producer `f5d317a6` completes all16 runs,128 stages and65,536 original
+minibatch updates. At the fixed final stage8, growth reaches37.70–42.77% novel
+raw and33.98–44.53% test; all eight cells beat equal-update continuation on both
+held-out raw metrics and every split CE. Old-geometry growth averages41.26%
+novel/42.43% test, versus23.19%/21.73% continuation; Hilbert growth averages
+38.67%/36.13%, versus21.39%/23.24%. Training raw is nearly unchanged or lower,
+so this is not just increased training fit. All80 declared checkpoint success
+and99% flags fail. The largest logged novel observation,43.75% at stage4, is
+retained without selecting it as an endpoint. All original classes, examples
+and the transformer remain unchanged; only one original task and seed are covered.
+
+All262,144 cached occurrences replay at their actual historical versions;
+maximum mean-recomputation error is1.458e-15. The56,492,032 compact/full CE
+checks agree within1.777e-15, actual/cache logits agree exactly, norm excess
+is2.221e-16, and aggregate RSS peaks at34.73GB. No rising minibatch loss is
+filtered. Fresh tests from the frozen source, all80 raw report replays,128
+history/current diagnostic files and seven deliberate corruption refusals pass.
+The old-geometry continuation caches have sizeable current-estimate errors,
+so bookkeeping consistency does not imply optimizer convergence. Growth also
+redistributes old mass; its gain does not isolate added content from calibration.
+Task402 will classify remaining errors using original examples: other stored
+value versus outside both stored values, two-value margins, selected pair and
+query position. Those task roles enter read-only diagnosis, never training.
+CM110 supplies a separate width obstruction, not an explanation of the MQAR
+errors or a99% guarantee. Generalization remains unresolved.
