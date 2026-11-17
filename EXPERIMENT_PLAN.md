@@ -8969,3 +8969,13 @@ The corrected projection repairs CM101 without solving original recall.
 Before blaming state capacity or accepting conditional optimality, prove and
 measure a training-only complete readout optimality gap; then use that evidence
 to choose further optimization or revisiting the shared learned content.
+
+Task387 formalizes CM103 before a numerical optimality diagnostic. Derive the
+exact support minimum for each complete complex row and all original classes
+and components. Contract the actual indexed mean CE residuals with the learned
+ordered states, then bound every feasible conditional CE improvement by the
+computed gap. Explicit nonzero imaginary examples at capacity16 realize both
+zero and positive gaps. This is a training-only conditional theorem; it does
+not certify finite precision, global factor optimization or unseen answers.
+The next measurement will stream all original training records in minibatches
+through saved endpoints, retaining every coordinate and using no held-out labels.

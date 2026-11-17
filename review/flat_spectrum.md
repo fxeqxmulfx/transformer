@@ -22176,3 +22176,67 @@ This proves the replacement and repairs that concrete optimizer counterexample.
 It does not assert convergence for noisy minibatches or finite CE differences,
 prove that native recall endpoints have the same failure, or identify unseen
 answers. Original-split measurements in both training modes remain necessary.
+
+## CM103. A complete training-only conditional readout optimality gap
+
+CM102 repairs the projection counterexample, but the original recall runs
+still fail. Falling training CE does not certify the conditional optimum.
+Before attributing the failure to learned states or their capacity, derive an
+explicit gap for the actual CM100 full-class mean CE on all training records.
+This bound holds for any finite learned component family and all its readouts.
+
+For two complete complex vectors u,a, define
+
+    pairing(u,a) = Re(u1*a1 + u2*a2).
+
+The row constraint |u1|+|u2|<=1 implies pairing(u,a)>=-max(|a1|,|a2|).
+This lower bound is attained: choose a coordinate of largest magnitude, use
+-conjugate(a_i)/|a_i| in that coordinate, and zero in the other. At a tie choose
+the first coordinate; when both coefficients are zero return zero. Both
+coordinates remain in the domain, even when the minimizing value is zero.
+For every component j and class c this gives an explicit feasible minimizing
+table, with total linear cost -sum_jc max(|a_jc1|,|a_jc2|).
+
+Let i index all N=n+1 training records, including duplicates and short tails.
+Keep the actual learned initial states, full ordered transitions, rotary
+frequencies, capacity B and component weights w_j. Let h_ji be their actual
+complete complex state on prefix x_i. For current rows U compute all original
+logits z_ic=sum_j w_j B pairing(U_jc,h_ji), ordinary softmax p_ic, and
+residual r_ic=p_ic-1[c=target_i]. Define the unconjugated coefficient
+
+    A_jc = (1/N) sum_i (w_j B r_ic) h_ji.
+
+This uses every original class, record, component and complex coordinate.
+Finite-sum rearrangement derives, rather than assumes, the full contraction
+identity
+
+    sum_jc pairing(V_jc-U_jc,A_jc)
+      = (1/N) sum_ic r_ic (z_ic(V)-z_ic(U)).
+
+Ordinary full-class CE's first-order inequality then gives the actual mean
+loss inequality L(V)>=L(U)+sum_jc pairing(V_jc-U_jc,A_jc). Combining it with
+the explicit support minimum defines the computable gap
+
+    G(U) = sum_jc pairing(U_jc,A_jc) + sum_jc max(|A_jc1|,|A_jc2|).
+
+For feasible U, G(U)>=0. For every feasible replacement table V,
+L(U)-G(U)<=L(V), hence L(U)-L(V)<=G(U). In particular a zero gap proves
+conditional optimality. The gap equals the negative linear change toward
+the explicit minimizing table; a positive gap therefore supplies a feasible
+direction with strictly negative actual first-order contraction. This does
+not claim that an arbitrary finite step decreases CE.
+
+All statements concern exact real arithmetic and the conditional slice on
+already learned content. They neither freeze the architecture permanently nor
+certify global factor discovery, unseen-label identification or raw accuracy.
+A future floating-point gap is a diagnostic until its numerical error is
+bounded. An analytic residual diagnostic of a forward-only endpoint is not a
+forward-only training update. No validation or test labels enter this bound.
+
+The hypotheses are inhabited using the existing nonconstant CM98 positional
+witness, weight one, B=16, and class rows (i,0) and(-i,0). Its state on
+[true,false] is (0,-i), so both actual logits are zero. Two indexed copies
+with opposite targets have A=0 and G=0; this is a genuine conditional CE
+minimum despite the conflicting labels. Retaining just the true-target record
+instead gives G=16 and a strict negative first-order direction. These examples
+prove the premises are realizable without assuming separability or an optimum.
