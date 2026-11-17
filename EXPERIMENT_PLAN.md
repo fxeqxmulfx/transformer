@@ -8928,3 +8928,22 @@ theorems, with0vacuous/0placeholder. The radial-CE counterexample is established
 the next repair must use a constrained step with a justified optimization
 property, then be tested in both Mini and forward Mini on the unchanged recall
 cohort. This result alone gives no additional stress-test accuracy credit.
+
+Task385 replaces the radial rule mathematically with CM102's explicit complete
+complex Euclidean projection. Prove all magnitude and zero/boundary cases,
+phase-preserving distance, closest-point optimality against every feasible
+complex row, original model capacity and identity on inside rows. On CM101's
+actual nonconstant CE witness, a concrete positive training-probability step
+must reach the better feasible rows and strictly improve both labeled records.
+Full Lean/source/axiom/INDEX/forbidden checks and review precede native changes.
+The next controlled Rust cohort changes only the projection rule, retaining the
+four learned sources, all original coordinates/classes/batches, both training
+modes,512 updates and unchanged CE settings. It must replay the old radial
+trajectory exactly as a regression control before interpreting new outcomes.
+
+CM102's25 new theorems pass the full14165-job build, all six touched-source
+warning checks and25 direct standard-axiom reports. The global audit remains
+36sorry/0rests/0extra; native INDEX records5068 modules and26549 theorems,
+0vacuous/0placeholder. The actual four-real-coordinate closest-point property,
+full model capacity and strict CE repair of CM101's example are proved. This
+does not establish a native recall improvement or an unseen-answer guarantee.

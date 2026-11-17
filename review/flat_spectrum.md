@@ -22126,3 +22126,53 @@ capacity shrink still changes mixture weights; the theorem concerns the row
 update at its current centre, not a fixed point of every part of the trainer.
 It motivates checking a true constrained optimization step before drawing a
 capacity conclusion from the stalled training loss. No new sorry is introduced.
+
+## CM102. Exact Euclidean projection of complete complex readouts
+
+CM101 proves that radial feasibility alone can leave a strictly worse CE point
+unchanged. Replace only that numerical row rule; keep the actual complex
+readout domain |u1|+|u2|<=1, all content paths and every original class.
+
+For a proposed complete complex row z, let r1=|z1| and r2=|z2|. Compute the
+two projected magnitudes s as follows, including the displayed boundary choices:
+
+    r1+r2 <= 1:       s=(r1,r2)
+    otherwise r1-r2 >= 1: s=(1,0)
+    otherwise r2-r1 >= 1: s=(0,1)
+    otherwise:       s=((r1-r2+1)/2,(r2-r1+1)/2).
+
+The projected complex coordinate is (s_i/r_i) z_i. At r_i=0 its magnitude s_i
+is zero as well, and the coordinate is zero. An implementation can return an
+inside row directly and explicitly guard zero division. No original coordinate
+is removed: a zero projected value remains stored and trainable.
+
+The proof first establishes 0<=s_i<=r_i and s1+s2<=1. It then proves that s
+minimizes (r1-a)^2+(r2-b)^2 over all a,b>=0 with a+b<=1. In the first dominant
+case the excess cost factors as
+
+    (1-a)^2+b^2+2(r1-1-r2)(1-a)+2 r2(1-a-b) >= 0.
+
+The second case is symmetric. When both magnitudes are active, put
+tau=(r1+r2-1)/2. The excess is
+
+    (a-s1)^2+(b-s2)^2+2 tau(1-a-b) >= 0.
+
+For arbitrary complex competitors v_i, the reverse triangle inequality gives
+(r_i-|v_i|)^2 <= |z_i-v_i|^2. The displayed phase-preserving projection attains
+equality with |z_i-p_i|=r_i-s_i. Thus the actual complete complex row p is a
+closest point for the Euclidean squared distance
+|z1-p1|^2+|z2-p2|^2. This is a proved optimization property of the explicit
+formula, not an assumed projection operator. It leaves every feasible row
+unchanged and gives admissible complete class/component readout replacements.
+
+For the actual nonconstant CM101 witness, the wrong-class probability is the
+same positive q on both original records. Choose the positive training-only
+step eta=4/(3q). The ordinary CE displacement sends the class rows to (2,1)
+and(-2,-1). The new projection sends these to (1,0) and(-1,0), precisely CM101's
+better feasible rows. Actual ordinary CE therefore strictly decreases on both
+oppositely labeled prefixes, where radial normalization was fixed.
+
+This proves the replacement and repairs that concrete optimizer counterexample.
+It does not assert convergence for noisy minibatches or finite CE differences,
+prove that native recall endpoints have the same failure, or identify unseen
+answers. Original-split measurements in both training modes remain necessary.
