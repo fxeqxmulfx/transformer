@@ -9188,3 +9188,16 @@ geometry, and the complete report must repeat independently. These ablations
 test dependence on input information beyond a class bias; they are not newly
 trained endpoints or stress-suite successes. Keep sources and pins frozen,
 all prior results intact, native checks and110GB/both-disk guards active.
+
+Task398 producer `1978c688` completes all32 declared ablations with zero updates.
+All eight intact raw reports match c620019a exactly, and a fresh review repeats
+all reports byte for byte. Mean-state ablation lowers novel accuracy by1.95–6.84
+points and test by4.10–6.84 points in every cell, with worse held-out CE. Current
+input-dependent content contributes beyond its average class bias. The new
+block alone remains at8.40–13.67% novel and9.96–13.87% test; every original
+success/99% flag fails. This does not prove that a separately optimized bias
+cannot match the gains, that query-specific binding was learned, or that wider
+states are necessary. Three native controls and two immutable-input fault
+refusals pass. The next learning step must strengthen shared retrieval content;
+do not treat normalization, positive estimate alignment or this ablation as an
+unseen-answer guarantee. Original endpoints and transformer remain unchanged.
