@@ -9136,3 +9136,16 @@ axioms. This proves a concrete geometric restriction, not that it caused the
 native failure or that the added family learns unseen answers. The next native
 comparison needs a checked full-matrix Hilbert feasibility rule, preserved old
 models, learned content and the unchanged original stress labels.
+
+Task396 proves CM108's executable full-matrix rule. All four complex entries
+form the actual column Gram coefficients; its closed larger-energy value is
+both an upper bound and attained by an explicitly constructed nonzero state.
+The resulting square root equals the actual Hilbert operator norm, including
+zero/diagonal cases. Uniform normalization by max(1,norm) preserves every unit
+matrix and gives a feasible full transition; no singular direction is removed
+and no Frobenius closest-point or optimizer claim is made. All28 new theorems,
+full14206-job build, six warning-free direct sources, direct/global axiom checks
+and generated native INDEX pass. INDEX has5109modules26773theorems,36existing
+sorry and0rests/extra/vacuous/placeholder. Native comparison can now enforce
+the added geometry without silently shrinking its isometries or replacing the
+old family. Original held-out99% accuracy remains unresolved and must be tested.

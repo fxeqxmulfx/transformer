@@ -22489,3 +22489,33 @@ matrix factors or a global component-search oracle. The witness supplies no
 unseen labels and is not a benchmark initialization. The native results do not
 yet establish that projection-induced decay is the cause of their failure;
 learning under the enlarged geometry needs a separate frozen comparison.
+
+## CM108. A complete numerical Hilbert matrix bound
+
+CM107's operator budget needs an executable full-matrix rule. For every complex
+two-by-two transition M, form its complete column Gram entries
+  a = |M00|^2 + |M10|^2,
+  d = |M01|^2 + |M11|^2,
+  b = conjugate(M00)*M01 + conjugate(M10)*M11.
+These use all real and imaginary coordinates. Define
+  L = (a+d+sqrt((a-d)^2+4|b|^2))/2,  N = sqrt(L).
+The actual squared Hilbert execution is
+  |M z|^2 = a|z0|^2+d|z1|^2+2 Re(b*conjugate(z0)*z1).
+Prove L>=a,d>=0 and (L-a)(L-d)=|b|^2. The resulting weighted quadratic
+inequality bounds every actual output by L times the input squared norm.
+
+This is a sharp bound, not an assumed eigenvector certificate. If L=a, then
+b=0 and the first basis state attains it. Otherwise L-a>0 and the explicit
+nonzero complex state (b,L-a) attains it. Consequently the actual Hilbert
+operator norm is N for every full complex matrix, including zero and diagonal
+matrices. No coordinate, zero entry, singular direction or class is removed.
+
+Normalize the complete matrix by the real factor 1/max(1,N). Its actual
+operator norm is at most one. Every already feasible matrix is unchanged,
+including CM107's rational unitary mixing; matrices outside the ball are
+scaled uniformly. This is a feasible radial rule, not a closest-point claim
+in the matrix Frobenius metric or a global optimizer. It does not replace the
+separate old branch or alter its saved parameters, original-class CE, inputs,
+outputs or finite-query identities. Native evaluation must still check finite
+arithmetic and its measured residuals; a real-number identity is not a
+floating-point rounding certificate or an unseen-answer theorem.
