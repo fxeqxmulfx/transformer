@@ -5,6 +5,8 @@ pub mod arithmetic;
 pub mod cohort;
 pub mod data;
 pub mod evaluation;
+#[cfg(feature = "rewrite-cohort")]
+pub mod generation;
 pub mod gradient;
 pub mod model;
 pub mod operator;

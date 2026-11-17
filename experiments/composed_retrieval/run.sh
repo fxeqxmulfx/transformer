@@ -2,7 +2,7 @@
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
 if (( $# < 4 || $# > 6 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets|prefix-cohort} SOURCE_INPUTS]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets|prefix-cohort|rewrite-cohort} SOURCE_INPUTS]' >&2
   exit 2
 fi
 if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
@@ -22,7 +22,7 @@ case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
   logodds) features=(--features logodds-depth); protocols+=(dense/protocol.json logodds/protocol.json) ;;
-  arithmetic|logodds-arithmetic|output-offsets|prefix-cohort)
+  arithmetic|logodds-arithmetic|output-offsets|prefix-cohort|rewrite-cohort)
     (( $# == 6 ))
     source_inputs=$(realpath "$6")
     features=(--features arithmetic-cohort)
@@ -31,13 +31,17 @@ case "$variant" in
       features=(--features arithmetic-cohort,logodds-depth)
       protocols+=(logodds/protocol.json logodds/arithmetic/protocol.json)
     fi
-    if [[ "$variant" == output-offsets || "$variant" == prefix-cohort ]]; then
+    if [[ "$variant" == output-offsets || "$variant" == prefix-cohort || "$variant" == rewrite-cohort ]]; then
       features=(--features output-offsets)
       protocols+=(output_offsets/protocol.json)
     fi
     if [[ "$variant" == prefix-cohort ]]; then
       features=(--features prefix-cohort)
       protocols+=(prefix/protocol.json)
+    fi
+    if [[ "$variant" == rewrite-cohort ]]; then
+      features=(--features rewrite-cohort)
+      protocols+=(rewrite/protocol.json)
     fi
     ;;
   *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
@@ -97,7 +101,7 @@ export output workspace storage variant
 if [[ -n "${source_inputs:-}" ]]; then
   mkdir "$output/inputs"
   cp "$source_inputs/plan.json" "$output/inputs/"
-  if [[ "$variant" != prefix-cohort ]]; then
+  if [[ "$variant" != prefix-cohort && "$variant" != rewrite-cohort ]]; then
     cp "$source_inputs"/{arithmetic_seed1,grokking_task_inventory}.json "$output/inputs/"
   fi
   for arm in original repeat; do invoke "$arm" inventory "$output/inputs" >"$output/$arm/inventory.json"; done
@@ -107,10 +111,11 @@ if [[ -n "${source_inputs:-}" ]]; then
   unavailable=6
   if [[ "$variant" == output-offsets ]]; then supported=51; fi
   if [[ "$variant" == prefix-cohort ]]; then supported=9; unavailable=0; fi
+  if [[ "$variant" == rewrite-cohort ]]; then supported=7; unavailable=0; fi
   jq -e --argjson n "$supported" --argjson u "$unavailable" '(.cases|length)==($n+$u) and .fits==($n*12)' "$inventory" >/dev/null
   mapfile -t cases < <(jq -r '.cases|to_entries[]|select(.value.dimensions != null)|.key' "$inventory")
   (( ${#cases[@]} == supported ))
-  required=$(jq -r '.raw_bytes + 17179869184' "$inventory")
+  required=$(jq -er '(.raw_bytes // .raw_bytes_upper_bound) | select(type=="number" and .>0) | .+17179869184' "$inventory")
   test "$(df -B1 --output=avail "$output" | tail -1)" -gt "$required"
 else
   mapfile -t cases < <(jq -r '.cases|keys[]' "$protocol")

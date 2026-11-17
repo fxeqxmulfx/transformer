@@ -21,7 +21,10 @@ fn main() -> Result<()> {
     let [work, storage, full, prefix] = [work, storage, full, prefix].map(Path::new);
     guard::admit(1 << 30, work, storage)?;
     let p = data::protocol()?;
-    for (root, def) in [(full, data::OFFSET_PROTOCOL), (prefix, data::PROTOCOL)] {
+    for (root, def) in [
+        (full, data::OFFSET_PROTOCOL),
+        (prefix, data::PREFIX_PROTOCOL),
+    ] {
         for arm in ["original", "repeat"] {
             if read(&root.join(arm).join("run/sealed/manifest.json"))?["identity"]["protocol_sha256"]
                 != baseline::hash(def.as_bytes())

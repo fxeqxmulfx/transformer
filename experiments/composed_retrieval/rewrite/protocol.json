@@ -1,0 +1,23 @@
+{
+  "name": "composed-retrieval-rewrite6-lookup-output-offsets-v1",
+  "training_protocol_sha256": "0cba707579431ae94d7464d123bfe3523a66b9495dbac265b8f1148922be9f08",
+  "plan_sha256": "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7",
+  "sequences_sha256": "a2f6044ee78c02fa491169bd7065ed87d7c161525a29603a2836933bc146ea71",
+  "typed_sha256": "cfe5ecb2e27c38bdd0de3741b343b0fed980ce9137de00f74335815c608e70f6",
+  "remaining_sha256": "a7cef601caa5d8d04478f560159949b807c263cd962b4d6271ab78a6eb493b27",
+  "generative_sha256": "99f853b01953e78253557f8d26a680fa5a3a6ae6e8ab107a0fef3ad7ad05e8e7",
+  "train": 128,
+  "batch": 32,
+  "selection": "validation/novel",
+  "metric": "sequence_accuracy",
+  "target": 0.95,
+  "cases": {
+    "suite-copy-repeat": {"vocabulary":100,"context":130,"training_targets":1690,"metadata_sha256":"eb30ffd91de9869c8042a71f754d09e3b5419695fecfd93fca64f5ef3448743f"},
+    "suite-copy-unique": {"vocabulary":100,"context":130,"training_targets":1732,"metadata_sha256":"f134c823b03ed5d6728339ffdc0289cec95ecdfcb073995392e1aa83a0873ac1"},
+    "suite-lookup": {"vocabulary":100,"context":96,"training_targets":256,"metadata_sha256":"6c31fb74c065ad4894537c00fafa342f92457b7343984af3cf8a9f9dde482294"},
+    "suite-reverse-repeat": {"vocabulary":100,"context":130,"training_targets":1606,"metadata_sha256":"b589d439207d9411ae970733b42b1cd406c276fb53bafe28913c1ff8b82128da"},
+    "suite-reverse-unique": {"vocabulary":100,"context":130,"training_targets":1714,"metadata_sha256":"2591ad8f10faaa9cee67330e2485003019900c2073c8d98e3e45f0b5598f0940"},
+    "suite-sort-repeat": {"vocabulary":100,"context":130,"training_targets":1742,"metadata_sha256":"32232875e8ff70c0f51b5742b7839ccd94acb3bb0ce4783ff9140191be7e61dd"},
+    "suite-sort-unique": {"vocabulary":100,"context":130,"training_targets":1678,"metadata_sha256":"ae8e2487aea17b80b9ec117d629a06ea3db4ca04f12537f49a0e681d4ddfec52"}
+  }
+}

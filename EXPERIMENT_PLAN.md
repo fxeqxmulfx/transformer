@@ -9544,3 +9544,10 @@ only 18, 38 and 36 of 64 exact sequences on the longest test. The two
 retrieval overlaps reproduced all 528 original raw files, model weights
 and optimizer receipts across both builds. The source-unavailable count
 remains six, with 101 cases outside these two cohorts.
+
+Task 418 freezes all six original copy, reverse and sort cases and repeats
+two-hop lookup under CM116. The closed-loop scorer starts with the original
+prompt, appends each model-written object and stops at EOS or the original
+input-derived limit. Compare generated and teacher-forced accuracy on every
+split after both builds seal. Verify the repeated lookup before adding the
+six cases to the original 165-case ledger.

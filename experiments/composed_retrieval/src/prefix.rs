@@ -1,5 +1,5 @@
-//! The complete supplied-prefix synthetic subgroup. Native adapters retain
-//! BOS, all target masks and all original short, long and novelty splits.
+//! Source-verified synthetic cohorts. Only the harness sees the case,
+//! original tensors, generation rules and source fingerprints.
 use crate::{
     Result,
     data::{CaseSpec, OFFSET_PROTOCOL, PROTOCOL, Protocol},
@@ -8,9 +8,13 @@ use baseline::{data::Task, hash};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use std::{collections::BTreeMap, fs, path::Path};
-use synthetic_data::{generative::typed, sequences};
+use synthetic_data::{generative, generative::typed, sequences};
 
-pub const NAME: &str = "composed-retrieval-synthetic-prefix9-output-offsets-v1";
+pub const NAME: &str = if cfg!(feature = "rewrite-cohort") {
+    "composed-retrieval-rewrite6-lookup-output-offsets-v1"
+} else {
+    "composed-retrieval-synthetic-prefix9-output-offsets-v1"
+};
 
 #[derive(Deserialize)]
 struct Source {
@@ -27,6 +31,7 @@ struct Definition {
     sequences_sha256: String,
     typed_sha256: String,
     remaining_sha256: String,
+    generative_sha256: Option<String>,
     train: usize,
     batch: usize,
     selection: String,
@@ -36,8 +41,16 @@ struct Definition {
 }
 pub fn configure(p: &mut Protocol) -> Result<()> {
     let d: Definition = serde_json::from_str(PROTOCOL)?;
+    let roster_matches = if cfg!(feature = "rewrite-cohort") {
+        d.cases.len() == generative::CASES.len() + 1
+            && generative::CASES.iter().all(|id| d.cases.contains_key(*id))
+            && d.cases.contains_key("suite-lookup")
+            && d.generative_sha256 == Some(hash(generative::PROTOCOL.as_bytes()))
+    } else {
+        d.cases.len() == 9 && d.generative_sha256.is_none()
+    };
     if d.name != NAME
-        || d.cases.len() != 9
+        || !roster_matches
         || d.training_protocol_sha256 != hash(OFFSET_PROTOCOL.as_bytes())
         || d.sequences_sha256 != hash(sequences::PROTOCOL.as_bytes())
         || d.typed_sha256 != hash(typed::PROTOCOL.as_bytes())
@@ -71,6 +84,27 @@ pub fn configure(p: &mut Protocol) -> Result<()> {
 }
 
 pub fn original(id: &str, spec: &CaseSpec) -> Result<(Task, Value)> {
+    #[cfg(feature = "rewrite-cohort")]
+    if generative::CASES.contains(&id) {
+        let d = generative::dataset::build(id)?;
+        let meta = generative::dataset::metadata(&d);
+        let mut context = 0;
+        for row in d.task.splits.values().flatten() {
+            crate::generation::validate_source(row, spec.vocabulary)?;
+            context = context.max(row.prompt.len() + row.limit - 1);
+        }
+        if spec.metadata_sha256.as_deref() != Some(&hash(&serde_json::to_vec(&meta)?))
+            || spec.context != context
+            || spec.vocabulary != d.task.vocab
+            || spec.selection != d.task.selection
+            || d.task.splits["train"].len() != spec.train
+        {
+            return Err(
+                format!("source tensors, generation limits or metadata differ on {id}").into(),
+            );
+        }
+        return Ok((d.task, meta));
+    }
     let d = match id {
         "suite-mqar" | "suite-lookup" | "suite-blocks" | "suite-dyck" => {
             sequences::dataset::build(id)?
@@ -131,7 +165,7 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
         {
             return Err("original case configuration changed".into());
         }
-        let (_, meta) = original(id, spec)?;
+        let (task, meta) = original(id, spec)?;
         if meta["splits"]["train"]["targets"] != d.cases[id].training_targets {
             return Err("training target multiplicity changed".into());
         }
@@ -142,12 +176,19 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
         {
             one_pass += 8 * spec.vocabulary as u64 * split["targets"].as_u64().ok_or("targets")?;
         }
+        let generation_limits: usize = task.splits.values().flatten().map(|row| row.limit).sum();
+        one_pass += 8 * spec.vocabulary as u64 * generation_limits as u64;
         entries.insert(id,json!({"dimensions":{"vocabulary":spec.vocabulary,"context":spec.context,"splits":meta["splits"]},
             "split_fingerprints":meta}));
     }
     let fits = p.cases.len() * p.seeds.len() * p.modes.len() * 2;
+    let bytes = one_pass * 4 * p.seeds.len() as u64 * p.modes.len() as u64;
+    let size_key = if cfg!(feature = "rewrite-cohort") {
+        "raw_bytes_upper_bound"
+    } else {
+        "raw_bytes"
+    };
     Ok(
-        json!({"protocol_sha256":hash(PROTOCOL.as_bytes()),"cases":entries,"fits":fits,
-        "raw_bytes":one_pass * 4 * p.seeds.len() as u64 * p.modes.len() as u64}),
+        json!({"protocol_sha256":hash(PROTOCOL.as_bytes()),"cases":entries,"fits":fits,(size_key):bytes}),
     )
 }

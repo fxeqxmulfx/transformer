@@ -15,6 +15,46 @@ use std::{
     path::Path,
 };
 
+fn decode_groups(
+    raw: &[u8],
+    rows: &[baseline::data::Example],
+    vocabulary: usize,
+    supervised: &BTreeSet<i64>,
+    report: &Value,
+) -> Result<Value> {
+    #[cfg(feature = "rewrite-cohort")]
+    if rows.first().is_some_and(|e| !e.prompt.is_empty()) {
+        if report["raw_sha256"] != hash(raw) || report["exposure_inputs"] != "teacher_forced" {
+            return Err("free-generation raw fingerprint or exposure scope differs".into());
+        }
+        let teacher = composed_retrieval::generation::decode(
+            rows,
+            vocabulary,
+            raw,
+            report["query_prefixes_sha256"]
+                .as_str()
+                .ok_or("prefix fingerprint")?,
+            &report["metrics"],
+        )?;
+        return decode_split(
+            &teacher,
+            rows,
+            vocabulary,
+            supervised,
+            &json!({
+            "raw_logits_sha256":report["teacher_logits_sha256"],"metrics":report["metrics"]["teacher_forced"]}),
+        );
+    }
+    decode_split(
+        raw,
+        rows,
+        vocabulary,
+        supervised,
+        &json!({
+        "raw_logits_sha256":report["raw_sha256"],"metrics":report["metrics"]}),
+    )
+}
+
 fn check_case(
     dir: &Path,
     id: &str,
@@ -50,13 +90,7 @@ fn check_case(
                     let r = &entry["splits"][name];
                     let metrics = &r["metrics"];
                     let raw = fs::read(raw_file(&dir.join("scores"), &key, name))?;
-                    let groups = decode_split(
-                        &raw,
-                        rows,
-                        task.vocab,
-                        &supervised,
-                        &json!({"raw_logits_sha256":r["raw_sha256"],"metrics":metrics}),
-                    )?;
+                    let groups = decode_groups(&raw, rows, task.vocab, &supervised, r)?;
                     let exposure = &r["exposure"]["correct_total_by_exposure"];
                     for (i, field) in ["correct", "targets"].iter().enumerate() {
                         let count = |group: &str| {

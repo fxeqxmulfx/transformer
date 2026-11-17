@@ -32,8 +32,11 @@ pub const FAMILY_PROTOCOL: &str = if cfg!(feature = "output-offsets") {
 } else {
     TRAINING_PROTOCOL
 };
-pub const PROTOCOL: &str = if cfg!(feature = "prefix-cohort") {
-    include_str!("../prefix/protocol.json")
+pub const PREFIX_PROTOCOL: &str = include_str!("../prefix/protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "rewrite-cohort") {
+    include_str!("../rewrite/protocol.json")
+} else if cfg!(feature = "prefix-cohort") {
+    PREFIX_PROTOCOL
 } else {
     FAMILY_PROTOCOL
 };

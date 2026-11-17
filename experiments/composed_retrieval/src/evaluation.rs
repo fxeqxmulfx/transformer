@@ -132,6 +132,10 @@ impl Predictor for Raw<'_> {
     }
 }
 fn split(m: &Model, examples: &[Example], exposure: &Exposure) -> Result<(Value, Vec<u8>)> {
+    #[cfg(feature = "rewrite-cohort")]
+    if examples.first().is_some_and(|e| !e.prompt.is_empty()) {
+        return generation_split(m, examples, exposure);
+    }
     if examples.iter().any(|e| {
         !e.prompt.is_empty()
             || e.field.is_some()
@@ -163,6 +167,58 @@ fn split(m: &Model, examples: &[Example], exposure: &Exposure) -> Result<(Value,
     Ok((
         json!({"exposure":groups,"raw_sha256":hash(&bytes),"raw99":original["token_accuracy"].as_f64().unwrap()>=0.99,
         "exact99":original["sequence_accuracy"].as_f64().unwrap()>=0.99,"metrics":original}),
+        bytes,
+    ))
+}
+
+#[cfg(feature = "rewrite-cohort")]
+fn generation_split(
+    m: &Model,
+    examples: &[Example],
+    exposure: &Exposure,
+) -> Result<(Value, Vec<u8>)> {
+    use crate::generation;
+    struct Traced<'a> {
+        predictor: Raw<'a>,
+        prefixes: RefCell<Vec<u8>>,
+    }
+    impl Predictor for Traced<'_> {
+        fn vocab(&self) -> usize {
+            self.predictor.vocab()
+        }
+        fn logits(&self, prefix: &[i64]) -> Vec<f64> {
+            generation::record_prefix(&mut self.prefixes.borrow_mut(), prefix);
+            self.predictor.logits(prefix)
+        }
+    }
+    let mut lengths = BTreeSet::new();
+    for e in examples {
+        generation::validate_source(e, m.vocabulary)?;
+        m.objects(&e.tokens)?;
+        let first_memory = e.prompt.len() - 1;
+        lengths.extend(first_memory..first_memory + e.limit);
+    }
+    let raw = Raw {
+        model: m,
+        table: Tables::new(m, &lengths.into_iter().collect::<Vec<_>>())?,
+        bytes: RefCell::default(),
+    };
+    let predictor = Traced {
+        predictor: raw,
+        prefixes: RefCell::default(),
+    };
+    let original = metrics::evaluate(&predictor, examples)?;
+    let bytes = predictor.predictor.bytes.into_inner();
+    let prefix_hash = hash(&predictor.prefixes.into_inner());
+    let teacher = generation::decode(examples, m.vocabulary, &bytes, &prefix_hash, &original)?;
+    let rows = records(examples, &(0..examples.len()).collect::<Vec<_>>())?;
+    let groups = exposure.report(&rows, &teacher, m.vocabulary)?;
+    Ok((
+        json!({"exposure":groups,"exposure_inputs":"teacher_forced","raw_sha256":hash(&bytes),
+        "query_prefixes_sha256":prefix_hash,"teacher_logits_sha256":hash(&teacher),
+        "raw99":original["token_accuracy"].as_f64().ok_or("generated accuracy")?>=0.99,
+        "exact99":original["sequence_accuracy"].as_f64().ok_or("generated exact")?>=0.99,
+        "metrics":original}),
         bytes,
     ))
 }
@@ -236,6 +292,38 @@ pub fn score(run: &Run<'_>, id: &str, replay: bool) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(feature = "rewrite-cohort")]
+    #[test]
+    fn live_rewrite_scores_record_each_original_and_model_written_prefix() -> Result<()> {
+        let p = data::protocol()?;
+        let id = "suite-copy-repeat";
+        let (task, _) = data::original(&p, id)?;
+        let model = Model::new(task.vocab, p.cases[id].context, &p, 0)?;
+        let rows = &task.splits["train"][..2];
+        let exposure = Exposure::new(rows, task.vocab, false)?;
+        let (scored, bytes) = split(&model, rows, &exposure)?;
+        let m = &scored["metrics"];
+        let targets: usize = rows.iter().map(|e| e.answer.len()).sum();
+        assert_eq!(m["targets"], targets);
+        let generated = m["generated_tokens"].as_u64().unwrap() as usize;
+        assert_eq!(bytes.len(), (targets + generated) * task.vocab * 8);
+        let teacher = crate::generation::decode(
+            rows,
+            task.vocab,
+            &bytes,
+            scored["query_prefixes_sha256"].as_str().unwrap(),
+            m,
+        )?;
+        learned_retrieval_transfer::audit::decode_split(
+            &teacher,
+            rows,
+            task.vocab,
+            &rows.iter().flat_map(|e| e.answer.iter().copied()).collect(),
+            &json!({"raw_logits_sha256":scored["teacher_logits_sha256"],"metrics":m["teacher_forced"]}),
+        )?;
+        Ok(())
+    }
+
     #[test]
     fn original_metrics_keep_both_queries_and_count_absent_answers() -> Result<()> {
         let m = Model::new(5, 4, &data::protocol()?, 0)?;

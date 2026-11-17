@@ -12,6 +12,7 @@ logodds-depth = ["dense-forward"]
 arithmetic-cohort = ["dense-forward", "dep:arithmetic-data"]
 output-offsets = ["arithmetic-cohort", "logodds-depth"]
 prefix-cohort = ["output-offsets", "dep:synthetic-data"]
+rewrite-cohort = ["prefix-cohort"]
 
 [[bin]]
 name = "reconcile-arithmetic"
@@ -42,6 +43,11 @@ required-features = ["prefix-cohort"]
 name = "reconcile-prefix"
 path = "src/bin/reconcile-prefix.rs"
 required-features = ["prefix-cohort"]
+
+[[bin]]
+name = "reconcile-rewrite"
+path = "src/bin/reconcile-rewrite.rs"
+required-features = ["rewrite-cohort"]
 
 [dependencies]
 synthetic-data = { package = "convex-stress-remaining-synthetic-data", path = "../convex_stress_remaining_synthetic_data", optional = true }
