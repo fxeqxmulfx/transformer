@@ -118,7 +118,18 @@ impl<'a> Run<'a> {
                     let r: Value = serde_json::from_slice(&receipt)?;
                     let bytes = fs::read(path.join("model.json"))?;
                     let model: Model = serde_json::from_slice(&bytes)?;
-                    model.validate()?;
+                    let layout = model.validate()?;
+                    if p.initial_log_odds.is_some() {
+                        let z = r["training"]["depth_log_odds"]
+                            .as_f64()
+                            .ok_or("missing depth log odds")?;
+                        if !z.is_finite() || model.weights[layout.depth] != crate::model::sigmoid(z)
+                        {
+                            return Err(
+                                "physical depth differs from sealed optimizer coordinate".into()
+                            );
+                        }
+                    }
                     if p.coordinates_per_table.is_none() {
                         let queries = if mode == "forward" {
                             2 * model.weights.len() * p.updates

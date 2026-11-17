@@ -22827,3 +22827,35 @@ condition. Its unrotated first read favors intermediate object B over C,
 its second read favors C over B, and the gate on the product is interior.
 One observed correct label supplies the CE expression above. The score
 contrast identification result assumes access to its numerical value.
+
+## CM115. The depth gate in log odds
+
+Keep the CM113 classifier and every physical read. Represent the depth by
+a finite real coordinate z with h(z) = 1/(1+exp(−z)). This assigns positive
+weight to each read inside the depth mixture. In the four-case experiment
+the initial z is log 9, giving h = 9/10. The CM114 equality between the
+two unrotated reads at uniform relative-position scores still applies, so
+the initial raw depth derivative is zero.
+
+For fixed other weights and an observed prefix, let S denote CM114's
+full-vocabulary CE slope in physical depth, evaluated at h(z). The actual
+CE derivative in z is S h(z)(1−h(z)). The factor is strictly positive and
+at most one quarter. At initialization it is 9/100. Every nonzero physical
+slope therefore has the same sign in log odds, although its magnitude
+is smaller. Adam's subsequent moment normalization also affects the
+step taken. Forward-only training measures losses at z+ε and z−ε before
+taking a step in this same coordinate.
+
+Between two raw coordinates z and t, class c changes score by
+[h(t)−h(z)]D(c), with D the physical class direction from CM114.
+The one-row CE lower bound is CE(t) ≥ CE(z) + [h(t)−h(z)]S. Its
+displacement is in physical depth. Summing over the original rows shows
+that a nonnegative complete training slope at z rules out improvement by
+moving to any t ≥ z with all other weights fixed. Convexity of CE in the
+physical mixture does not give convexity in the raw log odds.
+
+When two class directions differ on an observed prefix, the measured
+score contrast identifies the physical mixture weight and hence its
+finite raw coordinate by strict monotonicity. The CM113 chain provides
+an instance of that condition. These statements describe the optimization
+coordinate and leave the learned routing and held-out accuracy empirical.

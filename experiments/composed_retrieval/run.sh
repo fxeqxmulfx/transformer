@@ -2,7 +2,7 @@
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
 if (( $# < 4 || $# > 6 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|arithmetic SOURCE_INPUTS]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|arithmetic SOURCE_INPUTS]' >&2
   exit 2
 fi
 workspace=$(realpath "$1")
@@ -16,6 +16,7 @@ protocols=(protocol.json)
 case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
+  logodds) features=(--features logodds-depth); protocols+=(dense/protocol.json logodds/protocol.json) ;;
   arithmetic)
     (( $# == 6 ))
     source_inputs=$(realpath "$6")

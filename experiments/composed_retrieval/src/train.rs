@@ -63,13 +63,15 @@ struct Adam {
     first: Vec<f64>,
     second: Vec<f64>,
     clock: Vec<u32>,
+    depth_log_odds: Option<f64>,
 }
 impl Adam {
-    fn new(n: usize) -> Self {
+    fn new(n: usize, depth_log_odds: Option<f64>) -> Self {
         Self {
             first: vec![0.; n],
             second: vec![0.; n],
             clock: vec![0; n],
+            depth_log_odds,
         }
     }
     fn update(
@@ -99,7 +101,17 @@ impl Adam {
             };
             let delta = lr * (self.first[i] / (1. - p.beta1.powi(time)))
                 / ((self.second[i] / (1. - p.beta2.powi(time))).sqrt() + p.epsilon);
-            m.weights[i] = l.project(i, m.weights[i] - delta);
+            if i == l.depth
+                && let Some(z) = self.depth_log_odds.as_mut()
+            {
+                *z -= delta;
+                if !z.is_finite() {
+                    return Err("nonfinite depth log odds".into());
+                }
+                m.weights[i] = crate::model::sigmoid(*z);
+            } else {
+                m.weights[i] = l.project(i, m.weights[i] - delta);
+            }
         }
         m.validate()?;
         Ok(())
@@ -111,6 +123,9 @@ impl Adam {
         }
         for v in &self.clock {
             bytes.extend(v.to_le_bytes());
+        }
+        if let Some(z) = self.depth_log_odds {
+            bytes.extend(z.to_le_bytes());
         }
         hash(&bytes)
     }
@@ -191,8 +206,13 @@ pub fn fit(
         return Err("invalid training cell".into());
     }
     let l = m.validate()?;
+    if p.initial_log_odds
+        .is_some_and(|z| m.weights[l.depth] != crate::model::sigmoid(z))
+    {
+        return Err("starting physical depth differs from the protocol's log odds".into());
+    }
     let before = metrics(m, &input)?;
-    let mut adam = Adam::new(m.weights.len());
+    let mut adam = Adam::new(m.weights.len(), p.initial_log_odds);
     let mut cycle = p
         .coordinates_per_table
         .map(|count| (Choices::new(&l, seed), count));
@@ -221,7 +241,14 @@ pub fn fit(
         let mut tab = Tables::new(m, &lengths(&batch))?;
         let selected;
         let (coords, g) = match mode {
-            "mini" => (&all, analytic(m, &tab, &batch)),
+            "mini" => {
+                let mut g = analytic(m, &tab, &batch);
+                if adam.depth_log_odds.is_some() {
+                    let h = m.weights[l.depth];
+                    g[l.depth] *= h * (1. - h);
+                }
+                (&all, g)
+            }
             "forward" => {
                 let coords = if let Some((choices, count)) = &mut cycle {
                     selected = choices.next(*count);
@@ -229,7 +256,14 @@ pub fn fit(
                 } else {
                     &all
                 };
-                let g = query::differences(m, &mut tab, &batch, coords, p.query_step)?;
+                let g = query::differences(
+                    m,
+                    &mut tab,
+                    &batch,
+                    coords,
+                    p.query_step,
+                    adam.depth_log_odds,
+                )?;
                 queries += 2 * coords.len();
                 (coords, g)
             }
@@ -252,9 +286,11 @@ pub fn fit(
                 "optimizer_sha256":adam.digest(),"weights_sha256":hash(&serde_json::to_vec(&m.weights)?)}));
         }
     }
-    Ok(
-        json!({"before":before,"after":metrics(m,&input)?,"updates":p.updates,"examples":examples,
+    let mut result = json!({"before":before,"after":metrics(m,&input)?,"updates":p.updates,"examples":examples,
         "targets":targets,"forward_loss_queries":queries,"min_visits":adam.clock.iter().min(),"max_visits":adam.clock.iter().max(),
-        "optimizer_sha256":adam.digest(),"batch_sha256":hash(&batches),"trace":trace}),
-    )
+        "optimizer_sha256":adam.digest(),"batch_sha256":hash(&batches),"trace":trace});
+    if let Some(z) = adam.depth_log_odds {
+        result["depth_log_odds"] = json!(z);
+    }
+    Ok(result)
 }

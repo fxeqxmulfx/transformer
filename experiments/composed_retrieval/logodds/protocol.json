@@ -1,0 +1,7 @@
+{
+  "name": "composed-retrieval-original-four-logodds-depth-v1",
+  "parent_protocol_sha256": "45feef691cb3ceac1f7dbfb3a62dc63c12bc6aebf98e69f5dd9176c4d6008c76",
+  "initial_odds": 9,
+  "training": "Use an unconstrained trainable log-odds coordinate for depth, initialized to log(9) in all four cases. The physical depth in the scored model is sigmoid(log_odds). Standard minibatch multiplies the physical CE derivative by h*(1-h). Forward-only queries two complete minibatch losses at raw log_odds plus or minus the existing step, using the actual raw displacement. Adam updates the raw coordinate. Inherit every other initialization, parameter, batch, optimizer setting and the update budget from the matched-visit parent.",
+  "scoring": "Fit both modes at seeds 0, 1 and 2 on every original control. Independently seal all 48 fresh fits before scoring. Verify original criteria, each 99 percent flag, full raw logits, novel and long lookup accuracy, final gates and full training depth slopes at the sealed endpoint."
+}

@@ -9474,3 +9474,11 @@ at all three seeds in both training modes. The arithmetic cohort includes
 control also crossed 99%. Six fixed-random source datasets are unavailable
 and 108 cases are outside the measured cohorts. Addition is counted once
 after checking every overlapping model, receipt and raw file.
+
+Task 414 keeps the four original controls, both dense minibatch modes,
+three seeds and the 1,024-update budget. Change only the depth coordinate
+and its initialization. Train log odds initialized to log 9, giving the
+second read 90% of the physical depth mixture. CM115 derives the actual
+raw CE gradient and the relation between raw displacements and physical
+score contrasts. Compare trained gates and full training slopes along
+with every original and strict held-out criterion.

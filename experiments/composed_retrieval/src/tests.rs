@@ -171,7 +171,7 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
             m.weights[l.product] = 1.;
         }
         let original = m.clone();
-        let forward = query::differences(&mut m, &mut t, &batch, &coords, h)?;
+        let forward = query::differences(&mut m, &mut t, &batch, &coords, h, None)?;
         assert_eq!(m, original);
         for &i in &coords {
             let hi = l.project(i, original.weights[i] + h);
@@ -195,6 +195,34 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
                 );
             }
         }
+    }
+    Ok(())
+}
+#[test]
+fn log_odds_queries_match_the_literal_model_and_chain_rule() -> Result<()> {
+    let mut m = fixture()?;
+    let l = m.validate()?;
+    let row = Sample {
+        prefix: vec![0, 1, 1, 2, 0],
+        target: 2,
+    };
+    let batch = [&row];
+    let step = 0.0001;
+    for z in [-4., 0., 9_f64.ln(), 4.] {
+        let h = crate::model::sigmoid(z);
+        m.weights[l.depth] = h;
+        let mut t = Tables::new(&m, &[4])?;
+        let analytic = train::analytic(&m, &t, &batch)[l.depth] * h * (1. - h);
+        let actual = query::differences(&mut m, &mut t, &batch, &[l.depth], step, Some(z))?[0];
+        let trial = |z: f64| {
+            let mut trial = m.clone();
+            trial.weights[l.depth] = 1. / (1. + (-z).exp());
+            cross_entropy(&literal(&trial, &row.prefix), row.target)
+        };
+        let independent = (trial(z + step) - trial(z - step)) / (2. * step);
+        assert!((actual - independent).abs() < 2e-10);
+        assert!((analytic - independent).abs() < 5e-9);
+        assert_eq!(m.weights[l.depth], h);
     }
     Ok(())
 }

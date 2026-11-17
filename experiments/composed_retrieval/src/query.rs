@@ -132,6 +132,7 @@ pub fn differences(
     batch: &[&Sample],
     coords: &[usize],
     step: f64,
+    depth_log_odds: Option<f64>,
 ) -> Result<Vec<f64>> {
     if !(step > 0. && step.is_finite()) || batch.is_empty() {
         return Err("invalid forward query".into());
@@ -140,9 +141,23 @@ pub fn differences(
     let mut g = Vec::with_capacity(coords.len());
     for &i in coords {
         let original = m.weights[i];
-        let upper = t.layout.project(i, original + step);
-        let lower = t.layout.project(i, original - step);
-        if upper <= lower {
+        let (upper, lower, span) = if i == t.layout.depth
+            && let Some(z) = depth_log_odds
+        {
+            let (hi, lo) = (z + step, z - step);
+            (
+                crate::model::sigmoid(hi),
+                crate::model::sigmoid(lo),
+                hi - lo,
+            )
+        } else {
+            let (hi, lo) = (
+                t.layout.project(i, original + step),
+                t.layout.project(i, original - step),
+            );
+            (hi, lo, hi - lo)
+        };
+        if span <= 0. || !span.is_finite() {
             return Err("forward query displacement vanished".into());
         }
         let change = Change::at(&t.layout, i);
@@ -154,7 +169,7 @@ pub fn differences(
         }
         m.weights[i] = original;
         t.refresh(m, i);
-        g.push((losses[0] - losses[1]) / (upper - lower));
+        g.push((losses[0] - losses[1]) / span);
     }
     Ok(g)
 }

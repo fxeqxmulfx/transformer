@@ -9,8 +9,11 @@ use std::collections::BTreeMap;
 
 pub const BASE_PROTOCOL: &str = include_str!("../protocol.json");
 pub const DENSE_PROTOCOL: &str = include_str!("../dense/protocol.json");
+const LOGODDS_PROTOCOL: &str = include_str!("../logodds/protocol.json");
 pub const PROTOCOL: &str = if cfg!(feature = "arithmetic-cohort") {
     include_str!("../arithmetic/protocol.json")
+} else if cfg!(feature = "logodds-depth") {
+    LOGODDS_PROTOCOL
 } else if cfg!(feature = "dense-forward") {
     DENSE_PROTOCOL
 } else {
@@ -42,6 +45,7 @@ pub struct Protocol {
     pub capacity: f64,
     pub initial_key_scale: f64,
     pub initial_depth: f64,
+    pub initial_log_odds: Option<f64>,
     pub initial_product: f64,
     pub angle_lr: f64,
     pub routing_lr: f64,
@@ -71,6 +75,17 @@ pub fn protocol() -> Result<Protocol> {
     }
     #[cfg(feature = "arithmetic-cohort")]
     crate::arithmetic::configure(&mut p)?;
+    if PROTOCOL == LOGODDS_PROTOCOL {
+        let d: Value = serde_json::from_str(LOGODDS_PROTOCOL)?;
+        if d["parent_protocol_sha256"] != hash(DENSE_PROTOCOL.as_bytes()) || d["initial_odds"] != 9
+        {
+            return Err("changed log-odds comparison or parent".into());
+        }
+        p.name = d["name"].as_str().ok_or("comparison name")?.into();
+        let z = 9_f64.ln();
+        p.initial_log_odds = Some(z);
+        p.initial_depth = crate::model::sigmoid(z);
+    }
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256

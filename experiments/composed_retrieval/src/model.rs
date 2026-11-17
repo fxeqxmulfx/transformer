@@ -7,6 +7,15 @@ use std::{f64::consts::PI, ops::Range};
 
 pub const WIDTH: usize = 8;
 
+pub fn sigmoid(z: f64) -> f64 {
+    if z >= 0. {
+        1. / (1. + (-z).exp())
+    } else {
+        let e = z.exp();
+        e / (1. + e)
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Model {
     pub vocabulary: usize,
