@@ -62,7 +62,7 @@ reloads the endpoint and must reproduce all metrics and raw-logit bits. This
 checks saved inference, not an independent training repeat. Data, source,
 protocol, binary and checkpoint identities are recorded.
 
-Eleven native controls cover exhaustive small-prefix complex execution against
+Twelve native controls cover exhaustive small-prefix complex execution against
 independently materialized coefficients; feasible signed model queries; all
 real/imaginary coordinate gradients with duplicate records, repeated pairs and
 a one-record tail; a planted nonzero component-search control; and both update
@@ -71,6 +71,9 @@ refusal of unsealed or changed protocols. These are not original-task scores.
 The four CM93 controls also check the scaled full tensor, actual feasible query
 models, complete scaled coordinate responses, and both modes with checkpoint
 geometry retained. They include zero-scale and floating underflow refusals.
+The CM94 control compares every complex contraction and objective bit with
+dense execution, retains tiny nonzero rows, refreshes changed support and checks
+the all-zero case.
 
 Use native tooling only:
 
@@ -177,3 +180,45 @@ this one task/seed that MQAR, long parity or all35/165 tasks now pass. Additiona
 seeds, task families and learned depth remain to be tested. The real proofs
 still give capacity and feasible-query identities rather than a theorem that
 this approximate optimizer always finds the target family.
+
+## Prospective five-case, three-seed cohort
+
+`three_seed_protocol.json` keeps the CM93 geometry and shared trainable model.
+It uses training seeds1,2,3 on the original fixed data splits (data seed1), in
+both Mini and forward-only Mini. The budgets are fixed before any new scoring:
+
+| Original case | Updates per mode and training seed |
+| --- | --- |
+| Boolean AND shift | 1000 |
+| Boolean AND random | 1000 |
+| Addition | 1000 |
+| Short key-value binding / MQAR | 200 |
+| Parity16 | 128 |
+
+The binding/parity budgets match the earlier five-case diagnostic. Parity has
+only0.1024 epochs at this budget and the proved reader limitation still applies;
+this is a diagnostic, not a claim of adequate training or expected success on
+every case. Every original split, including longer probes, is retained.
+
+CM94 (`ebe3fd23`, `SharedAtoms/Support`) proves that exactly zero complete-class
+gradient rows contribute zero to all complex contractions. The native search
+scans the entire stored gradient for these rows at each proposal, preserving
+order and every nonzero entry, including tiny ones. It keeps the full gradient
+and every parameter vector; there is no rank or magnitude cutoff. This changes
+execution cost without changing the mathematical optimizer.
+
+Build with the native commands above in a new target directory, then use
+`stress plan-three-seed`. Freeze the checked binary, sources, commit hash and
+`three_seed_protocol.json` as `FREEZE/protocol.json`. Start the full cohort with:
+
+```sh
+bash experiments/convex_shared_atoms/run_three_seed.sh WORKSPACE STORAGE FREEZE COHORT
+```
+
+The runner creates a fresh cohort, caps each of its two workers at32GiB, checks
+aggregate RAM and both disks, trains all30 endpoints before scoring, and writes
+each command's exit status. It refuses insufficient resources and never removes
+old evidence. Each saved endpoint must replay every raw logit independently.
+The prior addition seed1 logits provide a separate control for execution
+equivalence after the exact-zero optimization. Results remain pending until
+the new cohort is complete.

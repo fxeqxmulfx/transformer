@@ -8620,3 +8620,12 @@ saved raw logit replays exactly. Mini query/context bias energies fall to
 split, seed1, with all classes retained and no arithmetic rule in the model.
 The active goal remains open for other seeds, MQAR and long sequence families;
 the CM86 parity restriction and approximate-oracle limitation still apply.
+
+Task369 extends the CM93 experiment to three training seeds on the unchanged
+data seed1 splits: both AND tasks and addition1000updates, short MQAR200,
+parity16128, in both minibatch modes. CM94 proves the exact zero-row contraction
+optimization required for these larger complete tensors. Retain all stored
+coordinates, all30 endpoints and every original split; seal the whole cohort
+before scoring. Compare the repeated addition seed1 raw logits with the prior
+successful dense producer. Keep the known parity limitation and training budget
+visible, and do not convert a diagnostic failure into a reduced task definition.

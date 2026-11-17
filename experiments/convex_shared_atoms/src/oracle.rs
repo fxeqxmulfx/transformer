@@ -1,6 +1,7 @@
 //! Approximate learned-component proposals on the CM92 convex joint domain.
 //! Alternating complex contractions search the full factors; they are not an
 //! exact global linear minimization oracle. No convergence certificate is claimed.
+//! CM94 skips only exactly zero full-class rows during repeated contractions.
 use crate::{C, Result, model::Atom};
 use baseline::random::Random;
 use bilinear::domain::Shape;
@@ -30,10 +31,22 @@ impl Gradient {
     }
 
     pub fn value(&self, atom: &Atom) -> f64 {
+        self.value_rows(atom, &self.active_rows())
+    }
+
+    /// Scan every class of every row afresh, without a magnitude threshold.
+    pub(crate) fn active_rows(&self) -> Vec<usize> {
         self.values
             .chunks_exact(self.shape.objects)
             .enumerate()
-            .map(|(dq, row)| {
+            .filter_map(|(i, row)| row.iter().any(|&v| v != 0.).then_some(i))
+            .collect()
+    }
+
+    pub(crate) fn value_rows(&self, atom: &Atom, rows: &[usize]) -> f64 {
+        rows.iter()
+            .map(|&dq| {
+                let row = &self.values[dq * self.shape.objects..(dq + 1) * self.shape.objects];
                 let q = dq % self.shape.queries;
                 let d = dq / self.shape.queries;
                 let u: C = row.iter().zip(&atom.output).map(|(&g, &u)| u * g).sum();
@@ -42,11 +55,12 @@ impl Gradient {
             .sum()
     }
 
-    fn contract(&self, atom: &Atom, axis: usize) -> Vec<C> {
+    pub(crate) fn contract(&self, atom: &Atom, axis: usize, rows: &[usize]) -> Vec<C> {
         let s = self.shape;
         let length = [s.objects, s.queries, s.columns][axis];
         let mut result = vec![C::default(); length];
-        for (dq, row) in self.values.chunks_exact(s.objects).enumerate() {
+        for &dq in rows {
+            let row = &self.values[dq * s.objects..(dq + 1) * s.objects];
             let q = dq % s.queries;
             let d = dq / s.queries;
             if axis == 0 {
@@ -76,6 +90,7 @@ impl Gradient {
         if restarts == 0 || sweeps == 0 {
             return Err("empty component search".into());
         }
+        let rows = self.active_rows();
         let mut best = Atom::zero(self.shape);
         let mut best_value = 0.;
         for restart in 0..(restarts + usize::from(previous.is_some())) {
@@ -90,7 +105,7 @@ impl Gradient {
             };
             for _ in 0..sweeps {
                 for axis in 0..3 {
-                    let mut vector = self.contract(&atom, axis);
+                    let mut vector = self.contract(&atom, axis, &rows);
                     for z in &mut vector {
                         *z = -z.conj();
                     }
@@ -103,7 +118,7 @@ impl Gradient {
                 }
             }
             atom.validate(self.shape)?;
-            let value = self.value(&atom);
+            let value = self.value_rows(&atom, &rows);
             if !value.is_finite() {
                 return Err("nonfinite component objective".into());
             }

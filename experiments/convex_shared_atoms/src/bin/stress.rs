@@ -7,12 +7,18 @@ use std::path::Path;
 fn run() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     let balanced = args.first().is_some_and(|s| s.ends_with("-balanced"));
-    let text = if balanced {
+    let three_seed = args.first().is_some_and(|s| s.ends_with("-three-seed"));
+    let text = if three_seed {
+        experiment::THREE_SEED_PROTOCOL
+    } else if balanced {
         experiment::BALANCED_PROTOCOL
     } else {
         experiment::PROTOCOL
     };
-    let command = args.first().map_or("", |s| s.trim_end_matches("-balanced"));
+    let command = args.first().map_or("", |s| {
+        s.trim_end_matches("-three-seed")
+            .trim_end_matches("-balanced")
+    });
     if args.len() == 1 && command == "plan" {
         let protocol: Value = serde_json::from_str(text)?;
         for case in protocol["cases"].as_array().ok_or("cases")? {
@@ -36,7 +42,7 @@ fn run() -> Result<()> {
         return Ok(());
     }
     if args.len() != 7 {
-        return Err("usage: stress plan[-balanced] | stress train|score|verify[-balanced] WORKSPACE STORAGE COHORT CASE mini|forward SEED".into());
+        return Err("usage: stress plan[-balanced|-three-seed] | stress train|score|verify[-balanced|-three-seed] WORKSPACE STORAGE COHORT CASE mini|forward SEED".into());
     }
     let workspace = Path::new(&args[1]);
     let storage = Path::new(&args[2]);

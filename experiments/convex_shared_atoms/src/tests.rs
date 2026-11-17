@@ -12,6 +12,7 @@ use bilinear::{
 };
 
 mod scaling;
+mod support;
 
 fn atom(shape: Shape, seed: u32) -> Result<Atom> {
     let mut rng = Random::new(seed);
