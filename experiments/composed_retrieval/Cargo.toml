@@ -22,6 +22,16 @@ name = "compare-depth"
 path = "src/bin/compare-depth.rs"
 required-features = ["logodds-depth"]
 
+[[bin]]
+name = "compare-output-offsets"
+path = "src/bin/compare-output-offsets.rs"
+required-features = ["output-offsets"]
+
+[[bin]]
+name = "offset-intervals"
+path = "src/bin/offset-intervals.rs"
+required-features = ["output-offsets"]
+
 [dependencies]
 arithmetic-data = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data", optional = true }
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }

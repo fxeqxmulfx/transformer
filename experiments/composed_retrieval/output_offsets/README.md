@@ -42,3 +42,32 @@ git show <producer-commit>:experiments/composed_retrieval/run.sh | bash -s -- \
 "$base/composed-retrieval/<fresh-output>/original/target/release/audit-raw" \
   "$PWD" /run/media/misha/storage "$base/composed-retrieval/<fresh-output>"
 ```
+
+## What a single offset can repair on the training rows
+
+The training-only check uses the frozen log-odds reference and selects
+each endpoint's most frequently missed target class. At seed 0 the
+following observed strict bounds apply when changing only that class.
+
+| Training case | Offset must exceed | Offset must stay below |
+| --- | ---: | ---: |
+| Modular division | 9.1813 | 2.8324 |
+| Modular multiplication | 6.0803 | 1.6426 |
+| Affine product | 15.9597 | 1.4443 |
+
+All three intervals were empty at every seed in both modes. Among all
+288 arithmetic endpoints, 50 already made every training prediction
+correct. Four could make every training target a strict winner by shifting
+one class. These were seeds 0 and 2 in both modes of the modulus-193
+constant task. The other 234 had conflicting strict margins or an error
+involving additional classes. The new fit lets all parameters move.
+
+```sh
+base=/run/media/misha/storage/transformer-runs/composed-retrieval
+manifest=experiments/composed_retrieval/Cargo.toml
+cargo run --release --locked --offline --manifest-path "$manifest" --features output-offsets \
+  --bin offset-intervals -- "$PWD" /run/media/misha/storage "$base/logodds-arithmetic54-v1"
+cargo run --release --locked --offline --manifest-path "$manifest" --features output-offsets \
+  --bin compare-output-offsets -- "$PWD" /run/media/misha/storage "$base/logodds-depth-v1" \
+  "$base/logodds-arithmetic54-v1" "$base/<fresh-output>"
+```
