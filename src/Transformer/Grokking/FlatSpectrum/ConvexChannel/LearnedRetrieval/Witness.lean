@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.B
 /-!
 # Nonempty learned binding conditions
 
-Source: `review/flat_spectrum.md`, CM111. Two distinct imaginary vectors and a
+Source: `review/flat_spectrum.md`, CM111–112. Two distinct imaginary vectors and a
 nonconstant learned relative potential satisfy the actual content, link and
 decoder conditions. This mathematical witness is not a native initializer.
 -/
@@ -105,5 +105,11 @@ example : Landscape.Neural.crossEntropy (logit witness witnessPast false) true �
     (by norm_num) (by norm_num) witness_key_gap witness_relative_gap witness_decoder_gap
   norm_num [witnessPast] at h ⊢
   exact h
+
+example :
+    ¬ ((fun z : Bool → ℝ => decide (z false < z true)) (score witness [false, false]) = false ∧
+      (fun z : Bool → ℝ => decide (z false < z true)) (score witness [false, true]) = true) :=
+  incompatible_two_object_answers witness (fun z : Bool → ℝ => decide (z false < z true))
+    false false true false true (by decide)
 
 end Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval

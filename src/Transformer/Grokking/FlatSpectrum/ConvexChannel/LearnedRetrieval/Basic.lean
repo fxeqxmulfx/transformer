@@ -6,7 +6,7 @@ public import Mathlib.Analysis.InnerProductSpace.Basic
 /-!
 # Actual shared learned content and relative-position retrieval
 
-Source: `review/flat_spectrum.md`, CM111. Query/key embeddings and value/class
+Source: `review/flat_spectrum.md`, CM111–112. Query/key embeddings and value/class
 embeddings are shared learned maps. All positions and original classes occur
 in the forward. Norm restrictions bound capacity; they do not specify labels.
 -/
@@ -88,6 +88,34 @@ theorem sum_pathMass {n : ℕ} (hn : 0 < n) (p : Parameters O E) (x : Fin n → 
     ∑ jk, pathMass p x q jk = 1 := by
   simp only [pathMass, Fintype.sum_prod_type, ← Finset.mul_sum,
     sum_softmaxWeight hn, mul_one]
+
+/-- CM112. With one past object, the sole path has mass one for every learned
+key, relative potential and query. Its value supplies every class score. -/
+theorem logit_one_past (p : Parameters O E) (x : Fin 1 → O) (q c : O) :
+    logit p x q c = kernel p c (x 0) := by
+  have mass := sum_pathMass (n := 1) (by decide) p x q
+  simp only [Fintype.sum_prod_type, Fin.sum_univ_one] at mass
+  simp only [logit, Fintype.sum_prod_type, Fin.sum_univ_one, mass, one_mul]
+
+/-- CM112. On the actual serialized prefix of two objects, each logit
+depends on the first object's value and the class readout. -/
+theorem score_two_objects (p : Parameters O E) (a q c : O) :
+    score p [a, q] c = kernel p c a := by
+  change logit p (fun j : Fin 1 => [a][j]) q c = _
+  rw [logit_one_past]
+  rfl
+
+/-- CM112. Any deterministic object selection from the complete scores
+must miss at least one of two different answers required after the same
+first object. The selection may include any fixed scaling and tie rule. -/
+theorem incompatible_two_object_answers (p : Parameters O E) (choose : (O → ℝ) → O)
+    (a q r y z : O) (hne : y ≠ z) :
+    ¬ (choose (score p [a, q]) = y ∧ choose (score p [a, r]) = z) := by
+  have equal : score p [a, q] = score p [a, r] := by
+    funext c
+    rw [score_two_objects, score_two_objects]
+  intro ⟨hq, hr⟩
+  exact hne (hq.symm.trans ((congrArg choose equal).trans hr))
 
 /-- The literal learned forward has unit score capacity at every width and
 memory length, including empty memory, CM111. -/

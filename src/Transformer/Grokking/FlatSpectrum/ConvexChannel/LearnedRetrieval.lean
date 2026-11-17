@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.ShortPrefix
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.Witness
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.Domain
 
 /-!
