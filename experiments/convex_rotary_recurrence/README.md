@@ -216,3 +216,50 @@ bash experiments/convex_rotary_recurrence/run.sh WORKSPACE STORAGE FREEZE COHORT
 Individual commands gain the same suffix: `train-cautious`, `score-cautious`,
 `verify-cautious`; family is `plain`, `fixed` or `rotary`. The original failed
 producer remains immutable and is replayed using its original frozen binary.
+
+The cautious comparison is complete at producer `ff00f921`, freeze
+`rotary-cautious-v1`, source fingerprint
+`f75861a34af01cca344cc7576c77d1f1f0070fa97d127beb8ed249218d581280`, binary SHA256
+`a5f24cf06a8a70df48baea016132984594820e1e06b8cbc2577727b66fba2da1`.
+Evidence remains in
+`/run/media/misha/storage/transformer-runs/rotary-recurrence/cautious-v1`.
+All eighteen train/score/replay commands exit0, and all six complete raw-logit
+and metric replays are identical. Each cell retains4096 original records, two
+epochs,129 components and all original split reports. Every accepted step obeys
+the prospective cap; all end at2/129 and the mean step is0.0693890.
+
+| Family / mode | Full train correct /2048 | Novel validation correct /512 | Test correct /512 | Novel validation CE |
+|---|---:|---:|---:|---:|
+| Plain / Mini |171 (8.350%)|27 (5.273%)|17 (3.320%)|3.77337|
+| Plain / forward |166 (8.105%)|15 (2.930%)|19 (3.711%)|3.80737|
+| Fixed / Mini |174 (8.496%)|10 (1.953%)|26 (5.078%)|3.76373|
+| Fixed / forward |180 (8.789%)|24 (4.688%)|16 (3.125%)|3.69763|
+| Learned rotary / Mini |174 (8.496%)|10 (1.953%)|26 (5.078%)|3.76373|
+| Learned rotary / forward |180 (8.789%)|24 (4.688%)|16 (3.125%)|3.69763|
+
+All six original success and raw/exact99 flags are false. Raw and exact coincide
+because each example has one answer. Capping updates lowers full-training CE to
+3.459–3.484 and improves training accuracy relative to the first comparison,
+but recall remains poorly fitted. The plain-model result isolates this update
+change: its novel CE falls from13.686/13.832 to3.773/3.807, while accuracy remains
+5.273%/2.930%. This supports improved stability, not a solution to recall.
+
+Fixed and learned rotations have **exactly equal complete split reports,
+including every raw-logit hash**, in each mode. Their mixture weights and all
+nonzero-component parameters are also exactly equal. Every nonzero component
+in the learned model retains frequencies(1,0.01); the separate zero component
+uses(0,0) and has identically zero output. This occurs despite9192 frequency
+proposal trials per learned run. There are thousands of nonzero off-diagonal
+content entries, so a claim that all matrices became diagonal would be false.
+The measurements do not establish that the family or its frequency directions
+are globally unhelpful: the numerical proposal search and low full-training
+accuracy remain substantial limitations.
+
+Plain/fixed cells each use71910880 component CE evaluations; learned rotary uses
+72205024. Every cell uses278528 line-search evaluations and every forward cell
+adds819200 class-bias queries. Training takes102.26/102.99s for plain,
+107.01/108.20s for fixed and107.38/107.27s for learned, Mini/forward respectively.
+These are descriptive concurrent-run timings, not matched transformer budgets.
+The next investigation should distinguish insufficient component discovery,
+state/readout geometry and training budget before adding another positional
+formula. The broader generalization goal and99% recall target remain unresolved.

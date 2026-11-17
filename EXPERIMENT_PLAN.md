@@ -8779,3 +8779,15 @@ Record stored versus trainable coordinates separately. The plain comparison
 isolates the cap versus the first producer; the learned comparison also changes
 its initialization and is described accordingly. Seal all six endpoints before
 scoring/replay; preserve every failure and resource limit.
+
+Task377's cautious six-cell comparison atff00f921 completes and all18 commands
+succeed; every full raw-logit replay matches. All accepted steps respect the
+prospective2/(t+2) cap. Full train improves to8.105%–8.789%, CE3.459–3.484,
+but novel recall remains1.953%–5.273%, and every original/raw99 flag fails.
+Fixed and learned rotations have exactly identical raw split reports, mixture
+weights and nonzero components in each mode. Learned frequencies stay at their
+matched(1,0.01) starts despite9192 frequency trials per run. The matrices retain
+many nonzero off-diagonals, so diagonal collapse does not explain this equality.
+Preserve all failures and distinguish improved update stability from solving
+fitting or generalization. Further work needs to diagnose component discovery,
+geometry and budget rather than assume another rotary formula supplies labels.
