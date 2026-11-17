@@ -1,0 +1,23 @@
+[package]
+name = "convex-joint-readouts"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+optimality = { package = "convex-readout-optimality", path = "../convex_readout_optimality" }
+readouts = { package = "convex-recurrent-readouts", path = "../convex_recurrent_readouts" }
+rotary = { package = "convex-rotary-recurrence", path = "../convex_rotary_recurrence" }
+bilinear = { package = "convex-bilinear-sequence", path = "../convex_bilinear_sequence" }
+baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.10.9"
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

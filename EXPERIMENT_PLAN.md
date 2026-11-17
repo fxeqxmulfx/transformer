@@ -9002,3 +9002,23 @@ Task389 will first prove a joint weighted-readout capacity domain and full CE ga
 that allow capacity redistribution among learned components. This remaining
 conditional restriction must not be mistaken for a state-capacity obstruction,
 a raw-accuracy bound or identification of unseen labels.
+
+Task389 is proved and reviewed at33511122:62 new theorems, full14181-job build,
+eleven warning-free direct sources, all direct/global axiom checks and native
+INDEX pass. The shared weighted-readout capacity is convex and reconstructs
+the original complete learned family exactly. Its support and actual training
+CE gap include all capacity reallocations. An explicit nonzero complex model
+has zero old fixed-weight gap yet strict actual CE improvement after capacity
+moves to a retained ordered component. No new sorry or extra axiom is introduced.
+
+Task390 tests this restriction with convex_joint_readouts. Freeze source,
+binary, protocol and all twelve reviewed input identities before execution.
+First compare both conditional gaps and fixed probes on all twelve original
+training streams. Then run512 additional conditional weighted-readout updates
+on the four projected-v1 endpoints, minibatch32, sampler seed10001, both modes,
+query reserve1e-4, twelve line iterations and step ceiling1/16. All components,
+classes, coordinates, masks and records remain. Forward training uses finite
+feasible CE queries. Seal all four models before original held-out scoring;
+replay all diagnostics and raw reports. Preserve learned content and the
+transformer baseline,110GB RAM and both-disk limits. This tests conditional
+allocation, without assuming unseen identification or a global factor optimum.
