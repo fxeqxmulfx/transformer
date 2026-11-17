@@ -77,5 +77,49 @@ The output directory must be new. Repeat into another new directory and compare
 all twelve reports byte for byte. The wrapper admits one worker under a32GiB
 address-space cap; native checks enforce110GB aggregate RAM and both disk
 thresholds. A space failure stops execution without cleanup. Generated evidence
-stays outside the worktree. Original recall failure remains the current finding;
-this new diagnostic has not yet produced measurements.
+stays outside the worktree.
+
+Producer `2e1e1aa6` completes all twelve diagnostics. Each retains 2048 supervised
+records, 64 minibatches, 100 classes, 129 components and 51,600 real coordinates.
+The twelve original endpoints remain byte-identical. Training correct counts
+match their original reports exactly; independently accumulated CE differs by
+at most 6.67e-16. No model is updated or newly evaluated on held-out labels.
+
+| Cohort | Source/mode | Current CE | Estimated gap | Best fixed probe eta | Probe CE | Training correct, before → probe |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| radial512 | cautious Mini | 2.069413 | 0.516121 | 0.25 | 2.021902 | 1455 → 1375 |
+| radial512 | cautious forward | 2.058971 | 0.536401 | 0.0625 | 2.032595 | 1459 → 1506 |
+| radial512 | refined Mini | 2.094261 | 0.532555 | 0.25 | 2.067526 | 1437 → 1305 |
+| radial512 | refined forward | 2.107671 | 0.549955 | 0.0625 | 2.081332 | 1393 → 1434 |
+| radial2048 | cautious Mini | 1.920944 | 0.273263 | 0.0625 | 1.908081 | 1598 → 1617 |
+| radial2048 | cautious forward | 1.911646 | 0.283142 | 0.0625 | 1.899469 | 1629 → 1632 |
+| radial2048 | refined Mini | 1.948229 | 0.283913 | 0.0625 | 1.936016 | 1595 → 1620 |
+| radial2048 | refined forward | 1.961521 | 0.305953 | 0.0625 | 1.949316 | 1569 → 1612 |
+| Euclidean512 | cautious Mini | 2.042003 | 0.492518 | 0.25 | 2.003725 | 1390 → 1357 |
+| Euclidean512 | cautious forward | 2.032235 | 0.509158 | 0.0625 | 2.007436 | 1408 → 1438 |
+| Euclidean512 | refined Mini | 2.071083 | 0.514688 | 0.0625 | 2.046180 | 1368 → 1428 |
+| Euclidean512 | refined forward | 2.085518 | 0.530963 | 0.0625 | 2.060469 | 1324 → 1377 |
+
+Every endpoint has an actually evaluated feasible probe that lowers training CE,
+by0.01218–0.04751. Thus none is treated as an optimum. The lowest-CE probe raises
+training correct counts in nine cases and lowers them in three; CE improvement
+does not imply raw-accuracy improvement. All eight probes remain in each report,
+including worse ones. These unaccepted training-only probes earn no task success
+or new held-out accuracy credit.
+
+With current states **and mixture weights fixed**, estimated conditional CE
+lower bounds are1.52257–1.56171 for radial512,1.62850–1.66432 for radial2048 and
+1.52308–1.55640 for Euclidean512. These floating estimates are not certified
+capacity obstructions, especially not raw-accuracy bounds. They also do not
+cover reallocation of mixture weights or changing learned content. The next
+Lean step is a joint weighted-readout capacity domain that permits capacity
+to move among complete learned components before interpreting a readout limit
+as a state-representation failure.
+
+Actual complete logits agree exactly with the independent state contraction.
+Maximum support-identity error is4.45e-16, change-identity error3.07e-14 and
+row-budget excess2.23e-16. Each diagnostic performs20,480 CE evaluations,
+245,760 across the cohort, with zero accepted updates. Generated reports are at
+`/run/media/misha/storage/transformer-runs/diagnostics/readout-optimality-v1`;
+source fingerprint is
+`3ef357564512402401981c245fb702b65e8f022108258b7777f4e2c4496a7004`.

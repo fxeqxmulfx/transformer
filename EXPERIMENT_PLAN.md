@@ -8989,3 +8989,16 @@ the frozen run, evaluate eight fixed feasible directions without an accepted
 update, and independently replay all reports. Analytic diagnostics of saved
 forward-only endpoints do not count as forward-only training. No held-out labels
 or new accuracy credit enter this diagnostic.
+
+Task388 producer2e1e1aa6 measures all twelve pinned endpoints. Estimated gaps are
+0.4925–0.5500 after512 updates and0.2733–0.3060 after2048. An actual fixed feasible
+probe lowers training CE in every case by0.01218–0.04751; no endpoint is declared
+optimal. The lowest-CE probe raises training correct counts in nine cases and
+lowers them in three. No update is accepted and no held-out label is used.
+Complete coefficients, classes, coordinates and records are retained; endpoint
+bytes are unchanged. Original training correct counts match exactly and CE to
+6.67e-16. These floating conditional bounds fix both states and mixture weights.
+Task389 will first prove a joint weighted-readout capacity domain and full CE gap
+that allow capacity redistribution among learned components. This remaining
+conditional restriction must not be mistaken for a state-capacity obstruction,
+a raw-accuracy bound or identification of unseen labels.
