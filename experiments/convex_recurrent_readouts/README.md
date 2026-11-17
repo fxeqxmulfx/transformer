@@ -154,7 +154,7 @@ the generalization gap persists and novel accuracy does not improve in every
 cell. Each run processes65536 records over32 refit epochs. All learned content
 hashes and129 stored components remain unchanged; all four batch streams match.
 Every interpolation coefficient is1, actual interpolation errors are0, and
-maximum row-budget excess is at most2.22e-16. Each Mini run uses4653056 CE
+maximum row-budget excess is4.44e-16. Each Mini run uses4653056 CE
 evaluations, each forward run17760256, including13107200 signed bias queries.
 Concurrent training times are63.93/74.70s for cautious and63.96/73.23s for
 refined, Mini/forward respectively; source-content training costs are separate.
