@@ -8670,3 +8670,13 @@ parity or Boolean weights. Keep every original target, duplicate and batch tail.
 Seal all six endpoints before any held-out scoring, replay all raw logits and
 report all short/long outcomes. Preserve the previous producers, baseline and
 resource limits; a bound or constructed parity witness alone is not success.
+
+Task369's frozen30-cell comparison is complete. All90 train/score/replay commands
+exit0 and every complete raw-logit replay matches. Addition succeeds in all six
+cells with4705/4705 held-out answers; seed1 is exactly equal to the earlier dense
+producer in both modes. Both modes pass2/5 primary tasks at each training seed:
+addition always, AND shift only seed3, AND random only seeds1/2. Total12/30.
+Key-value binding stays2.930–5.078% raw/exact and parity16 stays44.586–54.140%
+exact. Preserve all failures and24-iteration settings; these are not replaced
+by the separate line refinement or recurrent results. Broader generalization
+remains unresolved, while three-seed addition repeatability is established.

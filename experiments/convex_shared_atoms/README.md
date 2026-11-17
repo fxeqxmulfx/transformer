@@ -222,8 +222,39 @@ aggregate RAM and both disks, trains all30 endpoints before scoring, and writes
 each command's exit status. It refuses insufficient resources and never removes
 old evidence. Each saved endpoint must replay every raw logit independently.
 The prior addition seed1 logits provide a separate control for execution
-equivalence after the exact-zero optimization. Results remain pending until
-the new cohort is complete.
+equivalence after the exact-zero optimization.
+
+The complete30-cell cohort is now sealed, scored and replayed. Producer
+`be662e75`, freeze `shared-atoms-three-seed-v1`, source fingerprint
+`b3d7683c0173348de8f27507fb556eeda4e3b34ae1a2223dc0e01825fc4dfd5e`, binary
+SHA256 `7440301effee21de4871d42fcef233886f4a8ddf8f520f98aa395b09c7d704af`.
+Evidence is retained under
+`/run/media/misha/storage/transformer-runs/shared-atoms/three-seed-v1`.
+All90 train/score/replay commands exit0; all30 complete raw-logit replays match.
+Addition seed1 reproduces the previous dense producer's complete split reports,
+including every raw-logit hash, exactly in each mode.
+
+| Case | Successful cells out of6 | Primary raw range | Primary exact range |
+|---|---:|---:|---:|
+| Addition |6|100%|100%|
+| AND shift |2|50–100%|0–100%|
+| AND random |4|50–100%|0–100%|
+| Key-value binding / MQAR |0|2.930–5.078%|2.930–5.078%|
+| Parity16 |0|72.293–77.070%|44.586–54.140%|
+
+Both modes have the same success pattern: addition in all seeds, AND shift
+only in seed3, AND random only in seeds1/2. Thus each mode passes2/5 tasks in
+each training seed, and the cohort passes12/30 cells. Original success and
+primary raw/exact99 coincide here. Addition held-out CE ranges0.00112526–
+0.00116229, with4705/4705 held-out answers in every cell. The Boolean long
+probes still fail, down to28.125% exact on AND shift and31.25% on AND random.
+Complete per-cell reports retain every CE, count and failed probe.
+
+These results support repeatability of addition across three training seeds,
+and the exact-zero execution control. They do not resolve recall, parity or
+length transfer. The retained24-iteration line search can stall at this budget;
+the separate refinement below tests that optimization issue. No failed cell is
+replaced by a later architecture or counted as a success.
 
 ## Finite line-search resolution diagnostic
 
