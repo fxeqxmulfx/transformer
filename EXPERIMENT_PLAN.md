@@ -8812,3 +8812,12 @@ All88 directions per mode are retained; no held-out labels or accepted update.
 Task379 will extend frequency resolution while preserving all content paths,
 the original data and capped-step protocol. Existing CM98/99 proofs cover every
 finite frequency and feasible convex step; no new convergence claim is made.
+
+Task379 implements the training-only resolution repair within CM98/99: after
+unchanged six full coordinate sweeps, each learned-rotary start receives16 finer
+signed frequency levels1/32 through2^-20, with complete original-class readout
+refits and actual feasible CE comparisons. Keep every content parameter, original
+record,128-update budget, matched initialization and capped step unchanged.
+Zero extra levels must reproduce both cautious training trajectories exactly.
+Freeze a new two-mode producer, seal both endpoints before original scoring,
+retain every failure and raw replay. No new architecture or convergence claim.

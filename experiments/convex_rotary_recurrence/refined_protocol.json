@@ -1,0 +1,48 @@
+{
+  "name": "refined-learned-rotary-binding-v1",
+  "model": "CM98/99 complete learned rotary matrices with finer frequency proposals",
+  "interface": "immutable object sequence to next original object; IDs are addresses only",
+  "data": "unchanged original frozen35 key-value-binding generator and fingerprints; data seed1",
+  "families": [
+    "rotary"
+  ],
+  "modes": [
+    "mini",
+    "forward"
+  ],
+  "seeds": [
+    1
+  ],
+  "budget": 16.0,
+  "budget_rule": "fixed total component mass; initial maximum norm and every matrix/readout row absolute sum at most one",
+  "query_step": 0.0001,
+  "component_sweeps": 6,
+  "component_starts": "trainable identity, random complex monomial content, previous learned proposal; fixed and learned rotary candidates both initialize frequencies at(1,0.01); identical content RNG draws in every family",
+  "component_search": "unchanged six complete initial/matrix/frequency sweeps, followed for each start by16 frequency-only dyadic levels1/32 through2^-20; both signs and both frequencies; every trial refits every original-class readout",
+  "component_comparison": "strict actual full-class minibatch CE improvement at feasible alpha=min(0.1,1/budget); approximate discovery without a global oracle",
+  "line_iterations": 64,
+  "model_reservation_bytes": 80000000000,
+  "aggregate_ram_limit_bytes": 110000000000,
+  "minimum_workspace_free_bytes": 2147483648,
+  "minimum_storage_free_bytes": 17179869184,
+  "sampler": "all original minibatch records, masks, duplicate occurrences and short tails; Random(seed+10000)",
+  "component_rng": "Random(seed+20000), independent of sampler; plain consumes unused frequency initialization draws to match content starts",
+  "training": "ordinary full-class CE; same feasible query centre; forward mode uses finite loss evaluations without CE or recurrent derivatives",
+  "stopping": "fixed128-update diagnostic; both endpoints sealed before scoring; no convergence assumption",
+  "cases": [
+    {
+      "name": "gpt-probe-key-value-binding",
+      "maximum_updates": 128
+    }
+  ],
+  "success": "original primary success and separate raw/exact99; retain every original split and failure",
+  "limitations": "two-state components, approximate discovery, one training seed, short recall; order witness and norm bound do not prove unseen-answer learning",
+  "step_schedule": "two-over-t-plus-two",
+  "frequency_initialization": "matched-fixed",
+  "fixed_frequency": [
+    1.0,
+    0.01
+  ],
+  "comparison": "only finer frequency proposals added relative to cautious learned rotary; same original data,128 updates, initialization, content search, complete CE comparison and capped steps",
+  "frequency_refinement_steps": 16
+}

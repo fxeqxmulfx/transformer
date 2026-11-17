@@ -16,6 +16,7 @@ use std::{fs, io::Write, path::Path, time::Instant};
 pub mod score;
 pub const PROTOCOL: &str = include_str!("../protocol.json");
 pub const CAUTIOUS_PROTOCOL: &str = include_str!("../cautious_protocol.json");
+pub const REFINED_PROTOCOL: &str = include_str!("../refined_protocol.json");
 
 pub fn fingerprint() -> String {
     let mut digest = Sha256::new();
@@ -25,6 +26,7 @@ pub fn fingerprint() -> String {
         include_bytes!("atom.rs"),
         include_bytes!("coordinates.rs"),
         include_bytes!("proposal.rs"),
+        include_bytes!("proposal/refinement.rs"),
         include_bytes!("train.rs"),
         include_bytes!("experiment.rs"),
         include_bytes!("experiment/score.rs"),
@@ -33,6 +35,7 @@ pub fn fingerprint() -> String {
         include_bytes!("../Cargo.lock"),
         PROTOCOL.as_bytes(),
         CAUTIOUS_PROTOCOL.as_bytes(),
+        REFINED_PROTOCOL.as_bytes(),
         original::fingerprint().as_bytes(),
     ] {
         digest.update((bytes.len() as u64).to_le_bytes());
@@ -66,6 +69,10 @@ pub fn protocol(mode: &str, seed: u64, text: &str) -> Result<(Value, Config)> {
                 Family::Fixed.initial_frequency()
             }
             _ => return Err("unknown frequency initialization".into()),
+        },
+        frequency_refinement_steps: match p.get("frequency_refinement_steps") {
+            None => 0,
+            Some(v) => usize::try_from(v.as_u64().ok_or("frequency refinement steps")?)?,
         },
     };
     Ok((p, config))
@@ -207,6 +214,8 @@ pub fn train(
         "case":name,"mode":mode,"family":family,"seed":seed,"updates":updates,"examples_seen":examples,"targets_seen":targets,
         "epochs":examples as f64/training.len() as f64,"bias_loss_queries":queries,
         "component_loss_queries":component_queries,"coordinate_trials":coordinate_trials,"line_loss_queries":line_queries,
+        "centre_and_validation_ce_evaluations":2*targets,
+        "total_ce_evaluations":queries+component_queries+line_queries+2*targets,
         "components_stored":model.atoms.len(),"elapsed_seconds":started.elapsed().as_secs_f64(),
         "endpoint_sha256":original::hash(&fs::read(path.join("endpoint.json"))?),
         "status":"sealed","heldout_scored":false}),

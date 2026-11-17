@@ -168,6 +168,7 @@ mod tests {
             line_iterations: 64,
             step_ceiling: 0.1,
             frequency_start: Family::Fixed.initial_frequency(),
+            frequency_refinement_steps: 0,
         };
         let report = probes::measure(&centre, &atom, &records, config).unwrap();
         assert_eq!(report["directions"].as_array().unwrap().len(), 88);

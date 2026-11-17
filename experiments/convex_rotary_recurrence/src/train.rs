@@ -17,6 +17,8 @@ pub struct Config {
     pub line_iterations: usize,
     pub step_ceiling: f64,
     pub frequency_start: Option<[f64; 2]>,
+    #[serde(default)]
+    pub frequency_refinement_steps: usize,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -125,6 +127,8 @@ pub fn step(
         || config
             .frequency_start
             .is_some_and(|f| f.iter().any(|x| !x.is_finite()))
+        || config.frequency_refinement_steps > 16
+        || (config.frequency_refinement_steps > 0 && model.family != crate::atom::Family::Rotary)
     {
         return Err("invalid prospective update settings".into());
     }
@@ -159,8 +163,14 @@ pub fn step(
     } else {
         None
     };
-    let (atom, component_trial_ce) =
-        search.propose(model.objects, model.family, config.sweeps, rng, previous)?;
+    let (atom, component_trial_ce) = search.propose(
+        model.objects,
+        model.family,
+        config.sweeps,
+        config.frequency_refinement_steps,
+        rng,
+        previous,
+    )?;
     let candidate: Vec<Vec<f64>> = records
         .iter()
         .map(|r| {

@@ -8,6 +8,7 @@ use crate::{
 };
 use baseline::random::Random;
 use bilinear::{model::cross_entropy, train::Record};
+mod refinement;
 
 /// A feasible complete complex readout direction for a row-l1 budget.
 /// All coefficients contribute to the comparison; zeros are values, not removed parameters.
@@ -127,6 +128,7 @@ impl Search<'_, '_> {
         objects: usize,
         family: Family,
         sweeps: usize,
+        frequency_refinement_steps: usize,
         rng: &mut Random,
         previous: Option<&Atom>,
     ) -> Result<(Atom, f64)> {
@@ -139,7 +141,10 @@ impl Search<'_, '_> {
         }
         let mut best: Option<(Atom, f64)> = None;
         for start in starts {
-            let trial = self.improve(start, sweeps, true)?;
+            let mut trial = self.improve(start, sweeps, true)?;
+            if frequency_refinement_steps > 0 {
+                trial = self.refine_frequencies(trial.0, frequency_refinement_steps)?;
+            }
             if best.as_ref().is_none_or(|b| trial.1 < b.1) {
                 best = Some(trial);
             }

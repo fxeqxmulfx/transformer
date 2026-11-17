@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Preserve both complete families and failures; seal every endpoint before scoring.
+# Preserve every declared family and failure; seal every endpoint before scoring.
 set -euo pipefail
 if test "$#" -lt 4 || test "$#" -gt 5; then
-  echo 'usage: bash run.sh WORKSPACE STORAGE FREEZE COHORT [-cautious]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE FREEZE COHORT [-cautious|-refined]' >&2
   exit 2
 fi
 task_workspace=$1
@@ -11,7 +11,7 @@ task_freeze=$3
 task_cohort=$4
 task_suffix=${5:-}
 case "$task_suffix" in
-  ''|-cautious) ;;
+  ''|-cautious|-refined) ;;
   *) echo 'unknown frozen cohort variant' >&2; exit 2 ;;
 esac
 task_binary=$task_freeze/stress
@@ -26,11 +26,11 @@ mapfile -t task_cases < <(jq -r '.cases[].name' "$task_freeze/protocol.json")
 mapfile -t task_families < <(jq -r '.families[]' "$task_freeze/protocol.json")
 mapfile -t task_seeds < <(jq -r '.seeds[]' "$task_freeze/protocol.json")
 test "${#task_cases[@]}" -eq 1
-if test -n "$task_suffix"; then
-  test "${#task_families[@]}" -eq 3
-else
-  test "${#task_families[@]}" -eq 2
-fi
+case "$task_suffix" in
+  -refined) test "${#task_families[@]}" -eq 1 ;;
+  -cautious) test "${#task_families[@]}" -eq 3 ;;
+  '') test "${#task_families[@]}" -eq 2 ;;
+esac
 test "${#task_seeds[@]}" -eq 1
 run_cell() {
   local task_action=$1 task_case=$2 task_family=$3 task_mode=$4 task_seed=$5 task_result=0

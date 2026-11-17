@@ -144,6 +144,7 @@ fn both_modes_learn_swapped_order_without_witness_weights_and_replay() {
                 line_iterations: 64,
                 step_ceiling: 1.,
                 frequency_start: None,
+                frequency_refinement_steps: 0,
             };
             for _ in 0..6 {
                 let receipt = train::step(&mut m, &records, config, &mut rng).unwrap();
@@ -277,6 +278,7 @@ fn capped_steps_preserve_the_fixed_schedule_and_all_original_coordinates() {
                         line_iterations: 64,
                         step_ceiling: ceiling,
                         frequency_start: Family::Fixed.initial_frequency(),
+                        frequency_refinement_steps: 0,
                     },
                     &mut rng,
                 )

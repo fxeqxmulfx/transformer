@@ -6,11 +6,12 @@ use std::path::Path;
 fn run() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     let raw_command = args.first().map_or("", String::as_str);
-    let command = raw_command.trim_end_matches("-cautious");
-    let text = if raw_command.ends_with("-cautious") {
-        experiment::CAUTIOUS_PROTOCOL
+    let (command, text) = if let Some(command) = raw_command.strip_suffix("-refined") {
+        (command, experiment::REFINED_PROTOCOL)
+    } else if let Some(command) = raw_command.strip_suffix("-cautious") {
+        (command, experiment::CAUTIOUS_PROTOCOL)
     } else {
-        experiment::PROTOCOL
+        (raw_command, experiment::PROTOCOL)
     };
     if args.len() == 1 && command == "plan" {
         let p: Value = serde_json::from_str(text)?;
@@ -34,7 +35,7 @@ fn run() -> Result<()> {
         return Ok(());
     }
     if args.len() != 8 {
-        return Err("usage: stress plan[-cautious] | stress train|score|verify[-cautious] WORKSPACE STORAGE COHORT CASE plain|fixed|rotary mini|forward SEED".into());
+        return Err("usage: stress plan[-cautious|-refined] | stress train|score|verify[-cautious|-refined] WORKSPACE STORAGE COHORT CASE plain|fixed|rotary mini|forward SEED".into());
     }
     let workspace = Path::new(&args[1]);
     let storage = Path::new(&args[2]);

@@ -331,3 +331,46 @@ No held-out label entered the diagnosis, no proposed model was accepted, and no
 new accuracy result is claimed. The next controlled repair adds finer frequency
 proposals within the already proved CM98/99 domain and repeats original recall
 with every other protocol choice retained.
+
+## Finer frequency search
+
+Task379 adds a controlled repair of the measured training-only resolution
+failure. `refined_protocol.json` retains the cautious learned-rotary data,
+seed1, both modes,128 updates, matched initialization, six full component sweeps,
+capacity16 and capped accepted steps. After the existing search, each candidate
+start gets16 finer frequency-only levels, from1/32 through2^-20. Both signs and
+both coordinates are queried. Every proposal refits all original-class readouts
+and uses the same complete CE comparison. Initial states and content matrices
+still receive their complete original search; no parameter or record is removed.
+
+This changes numerical search resolution inside the CM98/99 proved domain.
+It adds no architectural or convergence assumption. Zero extra levels is the
+legacy default and must reproduce all128 deterministic receipts and the final
+checkpoint bytes of both cautious learned-rotary runs before this repair trains.
+A separate numerical fixture has no improving old-grid frequency direction,
+but the finer search lowers actual feasible mixture CE in both modes. It also
+checks preservation of every initial/content coordinate and finite-query counts.
+The aggregate training receipt counts component, class-bias and line-search CE
+queries separately, adds the two centre/validation CE calls per training record,
+and reports their total. Legacy per-update receipts retain their exact format.
+
+Freeze the native executable, source archive, commit and binary hashes, and copy
+`refined_protocol.json` to the freeze's `protocol.json`. Keep the earlier
+producers and their failed results intact. After the native checks and the two
+legacy `diagnose` replays above, run:
+
+```sh
+"$CARGO_TARGET_DIR/release/stress" plan-refined
+bash experiments/convex_rotary_recurrence/run.sh WORKSPACE STORAGE FREEZE FRESH_COHORT -refined
+```
+
+Both new endpoints seal before any held-out scoring; every original split and
+failure is retained, and both complete raw-logit replays must match. This
+training-only repair earns no accuracy credit before the measurements. Aggregate
+RAM stays below110GB and both disk guards apply throughout training and replay.
+
+All17 native controls, Clippy, formatting and shell checks pass. With extra
+refinement disabled, both legacy runs reproduce all128 deterministic receipts
+and endpoint bytes exactly, and both complete88-direction probe files match
+the earlier diagnostic byte-for-byte. Evidence is stored outside the worktree
+at `diagnostics/rotary-refinement-legacy-v1` under the shared runs directory.
