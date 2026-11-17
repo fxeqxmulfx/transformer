@@ -157,6 +157,26 @@ fn metrics(model: &Model, input: &[Vec<Sample>]) -> Result<Value> {
     }
     Ok(json!({"targets":all.len(),"correct":correct,"ce":loss/all.len() as f64}))
 }
+/// Read-only observations of the full minibatch immediately before Adam.
+pub struct Update<'a> {
+    pub number: usize,
+    pub model: &'a Model,
+    pub tables: &'a Tables,
+    pub batch: &'a [&'a Sample],
+    pub coordinates: &'a [usize],
+    pub gradient: &'a [f64],
+}
+pub trait Observer {
+    fn admit(&mut self) -> Result<()>;
+    fn before_update(&mut self, _update: Update<'_>) -> Result<()> {
+        Ok(())
+    }
+}
+impl<F: FnMut() -> Result<()>> Observer for F {
+    fn admit(&mut self) -> Result<()> {
+        self()
+    }
+}
 pub fn fit(
     m: &mut Model,
     rows: &[Example],
@@ -164,7 +184,7 @@ pub fn fit(
     mode: &str,
     seed: u32,
     p: &Protocol,
-    mut admit: impl FnMut() -> Result<()>,
+    mut observer: impl Observer,
 ) -> Result<Value> {
     let input = samples(m, rows)?;
     if input.is_empty() || batch_size == 0 || !p.modes.iter().any(|s| s == mode) {
@@ -189,7 +209,7 @@ pub fn fit(
             cursor = 0;
         }
         if step == 1 || step % 64 == 0 {
-            admit()?;
+            observer.admit()?;
         }
         let end = (cursor + batch_size).min(order.len());
         let indices = &order[cursor..end];
@@ -199,13 +219,10 @@ pub fn fit(
         }
         batches.extend(u64::MAX.to_le_bytes());
         let mut tab = Tables::new(m, &lengths(&batch))?;
-        match mode {
-            "mini" => {
-                let g = analytic(m, &tab, &batch);
-                adam.update(m, &l, &all, &g, p)?;
-            }
+        let selected;
+        let (coords, g) = match mode {
+            "mini" => (&all, analytic(m, &tab, &batch)),
             "forward" => {
-                let selected;
                 let coords = if let Some((choices, count)) = &mut cycle {
                     selected = choices.next(*count);
                     &selected
@@ -214,10 +231,19 @@ pub fn fit(
                 };
                 let g = query::differences(m, &mut tab, &batch, coords, p.query_step)?;
                 queries += 2 * coords.len();
-                adam.update(m, &l, coords, &g, p)?;
+                (coords, g)
             }
             _ => return Err("unrecognized training mode".into()),
-        }
+        };
+        observer.before_update(Update {
+            number: step,
+            model: m,
+            tables: &tab,
+            batch: &batch,
+            coordinates: coords,
+            gradient: &g,
+        })?;
+        adam.update(m, &l, coords, &g, p)?;
         cursor = end;
         examples += indices.len();
         targets += batch.len();
