@@ -4,6 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary.Readout.Execution
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary.Readout.Domain
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary.Readout.Minibatch
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary.Readout.Radial
 
 /-!
 # Complete readout refitting on already learned recurrent states

@@ -8909,3 +8909,22 @@ CE gains diminish by epoch32 while all content stays unchanged. This does not
 certify conditional optimality or a state-capacity obstruction. Investigate
 radial normalization as an optimizer limitation in Lean before another native
 repair; do not infer an unseen-answer guarantee from better fitting.
+
+Task384 proves a CM101 optimizer counterexample before choosing a replacement
+for radial normalization. Actual bounded recurrent content maps two different
+original-object prefixes to opposite complex states with opposite next labels.
+The complete CE residual gradient is checked against actual CE's first-order
+inequality. At feasible boundary rows every nonnegative gradient step, followed
+by radial normalization and interpolation, leaves those rows unchanged, while
+different feasible rows on the same learned content have strictly smaller CE
+for both records. This tests a convergence implication, not the specific native
+endpoint or a claim that query-shrink weights are fixed. Complete Lean/source,
+axiom, native INDEX and forbidden checks precede any new optimizer experiment.
+
+CM101's22 theorems pass the full14160-job build, all five touched-source warning
+checks and22 direct standard-axiom reports. The global audit remains36sorry,
+0rests,0extra axioms. Native INDEX generation/check records5063 modules and26524
+theorems, with0vacuous/0placeholder. The radial-CE counterexample is established;
+the next repair must use a constrained step with a justified optimization
+property, then be tested in both Mini and forward Mini on the unchanged recall
+cohort. This result alone gives no additional stress-test accuracy credit.

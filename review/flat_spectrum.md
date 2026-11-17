@@ -22080,3 +22080,49 @@ derivatives. No readout-separability, unseen-label identification, training-fit,
 optimizer-convergence or 99% accuracy guarantee is assumed. Every conditional
 statement is instantiated with explicit nonzero complex rows and the existing
 nonconstant positional witness.
+
+## CM101. Radial readout normalization can stall away from the CE optimum
+
+The longer CM100 refits improve training accuracy to76.6–79.5%, but gains slow
+and novel accuracy remains10.2–15.4%. This does not certify an optimum of the
+conditional convex readout problem. Here is an independent ordinary-CE
+counterexample to interpreting radial feasibility as an optimizer guarantee.
+
+Use the complete two-state complex family with zero frequencies, initial state
+s=(1,1/2), and object transitions T_true=Id and T_false=-Id. Thus the distinct
+original prefixes [true] and [false] execute to s and -s. Their next objects are
+true and false. These are admissible, nonconstant learned-content parameters
+used only as a proof witness, never as benchmark initialization or task features.
+
+Let r=(2/3,1/3), and take class rows u_true=r, u_false=-r. Each complete row has
+complex absolute sum one. Actual scores have correct-class logit5/6 and wrong
+logit-5/6. For either record b, write q_b for its positive wrong-class softmax
+probability. The ordinary-CE row gradient, in real/imaginary coordinates, is
+
+    g_{b,c} = (probability_c - 1[c=b]) conjugate(state_b)
+            = -(3/2) q_b u_c.
+
+The proof connects this explicit expression to the actual CE first-order
+inequality for arbitrary replacement rows, retaining both complex coordinates.
+For every nonnegative learning rate eta,
+
+    u_c - eta g_{b,c} = (1 + (3/2) eta q_b) u_c.
+
+CM100 radial normalization returns u_c exactly, because rowSize(u_c)=1 and the
+multiplier is at least one. Every interpolation between the old row and that
+proposal is unchanged as well. Both oppositely labeled records have this
+failure; it is not caused by conflicting labels on one identical prefix.
+
+Replace the rows instead by v_true=(1,0), v_false=(-1,0). They obey the same
+budget and retain exactly the same learned content. Their actual logits are
+1 and-1. Ordinary binary CE at correct margin2m is log(1+exp(-2m)), which is
+strictly smaller at m=1 than at m=5/6. The conditional loss is convex by CM100,
+yet the radial row update is fixed at a strictly worse feasible point.
+
+This is an optimizer implication counterexample, not a claim that the measured
+stress endpoints equal this witness, that their raw accuracy can be repaired by
+this fact alone, or that unseen labels become identified. The native finite-query
+capacity shrink still changes mixture weights; the theorem concerns the row
+update at its current centre, not a fixed point of every part of the trainer.
+It motivates checking a true constrained optimization step before drawing a
+capacity conclusion from the stalled training loss. No new sorry is introduced.
