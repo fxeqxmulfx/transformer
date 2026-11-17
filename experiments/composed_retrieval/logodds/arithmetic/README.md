@@ -60,3 +60,5 @@ training receipts and all 48 initial and final raw files in the separate
 four-case study. The primary driver stopped after the final fit when its
 working copy changed. The archived driver resumed at sealing, before any
 scores had been written, and rechecked the frozen source and executables.
+An uninterrupted end-to-end rerun reproduced all 288 models in each build,
+all optimizer receipts and every decoded count and raw score file.
