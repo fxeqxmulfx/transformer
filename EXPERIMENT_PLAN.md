@@ -9149,3 +9149,18 @@ and generated native INDEX pass. INDEX has5109modules26773theorems,36existing
 sorry and0rests/extra/vacuous/placeholder. Native comparison can now enforce
 the added geometry without silently shrinking its isometries or replacing the
 old family. Original held-out99% accuracy remains unresolved and must be tested.
+
+Task397 freezes `convex_hilbert_content` before native training: all four394
+control endpoints, selected on training evidence, retain their complete old
+parent at7/8 mass and add one full learned plain complex block at mass2.
+Old max-norm versus CM108 Hilbert geometry uses identical initial predictions,
+the same512 original minibatches of32 and both Mini/forward-only modes. All
+1204 real coordinates of the new block remain trainable. Complete feasible
+coordinate queries feed per-occurrence retained estimates; all parameters
+update simultaneously, replacing the earlier greedy coordinate acceptance.
+The retained parent stays learned but held during this new-block phase. This
+is a fixed empirical pilot, not jointly convex factor training or a proof of
+stochastic convergence. Every cached estimate must replay from its original
+record and actual historical parameters. All eight endpoints must seal before
+original raw/exact/CE/success/99 scoring and raw replay. Preserve all earlier
+failures and the transformer, with native tooling and110GB/both-disk guards.

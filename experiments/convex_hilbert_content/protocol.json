@@ -1,0 +1,23 @@
+{
+  "name":"hilbert-retained-content-v1",
+  "lean_source":"94b47aa8 CM107;886e7d05 CM108",
+  "case":"gpt-probe-key-value-binding",
+  "input":"all four48571783 control endpoints, selected for paired improved training CE and negative actual readout directions; no held-out selection",
+  "arms":["old","hilbert"],"variants":["cautious","refined"],"modes":["mini","forward"],
+  "seed":1,"batch":32,"updates":512,"shuffle_seed":30001,
+  "budget":16.0,"new_mass_fraction":0.125,"initialization_seed":30002,
+  "initial_radius":0.75,"matrix_jitter":0.015625,"query_step":0.0001,"learning_rate":1.0,
+  "model":"keep all129 learned original components at7/8 of their weights; add one complete plain complex two-state recurrence at mass2, with all initial, matrix and readout coordinates learned; no positional rotation in the new block; every100 original object has a full2x2 matrix and a complete two-complex-coordinate readout",
+  "initialization":"identical seeded raw initial vector and identity-plus-complex-jitter matrices in each arm, then each geometry's feasibility rule; output rows start zero, so paired starting logits agree exactly; no task-specific object roles, supplied answer formula or special label subset",
+  "geometry":"old: maximum-state norm, CM102 matrix/readout row projection and coordinatewise initial disk; hilbert: Euclidean initial/readout norm and CM108 full-matrix radial normalization; no singular direction is dropped; all old components remain unchanged during this one new-block learning phase",
+  "queries":"both signs of every responding real and imaginary coordinate, projected into its feasible block; only absent-object matrix coordinates skip, with exact zero estimate; all original output classes queried; no greedy coordinate acceptance",
+  "mini":"ordinary analytic CE residual dotted with the complete finite-logit difference for each feasible coordinate pair; content derivatives remain numerical",
+  "forward":"only actual full-class CE differences of the same feasible coordinate pair; no analytic residual in forward training",
+  "cache":"zero-initialized full1204-real-coordinate estimates per original supervised occurrence; replace each visited estimate and update mean by(new-old)/N; retain original identities and observation versions; no full-batch gradient initialization",
+  "update":"simultaneously subtract learning_rate times the retained full-training-size mean, then apply every geometry constraint once; no minibatch line search, endpoint selection or early stopping; all512 updates remain recorded even if visited-batch CE rises",
+  "history":"record initial and every post-update block with hashes; independently replay every cached estimate using its original record and recorded pre-update version",
+  "diagnostic":"after all eight endpoints seal, training-only history replay and complete current finite estimates streamed in batches32; report current-versus-retained estimate error and their dot product, actual state retention and complete training CE; no update or selection from diagnostics",
+  "scoring":"all original splits, labels, masks, duplicates and short tails; seal all eight endpoints before held-out scoring; original success predicate, raw/exact/CE and separate99% flags; raw-logit replay",
+  "limits":{"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184},
+  "claim":"empirical comparison in the CM107 feasible convex function family; independent content factors and this projected finite-query optimizer are not jointly convex or proved convergent; retained estimates can be biased and stale; CM106 readout error bounds are not claimed as parameter-gradient certificates; no unseen-answer or floating-rounding guarantee; transformer unchanged"
+}
