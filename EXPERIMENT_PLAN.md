@@ -8701,3 +8701,14 @@ distributions up to16/20/24 bits; they are separately trained tasks. Seal all
 endpoints before scoring all original splits and replay every raw logit. Compare
 the repeated seed1 endpoints to the first recurrence producer exactly. Keep all
 failures, the scalar order restriction and the110GB/both-disk limits explicit.
+
+Task374 proves CM97's complete two-state complex matrix/readout representation,
+explicit row-sum operator bounds under the product maximum norm, and a nonzero
+imaginary-state witness that predicts opposite labels on swapped input orders.
+Its two transitions preserve state norm but do not commute. The19 new theorems
+pass full build, direct/global axioms, generated INDEX and forbidden checks;
+no new sorry or extra axiom is introduced. This is an expressivity and capacity
+result, not learned MQAR accuracy. The user next suggested RoPE: task375 will
+connect learned position-dependent rotations to actual bounded execution.
+Existing RotarySpectrum already shows that per-row RoPE need not preserve a
+flat Gram spectrum; preserve the operator bound without claiming that equality.

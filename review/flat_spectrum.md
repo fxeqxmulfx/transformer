@@ -21910,3 +21910,34 @@ answer/end tokens and all length/position probes. Do not feed the witness's
 phases or label rules to the learner. Its candidate search uses complete CE
 signals and actual learned transitions, with finite loss evaluations at feasible
 mixture points; approximate discovery still has no global convergence guarantee.
+
+## CM97. A complete two-state learned operator family retains order
+
+CM96 rules out order distinctions only for the scalar-state subclass. Use
+E=complex×complex with the product maximum norm. A learned transition contains
+all four complex matrix entries, a learned class readout contains both complex
+coefficients, and both initial-state coordinates are learned. Every complex
+linear map on this state is reconstructed from its values on the two standard
+basis states; these are coordinate identities, not fixed task features.
+
+For a row u=(a,b), the constraint |a|+|b|≤1 implies its operator norm is at most
+one. Applying that constraint to both transition rows, to every original-class
+readout, and bounding the initial maximum norm by one gives the exact CM95 Unit
+hypotheses. Thus its length-independent output bound, convex function domain,
+ordinary CE and feasible loss queries apply unchanged. The chosen maximum norm
+is explicit: this is not a claim that all bounded matrices have flat Euclidean
+singular values or that independently varied matrix factors are jointly convex.
+
+The two transition assignments diag(1,-1) and the coordinate swap are
+noncommuting and preserve the state norm. With initial state(i,i), the prefixes
+[false,true] and[true,false] end at(-i,i) and(i,-i), respectively. Class readouts
+(i,0) for false and(-i,0) for true give the correct first object margin two on
+these two swapped prefixes. Actual nextObject therefore distinguishes them,
+whereas every scalar-domain function is permutation-invariant by CM96.
+
+This is a nonconstant existence witness inside the learned family, never a
+supplied native parameter assignment or proof of MQAR learning. A native learner
+must keep every complex initial/matrix/readout coordinate and learn from original
+CE observations. The matrix norm constraints control capacity; neither they nor
+this order witness select arbitrary unseen answers. Formalization:
+`LearnedRecurrent/Pair/Basic` and `LearnedRecurrent/Pair/Order`.
