@@ -300,3 +300,34 @@ cargo build --offline --locked --release --manifest-path experiments/convex_rota
 Freeze this diagnostic executable, source archive, commit and binary hash before
 running it. It writes a byte-replay record and all direction measurements outside
 the worktree. The existing110GB RAM and both-disk guards apply throughout replay.
+
+The diagnosis completes at producer `1da2f96c`, freeze
+`rotary-frequency-diagnostic-v1`, diagnostic fingerprint
+`f80e48c18ca3ba5c18c3e30f930ac81ba39f7787c580a8d1749098b84f170596`, binary SHA256
+`d2051377e56e6df63cc2abea72156c49dff5716c11cb4582d6db7eda0328ba2d`.
+Evidence is in
+`/run/media/misha/storage/transformer-runs/diagnostics/rotary-frequency-v1`.
+Both runs exit0. Every one of128 original batch hashes and deterministic
+receipts matches in each mode, and both endpoint files reconstruct byte-for-byte.
+The final component and its recorded comparison CE also reconstruct exactly.
+
+| Mode | Recorded component CE | Best old-grid CE at final component | Best finer CE | Finer first-frequency change |
+|---|---:|---:|---:|---:|
+| Mini |2.730541439235010|2.734987597286415|2.730395431702667|+0.0078125|
+| Forward Mini |2.547022993748942|2.558957538262184|2.547018666395651|-0.0009765625|
+
+Every old-grid perturbation worsens the criterion at this final component,
+whereas a finer feasible perturbation improves it in both modes. The gains
+are1.4600753e-4 and4.3273533e-6. Independently executed mixture-model CE confirms
+them, with discrepancies at most ordinary floating rounding at the selected
+points (4.44e-16 and0), far below either gain. Maximum operator-budget excess
+is2.22e-16. The state responses are nonzero. Mini's listed improvement requires
+the complete readout refit; holding its readouts fixed at that same perturbation
+would worsen CE. All88 directions and both readout variants remain recorded.
+
+This establishes a numerical resolution failure at the inspected final
+components; it does not show that resolution is the sole recall bottleneck.
+No held-out label entered the diagnosis, no proposed model was accepted, and no
+new accuracy result is claimed. The next controlled repair adds finer frequency
+proposals within the already proved CM98/99 domain and repeats original recall
+with every other protocol choice retained.

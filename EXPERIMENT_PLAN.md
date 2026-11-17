@@ -8801,3 +8801,14 @@ state responses, fixed/refitted readout CE and independently executed feasible
 mixture CE. Use no held-out labels, accept no new model, and give no accuracy
 credit. Existing CM98 bounds cover arbitrary finite frequencies; any future
 architecture or optimizer guarantee still requires its own proof and test.
+
+Task378's frozen diagnosis at1da2f96c exactly replays both cautious learned-rotary
+trajectories:128 batch hashes/receipts each and byte-identical endpoints. It also
+reproduces the final component and CE criterion exactly. All original frequency
+steps worsen that final criterion, but+0.0078125 improves Mini by1.4600753e-4
+and-0.0009765625 improves forward by4.3273533e-6 after the complete readout refit.
+Actual feasible mixture execution confirms those gains well beyond rounding.
+All88 directions per mode are retained; no held-out labels or accepted update.
+Task379 will extend frequency resolution while preserving all content paths,
+the original data and capped-step protocol. Existing CM98/99 proofs cover every
+finite frequency and feasible convex step; no new convergence claim is made.
