@@ -3,6 +3,7 @@
 pub use rotary::{C, Result};
 pub mod continuation;
 pub mod experiment;
+pub mod projection;
 pub mod score;
 pub mod source;
 #[cfg(test)]

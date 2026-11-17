@@ -1,7 +1,7 @@
-//! CM100 actual radial row update and complete conditional-CE interpolation.
+//! CM100 complete conditional-CE interpolation; CM102 optional Euclidean projection.
 //! Ordinary Mini uses the full readout gradient. Forward uses finite CE scalars
 //! in the same contraction; neither mode backpropagates through recurrent states.
-use crate::{C, Result};
+use crate::{C, Result, projection};
 use bilinear::{
     model::cross_entropy,
     train::{Mode, Record},
@@ -18,6 +18,8 @@ pub struct Config {
     pub query_step: f64,
     pub learning_rate: f64,
     pub line_iterations: usize,
+    #[serde(default)]
+    pub projection: projection::Rule,
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Receipt {
@@ -158,10 +160,14 @@ pub fn step(model: &mut Model, records: &[Record<'_>], config: Config) -> Result
             }
         }
         for (out, grad) in atom.output.iter_mut().zip(gradient) {
-            *out = project_row([
+            let displaced = [
                 out[0] - grad[0] * config.learning_rate,
                 out[1] - grad[1] * config.learning_rate,
-            ])?;
+            ];
+            *out = match config.projection {
+                projection::Rule::Radial => project_row(displaced)?,
+                projection::Rule::Euclidean => projection::project(displaced)?,
+            };
         }
     }
     proposed.validate()?;

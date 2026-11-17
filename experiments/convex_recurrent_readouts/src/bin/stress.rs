@@ -3,7 +3,9 @@ use std::path::Path;
 fn run() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     let raw = args.first().map_or("", String::as_str);
-    let (command, text) = if let Some(command) = raw.strip_suffix("-long") {
+    let (command, text) = if let Some(command) = raw.strip_suffix("-projected") {
+        (command, experiment::PROJECTED_PROTOCOL)
+    } else if let Some(command) = raw.strip_suffix("-long") {
         (command, experiment::LONG_PROTOCOL)
     } else {
         (raw, experiment::PROTOCOL)
@@ -16,7 +18,7 @@ fn run() -> Result<()> {
         return Ok(());
     }
     if args.len() != 7 {
-        return Err("usage: stress plan[-long] | stress train|score|verify[-long] WORKSPACE STORAGE SOURCE_RUNS COHORT cautious|refined mini|forward".into());
+        return Err("usage: stress plan[-long|-projected] | stress train|score|verify[-long|-projected] WORKSPACE STORAGE SOURCE_RUNS COHORT cautious|refined mini|forward".into());
     }
     match command {
         "train" => experiment::train(

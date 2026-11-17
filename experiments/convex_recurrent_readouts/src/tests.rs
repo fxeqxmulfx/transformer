@@ -19,6 +19,7 @@ fn config(mode: Mode) -> Config {
         query_step: 1e-4,
         learning_rate: 4.,
         line_iterations: 64,
+        projection: crate::projection::Rule::Radial,
     }
 }
 fn model() -> Model {

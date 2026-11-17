@@ -2,7 +2,7 @@
 # Seal all four complete endpoints before any new held-out scoring.
 set -euo pipefail
 if test "$#" -lt 5 || test "$#" -gt 6; then
-  echo 'usage: bash run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_COHORT [-long]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_COHORT [-long|-projected]' >&2
   exit 2
 fi
 task_workspace=$1
@@ -11,7 +11,7 @@ task_sources=$3
 task_freeze=$4
 task_cohort=$5
 task_suffix=${6:-}
-case "$task_suffix" in ''|-long) ;; *) echo 'unknown frozen protocol' >&2; exit 2 ;; esac
+case "$task_suffix" in ''|-long|-projected) ;; *) echo 'unknown frozen protocol' >&2; exit 2 ;; esac
 test -x "$task_freeze/stress"
 test -f "$task_freeze/protocol.json"
 test "$(df -B1 --output=avail "$task_workspace" | tail -1)" -gt 2147483648

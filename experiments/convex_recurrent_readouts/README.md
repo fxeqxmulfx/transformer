@@ -168,3 +168,46 @@ update rule; they do not certify a convex optimum, insufficient state capacity
 or impossibility of recall. The next investigation is whether radial row
 normalization can itself stall away from an optimum, before attributing the
 remaining failure to architecture or unseen-answer identification alone.
+
+## Exact Euclidean row projection
+
+CM101 at `1cf1d6e8` proves that the earlier radial rule can leave a strictly
+worse ordinary-CE point unchanged on two oppositely labeled original prefixes.
+CM102 at `9d1ce0fb` proves an explicit complete complex Euclidean projection,
+its closest-point property on all four real coordinates, original model
+capacity, and a positive CE step escaping that counterexample. All25 new
+theorems pass full/source/axiom/INDEX checks and review before this Rust port.
+
+Task386 changes only the row projection in the original512-update refit
+protocol. `projected_protocol.json` keeps all four learned starting models,
+original minibatches, learning rate4, query step1e-4,64 CE line iterations,
+capacity16 and every original coordinate/class. The piecewise magnitude rule
+preserves each complex phase; inside rows return unchanged, and zero magnitudes
+stay stored as zero values. The old radial update and both earlier protocols
+remain available. An old zero value can still receive later gradients.
+
+The new native controls cover all projection branches, complex phases, an
+independent variational check and3840 feasible distance competitors, and actual
+CM101 CE repair using the existing rate4 and complete update in both modes.
+The implementation uses f64; CM102's exact real-arithmetic theorem is not a
+roundoff or stochastic-convergence theorem. All existing capacity and actual
+logit checks remain in every update.
+
+Build with the same native commands above, then inspect `stress plan-projected`.
+Freeze the source commit/archive, executable and hashes, copying
+`projected_protocol.json` to `protocol.json` and retaining the old protocol and
+plan as `radial_protocol.json` and `plan-radial.json`. Before interpreting new
+outcomes, reproduce all four legacy512-update trajectories with the new binary:
+
+```sh
+bash experiments/convex_recurrent_readouts/run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_LEGACY_CONTROL
+bash experiments/convex_recurrent_readouts/run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_PROJECTED_COHORT -projected
+```
+
+Compare every legacy deterministic receipt, batch/count and checkpoint byte
+with `recurrent-readouts/original-v1`; compare every original raw split report
+and success flag as well. Producer identities differ because the new binary
+also contains the projection option. Preserve all old artifacts. Each cohort
+seals all four endpoints before scoring, retains all failures and replays all
+raw logits. Both disk guards and110GB aggregate RAM limits remain active.
+Improved fitting or the proof witness alone earns no stress-test success.

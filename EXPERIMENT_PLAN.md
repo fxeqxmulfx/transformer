@@ -8947,3 +8947,14 @@ warning checks and25 direct standard-axiom reports. The global audit remains
 0vacuous/0placeholder. The actual four-real-coordinate closest-point property,
 full model capacity and strict CE repair of CM101's example are proved. This
 does not establish a native recall improvement or an unseen-answer guarantee.
+
+Task386 follows CM102's approved proof at9d1ce0fb. Add an explicit Euclidean
+projection option to the existing Rust readout-refit experiment, preserving
+the radial default and immutable earlier producers. Freeze the same four
+original sources,512 updates, batch stream, rate4, query1e-4 and64-step CE line
+search. Test complete complex projection geometry and actual both-mode escape
+from CM101, then require exact legacy trajectories and original raw reports.
+Only after those controls pass interpret the prospective projected cohort,
+with all four endpoints sealed before scoring, every original failure/raw
+replay retained and the existing RAM/disk limits. Source/configuration and
+authored findings are committed; generated evidence stays outside the worktree.

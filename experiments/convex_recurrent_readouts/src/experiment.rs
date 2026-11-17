@@ -15,6 +15,7 @@ use std::{
 };
 pub const PROTOCOL: &str = include_str!("../protocol.json");
 pub const LONG_PROTOCOL: &str = include_str!("../long_protocol.json");
+pub const PROJECTED_PROTOCOL: &str = include_str!("../projected_protocol.json");
 pub const VARIANTS: [&str; 2] = ["cautious", "refined"];
 pub const MODES: [&str; 2] = ["mini", "forward"];
 pub fn fingerprint() -> String {
@@ -22,6 +23,7 @@ pub fn fingerprint() -> String {
     for bytes in [
         include_bytes!("lib.rs").as_slice(),
         include_bytes!("update.rs"),
+        include_bytes!("projection.rs"),
         include_bytes!("source.rs"),
         include_bytes!("continuation.rs"),
         include_bytes!("experiment.rs"),
@@ -31,6 +33,7 @@ pub fn fingerprint() -> String {
         include_bytes!("../Cargo.lock"),
         PROTOCOL.as_bytes(),
         LONG_PROTOCOL.as_bytes(),
+        PROJECTED_PROTOCOL.as_bytes(),
         rotary::experiment::fingerprint().as_bytes(),
     ] {
         h.update((bytes.len() as u64).to_le_bytes());
@@ -54,6 +57,12 @@ pub fn settings_with(variant: &str, mode: &str, text: &str) -> Result<(Value, Co
         query_step: p["query_step"].as_f64().ok_or("query step")?,
         learning_rate: p["learning_rate"].as_f64().ok_or("learning rate")?,
         line_iterations: p["line_iterations"].as_u64().ok_or("line iterations")? as usize,
+        projection: p
+            .get("projection")
+            .cloned()
+            .map(serde_json::from_value)
+            .transpose()?
+            .unwrap_or_default(),
     };
     Ok((p, config))
 }
