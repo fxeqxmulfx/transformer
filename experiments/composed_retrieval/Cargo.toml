@@ -11,6 +11,7 @@ dense-forward = []
 logodds-depth = ["dense-forward"]
 arithmetic-cohort = ["dense-forward", "dep:arithmetic-data"]
 output-offsets = ["arithmetic-cohort", "logodds-depth"]
+prefix-cohort = ["output-offsets", "dep:synthetic-data"]
 
 [[bin]]
 name = "reconcile-arithmetic"
@@ -32,7 +33,18 @@ name = "offset-intervals"
 path = "src/bin/offset-intervals.rs"
 required-features = ["output-offsets"]
 
+[[bin]]
+name = "prefix-inventory"
+path = "src/bin/prefix-inventory.rs"
+required-features = ["prefix-cohort"]
+
+[[bin]]
+name = "reconcile-prefix"
+path = "src/bin/reconcile-prefix.rs"
+required-features = ["prefix-cohort"]
+
 [dependencies]
+synthetic-data = { package = "convex-stress-remaining-synthetic-data", path = "../convex_stress_remaining_synthetic_data", optional = true }
 arithmetic-data = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data", optional = true }
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
 bilinear = { package = "convex-bilinear-sequence", path = "../convex_bilinear_sequence" }

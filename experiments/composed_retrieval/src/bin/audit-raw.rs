@@ -181,7 +181,7 @@ fn main() -> Result<()> {
         "strict_pass_all":cases.values().filter(|x|x["current"]["strict"]==true).count()});
     #[cfg(feature = "arithmetic-cohort")]
     let summary = {
-        let expected = composed_retrieval::arithmetic::preflight(&p, &output.join("inputs"))?;
+        let expected = data::inventory(&p, &output.join("inputs"))?;
         for arm in ["original", "repeat"] {
             if read(&output.join(arm).join("inventory.json"))? != expected {
                 return Err("frozen arithmetic input inventory differs".into());

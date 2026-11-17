@@ -14,7 +14,7 @@ fn main() -> Result<()> {
     match (action.as_str(), rest) {
         #[cfg(feature = "arithmetic-cohort")]
         ("inventory", [inputs]) => {
-            let plan = composed_retrieval::arithmetic::preflight(&run.protocol, Path::new(inputs))?;
+            let plan = composed_retrieval::data::inventory(&run.protocol, Path::new(inputs))?;
             println!("{}", serde_json::to_string_pretty(&plan)?);
             Ok(())
         }

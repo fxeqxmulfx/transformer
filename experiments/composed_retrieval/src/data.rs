@@ -19,8 +19,9 @@ pub const TRAINING_PROTOCOL: &str = if cfg!(feature = "logodds-depth") {
 };
 pub const ARITHMETIC_PROTOCOL: &str = include_str!("../arithmetic/protocol.json");
 pub const JOINT_PROTOCOL: &str = include_str!("../logodds/arithmetic/protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "output-offsets") {
-    include_str!("../output_offsets/protocol.json")
+pub const OFFSET_PROTOCOL: &str = include_str!("../output_offsets/protocol.json");
+pub const FAMILY_PROTOCOL: &str = if cfg!(feature = "output-offsets") {
+    OFFSET_PROTOCOL
 } else if cfg!(all(
     feature = "arithmetic-cohort",
     feature = "logodds-depth"
@@ -30,6 +31,11 @@ pub const PROTOCOL: &str = if cfg!(feature = "output-offsets") {
     ARITHMETIC_PROTOCOL
 } else {
     TRAINING_PROTOCOL
+};
+pub const PROTOCOL: &str = if cfg!(feature = "prefix-cohort") {
+    include_str!("../prefix/protocol.json")
+} else {
+    FAMILY_PROTOCOL
 };
 #[derive(Clone, Deserialize)]
 pub struct CaseSpec {
@@ -99,6 +105,8 @@ pub fn protocol() -> Result<Protocol> {
     }
     #[cfg(feature = "arithmetic-cohort")]
     crate::arithmetic::configure(&mut p)?;
+    #[cfg(feature = "prefix-cohort")]
+    crate::prefix::configure(&mut p)?;
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256
@@ -109,6 +117,10 @@ pub fn protocol() -> Result<Protocol> {
 }
 pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
     let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
+    #[cfg(feature = "prefix-cohort")]
+    if p.name == crate::prefix::NAME {
+        return crate::prefix::original(id, s);
+    }
     #[cfg(feature = "arithmetic-cohort")]
     if let Some(pins) = &s.source_fingerprints {
         let task = crate::arithmetic::original(id)?;
@@ -153,4 +165,13 @@ pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
         return Err("original data shape changed".into());
     }
     Ok((task, pins))
+}
+
+#[cfg(feature = "arithmetic-cohort")]
+pub fn inventory(p: &Protocol, inputs: &std::path::Path) -> Result<Value> {
+    #[cfg(feature = "prefix-cohort")]
+    if p.name == crate::prefix::NAME {
+        return crate::prefix::preflight(p, inputs);
+    }
+    crate::arithmetic::preflight(p, inputs)
 }

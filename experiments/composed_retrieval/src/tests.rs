@@ -289,16 +289,22 @@ fn inhabits_both_lean_capacity_witnesses() -> Result<()> {
 fn original_fingerprints_masks_and_optimizer_clocks() -> Result<()> {
     let mut p = data::protocol()?;
     for (id, s) in &p.cases {
-        let (task, _) = data::original(&p, id)?;
+        let (task, pins) = data::original(&p, id)?;
         assert_eq!(s.train, task.splits["train"].len());
         let m = Model::new(task.vocab, s.context, &p, 0)?;
-        let n = if id.starts_with("suite-") { 2 } else { 1 };
+        let targets = if id.starts_with("suite-") {
+            pins["splits"]["train"]["targets"]
+                .as_u64()
+                .ok_or("source target count")? as usize
+        } else {
+            s.train
+        };
         assert_eq!(
             train::samples(&m, &task.splits["train"])?
                 .iter()
                 .map(Vec::len)
                 .sum::<usize>(),
-            n * s.train
+            targets
         );
     }
     p.updates = 7;
@@ -346,7 +352,7 @@ fn original_fingerprints_masks_and_optimizer_clocks() -> Result<()> {
 }
 
 #[test]
-#[cfg(feature = "arithmetic-cohort")]
+#[cfg(all(feature = "arithmetic-cohort", not(feature = "prefix-cohort")))]
 fn every_previously_available_arithmetic_record_matches_the_original_adapter() -> Result<()> {
     let p = data::protocol()?;
     let suite: serde_json::Value = serde_json::from_str(learned_retrieval::cohort::SUITE)?;
@@ -384,7 +390,11 @@ fn every_previously_available_arithmetic_record_matches_the_original_adapter() -
 }
 
 #[test]
-#[cfg(all(feature = "arithmetic-cohort", feature = "logodds-depth"))]
+#[cfg(all(
+    feature = "arithmetic-cohort",
+    feature = "logodds-depth",
+    not(feature = "prefix-cohort")
+))]
 fn arithmetic_cohort_uses_the_original_log_odds_updates() -> Result<()> {
     let p = data::protocol()?;
     assert_eq!(

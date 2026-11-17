@@ -68,7 +68,7 @@ pub fn configure(p: &mut Protocol) -> Result<()> {
         return Err("arithmetic cohort membership changed".into());
     }
     let protocol = if cfg!(feature = "logodds-depth") {
-        let joined: Value = serde_json::from_str(PROTOCOL)?;
+        let joined: Value = serde_json::from_str(crate::data::FAMILY_PROTOCOL)?;
         if joined["training_protocol_sha256"] != hash(TRAINING_PROTOCOL.as_bytes())
             || joined["arithmetic_protocol_sha256"] != hash(ARITHMETIC_PROTOCOL.as_bytes())
         {

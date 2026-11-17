@@ -1,0 +1,24 @@
+{
+  "name": "composed-retrieval-synthetic-prefix9-output-offsets-v1",
+  "training_protocol_sha256": "0cba707579431ae94d7464d123bfe3523a66b9495dbac265b8f1148922be9f08",
+  "plan_sha256": "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7",
+  "sequences_sha256": "a2f6044ee78c02fa491169bd7065ed87d7c161525a29603a2836933bc146ea71",
+  "typed_sha256": "cfe5ecb2e27c38bdd0de3741b343b0fed980ce9137de00f74335815c608e70f6",
+  "remaining_sha256": "a7cef601caa5d8d04478f560159949b807c263cd962b4d6271ab78a6eb493b27",
+  "train": 128,
+  "batch": 32,
+  "selection": "validation/novel",
+  "metric": "sequence_accuracy",
+  "target": 0.95,
+  "cases": {
+    "suite-blocks": {"vocabulary":36,"context":64,"training_targets":1420,"metadata_sha256":"be7388e7ca8ae780334998569c55843d8684e364d6c31a4030ebcccd1f7d6936"},
+    "suite-crasp-depth-1": {"vocabulary":36,"context":64,"training_targets":1400,"metadata_sha256":"7ebe2ce0329f815e2d8137af8ece872992c8eb3182d29ca072892408293d7431"},
+    "suite-crasp-depth-2": {"vocabulary":36,"context":64,"training_targets":1440,"metadata_sha256":"d202d2d2af4d8f3ca9b5c21b245cb1fc41e09aa997dfac2e6255357019c0d28d"},
+    "suite-crasp-depth-3": {"vocabulary":36,"context":64,"training_targets":1370,"metadata_sha256":"6d5c30fb6268c8d92c49470dee591bf2497ca749a7ca256281114f6b414f5e8b"},
+    "suite-dyck": {"vocabulary":36,"context":64,"training_targets":1624,"metadata_sha256":"ab4e0de2dbb24ef558fc870147846a0ea584235edaf75f9be287f72096c7675e"},
+    "suite-dyck-2": {"vocabulary":38,"context":64,"training_targets":1704,"metadata_sha256":"4380b92b3af964d3b77a0f569201a03b5741261e283dbde199a3d84a54eee0f6"},
+    "suite-dyck-3": {"vocabulary":40,"context":64,"training_targets":1684,"metadata_sha256":"eda72f9213154704134e26de1ab1bd396b50b8aa21341023f619762f65ebdb48"},
+    "suite-lookup": {"vocabulary":100,"context":96,"training_targets":256,"metadata_sha256":"6c31fb74c065ad4894537c00fafa342f92457b7343984af3cf8a9f9dde482294"},
+    "suite-mqar": {"vocabulary":164,"context":96,"training_targets":256,"metadata_sha256":"ec5127f419e377c2006f8df5e30136377f9526e351851a7e34cc454d529962bf"}
+  }
+}

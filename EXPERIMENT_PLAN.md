@@ -9517,3 +9517,11 @@ one offset. Jointly train all representation, sequence and output
 coordinates from zero-initialized offsets. The two independent cohorts
 each contain all 51 cases with one fit per case, mode and seed. Compare
 every held-out outcome and retain all six arithmetic source refusals.
+
+Task 417 freezes the same output-offset model on all nine synthetic cases
+that score the visible input prefixes. The seven additional cases cover
+brackets, alternating blocks and three past-counting formula depths. Before
+combining coverage, repeat multi-query recall and two-hop lookup and compare
+both builds' complete models, training receipts and raw splits to task 416.
+Use the independently retained native data fingerprints and the original
+plan's batch sizes and accuracy criteria.

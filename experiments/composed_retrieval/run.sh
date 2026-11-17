@@ -2,7 +2,7 @@
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
 if (( $# < 4 || $# > 6 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets} SOURCE_INPUTS]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets|prefix-cohort} SOURCE_INPUTS]' >&2
   exit 2
 fi
 if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
@@ -22,7 +22,7 @@ case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
   logodds) features=(--features logodds-depth); protocols+=(dense/protocol.json logodds/protocol.json) ;;
-  arithmetic|logodds-arithmetic|output-offsets)
+  arithmetic|logodds-arithmetic|output-offsets|prefix-cohort)
     (( $# == 6 ))
     source_inputs=$(realpath "$6")
     features=(--features arithmetic-cohort)
@@ -31,9 +31,13 @@ case "$variant" in
       features=(--features arithmetic-cohort,logodds-depth)
       protocols+=(logodds/protocol.json logodds/arithmetic/protocol.json)
     fi
-    if [[ "$variant" == output-offsets ]]; then
+    if [[ "$variant" == output-offsets || "$variant" == prefix-cohort ]]; then
       features=(--features output-offsets)
       protocols+=(output_offsets/protocol.json)
+    fi
+    if [[ "$variant" == prefix-cohort ]]; then
+      features=(--features prefix-cohort)
+      protocols+=(prefix/protocol.json)
     fi
     ;;
   *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
@@ -51,7 +55,7 @@ mkdir "$output"
 git -C "$workspace" archive -o "$output/source.tar" "$producer" -- "$experiment" \
   experiments/{learned_retrieval,learned_retrieval_transfer,convex_bilinear_sequence,convex_stress_minibatch,convex_stress} \
   experiments/convex_stress_catalog experiments/convex_stress_arithmetic_data experiments/convex_binding_diagnostic/src/counts.rs \
-  experiments/convex_stress_sequences/src/{dataset,prefix,retrieval,wire}.rs \
+  experiments/convex_stress_{sequences,typed_data,remaining_synthetic_data,generative_data,calibrated,causal_pairs,counts,repair,tagged,adaptive,density,decode,relabel,budgets,schatten,moments,spectral,hull} \
   src/Transformer/Grokking/FlatSpectrum/ConvexChannel/ComposedRetrieval{,.lean} review/flat_spectrum.md
 printf '%s\n' "$producer" > "$output/producer.commit"
 rustc -Vv > "$output/rustc.txt"
@@ -92,13 +96,18 @@ export -f invoke
 export output workspace storage variant
 if [[ -n "${source_inputs:-}" ]]; then
   mkdir "$output/inputs"
-  cp "$source_inputs"/{arithmetic_seed1,grokking_task_inventory,plan}.json "$output/inputs/"
+  cp "$source_inputs/plan.json" "$output/inputs/"
+  if [[ "$variant" != prefix-cohort ]]; then
+    cp "$source_inputs"/{arithmetic_seed1,grokking_task_inventory}.json "$output/inputs/"
+  fi
   for arm in original repeat; do invoke "$arm" inventory "$output/inputs" >"$output/$arm/inventory.json"; done
   cmp "$output/original/inventory.json" "$output/repeat/inventory.json"
   inventory="$output/original/inventory.json"
   supported=48
+  unavailable=6
   if [[ "$variant" == output-offsets ]]; then supported=51; fi
-  jq -e --argjson n "$supported" '(.cases|length)==($n+6) and .fits==($n*12)' "$inventory" >/dev/null
+  if [[ "$variant" == prefix-cohort ]]; then supported=9; unavailable=0; fi
+  jq -e --argjson n "$supported" --argjson u "$unavailable" '(.cases|length)==($n+$u) and .fits==($n*12)' "$inventory" >/dev/null
   mapfile -t cases < <(jq -r '.cases|to_entries[]|select(.value.dimensions != null)|.key' "$inventory")
   (( ${#cases[@]} == supported ))
   required=$(jq -r '.raw_bytes + 17179869184' "$inventory")

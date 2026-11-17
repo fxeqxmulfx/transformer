@@ -8,6 +8,8 @@ pub mod evaluation;
 pub mod gradient;
 pub mod model;
 pub mod operator;
+#[cfg(feature = "prefix-cohort")]
+pub mod prefix;
 mod query;
 pub mod train;
 
