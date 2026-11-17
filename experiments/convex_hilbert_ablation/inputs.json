@@ -1,0 +1,74 @@
+[
+  {
+    "arm": "old",
+    "variant": "cautious",
+    "mode": "mini",
+    "metadata": "b2652b135a60341b068ea1b73f7fd6f3884aa8e0862d77cc5d45a197d6c04ab8",
+    "receipt": "27826471e5d71ae1b03882589f50278012d95143553c40d405d5e5f3ba2fc7a8",
+    "endpoint": "d911e8808bb820308582211a1897eb1fcf14e14b75a1b52b2c7ab9dce9865340",
+    "scores": "59a7d759280436467db259990f00e26636c53c2e1f25c134f1b84a2bc8e5f098"
+  },
+  {
+    "arm": "old",
+    "variant": "cautious",
+    "mode": "forward",
+    "metadata": "803f230e694d91e8c82844dc4255c8a4ab8270277bc404282103f7929c46e151",
+    "receipt": "5481ec86a9890d75d7816f777f657aacae05a1efa6839904549eaf3e9c536ddc",
+    "endpoint": "88d2e9acfe3165a0ae5e501dda9e2af6490e4ec70d5dccfec88f7c884be303c7",
+    "scores": "abebec94b8cf6bd2a4b605b658127d9212ed70ba4e822906b33cea2666796be7"
+  },
+  {
+    "arm": "old",
+    "variant": "refined",
+    "mode": "mini",
+    "metadata": "c924005da9bcc07f4f52689a46a16b48f8418d27d50b5202868e753ccb27169e",
+    "receipt": "8dce89e9b19bdd77a537137fa28334d1385f79e9e7b54d75fa1d7054f8030a6c",
+    "endpoint": "e67bb49ad389ccf305d365c6b772d3e5acfc6a86fa224af800f125e511be723c",
+    "scores": "61c144a2a1f99851be340d5e7e3b7cf62c5a03d1014d68dbb0b31c24db2365f1"
+  },
+  {
+    "arm": "old",
+    "variant": "refined",
+    "mode": "forward",
+    "metadata": "593e23aee114d814fdce5c7062f8ff1cc0a214f1ff2a52e72f06c8f5c147100a",
+    "receipt": "2ad46259341da0805e5a92ed147f5f4e4f3a7ff92be471b0b05a35b5906be802",
+    "endpoint": "9988f6c1751b4c49851062d0f366a2dbc5da476a5366d26ac769da9487197e51",
+    "scores": "2edc3f04330a92b506d41f5a8dd6112f9f4fb4c88691ae07d03eb1c7124288f3"
+  },
+  {
+    "arm": "hilbert",
+    "variant": "cautious",
+    "mode": "mini",
+    "metadata": "bb7c4f771b86f77ded19aa1b875a46ea90654d64714a898f02e6325dd2addf82",
+    "receipt": "be61b490611fcb6755cd065fb914b3f16a2afbf5437a8d104689b1740ab49dc5",
+    "endpoint": "e3e6e2e0acfe226ef11ad3007211d3961431486f58f9afdf56c929c18b386e01",
+    "scores": "c8dfca9f743bf6f3fa5029a6d36d987f1b9dc1e44296a15c80af035f098b6e4e"
+  },
+  {
+    "arm": "hilbert",
+    "variant": "cautious",
+    "mode": "forward",
+    "metadata": "c6d97064ea137d99ef6395bfb1ccd95cc562080de8de8e1494912872f249bc8d",
+    "receipt": "497cba7605216616a068ed9f2a8c00091bf67554f82837db67827d2d146f404a",
+    "endpoint": "04dc2e71b2b237864694d89118d497a46a4e5c016c3e8e8f3217bc2dcfae1c9f",
+    "scores": "e9fde9f18c877b454f80c8ae07b6c46bc9e32fdb486f346d6b62a51614006446"
+  },
+  {
+    "arm": "hilbert",
+    "variant": "refined",
+    "mode": "mini",
+    "metadata": "d0a01619ee5fe7128f682d30adf0e51b15e1e0b1a6c5a6594ef601fb2ca690f1",
+    "receipt": "2c0bb85fa6edb4a7f958c36032bc894982b01a2b09303a5b0b9a5e9e5a29032f",
+    "endpoint": "efb73320813ad681d62e1b74d55750d222b43446cdfedf68a965fe22caf6383f",
+    "scores": "738ec7379cac0219abca9b59241a0622757c54f7e41eeeb4bec6756996bde8a1"
+  },
+  {
+    "arm": "hilbert",
+    "variant": "refined",
+    "mode": "forward",
+    "metadata": "f46c4a4825d3b5b85fdd258a06246fe6ad9ff16b0fef0273a7556fdf75e07aab",
+    "receipt": "70f74f597fb1273e930904abbc7a29e5c7eba293fc57c82cc9213a563ba9f721",
+    "endpoint": "41f7377dc0ec6b9e1692455dde83ce214ea45d4edff51dd97990bcd5aef57849",
+    "scores": "00c5e01b170b96a847e319bcb5939c1e94796508ea581ad37d7e64da3813a18b"
+  }
+]

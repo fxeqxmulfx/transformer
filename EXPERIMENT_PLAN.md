@@ -9177,3 +9177,14 @@ find them. Do not infer a generalization solution from norm feasibility or
 positive numerical estimate alignment. Before expanding the recipe, measure
 whether the new block's gains require input-dependent states beyond a learned
 class bias. Preserve the prospective eight-cell results and both geometries.
+
+Task398 declares a post-hoc dependence diagnostic over all eight397 endpoints,
+with no retraining or selection: intact, zero new state, training-mean constant
+new state, and new-block-only at its original mass. The complete complex mean
+uses original supervised training prefixes without reading target labels.
+All original held-out examples, labels and metrics remain. Intact raw logits
+must match saved scores exactly, every ablation must satisfy its full numerical
+geometry, and the complete report must repeat independently. These ablations
+test dependence on input information beyond a class bias; they are not newly
+trained endpoints or stress-suite successes. Keep sources and pins frozen,
+all prior results intact, native checks and110GB/both-disk guards active.

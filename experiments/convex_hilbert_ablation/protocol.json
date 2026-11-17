@@ -1,0 +1,15 @@
+{
+  "name":"hilbert-content-ablation-v1",
+  "status":"post-hoc diagnostic declared after c620019a outcomes; no training or endpoint selection",
+  "inputs":"all eight original c620019a endpoints, exact metadata/receipt/endpoint/score pins",
+  "case":"gpt-probe-key-value-binding","seed":1,
+  "ablations":["intact","zero-state","training-mean-state","new-block-only"],
+  "intact":"re-evaluate actual saved model and require every original raw-logit hash and metric to match its saved report exactly",
+  "zero-state":"set the new block initial state to zero; keep parent, mass, all matrices/readouts/classes/components stored; predictions use7/8 of the original parent logits",
+  "training-mean-state":"compute the complete complex mean of actual new-block states on original supervised training prefixes, without using target labels; set the new initial state to this mean and every new transition to identity, retaining all learned outputs and the parent; validate feasibility; isolates a constant per-class contribution at the same mass",
+  "new-block-only":"set all parent learned component weights to zero and put parent mass in its structural zero component, without removing stored components; the new block retains its original mass2; isolates the learned new contribution",
+  "mean":"all original supervised occurrences, including duplicates and masks, with equal per-occurrence weight; no validation/test input or label is used to construct the mean; original record order retained",
+  "reports":"all original splits and labels for every declared ablation, raw/exact/CE and original success/99% flags; intact raw replay required; compare content versus constant-state contribution without interpreting an ablation as a newly trained endpoint",
+  "limits":{"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184},
+  "claim":"post-hoc empirical dependence check; no new optimizer, target identification, generalization proof or certified floating geometry; all original sources and transformer unchanged"
+}
