@@ -9408,3 +9408,20 @@ training modes, three seeds and 1,024 updates per cell. Seal all 48 fits from
 two independent builds before opening held-out scores. Compare with the
 retained CM111 cohort, including every missed unseen answer and every length
 probe. Keep the full 165-case goal and its negative controls in view.
+
+Task 410 producer `0f0aadbd` completed the four frozen original cases.
+All 48 independently trained endpoints sealed before scoring, and all 672
+initial and final raw files passed independent decoding. At all three seeds
+in both modes, binding and multi-query recall reached their original target,
+and binding passed the 99% raw and exact requirement everywhere. The other
+161 cases have no measured result for this model. The separate historical
+98/165 union retains its original scope.
+
+Standard minibatch learned every one of the 4,705 held-out modular sums at
+every seed. Forward-only minibatch learned 79, 64 and 82. It visited each
+value and rotation coordinate only 21 or 22 times. On two-hop lookup all
+six trained models assigned zero weight to the second read at the endpoint.
+Board tasks 411 and 412 distinguish two follow-up questions. Test forward-only loss
+queries with matched coordinate visits, and determine what the observed CE
+gradient does to the two-hop gate and routing parameters. Freeze each new
+comparison and retain the four original-case controls.

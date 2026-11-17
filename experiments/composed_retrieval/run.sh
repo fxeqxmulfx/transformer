@@ -21,7 +21,7 @@ mkdir -p "$(dirname "$output")"
 mkdir "$output"
 git -C "$workspace" archive -o "$output/source.tar" "$producer" -- "$experiment" \
   experiments/{learned_retrieval,learned_retrieval_transfer,convex_bilinear_sequence,convex_stress_minibatch,convex_stress} \
-  experiments/convex_stress_catalog/protocol.json experiments/convex_binding_diagnostic/src/counts.rs \
+  experiments/convex_stress_catalog experiments/convex_binding_diagnostic/src/counts.rs \
   experiments/convex_stress_sequences/src/{dataset,prefix,retrieval,wire}.rs \
   src/Transformer/Grokking/FlatSpectrum/ConvexChannel/ComposedRetrieval{,.lean} review/flat_spectrum.md
 printf '%s\n' "$producer" > "$output/producer.commit"

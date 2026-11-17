@@ -9,6 +9,7 @@ publish = false
 [dependencies]
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
 bilinear = { package = "convex-bilinear-sequence", path = "../convex_bilinear_sequence" }
+catalog = { package = "convex-stress-catalog", path = "../convex_stress_catalog" }
 learned-retrieval = { path = "../learned_retrieval" }
 learned-retrieval-transfer = { path = "../learned_retrieval_transfer" }
 serde = { version = "=1.0.229", features = ["derive"] }

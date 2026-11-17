@@ -37,6 +37,7 @@ name = "composed-retrieval"
 version = "0.1.0"
 dependencies = [
  "convex-bilinear-sequence",
+ "convex-stress-catalog",
  "convex-stress-minibatch",
  "learned-retrieval",
  "learned-retrieval-transfer",
@@ -59,6 +60,14 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2 0.10.9",
+]
+
+[[package]]
+name = "convex-stress-catalog"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "sha2 0.11.1",
 ]
 
 [[package]]

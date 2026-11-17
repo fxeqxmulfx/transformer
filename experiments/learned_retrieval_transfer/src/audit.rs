@@ -10,7 +10,8 @@ use std::{
     path::Path,
 };
 
-fn split(
+/// Independently decode every retained class vector against original masked records.
+pub fn decode_split(
     bytes: &[u8],
     rows: &[Example],
     vocabulary: usize,
@@ -107,7 +108,7 @@ pub fn run(name: &str, root: &Path) -> Result<Value> {
                 let mut splits = serde_json::Map::new();
                 for (label, rows) in &data.task.splits {
                     let bytes = fs::read(raw_file(&dir, &name, label))?;
-                    let groups = split(
+                    let groups = decode_split(
                         &bytes,
                         rows,
                         data.task.vocab,
@@ -140,14 +141,14 @@ mod tests {
         let m = p.initial(d.task.vocab, 1)?;
         let (mut report, mut raw) = learned_retrieval::evaluation::prefix_split(&m, rows)?;
         let seen = BTreeSet::new();
-        let groups = split(&raw, rows, m.vocabulary, &seen, &report)?;
+        let groups = decode_split(&raw, rows, m.vocabulary, &seen, &report)?;
         assert_eq!(groups["never_supervised_answer"]["targets"], 2);
         report["metrics"]["targets"] = json!(1);
-        assert!(split(&raw, rows, m.vocabulary, &seen, &report).is_err());
+        assert!(decode_split(&raw, rows, m.vocabulary, &seen, &report).is_err());
         report["metrics"]["targets"] = json!(2);
         raw.pop();
         report["raw_logits_sha256"] = json!(hash(&raw));
-        assert!(split(&raw, rows, m.vocabulary, &seen, &report).is_err());
+        assert!(decode_split(&raw, rows, m.vocabulary, &seen, &report).is_err());
         Ok(())
     }
 }

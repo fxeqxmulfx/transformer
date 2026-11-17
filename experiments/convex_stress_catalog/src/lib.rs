@@ -36,7 +36,8 @@ fn keyed<'a>(rows: &'a Value, key: &str, expected: usize) -> Result<BTreeMap<Str
     Ok(result)
 }
 
-fn catalog_rows(text: &str) -> Result<BTreeMap<String, Value>> {
+/// Read all unique case IDs and historical fields from the original Markdown catalog.
+pub fn catalog_rows(text: &str) -> Result<BTreeMap<String, Value>> {
     let mut section = "";
     let mut result = BTreeMap::new();
     for line in text.lines() {
