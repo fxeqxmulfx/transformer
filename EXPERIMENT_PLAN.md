@@ -9340,3 +9340,14 @@ and separation in the value embedding imply a margin against every competing
 class. The two-object complex example satisfies these assumptions. Whether
 ordinary next-object training discovers them on the original probe is the
 question for task 404.
+
+Task 404 prospectively fits a single CM111 head on the original binding probe.
+Use the original data seed 1, training seeds 0, 1 and 2, 100 output classes
+and 1,024 minibatches of 32. Every offset starts at zero. Learn all complex
+key and value/readout coordinates, the relative positions and the key scale.
+Mini uses the analytic CE gradient. Forward-only Mini uses paired finite
+queries of complete minibatch CE on feasible models and cycles through both
+entire embedding tables. Freeze both builds and seal all endpoints before
+scoring. Compare all original splits, the numerical CM111 margin and the
+queries whose supervised or stored key/value pair was absent during fitting.
+The two definitions of unseen pairs apply only to evaluation.
