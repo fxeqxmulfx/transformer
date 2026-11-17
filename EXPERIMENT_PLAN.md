@@ -8840,3 +8840,14 @@ against actual Atom.state and independent real4 execution, and reconstruct every
 original-class logit against Model.logits. No held-out labels, selected features,
 accepted updates or accuracy credit. Freeze and independently reproduce all four
 reports before choosing a state-geometry or component-fitting intervention.
+
+Task380's frozen training-state diagnosis at2356b0f1 completes all four runs.
+Mass-weighted final state norm means14.204–14.271 remain near initial15.996;
+only the explicit zero component is constant within every length. All2048
+complete training-state vectors are distinct, with no exact mixed-label
+collision. Independent real execution discrepancies are at most1.11e-15 and
+complete logits agree exactly. This excludes simple state collapse on the
+training set, not a capacity/separability or unseen-label obstruction. Next
+prove and test complete readout refitting across the training stream, keeping
+the trained content and all original coordinates. Treat it as a controlled
+optimizer investigation, not a supplied answer rule or generalization theorem.

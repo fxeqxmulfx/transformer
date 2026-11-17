@@ -440,3 +440,40 @@ Freeze this executable, source archive, commit and hashes before running all
 four variant/mode combinations. Diagnostic output stays outside the worktree;
 independent reruns must reproduce both metadata and every state statistic exactly.
 The existing110GB aggregate RAM and both-disk guards apply throughout inspection.
+
+The retention diagnosis completes at producer `2356b0f1`, freeze
+`rotary-retention-v1`, diagnostic fingerprint
+`dc3664eb1b2b5c5889130c11eba8978e2757dcea843c2913c943fdd0c3f51225`, binary SHA256
+`be0269ae46237a3199637c13feb9d58c92f48e3c3c6980671bce86f5f15fc1be`.
+All four runs exit0. Each includes2048 original training records,129 components,
+100 original classes and1056768 real state-coordinate comparisons. The shared
+training-record fingerprint is
+`21de666dea0fb1292160c088ecf04d0efe5722823b9f06764f0416d79dfd3464`.
+Evidence is in
+`/run/media/misha/storage/transformer-runs/diagnostics/rotary-retention-v1`.
+
+| Frozen model / mode | Mean mass-weighted final max norm | Minimum across training records | Maximum independent real-state discrepancy |
+|---|---:|---:|---:|
+| Cautious / Mini |14.20407|12.65100|1.11e-15|
+| Cautious / forward |14.24861|12.54628|9.99e-16|
+| Refined / Mini |14.27057|12.62760|1.11e-15|
+| Refined / forward |14.24999|12.07623|1.11e-15|
+
+The corresponding mass-weighted initial norm is15.99577 in every model. Only
+the explicit zero component is constant within every sequence length. Every
+nonzero component has nonzero within-length state variance; the minimum such
+variance is0.66397 across all four models. All2048 complete feature vectors are
+distinct in each model, with no exact mixed-label feature collision. Traced
+logits equal actual full-model logits exactly, and training CE/accuracy equal
+the original saved measurements. All19 native controls and Clippy pass.
+
+These measurements rule out collapse to zero or a common constant state on the
+inspected training set. They do not prove that the states contain the correct
+shared recall relation, are linearly separable under the capacity bound, or
+identify any unseen answer. Low training fit remains unresolved despite strong
+state variation. The next controlled change should revisit every existing
+readout across the training stream: currently each component's readout is left
+at its proposal-batch fit. Prove the complete conditional readout domain and
+actual update feasibility first; then test whether revisiting learned readouts
+helps before increasing memory or changing operator geometry. This diagnostic
+accepts no new model and earns no extra accuracy credit.
