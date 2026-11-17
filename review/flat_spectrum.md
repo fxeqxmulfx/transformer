@@ -22519,3 +22519,31 @@ separate old branch or alter its saved parameters, original-class CE, inputs,
 outputs or finite-query identities. Native evaluation must still check finite
 arithmetic and its measured residuals; a real-number identity is not a
 floating-point rounding certificate or an unseen-answer theorem.
+
+## CM109. Exact complete-class reuse for finite output queries
+
+Growing the finite learned mixture should not spend a full vocabulary sum
+on every output-coordinate query when only one class score changes. This is
+an algebraic reuse of ordinary cross-entropy, not an alternative loss or a
+derivative. Let z be the complete original logit vector, target t, changed
+class c, S=sum_d exp(z_d), and p_c=exp(z_c)/S. An existing original class
+witnesses S>0. Define shift(z,c,delta)_d=z_d+1[d=c]*delta. Then
+  S(shift(z,c,delta)) = S + exp(z_c)*(exp(delta)-1)
+                    = S*(1+p_c*(exp(delta)-1)).
+The factor is strictly positive for every real delta because the updated
+full partition is positive. Therefore the actual ordinary full-class loss is
+  CE(shift(z,c,delta),t)
+    = CE(z,t)+log(1+p_c*(exp(delta)-1))-1[t=c]*delta.
+For two actual changes plus and minus, subtract these identities. Their
+cached CE centres cancel, leaving the two logarithms and
+-1[t=c]*(plus-minus). No symmetry or infinitesimal limit is assumed; feasible
+projection of signed parameter perturbations can give asymmetric changes.
+
+Every original class still participates in S and CE. The formula supplies
+only the same two finite loss values at the actual feasible query points.
+It supplies no analytic CE residual to forward-only training. A native
+implementation may use expm1 and log1p for these differences and must compare
+them with full ordinary CE evaluations. This exact-real identity gives no
+certified floating rounding, stochastic convergence, factor oracle or unseen
+answer. Nonzero binary and three-class examples exercise target and competing
+class changes. It applies to the complete old and Hilbert branches alike.

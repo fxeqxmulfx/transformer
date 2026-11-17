@@ -9201,3 +9201,17 @@ states are necessary. Three native controls and two immutable-input fault
 refusals pass. The next learning step must strengthen shared retrieval content;
 do not treat normalization, positive estimate alignment or this ablation as an
 unseen-answer guarantee. Original endpoints and transformer remain unchanged.
+
+Task399 proves CM109's full-class CE reuse before the larger native content
+comparison. A complete one-class logit change updates the original partition
+by its exact changed summand. Its positive factor gives the exact ordinary CE
+query using the actual full-vocabulary softmax share, and subtraction gives
+the two-query difference even when projected parameter queries are asymmetric.
+This changes no labels or loss and supplies no analytic residual to forward
+training. Native output-row queries can reuse the partition after comparison
+with complete CE evaluations; real identities are not rounding certificates.
+The intended follow-up grows learned mixtures at the existing CM107 budget
+and compares them with equal-update continuation of one learned block.
+All seven new theorems pass the full14207-job build, warning-free direct
+checks, standard-axiom audit and native INDEX regeneration. INDEX now has5110
+modules26780theorems,36existing sorry and0rests/extra/vacuous/placeholder.
