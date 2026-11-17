@@ -21789,3 +21789,35 @@ forward and finite-query identities. They do not prove a better component
 oracle, a convergence rate, target-family membership or new stress accuracy.
 Any native test uses a separate frozen protocol and preserves the first failed
 shared-factor producer and its original-data evidence.
+
+## CM94. Exact zero-row execution for broader shared-factor tests
+
+The first CM93 original addition cohort reaches100% training and held-out
+accuracy in both minibatch modes, seed1; full saved-logit replays match. This
+is empirical evidence on one original split, not a generalization theorem for
+all tasks. Other seeds, short associative recall and longer sequences require
+separate prospective protocols. The CM86 higher-context parity limit remains.
+
+The complete gradient array has one real g[i,c] per query/context row i and
+every original class c, with the exact imaginary partner from CM88. Its memory
+and model dimensions are not reduced. Define A={i | exists c, g[i,c]!=0} using
+exact zero equality over all original classes. For every complex multiplier v,
+
+```
+sum_{i in A} sum_c g[i,c]*v[i,c] = sum_i sum_c g[i,c]*v[i,c].
+```
+
+Every omitted row has all entries zero, so every term vanishes independently
+of the learned multiplier. Taking v from the actual complete factor product
+gives the unchanged component objective, including the (1+i) output rotation.
+The three coordinate contractions are specializations of the same identity.
+Skipping these zero rows therefore changes execution cost without introducing
+a norm threshold, deleting a parameter, or restricting the learned directions.
+All original gradient coordinates and complete factor vectors remain stored.
+An explicit nonzero complex control has one zero row and one active row.
+
+Formalization: `SharedAtoms/Support`. The native implementation must select rows
+afresh from the complete current gradient, preserve their original order and
+compare contractions and objectives with the dense implementation. It must not
+apply this rule to merely small values. This supplies no global component-oracle
+or optimization theorem and no new held-out accuracy claim by itself.
