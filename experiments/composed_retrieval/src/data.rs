@@ -1,0 +1,92 @@
+//! The harness owns the case ID, source fingerprints, selection and budgets.
+//! Only original training examples and object dimensions reach the optimizer.
+use crate::{Result, model::WIDTH};
+use baseline::{data::Task, hash};
+use learned_retrieval::cohort::SUITE;
+use serde::Deserialize;
+use serde_json::Value;
+use std::collections::BTreeMap;
+
+pub const PROTOCOL: &str = include_str!("../protocol.json");
+#[derive(Clone, Deserialize)]
+pub struct CaseSpec {
+    pub vocabulary: usize,
+    pub context: usize,
+    pub batch: usize,
+    pub train: usize,
+    pub selection: String,
+    pub metric: String,
+    pub target: f64,
+    pub metadata_sha256: Option<String>,
+}
+#[derive(Clone, Deserialize)]
+pub struct Protocol {
+    pub name: String,
+    pub suite_sha256: String,
+    pub catalog_sha256: String,
+    pub cases: BTreeMap<String, CaseSpec>,
+    pub data_seed: u32,
+    pub seeds: Vec<u32>,
+    pub modes: Vec<String>,
+    pub updates: usize,
+    pub width: usize,
+    pub capacity: f64,
+    pub initial_key_scale: f64,
+    pub initial_depth: f64,
+    pub initial_product: f64,
+    pub angle_lr: f64,
+    pub routing_lr: f64,
+    pub recency_lr: f64,
+    pub gate_lr: f64,
+    pub beta1: f64,
+    pub beta2: f64,
+    pub epsilon: f64,
+    pub query_step: f64,
+    pub coordinates_per_table: usize,
+}
+pub fn protocol() -> Result<Protocol> {
+    let p: Protocol = serde_json::from_str(PROTOCOL)?;
+    if p.width != WIDTH
+        || hash(SUITE.as_bytes()) != p.suite_sha256
+        || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256
+    {
+        return Err("frozen protocol, width or original suite changed".into());
+    }
+    Ok(p)
+}
+pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
+    let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
+    let (task, pins) = if let Some(expected) = &s.metadata_sha256 {
+        let (task, metadata) = learned_retrieval_transfer::original_task(id)?;
+        if hash(&serde_json::to_vec(&metadata)?) != *expected {
+            return Err("sequence data fingerprint mismatch".into());
+        }
+        (task, metadata)
+    } else {
+        let suite: Value = serde_json::from_str(SUITE)?;
+        let row = suite["tasks"]
+            .as_array()
+            .ok_or("missing suite")?
+            .iter()
+            .find(|r| r["name"] == id)
+            .ok_or("missing original")?;
+        if row["case"]["batch"] != s.batch
+            || row["case"]["metric"] != s.metric
+            || row["case"]["target"] != s.target
+            || row["case"]["data_seed"] != p.data_seed
+        {
+            return Err("original metric or training configuration mismatch".into());
+        }
+        (
+            baseline::data::build(row)?,
+            row["data_fingerprints"].clone(),
+        )
+    };
+    if task.vocab != s.vocabulary
+        || task.selection != s.selection
+        || task.splits["train"].len() != s.train
+    {
+        return Err("original data shape changed".into());
+    }
+    Ok((task, pins))
+}

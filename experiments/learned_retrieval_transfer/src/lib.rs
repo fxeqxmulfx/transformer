@@ -51,6 +51,14 @@ fn inputs(case: &str) -> Result<(Protocol, dataset::Dataset, Value)> {
     p.suite_sha256 = hash(CATALOG.as_bytes());
     Ok((p, data, definition))
 }
+/// Original tensor-checked records and their source metadata, independent
+/// of the chosen learned model or the binary's producing commit.
+pub fn original_task(name: &str) -> Result<(data::Task, Value)> {
+    let (_, data, _) = inputs(name)?;
+    let metadata = data.metadata();
+    Ok((data.task, metadata))
+}
+
 pub fn case(name: &str) -> Result<Case> {
     let (p, data, definition) = inputs(name)?;
     let pins = json!({"original":data.original_fingerprints,"tensor":data.tensor_fingerprints});

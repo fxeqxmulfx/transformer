@@ -36,3 +36,24 @@ point. The frozen settings are in [protocol.json](protocol.json).
 
 The learned geometry, margin assumptions and indistinguishable training
 completions are stated in [CM113](../../review/flat_spectrum.md#cm113-composed-learned-retrieval-and-a-two-operand-phase-interaction).
+
+## Native reproduction
+
+Use the commit containing the native producer and an unused directory on the
+external storage volume. The runner archives tracked inputs, builds twice with
+Cargo offline and trains each endpoint in its own process. Each score command
+verifies the training seals of both complete arms and compares their weights
+and optimizer receipts. The replay recomputes all logits and original metrics.
+Generated data, raw scores and logs remain in the specified output directory.
+
+```sh
+bash experiments/composed_retrieval/run.sh "$PWD" /run/media/misha/storage \
+  <producer-commit> /run/media/misha/storage/transformer-runs/composed-retrieval/<fresh-run>
+```
+
+The Rust minibatch implementation caches the V² pairwise key similarities and
+one n² relative kernel per distinct memory length in a batch. Forward-only
+loss queries reuse forward values unaffected by a changed weight. A changed
+readout for an object absent from memory still contributes to the complete
+class partition on every example. The regression compares each projected
+coordinate query to recomputation from the literal nested path sums.
