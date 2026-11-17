@@ -105,3 +105,69 @@ bash experiments/convex_hilbert_content/review.sh \
  /run/media/misha/storage/transformer-runs/diagnostics/hilbert-content-v1 \
  /run/media/misha/storage/transformer-runs/reviews/task397-v1
 ```
+
+Producer `c620019a` completes all eight declared runs. Both geometries improve
+novel and test accuracy and reduce CE on every split relative to their own
+immutable starting parents. Hilbert geometry raises training raw accuracy in
+all four paired comparisons with the old geometry, but its novel and test
+accuracy each improve in only two pairs and decline in the other two. Its CE
+is higher than the matched old arm on every split in all four pairs. These
+results do not identify a consistent held-out advantage for the Hilbert norm.
+
+| Arm | Source/mode | Train raw | Train CE | Novel raw | Test raw |
+| --- | --- | ---: | ---: | ---: | ---: |
+| old | cautious Mini | 79.0039% | 1.602124 | 23.8281% | 22.8516% |
+| old | cautious forward | 78.8574% | 1.586483 | 21.6797% | 25.3906% |
+| old | refined Mini | 77.8809% | 1.620586 | 24.0234% | 24.0234% |
+| old | refined forward | 78.1250% | 1.616080 | 25.3906% | 22.2656% |
+| hilbert | cautious Mini | 82.0313% | 1.672622 | 24.4141% | 24.6094% |
+| hilbert | cautious forward | 82.3242% | 1.660829 | 22.8516% | 24.6094% |
+| hilbert | refined Mini | 80.2246% | 1.682239 | 23.2422% | 22.8516% |
+| hilbert | refined forward | 80.6152% | 1.700185 | 23.8281% | 22.8516% |
+
+Raw and exact accuracy agree on these single-target examples. Every original
+success and every 99% flag fails. The best novel and test accuracies, both
+25.3906%, come from different old-geometry forward runs. The highest training
+accuracy, 82.3242%, belongs to the cautious Hilbert forward run; it is not an
+unseen result. Relative to the starting parents, training accuracy improves
+in seven runs and falls in the old cautious forward run, despite its lower CE.
+Old-arm novel CE is 2.674866–2.708314 and test CE 2.659878–2.717092; Hilbert-arm
+novel CE is 2.762450–2.773239 and test CE 2.734005–2.776055. This is still one
+original task and seed, not a full stress-suite or three-seed success.
+
+All 4,096 updates finish, with 131,072 original occurrence visits and 690
+visited-batch CE increases. Every run covers all 2,048 original records and
+makes 16,384 cache refreshes. Every retained historical estimate replays bit
+for bit across all 16,384 endpoint records. Independent means agree with the
+incremental cache within 3.34e-16; maximum observed norm excess is 2.23e-16.
+All complete raw logits replay. Initial and transition coordinates change
+after the first update learns nonzero readouts; real and imaginary coordinates
+remain represented, including unobserved-object matrices with zero estimates.
+
+The current-versus-retained estimate dot product is positive in every cell,
+0.01515–0.02785. Their Euclidean difference is 0.06832–0.09615 for the old arm
+and 0.05465–0.05920 for Hilbert. These finite estimates are not certified true
+derivatives, so their agreement is not a convergence or generalization proof.
+Actual Hilbert state norms average 0.3714–0.4160, with minima 0.0100–0.0317,
+despite initial norms near one. The feasible Hilbert family still permits
+contractions: preserving a supplied isometry under normalization does not
+force learned matrices to be isometries or preserve all input distinctions.
+Old-arm maximum-state norms average 0.6417–0.6900; these use a different norm
+and are not a direct comparison of identical trajectories.
+
+Training uses 61,178,880 ordinary CE evaluations and 121,833,472 finite logit
+queries; the latter includes both Mini and forward queries, while Mini uses
+analytic CE residuals. Read-only current/history diagnostics add 15,261,952 CE
+evaluations. Each training cell takes 16.82–31.52 seconds. Maximum recorded
+aggregate RSS is 15.090 GB, well below the 110 GB cap. Neither disk guard fires.
+The frozen source fingerprint is
+`9ee1afcef03c26a3a1e572b02852378f915a918890c15b1a09a821636e1ca8ca`;
+the evidence locations are the commands above. All original parents, earlier
+failures and the transformer remain intact.
+
+This pilot changes the active-block optimizer, representation and allocation
+relative to the earlier content revisit; it does not isolate the optimizer as
+the cause of the gains. Before expanding this recipe, check whether the new
+block contributes useful input-dependent structure beyond a learned class
+bias. The norm extension is valid, but the requested 99% original held-out
+accuracy and generalization remain unresolved.

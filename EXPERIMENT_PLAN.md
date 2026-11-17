@@ -9164,3 +9164,16 @@ stochastic convergence. Every cached estimate must replay from its original
 record and actual historical parameters. All eight endpoints must seal before
 original raw/exact/CE/success/99 scoring and raw replay. Preserve all earlier
 failures and the transformer, with native tooling and110GB/both-disk guards.
+
+Task397 producer `c620019a` completes all eight frozen runs. All improve novel
+and test raw accuracy over their starting parents; novel is21.68–25.39% and
+test22.27–25.39%, with all original success/99% flags false. Hilbert training
+raw80.22–82.32% exceeds every matched old arm, but held-out raw wins only two
+of four pairs on each split and CE is worse in all four pairs on every split.
+All16384 cached estimates and all original raw logits replay; retained means
+agree within3.34e-16, and aggregate RSS stays below15.090GB. Learned Hilbert
+states still contract: allowing isometries does not force the optimizer to
+find them. Do not infer a generalization solution from norm feasibility or
+positive numerical estimate alignment. Before expanding the recipe, measure
+whether the new block's gains require input-dependent states beyond a learned
+class bias. Preserve the prospective eight-cell results and both geometries.
