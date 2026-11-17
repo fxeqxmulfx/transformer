@@ -12,6 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sp
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Identification
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Updates
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Capacity
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.SharedAtoms
 
 /-!
 # A learned rectangular complex sequence family with exact convex answer loss

@@ -8584,3 +8584,12 @@ shared learned structure and native Mini/forward-only Mini diagnostics on
 unchanged original splits. A capacity theorem or training-only fit does not
 complete the99% held-out goal. Keep the110GB aggregate RAM cap, both-disk
 guards, transformer baseline and all frozen producers; use no Python.
+
+CM92 supplies a shared learned output/query/context component family with
+complete joint-domain convexity, finite executable representations and feasible
+signed class-bias queries. Use the same capacity-reserving shrink in Mini and
+forward-only Mini. Component discovery may use an explicitly approximate
+training-only search; do not call it an exact convex oracle or claim optimizer
+convergence. First validate full complex execution and complete finite-query
+updates in Rust, then freeze a separate original-split diagnostic. Preserve
+the old failed cohorts and report the unchanged higher-context parity limit.

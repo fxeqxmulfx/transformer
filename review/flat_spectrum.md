@@ -21667,3 +21667,74 @@ which shared structure or budget solves the failed original GPT tasks.
 In particular, Euclidean size alone has not been shown to repair addition,
 MQAR or the CM86 higher-context parity restriction. Those remain empirical
 and architectural work under the active generalization goal.
+
+## CM92. A bounded shared learned output factor and feasible CE queries
+
+CM86 recovers separate factor pairs for every original output object. A new
+candidate uses components with three trainable complex vectors: u over output
+objects, v over query addresses and w over context addresses. No arithmetic
+meaning, task program, semantic vector or fixed finite feature bank is supplied.
+For a raw object sequence x, execute
+
+```
+(1+i) u[c] readQuery(x,v) readContext(past(x),w).
+```
+
+The complete coefficient tensor is u[c] v[q] w[d]. Summing components with
+learned real weights executes all three factors and predicts the next original
+object from the complete class scores. This execution equals CM86's complete
+joint reading, including complex values before taking real parts, on every
+prefix. The output factor couples the two input encoders across all classes.
+The raw reader still has CM86's interaction degree; this change alone cannot
+remove the proved higher-context parity restriction.
+
+Bound each component's three complete squared vector norms by one. Allow every
+complex direction satisfying these bounds, and take the convex hull of the
+complete tensors multiplied by a declared scalar budget B. This is a convex
+domain in joint tensor coordinates, and ordinary full-vocabulary CE is convex
+on it. It is not joint convexity in independently varied physical factor arrays.
+Every domain point has a finite representation as a convex combination of
+actual bounded factor triples; conversely every such finite representation is
+feasible and has the proved executable path. A zero component holds unused
+mass. No fixed rank or singular-direction threshold is imposed by the domain.
+Existence of a finite representation is not an efficient discovery algorithm.
+
+For one component, the complete real coordinate energy is exactly the product
+of its three complete complex squared norms. Thus it is at most one. Convexity
+of the CM91 energy ball implies E(p)<=B^2 for every atomic-domain point. This
+connects the domain to CM91's sufficient residual certificates. The converse
+energy-to-atomic-domain inclusion is not assumed. This bound does not establish
+that the original stress targets lie in a chosen budget or that their unseen
+answers admit certificates.
+
+A convex component update (1-eta)p+eta*B*atom remains feasible for0<=eta<=1,
+for every learned admissible candidate. An approximate component search may
+therefore propose valid states, but does not supply an exact global linear
+minimization oracle or a global optimization guarantee. Native work must report
+this limitation, retain every attempted update and failure, and score held-out
+data only under a separately frozen protocol. A nonconstant complex witness
+has squared norm1/2 in all three vectors, retains both original objects, and
+uses imaginary entries to change real output scores. It gives no stress credit.
+
+Forward-only queries must also correspond to allowed model parameters. Given
+current p, use the common centre (1-eta)p. A signed class-bias component has
+u=+/-e_c, v=e_bias, w=e_bias, so it is admissible and changes only class c's
+real logit. The two complete query points
+
+```
+(1-eta)p + eta*B*bias(c,+1),
+(1-eta)p + eta*B*bias(c,-1)
+```
+
+remain in the same domain. Their real logits equal the centre logits with
+class c changed by+/-eta*B. Their ordinary CE evaluations therefore supply
+the exact finite central bias difference at step eta*B. CM88's per-record
+reuse supplies the complete real/imaginary direction, retaining duplicates,
+pair multiplicities, every original class and short batch tails. This does
+not identify finite differences with analytic derivatives. Mini and forward-
+only Mini must use the same shrunken centre for a matched implementation.
+
+Formalization: `LearnedBilinear/SharedAtoms`. The proofs make a new shared
+factor experiment concrete while keeping the input/output contract and the
+optimization, identification and depth limitations explicit. They do not
+resolve the active generalization goal without new original-split evidence.
