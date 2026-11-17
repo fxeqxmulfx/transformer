@@ -22430,3 +22430,62 @@ quarter-turn content, CM105 imaginary current rows and a single true target,
 but retain class signals (-3/8,3/8) instead of the actual (-1/2,1/2). The full
 error budget is 1/4 and the estimated gap is 12, so correction 8 is strictly
 smaller. An indexed three-occurrence refresh also retains the denominator 3.
+
+## CM107. Learned norm-preserving mixing and the choice of state norm
+
+The CM106 native comparison correctly accounts for changing content, yet its
+finite coordinate revisits do not repair original key-value recall. This does
+not prove a capacity obstruction or identify its cause. Check a separate
+architectural restriction before another training change: CM97 uses the maximum
+norm on two complex states, so its unit transition rows have absolute sum at
+most one. This differs from a Hilbert operator-norm bound and can exclude a
+perfectly norm-preserving mixing matrix.
+
+Use H = WithLp 2 (complex x complex), with squared norm |z0|^2+|z1|^2.
+Keep both complex initial coordinates, all four complex entries of every
+original-object transition and both complex coefficients of every original
+class readout. Changing the norm changes the admissible set, not the numerical
+coordinate representation. Full complex linear maps still reconstruct exactly
+from their two columns. Require initial, transition and readout operator norms
+at most one in this Hilbert geometry; CM95 then bounds actual ordered execution
+and full-class outputs at every length. Readout squared coefficient norm at
+most one is a sufficient complete-row capacity condition.
+
+For an exact nonzero witness, take the real-coefficient complex-linear matrix
+R=((3/5,-4/5),(4/5,3/5)). It preserves the squared Euclidean norm of every complex
+state, including both imaginary coordinates. Consequently all its repeated
+executions preserve that norm exactly. But its two absolute row sums are7/5,
+and it sends (i,i), of maximum norm1, to (-i/5,7i/5), of maximum norm7/5.
+It is excluded by the old maximum-norm transition budget, despite its flat
+unit singular values. No prescribed position frequency is used in this example.
+
+Apply the actual CM102 phase-preserving Euclidean row projection to both rows
+of R. The result is Q=((2/5,-3/5),(3/5,2/5)). Its squared Hilbert norm is exactly
+(13/25) times the input squared norm. Repeating this projected transition n
+times gives squared state norm (13/25)^n times its initial value, strictly less
+than the unprojected value for every nonzero state after a positive number of
+steps. This is an exact example of the geometry's restriction, not a bug in
+CM102: Q really is the closest matrix under its original row constraints.
+It also distinguishes equal singular values from singular values equal to one.
+Flatness without a scale condition does not prevent depth-dependent decay.
+
+The converse inclusion also fails: the broadcast matrix ((1,0),(1,0)) has old
+maximum-norm operator bound one but sends the Hilbert unit state (i,0) to
+(i,i), whose squared Hilbert norm is two. Preserve the complete old learned-
+rotary family rather than replacing its norm and silently dropping parameter
+points. Enlarge the joint function domain to
+the convex hull of all old CM98 generators and all bounded Hilbert-state CM95
+generators. Every old function remains feasible, and every new admissible
+Hilbert recurrence is feasible. Its finite representations retain an explicit
+branch tag per learned component; no fixed feature table, numeric interpretation
+of objects or answer program enters either branch. The uniform output budget B
+survives finite mixtures, and ordinary complete-class CE is convex in joint
+scores. The already available nonzero original-class bias generators remain
+feasible, so finite signed CE queries keep their exact logits and capacity
+accounting even when the current model mixes both branches.
+
+This is functional convexity, not joint convexity in independently varied
+matrix factors or a global component-search oracle. The witness supplies no
+unseen labels and is not a benchmark initialization. The native results do not
+yet establish that projection-induced decay is the cause of their failure;
+learning under the enlarged geometry needs a separate frozen comparison.

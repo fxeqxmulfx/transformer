@@ -9119,3 +9119,20 @@ inconclusive. These checks validate the changing-state estimator, not this
 content optimizer or generalization. Do not extend this finite coordinate
 recipe merely because its visited-batch CE decreases; shared-content learning
 and the requested99% original held-out target remain unresolved.
+
+Task395 proves CM107's geometry extension before another native model change.
+The complete Hilbert-coordinate operators/readouts reconstruct all complex
+linear maps. Rational mixing R=((3/5,-4/5),(4/5,3/5)) preserves every complex
+state's Euclidean norm but exceeds the old maximum-norm budget. The actual
+CM102 row projection gives Q=((2/5,-3/5),(3/5,2/5)), whose repeated squared
+norm is exactly(13/25)^length times the initial value. Conversely, an old
+admissible broadcast matrix exceeds the Hilbert budget, so changing the norm
+cannot silently replace the old family. The enlarged joint domain retains
+every old rotary function and adds every bounded Hilbert recurrence, with the
+same output budget, ordinary CE convexity and actual feasible finite queries.
+All34 new theorems, full14201-job build, seven direct sources, standard-axiom
+checks and native INDEX pass;36 existing sorry remain with0 rests or extra
+axioms. This proves a concrete geometric restriction, not that it caused the
+native failure or that the added family learns unseen answers. The next native
+comparison needs a checked full-matrix Hilbert feasibility rule, preserved old
+models, learned content and the unchanged original stress labels.
