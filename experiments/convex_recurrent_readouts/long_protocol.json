@@ -1,0 +1,41 @@
+{
+  "name": "complete-learned-readout-long-v1",
+  "case": "gpt-probe-key-value-binding",
+  "sources": [
+    "cautious",
+    "refined"
+  ],
+  "modes": [
+    "mini",
+    "forward"
+  ],
+  "seed": 1,
+  "updates": 2048,
+  "learning_rate": 4.0,
+  "query_step": 0.0001,
+  "line_iterations": 64,
+  "line_interval": [
+    0.0,
+    1.0
+  ],
+  "budget": 16.0,
+  "initialization": "unchanged sealed seed1 learned-rotary endpoint from the named source and matching mode",
+  "readout_update": "all original classes/components and both complex coefficients; exact Mini readout gradient or forward finite-CE contraction, actual component weights included; radial row feasibility followed by full CE line search",
+  "content": "all initial states, full original-object matrices and learned frequencies retained from training; no prescribed feature map or answer rule",
+  "query_centre": "same capacity-reserving shrink in both modes; unused mass remains explicit",
+  "data": "unchanged original frozen35 binding generator, masks, duplicates, short tails and all labels; data seed1",
+  "sampler": "all original minibatches; Random(seed+10000), restarted identically in all four refits",
+  "stopping": "fixed2048 updates,32 additional epochs; every first512-update trajectory and checkpoint must match the earlier producer; all four final endpoints seal before new held-out scoring",
+  "success": "source primary success and separate99% raw/exact; every original split and failure retained",
+  "limits": {
+    "aggregate_ram_bytes": 110000000000,
+    "minimum_workspace_free_bytes": 2147483648,
+    "minimum_storage_free_bytes": 17179869184
+  },
+  "claim": "CM100 conditional feasible refit; no global optimizer, factor-convexity, separability or unseen-label guarantee",
+  "reference_prefix": {
+    "updates": 512,
+    "source_fingerprint": "0b2a966f9f9caea8716d2bf475be283b1d5f3789299a5cbd8f220278b273f7ac",
+    "relative_cohort": "transformer-runs/recurrent-readouts/original-v1"
+  }
+}

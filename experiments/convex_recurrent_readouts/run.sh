@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Seal all four complete endpoints before any new held-out scoring.
 set -euo pipefail
-if test "$#" -ne 5; then
-  echo 'usage: bash run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_COHORT' >&2
+if test "$#" -lt 5 || test "$#" -gt 6; then
+  echo 'usage: bash run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_COHORT [-long]' >&2
   exit 2
 fi
 task_workspace=$1
@@ -10,6 +10,8 @@ task_storage=$2
 task_sources=$3
 task_freeze=$4
 task_cohort=$5
+task_suffix=${6:-}
+case "$task_suffix" in ''|-long) ;; *) echo 'unknown frozen protocol' >&2; exit 2 ;; esac
 test -x "$task_freeze/stress"
 test -f "$task_freeze/protocol.json"
 test "$(df -B1 --output=avail "$task_workspace" | tail -1)" -gt 2147483648
@@ -20,7 +22,7 @@ mkdir "$task_cohort/logs"
 run_cell() {
  local task_action=$1 task_variant=$2 task_mode=$3 task_result=0
  local task_log=$task_cohort/logs/$task_action-$task_variant-$task_mode
- prlimit --as=34359738368:34359738368 -- "$task_freeze/stress" "$task_action" \
+ prlimit --as=34359738368:34359738368 -- "$task_freeze/stress" "$task_action$task_suffix" \
   "$task_workspace" "$task_storage" "$task_sources" "$task_cohort" "$task_variant" "$task_mode" \
   > "$task_log.log" 2>&1 || task_result=$?
  printf '%s\n' "$task_result" > "$task_log.exit"

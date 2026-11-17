@@ -1,7 +1,7 @@
 //! Original scoring only after all four readout-refit endpoints are sealed.
 use crate::{
-    Result,
-    experiment::{self, cell, settings},
+    Result, continuation,
+    experiment::{self, cell, settings_with},
     source,
 };
 use bilinear::{experiment as original, guard};
@@ -10,10 +10,13 @@ use serde_json::{Value, json};
 use std::{fs, path::Path};
 
 pub fn sealed(cohort: &Path) -> Result<()> {
+    sealed_with(cohort, experiment::PROTOCOL)
+}
+pub fn sealed_with(cohort: &Path, text: &str) -> Result<()> {
     let binary = original::hash(&fs::read(std::env::current_exe()?)?);
     for variant in experiment::VARIANTS {
         for mode in experiment::MODES {
-            let (protocol, _) = settings(variant, mode)?;
+            let (protocol, _) = settings_with(variant, mode, text)?;
             let path = cell(cohort, variant, mode);
             let meta = original::score::read(&path.join("metadata.json"))?;
             let receipt = original::score::read(&path.join("training_receipt.json"))?;
@@ -34,6 +37,7 @@ pub fn sealed(cohort: &Path) -> Result<()> {
             {
                 return Err("incomplete or changed refit cohort seal".into());
             }
+            continuation::verify_seal(&path, &protocol, &meta)?;
         }
     }
     Ok(())
@@ -46,10 +50,11 @@ pub fn run(
     variant: &str,
     mode: &str,
     replay: bool,
+    text: &str,
 ) -> Result<()> {
     guard::admit(0, workspace, storage)?;
-    sealed(cohort)?;
-    settings(variant, mode)?;
+    sealed_with(cohort, text)?;
+    settings_with(variant, mode, text)?;
     let path = cell(cohort, variant, mode);
     let meta = original::score::read(&path.join("metadata.json"))?;
     let (_, row, task) = original::case_in(source::CASE, rotary::experiment::CAUTIOUS_PROTOCOL)?;

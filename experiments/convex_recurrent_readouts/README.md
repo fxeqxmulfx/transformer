@@ -105,3 +105,30 @@ for cautious and16.27/19.10s for refined, Mini/forward respectively. These are
 additional refit costs, not the cost of learning the source content or matched
 transformer budgets. The next question is whether further fitting saturates or
 whether revisiting shared content is needed;99% remains unresolved.
+
+## Longer fitting with an exact earlier trajectory check
+
+Task383 changes only the prospective update budget, from512 to2048 (32 refit
+epochs). `long_protocol.json` keeps the same four starting checkpoints, learning
+rate4, query step, line search, row rule, original batch stream and all content
+coordinates. Before passing update512, every deterministic receipt, example and
+target count, batch hash and complete checkpoint byte must match the immutable
+first refit producer. The check reads training traces and model bytes only.
+A changed earlier trajectory refuses the run; all four exact-prefix records are
+also required by the final scoring seal. No old score selects a new update.
+
+Freeze a new executable/source archive, commit and hashes, copying
+`long_protocol.json` as the freeze's `protocol.json`. The original refit cohort
+must remain at its declared path below STORAGE. Then run:
+
+```sh
+"$CARGO_TARGET_DIR/release/stress" plan-long
+bash experiments/convex_recurrent_readouts/run.sh WORKSPACE STORAGE SOURCE_RUNS FREEZE FRESH_COHORT -long
+```
+
+Individual train/score/verify commands gain `-long`. Every old result remains
+intact. The first cohort's training-stream CE was still falling at epoch8; this
+control tests further fitting without claiming that more training identifies
+unseen answers. All original metrics, failures, query costs, resource guards
+and complete raw replays remain required. No new Lean claim is needed: the
+CM100 feasible update and conditional-CE results are unchanged.

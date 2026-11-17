@@ -8891,3 +8891,12 @@ actual complete logits match interpolation exactly. This supports revisiting
 learned readouts as a useful fitting repair, while the train/held-out gap and
 unseen-answer problem remain. Preserve every old failed result and separate
 additional refit compute from source-content training and transformer budgets.
+
+Task383 changes only CM100 readout-refit duration from512 to2048 updates, keeping
+all four original sources, minibatches, learning rate4, finite queries and row
+updates unchanged. Validate every original first512 deterministic receipt and
+batch/count field and require the checkpoint bytes to match before continuing.
+All four prefix replay records gate final scoring; no held-out label enters the
+check. Freeze a new producer and retain every original split/failure/raw replay.
+The training-only epoch CE trajectory justifies checking further fitting, not
+claiming that greater training accuracy establishes generalization.

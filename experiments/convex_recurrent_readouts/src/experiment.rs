@@ -1,6 +1,6 @@
 //! Prospective complete refit cohort; every endpoint seals before original scoring.
 use crate::{
-    Result, source,
+    Result, continuation, source,
     update::{self, Config},
 };
 use baseline::random::Random;
@@ -14,6 +14,7 @@ use std::{
     time::Instant,
 };
 pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub const LONG_PROTOCOL: &str = include_str!("../long_protocol.json");
 pub const VARIANTS: [&str; 2] = ["cautious", "refined"];
 pub const MODES: [&str; 2] = ["mini", "forward"];
 pub fn fingerprint() -> String {
@@ -22,12 +23,14 @@ pub fn fingerprint() -> String {
         include_bytes!("lib.rs").as_slice(),
         include_bytes!("update.rs"),
         include_bytes!("source.rs"),
+        include_bytes!("continuation.rs"),
         include_bytes!("experiment.rs"),
         include_bytes!("score.rs"),
         include_bytes!("bin/stress.rs"),
         include_bytes!("../Cargo.toml"),
         include_bytes!("../Cargo.lock"),
         PROTOCOL.as_bytes(),
+        LONG_PROTOCOL.as_bytes(),
         rotary::experiment::fingerprint().as_bytes(),
     ] {
         h.update((bytes.len() as u64).to_le_bytes());
@@ -39,10 +42,13 @@ pub fn cell(cohort: &Path, variant: &str, mode: &str) -> PathBuf {
     cohort.join(variant).join(mode)
 }
 pub fn settings(variant: &str, mode: &str) -> Result<(Value, Config)> {
+    settings_with(variant, mode, PROTOCOL)
+}
+pub fn settings_with(variant: &str, mode: &str, text: &str) -> Result<(Value, Config)> {
     if !VARIANTS.contains(&variant) || !MODES.contains(&mode) {
         return Err("cell outside frozen cohort".into());
     }
-    let p: Value = serde_json::from_str(PROTOCOL)?;
+    let p: Value = serde_json::from_str(text)?;
     let config = Config {
         mode: original::mode(mode)?,
         query_step: p["query_step"].as_f64().ok_or("query step")?,
@@ -58,12 +64,14 @@ pub fn train(
     cohort: &Path,
     variant: &str,
     mode: &str,
+    text: &str,
 ) -> Result<()> {
     guard::admit(0, workspace, storage)?;
-    let (protocol, config) = settings(variant, mode)?;
+    let (protocol, config) = settings_with(variant, mode, text)?;
     let (mut model, row, input, task) = source::load(workspace, storage, sources, variant, mode)?;
     let batch = row["case"]["batch"].as_u64().ok_or("original batch")? as usize;
     let updates = protocol["updates"].as_u64().ok_or("updates")? as usize;
+    let reference = continuation::Replay::load(storage, &protocol, variant, mode, &input)?;
     let path = cell(cohort, variant, mode);
     fs::create_dir_all(path.parent().ok_or("parent")?)?;
     fs::create_dir(&path)?;
@@ -71,6 +79,7 @@ pub fn train(
         &path.join("metadata.json"),
         &json!({"source_fingerprint":fingerprint(),
         "protocol":protocol,"input":input,"original":row,"objects":model.objects,"budget":model.budget,
+        "prefix_reference":reference.as_ref().map(|r|&r.identity),
         "variant":variant,"mode":mode,"selection":task.selection,
         "binary_sha256":original::hash(&fs::read(std::env::current_exe()?)?)}),
     )?;
@@ -112,13 +121,13 @@ pub fn train(
             .flat_map(|&i| (i as u64).to_le_bytes())
             .collect();
         cursor = end;
-        writeln!(
-            trace,
-            "{}",
-            json!({"update":update+1,"examples_seen":examples,"targets_seen":targets,
+        let record = json!({"update":update+1,"examples_seen":examples,"targets_seen":targets,
             "batch_indices_sha256":original::hash(&indices),"aggregate_rss_before":rss,
-            "elapsed_seconds":start.elapsed().as_secs_f64(),"receipt":receipt})
-        )?;
+            "elapsed_seconds":start.elapsed().as_secs_f64(),"receipt":receipt});
+        if let Some(reference) = &reference {
+            reference.observe(update, &record, &model, &path)?;
+        }
+        writeln!(trace, "{record}")?;
         trace.flush()?;
         if update == 0 || (update + 1) % 64 == 0 {
             println!(
