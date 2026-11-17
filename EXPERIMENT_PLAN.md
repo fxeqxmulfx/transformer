@@ -8723,3 +8723,14 @@ across the entire cohort is4.89207e-5 on a long Boolean probe. This is five of35
 selected tasks, not a full-suite result; separately trained parity lengths are
 not a parity16 extrapolation claim. Preserve the scalar order limitation and
 continue with the learned rotary/matrix extension for order-sensitive tasks.
+
+Task375 extends the recurrence with CM98 learned real rotary frequencies and
+actual position-dependent conjugation of the complete two-state content
+matrices. All52 new theorems build: rotations preserve the actual operator
+norm, the output bound is independent of sequence length, and full-class CE
+queries remain feasible in the joint convex score domain. A nonconstant
+swapped-prefix witness uses commuting content matrices, so its order signal
+comes from rotary positions. Scalar shared conjugation cancels; the result
+does not exclude other position-dependent scalar models. No Gram-flatness or
+unseen-label guarantee is inferred. Complete Lean audits precede task376's
+native comparison of plain and learned rotary matrices on original binding.

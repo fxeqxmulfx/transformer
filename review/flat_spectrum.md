@@ -21941,3 +21941,49 @@ must keep every complex initial/matrix/readout coordinate and learn from origina
 CE observations. The matrix norm constraints control capacity; neither they nor
 this order witness select arbitrary unseen answers. Formalization:
 `LearnedRecurrent/Pair/Basic` and `LearnedRecurrent/Pair/Order`.
+
+## CM98. Learned rotary positions inside the bounded recurrent family
+
+Use the existing `GPTMini.RoPE.applyRope_isometry` and
+`GPTMini.RoPE.applyRope_relative` geometry, with learned frequencies as in the
+local `RoPE/LeRoPE/Section3_LearnedFrequencies` formalization. Here both complex
+channel frequencies are unrestricted real trainable parameters; no prescribed
+frequency grid, token meaning or answer rule is introduced. This is a derived
+model extension, not a claim that the cited frequency formula proves learning.
+
+For theta=(theta1,theta2), let phase(theta_j,t)=exp(i*t*theta_j) and let R(t)
+be the diagonal complex operator with these phases. R(s)R(t)=R(s+t), R(-t) is
+its inverse, and R(t) preserves the maximum norm on the two complex channels.
+This is the complex-coordinate form of two independent real rotary pairs.
+Relative rotations depend on the position difference. At position t, execute
+A_t(o)=R(t) T_o R(-t), where every original-object matrix T_o, initial state and
+class readout remains learned. R and T interact inside actual execution.
+Conjugation preserves each transition's operator norm; the same Unit budgets
+therefore bound every actual output independently of sequence length.
+
+The external input remains List O and the output remains one original O.
+An internal position counter starts at zero and increments once per occurrence;
+there is no per-prefix parameter table. The joint score domain is the convex
+hull of all admissible learned frequencies and content parameters. Physical
+frequency/matrix discovery remains approximate and is not jointly convex.
+Ordinary full-class CE is convex in the joint scores; zero-frequency identity
+components give the same feasible signed class-bias queries as CM95.
+Replacing a content matrix for an object absent from the whole raw prefix
+changes neither its executed state nor any original-class score. This permits
+exact absent-object proposal skips while retaining every learned parameter;
+small nonzero responses and original classes cannot be filtered.
+
+In a scalar state, this particular shared rotary conjugation has no effect:
+phase(t)*a*phase(-t)*z=a*z. This does not rule out other position-dependent
+scalar models. In the two-state family even commuting content matrices can
+produce an order distinction through their position-dependent conjugates.
+Use a swap for false and identity for true, initial state(1,0), frequencies
+(pi/2,0), and readouts(0,1) for false and(0,i) for true. The two swapped prefixes
+have states(0,1) and(0,-i), and predict their first original object with margin1.
+These are existence witnesses only; no such weights enter native learning.
+
+Preserving each rotation or transition norm does not preserve a token-table
+Gram spectrum. The existing `SequenceModel.RotarySpectrum` counterexample
+changes eigenvalues(1,1) into(2,0) under valid rowwise RoPE while retaining each
+row norm. CM98 asserts operator/output bounds, not that arbitrary positionwise
+rotations keep the data Gram matrix flat or identify arbitrary unseen labels.

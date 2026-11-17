@@ -1,0 +1,56 @@
+import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary
+
+open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary
+
+#print axioms phase_norm
+#print axioms phase_zero
+#print axioms zero_frequency
+#print axioms phase_add
+#print axioms turn_apply
+#print axioms turn_isometry
+#print axioms turn_zero
+#print axioms turn_zero_frequency
+#print axioms turn_add
+#print axioms turn_inverse
+#print axioms turn_relative
+#print axioms transport_norm_le
+#print axioms transport_inverse
+#print axioms transport_norm
+#print axioms scalar_conjugation
+#print axioms step_norm
+#print axioms run_norm_le
+#print axioms complex_bound
+#print axioms score_bound
+#print axioms step_zero
+#print axioms run_zero
+#print axioms score_zero
+#print axioms zero_unit
+#print axioms zero_score
+#print axioms run_congr
+#print axioms absent_run
+#print axioms absent_score
+#print axioms domain_convex
+#print axioms generator_mem
+#print axioms zero_mem
+#print axioms finite_feasible
+#print axioms finite_representation
+#print axioms domain_bound
+#print axioms loss_convex
+#print axioms step_feasible
+#print axioms nextObject_max
+#print axioms bias_unit
+#print axioms bias_score
+#print axioms query_feasible
+#print axioms query_logits
+#print axioms feasible_difference
+#print axioms position_unit
+#print axioms position_content_commutes
+#print axioms phase_quarter
+#print axioms phase_negative_quarter
+#print axioms position_execution
+#print axioms position_scores
+#print axioms position_margin
+#print axioms position_mem_domain
+#print axioms position_prediction
+#print axioms position_nonconstant
+#print axioms position_zero_equal
