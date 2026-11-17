@@ -9498,3 +9498,12 @@ Task 415 extends the frozen log-odds training rule to the same original
 sole memory object in these prefix pairs. Independently refit every
 available case in both modes and compare actual raw decisions. Verify the
 overlap against the log-odds four-case evidence before merging its ledger.
+
+The complete log-odds comparison passed six original and six strict cases
+among 51 measured. Binding and two-hop lookup joined four arithmetic
+passes. All 48 available arithmetic outcomes and per-seed correctness
+counts were identical to the physical-depth reference. Only one raw
+decision changed across 3,262,182 final arithmetic predictions, a wrong
+validation answer in both models. Six original sources remain unavailable
+and 108 cases fall outside this cohort. The ordinary and forward-only
+fits matched every strict case decision.

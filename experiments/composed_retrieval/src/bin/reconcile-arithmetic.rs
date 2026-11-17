@@ -8,6 +8,8 @@ use archived::audit;
 #[path = "shared/decisions.rs"]
 mod decisions;
 use decisions::Decisions;
+#[path = "shared/arithmetic_charts.rs"]
+mod charts;
 use learned_retrieval::cohort::{raw_file, read};
 use serde_json::{Value, json};
 use std::{
@@ -124,9 +126,12 @@ fn predictions(root: &Path, id: &str, p: &data::Protocol) -> Result<Decisions> {
 }
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
-    let [workspace, storage, matched, family] = args.as_slice() else {
-        return Err("expected WORKSPACE STORAGE MATCHED_FOUR_OUTPUT ARITHMETIC_OUTPUT".into());
+    let [workspace, storage, matched, family, reference @ ..] = args.as_slice() else {
+        return Err("expected WORKSPACE STORAGE MATCHED_FOUR_OUTPUT ARITHMETIC_OUTPUT [PHYSICAL_ARITHMETIC_OUTPUT]".into());
     };
+    if reference.len() > 1 || (!reference.is_empty() && !cfg!(feature = "logodds-depth")) {
+        return Err("the log-odds study accepts one physical-depth reference".into());
+    }
     let (workspace, storage, matched, family) = (
         Path::new(workspace),
         Path::new(storage),
@@ -207,12 +212,14 @@ fn main() -> Result<()> {
     let summary = json!({"catalog":cases.len(),"measured":state("measured"),"source_unavailable":state("source_unavailable"),
         "outside_cohorts":state("outside_cohorts"),"original_pass_all":count("original"),"strict_pass_all":count("strict"),
         "overlap":overlap,"overlap_raw_files":raw_overlap_files,"arithmetic_mode_comparison":total});
-    serde_json::to_writer_pretty(
-        std::io::stdout().lock(),
-        &json!({"summary":summary,"cases":cases,
+    let mut result = json!({"summary":summary,"cases":cases,
         "four_case_audit":a["summary"],"arithmetic_audit":b["summary"],"arithmetic_endpoints":family_results,
-        "arithmetic_mode_comparison":family_predictions}),
-    )?;
+        "arithmetic_mode_comparison":family_predictions});
+    if let Some(physical) = reference.first() {
+        result["depth_comparison"] =
+            charts::compare(workspace, storage, Path::new(physical), family, &p, &b)?;
+    }
+    serde_json::to_writer_pretty(std::io::stdout().lock(), &result)?;
     println!();
     Ok(())
 }
