@@ -8979,3 +8979,13 @@ zero and positive gaps. This is a training-only conditional theorem; it does
 not certify finite precision, global factor optimization or unseen answers.
 The next measurement will stream all original training records in minibatches
 through saved endpoints, retaining every coordinate and using no held-out labels.
+
+Task387 is proved and reviewed at6383026a:29 new theorems, full14171-job build,
+seven warning-free source checks, direct/global axiom checks and generated INDEX
+all pass. No new sorry or extra axiom. Task388 now pins all twelve retained
+readout endpoints and will measure the complete floating gap using only original
+training minibatches. Check every numerical coefficient against actual CE before
+the frozen run, evaluate eight fixed feasible directions without an accepted
+update, and independently replay all reports. Analytic diagnostics of saved
+forward-only endpoints do not count as forward-only training. No held-out labels
+or new accuracy credit enter this diagnostic.

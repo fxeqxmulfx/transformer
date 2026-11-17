@@ -1,0 +1,17 @@
+{
+  "name": "complete-training-readout-gap-v1",
+  "lean_source": "6383026a CM103",
+  "case": "gpt-probe-key-value-binding",
+  "cohorts": ["original-v1", "long-v1", "projected-v1"],
+  "sources": ["cautious", "refined"],
+  "modes": ["mini", "forward"],
+  "seed": 1,
+  "batch": 32,
+  "etas": [0.0, 0.000244140625, 0.0009765625, 0.00390625, 0.015625, 0.0625, 0.25, 1.0],
+  "data": "all unchanged original training records including duplicates, masks and short tails; no validation/test labels enter coefficients or probes",
+  "coefficients": "all classes, components and both complex coordinates; unconjugated state times actual analytic full-class CE residual and native weight (already includes B), divided by all supervised records",
+  "mode_scope": "analytic read-only diagnostic of both previously trained modes; not a forward-only training update",
+  "probes": "fixed feasible readout interpolations evaluated with actual Model.logits; no accepted update, checkpoint or held-out scoring",
+  "claim": "floating-point diagnostic of exact-real CM103; no certified rounding bound, conditional optimum, factor optimum or unseen identification is assumed",
+  "limits": {"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184}
+}
