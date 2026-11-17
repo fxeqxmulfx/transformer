@@ -102,3 +102,14 @@ lie outside this cohort.
 Two independent builds of `e60c0c43` trained all 612 endpoints before
 held-out scoring. They matched every model and optimizer receipt and
 replayed 2,928 complete raw score files. The run took 1,352.59 seconds.
+
+All 732 initial split score files matched the log-odds reference exactly.
+The sampled training rows and coordinate visits matched too. For the
+modulus-193 constant control, removing the output offsets after training
+reduced correct training predictions from 18,528/18,528 to 85–97/18,528
+across the six fits. The target class had the largest learned offset at
+every seed. With the same removal, binding stayed at 2,048/2,048 and
+two-hop lookup at 256/256 training targets. On modulus-97 multiplication,
+removing offsets from the three standard minibatch fits cost 80, 69
+and 99 correct training predictions. Their held-out accuracies still
+missed 99% at every seed.
