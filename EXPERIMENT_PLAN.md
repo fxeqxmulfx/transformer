@@ -9492,3 +9492,9 @@ perfect. Multi-query recall reached 31/32, 32/32 and 30/32 on novel
 validation at the three seeds and lost its original all-seed pass. This
 protocol has three strict passes in four measured cases. Its coverage is
 reported separately from the 51-case physical-depth experiment.
+
+Task 415 extends the frozen log-odds training rule to the same original
+54-case arithmetic inventory. CM113 proves that either read selects the
+sole memory object in these prefix pairs. Independently refit every
+available case in both modes and compare actual raw decisions. Verify the
+overlap against the log-odds four-case evidence before merging its ledger.

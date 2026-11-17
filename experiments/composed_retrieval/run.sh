@@ -2,7 +2,7 @@
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
 if (( $# < 4 || $# > 6 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|arithmetic SOURCE_INPUTS]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic} SOURCE_INPUTS]' >&2
   exit 2
 fi
 workspace=$(realpath "$1")
@@ -11,21 +11,26 @@ producer=$(git -C "$workspace" rev-parse --verify "$3^{commit}")
 output=$(realpath -m "$4")
 experiment=experiments/composed_retrieval
 variant=${5:-sparse}
+source_inputs=
 features=()
 protocols=(protocol.json)
 case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
   logodds) features=(--features logodds-depth); protocols+=(dense/protocol.json logodds/protocol.json) ;;
-  arithmetic)
+  arithmetic|logodds-arithmetic)
     (( $# == 6 ))
     source_inputs=$(realpath "$6")
     features=(--features arithmetic-cohort)
     protocols+=(dense/protocol.json arithmetic/protocol.json)
+    if [[ "$variant" == logodds-arithmetic ]]; then
+      features=(--features arithmetic-cohort,logodds-depth)
+      protocols+=(logodds/protocol.json logodds/arithmetic/protocol.json)
+    fi
     ;;
   *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
 esac
-[[ "$variant" == arithmetic || $# -le 5 ]]
+[[ -n "${source_inputs:-}" || $# -le 5 ]]
 workers=18
 admit() {
   test "$(df -B1 --output=avail "$workspace" | tail -1)" -gt 2147483648
@@ -77,7 +82,7 @@ invoke() {
 }
 export -f invoke
 export output workspace storage variant
-if [[ "$variant" == arithmetic ]]; then
+if [[ -n "${source_inputs:-}" ]]; then
   mkdir "$output/inputs"
   cp "$source_inputs"/{arithmetic_seed1,grokking_task_inventory,plan}.json "$output/inputs/"
   for arm in original repeat; do invoke "$arm" inventory "$output/inputs" >"$output/$arm/inventory.json"; done

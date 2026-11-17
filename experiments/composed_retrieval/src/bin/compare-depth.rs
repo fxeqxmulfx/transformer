@@ -49,6 +49,9 @@ fn main() -> Result<()> {
     let (workspace, storage) = (Path::new(workspace), Path::new(storage));
     guard::admit(1 << 30, workspace, storage)?;
     let p = data::protocol()?;
+    if p.cases.len() != 4 {
+        return Err("compare-depth requires the four original controls".into());
+    }
     p.initial_log_odds.ok_or("compile for the log-odds study")?;
     let cohorts = [
         ("control", Path::new(control), data::DENSE_PROTOCOL),

@@ -2,7 +2,7 @@
 //! Only the resulting aligned examples and object dimensions enter training.
 use crate::{
     Result,
-    data::{CaseSpec, DENSE_PROTOCOL, PROTOCOL, Protocol},
+    data::{ARITHMETIC_PROTOCOL, CaseSpec, DENSE_PROTOCOL, PROTOCOL, Protocol, TRAINING_PROTOCOL},
 };
 use arithmetic_data::{dataset, inventory, oracle};
 use baseline::{
@@ -24,9 +24,9 @@ fn count(row: &Value, field: &str) -> Result<usize> {
     )?)
 }
 pub fn configure(p: &mut Protocol) -> Result<()> {
-    let extension: Value = serde_json::from_str(PROTOCOL)?;
-    if extension["parent_protocol_sha256"] != hash(DENSE_PROTOCOL.as_bytes())
-        || extension["data_protocol_sha256"] != hash(arithmetic_data::PROTOCOL.as_bytes())
+    let family: Value = serde_json::from_str(ARITHMETIC_PROTOCOL)?;
+    if family["parent_protocol_sha256"] != hash(DENSE_PROTOCOL.as_bytes())
+        || family["data_protocol_sha256"] != hash(arithmetic_data::PROTOCOL.as_bytes())
     {
         return Err("changed training or dataset parent".into());
     }
@@ -64,10 +64,21 @@ pub fn configure(p: &mut Protocol) -> Result<()> {
         );
     }
     unavailable.sort();
-    if cases.len() != 48 || extension["unavailable"] != json!(unavailable) {
+    if cases.len() != 48 || family["unavailable"] != json!(unavailable) {
         return Err("arithmetic cohort membership changed".into());
     }
-    p.name = extension["name"].as_str().ok_or("extension name")?.into();
+    let protocol = if cfg!(feature = "logodds-depth") {
+        let joined: Value = serde_json::from_str(PROTOCOL)?;
+        if joined["training_protocol_sha256"] != hash(TRAINING_PROTOCOL.as_bytes())
+            || joined["arithmetic_protocol_sha256"] != hash(ARITHMETIC_PROTOCOL.as_bytes())
+        {
+            return Err("training or arithmetic source protocol changed".into());
+        }
+        joined
+    } else {
+        family
+    };
+    p.name = protocol["name"].as_str().ok_or("extension name")?.into();
     p.cases = cases;
     Ok(())
 }

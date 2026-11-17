@@ -1,0 +1,7 @@
+{
+  "name": "composed-retrieval-original-arithmetic54-logodds-depth-v1",
+  "training_protocol_sha256": "52d2cc8bc99c68642e4bdf6e8513cf057de16fd5ac2382551f387324427f6cec",
+  "arithmetic_protocol_sha256": "15b11be73ae0123bba0c383cdc68eb5633463b0d81d96afa26381d916a07569c",
+  "training": "Use exactly the log-odds four-case initialization, model, updates, modes and optimizer. Fit every available member of the original 54-case arithmetic inventory with its original rows, masks, multiplicity, data seed and batch size.",
+  "scoring": "Independently seal both sets of 288 endpoints before scoring. Replay and decode all initial and final raw outputs. Reconcile with the log-odds four-case cohort only after verifying the complete overlapping addition models, training receipts and logits."
+}

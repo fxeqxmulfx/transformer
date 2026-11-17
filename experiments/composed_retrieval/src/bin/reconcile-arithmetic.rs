@@ -143,7 +143,7 @@ fn main() -> Result<()> {
         return Err("expected the frozen matched-four and arithmetic cohorts".into());
     }
     let p = data::protocol()?;
-    let expected = [(matched, data::DENSE_PROTOCOL), (family, data::PROTOCOL)];
+    let expected = [(matched, data::TRAINING_PROTOCOL), (family, data::PROTOCOL)];
     for (root, definition) in expected {
         for arm in ["original", "repeat"] {
             let seal = read(&root.join(arm).join("run/sealed/manifest.json"))?;

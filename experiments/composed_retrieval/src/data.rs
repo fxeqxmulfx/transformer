@@ -10,14 +10,23 @@ use std::collections::BTreeMap;
 pub const BASE_PROTOCOL: &str = include_str!("../protocol.json");
 pub const DENSE_PROTOCOL: &str = include_str!("../dense/protocol.json");
 const LOGODDS_PROTOCOL: &str = include_str!("../logodds/protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "arithmetic-cohort") {
-    include_str!("../arithmetic/protocol.json")
-} else if cfg!(feature = "logodds-depth") {
+pub const TRAINING_PROTOCOL: &str = if cfg!(feature = "logodds-depth") {
     LOGODDS_PROTOCOL
 } else if cfg!(feature = "dense-forward") {
     DENSE_PROTOCOL
 } else {
     BASE_PROTOCOL
+};
+pub const ARITHMETIC_PROTOCOL: &str = include_str!("../arithmetic/protocol.json");
+pub const PROTOCOL: &str = if cfg!(all(
+    feature = "arithmetic-cohort",
+    feature = "logodds-depth"
+)) {
+    include_str!("../logodds/arithmetic/protocol.json")
+} else if cfg!(feature = "arithmetic-cohort") {
+    ARITHMETIC_PROTOCOL
+} else {
+    TRAINING_PROTOCOL
 };
 #[derive(Clone, Deserialize)]
 pub struct CaseSpec {
@@ -73,9 +82,7 @@ pub fn protocol() -> Result<Protocol> {
             .into();
         p.coordinates_per_table = None;
     }
-    #[cfg(feature = "arithmetic-cohort")]
-    crate::arithmetic::configure(&mut p)?;
-    if PROTOCOL == LOGODDS_PROTOCOL {
+    if cfg!(feature = "logodds-depth") {
         let d: Value = serde_json::from_str(LOGODDS_PROTOCOL)?;
         if d["parent_protocol_sha256"] != hash(DENSE_PROTOCOL.as_bytes()) || d["initial_odds"] != 9
         {
@@ -86,6 +93,8 @@ pub fn protocol() -> Result<Protocol> {
         p.initial_log_odds = Some(z);
         p.initial_depth = crate::model::sigmoid(z);
     }
+    #[cfg(feature = "arithmetic-cohort")]
+    crate::arithmetic::configure(&mut p)?;
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256

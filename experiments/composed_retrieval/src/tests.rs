@@ -369,3 +369,23 @@ fn every_previously_available_arithmetic_record_matches_the_original_adapter() -
     assert_eq!(matched, 22);
     Ok(())
 }
+
+#[test]
+#[cfg(all(feature = "arithmetic-cohort", feature = "logodds-depth"))]
+fn arithmetic_cohort_uses_the_original_log_odds_updates() -> Result<()> {
+    let p = data::protocol()?;
+    assert_eq!(p.cases.len(), 48);
+    assert_eq!(p.initial_log_odds, Some(9_f64.ln()));
+    assert_eq!(p.coordinates_per_table, None);
+    let m = Model::new(p.cases["arithmetic-add"].vocabulary, 2, &p, 0)?;
+    assert_eq!(
+        m.weights[m.validate()?.depth],
+        crate::model::sigmoid(9_f64.ln())
+    );
+    let shell: serde_json::Value = serde_json::from_str(data::PROTOCOL)?;
+    assert_eq!(
+        shell["training_protocol_sha256"],
+        baseline::hash(data::TRAINING_PROTOCOL.as_bytes())
+    );
+    Ok(())
+}
