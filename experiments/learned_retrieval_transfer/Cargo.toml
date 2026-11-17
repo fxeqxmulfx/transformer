@@ -1,0 +1,20 @@
+[package]
+name = "learned-retrieval-transfer"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
+bilinear = { package = "convex-bilinear-sequence", path = "../convex_bilinear_sequence" }
+learned-retrieval = { path = "../learned_retrieval" }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[profile.test]
+opt-level = 2
+
+[profile.release]
+lto = "thin"

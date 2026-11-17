@@ -1,0 +1,15 @@
+{
+  "name": "learned-retrieval-sequence-transfer-v1",
+  "model_protocol_sha256": "0f3d446742bbdfd158e230a0ef8c3004bbf50d54ba70d7cbf56ad3d003020d5b",
+  "catalog_sha256": "3250869d547271008d28022ae26d3a1e97b434ef446f5f04d5c8a7a96ddc1c65",
+  "context": 96,
+  "metric": "sequence_accuracy",
+  "target": 0.95,
+  "cases": {
+    "suite-mqar": "ec5127f419e377c2006f8df5e30136377f9526e351851a7e34cc454d529962bf",
+    "suite-lookup": "6c31fb74c065ad4894537c00fafa342f92457b7343984af3cf8a9f9dde482294"
+  },
+  "data": "SHA256 of each canonical compact task320 metadata object, including every original-source and 11 native tensor fingerprints, masks, counts, selection and data provenance",
+  "training": "Inherit all optimizer settings, model width, capacity, three seeds, 1024 updates and both modes verbatim from the binding protocol. Use the published maximum length 96 for the relative-position table. Both original cases have batch size 32 and data seed 1. The common training prefixes have length at most 24.",
+  "evaluation": "Seal both cases and both independent arms before evaluating any held-out prefix. Retain original 95% success on novel validation and separate 99% raw and exact flags for every held-out split, including lengths 48 and 96."
+}

@@ -9363,3 +9363,10 @@ potentials at inaccessible negative offsets remain. Evaluate other positions,
 overwrite retrieval and two-hop lookup on their original data. This is one
 measured case for the current protocol. The historical 98-case union already
 includes this case.
+
+Task 406 applies the same model and fixed 1,024-update protocol to
+`suite-mqar` and `suite-lookup`. Both original tasks use two supervised
+queries, batches of 32 and data seed 1. Size the input context from the
+published maximum length 96. Train only on original length-24 records and
+score every original length-24/48/96 split after both independent cohorts are
+sealed. Task 407 separately covers eight-query Basis recall and overwritten keys.

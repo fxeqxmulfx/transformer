@@ -3,12 +3,12 @@
 use crate::{
     Result,
     binding_counts::{Context, Counts, Observation},
-    cohort::{self, Protocol},
+    cohort::{self, Study},
     model::{Model, dot},
 };
 use baseline::{
     channel::argmax,
-    data::Example,
+    data::{Example, Task},
     metrics::{self, Predictor},
 };
 use bilinear::{
@@ -114,18 +114,16 @@ impl Routes {
         Ok(())
     }
 }
-fn split(
+fn original_outputs(
     model: &Model,
     examples: &[Example],
-    queried: &Pairs,
-    stored: &Pairs,
+    rows: &[Record<'_>],
 ) -> Result<(Value, Vec<u8>)> {
-    let rows = records(examples, &(0..examples.len()).collect::<Vec<_>>())?;
-    if rows.len() != examples.len() {
-        return Err("binding probe expects one label per example".into());
-    }
-    for r in &rows {
+    for r in rows {
         model.objects(r.prefix)?;
+        if r.target >= model.vocabulary {
+            return Err("scoring label outside vocabulary".into());
+        }
     }
     let predictor = Raw {
         model,
@@ -136,6 +134,40 @@ fn split(
     if raw.len() != rows.len() * model.vocabulary * 8 {
         return Err("one complete original output per row required".into());
     }
+    Ok((metrics, raw))
+}
+/// Original scorer for aligned prefix labels, retaining all vocabulary logits
+/// for every supervised position in the scorer's order.
+pub fn prefix_split(model: &Model, examples: &[Example]) -> Result<(Value, Vec<u8>)> {
+    if examples.iter().any(|e| {
+        !e.prompt.is_empty()
+            || e.field.is_some()
+            || e.targets.len() != e.tokens.len()
+            || e.targets.len() != e.changes.len()
+            || !e.targets.iter().any(|&label| label >= 0)
+    }) {
+        return Err("expected aligned supervised prefix records".into());
+    }
+    let rows = records(examples, &(0..examples.len()).collect::<Vec<_>>())?;
+    let (metrics, raw) = original_outputs(model, examples, &rows)?;
+    Ok((
+        json!({"raw99":metrics["token_accuracy"].as_f64().ok_or("raw")? >= 0.99,
+        "exact99":metrics["sequence_accuracy"].as_f64().ok_or("exact")? >= 0.99,
+        "raw_logits_sha256":hash(&raw),"metrics":metrics}),
+        raw,
+    ))
+}
+fn split(
+    model: &Model,
+    examples: &[Example],
+    queried: &Pairs,
+    stored: &Pairs,
+) -> Result<(Value, Vec<u8>)> {
+    let rows = records(examples, &(0..examples.len()).collect::<Vec<_>>())?;
+    if rows.len() != examples.len() {
+        return Err("binding probe expects one label per example".into());
+    }
+    let (metrics, raw) = original_outputs(model, examples, &rows)?;
     let mut counts = Counts::default();
     let mut routes = Routes::default();
     let mut unseen = [[0usize; 2]; 2];
@@ -179,11 +211,33 @@ fn split(
 }
 pub fn run(workspace: &Path, storage: &Path, root: &Path, replay: bool) -> Result<()> {
     guard::admit(1 << 30, workspace, storage)?;
-    let p: Protocol = cohort::protocol()?;
-    let cells = cohort::load(root, &p)?;
-    let (row, task) = p.data()?;
+    let study = Study::binding()?;
+    let (row, task) = study.protocol().data()?;
     let train = &task.splits["train"];
     let (queried, stored) = seen(&records(train, &(0..train.len()).collect::<Vec<_>>())?)?;
+    score(
+        &study,
+        &task,
+        &row["case"],
+        root,
+        replay,
+        || guard::admit(1 << 27, workspace, storage).map(|_| ()),
+        |model, examples| split(model, examples, &queried, &stored),
+    )
+}
+pub fn score(
+    study: &Study,
+    task: &Task,
+    criteria: &Value,
+    root: &Path,
+    replay: bool,
+    mut admit: impl FnMut() -> Result<()>,
+    split: impl Fn(&Model, &[Example]) -> Result<(Value, Vec<u8>)>,
+) -> Result<()> {
+    let cells = study.load(root)?;
+    let p = study.protocol();
+    let metric = criteria["metric"].as_str().ok_or("original metric")?;
+    let threshold = criteria["target"].as_f64().ok_or("original threshold")?;
     let output = root.join("scores");
     let dest = if replay {
         root.join("replay")
@@ -204,8 +258,8 @@ pub fn run(workspace: &Path, storage: &Path, root: &Path, replay: bool) -> Resul
                 let mut splits = BTreeMap::new();
                 let mut all = true;
                 for (split_name, examples) in &task.splits {
-                    guard::admit(1 << 27, workspace, storage)?;
-                    let (report, raw) = split(model, examples, &queried, &stored)?;
+                    admit()?;
+                    let (report, raw) = split(model, examples)?;
                     if replay {
                         if fs::read(cohort::raw_file(&output, &name, split_name))? != raw {
                             return Err(
@@ -220,8 +274,6 @@ pub fn run(workspace: &Path, storage: &Path, root: &Path, replay: bool) -> Resul
                     }
                     splits.insert(split_name, report);
                 }
-                let metric = row["case"]["metric"].as_str().ok_or("original metric")?;
-                let threshold = row["case"]["target"].as_f64().ok_or("original threshold")?;
                 let success = splits[&task.selection]["metrics"][metric]
                     .as_f64()
                     .ok_or("primary score")?
