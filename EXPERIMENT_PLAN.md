@@ -9525,3 +9525,13 @@ combining coverage, repeat multi-query recall and two-hop lookup and compare
 both builds' complete models, training receipts and raw splits to task 416.
 Use the independently retained native data fingerprints and the original
 plan's batch sizes and accuracy criteria.
+
+The CM116 joint-offset cohort passed nine original and eight strict cases
+in 51 measured, with matching accuracy counts at every split and seed in
+both modes. The constant controls at moduli 17, 97 and 193 became exact.
+Division modulo 193 gained a strict pass while division modulo 97 missed
+at seed 1. Multi-query recall regained the original target. Two-hop lookup
+and binding remained exact. On the frozen previous scores the three
+modulus-97 operations with errors concentrated at zero all required
+incompatible single-class displacements. Producer `e60c0c43` sealed 612
+fits before scoring and replayed 2,928 raw files across two native builds.

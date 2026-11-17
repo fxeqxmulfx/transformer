@@ -71,3 +71,34 @@ cargo run --release --locked --offline --manifest-path "$manifest" --features ou
   --bin compare-output-offsets -- "$PWD" /run/media/misha/storage "$base/logodds-depth-v1" \
   "$base/logodds-arithmetic54-v1" "$base/<fresh-output>"
 ```
+
+## Joint training results on 51 cases
+
+The learned-offset model passed **nine original criteria and eight strict
+criteria** at every seed in both minibatch modes. Its log-odds reference
+passed six of each on these same 51 cases. Division modulo 193 and the
+modulus-17 and modulus-193 constant controls gained strict passes.
+Division modulo 97 lost one. Multi-query recall regained its original
+95% pass with 31/32 novel validation sequences at its weakest seed.
+
+| Original held-out split | Log-odds reference, seeds 0 / 1 / 2 | Learned offsets, seeds 0 / 1 / 2 |
+| --- | --- | --- |
+| Division modulo 97, 4,656 pairs | 4,613 / 4,612 / 4,616 | 4,624 / 4,591 / 4,617 |
+| Division modulo 193, 18,528 pairs | 18,441 / 18,294 / 18,443 | 18,429 / 18,358 / 18,436 |
+| Multiplication modulo 97, 4,705 pairs | 4,620 / 4,613 / 4,616 | 4,596 / 4,612 / 4,577 |
+| Constant, modulus 17, 136 pairs | 126 / 130 / 124 | 136 / 136 / 136 |
+| Constant, modulus 97, 4,656 pairs | 4,650 / 4,652 / 4,648 | 4,656 / 4,656 / 4,656 |
+| Constant, modulus 193, 18,528 pairs | 97 / 18,523 / 18,525 | 18,528 / 18,528 / 18,528 |
+| Multi-query recall, 32 novel sequences | 31 / 32 / 30 | 32 / 32 / 31 |
+
+Both modes produced the same object and exact-sequence counts on every
+split at all three seeds. Key/value binding remained 512/512 on novel
+validation and on test. Two-hop lookup remained 64/64 at each test length
+through 96. Modular addition and subtraction remained 4,705/4,705. The
+48 arithmetic members include the repeated addition control once. Six
+other arithmetic cases have unavailable original sources and 108 cases
+lie outside this cohort.
+
+Two independent builds of `e60c0c43` trained all 612 endpoints before
+held-out scoring. They matched every model and optimizer receipt and
+replayed 2,928 complete raw score files. The run took 1,352.59 seconds.
