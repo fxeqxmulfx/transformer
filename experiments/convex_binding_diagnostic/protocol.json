@@ -1,0 +1,15 @@
+{
+  "name":"original-binding-diagnostic-v1",
+  "status":"post-hoc read-only diagnosis declared after task400; zero updates and no selected endpoint",
+  "case":"gpt-probe-key-value-binding","seed":1,
+  "inputs":"all eight c620019a inputs and all sixteen f5d317a6 final stage8 endpoints, including both geometries, variants, modes and final arms",
+  "preservation":"all original examples, labels, supervised masks, duplicates, logits and original metrics; no replacement labels, artificial task or modified predictor",
+  "roles":"read-only shape validation against the frozen original generator: BOS1, two distinct keys at positions1 and3, stored values at2 and4, value fillers, final supervised query equal to one stored key and original target equal to its stored value; length6 through12; roles never enter model execution or training",
+  "categories":["correct","other_distinct_stored_value","outside_stored_values"],
+  "choice":"on distinct-value examples only, report full-class logits at both original stored values, their actual-label-order argmax, true-minus-other margin and conditional two-value CE; this auxiliary choice is not original model accuracy",
+  "mass":"report complete-softmax probability mass on unique stored values and negative log mass, using every original class in the denominator; compare full CE with mass loss plus conditional stored-value CE; duplicate values form a singleton and retain all original metrics",
+  "breakdowns":"overall, both selected-pair positions and all original query positions5 through11, with explicit empty denominators and duplicate-value counts",
+  "checks":"each complete original raw report must match its frozen reference exactly; category counts, target counts and CE must match original metrics; repeat all24 complete reports byte for byte and refuse changed pinned inputs",
+  "limits":{"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184},
+  "claim":"descriptive error localization on one original task and seed; no updates, new success, query causality proof, inferred arithmetic rule or generalization certificate"
+}

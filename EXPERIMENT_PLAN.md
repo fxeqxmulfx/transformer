@@ -9270,3 +9270,13 @@ value versus outside both stored values, two-value margins, selected pair and
 query position. Those task roles enter read-only diagnosis, never training.
 CM110 supplies a separate width obstruction, not an explanation of the MQAR
 errors or a99% guarantee. Generalization remains unresolved.
+
+Task402 now pins all eight initial and sixteen final inputs before evaluation.
+It preserves original full metrics and independently reproduces their logits,
+while partitioning errors into the other stored value and outside both values.
+Distinct-value choice, complete probability mass, CE decomposition, both selected
+pairs and all query positions are auxiliary descriptive reports. Repeated-value
+examples retain their original weight. No roles enter the predictor or training,
+and no new success flag is introduced. Six native controls and fresh complete
+reports plus changed-input refusals precede interpretation. Enforce110GB aggregate
+RAM and both disks; freeze all source, binaries, protocol and pins first.
