@@ -22368,3 +22368,65 @@ The strict comparison uses exp(t)+exp(-t)>2 for every positive contrast t.
 The ordered component remains available; CM104 already proves a different
 feasible reallocation improves both records. This counterexample concerns a
 minibatch descent inference, not impossibility of fitting or generalizing.
+
+## CM106. Retained coefficients while learned content changes
+
+CM105 permits an arbitrary complete estimate but does not justify treating a
+cache made under old learned content as a current coefficient. Keep every
+original indexed supervised occurrence i, including duplicates. At current
+content f let z_ij be its actual ordered state on prefix x_i. A stored state q_ij
+may come from a different historical model g_ij for each occurrence/component.
+For stored full-class signals s_ic define H_jc = (1/N) sum_i s_ic q_ij.
+There is no assumption that s is a current residual or that q is a current state.
+
+For two CM98 models, define the executed transition discrepancy along a prefix
+recursively by D_p([])=0 and
+D_p(o::xs)=norm(step_f(p,o)-step_g(p,o))+D_(p+1)(xs).
+Contractive actual operators and a historical starting state of norm at most
+one give
+  norm(run_f(p,v,xs)-run_g(p,w,xs)) <= norm(v-w)+D_p(xs).
+This follows by splitting each transition difference into the propagated state
+error and the changed operator applied to the historical state. Starting at
+the learned initial states gives rho(f,g,xs)=norm(init_f-init_g)+D_0(xs).
+The operators include both actual rotary conjugations, so changing frequencies,
+transitions or initial coordinates is covered. Each original occurrence keeps
+its position; no label or prescribed answer feature enters rho.
+
+For arbitrary complete state and signal tables, the mean coefficient is linear
+in either table separately. Refreshing an indexed subset replaces its old
+signal contribution by its new one, divided by the original N, not the batch
+size. Transporting stored signals to changed states adds the complete mean
+sum_i s_ic*(z_ij-q_ij)/N. Both identities retain all components and classes.
+Identical prefixes at different indices remain separate contributions.
+When both states and signals refresh on the minibatch, the increment is the
+indexed mean of (newSignal*newState - oldSignal*oldState) on just those records.
+Storing historical states therefore permits genuine content updates followed
+by ordinary minibatch refreshes without silently reusing the old state as new.
+
+Let r_ic be the actual full-class CE residual at the current complete model.
+If norm(z_ij)<=1 and norm(z_ij-q_ij)<=d_i for all j, then the CM105 peak obeys
+  peak(A-H) <= E,
+  E = (1/N) sum_i [sum_c abs(r_ic-s_ic) + d_i*sum_c abs(s_ic)].
+The proof uses
+  r*z-s*q = (r-s)*z + s*(z-q)
+before summing every class and occurrence. For historical CM98 models take
+d_i=max_j rho(f_j,g_ij,x_i). This supplies the state term from actual parameter
+changes; the signal term remains explicit. Thus G_H+2B E bounds conditional CE
+improvement and G_H>2B E suffices for an actual negative readout direction at the
+current content. It does not certify a finite content step or assume successful
+optimization. A native learner changing content must either invalidate its
+cache, transport every affected coefficient exactly, or account for both errors.
+
+This extension does not turn stored signals into unbiased gradients, bound
+their stochastic error for free, prove finite-query rounding or identify unseen
+answers. The native CM105 comparison remains partial: retained-small improves
+original novel accuracy but is far below 99%. Content learning and generalization
+still require actual training and original held-out evaluation.
+
+Nonzero witnesses use the CM98 quarter-turn model and its zero-frequency
+counterpart: on [true,false] their actual states are (0,-i) and (0,1), so the
+content-change term cannot be omitted. For a separate strict example, keep the
+quarter-turn content, CM105 imaginary current rows and a single true target,
+but retain class signals (-3/8,3/8) instead of the actual (-1/2,1/2). The full
+error budget is 1/4 and the estimated gap is 12, so correction 8 is strictly
+smaller. An indexed three-occurrence refresh also retains the denominator 3.

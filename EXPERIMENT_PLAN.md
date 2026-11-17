@@ -9076,3 +9076,19 @@ staleness issue from numerical accumulation. All129 components and learned
 content remain. The optimizer repair is partial; learning shared content and
 unseen generalization remain unresolved. Preserve the frozen results and extend
 the theory before changing how retained estimates interact with content updates.
+
+Task393 proves CM106's 30 new theorems before that change: actual ordered state
+perturbation from learned initial/transported operators; complete signal-only,
+state-only and simultaneous indexed refresh identities; separate signal/state
+error in every coefficient; corrected current-content CE and direction bounds.
+The historical model may differ by original record and component. Examples
+include a changed learned frequency with nonzero actual state discrepancy, an
+indexed three-record refresh, and strict descent with nonzero retained-signal
+error. Full14195-job build, ten warning-free direct sources, all30 standard
+axiom checks and the global audit pass; native INDEX has5098 modules and26711
+theorems, still36 sorry with0 rests, extra axioms, vacuous or placeholder entries.
+Task394 will compare a fixed-content continuation with actual learned-content
+revisits, retaining historical states and using the exact old/new-product cache
+update. Signals remain stale between visits, and finite content search remains
+approximate. Neither CM106 nor the proposed experiment is an unseen-answer or
+global-factor convergence guarantee; all original held-out outcomes still matter.
