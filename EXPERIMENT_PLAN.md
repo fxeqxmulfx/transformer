@@ -9215,3 +9215,16 @@ and compares them with equal-update continuation of one learned block.
 All seven new theorems pass the full14207-job build, warning-free direct
 checks, standard-axiom audit and native INDEX regeneration. INDEX now has5110
 modules26780theorems,36existing sorry and0rests/extra/vacuous/placeholder.
+
+Task400 compares continued learning of the existing plain block with adding
+complete learned blocks under the same CM107 budget16. All eight c620019a
+endpoints enter both arms, yielding16 prospective runs. Eight stages of512
+original minibatches32 use identical stage samplers, fresh occurrence caches
+and complete1204-coordinate updates. Growth scales all prior weights by7/8
+and adds mass2, preserving every stored component. CM109 full-class CE reuse
+is checked against actual finite CE queries during training; forward-only
+learning never uses analytic CE residuals. Every phase history and frozen base
+must reconstruct. Seal all128 stages before original scoring at0,1,2,4,8,
+retain all outcomes and replay all80 reports. No new task program, label subset,
+RoPE, full-batch training or success assumption is introduced. Freeze native
+source/binary/protocol/inputs before training and enforce110GB/both-disk limits.

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# One native worker, all training before any new held-out scoring.
+set -euo pipefail
+test "$#" -eq 5
+task_workspace=$1
+task_storage=$2
+task_freeze=$3
+task_cohort=$4
+task_diagnostics=$5
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+admit() {
+ ps -e -o rss= | awk '{s+=$1*1024}END{if(s+34359738368>110000000000)exit 1}'
+ test "$(df -B1 --output=avail "$task_workspace" | tail -n 1)" -gt 2147483648
+ test "$(df -B1 --output=avail "$task_storage" | tail -n 1)" -gt 17179869184
+}
+test ! -e "$task_cohort"
+test ! -e "$task_diagnostics"
+(cd "$task_freeze" && sha256sum -c SHA256SUMS)
+for task_arm in continue grow; do
+ for task_geometry in old hilbert; do
+  for task_variant in cautious refined; do
+   for task_mode in mini forward; do
+    admit
+    prlimit --as=34359738368:34359738368 -- "$task_freeze/convex-content-growth" train \
+     "$task_workspace" "$task_storage" "$task_cohort" "$task_arm" "$task_geometry" "$task_variant" "$task_mode"
+   done
+  done
+ done
+done
+admit
+prlimit --as=34359738368:34359738368 -- "$task_freeze/convex-content-growth" diagnose \
+ "$task_workspace" "$task_storage" "$task_cohort" "$task_diagnostics"
+for task_action in score replay; do
+ admit
+ prlimit --as=34359738368:34359738368 -- "$task_freeze/convex-content-growth" "$task_action" \
+  "$task_workspace" "$task_storage" "$task_cohort"
+done

@@ -1,0 +1,23 @@
+{
+  "name":"retained-content-growth-v1",
+  "lean_source":"94b47aa8 CM107 finite_feasible;886e7d05 CM108;1bb685d2 CM109",
+  "case":"gpt-probe-key-value-binding",
+  "inputs":"all eight c620019a endpoints; all had improved training CE over their inputs; no endpoint is selected by held-out rank",
+  "arms":["continue","grow"],"geometries":["old","hilbert"],"variants":["cautious","refined"],"modes":["mini","forward"],
+  "seed":1,"stages":8,"updates_per_stage":512,"batch":32,"checkpoints":[0,1,2,4,8],
+  "shuffle_seed_base":40001,"initialization_seed_base":40002,
+  "budget":16.0,"new_mass_fraction":0.125,"initial_radius":0.75,"matrix_jitter":0.015625,
+  "query_step":0.0001,"learning_rate":1.0,
+  "continue":"train the existing learned plain block for every stage, holding its learned parent and mass; reset its per-occurrence estimate cache at each stage to match grow",
+  "grow":"each stage scales every existing mixture contribution by7/8 and adds one complete trainable plain block at mass2; train that new block for the full stage; all old components and coordinates remain stored; this increases the finite representation within the same CM107 function-capacity budget",
+  "learning":"same512 original minibatches32 per stage in both arms, sampler seed base+stage; complete1204-real-coordinate simultaneous updates from the retained per-occurrence mean, then actual old/Hilbert normalization; no line search, early stopping or endpoint selection",
+  "initialization":"grow uses seed base+stage and the same generic complete initializer as c620019a, with zero readouts; no supplied task program, object roles, positional rotations or label subset",
+  "queries":"same feasible signed parameter pairs as c620019a; content queries evaluate all logits, output-row queries change one original class; Mini uses analytic CE residuals with numerical logit differences, forward uses finite actual CE differences only",
+  "ce_cache":"CM109 exact full-class partition reuse for output-only queries, evaluated with expm1/log1p; cache includes all original logits, no analytic CE residual enters forward training; projected plus/minus changes may be asymmetric",
+  "query_audit":"every output coordinate on the first record of each batch and one record-indexed output coordinate on each other record compare both compact CE queries to full ordinary CE at tolerance2e-12; validation results never alter estimates except refusal; count full and cached CE evaluations separately",
+  "cache":"reset full per-original-occurrence estimates to zero each stage, preserve duplicates and target masks, refresh by(new-old)/N; retain actual pre-update parameter versions and every complete active block snapshot; no full-batch training",
+  "review":"after every run seals, reconstruct every stage from its prior checkpoint and deterministic initialization, verify the frozen base and all full endpoints, and replay every cached estimate at its actual historical active block; current-estimate diagnostics are reserved for the final stage",
+  "scoring":"no new held-out scoring until all16 runs and128 stages seal; report all original raw/exact/CE/success/99 metrics at checkpoints0,1,2,4,8; checkpoint0 must reproduce original saved raw reports; every complete raw report must replay; no checkpoint is selected using these scores",
+  "limits":{"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184},
+  "claim":"finite approximate learning within the proved convex function domain; independent content factors are not jointly convex and neither retained estimates nor added components have a proved stochastic/global convergence or unseen-answer guarantee; original labels/examples/transformer unchanged"
+}
