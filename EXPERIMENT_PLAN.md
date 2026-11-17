@@ -8757,3 +8757,14 @@ batch CE. This suggests an update-stability issue, without proving that fixing
 it suffices for recall. Preserve the failures. Task377 will prove the relevant
 CE interference and feasible step bounds, then compare conservative updates for
 plain, user-requested fixed-rotary and learned-rotary models on unchanged data.
+
+CM99 now formalizes the fixed-frequency control as a convex subset of the full
+rotary score family, including actual same-frequency identity bias recurrences
+and feasible finite CE queries. Its concrete two-prefix counterexample proves
+that one minibatch's CE can decrease while the combined mean CE increases,
+although the full family contains a strict separating model. It also proves
+that2/(t+2) lies in(0,1] and any accepted nonnegative step below this ceiling
+preserves either the full or fixed-frequency domain for arbitrary object types.
+These26 new theorems establish feasibility and a failure mechanism, not an
+optimizer convergence or unseen-answer guarantee. Full Lean checks precede
+native fixed/plain/learned-rotary capped-step comparisons.

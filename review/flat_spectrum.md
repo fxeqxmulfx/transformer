@@ -21987,3 +21987,39 @@ Gram spectrum. The existing `SequenceModel.RotarySpectrum` counterexample
 changes eigenvalues(1,1) into(2,0) under valid rowwise RoPE while retaining each
 row norm. CM98 asserts operator/output bounds, not that arbitrary positionwise
 rotations keep the data Gram matrix flat or identify arbitrary unseen labels.
+
+## CM99. Fixed rotary controls and minibatch CE interference
+
+The user requested a fixed-rotation alternative to CM98's learned frequencies.
+Restrict every component to one externally chosen frequency pair theta, retaining
+all learned initial, content-matrix and original-class readout coordinates. The
+convex hull of these actual functions is a convex subset of the full rotary
+function domain, so its output bound and ordinary CE convexity remain valid.
+Rotary conjugation of the identity is exactly the identity at every position.
+Thus a signed constant-class bias recurrence using the same fixed theta has the
+same actual score as CM98's zero-frequency query. Both finite queries remain
+inside this restricted domain, not merely inside a larger learned-frequency
+family. The proposed fixed control uses the task-independent two-pair schedule
+(1,1/100), corresponding to GPTMini.invFreq with real head dimension4 and
+base10000. This is an explicit positional control, not a fully trainable
+frequency family or a supplied answer rule.
+
+Convex feasibility and decrease on one minibatch do not imply decrease of the
+combined training loss. Consider the distinct prefixes[false,true] and
+[true,false], with targets false and true respectively. Start from zero scores
+and let B=log3. The actual admissible class-bias model with scoreB for false and
+zero for true is in the fixed-theta domain for every theta. It decreases the
+first example's CE from log2 to log4-log3, but increases the pair's mean CE
+from log2 to log4-log3/2, which is strictly greater. The same full rotary family
+contains a strict separating model: the zero-frequency CM97 order witness
+scaled byB gives correct-class margin2B on both prefixes. This example isolates
+the lack of a full-data descent implication; it does not prove that the native
+run's failure has only this cause or that a step schedule solves identification.
+
+For zero-based update t, cap the numerical convex line search by2/(t+2).
+This cap is positive and at most one. Any nonnegative accepted step below it
+therefore satisfies the existing full and fixed-family feasibility theorems.
+No global convergence, regret or generalization guarantee is asserted for the
+approximate component search. Compare plain, fixed-rotary and learned-rotary
+execution with unchanged original data and all classes under this same cap,
+retaining the failed unrestricted-step producer and all complete raw replays.
