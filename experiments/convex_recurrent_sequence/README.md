@@ -129,3 +129,30 @@ three-seed recurrence reliability, general order-sensitive recall, all35/165
 stress tasks or a theorem that the approximate learner identifies arbitrary
 unseen answers. The scalar order obstruction still applies; no success is
 assigned to an untested task. The generalization goal remains active.
+
+## Prospective five-task, three-seed extension
+
+`three_seed_protocol.json` keeps the model, capacity, queries, component search,
+sampler and update budgets unchanged. It repeats AND shift/random128 updates
+and parity16512 updates at training seeds1/2/3, and adds the original parity20
+and parity24 tasks at512 updates, also in both modes and all three seeds.
+The original fixed data seed1 and all original task fingerprints are retained.
+The parity tasks use their original distributions up to the named bit length;
+training a separate parity24 model is not an extrapolation test of parity16.
+
+All30 endpoints must seal before any scoring. The repeated three seed1 tasks
+provide a direct complete-logit control against the first producer. Preserve
+all per-cell successes, failures, original split metrics and replay hashes.
+No transition, feature, target, example or learned coordinate is changed for
+the additional lengths. Results remain pending until the cohort completes.
+
+Build with the commands above, use `stress plan-three-seed`, and freeze a fresh
+executable/source archive with `three_seed_protocol.json` saved as the freeze's
+`protocol.json`. Then run:
+
+```sh
+bash experiments/convex_recurrent_sequence/run.sh WORKSPACE STORAGE FREEZE COHORT -three-seed
+```
+
+Individual commands are `train-three-seed`, `score-three-seed` and
+`verify-three-seed`, with the same positional arguments as the first cohort.

@@ -8692,3 +8692,12 @@ held-out parity without supplied witness weights. Keep the scalar order limit,
 one-seed scope and unresolved broader goal explicit. Next validate three seeds
 and more original parity lengths, then address order-sensitive recall through
 the separately proved general learned-operator family.
+
+Task373 follows the approved task372 review atafa4d859. Freeze the unchanged
+scalar recurrence across three training seeds on both original Boolean tasks
+and original parity16/20/24:30cells, fixed data seed1,128 Boolean updates and512
+parity updates. The named parity cases retain their original variable-length
+distributions up to16/20/24 bits; they are separately trained tasks. Seal all
+endpoints before scoring all original splits and replay every raw logit. Compare
+the repeated seed1 endpoints to the first recurrence producer exactly. Keep all
+failures, the scalar order restriction and the110GB/both-disk limits explicit.

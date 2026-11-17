@@ -14,6 +14,7 @@ use std::{fs, io::Write, path::Path, time::Instant};
 
 pub mod score;
 pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub const THREE_SEED_PROTOCOL: &str = include_str!("../three_seed_protocol.json");
 
 pub fn fingerprint() -> String {
     let mut digest = Sha256::new();
@@ -28,6 +29,7 @@ pub fn fingerprint() -> String {
         include_bytes!("../Cargo.toml"),
         include_bytes!("../Cargo.lock"),
         PROTOCOL.as_bytes(),
+        THREE_SEED_PROTOCOL.as_bytes(),
         original::fingerprint().as_bytes(),
     ] {
         digest.update((bytes.len() as u64).to_le_bytes());
