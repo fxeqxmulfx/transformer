@@ -9330,3 +9330,13 @@ matching and readout on the original 2,048 training examples and generalizes
 to the held-out queries in both modes. Use full-vocabulary accuracy for the
 pass decision. Report choice between the two distinct stored values as the
 diagnostic from task 402.
+
+Task 403 establishes the conditional retrieval margin in flat-spectrum CM111.
+One learned complex embedding supplies queries and keys, and a second supplies
+values and all original-class readouts. A learned relative-position potential
+connects every pair of past positions. The normalized path weights give a
+length-independent score bound. Actual gaps in the two learned softmax scores
+and separation in the value embedding imply a margin against every competing
+class. The two-object complex example satisfies these assumptions. Whether
+ordinary next-object training discovers them on the original probe is the
+question for task 404.

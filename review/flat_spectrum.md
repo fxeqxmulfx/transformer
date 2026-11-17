@@ -22602,3 +22602,75 @@ for example by one zero component with unit weight and epsilon1, because all
 witness scores have absolute value at most1. This lower bound is independent
 of the number of mixture components and does not assert a top-one accuracy
 limit on the original stress tests.
+
+## CM111. Shared learned matching with a learned relative-position link
+
+Task402 separates two failures: growth raises original stored-value prediction
+to about 80% on novel MQAR examples, but the choice between distinct stored
+values remains about half. The following extension changes the sharing of
+learned parameters. It does not deduce an answer from a norm bound.
+
+Let K,V map every opaque object into a complex inner-product space, with
+norm at most one. Both maps are learned. Query and memory keys share K;
+input values and complete output-class readouts share V. A real scale t and
+one real relative-position potential r(d), d an integer, are learned too.
+For a past prefix x indexed by j and a final query object q, define
+
+    a_j = softmax_j(t Re <K(q),K(x_j)>),
+    b_jk = softmax_k(r(k-j)),
+    h = sum_jk a_j b_jk V(x_k),
+    z_c = Re <V(c),h>.
+
+Every visible position and every original class is present. The runtime takes
+only the object sequence; its last object is q and the preceding objects form
+x. Empty memory gives zero. There are no supplied key/value roles, chosen
+offset, token equality feature, task label program or fixed output vectors.
+The sharing is an architectural restriction. It is not independent Q/K/V
+parameter convexity. The complex inner products use all coordinates.
+
+The path weights are nonnegative and sum to one for nonempty memory, so
+|z_c| <= 1 at every prefix length. Scaled learned heads and a previously
+learned bounded base can therefore form a convex hull at the same score
+capacity B. Ordinary complete-class CE is convex in that functional state.
+Searching for the learned factors remains a separate optimization problem.
+This is an output capacity bound, not a finite-sample complexity bound by itself.
+The complete vector map v -> v/max(1,||v||) enforces both learned-map norm
+restrictions and fixes every feasible vector. It preserves all complex
+coordinates. This is an exact-real feasibility result, not a floating-point
+or optimizer convergence guarantee.
+
+For explicit binding, suppose j is a past occurrence of q. If its actual
+learned key score exceeds every other score by g, then
+1-a_j <= n exp(-g). If the learned relative potential at k-j exceeds all its
+other visible offsets by h, then 1-b_jk <= n exp(-h). These are bounds derived
+from the literal softmax denominators, not hypotheses that attention already
+selects the correct path. Thus
+
+    1-a_j b_jk <= e = n(exp(-g)+exp(-h)).
+
+Suppose the learned value/readout map separates the object x_k from each
+rival c at that object by m >= 0:
+Re <V(x_k),V(x_k)> - Re <V(c),V(x_k)> >= m.
+The complete scaled output margin is at least
+
+    B [m-(m+2)e],                         B >= 0.
+
+The good path contributes its decoder separation; every other path has
+margin at least -2 by the unit norms. A positive bound identifies x_k against
+every original class, and the usual CE bound is
+log(1+(|O|-1) exp(-B[m-(m+2)e])). Repeated occurrences of the same value are
+allowed and can only make this conservative path argument less sharp.
+If a bounded learned base is retained at weight 1-eta and the new head at
+eta in [0,1], a new-head margin M gives mixed margin at least
+eta M - 2(1-eta)B. The retained base is not assumed to help the new relation.
+
+The same equations apply to unseen combinations of objects when these shared
+geometric and relative-position conditions hold. They do not prove that
+training establishes the conditions, identifies a unique relative relation,
+or that an arbitrary task's correct next object is x_k. A copying relation is
+additional structure, not a consequence of flatness. The native follow-up
+must learn its relative potential from original training CE and keep all
+parameter paths trainable; no offset may be supplied from MQAR roles.
+A two-object complex example with separated learned vectors and a nonconstant
+relative potential witnesses nonempty positive-margin conditions. It is a
+mathematical example, never a benchmark initialization or answer program.

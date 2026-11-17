@@ -19,6 +19,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Adaptive
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Completion
 public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Counts
