@@ -179,6 +179,35 @@ fn main() -> Result<()> {
     let summary = json!({"catalog":cases.len(),"measured":measured,"unmeasured":cases.len()-measured,"raw_files":files,
         "original_pass_all":cases.values().filter(|x|x["current"]["original"]==true).count(),
         "strict_pass_all":cases.values().filter(|x|x["current"]["strict"]==true).count()});
+    #[cfg(feature = "arithmetic-cohort")]
+    let summary = {
+        let expected = composed_retrieval::arithmetic::preflight(&p, &output.join("inputs"))?;
+        for arm in ["original", "repeat"] {
+            if read(&output.join(arm).join("inventory.json"))? != expected {
+                return Err("frozen arithmetic input inventory differs".into());
+            }
+        }
+        let inventory = expected["cases"]
+            .as_object()
+            .ok_or("arithmetic inventory")?;
+        let mut unavailable = 0;
+        for (id, row) in inventory {
+            let entry = cases
+                .get_mut(id)
+                .ok_or("original row absent from benchmark")?;
+            if row["dimensions"].is_null() {
+                if !entry["current"].is_null() {
+                    return Err("scored unavailable data".into());
+                }
+                unavailable += 1;
+                entry["source_unavailable"] = Value::Bool(true);
+            }
+        }
+        let mut summary = summary;
+        summary["unavailable_original_data"] = json!(unavailable);
+        summary["outside_cohort"] = json!(cases.len() - inventory.len());
+        summary
+    };
     serde_json::to_writer_pretty(
         std::io::stdout().lock(),
         &json!({"producer":producer.trim(),"summary":summary,"cases":cases}),

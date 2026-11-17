@@ -9449,3 +9449,10 @@ depth curve is zero. For general weights the actual depth derivative is
 the difference between the full predictive mean direction and the observed
 target's direction. Replay the original sparse-protocol training trajectories
 to measure when the symmetry breaks and what moves the gate to its boundary.
+
+Task 413 applies the matched-coordinate CM113 protocol to all 54 original
+two-operand arithmetic and powered-division cases. Recover the original
+sources and verify both seed-1 split fingerprints before each fit. Preserve
+all six unavailable cases and the three constant controls. Seal both builds
+before evaluating any held-out row, then compare their raw outputs and the
+overlapping addition endpoints with the preceding four-case experiment.

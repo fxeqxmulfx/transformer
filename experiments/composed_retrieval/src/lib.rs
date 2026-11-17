@@ -1,5 +1,7 @@
 //! Native realization of the complete physical CM113 next-object score.
 pub use baseline::Result;
+#[cfg(feature = "arithmetic-cohort")]
+pub mod arithmetic;
 pub mod cohort;
 pub mod data;
 pub mod evaluation;

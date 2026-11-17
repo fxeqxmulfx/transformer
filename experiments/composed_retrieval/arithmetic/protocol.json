@@ -1,0 +1,9 @@
+{
+  "name": "composed-retrieval-original-arithmetic54-matched-visits-v1",
+  "parent_protocol_sha256": "45feef691cb3ceac1f7dbfb3a62dc63c12bc6aebf98e69f5dd9176c4d6008c76",
+  "data_protocol_sha256": "198debddac7bec324926aff3a013628c1653e9968ee6f9d233f9946cb238db98",
+  "membership": "Every one of the 54 original arithmetic and powered-division rows in the pinned source inventory. Include the three power-zero constant controls. The six source tables listed below lack their original fixed random helpers.",
+  "unavailable": ["arithmetic-random", "arithmetic-sum-interval-12", "arithmetic-sum-interval-2", "arithmetic-sum-interval-4", "arithmetic-sum-interval-8", "arithmetic-sum-random-half"],
+  "training": "Reuse the matched-visit protocol for both modes, seeds 0, 1 and 2, the original data seed and batch for each case, and exactly 1024 updates of every model coordinate. Expose the two opaque input objects and single final target to ordinary full-vocabulary cross-entropy.",
+  "scoring": "Verify the three whole historical source inputs and both split fingerprints for every supported case. Two fresh builds train and seal all 576 endpoints before held-out evaluation. Retain initial and final raw f64 logits on every original row. Independently replay and decode each original criterion and the all-seed, all-mode 99 percent raw-object and exact-sequence criterion. Verify addition against the preceding four-case cohort before combining counts."
+}

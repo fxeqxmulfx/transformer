@@ -303,3 +303,41 @@ fn original_fingerprints_masks_and_optimizer_clocks() -> Result<()> {
     }
     Ok(())
 }
+
+#[test]
+#[cfg(feature = "arithmetic-cohort")]
+fn every_previously_available_arithmetic_record_matches_the_original_adapter() -> Result<()> {
+    let p = data::protocol()?;
+    let suite: serde_json::Value = serde_json::from_str(learned_retrieval::cohort::SUITE)?;
+    let mut matched = 0;
+    for row in suite["tasks"].as_array().ok_or("original tasks")? {
+        if row["case"]["kind"] != "arithmetic" {
+            continue;
+        }
+        let (task, pins) = data::original(&p, row["name"].as_str().ok_or("case name")?)?;
+        let old = baseline::data::build(row)?;
+        assert_eq!(pins, row["data_fingerprints"]);
+        assert_eq!((old.vocab, &old.selection), (task.vocab, &task.selection));
+        assert_eq!(
+            old.splits.keys().collect::<Vec<_>>(),
+            task.splits.keys().collect::<Vec<_>>()
+        );
+        for (name, original) in &old.splits {
+            let actual = &task.splits[name];
+            assert_eq!(actual.len(), original.len());
+            for (a, b) in actual.iter().zip(original) {
+                assert_eq!(
+                    (&a.tokens, &a.targets, &a.changes),
+                    (&b.tokens, &b.targets, &b.changes)
+                );
+                assert_eq!(
+                    (&a.task, &a.prompt, &a.answer, a.limit, a.field, a.row_index),
+                    (&b.task, &b.prompt, &b.answer, b.limit, b.field, b.row_index)
+                );
+            }
+        }
+        matched += 1;
+    }
+    assert_eq!(matched, 22);
+    Ok(())
+}

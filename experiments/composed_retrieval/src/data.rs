@@ -8,8 +8,11 @@ use serde_json::Value;
 use std::collections::BTreeMap;
 
 pub const BASE_PROTOCOL: &str = include_str!("../protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "dense-forward") {
-    include_str!("../dense/protocol.json")
+pub const DENSE_PROTOCOL: &str = include_str!("../dense/protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "arithmetic-cohort") {
+    include_str!("../arithmetic/protocol.json")
+} else if cfg!(feature = "dense-forward") {
+    DENSE_PROTOCOL
 } else {
     BASE_PROTOCOL
 };
@@ -23,6 +26,7 @@ pub struct CaseSpec {
     pub metric: String,
     pub target: f64,
     pub metadata_sha256: Option<String>,
+    pub source_fingerprints: Option<Value>,
 }
 #[derive(Clone, Deserialize)]
 pub struct Protocol {
@@ -53,7 +57,7 @@ pub struct Protocol {
 pub fn protocol() -> Result<Protocol> {
     let mut p: Protocol = serde_json::from_str(BASE_PROTOCOL)?;
     if cfg!(feature = "dense-forward") {
-        let dense: Value = serde_json::from_str(PROTOCOL)?;
+        let dense: Value = serde_json::from_str(DENSE_PROTOCOL)?;
         if dense["parent_protocol_sha256"] != hash(BASE_PROTOCOL.as_bytes())
             || dense["forward_coordinates"] != "all"
         {
@@ -65,6 +69,8 @@ pub fn protocol() -> Result<Protocol> {
             .into();
         p.coordinates_per_table = None;
     }
+    #[cfg(feature = "arithmetic-cohort")]
+    crate::arithmetic::configure(&mut p)?;
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256
@@ -75,6 +81,17 @@ pub fn protocol() -> Result<Protocol> {
 }
 pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
     let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
+    #[cfg(feature = "arithmetic-cohort")]
+    if let Some(pins) = &s.source_fingerprints {
+        let task = crate::arithmetic::original(id)?;
+        if task.vocab != s.vocabulary
+            || task.splits["train"].len() != s.train
+            || task.selection != s.selection
+        {
+            return Err("arithmetic source dimensions changed".into());
+        }
+        return Ok((task, pins.clone()));
+    }
     let (task, pins) = if let Some(expected) = &s.metadata_sha256 {
         let (task, metadata) = learned_retrieval_transfer::original_task(id)?;
         if hash(&serde_json::to_vec(&metadata)?) != *expected {

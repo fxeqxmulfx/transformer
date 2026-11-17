@@ -106,7 +106,10 @@ impl<'a> Run<'a> {
         let mut pins = BTreeMap::new();
         let mut shared = BTreeMap::new();
         for (id, s) in &p.cases {
-            let (_, original) = data::original(p, id)?;
+            let original = match &s.source_fingerprints {
+                Some(pins) => pins.clone(),
+                None => data::original(p, id)?.1,
+            };
             for mode in &p.modes {
                 for &seed in &p.seeds {
                     let cell = format!("{id}/{mode}-{seed}");

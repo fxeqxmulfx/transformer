@@ -12,6 +12,12 @@ fn main() -> Result<()> {
         arm,
     )?;
     match (action.as_str(), rest) {
+        #[cfg(feature = "arithmetic-cohort")]
+        ("inventory", [inputs]) => {
+            let plan = composed_retrieval::arithmetic::preflight(&run.protocol, Path::new(inputs))?;
+            println!("{}", serde_json::to_string_pretty(&plan)?);
+            Ok(())
+        }
         ("fit", [id, mode, seed]) => run.fit(id, mode, seed.parse()?),
         ("seal", []) => run.seal(),
         ("score", [id]) => evaluation::score(&run, id, false),

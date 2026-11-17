@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
-if (( $# < 4 || $# > 5 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense]' >&2
+if (( $# < 4 || $# > 6 )); then
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|arithmetic SOURCE_INPUTS]' >&2
   exit 2
 fi
 workspace=$(realpath "$1")
@@ -16,8 +16,15 @@ protocols=(protocol.json)
 case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
+  arithmetic)
+    (( $# == 6 ))
+    source_inputs=$(realpath "$6")
+    features=(--features arithmetic-cohort)
+    protocols+=(dense/protocol.json arithmetic/protocol.json)
+    ;;
   *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
 esac
+[[ "$variant" == arithmetic || $# -le 5 ]]
 workers=18
 admit() {
   test "$(df -B1 --output=avail "$workspace" | tail -1)" -gt 2147483648
@@ -29,7 +36,7 @@ mkdir -p "$(dirname "$output")"
 mkdir "$output"
 git -C "$workspace" archive -o "$output/source.tar" "$producer" -- "$experiment" \
   experiments/{learned_retrieval,learned_retrieval_transfer,convex_bilinear_sequence,convex_stress_minibatch,convex_stress} \
-  experiments/convex_stress_catalog experiments/convex_binding_diagnostic/src/counts.rs \
+  experiments/convex_stress_catalog experiments/convex_stress_arithmetic_data experiments/convex_binding_diagnostic/src/counts.rs \
   experiments/convex_stress_sequences/src/{dataset,prefix,retrieval,wire}.rs \
   src/Transformer/Grokking/FlatSpectrum/ConvexChannel/ComposedRetrieval{,.lean} review/flat_spectrum.md
 printf '%s\n' "$producer" > "$output/producer.commit"
@@ -55,21 +62,35 @@ done
   sha256sum -c frozen.sha256
 )
 protocol="$output/original/source/$experiment/protocol.json"
-mapfile -t cases < <(jq -r '.cases|keys[]' "$protocol")
 mapfile -t modes < <(jq -r '.modes[]' "$protocol")
 mapfile -t seeds < <(jq -r '.seeds[]' "$protocol")
-(( ${#cases[@]} == 4 && ${#modes[@]} == 2 && ${#seeds[@]} == 3 ))
+(( ${#modes[@]} == 2 && ${#seeds[@]} == 3 ))
 invoke() {
   local arm=$1 action=$2
   shift 2
   local meter=()
-  if [[ "$action" == fit && "$variant" == dense ]]; then
+  if [[ "$action" == fit && "$variant" != sparse ]]; then
     meter=(/usr/bin/time -f '%e %U %S %M' -o "$output/$arm/fit-$1-$2-$3.time")
   fi
   "${meter[@]}" prlimit --as=2147483648:2147483648 -- "$output/$arm/composed-retrieval" "$action" "$workspace" "$storage" "$output" "$arm" "$@"
 }
 export -f invoke
 export output workspace storage variant
+if [[ "$variant" == arithmetic ]]; then
+  mkdir "$output/inputs"
+  cp "$source_inputs"/{arithmetic_seed1,grokking_task_inventory,plan}.json "$output/inputs/"
+  for arm in original repeat; do invoke "$arm" inventory "$output/inputs" >"$output/$arm/inventory.json"; done
+  cmp "$output/original/inventory.json" "$output/repeat/inventory.json"
+  inventory="$output/original/inventory.json"
+  jq -e '(.cases|length)==54 and .fits==576' "$inventory" >/dev/null
+  mapfile -t cases < <(jq -r '.cases|to_entries[]|select(.value.dimensions != null)|.key' "$inventory")
+  (( ${#cases[@]} == 48 ))
+  required=$(jq -r '.raw_bytes + 17179869184' "$inventory")
+  test "$(df -B1 --output=avail "$output" | tail -1)" -gt "$required"
+else
+  mapfile -t cases < <(jq -r '.cases|keys[]' "$protocol")
+  (( ${#cases[@]} == 4 ))
+fi
 fit_cells() {
   for id in "${cases[@]}"; do for mode in "${modes[@]}"; do for seed in "${seeds[@]}"; do for arm in original repeat; do
     printf '%s\0' "$arm" "$id" "$mode" "$seed"
@@ -86,4 +107,4 @@ for action in score replay; do
   ) | xargs -0 -r -n2 -P 4 bash -c 'invoke "$1" "$0" "$2" > "$output/$1/$0-$2.log" 2>&1' "$action"
 done
 for id in "${cases[@]}"; do diff -qr "$output/original/run/$id/scores" "$output/repeat/run/$id/scores"; done
-echo 'All 48 training endpoints sealed. Models, optimizer traces, original scores and raw f64 logits independently matched and replayed.'
+echo "All $((2 * ${#cases[@]} * ${#modes[@]} * ${#seeds[@]})) training endpoints sealed. Models, optimizer traces, original scores and raw f64 logits independently matched and replayed."
