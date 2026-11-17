@@ -9351,3 +9351,15 @@ entire embedding tables. Freeze both builds and seal all endpoints before
 scoring. Compare all original splits, the numerical CM111 margin and the
 queries whose supervised or stored key/value pair was absent during fitting.
 The two definitions of unseen pairs apply only to evaluation.
+
+Task 404 producer `339ba587` learned the original binding probe in both
+minibatch modes at seeds 0, 1 and 2. Every endpoint scored 512/512 on novel
+validation and 512/512 on test, including 65/65 test queries with a previously
+unsupervised key/value pair and 5/5 with a pair absent from all training
+memories. All initializers and trained raw outputs replayed byte for byte
+across independent builds. Forward-only training learned offsets that give
+the correct visible link from the original two key positions, while larger
+potentials at inaccessible negative offsets remain. Evaluate other positions,
+overwrite retrieval and two-hop lookup on their original data. This is one
+measured case for the current protocol. The historical 98-case union already
+includes this case.

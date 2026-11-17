@@ -60,3 +60,44 @@ Run from the workspace root with the producing commit and a fresh output directo
 bash experiments/learned_retrieval/run.sh "$PWD" /run/media/misha/storage PRODUCER \
   /run/media/misha/storage/transformer-runs/learned-retrieval/binding-v1
 ```
+
+## Results on the original binding probe
+
+Producer `339ba587` reached **512/512 exact on novel validation and 512/512
+on test** for each of the six trained endpoints. All also scored 2,048/2,048
+on train. Each original example has one supervised token, so the raw and
+exact counts coincide. The original success and both 99% criteria hold on
+every held-out split. The initializers scored 67–75/512 on novel validation
+and 62–92/512 on test across the three seeds.
+
+| Endpoint across seeds 0, 1 and 2 | Novel validation CE | Test CE | Mean mass on the correct two-stage path on novel validation |
+| --- | ---: | ---: | ---: |
+| Mini | 0.0000825–0.0000868 | 0.0000831–0.0000872 | 0.9449–0.9463 |
+| Forward-only Mini | 0.002147–0.002637 | 0.002133–0.002777 | 0.9932–0.9944 |
+
+Every endpoint selected the correct value on all 498 distinct-value novel
+examples and all 489 distinct-value test examples. Across the full splits it
+also answered all 71 novel and 65 test queries whose key/value pair had never been supervised during
+training. Under the stricter definition requiring that pair to be absent from
+every training memory, all nine novel and all five test queries were correct.
+The 512 novel and 512 test examples are fixed across seeds.
+
+All four parameter groups moved in both modes. Each forward-only run made
+110,592 complete minibatch loss queries and visited every embedding coordinate
+at least ten times. The learned scale rose from 2 to 5.34–5.54 in Mini and
+10.47–10.52 in forward-only Mini. The two modes learned different offset
+tables. Mini ranked +1 highest over all offsets. Forward-only Mini ranked
+−4 or −5 highest globally. Those negative offsets are invisible from the two
+original key positions, 1 and 3. Its mean mass on the link from the matched
+key to the correct value nevertheless exceeded 0.998 on novel validation.
+Transfer to other key positions and overwritten keys requires separate data.
+
+The numerical CM111 sufficient bound was positive on 453–480 of 512 novel
+examples in Mini and 502–510 in forward-only Mini. All observed complete-class
+margins satisfied the checked inequality within the declared floating-point
+tolerance. The independent rebuilds had different executable hashes. All six
+trained parameter files, training traces, 48 initial and trained raw-logit files
+and the full score report were byte-identical across runs. Separate-process
+replays matched. The score report SHA256 is
+`bba23ff02967adba93061f6f8816155d200b1ad03634a886539a717705a09fab`.
+This contributes one original case to the shared model's own 165-case tally.
