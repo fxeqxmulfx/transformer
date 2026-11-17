@@ -211,3 +211,44 @@ also contains the projection option. Preserve all old artifacts. Each cohort
 seals all four endpoints before scoring, retains all failures and replays all
 raw logits. Both disk guards and110GB aggregate RAM limits remain active.
 Improved fitting or the proof witness alone earns no stress-test success.
+
+The projected cohort completes at producer `65eb373d`, freeze
+`recurrent-readouts-projected-v1`, source fingerprint
+`2b40be589c9def1f47fcab9180e28afc2fcd0c88e832fb12e46835a382313617`, binary SHA256
+`54662795a59c03e4b5bd38c2d5acdcd49e590d4a25ba2520a32d453292dcca1e`.
+All eight native controls and clippy/fmt/shell checks pass. All four legacy
+controls match every original512 deterministic receipt, batch/count, checkpoint
+byte and original raw split report; only producer metadata differs. All24
+train/score/replay commands exit0 across the legacy and new cohorts, and all
+eight raw replays match. Evidence is under
+`/run/media/misha/storage/transformer-runs/recurrent-readouts/` in
+`projected-legacy-control-v1` and `projected-v1`.
+
+| Source / mode | Train correct /2048 | Novel validation correct /512 | Test correct /512 | Train CE | Novel CE |
+|---|---:|---:|---:|---:|---:|
+| Cautious / Mini |1390 (67.871%)|76 (14.844%)|65 (12.695%)|2.04200|3.15798|
+| Cautious / forward |1408 (68.750%)|62 (12.109%)|67 (13.086%)|2.03223|3.16457|
+| Refined / Mini |1368 (66.797%)|59 (11.523%)|48 (9.375%)|2.07108|3.21449|
+| Refined / forward |1324 (64.648%)|63 (12.305%)|69 (13.477%)|2.08552|3.18236|
+
+Every source-success/raw99 flag remains false. At the matched eight-refit-epoch
+budget, training CE is lower in all four cells, while training raw accuracy is
+2.49–3.37 percentage points lower. Novel accuracy improves for both cautious
+sources and declines for both refined sources. A correct projection and lower
+CE therefore do not establish better raw accuracy or solve unseen recall.
+The longer radial cohort above used32 epochs and is not the matched comparison.
+
+All original content hashes,129 components,100 classes and batch streams remain
+unchanged. Each new run processes16384 records; every interpolation coefficient
+is1, actual logit interpolation error is0, and maximum row-budget excess is
+2.22e-16. Mini uses1163264 CE evaluations and forward4440064, including3276800
+signed bias queries; line and centre/validation/check costs match the legacy
+protocol. Concurrent refit times are15.82/18.56s for cautious and15.63/19.00s for
+refined, Mini/forward respectively, excluding source-content training.
+
+Training-stream mean CE is still falling at epoch8. Its final values are
+2.19114/2.18174 for cautious and2.22372/2.23832 for refined, Mini/forward.
+Neither this trajectory nor the failed raw scores certify an optimum of the
+conditional readout problem. A training-only optimality-gap diagnostic is the
+next way to distinguish remaining optimization error from limits of this
+learned content and capacity before revisiting their shared structure.

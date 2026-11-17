@@ -8958,3 +8958,14 @@ Only after those controls pass interpret the prospective projected cohort,
 with all four endpoints sealed before scoring, every original failure/raw
 replay retained and the existing RAM/disk limits. Source/configuration and
 authored findings are committed; generated evidence stays outside the worktree.
+
+Task386's frozen producer65eb373d reproduces all four old512-update radial
+trajectories, checkpoint bytes and original raw reports, then completes the
+four projected refits and all eight raw replays. At the matched eight-epoch
+budget, every projected training CE improves, but train raw falls to
+64.648–68.750%; novel11.523–14.844% changes in both directions and every success
+flag still fails. Full content, coordinates, classes and batches remain intact.
+The corrected projection repairs CM101 without solving original recall.
+Before blaming state capacity or accepting conditional optimality, prove and
+measure a training-only complete readout optimality gap; then use that evidence
+to choose further optimization or revisiting the shared learned content.
