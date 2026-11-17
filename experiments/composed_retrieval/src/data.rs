@@ -18,11 +18,14 @@ pub const TRAINING_PROTOCOL: &str = if cfg!(feature = "logodds-depth") {
     BASE_PROTOCOL
 };
 pub const ARITHMETIC_PROTOCOL: &str = include_str!("../arithmetic/protocol.json");
-pub const PROTOCOL: &str = if cfg!(all(
+pub const JOINT_PROTOCOL: &str = include_str!("../logodds/arithmetic/protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "output-offsets") {
+    include_str!("../output_offsets/protocol.json")
+} else if cfg!(all(
     feature = "arithmetic-cohort",
     feature = "logodds-depth"
 )) {
-    include_str!("../logodds/arithmetic/protocol.json")
+    JOINT_PROTOCOL
 } else if cfg!(feature = "arithmetic-cohort") {
     ARITHMETIC_PROTOCOL
 } else {
@@ -52,6 +55,7 @@ pub struct Protocol {
     pub updates: usize,
     pub width: usize,
     pub capacity: f64,
+    pub output_offset_bound: Option<f64>,
     pub initial_key_scale: f64,
     pub initial_depth: f64,
     pub initial_log_odds: Option<f64>,

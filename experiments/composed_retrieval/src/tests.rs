@@ -22,6 +22,7 @@ fn probabilities(scores: Vec<f64>) -> Vec<f64> {
 fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
     let l = m.validate().unwrap();
     let w = &m.weights;
+    let offset = |c: usize| w[l.output_offsets.clone()].get(c).copied().unwrap_or(0.);
     let decode = |v: usize, turn: Option<usize>, c: usize| {
         (0..WIDTH)
             .map(|d| {
@@ -37,7 +38,7 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
     let n = x.len();
     if n == 0 {
         return (0..m.vocabulary)
-            .map(|c| m.capacity * decode(l.start.start, q, c))
+            .map(|c| m.capacity * decode(l.start.start, q, c) + offset(c))
             .collect();
     }
     let q = q.unwrap();
@@ -80,6 +81,7 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
             m.capacity
                 * ((1. - w[l.product]) * ((1. - w[l.depth]) * one + w[l.depth] * two)
                     + w[l.product] * rotated)
+                + offset(c)
         })
         .collect()
 }
@@ -90,6 +92,9 @@ fn fixture() -> Result<Model> {
         m.weights[i] = (i as f64 * 0.97).sin();
     }
     m.weights[l.recency] = -0.14;
+    for (c, b) in m.weights[l.output_offsets.clone()].iter_mut().enumerate() {
+        *b = (c as f64 + 1.).sin() * 3.;
+    }
     Ok(m)
 }
 #[test]
@@ -107,6 +112,10 @@ fn operator_matches_literal_paths_boundaries_and_renamings() -> Result<()> {
             }
         }
         permuted.weights[l.bias.start + perm(o)] = m.weights[l.bias.start + o];
+        if !l.output_offsets.is_empty() {
+            permuted.weights[l.output_offsets.start + perm(o)] =
+                m.weights[l.output_offsets.start + o];
+        }
     }
     let other = Tables::new(&permuted, &[1, 2, 3, 4, 5, 6])?;
     for x in [
@@ -121,7 +130,7 @@ fn operator_matches_literal_paths_boundaries_and_renamings() -> Result<()> {
         let z2 = other.logits(&permuted, &other.pass(&permuted, &renamed).hidden);
         for (c, &v) in literal(&m, x).iter().enumerate() {
             assert!((z[c] - v).abs() < 2e-13 && (z2[perm(c)] - v).abs() < 2e-13);
-            assert!(v.abs() <= m.capacity + 1e-13);
+            assert!(v.abs() <= m.capacity + m.output_offset_bound.unwrap_or(0.) + 1e-13);
         }
     }
     assert!(m.objects(&[-1]).is_err() && m.objects(&[5]).is_err() && m.objects(&[0; 8]).is_err());
@@ -169,6 +178,10 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
         if boundary {
             m.weights[l.depth] = 0.;
             m.weights[l.product] = 1.;
+            if let Some(bound) = m.output_offset_bound {
+                m.weights[l.output_offsets.start] = -bound;
+                m.weights[l.output_offsets.start + 1] = bound;
+            }
         }
         let original = m.clone();
         let forward = query::differences(&mut m, &mut t, &batch, &coords, h, None)?;
@@ -374,7 +387,14 @@ fn every_previously_available_arithmetic_record_matches_the_original_adapter() -
 #[cfg(all(feature = "arithmetic-cohort", feature = "logodds-depth"))]
 fn arithmetic_cohort_uses_the_original_log_odds_updates() -> Result<()> {
     let p = data::protocol()?;
-    assert_eq!(p.cases.len(), 48);
+    assert_eq!(
+        p.cases.len(),
+        if cfg!(feature = "output-offsets") {
+            51
+        } else {
+            48
+        }
+    );
     assert_eq!(p.initial_log_odds, Some(9_f64.ln()));
     assert_eq!(p.coordinates_per_table, None);
     let m = Model::new(p.cases["arithmetic-add"].vocabulary, 2, &p, 0)?;
@@ -387,5 +407,34 @@ fn arithmetic_cohort_uses_the_original_log_odds_updates() -> Result<()> {
         shell["training_protocol_sha256"],
         baseline::hash(data::TRAINING_PROTOCOL.as_bytes())
     );
+    Ok(())
+}
+
+#[cfg(feature = "output-offsets")]
+#[test]
+fn old_models_and_zero_offsets_give_the_same_logits() -> Result<()> {
+    let mut p = data::protocol()?;
+    let m = Model::new(5, 6, &p, 0)?;
+    let l = m.validate()?;
+    assert_eq!(m.output_offset_bound, Some(16.));
+    assert_eq!(&m.weights[l.output_offsets.clone()], &[0.; 5]);
+    p.output_offset_bound = None;
+    let old = Model::new(5, 6, &p, 0)?;
+    let bytes = serde_json::to_vec(&old)?;
+    assert!(!String::from_utf8_lossy(&bytes).contains("output_offset_bound"));
+    let replay: Model = serde_json::from_slice(&bytes)?;
+    assert_eq!(&m.weights[..l.output_offsets.start], &replay.weights);
+    for x in [&[][..], &[1], &[1, 0], &[4, 1, 2, 4, 1]] {
+        let scores = |model: &Model| -> Result<_> {
+            let t = Tables::new(model, &[x.len().saturating_sub(1)])?;
+            Ok(t.logits(model, &t.pass(model, x).hidden))
+        };
+        assert_eq!(scores(&m)?, scores(&replay)?);
+    }
+    let mut bad = m.clone();
+    bad.weights[l.output_offsets.start] = 17.;
+    assert!(bad.validate().is_err());
+    bad.weights.pop();
+    assert!(bad.validate().is_err());
     Ok(())
 }

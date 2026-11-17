@@ -21,6 +21,7 @@ enum Change {
     Recency,
     Depth,
     Product,
+    OutputOffset(usize),
 }
 impl Change {
     fn at(l: &Layout, i: usize) -> Self {
@@ -42,6 +43,8 @@ impl Change {
             Self::Recency
         } else if i == l.depth {
             Self::Depth
+        } else if l.output_offsets.contains(&i) {
+            Self::OutputOffset(i - l.output_offsets.start)
         } else {
             Self::Product
         }
@@ -92,16 +95,18 @@ impl<'a> Original<'a> {
             .split_last()
             .map_or((None, &[][..]), |(q, x)| (Some(*q), x));
         let n = memory.len();
+        let one_logit_loss = |c: usize| {
+            let z = t.class_logit(m, &self.pass.hidden, c);
+            let label = if c == self.sample.target {
+                z
+            } else {
+                self.logits[self.sample.target]
+            };
+            self.shift + (self.other_mass[c] + (z - self.shift).exp()).ln() - label
+        };
         let hidden = match change {
-            Change::Value(c) if !memory.contains(&c) => {
-                let z = m.capacity / WIDTH as f64 * t.values[c].dot(&self.pass.hidden);
-                let label = if c == self.sample.target {
-                    z
-                } else {
-                    self.logits[self.sample.target]
-                };
-                return self.shift + (self.other_mass[c] + (z - self.shift).exp()).ln() - label;
-            }
+            Change::OutputOffset(c) => return one_logit_loss(c),
+            Change::Value(c) if !memory.contains(&c) => return one_logit_loss(c),
             Change::Value(_) => {
                 let (s1, s2) = t.reads(memory, &self.pass.one, &self.pass.two);
                 t.hidden(m, q.unwrap(), &s1, &s2)

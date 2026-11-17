@@ -1,5 +1,5 @@
 //! Opaque objects address learned angles. Signed offsets address a learned
-//! scalar table. The only constrained weights are the two convex gates (CM113).
+//! scalar table. CM116 can append one bounded output offset per object.
 use crate::Result;
 use baseline::random::Random;
 use serde::{Deserialize, Serialize};
@@ -21,6 +21,8 @@ pub struct Model {
     pub vocabulary: usize,
     pub context: usize,
     pub capacity: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub output_offset_bound: Option<f64>,
     pub weights: Vec<f64>,
 }
 
@@ -36,12 +38,20 @@ pub struct Layout {
     pub recency: usize,
     pub depth: usize,
     pub product: usize,
+    pub output_offsets: Range<usize>,
+    output_offset_bound: f64,
 }
 
 impl Layout {
     pub fn new(vocab: usize, context: usize) -> Result<Self> {
+        Self::with_offsets(vocab, context, None)
+    }
+    fn with_offsets(vocab: usize, context: usize, bound: Option<f64>) -> Result<Self> {
         if vocab == 0 || context < 2 {
             return Err("empty vocabulary or insufficient context".into());
+        }
+        if bound.is_some_and(|b| !b.is_finite() || b <= 0.) {
+            return Err("output-offset bound must be positive and finite".into());
         }
         let table = vocab.checked_mul(WIDTH).ok_or("table size overflow")?;
         let offsets = (context - 2)
@@ -61,6 +71,7 @@ impl Layout {
         let bias = range(vocab + 1)?;
         let relation = range(offsets)?;
         let scalars = range(4)?;
+        let output_offsets = range(if bound.is_some() { vocab } else { 0 })?;
         Ok(Self {
             key,
             value,
@@ -72,6 +83,8 @@ impl Layout {
             recency: scalars.start + 1,
             depth: scalars.start + 2,
             product: scalars.start + 3,
+            output_offsets,
+            output_offset_bound: bound.unwrap_or(0.),
         })
     }
     pub fn offset(&self, j: usize, k: usize) -> usize {
@@ -80,6 +93,8 @@ impl Layout {
     pub fn project(&self, i: usize, weight: f64) -> f64 {
         if i == self.depth || i == self.product {
             weight.clamp(0., 1.)
+        } else if self.output_offsets.contains(&i) {
+            weight.clamp(-self.output_offset_bound, self.output_offset_bound)
         } else {
             weight
         }
@@ -93,9 +108,9 @@ impl Model {
         p: &crate::data::Protocol,
         seed: u32,
     ) -> Result<Self> {
-        let l = Layout::new(vocabulary, context)?;
+        let l = Layout::with_offsets(vocabulary, context, p.output_offset_bound)?;
         let mut rng = Random::new(seed);
-        let mut weights = vec![0.; l.product + 1];
+        let mut weights = vec![0.; l.output_offsets.end];
         for x in &mut weights[..l.start.end] {
             *x = (2. * rng.random() - 1.) * PI;
         }
@@ -106,17 +121,21 @@ impl Model {
             vocabulary,
             context,
             capacity: p.capacity,
+            output_offset_bound: p.output_offset_bound,
             weights,
         };
         model.validate()?;
         Ok(model)
     }
     pub fn validate(&self) -> Result<Layout> {
-        let l = Layout::new(self.vocabulary, self.context)?;
-        if self.weights.len() != l.product + 1
+        let l = Layout::with_offsets(self.vocabulary, self.context, self.output_offset_bound)?;
+        if self.weights.len() != l.output_offsets.end
             || !self.capacity.is_finite()
             || self.capacity < 0.
             || self.weights.iter().any(|w| !w.is_finite())
+            || self.weights[l.output_offsets.clone()]
+                .iter()
+                .any(|b| b.abs() > l.output_offset_bound)
             || [l.depth, l.product]
                 .iter()
                 .any(|&i| !(0. ..=1.).contains(&self.weights[i]))

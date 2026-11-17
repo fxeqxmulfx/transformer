@@ -84,6 +84,9 @@ pub fn accumulate(m: &Model, tab: &Tables, prefix: &[usize], label: usize, g: &m
     let mut residual = tab.logits(m, &pass.hidden);
     softmax(&mut residual);
     residual[label] -= 1.;
+    for (entry, r) in g[l.output_offsets.clone()].iter_mut().zip(&residual) {
+        *entry += r;
+    }
     let mut dh = Wave::default();
     let out = m.capacity / WIDTH as f64;
     for (c, (&r, v)) in residual.iter().zip(&tab.values).enumerate() {

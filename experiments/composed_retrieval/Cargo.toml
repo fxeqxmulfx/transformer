@@ -10,6 +10,7 @@ publish = false
 dense-forward = []
 logodds-depth = ["dense-forward"]
 arithmetic-cohort = ["dense-forward", "dep:arithmetic-data"]
+output-offsets = ["arithmetic-cohort", "logodds-depth"]
 
 [[bin]]
 name = "reconcile-arithmetic"

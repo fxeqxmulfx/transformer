@@ -203,9 +203,21 @@ impl Tables {
             hidden,
         }
     }
+    pub fn class_logit(&self, m: &Model, h: &Wave, c: usize) -> f64 {
+        let z = m.capacity / WIDTH as f64 * self.values[c].dot(h);
+        let offsets = &m.weights[self.layout.output_offsets.clone()];
+        offsets.get(c).map_or(z, |b| z + b)
+    }
     pub fn logits(&self, m: &Model, h: &Wave) -> Vec<f64> {
         let scale = m.capacity / WIDTH as f64;
-        self.values.iter().map(|w| scale * w.dot(h)).collect()
+        let mut z: Vec<_> = self.values.iter().map(|w| scale * w.dot(h)).collect();
+        for (s, b) in z
+            .iter_mut()
+            .zip(&m.weights[self.layout.output_offsets.clone()])
+        {
+            *s += b;
+        }
+        z
     }
 }
 #[derive(Default)]

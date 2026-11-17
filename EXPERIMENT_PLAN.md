@@ -9507,3 +9507,13 @@ decision changed across 3,262,182 final arithmetic predictions, a wrong
 validation answer in both models. Six original sources remain unavailable
 and 108 cases fall outside this cohort. The ordinary and forward-only
 fits matched every strict case decision.
+
+Task 416 tests a bounded trainable offset on every original output class.
+On division, multiplication and affine product at modulus 97, all observed
+training mistakes in the physical-depth reference shared the same target
+at all three seeds. CM116 gives the full-logit bound, the conditional CE
+derivative, and exact fixed-score inequalities for repairing a class with
+one offset. Jointly train all representation, sequence and output
+coordinates from zero-initialized offsets. The two independent cohorts
+each contain all 51 cases with one fit per case, mode and seed. Compare
+every held-out outcome and retain all six arithmetic source refusals.

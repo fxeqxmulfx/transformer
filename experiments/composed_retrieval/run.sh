@@ -2,8 +2,12 @@
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
 if (( $# < 4 || $# > 6 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic} SOURCE_INPUTS]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets} SOURCE_INPUTS]' >&2
   exit 2
+fi
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+  driver=$(git -C "$1" show "$3:experiments/composed_retrieval/run.sh")
+  exec bash -c "$driver" "$0" "$@"
 fi
 workspace=$(realpath "$1")
 storage=$(realpath "$2")
@@ -18,14 +22,18 @@ case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
   logodds) features=(--features logodds-depth); protocols+=(dense/protocol.json logodds/protocol.json) ;;
-  arithmetic|logodds-arithmetic)
+  arithmetic|logodds-arithmetic|output-offsets)
     (( $# == 6 ))
     source_inputs=$(realpath "$6")
     features=(--features arithmetic-cohort)
     protocols+=(dense/protocol.json arithmetic/protocol.json)
-    if [[ "$variant" == logodds-arithmetic ]]; then
+    if [[ "$variant" != arithmetic ]]; then
       features=(--features arithmetic-cohort,logodds-depth)
       protocols+=(logodds/protocol.json logodds/arithmetic/protocol.json)
+    fi
+    if [[ "$variant" == output-offsets ]]; then
+      features=(--features output-offsets)
+      protocols+=(output_offsets/protocol.json)
     fi
     ;;
   *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
@@ -88,9 +96,11 @@ if [[ -n "${source_inputs:-}" ]]; then
   for arm in original repeat; do invoke "$arm" inventory "$output/inputs" >"$output/$arm/inventory.json"; done
   cmp "$output/original/inventory.json" "$output/repeat/inventory.json"
   inventory="$output/original/inventory.json"
-  jq -e '(.cases|length)==54 and .fits==576' "$inventory" >/dev/null
+  supported=48
+  if [[ "$variant" == output-offsets ]]; then supported=51; fi
+  jq -e --argjson n "$supported" '(.cases|length)==($n+6) and .fits==($n*12)' "$inventory" >/dev/null
   mapfile -t cases < <(jq -r '.cases|to_entries[]|select(.value.dimensions != null)|.key' "$inventory")
-  (( ${#cases[@]} == 48 ))
+  (( ${#cases[@]} == supported ))
   required=$(jq -r '.raw_bytes + 17179869184' "$inventory")
   test "$(df -B1 --output=avail "$output" | tail -1)" -gt "$required"
 else

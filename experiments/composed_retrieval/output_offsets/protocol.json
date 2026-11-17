@@ -1,0 +1,11 @@
+{
+  "name": "composed-retrieval-original-51-output-offsets-v1",
+  "parent_protocol_sha256": "c8500af18b1db437f881ef8ca663af39b6fdfb12b05a1546c40583fbb19a4a32",
+  "training_protocol_sha256": "52d2cc8bc99c68642e4bdf6e8513cf057de16fd5ac2382551f387324427f6cec",
+  "arithmetic_protocol_sha256": "15b11be73ae0123bba0c383cdc68eb5633463b0d81d96afa26381d916a07569c",
+  "output_offset_bound": 16.0,
+  "initial_output_offset": 0,
+  "offset_learning_rate": 0.06,
+  "model": "Append an independent scalar for every original output object to the scaled CM115 logits. Project each offset to the closed symmetric box after every update. Use all original coordinates and all new offsets in every minibatch.",
+  "cohort": "Form the union of the four controls with the 48 available original arithmetic cases. Fit the overlapping addition task once. Preserve all training conventions, including log-odds initialization, and seal both independent 306-endpoint cohorts before scoring."
+}

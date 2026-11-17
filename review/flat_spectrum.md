@@ -22859,3 +22859,40 @@ score contrast identifies the physical mixture weight and hence its
 finite raw coordinate by strict monotonicity. The CM113 chain provides
 an instance of that condition. These statements describe the optimization
 coordinate and leave the learned routing and held-out accuracy empirical.
+
+## CM116. Bounded output offsets in the two-read successor
+
+For every original class $c$, append an independently learned scalar
+$b_c$ to the model. On prefix $x$ the executed logit is
+$z_x(c)=B s_p(x,c)+b_c$, where $s_p$ is the complete CM113 physical
+score and $|b_c|\le D$. Since $|s_p|\le1$ and $B\ge0$, the absolute logit
+is bounded by $B+D$, including at empty memory. The experiment uses
+$B=D=16$ and starts every offset at zero.
+
+At fixed sequence weights the loss for a labeled prefix is convex in the
+offset vector. Along coordinate $k$ its derivative is the original
+softmax probability of $k$ minus the indicator that the target is $k$.
+Any offset change $v$ has CE at least the current CE plus the probability
+mean of $v$ minus its target entry. Averaging preserves this lower bound
+with every training occurrence at its original multiplicity. CM109 gives
+the finite single-logit query used by the forward-only optimizer. The
+joint fit also moves the sequence weights, where this convexity argument
+does not apply.
+
+Suppose only class $k$ moves by $t$ from its present logit. On every
+observed row with target $k$, each rival minus target score must be
+strictly below $t$. On each other row with target $y$, the difference
+$z_y-z_k$ must strictly exceed $t$, and $y$ must already beat every
+remaining rival. Together these conditions characterize strict correct
+classification on all the rows. Bounded moves additionally require
+$|b_k+t|\le D$. For two rows with targets 0 and 1 and respective
+base scores $(0,2)$ and $(0,1)$, only the first row is wrong. A shift
+of class 0 must exceed 2 on the first row and stay below 1 on the second.
+
+With the sequence weights fixed, the vector of class contrasts on one
+observed prefix determines every offset relative to an anchor class.
+Adding a common constant leaves those contrasts unchanged on every
+prefix. One observed winning label provides inequalities instead of these
+numerical contrasts. With all sequence weights trainable, the CM113
+example of identical observed scores and opposite unseen winners still
+applies by choosing every offset zero.

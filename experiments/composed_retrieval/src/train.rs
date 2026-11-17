@@ -94,7 +94,7 @@ impl Adam {
                 p.angle_lr
             } else if i == l.recency {
                 p.recency_lr
-            } else if i >= l.depth {
+            } else if i == l.depth || i == l.product {
                 p.gate_lr
             } else {
                 p.routing_lr
@@ -206,6 +206,9 @@ pub fn fit(
         return Err("invalid training cell".into());
     }
     let l = m.validate()?;
+    if m.output_offset_bound != p.output_offset_bound {
+        return Err("model output-offset domain differs from the training protocol".into());
+    }
     if p.initial_log_odds
         .is_some_and(|z| m.weights[l.depth] != crate::model::sigmoid(z))
     {

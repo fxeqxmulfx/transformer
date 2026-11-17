@@ -74,6 +74,27 @@ pub fn configure(p: &mut Protocol) -> Result<()> {
         {
             return Err("training or arithmetic source protocol changed".into());
         }
+        if cfg!(feature = "output-offsets") {
+            if joined["parent_protocol_sha256"] != hash(crate::data::JOINT_PROTOCOL.as_bytes())
+                || joined["initial_output_offset"] != 0
+                || joined["offset_learning_rate"] != p.routing_lr
+                || joined["output_offset_bound"] != p.capacity
+            {
+                return Err("changed output-offset study or reference".into());
+            }
+            p.output_offset_bound = Some(p.capacity);
+            let overlap = p
+                .cases
+                .keys()
+                .filter(|id| cases.contains_key(*id))
+                .collect::<Vec<_>>();
+            if overlap.len() != 1 || overlap[0] != "arithmetic-add" {
+                return Err("unexpected overlap with the four original controls".into());
+            }
+            for (id, spec) in std::mem::take(&mut p.cases) {
+                cases.entry(id).or_insert(spec);
+            }
+        }
         joined
     } else {
         family
@@ -136,6 +157,23 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
             id.to_owned(),
             json!({"dimensions":split,"split_fingerprints":row["history"]["data_fingerprints"]}),
         );
+    }
+    for (id, spec) in &p.cases {
+        if cases.contains_key(id) {
+            continue;
+        }
+        let (task, pins) = crate::data::original(p, id)?;
+        let mut split_counts = BTreeMap::new();
+        for (name, rows) in &task.splits {
+            let targets = rows
+                .iter()
+                .flat_map(|row| &row.targets)
+                .filter(|&&y| y >= 0)
+                .count();
+            one_pass += 8 * spec.vocabulary as u64 * targets as u64;
+            split_counts.insert(name, json!({"examples":rows.len(),"targets":targets}));
+        }
+        cases.insert(id.to_owned(), json!({"dimensions":{"vocabulary":spec.vocabulary,"splits":split_counts},"split_fingerprints":pins}));
     }
     let fits = p.cases.len() * p.seeds.len() * p.modes.len() * 2;
     let raw_bytes = one_pass * 2 * 2 * p.seeds.len() as u64 * p.modes.len() as u64;

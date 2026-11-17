@@ -157,6 +157,7 @@ impl<'a> Run<'a> {
                         || r["training"]["updates"] != p.updates
                         || r["training"]["min_visits"].as_u64().unwrap_or(0) == 0
                         || model.capacity != p.capacity
+                        || model.output_offset_bound != p.output_offset_bound
                         || model.context != s.context
                         || model.vocabulary != s.vocabulary
                     {
