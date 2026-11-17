@@ -407,3 +407,36 @@ The training-only diagnosis identified a real local search defect, but fixing
 that defect is insufficient. The next investigation should measure state
 retention and component fitting before selecting a larger memory or another
 operator geometry. No new task reaches99%, and the broader goal remains open.
+
+## Complete training-state retention diagnosis
+
+Task380 inspects the frozen cautious and refined learned-rotary checkpoints in
+both modes. It accepts no update and accesses only the original training split.
+Every stored component, raw input occurrence, complex state coordinate and
+original class readout is executed. Report maximum state norms by position and
+sequence length, within-length state variance, and exact collisions of the
+complete weight-scaled state vectors. Equality uses every real and imaginary
+floating value, identifies signed zeros, and applies no magnitude threshold.
+A collision group reports all its training-label multiplicities. Distinct state
+vectors alone do not imply linear separability or generalization.
+
+Each traced endpoint must exactly equal `Atom.state`, and an independent real
+four-coordinate matrix implementation checks every component/example endpoint
+to2e-12. Complete logits accumulated from traced states are independently checked
+against actual `Model.logits` for every class and training record. The output
+also reports the unchanged checkpoint's training CE/accuracy, maximum execution
+discrepancies and full training-record fingerprint. Constant, contracting and
+order-sensitive imaginary-state controls distinguish the inspected behaviors.
+CM98 already bounds these executions; no new capacity or learning theorem is
+claimed. State variation, contraction and label fit remain separate measurements.
+
+```sh
+cargo build --offline --locked --release --manifest-path experiments/convex_rotary_recurrence/Cargo.toml --bin retention
+"$CARGO_TARGET_DIR/release/retention" WORKSPACE STORAGE CAUTIOUS_COHORT FRESH_OUTPUT cautious mini
+"$CARGO_TARGET_DIR/release/retention" WORKSPACE STORAGE REFINED_COHORT OTHER_FRESH_OUTPUT refined forward
+```
+
+Freeze this executable, source archive, commit and hashes before running all
+four variant/mode combinations. Diagnostic output stays outside the worktree;
+independent reruns must reproduce both metadata and every state statistic exactly.
+The existing110GB aggregate RAM and both-disk guards apply throughout inspection.

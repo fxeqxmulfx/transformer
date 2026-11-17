@@ -7,6 +7,7 @@ pub mod diagnostic;
 pub mod experiment;
 pub mod model;
 pub mod proposal;
+pub mod retention;
 pub mod train;
 
 #[cfg(test)]

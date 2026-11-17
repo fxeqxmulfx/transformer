@@ -8831,3 +8831,12 @@ run records33704 frequency trials and73001664 component CE calls. This fixes the
 measured resolution defect without solving fitting or generalization. Next
 measure actual state retention and component fitting on training data before
 choosing a memory-capacity or operator-geometry change.
+
+Task380 diagnoses the frozen cautious/refined learned-rotary checkpoints on all
+original training records, both modes. Trace every component/input occurrence;
+measure state norms by position and length, within-length variance and exact
+collisions of all weight-scaled real/imaginary coordinates. Verify every endpoint
+against actual Atom.state and independent real4 execution, and reconstruct every
+original-class logit against Model.logits. No held-out labels, selected features,
+accepted updates or accuracy credit. Freeze and independently reproduce all four
+reports before choosing a state-geometry or component-fitting intervention.
