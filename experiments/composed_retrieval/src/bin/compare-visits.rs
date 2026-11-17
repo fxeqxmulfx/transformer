@@ -1,44 +1,15 @@
 //! Compare the sealed sparse control and the matched-visit cohort, including
 //! per-object decisions from both trained modes and OS-measured fit costs.
-use baseline::{channel::argmax, hash};
+#[path = "shared/decisions.rs"]
+mod decisions;
+use baseline::hash;
 use bilinear::guard;
 use composed_retrieval::{Result, data};
+use decisions::Decisions;
 use learned_retrieval::cohort::{raw_file, read};
 use serde_json::{Value, json};
 use std::{collections::BTreeMap, fs, path::Path};
 
-#[derive(Default)]
-struct Decisions {
-    rows: usize,
-    different: usize,
-    max_logit_delta: f64,
-}
-impl Decisions {
-    fn add(&mut self, a: &[u8], b: &[u8], v: usize) -> Result<()> {
-        if v == 0 || a.is_empty() || a.len() != b.len() || !a.len().is_multiple_of(8 * v) {
-            return Err("unaligned raw logits".into());
-        }
-        let decode = |row: &[u8]| {
-            row.as_chunks::<8>()
-                .0
-                .iter()
-                .map(|b| f64::from_le_bytes(*b))
-                .collect::<Vec<_>>()
-        };
-        for (a, b) in a.chunks_exact(v * 8).zip(b.chunks_exact(v * 8)) {
-            let (a, b) = (decode(a), decode(b));
-            if a.iter().chain(&b).any(|x| !x.is_finite()) {
-                return Err("nonfinite raw score".into());
-            }
-            self.rows += 1;
-            self.different += usize::from(argmax(&a) != argmax(&b));
-            for (x, y) in a.iter().zip(b) {
-                self.max_logit_delta = self.max_logit_delta.max((x - y).abs());
-            }
-        }
-        Ok(())
-    }
-}
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     let [workspace, storage, sparse, dense] = args.as_slice() else {

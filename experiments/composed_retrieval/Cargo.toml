@@ -10,6 +10,11 @@ publish = false
 dense-forward = []
 arithmetic-cohort = ["dense-forward", "dep:arithmetic-data"]
 
+[[bin]]
+name = "reconcile-arithmetic"
+path = "src/bin/reconcile-arithmetic.rs"
+required-features = ["arithmetic-cohort"]
+
 [dependencies]
 arithmetic-data = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data", optional = true }
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }

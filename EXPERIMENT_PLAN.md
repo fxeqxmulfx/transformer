@@ -9465,3 +9465,12 @@ it there. At each endpoint the training CE slope was positive, +0.283 to
 +0.370, and forcing the gate to one reduced correct objects from 119–242
 to 52–81 out of 256. CM114 explains this unilateral depth optimum with
 the learned routing and readout held fixed.
+
+Matched-visit CM113 now has 51 measured original cases. Six satisfy
+their original criterion and five satisfy all raw and exact 99% targets
+at all three seeds in both training modes. The arithmetic cohort includes
+48 original datasets with 4 passes. Addition and subtraction scored
+4,705/4,705 at every seed. Division at modulus 97 and one constant-output
+control also crossed 99%. Six fixed-random source datasets are unavailable
+and 108 cases are outside the measured cohorts. Addition is counted once
+after checking every overlapping model, receipt and raw file.
