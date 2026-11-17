@@ -8900,3 +8900,12 @@ All four prefix replay records gate final scoring; no held-out label enters the
 check. Freeze a new producer and retain every original split/failure/raw replay.
 The training-only epoch CE trajectory justifies checking further fitting, not
 claiming that greater training accuracy establishes generalization.
+
+Task383's longer cohort atb78d4661 reproduces all four original512-update
+trajectories and checkpoint bytes, then completes2048 updates per cell and all
+four complete raw replays. Train accuracy reaches76.611–79.541%, novel
+validation10.156–15.430%; every source-success/raw99 flag still fails. Training
+CE gains diminish by epoch32 while all content stays unchanged. This does not
+certify conditional optimality or a state-capacity obstruction. Investigate
+radial normalization as an optimizer limitation in Lean before another native
+repair; do not infer an unseen-answer guarantee from better fitting.

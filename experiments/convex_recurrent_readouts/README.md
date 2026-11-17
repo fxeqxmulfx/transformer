@@ -132,3 +132,39 @@ control tests further fitting without claiming that more training identifies
 unseen answers. All original metrics, failures, query costs, resource guards
 and complete raw replays remain required. No new Lean claim is needed: the
 CM100 feasible update and conditional-CE results are unchanged.
+
+The longer cohort completes at producer `b78d4661`, freeze
+`recurrent-readouts-long-v1`, source fingerprint
+`fba92f6a6c978d8cf62885f971285c2731c63c9d1f743aea0b62f775de8604ed`, binary SHA256
+`ca9940ffda45f3f121f20c83e653327d9b9812c079aad348d8247fb8763c3d47`.
+All four first512 trajectories and checkpoints match the earlier producer
+exactly, all twelve commands exit0, and all four complete raw replays match.
+Evidence is in
+`/run/media/misha/storage/transformer-runs/recurrent-readouts/long-v1`.
+
+| Source / mode | Train correct /2048 | Novel validation correct /512 | Test correct /512 | Train CE | Novel CE |
+|---|---:|---:|---:|---:|---:|
+| Cautious / Mini |1598 (78.027%)|79 (15.430%)|68 (13.281%)|1.92094|3.12219|
+| Cautious / forward |1629 (79.541%)|52 (10.156%)|74 (14.453%)|1.91165|3.14176|
+| Refined / Mini |1595 (77.881%)|69 (13.477%)|65 (12.695%)|1.94823|3.15926|
+| Refined / forward |1569 (76.611%)|75 (14.648%)|81 (15.820%)|1.96152|3.14849|
+
+Every original success/raw99 flag remains false. Train fit and CE improve, but
+the generalization gap persists and novel accuracy does not improve in every
+cell. Each run processes65536 records over32 refit epochs. All learned content
+hashes and129 stored components remain unchanged; all four batch streams match.
+Every interpolation coefficient is1, actual interpolation errors are0, and
+maximum row-budget excess is at most2.22e-16. Each Mini run uses4653056 CE
+evaluations, each forward run17760256, including13107200 signed bias queries.
+Concurrent training times are63.93/74.70s for cautious and63.96/73.23s for
+refined, Mini/forward respectively; source-content training costs are separate.
+
+Mean pre-update training-stream CE slows substantially. For cautious Mini it is
+2.2230/2.0833/2.0547/2.0466 at epochs8/16/24/32; cautious forward gives
+2.2127/2.0735/2.0453/2.0376. Refined Mini gives
+2.2496/2.1103/2.0846/2.0748, refined forward2.2643/2.1258/2.0978/2.0897.
+These changing-minibatch measurements support diminishing gains under this
+update rule; they do not certify a convex optimum, insufficient state capacity
+or impossibility of recall. The next investigation is whether radial row
+normalization can itself stall away from an optimum, before attributing the
+remaining failure to architecture or unseen-answer identification alone.
