@@ -8746,3 +8746,14 @@ batches; frequency search adds work, so equal updates are not equal compute.
 The two-state order witness is not a supplied training rule, convergence result
 or guarantee of99% recall. The transformer and earlier frozen producers remain
 unchanged, with110GB aggregate RAM and both-disk free thresholds enforced.
+
+Task376's frozen128-update binding comparison at15b2bd3e completes with all12
+commands successful and all four raw-logit/metric replays identical. All original
+success/raw99 flags fail. Novel validation raw/exact is2.734%/2.148% for plain
+Mini/forward and3.711%/2.930% for learned rotary. Full training is only3.027%–
+4.492%, and CE exceeds the uniform initial loss. Mean mixture steps0.892–0.904
+replace most existing mass on each32-example batch despite low after-update
+batch CE. This suggests an update-stability issue, without proving that fixing
+it suffices for recall. Preserve the failures. Task377 will prove the relevant
+CE interference and feasible step bounds, then compare conservative updates for
+plain, user-requested fixed-rotary and learned-rotary models on unchanged data.

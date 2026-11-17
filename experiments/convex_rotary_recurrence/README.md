@@ -116,3 +116,54 @@ hashes and original metric thresholds are checked. Outputs are create-new only;
 failed runs stay visible. Generated evidence lives outside the worktree.
 Resource guards preserve the110GB aggregate RAM limit,2GiB workspace free and
 16GiB storage free minima. Low disk space stops work without cleanup.
+
+## First original binding comparison, 2026-11-17
+
+Producer `15b2bd3e`, freeze `rotary-binding-v1`, source fingerprint
+`463197b3624b4b30c70459a6f40bc5f4509463105c398d677c100baeca69d223`, binary SHA256
+`5f7e2b1d63cede287ae59ca5f0e96b6b4d635f343b107041608b604d062eb204`.
+Generated evidence remains in
+`/run/media/misha/storage/transformer-runs/rotary-recurrence/binding-v1`.
+All twelve train/score/replay commands exit0. All four complete raw-logit and
+metric replays match. Original batch-index traces match across the four cells.
+Each model uses4096 original records, two epochs, and retains129 components.
+
+| Family / mode | Full train correct /2048 | Novel validation correct /512 | Test correct /512 | Novel validation CE |
+|---|---:|---:|---:|---:|
+| Plain / Mini |62 (3.027%)|14 (2.734%)|9 (1.758%)|13.68627|
+| Plain / forward |72 (3.516%)|11 (2.148%)|19 (3.711%)|13.83214|
+| Learned rotary / Mini |92 (4.492%)|19 (3.711%)|20 (3.906%)|15.93211|
+| Learned rotary / forward |86 (4.199%)|15 (2.930%)|15 (2.930%)|10.91809|
+
+There is one supervised answer per example, so raw and exact accuracy coincide.
+The original validation and novel-validation split reports coincide here, as in
+the original data. Every original success and raw/exact99 flag is false. This
+short diagnostic does not support a useful recall advantage for learned rotary
+positions. It also does not establish that the family lacks a fitting solution:
+full-training accuracy is poor, and no global component oracle is available.
+
+The training trace shows a strong instability. Mean mixture step is0.89951,
+0.90227,0.90386 and0.89211 respectively. A typical step therefore replaces
+about90% of existing mixture mass with a component selected on32 examples.
+Mean current-batch CE falls from14.07/14.12/14.33/14.12 before the update to
+1.77/1.76/1.70/1.80 afterward, while full-training CE finishes at
+12.96005/13.51785/15.45444/11.54355. All exceed the initial uniform-class
+CE `log(100)=4.60517`. This is consistent with destructive interference across
+minibatches; it is not a proof that interference alone explains the failure.
+A capacity-feasible smaller-step comparison is needed before attributing the
+result to positional representation or claiming generalization progress.
+
+Plain runs use71910880 component-loss evaluations; rotary runs use72205024.
+Every cell uses278528 line-search loss evaluations. Each forward cell adds
+819200 signed class-bias CE queries. Mean/runtime comparisons are descriptive,
+not matched to transformer compute: training takes101.59/103.87/106.25/106.93s
+in the table order. The rotary learner searches both real frequencies and every
+responding complex initial/matrix coordinate; no fixed task weights are used.
+All failed checkpoints and raw-logit hashes remain frozen.
+
+The user next requested a fixed-rotation alternative. Compare plain matrices,
+fixed positional frequencies and learned frequencies under the same more
+conservative update rule. Fixed rotations are an explicit architectural control;
+all initial/content/readout parameters remain learned. Preserve these original
+unrestricted-step results and prove the feasible fixed-frequency queries before
+using that new control. No99% recall claim is made by this experiment.
