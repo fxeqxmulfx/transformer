@@ -8734,3 +8734,15 @@ comes from rotary positions. Scalar shared conjugation cancels; the result
 does not exclude other position-dependent scalar models. No Gram-flatness or
 unseen-label guarantee is inferred. Complete Lean audits precede task376's
 native comparison of plain and learned rotary matrices on original binding.
+
+Task376 follows the approved CM98 proof review at56ab91ca. Implement the full
+complex two-state matrix family and learned rotary conjugation in native Rust,
+retaining every original object/class/record and all numerical coordinates.
+Freeze a four-cell original short binding diagnostic: plain and rotary models,
+Mini and forward Mini, seed1,128 updates, capacity16 and original batch32.
+All endpoints seal before any scoring. Preserve every original split, failure,
+complete raw-logit replay and query count. Compare matched content starts and
+batches; frequency search adds work, so equal updates are not equal compute.
+The two-state order witness is not a supplied training rule, convergence result
+or guarantee of99% recall. The transformer and earlier frozen producers remain
+unchanged, with110GB aggregate RAM and both-disk free thresholds enforced.
