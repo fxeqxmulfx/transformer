@@ -8821,3 +8821,13 @@ record,128-update budget, matched initialization and capped step unchanged.
 Zero extra levels must reproduce both cautious training trajectories exactly.
 Freeze a new two-mode producer, seal both endpoints before original scoring,
 retain every failure and raw replay. No new architecture or convergence claim.
+
+Task379's frozen repair at534a258f completes both original runs and raw replays.
+All128 nonzero components now change rotary frequencies. Nevertheless novel
+accuracy is3.125%/2.148%, full-training8.594%/9.570%, and both training/novel CE
+worsen against cautious learned/fixed controls. All original success/raw99 flags
+remain false; original batches, records and capped steps remain intact. Each
+run records33704 frequency trials and73001664 component CE calls. This fixes the
+measured resolution defect without solving fitting or generalization. Next
+measure actual state retention and component fitting on training data before
+choosing a memory-capacity or operator-geometry change.

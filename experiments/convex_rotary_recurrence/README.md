@@ -374,3 +374,36 @@ refinement disabled, both legacy runs reproduce all128 deterministic receipts
 and endpoint bytes exactly, and both complete88-direction probe files match
 the earlier diagnostic byte-for-byte. Evidence is stored outside the worktree
 at `diagnostics/rotary-refinement-legacy-v1` under the shared runs directory.
+
+The refined comparison completes at producer `534a258f`, freeze
+`rotary-frequency-refined-v1`, source fingerprint
+`0f0552315bfd778e2f10ac1aac56cd1593ed4b3aa284a85ae46c2e787ebb859f`, binary SHA256
+`3a67f9ee693e0fa1248fe6b84d9f5aa7debcb7f5327f82f5eef45dd7f85667b6`.
+All six train/score/replay commands exit0. Both complete raw-logit and metric
+replays match. Evidence remains in
+`/run/media/misha/storage/transformer-runs/rotary-recurrence/refined-v1`.
+Both original batch traces equal the cautious producer exactly, and every
+accepted step satisfies the same prospective cap. Each run retains4096 records,
+two epochs,129 components, all100 original classes and every original split.
+
+| Mode | Full train correct /2048 | Novel validation correct /512 | Test correct /512 | Train CE | Novel CE |
+|---|---:|---:|---:|---:|---:|
+| Mini |176 (8.594%)|16 (3.125%)|20 (3.906%)|3.51723|3.87758|
+| Forward Mini |196 (9.570%)|11 (2.148%)|20 (3.906%)|3.51547|3.77392|
+
+Both original success and raw/exact99 flags remain false. The finer search now
+changes the frequencies of all128 nonzero components in each run. First-frequency
+ranges are0.977891–1.014997 for Mini and0.984792–1.017882 for forward. Thus the
+previous failure to leave the initial schedule is repaired, but original recall
+is not. Against the cautious learned/fixed control, both full-training and novel
+CE worsen; the small accuracy changes do not establish improved generalization.
+
+Each run uses33704 frequency trials and73001664 component CE calls, compared
+with9192 and72205024 before refinement. Each also uses278528 line-search calls
+and8192 centre/validation calls; forward adds819200 class-bias queries. Complete
+CE totals are73288384 and74107584. Concurrent training times are107.25/107.74s;
+these remain descriptive timings, not matched transformer compute budgets.
+The training-only diagnosis identified a real local search defect, but fixing
+that defect is insufficient. The next investigation should measure state
+retention and component fitting before selecting a larger memory or another
+operator geometry. No new task reaches99%, and the broader goal remains open.
