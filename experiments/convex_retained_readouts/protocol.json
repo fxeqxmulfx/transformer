@@ -1,0 +1,25 @@
+{
+  "name": "retained-complete-coefficients-v1",
+  "lean_source": "b87fa714 CM105",
+  "case": "gpt-probe-key-value-binding",
+  "training_input_cohort": "projected-v1",
+  "variants": ["cautious", "refined"],
+  "modes": ["mini", "forward"],
+  "arms": [
+    {"name":"instantaneous-small", "retained":false, "step_ceiling":0.0009765625},
+    {"name":"retained-large", "retained":true, "step_ceiling":0.0625},
+    {"name":"retained-small", "retained":true, "step_ceiling":0.0009765625}
+  ],
+  "prior": "four pinned f5ae34ef instantaneous-large endpoints at step_ceiling1/16; already scored, no retraining or selection",
+  "seed":1, "batch":32, "updates":512, "shuffle_seed":10001,
+  "query_step":0.0001, "line_iterations":12, "budget":16.0,
+  "estimator":"zero-initialized original-record-indexed last full-class CE signals; refresh only current minibatch; maintain sum(signal_i*state_i)/N with no old native-weight multiplier; explicitly stale and biased, not SAGA or current full gradient",
+  "content":"conditional phase on every previously learned initial state, transition and frequency; content identity checked on every cache refresh; cache invalid if content changes; no fixed-feature architecture replacement",
+  "line":"same current-minibatch actual-CE line search for both estimators, with predeclared maximum step; no claimed full-training monotonicity",
+  "forward":"all class signals from finite feasible signed CE queries only; same query-reserving shrink in both modes",
+  "identity":"all original indexed supervised occurrences, masks, duplicate examples and short tails; all100 classes and129 components including zero-weight states retained",
+  "diagnostic":"after all twelve endpoints seal, stream training records in batches32 for actual analytic complete coefficients; retained endpoints additionally compare saved H, CM105 estimated gap, peak(A-H), correction2B*peak(A-H), and independently reconstructed cached sum; diagnostic never updates or selects an endpoint",
+  "scoring":"all twelve endpoints seal before any new held-out scoring; original primary success plus separate99% raw/exact on each original split; complete raw-logit replay; no early stopping or held-out selection",
+  "limits":{"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184},
+  "claim":"empirical estimator/step-size comparison; no proved stochastic convergence, finite-rounding certificate or unseen identification; transformer baseline unchanged"
+}

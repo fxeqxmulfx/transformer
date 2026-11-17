@@ -1,0 +1,38 @@
+[
+  {
+    "variant": "cautious",
+    "mode": "mini",
+    "metadata_sha256": "5750ef4bea24ff5a12f1859f8dd3ca2aae0254eee7c4f5a34981b09c27d40660",
+    "receipt_sha256": "21f9af5491740b9afdea1c495f8f90966632d845f3a5f71c5881310bab53361d",
+    "endpoint_sha256": "95c9407851e944a837d1b5a020a503e930a82bcf73c6b8cf986bb12e392b5170",
+    "score_sha256": "a31125075d0e9acf58002e0c04cee6e943b469d1b9d31e9dbc70c5da6f6c0a13",
+    "replay_sha256": "4a155630151c4d5734ffe0499c0516412e01e1592b693f0a2d49022ba6737323"
+  },
+  {
+    "variant": "cautious",
+    "mode": "forward",
+    "metadata_sha256": "bc831132a82dfd29d08d2a385c09d11f005ccd169e21313f60223c60c22dfbb7",
+    "receipt_sha256": "e1c1c47375408aed60c3ad447b2958b508bf5809bbd4948a9e0a2fb4135cb284",
+    "endpoint_sha256": "c6aadc376c07b7a13b11ad7c4e08f94155dccdfed5dcbe352ab2b42e410b8560",
+    "score_sha256": "977d88402d8d1ea013867948d5b24d87c166762aff7649354decc57395515185",
+    "replay_sha256": "ad9978aa72d2f7113eabe78d82501bf96f3db4ebcd752447da12f832a2a115b5"
+  },
+  {
+    "variant": "refined",
+    "mode": "mini",
+    "metadata_sha256": "b8ea63a5d368042f9bd5c5dae93c72306453939dd2dd68b6d44159f1e8635fe4",
+    "receipt_sha256": "d897953ad9a2dc4f6488d0ecf51d6f181c2df0c0744a3e4fb79d36d32b8c8472",
+    "endpoint_sha256": "17116328a7488f679c8eec9068cfff0fd16a7719ea3ad6e1124156f1b26b60ca",
+    "score_sha256": "44d5ad006d7993674b88075b53a5dbab852565b56d94b692988679ff63bb1ea6",
+    "replay_sha256": "8c767b9bf077aeea043269e09b4c102aaa389ff6ac88589ee91ecfc89f2788f2"
+  },
+  {
+    "variant": "refined",
+    "mode": "forward",
+    "metadata_sha256": "f2367b4f5c6708c39ab1c3e7a4b9ba43735ea88eed36bb8c44c47337a70f1338",
+    "receipt_sha256": "206009f88f3188a204f48fe9ab6370a7181b70c34d5299598c65104cb8485e74",
+    "endpoint_sha256": "3f138484f70d1dc4f9c7e2623a831fac38f37db38f8680d7fce62b04f8f849e9",
+    "score_sha256": "b754add0b84e2c76608f26dab896b010b95aa496e0106bfcbd9887d23a2ba50e",
+    "replay_sha256": "833c935704dd0309b174a7b9cf68bd4ca97f535f33da19558398c6523f170faf"
+  }
+]

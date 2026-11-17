@@ -9048,3 +9048,17 @@ The next native comparison will retain coefficients by original record index
 and separate estimate retention from step-size reduction. It must measure actual
 coefficient discrepancy and all original raw outcomes, without claiming a
 stochastic-error certificate or generalization guarantee from convexity alone.
+
+Task392 implements that prospective native comparison after reviewed CM105 at
+`b87fa714`. Twelve new512-update endpoints compare instantaneous-small,
+retained-large and retained-small across cautious/refined inputs and both mini
+modes. Four pinned f5ae34ef instantaneous-large results complete the comparison;
+the predeclared step ceilings are1/16 and1/1024. Every retained signal is keyed
+by original supervised occurrence, with zero initial coverage and explicit stale
+coefficients. Content changes invalidate the cache. Five native controls cover
+cache reconstruction, original masks/duplicates/tails, both query modes and the
+actual nonzero CM105 witnesses. All endpoints must seal before scoring; complete
+training coefficient-error diagnostics are read-only and all original raw scores
+must replay. This conditional repair does not establish an all-path optimum,
+stochastic convergence or unseen generalization. Execute only the frozen
+`convex_retained_readouts` protocol and retain evidence outside the worktree.
