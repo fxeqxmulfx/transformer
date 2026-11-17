@@ -1,0 +1,90 @@
+# Learned complex recurrence on original object sequences
+
+Can a learned recurrence improve the short-to-long transfer that the previous
+bilinear reader failed? The input is a sequence of immutable objects and the
+output is one next original object. Object IDs only address parameters. The
+model receives no task name, arithmetic operation, bit role or answer rule.
+
+CM95 in `review/flat_spectrum.md` and
+`Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent` prove the
+length-independent capacity bound, convex function domain, finite executed
+mixtures, ordinary CE convexity and feasible signed class queries. CM96, committed
+as `680dffb0`, proves that scalar parameters represent the complete complex
+one-dimensional operator family and that absent input objects have exactly zero
+transition response. It also proves this family's limitation: every mixture is
+permutation-invariant. This is a Boolean/parity prototype, not a general
+order-sensitive MQAR architecture. The proof's parity witness is never supplied
+to the learner.
+
+Each component has a complex initial state, one complex transition for every
+original object and one complex readout for every original class. Execution
+multiplies the state by the learned transition for every input occurrence, then
+applies each readout. Every scalar has magnitude at most one. Nonnegative
+component weights sum to the fixed capacity16; a stored zero component carries
+unused mass. There is no fixed prefix table or maximum sequence length.
+
+The joint domain is the convex hull of **all** such learned components. Component
+discovery is an approximate numerical search; it is not a globally optimal
+convex oracle. The physical transition parameters are not jointly convex.
+Previously added components remain stored and their mixture weights update.
+Every new component's numerical paths are learned from the current minibatch.
+
+| Frozen run | Update count | Difference |
+|---|---:|---|
+| Original AND shift, seed1, both modes |128| Original batches, short and long probes |
+| Original AND random, seed1, both modes |128| Original batches, short and long probes |
+| Original parity16, seed1, both modes |512| Same learner; every answer/end target retained |
+
+Mini uses full-class CE residuals. Forward Mini uses two finite CE evaluations
+per original class and record. Both use the same capacity-reserving shrink and
+query step0.0001. A component starts from trainable identity parameters, random
+complex unit parameters or the preceding learned proposal. Each numerical
+initial/transition coordinate gets four real/imaginary disk-projected proposals
+at radii2,1,1/2,1/4,1/8,1/16. All original readouts are fitted to the complete
+observed scalar signals, and proposals are compared by actual full-class CE at
+a feasible mixture point. A64-iteration loss-only line search chooses the final
+convex mixture step. There is no recurrent backward pass in either mode.
+
+Only transition proposals for objects absent from **every** batch prefix may
+be skipped, by CM96; their parameters remain stored. No magnitude, class,
+record, length or semantic filter is used. Repeated objects, duplicate examples,
+original answer/end tokens, target masks and short final batches are preserved.
+Floating point capacity tolerances are2e-12 per operator and2e-10 times the
+budget for total mass; these are numerical checks, not formal real certificates.
+
+Eight native controls cover complex execution against independent real-matrix
+composition, actual feasible signed query models, long-input bounds, opaque
+object renaming, the order limitation, every original competitor, exact absence
+versus dense search, tiny retained parameters, duplicates/tails, learning without
+supplied witness weights, checkpoint replay and cohort-seal rejection. Full
+Lean checks passed with eight new theorems, no new sorry and no extra axioms.
+Benchmark outcomes remain pending until all six endpoints are sealed.
+
+Reproduce with native tools from the repository root:
+
+```sh
+export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/recurrent-sequence
+cargo test --offline --manifest-path experiments/convex_recurrent_sequence/Cargo.toml
+cargo fmt --manifest-path experiments/convex_recurrent_sequence/Cargo.toml --check
+cargo clippy --offline --manifest-path experiments/convex_recurrent_sequence/Cargo.toml --all-targets -- -D warnings
+cargo build --offline --release --manifest-path experiments/convex_recurrent_sequence/Cargo.toml --bin stress
+"$CARGO_TARGET_DIR/release/stress" plan
+```
+
+Before running, freeze the executable, `protocol.json`, source commit/hash,
+binary SHA256 and source archive outside the worktree. Include this experiment,
+`convex_bilinear_sequence`, `convex_stress_minibatch` and `convex_stress` in the
+archive. With a fresh output directory:
+
+```sh
+bash experiments/convex_recurrent_sequence/run.sh WORKSPACE STORAGE FREEZE COHORT
+```
+
+The runner trains both modes, seals all six endpoints, then evaluates every
+original split and independently reloads/replays every raw logit and metric.
+Generated evidence stays ignored under external storage. Model selection uses
+fixed update counts, not held-out results. Preserve the original success flag
+and report raw/exact99 separately, including every failed transfer probe.
+The transformer baseline and earlier frozen producers are unchanged. Guards
+enforce110GB aggregate RAM, at least2GiB free on the workspace disk and16GiB on
+the storage disk. A low-space refusal stops work without further cleanup.

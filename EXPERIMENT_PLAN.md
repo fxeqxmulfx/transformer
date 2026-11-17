@@ -8658,3 +8658,15 @@ length64 CE exceeds126. Keep these transfer failures visible. The result support
 the line-resolution diagnosis for short fitting while reinforcing the need to
 train the separately proved recurrent family. The original30-run cohort remains
 frozen and continues unchanged.
+
+Task372 implements CM95/96 after the complete Lean checks pass at680dffb0.
+Use the complete scalar complex recurrent family with learned initial state,
+every original-object transition and every class readout. CM96 proves its
+permutation limitation; this prototype makes no general MQAR claim. Freeze an
+independent original AND shift/random128-update and parity16512-update cohort,
+seed1, both minibatch modes, fixedcapacity16. Component discovery uses complete
+CE scalar signals and finite loss-only numerical search, without supplying
+parity or Boolean weights. Keep every original target, duplicate and batch tail.
+Seal all six endpoints before any held-out scoring, replay all raw logits and
+report all short/long outcomes. Preserve the previous producers, baseline and
+resource limits; a bound or constructed parity witness alone is not success.

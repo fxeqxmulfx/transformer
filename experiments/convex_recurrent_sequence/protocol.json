@@ -1,0 +1,30 @@
+{
+  "name": "learned-scalar-complex-recurrence-v1",
+  "model": "CM95/96 complete learned scalar complex recurrence and convex function mixtures",
+  "interface": "immutable object sequence to next original object; IDs are addresses only",
+  "data": "unchanged original frozen35 native generators; data seed1",
+  "modes": ["mini", "forward"],
+  "seeds": [1],
+  "budget": 16.0,
+  "budget_rule": "fixed label-independent total component mass; every scalar operator has norm at most one",
+  "query_step": 0.0001,
+  "component_sweeps": 6,
+  "component_starts": "trainable identity initialization, random full complex unit scalars, previous learned proposal when available",
+  "component_search": "initial state and every observed-object transition; four real/imaginary disk-projected perturbations, radius 2*2^(-sweep); fit all readouts to complete CE scalar signals; accept only strict full-batch CE decrease at alpha=min(0.1,1/budget)",
+  "line_iterations": 64,
+  "model_reservation_bytes": 80000000000,
+  "aggregate_ram_limit_bytes": 110000000000,
+  "minimum_workspace_free_bytes": 2147483648,
+  "minimum_storage_free_bytes": 17179869184,
+  "sampler": "all original minibatch records, duplicate occurrences and short tails; Random(seed+10000)",
+  "component_rng": "Random(seed+20000), independent of data sampler",
+  "training": "ordinary full-class CE; same feasible query centre; forward mode uses finite loss queries without CE or recurrent derivatives",
+  "stopping": "fixed updates, all six endpoints sealed before held-out scoring",
+  "cases": [
+    {"name": "suite-boolean-and-shift", "maximum_updates": 128},
+    {"name": "suite-boolean-and-random", "maximum_updates": 128},
+    {"name": "basis-parity16", "maximum_updates": 512}
+  ],
+  "success": "original primary success plus separate raw/exact99; retain every original split",
+  "limitations": "scalar recurrence is permutation-invariant; no general MQAR claim; approximate component discovery has no global convergence guarantee"
+}
