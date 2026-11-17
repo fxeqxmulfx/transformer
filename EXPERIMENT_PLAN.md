@@ -8869,3 +8869,15 @@ and26502 theorems, with0vacuous/0placeholder. The conditional readout step is
 proved feasible and convex in its complete coefficients; no new fitting or
 unseen-answer conclusion. Task382 will measure whether revisiting all learned
 readouts across original minibatches improves the retained recall failures.
+
+Task382 follows approved CM100 at16276e1c. The Rust experiment
+convex_recurrent_readouts freezes four conditional refits: cautious/refined
+learned rotary sources, both modes, same seed1 original minibatches,512 updates
+(eight extra epochs), learning rate4 and64-step CE interpolation on[0,1]. Every
+original class and complex readout coordinate receives the actual weighted
+state contraction, radial feasibility rule and checked full-model update.
+Retain all already learned content and verify its complete hash unchanged.
+Use no supplied features or answer rule. Seal all four endpoints before any new
+held-out score, preserve every failure, independently replay all raw logits,
+and retain110GB aggregate RAM and both-disk guards. Training fit alone is not
+an unseen-answer result.
