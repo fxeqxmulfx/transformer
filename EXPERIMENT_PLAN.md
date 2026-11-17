@@ -9432,3 +9432,11 @@ minibatch on the same four original cases. Freeze the comparison in
 Each of the 48 fits uses the original seed, batch order and fixed 1,024-update
 endpoint. Record numerical query counts and measured resource costs. Check the
 standard minibatch runs against the previous weights and optimizer evidence.
+
+Producer `0c8436c1` recovered all 4,705 held-out sums with forward-only
+training at all three seeds. The standard minibatch control reproduced
+every earlier endpoint and optimizer trace. Across both learned modes all
+46,659 scored positions gave the same next object. With this shared dense
+protocol, binding and addition pass every 99% raw and exact criterion.
+Multi-query recall also passes its original target. The 161 remaining cases
+are unmeasured. Two-hop lookup still underperforms in both modes.
