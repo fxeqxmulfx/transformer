@@ -8649,3 +8649,12 @@ Freeze a separate original AND-shift diagnostic with64 iterations,100 updates,
 seed1 and both modes. Keep the same complete learned domain, all original data
 and the110GB/both-disk guards; seal both endpoints before scoring and replay.
 This does not address the old reader's parity expressivity limit.
+
+The refined diagnostic (`41cffd66`, `shared-atoms-refined-v1`) completes and all
+raw logits replay. Both modes reach100% raw/exact on train, main validation and
+ordinary test in100 updates; source success and primary raw/exact99 are true.
+Long length32/64 probes still have28.125%–59.375% exact accuracy, and validation
+length64 CE exceeds126. Keep these transfer failures visible. The result supports
+the line-resolution diagnosis for short fitting while reinforcing the need to
+train the separately proved recurrent family. The original30-run cohort remains
+frozen and continues unchanged.

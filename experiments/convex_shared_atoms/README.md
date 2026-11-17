@@ -247,4 +247,33 @@ earlier frozen producers keep their original protocol and remain intact.
 Build and freeze a fresh executable with `refined_protocol.json` saved as the
 freeze's `protocol.json`. Use `plan-refined`, then `train-refined` for both modes;
 only then run `score-refined` and `verify-refined`, with the same positional
-arguments and a fresh cohort directory. Results are pending.
+arguments and a fresh cohort directory.
+
+The frozen producer is `41cffd66`, source fingerprint
+`0f07c21a8522cb290b06c71f5144b39f666d3564eb594441e02bcb63bbef1929`, binary SHA256
+`7fa52c724e036a0faf6a7aac0aa078c966b5c9c9138cc6d6255f4e88260e05c2`, retained in
+`/run/media/misha/storage/transformer-runs/freezes/shared-atoms-refined-v1`.
+Generated results are in the adjacent `shared-atoms/refined-v1` cohort.
+Every command exits zero and both complete raw-logit/metric replays match.
+
+| Split | Mini raw / exact | Forward-only raw / exact | Mini CE | Forward-only CE |
+| --- | --- | --- | --- | --- |
+| Train | 100% / 100% | 100% / 100% | 0.0002530770 | 0.0002530935 |
+| Main validation/novel | 100% / 100% | 100% / 100% | 0.0001680606 | 0.0001680725 |
+| Ordinary test | 100% / 100% | 100% / 100% | 0.0000171517 | 0.0000171530 |
+| Validation length64 | 64.0625% / 28.125% | 64.0625% / 28.125% | 126.4076 | 128.3244 |
+| Test length64 | 72.6563% / 45.3125% | 72.6563% / 45.3125% | 96.4967 | 97.9592 |
+
+Both original success and the primary raw/exact99 flag are true: all14 raw
+targets in7 main held-out examples are correct; ordinary test has128/128 raw
+targets and64/64 exact examples. Each mode sees3200 indexed examples and6400
+supervised records, or25 epochs, in100 updates. Mini takes39.24s and forward-only
+40.64s alongside the existing producers, without a transformer timing claim.
+
+Across all length32/64 probes, including position shifts, exact accuracy ranges
+28.125%–59.375%. Ordinary position-shift exact accuracy is93.75% on validation
+and92.1875% on test. These transfer failures remain failures even though the
+source's main success criterion passes. Finer finite search repairs short-task
+fitting in this diagnostic; it does not repair length generalization or the
+fixed-interaction parity limit. The new CM95 recurrence is proved separately
+and has not been trained in this experiment.
