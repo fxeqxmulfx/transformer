@@ -9280,3 +9280,21 @@ examples retain their original weight. No roles enter the predictor or training,
 and no new success flag is introduced. Six native controls and fresh complete
 reports plus changed-input refusals precede interpretation. Enforce110GB aggregate
 RAM and both disks; freeze all source, binaries, protocol and pins first.
+
+Task402 producer `3a509853` completes and replays all 24 diagnostic reports
+without changing any complete original score. Across the four old-geometry
+growth cells, novel/test stored-value prediction is 80.13%/78.71%, while
+two-distinct-value choice is 49.90%/51.79% versus 82.46% training. Hilbert
+growth gives 70.61%/67.63% stored-value prediction and 52.91%/48.98% choice.
+Old growth's CE reduction is entirely from better stored-value mass, with
+conditional stored-value CE slightly worse. A first-pair preference remains:
+novel choice is 67.63% for the first pair versus 33.27% for the second in old
+growth. Even with no filler, stored-value prediction is 100% but choice is
+54.01%. At the longest original query prefix, stored-value prediction drops
+to 69.74%. Query binding and longer-prefix retention are distinct problems.
+All repeated values, original classes and masks remain; validation aliases
+novel and is not an extra dataset. Six frozen-source native controls and four
+changed-input refusals pass; fresh reports are identical. This is one original
+task/seed, zero updates and no new success. Prioritize shared learned matching
+across unseen combinations, while retaining CM110's width result as a separate
+expressivity fact rather than evidence that width alone solves this failure.
