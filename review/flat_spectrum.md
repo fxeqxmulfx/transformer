@@ -21879,3 +21879,34 @@ Formalization: `ConvexChannel/LearnedRecurrent`. The input/output contract
 remains an immutable-object sequence to one next original object. General
 unseen-answer correctness still needs target-family assumptions and training
 evidence; bounded recurrent depth alone cannot determine arbitrary labels.
+
+## CM96. Scalar execution is complete but permutation-invariant
+
+The first native recurrent prototype may use the scalar complex state E=complex
+numbers. This retains every parameter of that declared state family: every
+complex linear operator L on it is exactly multiplication by L(1). Reconstructing
+the initial state, all transitions and all class readouts as scalar parameters
+therefore changes no operator or output. It does not claim equivalence with a
+higher-dimensional recurrent family.
+
+Changing t[o] for an object absent from a raw prefix changes no executed product,
+complex output or real logit. If that object is absent from every indexed record
+in a minibatch, every corresponding loss is unchanged. A native proposal search
+may skip those exactly unobservable changes while storing every original object's
+parameter; future batches may observe it. No small-value threshold or semantic
+role selection is allowed. Output classes and all original records remain complete.
+
+Scalar multiplication commutes. Every scalar recurrence therefore gives the same
+scores to any two permutations of the input list. The identity survives every
+finite convex mixture, hence the entire scalar function domain. In particular,
+the two Boolean-object prefixes[false,true] and[true,false] cannot both have a
+strictly correct first-object prediction. The scalar prototype is consequently
+not a general order-sensitive MQAR model, even though CM95 gives an arbitrary-
+length parity witness. Higher-dimensional learned operators are a separate step.
+
+Formalization: `LearnedRecurrent/Scalar/Structure`. Test scalar learning first
+on unchanged original Boolean and parity records, including their original
+answer/end tokens and all length/position probes. Do not feed the witness's
+phases or label rules to the learner. Its candidate search uses complete CE
+signals and actual learned transitions, with finite loss evaluations at feasible
+mixture points; approximate discovery still has no global convergence guarantee.
