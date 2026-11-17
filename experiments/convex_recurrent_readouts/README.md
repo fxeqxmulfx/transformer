@@ -70,3 +70,38 @@ All four native controls pass, covering both training modes, imaginary order
 information, complete class/coordinate updates, unchanged learned content,
 actual feasible signed queries and refusal to score an incomplete or modified
 four-endpoint cohort. Clippy, formatting and shell checks pass as well.
+
+The first cohort completes at producer `6cc8d452`, freeze
+`recurrent-readouts-v1`, source fingerprint
+`0b2a966f9f9caea8716d2bf475be283b1d5f3789299a5cbd8f220278b273f7ac`, binary SHA256
+`f2b623685e0bed60cb5c96d41d7a6834d4be7e5fe336db0d78cbb2cf757d2174`.
+All twelve train/score/replay commands exit0 and all four complete raw-logit and
+metric replays match. Evidence is in
+`/run/media/misha/storage/transformer-runs/recurrent-readouts/original-v1`.
+
+| Source / mode | Train correct /2048 | Novel validation correct /512 | Test correct /512 | Train CE | Novel CE |
+|---|---:|---:|---:|---:|---:|
+| Cautious / Mini |1455 (71.045%)|70 (13.672%)|68 (13.281%)|2.06941|3.17215|
+| Cautious / forward |1459 (71.240%)|54 (10.547%)|65 (12.695%)|2.05897|3.19051|
+| Refined / Mini |1437 (70.166%)|63 (12.305%)|48 (9.375%)|2.09426|3.22125|
+| Refined / forward |1393 (68.018%)|66 (12.891%)|75 (14.648%)|2.10767|3.20411|
+
+Both original success and raw/exact99 flags remain false for every cell.
+Raw and exact accuracies coincide because each example has one answer. Training
+fit improves substantially from the retained sources' 8.5–9.6%, and novel
+accuracy improves from their 2.0–4.7%. This demonstrates better fitting with the
+same learned state functions; it does not show that those functions identify
+the right unseen answers. There is still a large train/held-out gap. Only one
+training seed and the original data seed are measured here.
+
+Every complete content hash is unchanged. Each run retains129 components and
+processes16384 original records over8 additional epochs; all four batch traces
+match. All512 accepted interpolation coefficients are1, and all actual-logit
+interpolation discrepancies are0. Maximum operator-budget excess is2.22e-16.
+Each Mini run uses1163264 CE evaluations; each forward run4440064, including
+3276800 signed class-bias queries. All runs include1114112 line-search and49152
+centre/validation/accepted-model calls. Concurrent training times are16.62/18.85s
+for cautious and16.27/19.10s for refined, Mini/forward respectively. These are
+additional refit costs, not the cost of learning the source content or matched
+transformer budgets. The next question is whether further fitting saturates or
+whether revisiting shared content is needed;99% remains unresolved.

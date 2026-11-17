@@ -8881,3 +8881,13 @@ Use no supplied features or answer rule. Seal all four endpoints before any new
 held-out score, preserve every failure, independently replay all raw logits,
 and retain110GB aggregate RAM and both-disk guards. Training fit alone is not
 an unseen-answer result.
+
+Task382's frozen CM100 refits at6cc8d452 complete all twelve commands and four
+raw-logit replays. With all learned content hashes unchanged, train accuracy
+rises to68.018–71.240% and novel validation to10.547–13.672%; every original
+success/raw99 flag still fails. Each run adds512 original minibatches/eight
+epochs and retains all129 components/classes. All accepted readout steps are1;
+actual complete logits match interpolation exactly. This supports revisiting
+learned readouts as a useful fitting repair, while the train/held-out gap and
+unseen-answer problem remain. Preserve every old failed result and separate
+additional refit compute from source-content training and transformer budgets.
