@@ -43,3 +43,34 @@ cargo run --release --locked --offline --manifest-path "$manifest" --features pr
   --bin reconcile-prefix -- "$PWD" /run/media/misha/storage \
   "$base/composed-retrieval/output-offsets51-v1" "$base/composed-retrieval/<fresh-output>"
 ```
+
+## Held-out results
+
+All seven additional cases missed both the original all-seed criterion
+and the 99% all-split criterion. Two-hop lookup again passed both.
+Multi-query recall met its original target. Both training modes had
+the same exact-sequence counts on every split at every seed.
+
+| Additional case | Exact on novel validation, seeds 0 / 1 / 2 | Exact on length-64 test, seeds 0 / 1 / 2 |
+| --- | --- | --- |
+| Alternating blocks | 18 / 11 / 9 of 28 | 4 / 5 / 13 of 64 |
+| One-type brackets | 14 / 12 / 8 of 32 | 7 / 7 / 10 of 64 |
+| Two-type brackets | 9 / 9 / 6 of 32 | 10 / 11 / 8 of 64 |
+| Three-type brackets | 4 / 4 / 4 of 32 | 12 / 12 / 4 of 64 |
+| Counting formula, depth 1 | 30 / 30 / 31 of 32 | 18 / 38 / 36 of 64 |
+| Counting formula, depth 2 | 22 / 22 / 22 of 32 | 41 / 42 / 40 of 64 |
+| Counting formula, depth 3 | 23 / 23 / 22 of 31 | 10 / 26 / 44 of 64 |
+
+Depth 1 fit all 1,400 supervised training positions and all 128 training
+sequences at every seed. At length 64 it scored 3,774, 3,877 and 3,903
+correct objects out of 4,032. The other six new cases also made training
+errors at every seed. The native data and metric checks preserve the
+smaller novel subsets in the alternating-block and depth-3 cases.
+
+The two independent builds of `3601fa91` sealed 108 fits and replayed
+2,376 full raw score files. Both shared cases matched their earlier
+models, complete training receipts and 528 original raw files, including
+the initial outputs and all probes. Counting the overlapping cases once
+gives **58 measured, nine original passes and eight strict passes** for
+this model. Six original arithmetic sources are unavailable and 101
+catalog cases are outside the two cohorts.

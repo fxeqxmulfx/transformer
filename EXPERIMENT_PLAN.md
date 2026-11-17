@@ -9535,3 +9535,12 @@ and binding remained exact. On the frozen previous scores the three
 modulus-97 operations with errors concentrated at zero all required
 incompatible single-class displacements. Producer `e60c0c43` sealed 612
 fits before scoring and replayed 2,928 raw files across two native builds.
+
+The synthetic-prefix extension verified 58 distinct original cases under
+CM116. Nine met their original criterion and eight met the all-split 99%
+criterion. None of the seven additional cases crossed its all-seed
+threshold. The depth-1 counting formula fit every training position but
+only 18, 38 and 36 of 64 exact sequences on the longest test. The two
+retrieval overlaps reproduced all 528 original raw files, model weights
+and optimizer receipts across both builds. The source-unavailable count
+remains six, with 101 cases outside these two cohorts.
