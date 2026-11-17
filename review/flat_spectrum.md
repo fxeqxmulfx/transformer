@@ -22240,3 +22240,77 @@ with opposite targets have A=0 and G=0; this is a genuine conditional CE
 minimum despite the conflicting labels. Retaining just the true-target record
 instead gives G=16 and a strict negative first-order direction. These examples
 prove the premises are realizable without assuming separability or an optimum.
+
+## CM104. Joint capacity allocation on complete learned readouts
+
+CM103 fixes the mixture weights as well as the learned recurrent content. Its
+measured gaps therefore cannot obstruct improvements obtained by changing those
+weights. Keep all learned initial states, transitions and frequencies, but
+absorb each nonnegative native mixture weight into its complete class rows.
+For finite components J and a nonempty finite original vocabulary O, write
+
+    s_j(U) = max_c (|U_jc1| + |U_jc2|),
+    K(U) = sum_j s_j(U),                 K(U) <= B.
+
+Every row, class and component remains a variable, even at zero weight. The
+score is sum_j Re(row(U_jc,h_j(x))), where h_j is the actual ordered state.
+The shared capacity set is convex in all real and imaginary weighted-readout
+coordinates. Ordinary full-class CE and every nonempty indexed mean are convex
+on it. This is a conditional coordinate formulation, not joint convexity of
+independent transition, readout and frequency factors.
+
+For B>0, reconstruct an actual CM98 model explicitly: give component j native
+weight s_j(U), replace its readouts by U_jc/s_j(U), and put unused capacity
+B-K(U) on the zero component. A zero block has only zero rows; normalization
+returns zero and reconstructs it exactly. The normalized weights sum to one
+after division by B. All original content and full complex coordinates remain,
+and reconstructed scores agree on every immutable-object sequence. Conversely,
+any complete unit readouts with nonnegative weights of total native mass at
+most B produce a table in this shared capacity domain with exactly their scores.
+
+On indexed training records, form the actual full-class residuals r_ic=p_ic-
+1[c=target_i] and coefficients A_jc=(1/N)sum_i r_ic h_ji. Native weights and B
+are already in U, so they must not multiply A again. The complete first-order
+contraction is derived by CM103 specialized to these weighted rows.
+
+Let d_j(A)=sum_c max(|A_jc1|,|A_jc2|) and D(A)=max_j d_j(A), assuming J is
+nonempty for this maximum. For every feasible U, its linear contraction is
+at least -B D(A). An explicit minimizer selects a component attaining D,
+assigns B times CM103's phase-normalized best row to each of its original
+classes, and assigns zero rows to the other components. Every coordinate is
+still present; this is one feasible value, not deletion or a reduced family.
+Finite maximum attainment proves existence of the selected component rather
+than assuming an optimization oracle. At zero coefficients any tied component
+works, and all minimizing rows are zero.
+
+The resulting actual mean-CE gap is
+
+    G_joint(U) = sum_jc Re(row(U_jc,A_jc)) + B D(A).
+
+It is nonnegative on the shared capacity domain and bounds every feasible
+conditional CE improvement, including arbitrary capacity reallocation among
+the retained learned components. A zero gap certifies this enlarged conditional
+minimum; positive gap gives a feasible target with negative first-order
+contraction. Neither statement supplies unseen labels, a raw-accuracy bound,
+global factor discovery, finite-step descent or a floating-point certificate.
+Forward-only updates still require actual finite feasible CE queries.
+
+An explicit counterexample uses two retained bounded components: an identity
+transition with constant state (1,0), and CM98's ordered component with states
+(0,-i) on [true,false] and (0,1) on [false,true]. The two targets are respectively
+true and false. Give the constant-state component both class rows (0,i), the
+ordered component its original rows (0,i) and (0,1), and native weights 16 and 0.
+Every actual logit is zero. Balanced residuals cancel on the constant state;
+the zero weight suppresses every old CM103 coefficient of the ordered component.
+Consequently the old fixed-weight gap is exactly zero with nonzero complex rows.
+
+Move the same capacity sixteen to the ordered component without changing either
+state function. Its correct-class logit becomes sixteen and its other-class
+logit zero on both indexed records. The actual target probability rises from
+1/2 to exp(16)/(exp(16)+1), so ordinary CE strictly decreases on both records
+and their full mean. The joint gap at the initial table is therefore strictly
+positive by its proved lower bound. This is a counterexample to interpreting
+fixed-weight optimality as joint-capacity optimality, not a contradiction of
+CM103 or a benchmark result. For a separate zero-joint-gap witness, retain two
+copies of [true,false] with opposite targets: both complete coefficients cancel
+and the joint gap is zero, without deleting the conflicting indexed records.
