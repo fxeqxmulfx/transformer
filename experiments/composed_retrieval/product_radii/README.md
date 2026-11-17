@@ -58,3 +58,38 @@ for arm in original repeat; do
 done
 cmp /tmp/product-radii-original.json /tmp/product-radii-repeat.json
 ```
+
+## Joint training on 64 original cases
+
+Each independent build fits all 64 distinct cases from the arithmetic,
+aligned-prefix and Rewrite studies. The 48 available arithmetic cases,
+query-specific binding, nine aligned synthetic cases and six greedy Rewrite
+tasks use one architecture. Six further arithmetic tasks have unavailable
+original inputs. The native inventory checks the original plan and all
+source fingerprints before training. The upper bound on raw logit storage
+for both builds is 18,528,751,296 bytes. [Frozen protocol](protocol.json)
+
+Every radius starts at one. Each update trains it together with the original
+phases, routing, gates and class offsets by ordinary full-vocabulary CE.
+The radius uses projected Adam with the existing gate learning rate of
+0.01. In forward-only minibatches the two loss probes use feasible
+displacements and the actual distance between them. A repeated operand
+affects both the retrieved value and the query. At either boundary the
+projection still admits an inward loss probe.
+
+Both complete 384-fit builds seal before any held-out score is read. The
+matched comparison checks every initial raw array, the training minibatch
+order, the extra loss queries, each original criterion and the 99% raw
+and exact targets. It also resets all fitted radii to one on the original
+training rows to measure their direct effect with the other weights fixed.
+
+```sh
+base=/run/media/misha/storage/transformer-runs
+out="$base/composed-retrieval/learned-radii64-v1"
+producer=$(git log --diff-filter=A --format=%H -- experiments/composed_retrieval/product_radii/protocol.json)
+bash experiments/composed_retrieval/run.sh "$PWD" /run/media/misha/storage \
+  "$producer" "$out" radii-cohort "$base/arithmetic-data/inputs-v1"
+"$out/original/target/release/compare-learned-radii" "$PWD" /run/media/misha/storage \
+  "$base/composed-retrieval/output-offsets51-v1" "$base/composed-retrieval/output-prefix9-v1" \
+  "$base/composed-retrieval/output-rewrite7-v1" "$out"
+```

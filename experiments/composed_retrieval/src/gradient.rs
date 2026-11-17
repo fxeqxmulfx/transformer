@@ -42,10 +42,10 @@ fn route_backward(
     pass: &Pass,
     x: &[usize],
     q: usize,
-    read_adjoints: [&Wave; 2],
+    read_adjoints: (&[f64], &Wave),
     g: &mut [f64],
 ) {
-    let [d1, d2] = read_adjoints;
+    let (first_scores, d2) = read_adjoints;
     let routing = Routing {
         model: m,
         tables: tab,
@@ -61,7 +61,7 @@ fn route_backward(
         .collect();
     let mut dm1 = Vec::with_capacity(n);
     for (k, (&id, a)) in x.iter().zip(pass.attention.chunks_exact(n)).enumerate() {
-        dm1.push(d1.dot(&tab.values[id]) + weighted_sum(a, &dkeys));
+        dm1.push(first_scores[k] + weighted_sum(a, &dkeys));
         routing.key_backward(id, a, &dkeys, pass.one[k], g);
     }
     let dquery: Vec<_> = links
@@ -107,22 +107,36 @@ pub fn accumulate(m: &Model, tab: &Tables, prefix: &[usize], label: usize, g: &m
     }
     let h = m.weights[l.depth];
     let u = m.weights[l.product];
-    let rotated = pass.s1.times(turn, false);
+    let rotated = pass.product_read.times(turn, false);
+    let query_radius = tab.radius(m, q);
     let base = Wave::mix(&pass.s1, &pass.s2, h);
-    g[l.product] += dh.dot(&rotated) - dh.dot(&base);
+    g[l.product] += query_radius * dh.dot(&rotated) - dh.dot(&base);
     g[l.depth] += (1. - u) * (dh.dot(&pass.s2) - dh.dot(&pass.s1));
-    rotated.angle_gradient(&dh, &mut g[at..at + WIDTH], u);
-    let (mut d1, mut d2) = (Wave::default(), Wave::default());
-    d1.add(&dh, (1. - u) * (1. - h));
-    d1.add(&dh.times(turn, true), u);
+    rotated.angle_gradient(&dh, &mut g[at..at + WIDTH], u * query_radius);
+    if m.learned_product_radii {
+        g[l.radii.start + q] += u * dh.dot(&rotated);
+    }
+    let (mut plain, mut d2) = (Wave::default(), Wave::default());
+    plain.add(&dh, (1. - u) * (1. - h));
+    let product_adjoint = dh.times(turn, true);
     d2.add(&dh, (1. - u) * h);
+    let mut first_scores = Vec::with_capacity(x.len());
     for (k, &id) in x.iter().enumerate() {
+        let mut d1 = plain;
+        d1.add(&product_adjoint, u * query_radius * tab.radius(m, id));
+        if m.learned_product_radii {
+            g[l.radii.start + id] +=
+                pass.one[k] * u * query_radius * product_adjoint.dot(&tab.values[id]);
+        }
+        if x.len() > 1 {
+            first_scores.push(d1.dot(&tab.values[id]));
+        }
         let start = l.value.start + id * WIDTH;
         let row = &mut g[start..start + WIDTH];
         tab.values[id].angle_gradient(&d1, row, pass.one[k]);
         tab.values[id].angle_gradient(&d2, row, pass.two[k]);
     }
     if x.len() > 1 {
-        route_backward(m, tab, &pass, x, q, [&d1, &d2], g);
+        route_backward(m, tab, &pass, x, q, (&first_scores, &d2), g);
     }
 }

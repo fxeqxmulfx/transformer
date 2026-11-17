@@ -2,7 +2,7 @@
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
 if (( $# < 4 || $# > 6 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets|prefix-cohort|rewrite-cohort} SOURCE_INPUTS]' >&2
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense|logodds|{arithmetic|logodds-arithmetic|output-offsets|prefix-cohort|rewrite-cohort|radii-cohort} SOURCE_INPUTS]' >&2
   exit 2
 fi
 if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
@@ -22,7 +22,7 @@ case "$variant" in
   sparse) ;;
   dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
   logodds) features=(--features logodds-depth); protocols+=(dense/protocol.json logodds/protocol.json) ;;
-  arithmetic|logodds-arithmetic|output-offsets|prefix-cohort|rewrite-cohort)
+  arithmetic|logodds-arithmetic|output-offsets|prefix-cohort|rewrite-cohort|radii-cohort)
     (( $# == 6 ))
     source_inputs=$(realpath "$6")
     features=(--features arithmetic-cohort)
@@ -31,7 +31,7 @@ case "$variant" in
       features=(--features arithmetic-cohort,logodds-depth)
       protocols+=(logodds/protocol.json logodds/arithmetic/protocol.json)
     fi
-    if [[ "$variant" == output-offsets || "$variant" == prefix-cohort || "$variant" == rewrite-cohort ]]; then
+    if [[ "$variant" == output-offsets || "$variant" == prefix-cohort || "$variant" == rewrite-cohort || "$variant" == radii-cohort ]]; then
       features=(--features output-offsets)
       protocols+=(output_offsets/protocol.json)
     fi
@@ -42,6 +42,10 @@ case "$variant" in
     if [[ "$variant" == rewrite-cohort ]]; then
       features=(--features rewrite-cohort)
       protocols+=(rewrite/protocol.json)
+    fi
+    if [[ "$variant" == radii-cohort ]]; then
+      features=(--features radii-cohort)
+      protocols+=(prefix/protocol.json rewrite/protocol.json product_radii/protocol.json)
     fi
     ;;
   *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
@@ -112,6 +116,7 @@ if [[ -n "${source_inputs:-}" ]]; then
   if [[ "$variant" == output-offsets ]]; then supported=51; fi
   if [[ "$variant" == prefix-cohort ]]; then supported=9; unavailable=0; fi
   if [[ "$variant" == rewrite-cohort ]]; then supported=7; unavailable=0; fi
+  if [[ "$variant" == radii-cohort ]]; then supported=64; fi
   jq -e --argjson n "$supported" --argjson u "$unavailable" '(.cases|length)==($n+$u) and .fits==($n*12)' "$inventory" >/dev/null
   mapfile -t cases < <(jq -r '.cases|to_entries[]|select(.value.dimensions != null)|.key' "$inventory")
   (( ${#cases[@]} == supported ))

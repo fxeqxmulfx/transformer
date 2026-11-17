@@ -94,7 +94,7 @@ impl Adam {
                 p.angle_lr
             } else if i == l.recency {
                 p.recency_lr
-            } else if i == l.depth || i == l.product {
+            } else if i == l.depth || i == l.product || l.radii.contains(&i) {
                 p.gate_lr
             } else {
                 p.routing_lr
@@ -161,7 +161,7 @@ impl Choices {
         ids
     }
 }
-fn metrics(model: &Model, input: &[Vec<Sample>]) -> Result<Value> {
+pub fn metrics(model: &Model, input: &[Vec<Sample>]) -> Result<Value> {
     let all: Vec<_> = input.iter().flatten().collect();
     let tab = Tables::new(model, &lengths(&all))?;
     let (mut correct, mut loss) = (0, 0.);
@@ -206,8 +206,10 @@ pub fn fit(
         return Err("invalid training cell".into());
     }
     let l = m.validate()?;
-    if m.output_offset_bound != p.output_offset_bound {
-        return Err("model output-offset domain differs from the training protocol".into());
+    if m.output_offset_bound != p.output_offset_bound
+        || m.learned_product_radii != p.learned_product_radii
+    {
+        return Err("model coordinate domains differ from the training protocol".into());
     }
     if p.initial_log_odds
         .is_some_and(|z| m.weights[l.depth] != crate::model::sigmoid(z))

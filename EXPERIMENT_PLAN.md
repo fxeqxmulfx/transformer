@@ -9559,3 +9559,10 @@ input radius to zero made multiplication exact on training pairs at two
 seeds and repaired 45 of 55 errors at the third. Most fitted models still
 had errors under all five tested radii. Compare a fresh fully trainable
 model starting with all radii at one against the frozen CM116 cohort.
+
+Task 420 freezes that joint fit on all 64 available cases from the three
+CM116 cohorts. The initial object radii reproduce every old logit. Both
+native optimizers update all old coordinates and each new radius on the
+same original minibatches. Seal both independent 384-endpoint builds
+before scoring. Preserve original failure, control and source-unavailable
+rows when comparing the two architectures.

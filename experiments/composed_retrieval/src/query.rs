@@ -22,6 +22,7 @@ enum Change {
     Depth,
     Product,
     OutputOffset(usize),
+    Radius(usize),
 }
 impl Change {
     fn at(l: &Layout, i: usize) -> Self {
@@ -45,6 +46,8 @@ impl Change {
             Self::Depth
         } else if l.output_offsets.contains(&i) {
             Self::OutputOffset(i - l.output_offsets.start)
+        } else if l.radii.contains(&i) {
+            Self::Radius(i - l.radii.start)
         } else {
             Self::Product
         }
@@ -109,16 +112,32 @@ impl<'a> Original<'a> {
             Change::Value(c) if !memory.contains(&c) => return one_logit_loss(c),
             Change::Value(_) => {
                 let (s1, s2) = t.reads(memory, &self.pass.one, &self.pass.two);
-                t.hidden(m, q.unwrap(), &s1, &s2)
+                let product = t.product_read(m, memory, &self.pass.one, &s1);
+                t.hidden(m, q.unwrap(), &s1, &s2, &product)
+            }
+            Change::Radius(o) if n == 0 || !prefix.contains(&o) => return self.loss,
+            Change::Radius(o) if memory.contains(&o) => {
+                let product = t.product_read(m, memory, &self.pass.one, &self.pass.s1);
+                t.hidden(m, q.unwrap(), &self.pass.s1, &self.pass.s2, &product)
             }
             Change::Start if n > 0 => return self.loss,
             Change::Phase(o) if q != Some(o) => return self.loss,
-            Change::Phase(_) if n > 0 => t.hidden(m, q.unwrap(), &self.pass.s1, &self.pass.s2),
+            Change::Phase(_) if n > 0 => t.hidden(
+                m,
+                q.unwrap(),
+                &self.pass.s1,
+                &self.pass.s2,
+                &self.pass.product_read,
+            ),
             Change::Product if n == 0 => return self.loss,
             Change::Depth if n <= 1 => return self.loss,
-            Change::Depth | Change::Product => {
-                t.hidden(m, q.unwrap(), &self.pass.s1, &self.pass.s2)
-            }
+            Change::Depth | Change::Product | Change::Radius(_) => t.hidden(
+                m,
+                q.unwrap(),
+                &self.pass.s1,
+                &self.pass.s2,
+                &self.pass.product_read,
+            ),
             Change::Key(o) if n <= 1 || !prefix.contains(&o) => return self.loss,
             Change::Bias(o) if n <= 1 || (o != m.vocabulary && !memory[..n - 1].contains(&o)) => {
                 return self.loss;

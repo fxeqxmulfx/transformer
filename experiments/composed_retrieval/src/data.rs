@@ -33,14 +33,18 @@ pub const FAMILY_PROTOCOL: &str = if cfg!(feature = "output-offsets") {
     TRAINING_PROTOCOL
 };
 pub const PREFIX_PROTOCOL: &str = include_str!("../prefix/protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "rewrite-cohort") {
-    include_str!("../rewrite/protocol.json")
+pub const REWRITE_PROTOCOL: &str = include_str!("../rewrite/protocol.json");
+pub const RADII_PROTOCOL: &str = include_str!("../product_radii/protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "radii-cohort") {
+    RADII_PROTOCOL
+} else if cfg!(feature = "rewrite-cohort") {
+    REWRITE_PROTOCOL
 } else if cfg!(feature = "prefix-cohort") {
     PREFIX_PROTOCOL
 } else {
     FAMILY_PROTOCOL
 };
-#[derive(Clone, Deserialize)]
+#[derive(Clone, Deserialize, PartialEq)]
 pub struct CaseSpec {
     pub vocabulary: usize,
     pub context: usize,
@@ -65,6 +69,8 @@ pub struct Protocol {
     pub width: usize,
     pub capacity: f64,
     pub output_offset_bound: Option<f64>,
+    #[serde(default)]
+    pub learned_product_radii: bool,
     pub initial_key_scale: f64,
     pub initial_depth: f64,
     pub initial_log_odds: Option<f64>,
@@ -108,8 +114,10 @@ pub fn protocol() -> Result<Protocol> {
     }
     #[cfg(feature = "arithmetic-cohort")]
     crate::arithmetic::configure(&mut p)?;
-    #[cfg(feature = "prefix-cohort")]
+    #[cfg(all(feature = "prefix-cohort", not(feature = "radii-cohort")))]
     crate::prefix::configure(&mut p)?;
+    #[cfg(feature = "radii-cohort")]
+    crate::radii_cohort::configure(&mut p)?;
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256
@@ -121,7 +129,7 @@ pub fn protocol() -> Result<Protocol> {
 pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
     let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
     #[cfg(feature = "prefix-cohort")]
-    if p.name == crate::prefix::NAME {
+    if p.name == crate::prefix::NAME || (p.learned_product_radii && s.metadata_sha256.is_some()) {
         return crate::prefix::original(id, s);
     }
     #[cfg(feature = "arithmetic-cohort")]
@@ -172,6 +180,10 @@ pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
 
 #[cfg(feature = "arithmetic-cohort")]
 pub fn inventory(p: &Protocol, inputs: &std::path::Path) -> Result<Value> {
+    #[cfg(feature = "radii-cohort")]
+    if p.learned_product_radii {
+        return crate::radii_cohort::preflight(p, inputs);
+    }
     #[cfg(feature = "prefix-cohort")]
     if p.name == crate::prefix::NAME {
         return crate::prefix::preflight(p, inputs);

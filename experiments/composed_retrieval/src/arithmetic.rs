@@ -142,6 +142,7 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
     inventory::check_inputs(inputs).map_err(|e| e.to_string())?;
     let mut cases = BTreeMap::new();
     let mut one_pass = 0_u64;
+    let mut rollout_budget = 0_u64;
     for row in source_cases()? {
         let id = name(&row)?;
         let data = dataset::build(&row).map_err(|e| e.to_string())?;
@@ -171,13 +172,21 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
                 .filter(|&&y| y >= 0)
                 .count();
             one_pass += 8 * spec.vocabulary as u64 * targets as u64;
+            rollout_budget +=
+                8 * spec.vocabulary as u64 * rows.iter().map(|e| e.limit as u64).sum::<u64>();
             split_counts.insert(name, json!({"examples":rows.len(),"targets":targets}));
         }
         cases.insert(id.to_owned(), json!({"dimensions":{"vocabulary":spec.vocabulary,"splits":split_counts},"split_fingerprints":pins}));
     }
     let fits = p.cases.len() * p.seeds.len() * p.modes.len() * 2;
-    let raw_bytes = one_pass * 2 * 2 * p.seeds.len() as u64 * p.modes.len() as u64;
+    let raw_bytes =
+        (one_pass + rollout_budget) * 2 * 2 * p.seeds.len() as u64 * p.modes.len() as u64;
+    let size_field = if rollout_budget == 0 {
+        "raw_bytes"
+    } else {
+        "raw_bytes_upper_bound"
+    };
     Ok(
-        json!({"protocol_sha256":hash(PROTOCOL.as_bytes()),"cases":cases,"fits":fits,"raw_bytes":raw_bytes}),
+        json!({"protocol_sha256":hash(PROTOCOL.as_bytes()),"cases":cases,"fits":fits,(size_field):raw_bytes}),
     )
 }

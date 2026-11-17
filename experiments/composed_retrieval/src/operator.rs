@@ -164,11 +164,34 @@ impl Tables {
         }
         (first, second)
     }
-    pub fn hidden(&self, m: &Model, q: usize, one: &Wave, two: &Wave) -> Wave {
+    pub fn radius(&self, m: &Model, id: usize) -> f64 {
+        if m.learned_product_radii {
+            m.weights[self.layout.radii.start + id]
+        } else {
+            1.
+        }
+    }
+    pub fn scaled_values(&self, x: &[usize], one: &[f64], radii: &[f64]) -> Wave {
+        let mut read = Wave::default();
+        for (&id, &weight) in x.iter().zip(one) {
+            read.add(&self.values[id], weight * radii[id]);
+        }
+        read
+    }
+    pub fn product_read(&self, m: &Model, x: &[usize], one: &[f64], s1: &Wave) -> Wave {
+        if m.learned_product_radii {
+            self.scaled_values(x, one, &m.weights[self.layout.radii.clone()])
+        } else {
+            *s1
+        }
+    }
+    pub fn hidden(&self, m: &Model, q: usize, one: &Wave, two: &Wave, product_read: &Wave) -> Wave {
         let l = &self.layout;
         Wave::mix(
             &Wave::mix(one, two, m.weights[l.depth]),
-            &one.times(&self.phases[q], false),
+            &product_read
+                .times(&self.phases[q], false)
+                .scaled(self.radius(m, q)),
             m.weights[l.product],
         )
     }
@@ -192,7 +215,8 @@ impl Tables {
         let second_keys = left_multiply(&one, &attention[..n * n], n);
         let two = left_multiply(&second_keys, links, n);
         let (s1, s2) = self.reads(x, &one, &two);
-        let hidden = self.hidden(m, q, &s1, &s2);
+        let product_read = self.product_read(m, x, &one, &s1);
+        let hidden = self.hidden(m, q, &s1, &s2, &product_read);
         Pass {
             attention,
             one,
@@ -200,6 +224,7 @@ impl Tables {
             two,
             s1,
             s2,
+            product_read,
             hidden,
         }
     }
@@ -228,5 +253,6 @@ pub struct Pass {
     pub two: Vec<f64>,
     pub s1: Wave,
     pub s2: Wave,
+    pub product_read: Wave,
     pub hidden: Wave,
 }

@@ -23,6 +23,8 @@ pub struct Model {
     pub capacity: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub output_offset_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub learned_product_radii: bool,
     pub weights: Vec<f64>,
 }
 
@@ -39,14 +41,20 @@ pub struct Layout {
     pub depth: usize,
     pub product: usize,
     pub output_offsets: Range<usize>,
+    pub radii: Range<usize>,
     output_offset_bound: f64,
 }
 
 impl Layout {
     pub fn new(vocab: usize, context: usize) -> Result<Self> {
-        Self::with_offsets(vocab, context, None)
+        Self::with_extensions(vocab, context, None, false)
     }
-    fn with_offsets(vocab: usize, context: usize, bound: Option<f64>) -> Result<Self> {
+    fn with_extensions(
+        vocab: usize,
+        context: usize,
+        bound: Option<f64>,
+        radii: bool,
+    ) -> Result<Self> {
         if vocab == 0 || context < 2 {
             return Err("empty vocabulary or insufficient context".into());
         }
@@ -72,6 +80,7 @@ impl Layout {
         let relation = range(offsets)?;
         let scalars = range(4)?;
         let output_offsets = range(if bound.is_some() { vocab } else { 0 })?;
+        let radii = range(if radii { vocab } else { 0 })?;
         Ok(Self {
             key,
             value,
@@ -84,6 +93,7 @@ impl Layout {
             depth: scalars.start + 2,
             product: scalars.start + 3,
             output_offsets,
+            radii,
             output_offset_bound: bound.unwrap_or(0.),
         })
     }
@@ -91,7 +101,7 @@ impl Layout {
         self.relation.start + self.relation.len() / 2 + k - j
     }
     pub fn project(&self, i: usize, weight: f64) -> f64 {
-        if i == self.depth || i == self.product {
+        if i == self.depth || i == self.product || self.radii.contains(&i) {
             weight.clamp(0., 1.)
         } else if self.output_offsets.contains(&i) {
             weight.clamp(-self.output_offset_bound, self.output_offset_bound)
@@ -108,9 +118,15 @@ impl Model {
         p: &crate::data::Protocol,
         seed: u32,
     ) -> Result<Self> {
-        let l = Layout::with_offsets(vocabulary, context, p.output_offset_bound)?;
+        let l = Layout::with_extensions(
+            vocabulary,
+            context,
+            p.output_offset_bound,
+            p.learned_product_radii,
+        )?;
         let mut rng = Random::new(seed);
-        let mut weights = vec![0.; l.output_offsets.end];
+        let mut weights = vec![0.; l.radii.end];
+        weights[l.radii.clone()].fill(1.);
         for x in &mut weights[..l.start.end] {
             *x = (2. * rng.random() - 1.) * PI;
         }
@@ -122,17 +138,26 @@ impl Model {
             context,
             capacity: p.capacity,
             output_offset_bound: p.output_offset_bound,
+            learned_product_radii: p.learned_product_radii,
             weights,
         };
         model.validate()?;
         Ok(model)
     }
     pub fn validate(&self) -> Result<Layout> {
-        let l = Layout::with_offsets(self.vocabulary, self.context, self.output_offset_bound)?;
-        if self.weights.len() != l.output_offsets.end
+        let l = Layout::with_extensions(
+            self.vocabulary,
+            self.context,
+            self.output_offset_bound,
+            self.learned_product_radii,
+        )?;
+        if self.weights.len() != l.radii.end
             || !self.capacity.is_finite()
             || self.capacity < 0.
             || self.weights.iter().any(|w| !w.is_finite())
+            || self.weights[l.radii.clone()]
+                .iter()
+                .any(|v| !(0. ..=1.).contains(v))
             || self.weights[l.output_offsets.clone()]
                 .iter()
                 .any(|b| b.abs() > l.output_offset_bound)
@@ -168,6 +193,14 @@ pub struct Wave {
 }
 
 impl Wave {
+    pub fn scaled(self, scale: f64) -> Self {
+        if scale == 1. {
+            return self;
+        }
+        let mut result = Self::default();
+        result.add(&self, scale);
+        result
+    }
     pub fn angles(xs: &[f64]) -> Self {
         let mut v = Self::default();
         for (d, &theta) in xs.iter().enumerate() {

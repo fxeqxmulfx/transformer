@@ -1,0 +1,15 @@
+{
+  "name": "composed-retrieval-all64-learned-product-radii-v1",
+  "parent_training_sha256": "0cba707579431ae94d7464d123bfe3523a66b9495dbac265b8f1148922be9f08",
+  "prefix_source_sha256": "d8f584469b4c4982b4090073bba77b98aeefb248d5c2623f08ff613c0deca4ce",
+  "rewrite_source_sha256": "4df85018f160925ee45cefad145e04232f7e2322668cd8c0d4a808c347d4f85f",
+  "initial_radius": 1,
+  "minimum_radius": 0,
+  "maximum_radius": 1,
+  "radius_learning_rate": 0.01,
+  "measured_cases": 64,
+  "unavailable_arithmetic_sources": 6,
+  "theory": "CM117, product radii on the first normalized read and query rotation.",
+  "training": "One unit-initialized radius per original object shared on the value and query sides of the rotated product. Optimize every old coordinate and all radii from ordinary masked full-vocabulary CE for 1024 updates. Use the existing projected gate learning rate for each radius. Each case starts fresh at each seed and mode.",
+  "freeze": "Two independent builds each train all 384 endpoints before either evaluates a held-out record. Compare raw initialization and matched minibatch receipts to CM116 on exactly the same 64 original cases. Preserve all original selection and greedy rollout rules."
+}

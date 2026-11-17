@@ -23,6 +23,7 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
     let l = m.validate().unwrap();
     let w = &m.weights;
     let offset = |c: usize| w[l.output_offsets.clone()].get(c).copied().unwrap_or(0.);
+    let radius = |c: usize| w[l.radii.clone()].get(c).copied().unwrap_or(1.);
     let decode = |v: usize, turn: Option<usize>, c: usize| {
         (0..WIDTH)
             .map(|d| {
@@ -73,7 +74,10 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
             let mut rotated = 0.;
             for (k, &id) in x.iter().enumerate() {
                 one += first[k] * decode(l.value.start + WIDTH * id, None, c);
-                rotated += first[k] * decode(l.value.start + WIDTH * id, Some(q), c);
+                rotated += first[k]
+                    * radius(id)
+                    * radius(q)
+                    * decode(l.value.start + WIDTH * id, Some(q), c);
                 for (j, &v) in x.iter().enumerate() {
                     two += first[k] * second[k][j] * decode(l.value.start + WIDTH * v, None, c);
                 }
@@ -95,6 +99,9 @@ fn fixture() -> Result<Model> {
     for (c, b) in m.weights[l.output_offsets.clone()].iter_mut().enumerate() {
         *b = (c as f64 + 1.).sin() * 3.;
     }
+    for (i, r) in m.weights[l.radii.clone()].iter_mut().enumerate() {
+        *r = 0.2 + i as f64 * 0.13;
+    }
     Ok(m)
 }
 #[test]
@@ -115,6 +122,9 @@ fn operator_matches_literal_paths_boundaries_and_renamings() -> Result<()> {
         if !l.output_offsets.is_empty() {
             permuted.weights[l.output_offsets.start + perm(o)] =
                 m.weights[l.output_offsets.start + o];
+        }
+        if !l.radii.is_empty() {
+            permuted.weights[l.radii.start + perm(o)] = m.weights[l.radii.start + o];
         }
     }
     let other = Tables::new(&permuted, &[1, 2, 3, 4, 5, 6])?;
@@ -154,6 +164,10 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
             target: 0,
         },
         Sample {
+            prefix: vec![2, 2],
+            target: 1,
+        },
+        Sample {
             prefix: vec![0, 1, 1, 2, 0],
             target: 2,
         },
@@ -181,6 +195,10 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
             if let Some(bound) = m.output_offset_bound {
                 m.weights[l.output_offsets.start] = -bound;
                 m.weights[l.output_offsets.start + 1] = bound;
+            }
+            if !l.radii.is_empty() {
+                m.weights[l.radii.start] = 0.;
+                m.weights[l.radii.start + 1] = 1.;
             }
         }
         let original = m.clone();
@@ -424,6 +442,7 @@ fn arithmetic_cohort_uses_the_original_log_odds_updates() -> Result<()> {
 #[test]
 fn old_models_and_zero_offsets_give_the_same_logits() -> Result<()> {
     let mut p = data::protocol()?;
+    p.learned_product_radii = false;
     let m = Model::new(5, 6, &p, 0)?;
     let l = m.validate()?;
     assert_eq!(m.output_offset_bound, Some(16.));
@@ -445,6 +464,30 @@ fn old_models_and_zero_offsets_give_the_same_logits() -> Result<()> {
     bad.weights[l.output_offsets.start] = 17.;
     assert!(bad.validate().is_err());
     bad.weights.pop();
+    assert!(bad.validate().is_err());
+    Ok(())
+}
+
+#[cfg(feature = "radii-cohort")]
+#[test]
+fn old_coordinates_and_unit_radius_initial_scores_agree_exactly() -> Result<()> {
+    let mut p = data::protocol()?;
+    let model = Model::new(5, 7, &p, 2)?;
+    let l = model.validate()?;
+    assert_eq!(&model.weights[l.radii.clone()], &[1.; 5]);
+    p.learned_product_radii = false;
+    let old: Model = serde_json::from_slice(&serde_json::to_vec(&Model::new(5, 7, &p, 2)?)?)?;
+    assert_eq!(&model.weights[..l.radii.start], &old.weights);
+    let current = Tables::new(&model, &[1, 2, 3])?;
+    let reference = Tables::new(&old, &[1, 2, 3])?;
+    for prefix in [&[][..], &[2], &[4, 4], &[0, 2, 1], &[0, 3, 2, 3]] {
+        assert_eq!(
+            current.logits(&model, &current.pass(&model, prefix).hidden),
+            reference.logits(&old, &reference.pass(&old, prefix).hidden)
+        );
+    }
+    let mut bad = model;
+    bad.weights[l.radii.start] = 1.1;
     assert!(bad.validate().is_err());
     Ok(())
 }

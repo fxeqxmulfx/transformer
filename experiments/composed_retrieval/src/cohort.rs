@@ -106,9 +106,10 @@ impl<'a> Run<'a> {
         let mut pins = BTreeMap::new();
         let mut shared = BTreeMap::new();
         for (id, s) in &p.cases {
-            let original = match &s.source_fingerprints {
-                Some(pins) => pins.clone(),
-                None => data::original(p, id)?.1,
+            let original_sha256 = match (&s.metadata_sha256, &s.source_fingerprints) {
+                (Some(digest), _) => digest.clone(),
+                (None, Some(pins)) => hash(&serde_json::to_vec(pins)?),
+                (None, None) => hash(&serde_json::to_vec(&data::original(p, id)?.1)?),
             };
             for mode in &p.modes {
                 for &seed in &p.seeds {
@@ -152,12 +153,13 @@ impl<'a> Run<'a> {
                         || r["case"] != *id
                         || r["mode"] != *mode
                         || r["seed"] != seed
-                        || r["data_fingerprints"] != original
+                        || hash(&serde_json::to_vec(&r["data_fingerprints"])?) != original_sha256
                         || r["endpoint_sha256"] != hash(&bytes)
                         || r["training"]["updates"] != p.updates
                         || r["training"]["min_visits"].as_u64().unwrap_or(0) == 0
                         || model.capacity != p.capacity
                         || model.output_offset_bound != p.output_offset_bound
+                        || model.learned_product_radii != p.learned_product_radii
                         || model.context != s.context
                         || model.vocabulary != s.vocabulary
                     {

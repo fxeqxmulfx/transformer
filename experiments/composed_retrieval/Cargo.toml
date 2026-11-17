@@ -13,6 +13,7 @@ arithmetic-cohort = ["dense-forward", "dep:arithmetic-data"]
 output-offsets = ["arithmetic-cohort", "logodds-depth"]
 prefix-cohort = ["output-offsets", "dep:synthetic-data"]
 rewrite-cohort = ["prefix-cohort"]
+radii-cohort = ["rewrite-cohort"]
 
 [[bin]]
 name = "reconcile-arithmetic"
@@ -53,6 +54,11 @@ required-features = ["prefix-cohort"]
 name = "reconcile-rewrite"
 path = "src/bin/reconcile-rewrite.rs"
 required-features = ["rewrite-cohort"]
+
+[[bin]]
+name = "compare-learned-radii"
+path = "src/bin/compare-learned-radii.rs"
+required-features = ["radii-cohort"]
 
 [dependencies]
 synthetic-data = { package = "convex-stress-remaining-synthetic-data", path = "../convex_stress_remaining_synthetic_data", optional = true }

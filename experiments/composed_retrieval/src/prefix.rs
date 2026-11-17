@@ -10,10 +10,12 @@ use serde_json::{Value, json};
 use std::{collections::BTreeMap, fs, path::Path};
 use synthetic_data::{generative, generative::typed, sequences};
 
+const REWRITE_NAME: &str = "composed-retrieval-rewrite6-lookup-output-offsets-v1";
+const PREFIX_NAME: &str = "composed-retrieval-synthetic-prefix9-output-offsets-v1";
 pub const NAME: &str = if cfg!(feature = "rewrite-cohort") {
-    "composed-retrieval-rewrite6-lookup-output-offsets-v1"
+    REWRITE_NAME
 } else {
-    "composed-retrieval-synthetic-prefix9-output-offsets-v1"
+    PREFIX_NAME
 };
 
 #[derive(Deserialize)]
@@ -40,8 +42,11 @@ struct Definition {
     cases: BTreeMap<String, Source>,
 }
 pub fn configure(p: &mut Protocol) -> Result<()> {
-    let d: Definition = serde_json::from_str(PROTOCOL)?;
-    let roster_matches = if cfg!(feature = "rewrite-cohort") {
+    configure_from(p, PROTOCOL, cfg!(feature = "rewrite-cohort"))
+}
+pub(crate) fn configure_from(p: &mut Protocol, definition: &str, rewrite: bool) -> Result<()> {
+    let d: Definition = serde_json::from_str(definition)?;
+    let roster_matches = if rewrite {
         d.cases.len() == generative::CASES.len() + 1
             && generative::CASES.iter().all(|id| d.cases.contains_key(*id))
             && d.cases.contains_key("suite-lookup")
@@ -49,7 +54,7 @@ pub fn configure(p: &mut Protocol) -> Result<()> {
     } else {
         d.cases.len() == 9 && d.generative_sha256.is_none()
     };
-    if d.name != NAME
+    if d.name != (if rewrite { REWRITE_NAME } else { PREFIX_NAME })
         || !roster_matches
         || d.training_protocol_sha256 != hash(OFFSET_PROTOCOL.as_bytes())
         || d.sequences_sha256 != hash(sequences::PROTOCOL.as_bytes())
@@ -143,7 +148,15 @@ pub fn original(id: &str, spec: &CaseSpec) -> Result<(Task, Value)> {
 }
 
 pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
-    let d: Definition = serde_json::from_str(PROTOCOL)?;
+    inventory_from(p, inputs, PROTOCOL, cfg!(feature = "rewrite-cohort"))
+}
+pub(crate) fn inventory_from(
+    p: &Protocol,
+    inputs: &Path,
+    definition: &str,
+    rewrite: bool,
+) -> Result<Value> {
+    let d: Definition = serde_json::from_str(definition)?;
     let bytes = fs::read(inputs.join("plan.json"))?;
     if hash(&bytes) != d.plan_sha256 {
         return Err("original DiffGPT plan changed".into());
@@ -183,12 +196,12 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
     }
     let fits = p.cases.len() * p.seeds.len() * p.modes.len() * 2;
     let bytes = one_pass * 4 * p.seeds.len() as u64 * p.modes.len() as u64;
-    let size_key = if cfg!(feature = "rewrite-cohort") {
+    let size_key = if rewrite {
         "raw_bytes_upper_bound"
     } else {
         "raw_bytes"
     };
     Ok(
-        json!({"protocol_sha256":hash(PROTOCOL.as_bytes()),"cases":entries,"fits":fits,(size_key):bytes}),
+        json!({"protocol_sha256":hash(definition.as_bytes()),"cases":entries,"fits":fits,(size_key):bytes}),
     )
 }

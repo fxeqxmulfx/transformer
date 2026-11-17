@@ -28,23 +28,16 @@ pub fn hidden(
     if memory.len() != pass.one.len() {
         return Err("inconsistent first-read path".into());
     }
-    let radius = |i: usize| {
-        radii
-            .get(i)
-            .copied()
-            .filter(|r| (0.0..=1.0).contains(r))
-            .ok_or("input object radius outside the unit interval")
-    };
-    let mut product_read = Wave::default();
-    for (&id, &weight) in memory.iter().zip(&pass.one) {
-        let r = radius(id)?;
-        product_read.add(&table.values[id], weight * r);
+    if prefix
+        .iter()
+        .any(|&id| radii.get(id).is_none_or(|r| !(0.0..=1.0).contains(r)))
+    {
+        return Err("input object radius outside the unit interval".into());
     }
-    let mut product = Wave::default();
-    product.add(
-        &product_read.times(&table.phases[query], false),
-        radius(query)?,
-    );
+    let product_read = table.scaled_values(memory, &pass.one, radii);
+    let product = product_read
+        .times(&table.phases[query], false)
+        .scaled(radii[query]);
     let l = &table.layout;
     let base = Wave::mix(&pass.s1, &pass.s2, model.weights[l.depth]);
     Ok(Wave::mix(&base, &product, model.weights[l.product]))
