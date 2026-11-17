@@ -9482,3 +9482,13 @@ second read 90% of the physical depth mixture. CM115 derives the actual
 raw CE gradient and the relation between raw displacements and physical
 score contrasts. Compare trained gates and full training slopes along
 with every original and strict held-out criterion.
+
+Frozen log-odds depth produced the first full two-hop result here. All
+six fits scored every original training, novel validation and held-out
+test object and sequence correctly, through length 96. At the trained
+weights, disabling the second read reduced training accuracy to 0/256
+while depth one gave 256/256. Binding and modular addition remained
+perfect. Multi-query recall reached 31/32, 32/32 and 30/32 on novel
+validation at the three seeds and lost its original all-seed pass. This
+protocol has three strict passes in four measured cases. Its coverage is
+reported separately from the 51-case physical-depth experiment.

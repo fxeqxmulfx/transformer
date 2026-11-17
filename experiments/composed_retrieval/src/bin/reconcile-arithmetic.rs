@@ -2,6 +2,9 @@
 //! arithmetic-add run before combining coverage of the 165 original cases.
 use bilinear::guard;
 use composed_retrieval::{Result, data};
+#[path = "shared/audit.rs"]
+mod archived;
+use archived::audit;
 #[path = "shared/decisions.rs"]
 mod decisions;
 use decisions::Decisions;
@@ -11,25 +14,7 @@ use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
     path::Path,
-    process::Command,
 };
-
-fn audit(workspace: &Path, storage: &Path, root: &Path) -> Result<Value> {
-    let out = Command::new(root.join("original/target/release/audit-raw"))
-        .args([workspace, storage, root])
-        .output()?;
-    if !out.status.success() {
-        return Err(format!("raw audit failed: {}", String::from_utf8_lossy(&out.stderr)).into());
-    }
-    let a: Value = serde_json::from_slice(&out.stdout)?;
-    if a["producer"] != fs::read_to_string(root.join("producer.commit"))?.trim()
-        || a["summary"]["catalog"] != 165
-        || a["cases"].as_object().ok_or("case ledger")?.len() != 165
-    {
-        return Err("incomplete raw audit".into());
-    }
-    Ok(a)
-}
 
 fn check_overlap(a: &Path, b: &Path, id: &str, p: &data::Protocol) -> Result<usize> {
     let mut raw_files = 0;

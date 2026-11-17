@@ -16,6 +16,11 @@ name = "reconcile-arithmetic"
 path = "src/bin/reconcile-arithmetic.rs"
 required-features = ["arithmetic-cohort"]
 
+[[bin]]
+name = "compare-depth"
+path = "src/bin/compare-depth.rs"
+required-features = ["logodds-depth"]
+
 [dependencies]
 arithmetic-data = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data", optional = true }
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
