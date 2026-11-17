@@ -22547,3 +22547,58 @@ them with full ordinary CE evaluations. This exact-real identity gives no
 certified floating rounding, stochastic convergence, factor oracle or unseen
 answer. Nonzero binary and three-class examples exercise target and competing
 class changes. It applies to the complete old and Hilbert branches alike.
+
+## CM110. State width is not the same as the number of plain learned blocks
+
+A separate structural check is possible while the prospective growth cohort
+trains, without inspecting its held-out outcomes. A plain two-complex-state
+block has arbitrary complete matrices A, B and C shared across input positions.
+The two-by-two commutator K=AB-BA is traceless, and its square is scalar.
+Consequently C K^2-K^2 C=0. Executing input words from left to right reverses
+the order of their matrix products. Define the actual signed score difference
+  D(f;a,b,c) = f(ababc)+f(babac)+f(cabba)+f(cbaab)
+              -f(abbac)-f(baabc)-f(cabab)-f(cbaba).
+Here each letter is an original opaque object, and f is one original class's
+real score. Prove D=0 for every complete complex initial state, every full
+complex transition matrix and every complete complex readout. No norm,
+flatness, balancedness, sign or real-coordinate restriction is needed. The
+proof expands actual Pair.operator execution, rather than assuming a matrix
+identity as an extra input. The complete coordinate representation extends it
+to every complex linear map on the two-state space.
+
+D is a linear functional of actual sequence scores. Thus any finite mixture,
+including arbitrary signed weights, duplicate components and zero weights,
+still has D=0. If a held position-dependent parent g is included with mass r,
+the resulting score has exactly D=r*D(g). No claim that the rotary parent
+satisfies the plain identity is made. Training more plain blocks can change
+many predictions, but cannot introduce a new independent violation of D.
+
+This is a strict expressivity restriction even under a unit capacity bound.
+In three complex coordinates, choose A=E01, B=E10 and C=E12. Their complete
+linear maps are (x,y,z)->(y,0,0), (x,y,z)->(0,x,0), and
+(x,y,z)->(0,z,0). Start from e2 and read coordinate1 for output class0;
+other output classes have zero readout. Every transition and readout is a
+contraction in the product norm. Each transition and readout also contracts
+the complete squared Euclidean energy |x|^2+|y|^2+|z|^2, with initial energy1.
+Actual execution therefore has bounded scores at every length. Nevertheless
+K^2=diag(1,1,0), C K^2-K^2 C=-C and the eight actual word scores give D=-1.
+No finite mixture of plain two-state blocks equals this bounded three-state
+function on all words. The witness is an expressivity counterexample, never
+a supplied benchmark program or initialization.
+
+This theorem does not establish that the original MQAR examples violate the
+identity, does not lower-bound their classification accuracy, and does not
+prove that a larger state can be learned from their training data. It separates
+an architectural limit from norm geometry, mixture size and optimization.
+The fixed sixteen-run growth comparison must finish and retain all outcomes;
+this proof does not justify selecting or changing its protocol after results.
+
+The separation also has a quantitative score consequence. If two sequence
+score functions differ uniformly by at most epsilon, their D values differ
+by at most8*epsilon, by the eight actual termwise error bounds. Since every
+plain two-state mixture has D=0 and the witness has D=-1, any uniform score
+approximation to that witness has epsilon>=1/8. The hypothesis is inhabited,
+for example by one zero component with unit weight and epsilon1, because all
+witness scores have absolute value at most1. This lower bound is independent
+of the number of mixture components and does not assert a top-one accuracy
+limit on the original stress tests.

@@ -9228,3 +9228,19 @@ must reconstruct. Seal all128 stages before original scoring at0,1,2,4,8,
 retain all outcomes and replay all80 reports. No new task program, label subset,
 RoPE, full-batch training or success assumption is introduced. Freeze native
 source/binary/protocol/inputs before training and enforce110GB/both-disk limits.
+
+Task401 independently examines a structural limit while the fixed400 cohort
+runs. CM110 proves that all complete plain two-complex-state recurrences
+satisfy an eight-word squared-commutator identity. Every finite mixture retains
+it, regardless of signed weights, learned entries or normalization. A held
+rotary parent's contribution is explicitly its scaled obstruction, not zero
+by assumption. A complete three-coordinate contraction has actual obstruction
+-1, with unit initial state, bounded outputs and nonincreasing Euclidean
+energy. No finite plain two-state mixture equals it; uniform score error is
+at least1/8. This distinguishes state width from mixture size, without claiming
+that the original MQAR labels violate the identity or that width alone learns
+unseen answers. Do not change the ongoing400 protocol or filter its outcomes.
+CM110 validation passes the full14210-job build, warning-free direct checks
+and all23 standard-axiom checks. Generated INDEX has5113modules26803theorems,
+with36existing sorry and0rests/extra/vacuous/placeholder. The nonempty singleton
+zero-component example satisfies the uniform-error hypothesis at epsilon1.
