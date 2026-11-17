@@ -9062,3 +9062,17 @@ training coefficient-error diagnostics are read-only and all original raw scores
 must replay. This conditional repair does not establish an all-path optimum,
 stochastic convergence or unseen generalization. Execute only the frozen
 `convex_retained_readouts` protocol and retain evidence outside the worktree.
+
+Task392 producer `5380ac97` completes all twelve endpoints and raw replays.
+Retained-small improves all four paired starting models: train raw74.56–77.78%,
+novel15.23–18.95%, test14.45–16.60%. Every original success and99% flag remains
+false. Instantaneous-small and retained-large both worsen training accuracy.
+All four retained-large estimates propose positive actual training directional
+changes despite their small estimated gaps; their CM105 corrections6.15–9.34
+exceed those gaps. Retained-small gives negative actual directions in all four
+cells, actual gaps0.454–0.470, and the sufficient corrected condition in the two
+cautious cells. Cache reconstruction errors are below2.95e-16, separating the
+staleness issue from numerical accumulation. All129 components and learned
+content remain. The optimizer repair is partial; learning shared content and
+unseen generalization remain unresolved. Preserve the frozen results and extend
+the theory before changing how retained estimates interact with content updates.
