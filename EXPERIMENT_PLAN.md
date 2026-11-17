@@ -9440,3 +9440,12 @@ every earlier endpoint and optimizer trace. Across both learned modes all
 protocol, binding and addition pass every 99% raw and exact criterion.
 Multi-query recall also passes its original target. The 161 remaining cases
 are unmeasured. Two-hop lookup still underperforms in both modes.
+
+Task 412 derives the ordinary training signal for the learned depth gate in
+flat-spectrum CM114. With a constant relative potential all queries route
+to the uniform distribution over visible destinations. The first and second
+unrotated read coincide, and the CE derivative along any joint content and
+depth curve is zero. For general weights the actual depth derivative is
+the difference between the full predictive mean direction and the observed
+target's direction. Replay the original sparse-protocol training trajectories
+to measure when the symmetry breaks and what moves the gate to its boundary.

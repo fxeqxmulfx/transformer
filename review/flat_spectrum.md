@@ -22778,3 +22778,52 @@ both two-object training inputs ending in false, and select different
 answers at `[false,true]`. This is an ambiguity inside the executed family.
 The positive addition and two-hop constructions establish representability.
 Original held-out performance still requires a separately frozen fit.
+
+## CM114. What the two-hop gate can learn from ordinary cross-entropy
+
+The native CM113 fit initializes every learned relative potential to zero.
+More generally, if these potentials share any constant value, the relative
+softmax from each source position is uniform. Summing over its normalized
+content match gives the same uniform destination law for every query. For
+a memory of positive length both unrotated reads therefore return the same
+mean value. The complete score still depends on the learned value table,
+the final object's rotation and the product gate.
+
+This equality holds for arbitrary content weights and arbitrary depth, with
+the other coordinates fixed. Even a simultaneous curve through the key map,
+predecessor bias, key scale, recency and depth leaves all logits and hence
+the ordinary full-class CE constant. Its directional derivative is zero.
+At this initialization the observed labels provide no first-order signal
+along those directions. Changing the relative potentials can break the
+equality. The claim is specific to spatially uniform relative scores.
+
+For a fixed prefix and all weights except depth held fixed, let z(c)
+denote its actual scaled logit at depth h. Write R1(c) and R2(c) for the
+unrotated first- and second-read scores. With capacity B and product gate u,
+define D(c) = B(1−u)[R2(c)−R1(c)]. At a depth displacement a the new complete
+logit is exactly z(c) + a D(c). If p(c) denotes the full softmax at the
+current point, the derivative of ordinary CE for observed answer y is
+
+    sum_c p(c) D(c) − D(y).
+
+A target whose direction exceeds the predicted mean favors more depth on
+that row. The minibatch averages these signed contributions, retaining
+every supervised occurrence. The constrained update also depends on the
+feasible interval and optimizer state. These identities supply a training
+diagnostic at arbitrary learned parameters.
+
+With the other weights fixed, full-vocabulary CE lies above its tangent
+as a function of depth. Summing the tangent bounds over the training
+records preserves their multiplicities. At depth zero, a nonnegative summed
+training slope therefore certifies that zero minimizes this one-coordinate
+training objective over the entire feasible interval. The argument allows
+different prefix lengths and leaves joint changes in routing weights open.
+
+If D(c) and D(k) differ, the observed score difference of c and k on this
+prefix determines the depth with the other coordinates fixed. The same
+difference is their full-softmax log odds. At least one of these two labels
+produces nonzero CE slope. CM113's repeated-key example satisfies this
+condition. Its unrotated first read favors intermediate object B over C,
+its second read favors C over B, and the gate on the product is interior.
+One observed correct label supplies the CE expression above. The score
+contrast identification result assumes access to its numerical value.
