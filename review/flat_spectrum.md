@@ -21595,3 +21595,75 @@ the earlier nonconstant three-record CM87 example and a separate nonempty
 two-object training example. The result diagnoses an observation/structure gap;
 it is not an empirical held-out result, a general impossibility of learning,
 or an assertion that increasing optimization speed closes that gap.
+
+## CM91. Capacity pays for a nonzero identification residual
+
+The native CM89 addition diagnostic reaches100% training accuracy and0%
+held-out accuracy. CM90 explains why observed labels do not force missing
+answers in the unrestricted joint family. A capacity restriction changes the
+admissible completions, so it can strengthen identification. This restriction
+is additional structure: neither fitting nor a flat coefficient spectrum
+establishes the correct budget for an unknown target.
+
+Keep the input/output contract unchanged: a sequence of immutable objects
+predicts one next object from the original vocabulary. IDs supply addresses,
+not arithmetic values or supplied semantic vectors. Every real and imaginary
+joint coordinate remains trainable, and the actual recovered complex encoders
+remain the inference path. Define the complete squared size E(p)=sum_z p_z^2
+in CM87's real coordinates. The region E(p)<=B is convex, and ordinary CE
+through the actual learned forward remains jointly convex on this region.
+This does not assert convexity in independently varied physical factors.
+
+Let A_i be observed margin coefficient vectors, lower_i their known lower
+bounds, q the proposed query comparison and w_i>=0. Define the full residual
+r=q-sum_i w_i A_i and the supplied margin mass m=sum_i w_i lower_i.
+The following finite inequalities suffice for query margin at least beta:
+
+```
+E(p) <= B,     A_i dot p >= lower_i,
+m - beta >= 0,
+B * E(r) <= (m - beta)^2.
+```
+
+Indeed Cauchy--Schwarz gives (r dot p)^2<=E(r)E(p), hence
+r dot p>=-(m-beta). Adding the nonnegative observed combination gives
+q dot p>=beta. Squared arithmetic avoids numerical square roots in a rational
+check. Original records, duplicate observations and every original competitor
+remain in the sums. Explicit lower_i also permit observed-margin errors.
+For the sequence certificate, self-label weights are zero and other observed
+lower margins are one, as in CM87. Its coefficient reading is proved equal
+to the actual learned margin. No query's true label or unknown target
+parameters are inputs to the certificate. Positive certificates for all
+competitors force one original object; correctness for a real task still
+requires that the target belongs to the declared bounded family.
+
+The earlier exact coefficient identity is the zero-residual special case.
+No converse or certificate-search/optimizer theorem is asserted here. Unlike
+CM87, a nonzero residual can now be tolerated because a silent coefficient
+cannot move arbitrarily while remaining inside the capacity region. Rank or
+flatness alone does not supply this directional residual bound.
+
+A complete Boolean-object witness demonstrates strictly stronger identification.
+Observe [false,false]->false, [false,true]->false, [true,false]->true, and
+withhold [true,true]. The labels are nonconstant and the query differs from
+every observed input. Let A0,A1,A2 be the observed correct-versus-other margin
+forms. The complete real parameter
+
+```
+p0 = (5/48) A0 + (1/24) A1 + (1/8) A2
+```
+
+fits all three unit margins, has E(p0)=13/48, and has true-versus-false query
+margin1/4. With B=13/48, beta=1/8 and weights(20/3,8/3,8), the mass is52/3
+and E(r)=3280/3. The squared slack exceeds B E(r) by1/64. Thus every fitting
+actual model within this budget predicts true on the missing pair. In
+contrast, CM90 proves no finite unrestricted margin certificate exists there.
+This is a nonempty bounded example and a real nonzero-residual certificate,
+not an original stress-test result or a supplied unseen-answer constraint.
+
+Formalization: `LearnedBilinear/Capacity`. The bound establishes how a
+capacity restriction can identify an unseen object, but does not establish
+which shared structure or budget solves the failed original GPT tasks.
+In particular, Euclidean size alone has not been shown to repair addition,
+MQAR or the CM86 higher-context parity restriction. Those remain empirical
+and architectural work under the active generalization goal.

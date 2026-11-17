@@ -8572,3 +8572,15 @@ training-repeat claim. Save authored findings and commands in the experiment
 README; keep generated evidence in external storage. Before broader runs on a
 new family, establish how shared trainable structure constrains unseen answers
 and how its context interactions address the proved parity restriction.
+
+### 2026-11-17: generalization is the active goal
+
+Task368 starts from the verified fitting/generalization separation, not a
+fresh accuracy claim. Preserve the immutable-object-sequence to next-original-
+object interface, every class and complete trainable complex path. First
+prove CM91 capacity-constrained identification and its nonconstant missing-
+pair control, with unrestricted ambiguity alongside it. Then investigate
+shared learned structure and native Mini/forward-only Mini diagnostics on
+unchanged original splits. A capacity theorem or training-only fit does not
+complete the99% held-out goal. Keep the110GB aggregate RAM cap, both-disk
+guards, transformer baseline and all frozen producers; use no Python.

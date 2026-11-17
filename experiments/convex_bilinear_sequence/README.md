@@ -12,6 +12,16 @@ primary tests. The additional scaled addition run fits every training answer
 but gets no held-out answers correct. All twelve saved models reproduce every
 scored raw-logit vector and metric on reload. The overall99% target is unmet.
 
+The next theoretical step is CM91 (`LearnedBilinear/Capacity`): an explicit
+squared capacity budget can pay for a nonzero identification residual. A
+nonconstant three-record object-pair witness forces the held-out fourth pair
+within capacity, while the unrestricted model remains ambiguous. This is a
+proved possibility, not a new stress score. The original failed runs are
+unchanged; selecting suitable shared structure and a training-only budget for
+their unseen answers remains the active generalization problem. A sequence of
+immutable objects still predicts one original object, with no numeric meaning
+assigned to object IDs and no task-specific answer program in inference.
+
 For vocabulary size V and context cap T, the complete joint domain has
 2 V (V+1) (1+TV+1[T≥2]V²) real coordinates. Immutable object identities,
 positions, a bias and adjacent-pair multiplicities provide serialization
