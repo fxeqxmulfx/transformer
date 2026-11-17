@@ -8611,3 +8611,12 @@ Validate full complex responses and actual feasible queries before training;
 seal both endpoints before held-out scoring and replay every raw logit. This
 geometry changes the bounded domain and supplies no optimizer/generalization
 guarantee. The input/output contract remains opaque objects throughout.
+
+The scaled cohort (`66b08989`, `shared-atoms-balanced-v1`) is complete: both
+modes reach4704/4704 training and4705/4705 held-out raw/exact accuracy, with
+held-out CE0.00112526. Both original success and raw/exact99 are true. Every
+saved raw logit replays exactly. Mini query/context bias energies fall to
+0.00004850/0.00005369. This is empirical generalization on the original addition
+split, seed1, with all classes retained and no arithmetic rule in the model.
+The active goal remains open for other seeds, MQAR and long sequence families;
+the CM86 parity restriction and approximate-oracle limitation still apply.

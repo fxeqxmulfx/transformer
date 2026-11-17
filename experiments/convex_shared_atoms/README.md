@@ -4,8 +4,10 @@ Can a capacity constraint with a learned output factor shared across the input
 encoders improve unseen-answer accuracy? The previous CM89 addition diagnostic
 fits 100% of training answers and gets 0% of held-out answers correct. This is a
 new experiment with unchanged original data and the transformer baseline
-preserved. The first frozen run fails: both modes fit only 133/4704 training
-answers and predict 1/4705 held-out answers correctly. Generalization is unresolved.
+preserved. The first geometry fails at 133/4704 training and 1/4705 held-out
+answers. After dimension-based bias scaling, both modes reach 4704/4704 training
+and 4705/4705 held-out answers. This establishes empirical generalization on one
+original task and one seed; broader generalization remains unresolved.
 
 The interface is a sequence of immutable objects to one next original object.
 IDs are addresses, with no arithmetic or semantic interpretation. Every
@@ -137,10 +139,41 @@ queries still change one raw logit by `+/-h`. All complete gradient responses
 receive `query_scale[q]*context_scale[d]`. Scoring checks the saved scales against
 the frozen protocol. The same 1000 updates, seed, records, factor-search settings
 and dimension-only budget are retained. The nonconvex approximate component
-search and higher-context parity limitations remain; there is no new accuracy
-claim before scoring all sealed endpoints.
+search and higher-context parity limitations remain. Scores below were measured
+only after both endpoints were sealed.
 
 Use `plan-balanced`, `train-balanced`, `score-balanced` and `verify-balanced`
 with the same arguments as above, a fresh frozen executable and a distinct
 cohort directory. The original frozen executable is required to replay the first
 cohort: its checkpoint schema and source fingerprint remain unchanged there.
+
+## Scaled diagnostic, 2026-11-17
+
+Producer commit `66b08989`, freeze `shared-atoms-balanced-v1`, source fingerprint
+`86f9e4d7b960000a34f432ff2b9279ea8d9366c3d2dbd9caf801df649d713a7e` and binary
+SHA256 `104bff23210c01ce1fa07d54a86a03c7545127d498120f0e0ec7b199fd9476e2`.
+Generated evidence is retained at
+`/run/media/misha/storage/transformer-runs/shared-atoms/balanced-v1`.
+All training, original-split scoring and separate-process replay commands exit
+zero. Every saved raw logit and metric replays exactly in each mode.
+
+| Mode | Training raw/exact | Held-out raw/exact | Training CE | Held-out CE |
+| --- | --- | --- | --- | --- |
+| Mini | 4704/4704 = 100% | 4705/4705 = 100% | 0.001042251084268 | 0.001125259891768 |
+| Forward-only Mini | 4704/4704 = 100% | 4705/4705 = 100% | 0.001042251084259 | 0.001125259891742 |
+
+Both original success and raw/exact99 are true. Each mode retains 1000 updates,
+247680 indexed records, 52.6531 epochs and 1001 components, including the zero
+component. Mini training takes112.19s and forward-only150.73s on this machine
+with the existing unrelated producer running; these are not transformer timing
+comparisons. Forward-only uses48049920 finite class-bias loss evaluations.
+
+The Mini endpoint's active mass is7719.7140. Its component-mass-weighted squared
+query/context bias energies are0.0000485007/0.0000536857. The matched geometry
+change therefore removes the measured bias dominance and enables both fitting
+and held-out accuracy in this diagnostic. The learned factors use object IDs
+only as addresses; no arithmetic answer rule is supplied. Do not infer from
+this one task/seed that MQAR, long parity or all35/165 tasks now pass. Additional
+seeds, task families and learned depth remain to be tested. The real proofs
+still give capacity and feasible-query identities rather than a theorem that
+this approximate optimizer always finds the target family.
