@@ -99,5 +99,77 @@ Admission checks enforce the 110 GB aggregate RAM limit and both disk-space
 thresholds before each minibatch. Low disk space stops work without deleting
 evidence. Review repeats diagnostics in a fresh directory and replays saved
 scores in fresh copies, then rejects changed producer, endpoint, cache and
-history evidence. The declared comparison is pending; generalization remains
-unresolved.
+history evidence. Generalization remains unresolved.
+
+Producer `48571783` completes the eight declared runs. Content revisits modestly
+raise novel accuracy relative to the matched continuation in all four pairs,
+while lowering training accuracy and raising training CE in all four. Test
+accuracy rises in two pairs, ties in one and falls in one. These seed-1 results
+do not establish a reliable generalization improvement or an optimizer repair.
+
+| Arm | Source/mode | Train raw | Train CE | Novel raw | Test raw |
+| --- | --- | ---: | ---: | ---: | ---: |
+| control | cautious Mini | 78.2715% | 1.799295 | 16.9922% | 17.7734% |
+| control | cautious forward | 79.8340% | 1.779229 | 18.7500% | 18.7500% |
+| control | refined Mini | 77.6367% | 1.805723 | 17.7734% | 19.1406% |
+| control | refined forward | 76.2695% | 1.828541 | 18.7500% | 18.5547% |
+| revisit | cautious Mini | 75.9766% | 1.925073 | 17.9688% | 18.3594% |
+| revisit | cautious forward | 76.7578% | 1.916712 | 20.3125% | 18.7500% |
+| revisit | refined Mini | 76.6602% | 1.933239 | 17.9688% | 19.7266% |
+| revisit | refined forward | 75.1465% | 1.965040 | 19.1406% | 18.3594% |
+
+Raw and exact accuracy agree on these single-target examples. Every original
+success flag and every split's 99% flag is false. Relative to their four
+starting retained-small endpoints, both revisit Mini runs have lower novel
+accuracy and both forward runs have higher novel accuracy. All four revisit
+training CEs are higher than their starting values. The continuation improves
+training fit in all four controls, but does not close the large unseen gap.
+
+All 4,096 scheduled updates finish. Every revisit step changes content, for
+2,048 changed versions; each of the 128 learned components receives four full
+sweeps. Across those sweeps, 4,085 initial-coordinate, 464,723 matrix-coordinate
+and 3,974 frequency-coordinate proposals are accepted. Every content sweep
+lowers or preserves its actual minibatch CE, and 2,411 readout updates take a
+positive step. Thus current-batch descent still does not imply lower complete
+training CE when content changes. No endpoint or trajectory is selected using
+held-out outcomes.
+
+Every endpoint retains all 129 components and covers all 2,048 indexed records,
+with 16,384 new cache refreshes per run. All 16,384 cached record histories
+reconstruct exactly from their recorded content versions. Independent complete
+product sums agree with the incremental cache within 3.47e-16; the cache bug
+targeted by CM106 is not present. Original full raw-logit replays agree in all
+eight cells.
+
+At the endpoints, actual joint readout gaps are 0.279–0.297 in controls and
+0.349–0.371 in revisits. All eight estimated readout directions have negative
+actual full-training first-order change, from -0.3653 to -0.1403. Nevertheless,
+the sufficient CM105 corrected-gap condition is inconclusive in every cell:
+its actual error corrections are 0.347–0.402 in controls and 0.490–0.758 in
+revisits, exceeding their respective estimated gaps. This does not contradict
+the directly measured negative directions; the bound is sufficient, not
+necessary.
+
+The CM106 split exposes genuine historical-state movement. Its mean state term
+is zero in controls and 0.2290–0.2403 in revisits; the corresponding signal term
+is 0.0298–0.0337 and 0.0434–0.0486. The resulting revisit corrections 8.718–9.235
+are much looser than the actual CM105 coefficient-error corrections because
+they sum absolute per-record discrepancies before possible cancellations.
+Both sets of measured inequalities have zero positive excess at the declared
+tolerances. These are floating evaluations, not finite-rounding certificates.
+
+The eight runs consume 80,381,952 CE evaluations: 64,784,384 for content search
+and 15,597,568 for readout updates, including 13,107,200 finite signed-bias
+queries. Read-only diagnostics add 32,768 CE evaluations. Maximum recorded
+aggregate RSS is 10.436 GB, complete-logit reconstruction error 1.51e-14,
+operator-norm excess 2.23e-16 and shared-capacity excess zero. Low disk-space
+guards never trigger. The transformer baseline and prior endpoints are intact.
+
+Evidence is under `transformer-runs/freezes/content-revisit-v1`,
+`content-revisit/original-v1` and `diagnostics/content-revisit-v1` on storage.
+The frozen source fingerprint is
+`377b1055938f8f7b8c687409c730d2617eedd52420663d0c38dbfd6db67cdbea`.
+The history-aware estimator permits real content learning, but this finite
+minibatch coordinate-search recipe is insufficient. The next change must
+address shared-content learning rather than infer success from a norm bound,
+negative readout direction or decrease on the visited minibatch.

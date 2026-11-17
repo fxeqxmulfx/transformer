@@ -9105,3 +9105,17 @@ signal/state discrepancy and the actual CM105 coefficient error. Original
 success/raw/exact/CE/99% reports and complete raw replays are required; preserve
 the transformer baseline and prior failures. This is approximate shared-content
 learning, not a certified convex oracle in the independent factors.
+
+Task394 producer `48571783` completes the eight fixed runs. Revisit novel raw
+17.97–20.31% exceeds its matched control in all four cells, but training raw
+75.15–76.76% is below every control and all four training CEs worsen; test
+accuracy improves twice, ties once and declines once. Every original success
+and99% flag fails. All2,048 content changes preserve feasibility and lower or
+preserve their current minibatch CE. All16,384 cached original-record states
+replay bit for bit, and independent product sums agree within3.47e-16. All
+eight complete raw replays agree. Actual estimated readout directions remain
+negative in every cell, although the CM105/106 sufficient error bounds are
+inconclusive. These checks validate the changing-state estimator, not this
+content optimizer or generalization. Do not extend this finite coordinate
+recipe merely because its visited-batch CE decreases; shared-content learning
+and the requested99% original held-out target remain unresolved.
