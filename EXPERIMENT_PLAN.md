@@ -8593,3 +8593,12 @@ training-only search; do not call it an exact convex oracle or claim optimizer
 convergence. First validate full complex execution and complete finite-query
 updates in Rust, then freeze a separate original-split diagnostic. Preserve
 the old failed cohorts and report the unchanged higher-context parity limit.
+
+The first frozen CM92 native cohort (`3bb8159a`, `shared-atoms-v1`) is complete.
+Both modes fit 133/4704 training answers and predict 1/4705 held-out answers
+correctly; all full raw-logit replays match. Both source success and raw/exact99
+are false. The active-mass-weighted squared query/context bias energies are
+0.9781/0.9784 in Mini. Treat this as a failed optimization/generalization trial.
+Next prove a positive coordinate rescaling that retains all learned directions
+and feasible forward queries before testing whether less bias dominance helps.
+Preserve this producer, every failed result and the unresolved goal.

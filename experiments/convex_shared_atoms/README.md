@@ -4,7 +4,8 @@ Can a capacity constraint with a learned output factor shared across the input
 encoders improve unseen-answer accuracy? The previous CM89 addition diagnostic
 fits 100% of training answers and gets 0% of held-out answers correct. This is a
 new experiment with unchanged original data and the transformer baseline
-preserved. There is no new held-out result yet.
+preserved. The first frozen run fails: both modes fit only 133/4704 training
+answers and predict 1/4705 held-out answers correctly. Generalization is unresolved.
 
 The interface is a sequence of immutable objects to one next original object.
 IDs are addresses, with no arithmetic or semantic interpretation. Every
@@ -85,3 +86,34 @@ Before training allocations/updates and each scoring split, check aggregate RAM
 plus the full reservation against 110,000,000,000 bytes. Keep at least 2 GiB free
 on the workspace disk and 16 GiB on storage. Insufficient space or memory stops
 the operation without cleanup, reduction or changes to frozen producers.
+
+## First frozen diagnostic, 2026-11-17
+
+Producer commit `3bb8159a`, freeze `shared-atoms-v1`, source fingerprint
+`878ccde937e52893fb97eed0f298fc23127cbf93e072fb6ba87d72984f1f428f` and binary
+SHA256 `06bcc4a4cf5fc869f2ff12c2e53adbb33412eb7c43c8dfb9d46bb107efd61f17`.
+Generated evidence is retained at
+`/run/media/misha/storage/transformer-runs/shared-atoms/original-v1`.
+All training and scoring queues exit zero. Both checkpoints reproduce complete
+metrics and raw-logit bits in a separate process.
+
+| Mode | Training raw/exact | Held-out raw/exact | Training CE | Held-out CE |
+| --- | --- | --- | --- | --- |
+| Mini | 133/4704 = 2.82738% | 1/4705 = 0.021254% | 4.59864689 | 5.71236592 |
+| Forward-only Mini | 133/4704 = 2.82738% | 1/4705 = 0.021254% | 4.59864710 | 5.71236623 |
+
+Each mode uses 1000 updates and 247680 indexed training records, or 52.6531
+epochs. The original success flag and raw/exact99 are false. These results do
+not improve the original unscaled held-out count, and the loss is worse. Unlike
+the earlier frequency-scaled model, this optimizer fails to fit training too.
+The result does not establish that every optimizer in this domain must fail.
+
+The Mini endpoint retains 1000 proposed components plus the zero component.
+Among the active weights, mean squared query-bias energy is 0.9780685 and mean
+squared context-bias energy is 0.9783835 (weighted by component mass, excluding
+the zero component). Thus almost all factor energy goes to the always-present
+bias addresses. This is a measured optimization-geometry diagnostic, not a
+generalization theorem. A positive change of coordinate scale is the next
+candidate: preserve every learned coordinate and original object while reducing
+the bias addresses' dominance. Prove that geometry and feasible loss-query
+changes before a separate frozen experiment. Keep this failed producer intact.
