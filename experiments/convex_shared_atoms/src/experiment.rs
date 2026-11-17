@@ -13,6 +13,7 @@ use std::{fs, io::Write, path::Path, time::Instant};
 
 pub mod score;
 pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub const BALANCED_PROTOCOL: &str = include_str!("../balanced_protocol.json");
 
 pub fn fingerprint() -> String {
     let mut digest = Sha256::new();
@@ -27,6 +28,7 @@ pub fn fingerprint() -> String {
         include_bytes!("../Cargo.toml"),
         include_bytes!("../Cargo.lock"),
         PROTOCOL.as_bytes(),
+        BALANCED_PROTOCOL.as_bytes(),
         original::fingerprint().as_bytes(),
     ] {
         digest.update((bytes.len() as u64).to_le_bytes());
@@ -39,8 +41,8 @@ pub fn fingerprint() -> String {
         .collect()
 }
 
-pub fn protocol(mode: &str, seed: u64) -> Result<(Value, Config)> {
-    let p: Value = serde_json::from_str(PROTOCOL)?;
+pub fn protocol(mode: &str, seed: u64, text: &str) -> Result<(Value, Config)> {
+    let p: Value = serde_json::from_str(text)?;
     if !p["modes"].as_array().ok_or("modes")?.contains(&json!(mode))
         || !p["seeds"].as_array().ok_or("seeds")?.contains(&json!(seed))
     {
@@ -57,6 +59,16 @@ pub fn protocol(mode: &str, seed: u64) -> Result<(Value, Config)> {
     Ok((p, config))
 }
 
+pub fn initial_model(shape: bilinear::domain::Shape, protocol: &Value) -> Result<Model> {
+    let budget = protocol["budget_multiplier"].as_f64().ok_or("capacity")?
+        * ((shape.objects as f64) * (shape.queries as f64) * (shape.columns as f64)).sqrt();
+    match protocol["geometry"].as_str() {
+        None | Some("identity") => Model::zero(shape, budget),
+        Some("dimension-bias") => Model::balanced(shape, budget),
+        _ => Err("unknown positive coordinate geometry".into()),
+    }
+}
+
 pub fn train(
     workspace: &Path,
     storage: &Path,
@@ -64,14 +76,14 @@ pub fn train(
     name: &str,
     mode: &str,
     seed: u64,
+    text: &str,
 ) -> Result<()> {
     guard::admit(0, workspace, storage)?;
-    let (protocol, config) = protocol(mode, seed)?;
-    let (case, original_row, task) = original::case_in(name, PROTOCOL)?;
+    let (protocol, config) = protocol(mode, seed, text)?;
+    let (case, original_row, task) = original::case_in(name, text)?;
     let shape = original::shape(&task)?;
-    let budget = protocol["budget_multiplier"].as_f64().ok_or("capacity")?
-        * ((shape.objects as f64) * (shape.queries as f64) * (shape.columns as f64)).sqrt();
-    let mut model = Model::zero(shape, budget)?;
+    let mut model = initial_model(shape, &protocol)?;
+    let budget = model.budget;
     let training = &task.splits["train"];
     let batch = original_row["case"]["batch"]
         .as_u64()
@@ -87,6 +99,8 @@ pub fn train(
         &json!({"source_fingerprint":fingerprint(),
         "protocol":protocol,"case":case,"original":original_row,"shape":shape,"selection":task.selection,
         "seed":seed,"mode":mode,"budget":budget,"complete_real_coordinates":shape.real_coordinates().to_string(),
+        "query_scale":model.query_scale,"context_scale":model.context_scale,
+        "raw_bias_response":model.query_scale[0]*model.context_scale[0],
         "binary_sha256":original::hash(&fs::read(std::env::current_exe()?)?)}),
     )?;
     let mut trace = fs::OpenOptions::new()

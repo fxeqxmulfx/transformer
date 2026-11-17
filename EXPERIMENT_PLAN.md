@@ -8602,3 +8602,12 @@ are false. The active-mass-weighted squared query/context bias energies are
 Next prove a positive coordinate rescaling that retains all learned directions
 and feasible forward queries before testing whether less bias dominance helps.
 Preserve this producer, every failed result and the unresolved goal.
+
+CM93 (`c7118dc1`) now proves the positive geometry and its corrected loss-query
+reservation. Freeze a separate dimension-bias cohort: both input bias addresses
+scale by1/sqrt(V), all other original coordinates by1. Keep both modes' common
+centre, all original records, seed1,1000 updates and the same capacity scalar.
+Validate full complex responses and actual feasible queries before training;
+seal both endpoints before held-out scoring and replay every raw logit. This
+geometry changes the bounded domain and supplies no optimizer/generalization
+guarantee. The input/output contract remains opaque objects throughout.

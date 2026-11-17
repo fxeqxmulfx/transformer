@@ -29,7 +29,7 @@ optimization convergence are not proved.
 | Mini | Ordinary CE analytic class residuals | Every supervised prefix, original class, duplicate and short tail |
 | Forward-only Mini | Two ordinary CE evaluations per class and record | Same records and all real/imaginary coordinate responses |
 
-Each step shrinks the state by `1-h/B`, putting the freed mass on an exact zero
+In the original geometry, each step shrinks the state by `1-h/B`, putting the freed mass on an exact zero
 component. Signed class-bias queries of size `h` are actual feasible states,
 as proved in CM92. Only the loss receives targets. CM88 supplies all coordinate
 responses, including repeated pairs. Real address rows make the complete
@@ -60,20 +60,23 @@ reloads the endpoint and must reproduce all metrics and raw-logit bits. This
 checks saved inference, not an independent training repeat. Data, source,
 protocol, binary and checkpoint identities are recorded.
 
-Seven native controls cover exhaustive small-prefix complex execution against
+Eleven native controls cover exhaustive small-prefix complex execution against
 independently materialized coefficients; feasible signed model queries; all
 real/imaginary coordinate gradients with duplicate records, repeated pairs and
 a one-record tail; a planted nonzero component-search control; and both update
 modes with exact checkpoint replay; original masks and full-logit digests; and
 refusal of unsealed or changed protocols. These are not original-task scores.
+The four CM93 controls also check the scaled full tensor, actual feasible query
+models, complete scaled coordinate responses, and both modes with checkpoint
+geometry retained. They include zero-scale and floating underflow refusals.
 
 Use native tooling only:
 
 ```sh
-export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/shared-atoms-native-v1
-cargo test --offline --manifest-path experiments/convex_shared_atoms/Cargo.toml
-cargo clippy --offline --manifest-path experiments/convex_shared_atoms/Cargo.toml --all-targets -- -D warnings
-cargo build --offline --release --manifest-path experiments/convex_shared_atoms/Cargo.toml
+export CARGO_TARGET_DIR=/run/media/misha/storage/transformer-runs/build/shared-atoms-balanced-native-v1
+cargo test --offline --locked --manifest-path experiments/convex_shared_atoms/Cargo.toml
+cargo clippy --offline --locked --manifest-path experiments/convex_shared_atoms/Cargo.toml --all-targets -- -D warnings
+cargo build --offline --locked --release --manifest-path experiments/convex_shared_atoms/Cargo.toml
 "$CARGO_TARGET_DIR/release/stress" plan
 ```
 
@@ -115,5 +118,29 @@ the zero component). Thus almost all factor energy goes to the always-present
 bias addresses. This is a measured optimization-geometry diagnostic, not a
 generalization theorem. A positive change of coordinate scale is the next
 candidate: preserve every learned coordinate and original object while reducing
-the bias addresses' dominance. Prove that geometry and feasible loss-query
-changes before a separate frozen experiment. Keep this failed producer intact.
+the bias addresses' dominance. The next cohort tests this after proving its
+geometry and feasible queries. Keep this failed producer intact.
+
+## Dimension-scaled bias geometry
+
+CM93 (`c7118dc1`, `SharedAtoms/Scaling`) proves an invertible positive coordinate
+change, convexity of the changed joint capacity region, full executed factor
+representations, the complete scaled responses and feasible forward queries.
+The new `balanced_protocol.json` differs in geometry: each input bias entry has
+scale `1/sqrt(V)`, and every object, position and pair entry has scale one. All
+stored complex factors remain learned. This changes the fixed-budget domain;
+it is not an assertion that both geometries admit exactly the same parameters.
+
+The actual raw class-bias response is `u=query_scale[0]*context_scale[0]`.
+Both modes reserve mass `h/u` and shrink by `1-h/(u*B)`, so actual signed model
+queries still change one raw logit by `+/-h`. All complete gradient responses
+receive `query_scale[q]*context_scale[d]`. Scoring checks the saved scales against
+the frozen protocol. The same 1000 updates, seed, records, factor-search settings
+and dimension-only budget are retained. The nonconvex approximate component
+search and higher-context parity limitations remain; there is no new accuracy
+claim before scoring all sealed endpoints.
+
+Use `plan-balanced`, `train-balanced`, `score-balanced` and `verify-balanced`
+with the same arguments as above, a fresh frozen executable and a distinct
+cohort directory. The original frozen executable is required to replay the first
+cohort: its checkpoint schema and source fingerprint remain unchanged there.

@@ -1,4 +1,4 @@
-//! CM92 SharedAtoms.Basic/Model/Queries: execute every learned factor and class.
+//! CM92/CM93: execute every learned factor under a positive capacity geometry.
 use crate::{C, Result};
 use bilinear::domain::{Addresses, Shape};
 use serde::{Deserialize, Serialize};
@@ -64,6 +64,21 @@ impl Atom {
         self.output.iter().map(|&u| u * interaction).collect()
     }
 
+    pub fn scaled_complex(&self, input: &Addresses, query: &[f64], context: &[f64]) -> Vec<C> {
+        let q: C = input
+            .queries
+            .iter()
+            .map(|&i| self.query[i] * query[i])
+            .sum();
+        let d: C = input
+            .columns
+            .iter()
+            .map(|&(i, n)| self.context[i] * (context[i] * n as f64))
+            .sum();
+        let interaction = C::new(1., 1.) * q * d;
+        self.output.iter().map(|&u| u * interaction).collect()
+    }
+
     pub fn entry(&self, c: usize, q: usize, d: usize) -> C {
         self.output[c] * self.query[q] * self.context[d]
     }
@@ -73,6 +88,8 @@ impl Atom {
 pub struct Model {
     pub shape: Shape,
     pub budget: f64,
+    pub query_scale: Vec<f64>,
+    pub context_scale: Vec<f64>,
     pub atoms: Vec<Atom>,
     pub weights: Vec<f64>,
 }
@@ -85,12 +102,40 @@ impl Model {
         Ok(Self {
             shape,
             budget,
+            query_scale: vec![1.; shape.queries],
+            context_scale: vec![1.; shape.columns],
             atoms: vec![Atom::zero(shape)],
             weights: vec![budget],
         })
     }
 
+    /// CM93: dimension-only positive geometry; every learned entry is retained.
+    pub fn balanced(shape: Shape, budget: f64) -> Result<Self> {
+        let mut model = Self::zero(shape, budget)?;
+        let scale = 1. / (shape.objects as f64).sqrt();
+        model.query_scale[0] = scale;
+        model.context_scale[0] = scale;
+        model.validate()?;
+        Ok(model)
+    }
+
     pub fn validate(&self) -> Result<f64> {
+        for (scales, expected) in [
+            (&self.query_scale, self.shape.queries),
+            (&self.context_scale, self.shape.columns),
+        ] {
+            if scales.len() != expected
+                || scales.is_empty()
+                || scales.iter().any(|s| !s.is_finite() || *s <= 0. || *s > 1.)
+            {
+                return Err("incomplete or nonpositive coordinate geometry".into());
+            }
+        }
+        let minimum_query = self.query_scale.iter().copied().fold(1f64, f64::min);
+        let minimum_context = self.context_scale.iter().copied().fold(1f64, f64::min);
+        if minimum_query * minimum_context == 0. {
+            return Err("joint geometry underflow removes a coordinate".into());
+        }
         if self.atoms.is_empty()
             || self.atoms.len() != self.weights.len()
             || !self.budget.is_finite()
@@ -124,7 +169,11 @@ impl Model {
             if weight == 0. {
                 continue;
             } // Exact zero mass only; no small-weight threshold.
-            for (score, value) in scores.iter_mut().zip(atom.complex(input)) {
+            for (score, value) in scores.iter_mut().zip(atom.scaled_complex(
+                input,
+                &self.query_scale,
+                &self.context_scale,
+            )) {
                 *score += value * weight;
             }
         }
@@ -145,17 +194,24 @@ impl Model {
         Ok((1..scores.len()).fold(0, |best, c| if scores[c] > scores[best] { c } else { best }))
     }
 
-    /// CM92 leaves room for both signed loss queries. The zero component
+    /// CM93 accounts for the actual scaled bias response in raw logit units.
+    pub fn query_mass(&self, h: f64) -> Result<f64> {
+        let mass = h / (self.query_scale[0] * self.context_scale[0]);
+        if !h.is_finite() || h <= 0. || !mass.is_finite() || mass <= 0. || mass > self.budget {
+            return Err("loss-query step exceeds scaled capacity".into());
+        }
+        Ok(mass)
+    }
+
+    /// CM92/CM93 leave room for both signed loss queries. The zero component
     /// retains exactly the unused mass, without changing any class score.
     pub fn shrink_for_queries(&mut self, h: f64) -> Result<()> {
-        if !h.is_finite() || h <= 0. || h > self.budget {
-            return Err("loss-query step exceeds capacity".into());
-        }
-        let eta = h / self.budget;
+        let mass = self.query_mass(h)?;
+        let eta = mass / self.budget;
         for weight in &mut self.weights {
             *weight *= 1. - eta;
         }
-        self.weights[0] += h;
+        self.weights[0] += mass;
         self.validate()?;
         Ok(())
     }

@@ -1,5 +1,5 @@
 //! Complete original metrics and separate-process raw-logit replay after sealing.
-use super::{PROTOCOL, fingerprint, protocol};
+use super::{PROTOCOL, fingerprint, initial_model, protocol};
 use crate::{Result, model::Model};
 use baseline::{data::Example, metrics::Predictor};
 use bilinear::{experiment as original, guard};
@@ -8,7 +8,11 @@ use sha2::{Digest, Sha256};
 use std::{cell::RefCell, fs, path::Path};
 
 pub fn sealed(cohort: &Path) -> Result<()> {
-    let protocol: Value = serde_json::from_str(PROTOCOL)?;
+    sealed_with_protocol(cohort, PROTOCOL)
+}
+
+pub fn sealed_with_protocol(cohort: &Path, text: &str) -> Result<()> {
+    let protocol: Value = serde_json::from_str(text)?;
     let binary = original::hash(&fs::read(std::env::current_exe()?)?);
     for case in protocol["cases"].as_array().ok_or("cases")? {
         let name = case["name"].as_str().ok_or("case")?;
@@ -102,16 +106,18 @@ pub fn run(
     name: &str,
     mode: &str,
     seed: u64,
-    replay: bool,
+    options: (&str, bool),
 ) -> Result<()> {
+    let (text, replay) = options;
     guard::admit(0, workspace, storage)?;
-    protocol(mode, seed)?;
-    sealed(cohort)?;
-    let (_, original_row, task) = original::case_in(name, PROTOCOL)?;
+    let (protocol, _) = protocol(mode, seed, text)?;
+    sealed_with_protocol(cohort, text)?;
+    let (_, original_row, task) = original::case_in(name, text)?;
     let path = original::score::cell(cohort, name, mode, seed);
     let meta = original::score::read(&path.join("metadata.json"))?;
     let receipt = original::score::read(&path.join("training_receipt.json"))?;
     let shape = original::shape(&task)?;
+    let expected = initial_model(shape, &protocol)?;
     if meta["original"] != original_row
         || meta["shape"] != serde_json::to_value(shape)?
         || meta["selection"] != task.selection
@@ -136,6 +142,12 @@ pub fn run(
     drop(raw);
     if model.shape != shape
         || meta["budget"] != json!(model.budget)
+        || model.budget != expected.budget
+        || model.query_scale != expected.query_scale
+        || model.context_scale != expected.context_scale
+        || meta["query_scale"] != json!(model.query_scale)
+        || meta["context_scale"] != json!(model.context_scale)
+        || meta["raw_bias_response"] != json!(model.query_scale[0] * model.context_scale[0])
         || receipt["components_stored"] != json!(model.atoms.len())
     {
         return Err("checkpoint capacity/domain mismatch".into());

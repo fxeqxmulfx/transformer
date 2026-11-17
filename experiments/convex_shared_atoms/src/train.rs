@@ -80,8 +80,12 @@ pub fn update_gradient(
             for &q in &input.queries {
                 for (c, &scalar) in derivative.iter().enumerate() {
                     let index = gradient.index(c, q, d);
-                    gradient.values[index] +=
-                        (1. - config.momentum) * scalar * count as f64 / records.len() as f64;
+                    gradient.values[index] += (1. - config.momentum)
+                        * scalar
+                        * count as f64
+                        * model.query_scale[q]
+                        * model.context_scale[d]
+                        / records.len() as f64;
                 }
             }
         }
@@ -160,7 +164,11 @@ pub fn step(
         .iter()
         .map(|r| {
             Ok(atom
-                .complex(&model.shape.addresses(r.prefix)?)
+                .scaled_complex(
+                    &model.shape.addresses(r.prefix)?,
+                    &model.query_scale,
+                    &model.context_scale,
+                )
                 .iter()
                 .map(|z| z.re * model.budget)
                 .collect())

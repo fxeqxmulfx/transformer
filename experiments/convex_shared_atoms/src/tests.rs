@@ -11,6 +11,8 @@ use bilinear::{
     train::{Mode, Record, forward_scalars},
 };
 
+mod scaling;
+
 fn atom(shape: Shape, seed: u32) -> Result<Atom> {
     let mut rng = Random::new(seed);
     let mut vector = |n| -> Result<Vec<C>> {
