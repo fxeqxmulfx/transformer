@@ -22703,3 +22703,78 @@ operand in both original splits. A shared architecture that covers arithmetic
 needs a learned path from the final object to the output even with one
 memory position. Ordinary CE fitting and the flat capacity bound alone
 cannot supply that missing dependence.
+
+## CM113. Composed learned retrieval and a two-operand phase interaction
+
+CM112 identifies a lost operand on prefixes of length two. Task 406 also
+found a second independent failure. Following two links in a table changes
+the object used for the second lookup. The original table can contain an
+object both as a key and as a value. A shared learned operator can distinguish
+its occurrences through their preceding raw objects and their positions.
+
+For each opaque object, learn three width-$D$ vectors of real angles with
+$D>0$. They supply the key $K$, tied value/readout $V$, and rotation $P$. Their complex coordinates
+are $e^{i\theta}$. Also learn an initial angle vector, a scalar bias for
+each possible predecessor including the boundary, a key scale $t$, a recency
+coefficient $s$, a table of signed relative potentials $r$, and depth and
+product gates $h,u\in[0,1]$. For memory objects $x_j$ before the final
+query $q$, let the means below average over all $D$ coordinates.
+
+```
+a(o,j) = softmax_j[t mean cos(K(o) − K(x_j)) + bias(prev_j) + s j]
+b(j,k) = softmax_k[r(k−j)]
+M(o,k) = sum_j a(o,j) b(j,k)
+V1     = sum_k M(q,k) exp(i V(x_k))
+V2     = sum_k,l M(q,k) M(x_k,l) exp(i V(x_l))
+H      = (1−u) [(1−h) V1 + h V2] + u exp(i P(q)) V1
+z_c    = B mean Re[conj(exp(i V(c))) H]
+```
+
+Products of coordinate vectors are componentwise. Every position and class
+participates. The initial phases supply the empty-memory state. An empty
+sequence decodes this state directly and a single object rotates it before
+decoding. All predictors share the same computation, with task identity
+confined to the data adapter. On `[a,b]`, the product route has actual score
+`mean cos(V(a)+P(b)−V(c))`. One admissible width-one setting gives class
+`(a+b) mod 97` strictly higher score than every rival on every one of the
+9,409 original pairs. Set both tables to $2\pi a/97$ in this existence
+proof. Equality of a rival's cosine score to one would require its difference
+from the sum to be an integer multiple of 97. Native training initializes the
+tables independently of the numerical names of the objects.
+
+Both Markov reads preserve total mass. Their unrotated decoder has
+diagonal one for every set of learned angles, including a class that never
+appears as a positive training answer. Every actual score has magnitude
+at most $B\ge 0$. The convex hull of these complete score functions inherits
+this bound and ordinary full-class CE is convex on that functional domain.
+The optimizer updates angles, gates and routing coordinates directly.
+
+For one proposed hop from source $i$ to destination $k$, let $g,h_r$ be
+lower bounds on the actual key and relative score gaps against every other
+visible position. CM111's normalized softmax bound gives
+`1−M(o,k) ≤ e = n(exp(−g)+exp(−h_r))` at memory length $n$.
+For a second such hop using $x_k$ as its query and ending at $l$, the
+missing mass on the joint path is at most $e_1+e_2$. If the tied decoder's
+unrotated separation at $x_l$ against every rival is at least $m\ge 0$,
+the complete scaled margin is at least
+
+```
+B { w [m − (m+2)(e1+e2)] − 2(1−w) },    w = (1−u) h.
+```
+
+A positive bound identifies the final object and bounds its ordinary CE
+over all classes. In the explicit three-object witness the memory is
+`[A,B,B,C]` and the query is `A`. With both gates interior, the first read
+prefers `B` to `C`, and the complete model returns `C` against every rival.
+The shared predecessor bias distinguishes the two occurrences of `B`. For
+occurrences with the same preceding object, the key-score difference equals
+the recency coefficient times the position difference. At zero recency those
+occurrences tie. The path certificate then needs other evidence or a common
+destination for the tied paths.
+
+Perfect matching on observed prefixes alone cannot identify an unrestricted
+unseen answer. Two admissible Boolean phase tables agree on every class at
+both two-object training inputs ending in false, and select different
+answers at `[false,true]`. This is an ambiguity inside the executed family.
+The positive addition and two-hop constructions establish representability.
+Original held-out performance still requires a separately frozen fit.

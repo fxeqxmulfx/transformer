@@ -9393,3 +9393,18 @@ discards all query dependence through its singleton softmaxes. The original
 modular-addition validation score is bounded by 97/4,705 for every set of
 weights. A successor must retain a trainable interaction with the final
 object at this prefix length and must also be tested on two-hop composition.
+
+Task 409 and flat-spectrum CM113 define a shared successor with two learned
+content-dependent reads, a learned predecessor bias and a query rotation
+that survives a one-object memory. Its complete bounded score has an
+admissible witness for all 9,409 original modular sums and a separate
+repeated-key witness where the first and second reads favor different
+objects. In the same family two admissible states agree on complete training
+scores and predict opposite objects at an unobserved query.
+
+Freeze the four-case native comparison in
+[composed_retrieval](experiments/composed_retrieval/README.md). Use both
+training modes, three seeds and 1,024 updates per cell. Seal all 48 fits from
+two independent builds before opening held-out scores. Compare with the
+retained CM111 cohort, including every missed unseen answer and every length
+probe. Keep the full 165-case goal and its negative controls in view.
