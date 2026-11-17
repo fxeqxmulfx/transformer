@@ -1,0 +1,22 @@
+{
+  "name":"historical-state-content-revisit-v1",
+  "lean_source":"3c4705fb CM106; CM102 row projection",
+  "case":"gpt-probe-key-value-binding",
+  "training_input":"all four5380ac97 retained-small endpoints, selected for paired lower training CE and actual negative readout directions; every prior result retained",
+  "arms":["control","revisit"],
+  "variants":["cautious","refined"],"modes":["mini","forward"],
+  "seed":1,"batch":32,"updates":512,"shuffle_seed":20001,"budget":16.0,
+  "query_step":0.0001,"line_iterations":12,"step_ceiling":0.0009765625,
+  "content_radius":0.015625,"frequency_radius":0.00390625,
+  "control":"continue complete readout optimization with identical historical-state cache code and sampler; hold learned content in this control only",
+  "revisit":"before every readout step, cycle through components1..128 and make one sweep over both complex initial coordinates, all four complex entries of every transition whose object occurs in that original minibatch, and both learned frequencies; compare four signed real/imaginary trials per complex coordinate and two per frequency by actual full-class CE; retain the best current-batch point including the unchanged centre",
+  "feasibility":"project initial coordinates to the unit complex disk and complete matrix rows with CM102 Euclidean projection; frequencies remain unrestricted finite reals; all components/rows/coordinates stay stored including exact zeros; structural unused-capacity component0 stays zero",
+  "cache":"warm-start all indexed prior signals and the prior complete mean; compute initial historical states from the immutable starting content without CE queries; then refresh each visited record by (new_signal*new_state-old_signal*old_state)/N; store per-record content versions; never silently replace historical states by current states",
+  "history":"save each accepted changed component and every content-version hash; independently reconstruct every cached original-record state from the pinned initial model and history before interpreting diagnostics",
+  "forward":"content search uses only finite actual CE evaluations in both modes; forward readout signals use finite feasible signed CE queries, with no analytic residual in training; same reserve in both modes",
+  "diagnostics":"after all eight endpoints seal, stream training records to compare actual coefficientA with cachedH; report CM105 gap/error/direction and CM106 separate signal/current-state errors using actual complete state discrepancies, plus independent cached-product reconstruction and exact historical-state replay; no diagnostic update or held-out selection",
+  "data":"original example indices, all supervised masks, duplicates, short tails, all100 original classes and129 stored components; no answer formula or prescribed content feature",
+  "scoring":"seal all eight endpoints before new held-out scoring; original primary predicate, raw/exact/CE on all original splits and separate99% flags; complete raw-logit replay; no early stopping",
+  "limits":{"aggregate_ram_bytes":110000000000,"minimum_workspace_free_bytes":2147483648,"minimum_storage_free_bytes":17179869184},
+  "claim":"empirical persistent content search in the bounded learned family; functional/conditional convexity does not make independent content factors jointly convex; no stochastic convergence, finite-rounding certificate or unseen-answer guarantee; transformer baseline unchanged"
+}

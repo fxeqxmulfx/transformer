@@ -9092,3 +9092,16 @@ revisits, retaining historical states and using the exact old/new-product cache
 update. Signals remain stale between visits, and finite content search remains
 approximate. Neither CM106 nor the proposed experiment is an unseen-answer or
 global-factor convergence guarantee; all original held-out outcomes still matter.
+
+Task394 freezes `convex_content_revisit` before training: eight endpoints compare
+control/revisit across all four retained-small inputs, 512 minibatches of32,
+sampler20001 and unchanged readout step ceiling1/1024. Revisit cycles through
+all128 learned components, testing every responding complex initial/matrix
+coordinate and both frequencies against actual CE. Stored historical states
+and signals refresh by the exact CM106 old/new-product identity, and every
+cached state's version must replay from recorded content history. All eight
+endpoints seal before scoring. Training-only diagnostics measure separate
+signal/state discrepancy and the actual CM105 coefficient error. Original
+success/raw/exact/CE/99% reports and complete raw replays are required; preserve
+the transformer baseline and prior failures. This is approximate shared-content
+learning, not a certified convex oracle in the independent factors.
