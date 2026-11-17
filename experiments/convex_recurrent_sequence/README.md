@@ -58,7 +58,8 @@ object renaming, the order limitation, every original competitor, exact absence
 versus dense search, tiny retained parameters, duplicates/tails, learning without
 supplied witness weights, checkpoint replay and cohort-seal rejection. Full
 Lean checks passed with eight new theorems, no new sorry and no extra axioms.
-Benchmark outcomes remain pending until all six endpoints are sealed.
+The original benchmark results below were measured after all six endpoints
+were sealed.
 
 Reproduce with native tools from the repository root:
 
@@ -88,3 +89,43 @@ and report raw/exact99 separately, including every failed transfer probe.
 The transformer baseline and earlier frozen producers are unchanged. Guards
 enforce110GB aggregate RAM, at least2GiB free on the workspace disk and16GiB on
 the storage disk. A low-space refusal stops work without further cleanup.
+
+## Original short and long results, 2026-11-17
+
+Producer `00d9936e`, freeze `recurrent-sequence-v1`, source fingerprint
+`0375067e738010261e46facf75a05e3512f30459a54e9378eda00935a24b30be`, binary SHA256
+`45f3b355dde50fdf45f9deae06f2d9ba379de94d98de6336a3178f09b872a5d4`.
+Generated evidence remains in
+`/run/media/misha/storage/transformer-runs/recurrent-sequence/original-v1`.
+All18 train/score/replay commands exit0, and every complete saved raw logit and
+metric replays exactly in both modes.
+
+| Original task | Main held-out raw / exact counts, each mode | Mini main CE | Forward Mini main CE |
+|---|---|---:|---:|
+| AND shift |14/14 tokens;7/7 sequences|1.58677e-8|1.58548e-8|
+| AND random |16/16 tokens;8/8 sequences|1.71247e-8|1.74367e-8|
+| Parity16 |314/314 tokens;157/157 sequences|3.44944e-8|3.43698e-8|
+
+All three tasks pass the original success criterion and raw/exact99 in both
+modes. **Every original split has100% raw and exact accuracy**, including the
+Boolean length32/64 and position-shift probes. Those long Boolean probes had
+failed in the earlier bilinear/shared-factor experiments. Across all original
+splits, the largest CE is7.59429e-7. The parity16 source has four splits at its
+original task length; this run does not add a new longer-parity dataset.
+
+Each mode correctly predicts all40000 training parity targets in20000 examples,
+and all256 training targets in128 examples for each Boolean task. These full
+training evaluations include records that were not visited during the fixed
+512 parity updates:8192 sampled examples,16384 records,0.4096 epochs. Each
+Boolean run uses4096 examples,8192 records,32 epochs in128 updates. Training
+takes8.13/9.52s for AND shift,8.13/9.69s for AND random and18.47/19.27s for
+parity16 (Mini/forward) with other producers active, not matched transformer
+timings. Forward queries total1638400 per Boolean run and2228224 for parity.
+Every component/line-search loss evaluation is also counted in the receipts.
+
+This establishes empirical learning and length transfer for the tested original
+Boolean tasks, and held-out parity16 learning, at seed1. It does not establish
+three-seed recurrence reliability, general order-sensitive recall, all35/165
+stress tasks or a theorem that the approximate learner identifies arbitrary
+unseen answers. The scalar order obstruction still applies; no success is
+assigned to an untested task. The generalization goal remains active.

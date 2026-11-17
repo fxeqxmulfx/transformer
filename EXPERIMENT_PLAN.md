@@ -8680,3 +8680,15 @@ Key-value binding stays2.930–5.078% raw/exact and parity16 stays44.586–54.14
 exact. Preserve all failures and24-iteration settings; these are not replaced
 by the separate line refinement or recurrent results. Broader generalization
 remains unresolved, while three-seed addition repeatability is established.
+
+Task372's first recurrence cohort at00d9936e completes with all18 commands
+successful and all six complete raw-logit/metric replays exact. Every original
+split of AND shift, AND random and parity16 reaches100% raw/exact in both modes,
+including Boolean length32/64 and position shifts. Main held-out counts are
+14/14,16/16 and314/314 tokens. Parity is evaluated at the original16-bit task
+length; no longer-parity dataset is added here. Maximum CE across all splits is
+7.59429e-7. This repairs the tested Boolean length-transfer failures and learns
+held-out parity without supplied witness weights. Keep the scalar order limit,
+one-seed scope and unresolved broader goal explicit. Next validate three seeds
+and more original parity lengths, then address order-sensitive recall through
+the separately proved general learned-operator family.
