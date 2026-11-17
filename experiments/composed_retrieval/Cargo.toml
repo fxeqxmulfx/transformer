@@ -35,6 +35,11 @@ path = "src/bin/offset-intervals.rs"
 required-features = ["output-offsets"]
 
 [[bin]]
+name = "product-radii"
+path = "src/bin/product-radii.rs"
+required-features = ["output-offsets"]
+
+[[bin]]
 name = "prefix-inventory"
 path = "src/bin/prefix-inventory.rs"
 required-features = ["prefix-cohort"]

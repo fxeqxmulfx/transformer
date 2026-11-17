@@ -1,10 +1,10 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.OutputOffsets
+public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.ProductRadii
 
 /-!
 # Composed retrieval on immutable object sequences
 
-Source: `review/flat_spectrum.md`, CM113–116. Complete score geometry, sufficient
-two-hop margins, modular-addition capacity, depth training and bounded output offsets.
+Source: `review/flat_spectrum.md`, CM113–117. Complete score geometry, two-hop
+margins, modular addition, gate training, bounded offsets and learned product radii.
 -/

@@ -13,6 +13,8 @@ pub mod operator;
 #[cfg(feature = "prefix-cohort")]
 pub mod prefix;
 mod query;
+#[cfg(feature = "output-offsets")]
+pub mod radial;
 pub mod train;
 
 #[cfg(test)]

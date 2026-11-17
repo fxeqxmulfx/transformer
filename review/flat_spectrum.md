@@ -22896,3 +22896,41 @@ prefix. One observed winning label provides inequalities instead of these
 numerical contrasts. With all sequence weights trainable, the CM113
 example of identical observed scores and opposite unseen winners still
 applies by choosing every offset zero.
+
+## CM117. Learned object magnitudes in the product channel
+
+Give every original object $o$ one trainable radius $r_o$ in $[0,1]$.
+Use it on both sides of the CM113 product. In a nonempty memory with
+first-read weights $w_j$ and final query $q$, the rotated class score becomes
+
+$$
+r_q\sum_j w_j r_{x_j}\,\mathrm{decode}(v_{x_j},\phi_q,c).
+$$
+
+The two unrotated routes still use the original normalized weights. The
+complete logit uses the depth and product mixtures, scale $B\ge0$, and
+the CM116 offset $b_c$ with $|b_c|\le D$. An empty prefix or a single
+object uses the original boundary rule. Since the normalized read averages
+terms of magnitude at most one, every complete logit has absolute value
+at most $B+D$. A radius of one for each class recovers the original model.
+
+On a two-object prefix $[a,q]$ both unrotated reads coincide. The product
+term equals $r_a r_q$ times its old value. When only the radii change, the
+change in an observed logit contrast between classes $c,k$ is the change
+in $r_a r_q$ times $B$ times the product gate times the difference of
+their rotated decodes. For a nonzero coefficient the numerical contrast
+identifies the product. At $a=q$ the nonnegative radius is identified.
+Winning labels supply inequalities. For a product-only two-class model,
+take phase 0 for false and $\pi$ for true in the value and query tables,
+give false an offset of $1/2$, and use $B=1$. Changing the radius of true
+from one to zero gives identical training logits on $[\mathrm{false},
+\mathrm{false}]$ and reverses the strict winner on $[\mathrm{true},
+\mathrm{false}]$.
+
+For a fixed pair, the logits are affine in the scalar product of its two
+radii when the other coordinates are fixed, so ordinary CE is convex in
+that scalar on $[0,1]$. A radius shared between two occurrences enters
+quadratically. Optimizing all radii, phases and routes jointly requires
+separate analysis. The native training-only intervention below measures
+whether bounded changes could correct the observed original pairs. An
+intervention is distinct from learning those values from scratch.

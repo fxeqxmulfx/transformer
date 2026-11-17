@@ -9551,3 +9551,11 @@ prompt, appends each model-written object and stops at EOS or the original
 input-derived limit. Compare generated and teacher-forced accuracy on every
 split after both builds seal. Verify the repeated lookup before adding the
 six cases to the original 165-case ledger.
+
+Task 419 tests whether CM117's learned object magnitudes can address the
+observed product errors. Its original-training-only intervention reproduced
+all raw logits of 288 arithmetic models. At modulus 97, setting the selected
+input radius to zero made multiplication exact on training pairs at two
+seeds and repaired 45 of 55 errors at the third. Most fitted models still
+had errors under all five tested radii. Compare a fresh fully trainable
+model starting with all radii at one against the frozen CM116 cohort.
