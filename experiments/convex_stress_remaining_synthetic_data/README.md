@@ -121,3 +121,27 @@ for run in original-v1 review-v1; do
     "$(cat "$freeze/producer.commit")" "$history"
 done
 ```
+
+## Exact-generation limit of the random-LM control
+
+At each length, every row gives the model the same prompt and generation
+limit. A deterministic next-object model therefore produces one complete
+sequence for the whole split. Its greatest possible exact-match count is the
+multiplicity of the most frequent answer, including EOS. This is an upper
+bound even for a predictor allowed to know the answer frequencies.
+
+In the seed-1 native reconstruction, all 64 primary validation answers differ.
+The most frequent test answer occurs twice in 128 rows. The exact ceilings are
+therefore **1/64 on validation and 2/128 on test**, both 1.5625%. At lengths
+16 and 32 the ceilings are 1/64 on validation and 1/128 on test. These
+counts establish that the control's original 95% exact target and the
+all-catalog 99% exact target are unattainable on these splits. Keep its case
+and pass flag in the full catalog. The counts measure the scoring limit alone.
+
+The native check enumerates the distinct complete answers and scores each
+possible matching output against every row with the original generation
+scorer. Run it from the repository root.
+
+```sh
+cargo test --offline --locked --manifest-path experiments/convex_stress_remaining_synthetic_data/Cargo.toml --test random_control
+```

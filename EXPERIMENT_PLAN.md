@@ -9298,3 +9298,35 @@ changed-input refusals pass; fresh reports are identical. This is one original
 task/seed, zero updates and no new success. Prioritize shared learned matching
 across unseen combinations, while retaining CM110's width result as a separate
 expressivity fact rather than evidence that width alone solves this failure.
+
+### 2026-11-17 GPT stress-test goal for the fully trainable next-object model
+
+Use the November 16 constant-object interface across all 165 cases in
+`stress_tests_for_gpt.md`. At every prediction the model reads an immutable
+prefix and returns one object from the same vocabulary. Fit a fresh instance
+of the shared architecture per case. Ordinary full-vocabulary next-object CE
+trains the representation, sequence interactions and output mapping using the
+original training records. Object IDs provide addresses only. For the learned
+complex model, state the domain on which ordinary CE is jointly convex and
+which coordinates the native optimizer updates. CM95, for example, proves
+convexity over finite mixtures of score functions. Training the factors of a
+component requires its own analysis. Use flat-spectrum results to bound the
+executed operator and check which unseen predictions the observations identify
+under the stated assumptions (CC6–7, CM77, CM87, CM91).
+
+Run both minibatch and forward-only minibatch in Rust/Kernite. Freeze each
+protocol and seal its endpoints before scoring, then independently repeat and
+replay. Retain every original split, metric and success flag and report the
+separate 99% raw-object and exact-sequence targets wherever defined. The
+98/165 historical union spans separate seed-1 cohorts. Track the new
+architecture's results case by case. Include negative controls and refusals
+in the denominator. On `random-lm-control` the deterministic exact-score
+ceiling on the primary split is 1/64. The native check and its assumptions
+are in `experiments/convex_stress_remaining_synthetic_data/README.md`.
+
+The first milestone is `gpt-probe-key-value-binding`. Board task 403 covers
+the learned retrieval margin. Task 404 tests whether training learns the
+matching and readout on the original 2,048 training examples and generalizes
+to the held-out queries in both modes. Use full-vocabulary accuracy for the
+pass decision. Report choice between the two distinct stored values as the
+diagnostic from task 402.
