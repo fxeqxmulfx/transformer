@@ -9034,3 +9034,17 @@ recipe is finished and is not extended. Next prove how error between a training
 coefficient and a minibatch or retained estimate affects the CM104 direction;
 then test a minibatch estimate/update with less stochastic variation. No global
 factor or unseen-answer conclusion follows from these conditional results.
+
+Task391 proves CM105 before another minibatch repair: complete support
+perturbation, corrected actual CE gaps and actual direction bounds with the
+explicit2B D(A-H) coefficient-error term. A nonzero complex witness has estimated
+gap12 and correction8, so strict actual descent does not require exact equality
+of the estimate and training coefficient. A separate finite feasible halfway
+step lowers CE on original training index0 while raising the complete mean on
+two distinct opposite prefixes. Both imaginary class rows and the learned
+ordered component remain. All41 new theorems compile; full14187-job build,
+direct/global axiom checks and native INDEX pass with no new sorry or extra axiom.
+The next native comparison will retain coefficients by original record index
+and separate estimate retention from step-size reduction. It must measure actual
+coefficient discrepancy and all original raw outcomes, without claiming a
+stochastic-error certificate or generalization guarantee from convexity alone.

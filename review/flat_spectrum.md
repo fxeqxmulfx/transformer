@@ -22314,3 +22314,57 @@ fixed-weight optimality as joint-capacity optimality, not a contradiction of
 CM103 or a benchmark result. For a separate zero-joint-gap witness, retain two
 copies of [true,false] with opposite targets: both complete coefficients cancel
 and the joint gap is zero, without deleting the conflicting indexed records.
+
+## CM105. Complete coefficient error and minibatch descent failure
+
+The CM104 experiment lowers every updated minibatch's CE but increases the
+complete training mean. Convexity of the complete weighted-readout domain does
+not equate a current minibatch coefficient with the full training coefficient.
+Keep the same finite complete classes/components and shared capacity K(U)<=B.
+For any complete coefficient table A, retain the support
+D(A)=max_j sum_c max(|A_jc1|,|A_jc2|), with nonempty components and classes.
+
+This support is symmetric and subadditive, so |D(A)-D(H)|<=D(A-H). Every feasible
+table satisfies |<U,E>|<=B D(E); two feasible tables therefore satisfy
+|<V-U,E>|<=2B D(E). These statements include every original complex coordinate,
+including components currently at zero capacity. They need no optimizer oracle.
+
+Define the estimated gap G_H(U)=<U,H>+B D(H), where H may be a current minibatch,
+finite-query or retained estimate. At feasible U it is nonnegative for every H.
+For actual indexed complete-training coefficient A(U),
+
+    |G_A(U)-G_H(U)| <= 2B D(A(U)-H),
+    L(U)-G_H(U)-2B D(A(U)-H) <= L(V)
+
+for every shared-capacity feasible V. If V_H is CM104's explicit finite support
+minimizer for H, its actual complete-training first-order contraction obeys
+
+    <V_H-U,A(U)> <= -G_H(U)+2B D(A(U)-H).
+
+Thus G_H(U)>2B D(A(U)-H) supplies a strictly negative actual first-order direction.
+A positive estimated gap by itself does not. No bound on estimator error is
+assumed free: the error here is its actual full-table discrepancy. The result
+does not claim unbiasedness, reduced variance, finite-step CE descent, convergence,
+rounding certification, raw accuracy or unseen-label identification. Any subsequent
+minibatch implementation must distinguish its estimate from A(U).
+
+The error condition is inhabited nontrivially. Take the CM98 ordered component,
+capacity sixteen, full imaginary rows (i,0) and(-i,0), and the true-target record
+[true,false]. Scores are zero and the actual coefficient has class rows
+(0,i/2) and(0,-i/2). Set H=3A/4: G_H=12, D(A-H)=1/4, and the correction is8.
+The error is nonzero, yet the strict-direction condition holds.
+
+A finite-step counterexample keeps both distinct CM104 learned components and
+both opposite prefixes with their respective first-object targets. Start at
+CM104's parked table, whose actual scores are zero despite imaginary readouts.
+Put native capacity sixteen on class rows (1,0) and(-1,0) of its constant-state
+component to form a feasible bias table, then take the halfway interpolation
+from parked to this bias table. The resulting complete rows retain imaginary
+coordinates and obey the same shared budget. Actual logits are8 for true and-8
+for false on both prefixes. CE decreases on the minibatch containing training
+index0, but the complete two-record mean rises from log2 to
+log(exp8+exp(-8))>log2. The full class denominator and both indexed records remain.
+The strict comparison uses exp(t)+exp(-t)>2 for every positive contrast t.
+The ordered component remains available; CM104 already proves a different
+feasible reallocation improves both records. This counterexample concerns a
+minibatch descent inference, not impossibility of fitting or generalizing.
