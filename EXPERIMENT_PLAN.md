@@ -9370,3 +9370,19 @@ queries, batches of 32 and data seed 1. Size the input context from the
 published maximum length 96. Train only on original length-24 records and
 score every original length-24/48/96 split after both independent cohorts are
 sealed. Task 407 separately covers eight-query Basis recall and overwritten keys.
+
+Task 406 producer `3a69f86b` reached the original multi-query recall target
+at all seeds in both modes. Forward-only Mini achieved 100% raw and exact on
+all 11 splits, including the length-96 probe. Mini scored 31/32 exact on
+novel validation and 63/64, 58/64 and 62/64 on the length-24/48/96 tests.
+Two-hop lookup missed its original target in both modes. At length 24 the
+test exact counts were 10–12/64 in Mini and 14–15/64 in forward-only Mini.
+Across the three originals evaluated with this architecture, one passes the
+99% raw and exact goal at all model seeds in both modes. Keep the lookup
+failure and the mode difference on recall visible in subsequent comparisons.
+
+The retained multi-query recall logits identify one missing supervised output.
+Object 132 occurs 33 times in training inputs. All three Mini endpoints fail
+every held-out query for this object and succeed on every other answer.
+All three forward-only endpoints also succeed on object 132. This observation
+gives a training-exposure test for the next comparison.

@@ -3,6 +3,7 @@
 pub use baseline::{Result, data, hash, random::Random};
 use learned_retrieval::cohort::{self, Protocol, Study};
 use serde_json::{Value, json};
+pub mod audit;
 
 // Reuse the four reviewed original data and fingerprint modules, with the
 // same Example and RNG types as the learner.
