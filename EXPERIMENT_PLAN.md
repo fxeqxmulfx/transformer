@@ -9022,3 +9022,15 @@ feasible CE queries. Seal all four models before original held-out scoring;
 replay all diagnostics and raw reports. Preserve learned content and the
 transformer baseline,110GB RAM and both-disk limits. This tests conditional
 allocation, without assuming unseen identification or a global factor optimum.
+
+Task390 producerf5ae34ef completes the fixed comparison. All twelve enlarged
+gaps exceed the old fixed-weight gaps (1.180–1.619 versus0.273–0.550), and all
+have actual training-only probes lowering CE. But all four512-update minibatch
+continuations fail: train raw3.71–4.05%, novel1.95–3.52%, all success flags false.
+Every accepted step lowers its own minibatch CE and takes eta1/16; full-training
+CE instead rises above4.0. All original raw replays match, all129 components and
+learned content remain, and native capacity/reconstruction checks pass. This
+recipe is finished and is not extended. Next prove how error between a training
+coefficient and a minibatch or retained estimate affects the CM104 direction;
+then test a minibatch estimate/update with less stochastic variation. No global
+factor or unseen-answer conclusion follows from these conditional results.

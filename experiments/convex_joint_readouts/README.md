@@ -82,3 +82,52 @@ A space failure stops execution without cleanup. Generated evidence stays on
 storage outside the worktree. Review repeats all twelve diagnostics into another
 directory byte-for-byte and independently replays all four original raw reports.
 No result or99% success is claimed before those checks.
+
+Producer `f5ae34ef` completes all twelve diagnostics and all four fixed training
+runs. The joint gaps are1.18036–1.61864, versus the old fixed-weight gaps
+0.27326–0.54996. Thus the old conditional lower bounds omitted substantial
+capacity-allocation scope. Each endpoint has an actually evaluated full-training
+probe lowering CE by0.00566–0.01409, with the best of the eight fixed probes at
+eta1/64 in all twelve cases. That lowest-CE probe raises training correct counts
+in three cases, lowers them in eight and leaves one unchanged. No diagnostic
+probe is accepted or earns new held-out accuracy credit.
+
+The minibatch update rule fails severely. Every one of2048 accepted steps lowers
+its own reserved-centre minibatch CE, and every line search selects its maximum
+eta1/16. Nevertheless full-training CE rises from2.032–2.086 to4.006–4.063, while
+both training and novel accuracy collapse. This is evidence of an unsuitable
+stochastic update rule, not a counterexample to the conditional convexity theorem
+or proof that these learned states cannot fit the task.
+
+| Source/mode | Train raw before | Train raw after | Train CE after | Novel raw before | Novel raw after | Test raw after |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| cautious Mini | 67.8711% | 3.8086% | 4.063179 | 14.8438% | 3.5156% | 3.9063% |
+| cautious forward | 68.7500% | 4.0527% | 4.037471 | 12.1094% | 2.5391% | 4.2969% |
+| refined Mini | 66.7969% | 3.7109% | 4.005676 | 11.5234% | 3.3203% | 5.4688% |
+| refined forward | 64.6484% | 4.0527% | 4.008804 | 12.3047% | 1.9531% | 2.5391% |
+
+Raw and exact accuracy agree on these original single-target records. Every
+original success flag and every99% flag is false. All four complete raw-logit
+replays are identical. Each model retains129 components and all learned content;
+component1 is selected in1350 of2048 steps and finishes with13.84–14.76 of the
+total native capacity16. This concentration is an observed optimizer outcome,
+not component pruning. Full-training diagnostics had selected other components.
+
+All four runs finish the declared512 updates and eight additional epochs. The
+two Mini runs each use311,296 CE evaluations; the two forward runs each use
+3,588,096, including3,276,800 signed-bias queries. The twelve diagnostics use
+294,912 CE evaluations. Maximum accepted-step logit reconstruction error is
+4.45e-14, operator-norm excess2.23e-16 and shared-capacity excess0; the largest
+observed aggregate RSS before an update is10.981GB. Diagnostic support/change
+identity errors stay below4.45e-16/1.58e-13. These are measured floating checks.
+
+The next repair must address the discrepancy between a current minibatch
+coefficient and the complete training coefficient before further aggressive
+capacity movement. Merely lowering the current batch CE does not suffice.
+Both mini modes remain required; full-batch training and unseen-label access
+are not proposed as substitutes. Generalization remains unresolved.
+
+Frozen evidence is under `transformer-runs/freezes/joint-readouts-v1`, reports
+under `diagnostics/joint-readouts-v1`, and models/receipts under
+`joint-readouts/original-v1` on storage. The source fingerprint is
+`a4aa537ad5e8bad152e79689913078a0865394c17cd98eb63f7dfbac23168c39`.
