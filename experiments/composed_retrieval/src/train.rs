@@ -173,7 +173,9 @@ pub fn fit(
     let l = m.validate()?;
     let before = metrics(m, &input)?;
     let mut adam = Adam::new(m.weights.len());
-    let mut choices = Choices::new(&l, seed);
+    let mut cycle = p
+        .coordinates_per_table
+        .map(|count| (Choices::new(&l, seed), count));
     let all: Vec<_> = (0..m.weights.len()).collect();
     let mut rng = Random::new(seed + 10000);
     let mut order: Vec<_> = (0..input.len()).collect();
@@ -203,10 +205,16 @@ pub fn fit(
                 adam.update(m, &l, &all, &g, p)?;
             }
             "forward" => {
-                let coords = choices.next(p.coordinates_per_table);
-                let g = query::differences(m, &mut tab, &batch, &coords, p.query_step)?;
+                let selected;
+                let coords = if let Some((choices, count)) = &mut cycle {
+                    selected = choices.next(*count);
+                    &selected
+                } else {
+                    &all
+                };
+                let g = query::differences(m, &mut tab, &batch, coords, p.query_step)?;
                 queries += 2 * coords.len();
-                adam.update(m, &l, &coords, &g, p)?;
+                adam.update(m, &l, coords, &g, p)?;
             }
             _ => return Err("unrecognized training mode".into()),
         }

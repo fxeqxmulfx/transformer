@@ -7,7 +7,12 @@ use serde::Deserialize;
 use serde_json::Value;
 use std::collections::BTreeMap;
 
-pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub const BASE_PROTOCOL: &str = include_str!("../protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "dense-forward") {
+    include_str!("../dense/protocol.json")
+} else {
+    BASE_PROTOCOL
+};
 #[derive(Clone, Deserialize)]
 pub struct CaseSpec {
     pub vocabulary: usize,
@@ -42,10 +47,24 @@ pub struct Protocol {
     pub beta2: f64,
     pub epsilon: f64,
     pub query_step: f64,
-    pub coordinates_per_table: usize,
+    /// A count selects a seeded cycle in each table. None visits every model coordinate.
+    pub coordinates_per_table: Option<usize>,
 }
 pub fn protocol() -> Result<Protocol> {
-    let p: Protocol = serde_json::from_str(PROTOCOL)?;
+    let mut p: Protocol = serde_json::from_str(BASE_PROTOCOL)?;
+    if cfg!(feature = "dense-forward") {
+        let dense: Value = serde_json::from_str(PROTOCOL)?;
+        if dense["parent_protocol_sha256"] != hash(BASE_PROTOCOL.as_bytes())
+            || dense["forward_coordinates"] != "all"
+        {
+            return Err("dense comparison or its frozen parent changed".into());
+        }
+        p.name = dense["name"]
+            .as_str()
+            .ok_or("missing comparison name")?
+            .into();
+        p.coordinates_per_table = None;
+    }
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256

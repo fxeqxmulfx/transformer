@@ -116,6 +116,23 @@ impl<'a> Run<'a> {
                     let bytes = fs::read(path.join("model.json"))?;
                     let model: Model = serde_json::from_slice(&bytes)?;
                     model.validate()?;
+                    if p.coordinates_per_table.is_none() {
+                        let queries = if mode == "forward" {
+                            2 * model.weights.len() * p.updates
+                        } else {
+                            0
+                        };
+                        let training = &r["training"];
+                        if training["min_visits"] != p.updates
+                            || training["max_visits"] != p.updates
+                            || training["forward_loss_queries"] != queries
+                        {
+                            return Err(format!(
+                                "dense visits or loss query count differ in {arm}/{cell}"
+                            )
+                            .into());
+                        }
+                    }
                     if r["identity"] != identity
                         || r["heldout_scored"] != false
                         || r["case"] != *id

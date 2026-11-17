@@ -282,6 +282,16 @@ fn original_fingerprints_masks_and_optimizer_clocks() -> Result<()> {
         assert_eq!(r["examples"], 11);
         assert_eq!(r["targets"], 22);
         assert!(r["min_visits"].as_u64().unwrap() > 0);
+        if mode == "mini" || p.coordinates_per_table.is_none() {
+            assert_eq!(r["min_visits"], p.updates);
+            assert_eq!(r["max_visits"], p.updates);
+            let queries = if mode == "forward" {
+                2 * m.weights.len() * p.updates
+            } else {
+                0
+            };
+            assert_eq!(r["forward_loss_queries"], queries);
+        }
         assert_eq!(
             r["forward_loss_queries"].as_u64().unwrap() > 0,
             mode == "forward"

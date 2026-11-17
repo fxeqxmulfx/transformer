@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Train both independent frozen builds before allowing any held-out score.
 set -euo pipefail
-if (( $# != 4 )); then
-  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT' >&2
+if (( $# < 4 || $# > 5 )); then
+  echo 'usage: bash run.sh WORKSPACE STORAGE PRODUCER FRESH_OUTPUT [sparse|dense]' >&2
   exit 2
 fi
 workspace=$(realpath "$1")
@@ -10,6 +10,14 @@ storage=$(realpath "$2")
 producer=$(git -C "$workspace" rev-parse --verify "$3^{commit}")
 output=$(realpath -m "$4")
 experiment=experiments/composed_retrieval
+variant=${5:-sparse}
+features=()
+protocols=(protocol.json)
+case "$variant" in
+  sparse) ;;
+  dense) features=(--features dense-forward); protocols+=(dense/protocol.json) ;;
+  *) echo 'unknown coordinate schedule' >&2; exit 2 ;;
+esac
 workers=18
 admit() {
   test "$(df -B1 --output=avail "$workspace" | tail -1)" -gt 2147483648
@@ -35,13 +43,15 @@ for arm in original repeat; do
   export RETRIEVAL_PRODUCER="$producer" CARGO_BUILD_JOBS=4
   export RUSTFLAGS="--remap-path-prefix=$src=/composed-source --remap-path-prefix=$build_dir=/composed-target"
   manifest="$src/$experiment/Cargo.toml"
-  cargo test --locked --offline --manifest-path "$manifest" --target-dir "$build_dir" > "$output/$arm/tests.log" 2>&1
-  cargo build --locked --offline --release --manifest-path "$manifest" --target-dir "$build_dir" > "$output/$arm/build.log" 2>&1
+  cargo test --locked --offline "${features[@]}" --manifest-path "$manifest" --target-dir "$build_dir" > "$output/$arm/tests.log" 2>&1
+  cargo build --locked --offline --release "${features[@]}" --manifest-path "$manifest" --target-dir "$build_dir" > "$output/$arm/build.log" 2>&1
   cp "$build_dir/release/composed-retrieval" "$output/$arm/composed-retrieval"
 done
 (
   cd "$output"
-  sha256sum source.tar producer.commit {original,repeat}/composed-retrieval {original,repeat}/source/"$experiment"/protocol.json > frozen.sha256
+  inputs=(source.tar producer.commit {original,repeat}/composed-retrieval)
+  for file in "${protocols[@]}"; do inputs+=({original,repeat}/source/"$experiment/$file"); done
+  sha256sum "${inputs[@]}" > frozen.sha256
   sha256sum -c frozen.sha256
 )
 protocol="$output/original/source/$experiment/protocol.json"
@@ -52,10 +62,14 @@ mapfile -t seeds < <(jq -r '.seeds[]' "$protocol")
 invoke() {
   local arm=$1 action=$2
   shift 2
-  prlimit --as=2147483648:2147483648 -- "$output/$arm/composed-retrieval" "$action" "$workspace" "$storage" "$output" "$arm" "$@"
+  local meter=()
+  if [[ "$action" == fit && "$variant" == dense ]]; then
+    meter=(/usr/bin/time -f '%e %U %S %M' -o "$output/$arm/fit-$1-$2-$3.time")
+  fi
+  "${meter[@]}" prlimit --as=2147483648:2147483648 -- "$output/$arm/composed-retrieval" "$action" "$workspace" "$storage" "$output" "$arm" "$@"
 }
 export -f invoke
-export output workspace storage
+export output workspace storage variant
 fit_cells() {
   for id in "${cases[@]}"; do for mode in "${modes[@]}"; do for seed in "${seeds[@]}"; do for arm in original repeat; do
     printf '%s\0' "$arm" "$id" "$mode" "$seed"

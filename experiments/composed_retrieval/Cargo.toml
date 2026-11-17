@@ -6,6 +6,9 @@ publish = false
 
 [workspace]
 
+[features]
+dense-forward = []
+
 [dependencies]
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
 bilinear = { package = "convex-bilinear-sequence", path = "../convex_bilinear_sequence" }

@@ -1,0 +1,8 @@
+{
+  "name": "composed-retrieval-original-four-matched-visits-v1",
+  "parent_protocol_sha256": "230ab419a570932ffac0eb3d2cdd338b81eb630d223337d07f329ad67148aec8",
+  "forward_coordinates": "all",
+  "comparison": "Inherit the complete parent protocol, including its four original datasets, architecture, initialization, three seeds, both modes, batch order, 1024 updates, loss step, Adam hyperparameters, endpoint freeze and held-out criteria. Replace the cyclic forward coordinate schedule with every physical scalar in native parameter order on every minibatch.",
+  "query_accounting": "At every visit evaluate upper and lower feasible complete-minibatch CE before applying any updates. Count both losses even when cached rows are constant under the perturbation. Both gates use their feasible displacements. Every scalar advances its own Adam clock on all 1024 updates.",
+  "evidence": "Verify all standard minibatch model files and optimizer receipts against the frozen first cohort. Seal all 48 fresh training endpoints prior to evaluation. Independently replay and decode all initial and final raw outputs. Record elapsed time, user and system CPU seconds, and peak resident memory for each fit."
+}

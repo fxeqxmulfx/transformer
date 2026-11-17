@@ -9425,3 +9425,10 @@ Board tasks 411 and 412 distinguish two follow-up questions. Test forward-only l
 queries with matched coordinate visits, and determine what the observed CE
 gradient does to the two-hop gate and routing parameters. Freeze each new
 comparison and retain the four original-case controls.
+
+Task 411 compares every-coordinate forward-only loss queries against standard
+minibatch on the same four original cases. Freeze the comparison in
+[the matched-visit protocol](experiments/composed_retrieval/dense/protocol.json).
+Each of the 48 fits uses the original seed, batch order and fixed 1,024-update
+endpoint. Record numerical query counts and measured resource costs. Check the
+standard minibatch runs against the previous weights and optimizer evidence.
