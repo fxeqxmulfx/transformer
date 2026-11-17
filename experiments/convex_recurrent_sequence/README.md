@@ -144,7 +144,7 @@ All30 endpoints must seal before any scoring. The repeated three seed1 tasks
 provide a direct complete-logit control against the first producer. Preserve
 all per-cell successes, failures, original split metrics and replay hashes.
 No transition, feature, target, example or learned coordinate is changed for
-the additional lengths. Results remain pending until the cohort completes.
+the additional lengths.
 
 Build with the commands above, use `stress plan-three-seed`, and freeze a fresh
 executable/source archive with `three_seed_protocol.json` saved as the freeze's
@@ -156,3 +156,30 @@ bash experiments/convex_recurrent_sequence/run.sh WORKSPACE STORAGE FREEZE COHOR
 
 Individual commands are `train-three-seed`, `score-three-seed` and
 `verify-three-seed`, with the same positional arguments as the first cohort.
+
+The expanded cohort is complete at producer `1786526f`, freeze
+`recurrent-three-seed-v1`, source fingerprint
+`07e81190c695ee67e9f95c280ec0bcc2351b4374050c0f7472b1a93ed3e5857d`, binary SHA256
+`38a9ae459ae832c92a8eaf07f50230c085e1876bf79a3111722679aa0c49e8e9`.
+Evidence stays in
+`/run/media/misha/storage/transformer-runs/recurrent-sequence/three-seed-v1`.
+All90 train/score/replay commands exit0, and all30 complete raw-logit replays
+match. All six repeated seed1 split reports, including every raw-logit hash,
+are exactly equal to the first recurrence producer.
+
+| Original task | Successful cells | Main held-out correct tokens / sequences per cell | Worst CE over every split and cell |
+|---|---:|---|---:|
+| AND shift |6/6|14/14;7/7|2.10756e-6|
+| AND random |6/6|16/16;8/8|4.89207e-5|
+| Parity16 |6/6|314/314;157/157|3.67811e-8|
+| Parity20 |6/6|568/568;284/284|3.63936e-8|
+| Parity24 |6/6|612/612;306/306|3.18130e-8|
+
+**Every original split of all30 models reaches100% raw and exact accuracy.**
+Both original success and raw/exact99 are true in every cell, including all
+Boolean length32/64 and position-shift probes. Thus this family passes these
+five original tasks in both modes at all three training seeds on the unchanged
+data seed1 splits. The result covers five of the selected35 tasks, not all35 or
+the full165-case catalog. Addition's separately reviewed shared-factor result
+is a different architecture and is not added to this model's pass count.
+General order-sensitive recall remains unresolved by the scalar family.

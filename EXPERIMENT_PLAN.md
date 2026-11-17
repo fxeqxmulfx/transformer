@@ -8712,3 +8712,14 @@ result, not learned MQAR accuracy. The user next suggested RoPE: task375 will
 connect learned position-dependent rotations to actual bounded execution.
 Existing RotarySpectrum already shows that per-row RoPE need not preserve a
 flat Gram spectrum; preserve the operator bound without claiming that equality.
+
+Task373's expanded frozen cohort at1786526f is complete: all30 endpoints pass
+original success and raw/exact99 with100% raw/exact on every original split.
+All90 commands exit0 and all30 raw-logit/metric replays are identical. Both
+original Boolean tasks and parity16/20/24 pass in both modes at all three
+training seeds on the unchanged data seed1 splits. The six repeated seed1 split
+reports exactly equal the first producer, including full-logit hashes. Worst CE
+across the entire cohort is4.89207e-5 on a long Boolean probe. This is five of35
+selected tasks, not a full-suite result; separately trained parity lengths are
+not a parity16 extrapolation claim. Preserve the scalar order limitation and
+continue with the learned rotary/matrix extension for order-sensitive tasks.
