@@ -22674,3 +22674,32 @@ parameter paths trainable; no offset may be supplied from MQAR roles.
 A two-object complex example with separated learned vectors and a nonconstant
 relative potential witnesses nonempty positive-margin conditions. It is a
 mathematical example, never a benchmark initialization or answer program.
+
+## CM112. A two-object input removes query dependence from CM111
+
+On the original prefix `[a,b]`, the query is `b` and the memory contains just
+`a`. Both normalized rows have a single entry. The one path has mass one for
+every possible learned key table, key scale and relative potential. The whole
+unscaled class-score function is therefore
+
+    score([a,b], c) = Re <V(c), V(a)>.
+
+The native scale multiplies all these scores by the same capacity. For a
+fixed first object, every second object gives the same scores and the same
+prediction under a fixed deterministic decoder. This holds during fitting
+and for every endpoint, including any subsequent change to the weights.
+If two such prefixes require different answers, at least one prediction must
+be wrong. Distinct Boolean answers and the existing nonzero complex witness
+instantiate the contradiction for a deterministic two-class readout.
+
+The original `arithmetic-add` data consists of two operands modulo 97 with
+one label at the second position. At a fixed first operand, distinct second
+operands have distinct answers. Grouping each original fingerprint-checked
+split by first operand bounds the number correct by the sum of the largest
+answer counts in those groups. This gives 97/4,704 on train and 97/4,705 on
+validation. These are upper bounds on every trained CM111 single head. The
+native regression also compares its full raw logit vector across every second
+operand in both original splits. A shared architecture that covers arithmetic
+needs a learned path from the final object to the output even with one
+memory position. Ordinary CE fitting and the flat capacity bound alone
+cannot supply that missing dependence.

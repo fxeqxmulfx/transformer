@@ -101,3 +101,19 @@ and the full score report were byte-identical across runs. Separate-process
 replays matched. The score report SHA256 is
 `bba23ff02967adba93061f6f8816155d200b1ad03634a886539a717705a09fab`.
 This contributes one original case to the shared model's own 165-case tally.
+
+## Two-object arithmetic
+
+The CM112 proof gives the full score vector on the original two-operand
+arithmetic prefix. Both softmaxes have one memory position, so the first
+operand determines every score. Modular addition requires a different answer
+for each second operand at fixed first operand. On the original data seed 1
+the single head can therefore score at most 97/4,704 on train and 97/4,705
+on validation (2.06%). The native test checks the original split fingerprints,
+computes the bound by grouping the labels, and compares the full model
+outputs across all 9,409 original examples. This is an architectural bound.
+
+```sh
+cargo test --offline --locked --manifest-path experiments/learned_retrieval/Cargo.toml \
+  --test two_object_arithmetic -- --nocapture
+```

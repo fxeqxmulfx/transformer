@@ -9386,3 +9386,10 @@ Object 132 occurs 33 times in training inputs. All three Mini endpoints fail
 every held-out query for this object and succeed on every other answer.
 All three forward-only endpoints also succeed on object 132. This observation
 gives a training-exposure test for the next comparison.
+
+Task 408 and flat-spectrum CM112 identify a separate obstacle to the
+165-case goal. On any two-object prefix the current single retrieval head
+discards all query dependence through its singleton softmaxes. The original
+modular-addition validation score is bounded by 97/4,705 for every set of
+weights. A successor must retain a trainable interaction with the final
+object at this prefix length and must also be tested on two-hop composition.

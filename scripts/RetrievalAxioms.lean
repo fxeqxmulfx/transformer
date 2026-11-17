@@ -35,3 +35,6 @@ open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval
 #print axioms witness_decoder_gap
 #print axioms witness_positive
 #print axioms witness_correct
+#print axioms logit_one_past
+#print axioms score_two_objects
+#print axioms incompatible_two_object_answers
