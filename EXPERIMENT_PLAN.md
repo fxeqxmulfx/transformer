@@ -8851,3 +8851,21 @@ training set, not a capacity/separability or unseen-label obstruction. Next
 prove and test complete readout refitting across the training stream, keeping
 the trained content and all original coordinates. Treat it as a controlled
 optimizer investigation, not a supplied answer rule or generalization theorem.
+
+Task381 extends Lean with CM100 before native readout refitting. The complete
+row domain varies every real/imaginary class coefficient on already learned
+content; actual recurrent states stay unchanged, while full logits are linear
+and indexed mean CE is convex. Prove the explicit radial row update, complete
+model feasibility and full-family signed CE-query feasibility. Keep this
+conditional subproblem distinct from full physical-factor convexity, and assert
+no descent, separability or unseen-label guarantee. Native task382 follows only
+after module/full builds, direct/global axioms, source warning, INDEX and
+forbidden checks and review pass.
+
+CM100's22 new theorems pass the full14156-job Lean build, all six touched-source
+warning checks,22 direct standard-axiom reports, global36sorry/0rests/0extra audit,
+native INDEX generation/check and forbidden checks. INDEX now records5059 modules
+and26502 theorems, with0vacuous/0placeholder. The conditional readout step is
+proved feasible and convex in its complete coefficients; no new fitting or
+unseen-answer conclusion. Task382 will measure whether revisiting all learned
+readouts across original minibatches improves the retained recall failures.

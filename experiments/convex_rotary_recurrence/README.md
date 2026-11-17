@@ -477,3 +477,15 @@ at its proposal-batch fit. Prove the complete conditional readout domain and
 actual update feasibility first; then test whether revisiting learned readouts
 helps before increasing memory or changing operator geometry. This diagnostic
 accepts no new model and earns no extra accuracy credit.
+
+CM100 now adds22 proved Lean statements for that conditional readout step.
+Actual execution preserves every learned initial state, transition and rotary
+frequency while every complex class row varies. Complete logits are real
+linear; ordinary full-class CE and indexed mean minibatch CE are convex in all
+those rows. The concrete radial row update and accepted interpolation preserve
+the original learned-model domain, and both signed finite CE queries remain
+feasible in the full family. No Euclidean-projection, descent, separability or
+unseen-answer guarantee is inferred. The full build, all touched source checks,
+22 direct axiom reports, global audit, native INDEX and forbidden checks pass.
+There is no new sorry or extra axiom. Native readout-refitting results remain
+prospective until task382 executes and independently replays its frozen cohort.

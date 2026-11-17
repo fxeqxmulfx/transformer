@@ -22023,3 +22023,60 @@ No global convergence, regret or generalization guarantee is asserted for the
 approximate component search. Compare plain, fixed-rotary and learned-rotary
 execution with unchanged original data and all classes under this same cap,
 retaining the failed unrestricted-step producer and all complete raw replays.
+
+## CM100. Revisit all complex readouts on already learned recurrent states
+
+The native recall runs still fit less than 10% of the training answers after
+frequency refinement. Complete state inspection rules out simple state collapse
+on those training records: the learned states remain nonconstant with large
+norms. This does not establish that the states encode the right recall relation
+or are linearly separable. A controlled next step is to revisit every learned
+readout across the training stream. The existing component search fits each
+readout on its proposal batch and then keeps it unchanged.
+
+Let f_j be already learned CM98 components, with learned initial states,
+transitions and frequencies. Let w_j be nonnegative mixture weights summing to
+one and let B be the capacity scale. For every component j and original class c,
+retain a complete row u_{j,c} in C^2 with
+
+    rowSize(u) = |u_1| + |u_2| <= 1.
+
+Replace only the class readout of f_j by the actual complex linear map
+z -> u_{j,c,1} z_1 + u_{j,c,2} z_2. The complete ordered hidden execution is
+unchanged. Every old readout can be reconstructed from its two basis values;
+no coordinate or imaginary term is omitted. If the content satisfies Unit and
+the new rows satisfy their explicit budgets, every replaced component is Unit.
+
+The set of all such rows, across every component and original class, is convex
+in their real and imaginary coordinates. The complete executed score map
+
+    S(u)(x,c) = sum_j w_j B Re(row(u_{j,c})(run(f_j,x)))
+
+is real linear. Consequently ordinary full-class cross-entropy and its indexed
+mean over any nonempty minibatch are jointly convex on this readout domain.
+Indices preserve duplicates and short tails. The resulting functions still
+belong to the original learned recurrent domain. This is a conditional
+optimization step on already learned content; it does not claim that independent
+transition/readout factors become jointly convex or prescribe a fixed feature
+map for the architecture.
+
+Use the actual radial feasibility rule
+
+    projectRow(u) = u                       if rowSize(u) <= 1,
+                   u / rowSize(u)          otherwise.
+
+Both complex coordinates scale together. It leaves every inside row unchanged
+and always returns a row of size at most one. Applying this rule to every
+numerically displaced row therefore gives an admissible model. Any accepted
+convex interpolation with the previous rows remains admissible as well. This
+rule is not asserted to be the Euclidean projection, and feasibility does not
+imply descent or convergence.
+
+Both signed original-class CE probes remain actual feasible points of the
+full CM98 family, by the existing capacity-reserving bias construction applied
+to S(u). Those probes need not belong to the conditional readout slice itself.
+Forward-only scalar differences remain finite loss evaluations, not exact CE
+derivatives. No readout-separability, unseen-label identification, training-fit,
+optimizer-convergence or 99% accuracy guarantee is assumed. Every conditional
+statement is instantiated with explicit nonzero complex rows and the existing
+nonconstant positional witness.
