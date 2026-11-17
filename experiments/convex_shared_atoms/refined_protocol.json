@@ -1,0 +1,40 @@
+{
+  "name": "shared-complex-atoms-line-refinement-probe-v1",
+  "model": "CM93 positive dimension-bias image of CM92 complete learned shared complex atoms",
+  "interface": "immutable object sequence to one next original object; IDs have no arithmetic meaning",
+  "data": "unchanged original frozen35 native generators and fingerprints; data seed1",
+  "modes": [
+    "mini",
+    "forward"
+  ],
+  "seeds": [
+    1
+  ],
+  "budget_multiplier": 8.0,
+  "budget_rule": "8*sqrt(original_objects*query_addresses*context_addresses); dimensions only",
+  "query_step": 0.0001,
+  "momentum": 0.95,
+  "component_restarts": 2,
+  "component_sweeps": 8,
+  "line_iterations": 64,
+  "model_reservation_bytes": 80000000000,
+  "aggregate_ram_limit_bytes": 110000000000,
+  "minimum_workspace_free_bytes": 2147483648,
+  "minimum_storage_free_bytes": 17179869184,
+  "sampler": "all original example batches, masks, duplicates and short tails; Random(seed+10000)",
+  "component_rng": "Random(seed+20000), separate from the original data sampler",
+  "training": "ordinary answer CE; complete minibatch gradient or feasible finite CE queries at the same shrunken centre; running full-coordinate momentum; approximate complex component search; convex CE line search",
+  "stopping": "fixed update count; every endpoint in both modes sealed before any held-out scoring",
+  "cases": [
+    {
+      "name": "suite-boolean-and-shift",
+      "maximum_updates": 100
+    }
+  ],
+  "success": "retain original success; report raw and exact >=99% separately",
+  "limitations": "short100-update line-resolution diagnostic, not matched1000-update comparison; same approximate component oracle and parity restriction; previous frozen cohorts unchanged",
+  "geometry": "dimension-bias",
+  "geometry_rule": "query and context bias scale 1/sqrt(original_objects); all other coordinates one; no labels",
+  "query_reservation": "same raw logit step h, reserve h/(query_bias_scale*context_bias_scale) in both modes",
+  "execution": "CM94 exact zero rows, all coordinates retained"
+}

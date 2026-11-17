@@ -62,7 +62,7 @@ reloads the endpoint and must reproduce all metrics and raw-logit bits. This
 checks saved inference, not an independent training repeat. Data, source,
 protocol, binary and checkpoint identities are recorded.
 
-Twelve native controls cover exhaustive small-prefix complex execution against
+Thirteen native controls cover exhaustive small-prefix complex execution against
 independently materialized coefficients; feasible signed model queries; all
 real/imaginary coordinate gradients with duplicate records, repeated pairs and
 a one-record tail; a planted nonzero component-search control; and both update
@@ -74,6 +74,8 @@ geometry retained. They include zero-scale and floating underflow refusals.
 The CM94 control compares every complex contraction and objective bit with
 dense execution, retains tiny nonzero rows, refreshes changed support and checks
 the all-zero case.
+The line-search control uses a mixed-label constant-input batch with a known CE
+optimum to detect insufficient resolution at large candidate scales.
 
 Use native tooling only:
 
@@ -222,3 +224,27 @@ old evidence. Each saved endpoint must replay every raw logit independently.
 The prior addition seed1 logits provide a separate control for execution
 equivalence after the exact-zero optimization. Results remain pending until
 the new cohort is complete.
+
+## Finite line-search resolution diagnostic
+
+While the frozen three-seed cohort trains unchanged, its Boolean traces show
+many zero component steps and training CE plateaus. A separate independent
+two-class control has seven class-zero and three class-one records, all with
+the same input, and a candidate logit change of100000000. The optimal class-zero
+logit is `ln(7/3)` and optimal CE is the binary entropy of0.7. Twenty-four golden
+search iterations return zero and CE`ln(2)`;64 iterations recover the known
+optimum using only ordinary CE evaluations. The analytic answer is used only
+to check this control, never to propose an optimizer step.
+
+`refined_protocol.json` prospectively tests64 line iterations on original
+Boolean AND shift, seed1, both modes, for100 updates. It changes no architecture,
+class, coordinate, label, original split, sampler, budget or query geometry.
+This is a short diagnostic, not a matched1000-update comparison. Both endpoints
+must be sealed before scoring every original split, then every raw logit must
+replay. No held-out outcome selected the refinement. The larger cohort and all
+earlier frozen producers keep their original protocol and remain intact.
+
+Build and freeze a fresh executable with `refined_protocol.json` saved as the
+freeze's `protocol.json`. Use `plan-refined`, then `train-refined` for both modes;
+only then run `score-refined` and `verify-refined`, with the same positional
+arguments and a fresh cohort directory. Results are pending.

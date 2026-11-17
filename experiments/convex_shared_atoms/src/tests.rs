@@ -11,6 +11,7 @@ use bilinear::{
     train::{Mode, Record, forward_scalars},
 };
 
+mod line;
 mod scaling;
 mod support;
 

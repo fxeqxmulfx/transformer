@@ -94,7 +94,7 @@ pub fn update_gradient(
     Ok((all_logits, loss / records.len() as f64))
 }
 
-fn line_search(
+pub(crate) fn line_search(
     base: &[Vec<f64>],
     candidate: &[Vec<f64>],
     records: &[Record<'_>],

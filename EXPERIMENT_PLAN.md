@@ -8640,3 +8640,12 @@ A nonconstant complex parameter witness realizes parity at every length with
 margin2, removing CM86's fixed-interaction obstruction. It is not supplied to
 training and provides no new stress score or optimizer-discovery guarantee.
 Implement and evaluate learning only after the complete Lean checks pass.
+
+Task371 investigates a separate training-only optimization issue while the
+three-seed producer remains unchanged. At large candidate scales the24-iteration
+finite CE line search can return zero despite a strict interior improvement;
+an independent mixed-label control verifies this against its known CE optimum.
+Freeze a separate original AND-shift diagnostic with64 iterations,100 updates,
+seed1 and both modes. Keep the same complete learned domain, all original data
+and the110GB/both-disk guards; seal both endpoints before scoring and replay.
+This does not address the old reader's parity expressivity limit.
