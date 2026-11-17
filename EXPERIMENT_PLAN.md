@@ -9456,3 +9456,12 @@ sources and verify both seed-1 split fingerprints before each fit. Preserve
 all six unavailable cases and the three constant controls. Seal both builds
 before evaluating any held-out row, then compare their raw outputs and the
 overlapping addition endpoints with the preceding four-case experiment.
+
+Training-only replay of the six original sparse lookup fits reproduced
+every endpoint and training trace. The two reads became distinguishable on
+minibatch two in every fit. The first minibatch starting at depth zero was
+47–52, and 5,852 of 5,853 subsequent boundary minibatches favored keeping
+it there. At each endpoint the training CE slope was positive, +0.283 to
++0.370, and forcing the gate to one reduced correct objects from 119–242
+to 52–81 out of 256. CM114 explains this unilateral depth optimum with
+the learned routing and readout held fixed.
