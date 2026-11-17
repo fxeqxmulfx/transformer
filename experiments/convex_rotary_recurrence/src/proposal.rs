@@ -26,6 +26,8 @@ pub(crate) fn readout_direction(a: State) -> Result<State> {
     Ok(out)
 }
 pub(crate) struct Search<'a, 'r> {
+    pub family: Family,
+    pub frequency_start: Option<[f64; 2]>,
     pub base: &'a [Vec<f64>],
     pub signals: &'a [Vec<f64>],
     pub records: &'a [Record<'r>],
@@ -77,11 +79,7 @@ impl Search<'_, '_> {
         sweeps: usize,
         skip_absent: bool,
     ) -> Result<(Atom, f64)> {
-        let family = if atom.frequency.is_some() {
-            Family::Rotary
-        } else {
-            Family::Plain
-        };
+        let family = self.family;
         let mut observed = vec![false; atom.transition.len()];
         for record in self.records {
             for &o in record.prefix {
@@ -135,10 +133,7 @@ impl Search<'_, '_> {
         if sweeps == 0 {
             return Err("empty component search".into());
         }
-        let mut starts = vec![
-            Atom::identity_start(objects, family),
-            coordinates::random_start(objects, family, rng),
-        ];
+        let mut starts = coordinates::starts(objects, family, rng, self.frequency_start).to_vec();
         if let Some(a) = previous {
             starts.push(a.clone());
         }

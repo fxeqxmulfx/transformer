@@ -167,3 +167,52 @@ conservative update rule. Fixed rotations are an explicit architectural control;
 all initial/content/readout parameters remain learned. Preserve these original
 unrestricted-step results and prove the feasible fixed-frequency queries before
 using that new control. No99% recall claim is made by this experiment.
+
+## Prospective fixed/plain/learned comparison with capped updates
+
+The CM99 proof extension at `18c7409b` defines the fixed-frequency convex domain,
+proves actual same-frequency bias execution and finite-query feasibility, and
+provides the concrete CE interference counterexample and step-bound theorem.
+All26 new theorems pass full Lean, direct/global axioms, source-warning, native
+INDEX and forbidden checks. No convergence result is inferred.
+
+`cautious_protocol.json` freezes three families at the same original128 updates,
+seed1, capacity16, original batches and both modes. Plain retains full learned
+matrices without rotations. Fixed uses frequencies(1,0.01) in every component
+and searches every initial/content/readout coordinate. Learned rotary starts
+its identity and random-content proposals at the identical(1,0.01) frequencies
+and then searches both of them; previous proposals retain their learned values.
+Matched content RNG draws remain identical across all three families. Thus
+fixed versus learned begins from the same parameter points. Against the older
+learned-rotary producer, both the step policy and frequency initialization change;
+only the plain-model comparison isolates the step policy alone.
+
+At zero-based update t, the accepted convex CE line search runs on
+`[0,2/(t+2)]`. Its two endpoints and64 inner iterations use actual complete CE.
+The component-proposal comparison remains the original fixed feasible step
+`min(0.1,1/budget)`; only the accepted mixture update is capped. Every finite
+query, original class and record remains present. Fixed-frequency zero and bias
+components use the same fixed schedule, as required by CM99. Stored versus
+trainable numerical coordinates are reported separately:1206 stored/1204
+trainable for fixed,1206/1206 for learned rotary,1204/1204 for plain on this
+100-object task. Checkpoint validation rejects a changed fixed schedule.
+
+All six endpoints seal before scoring, followed by complete independent raw
+replays. Retain all failed original splits and both original and raw/exact99
+success flags. The extra controls cover all three families, matched starts,
+fixed-frequency query execution, the actual CE counterexample and capped
+line-search/step behavior. A cap is a feasibility and stability experiment;
+no extra held-out accuracy is credited before measurements.
+All fifteen native controls, Clippy, formatting and shell checks pass.
+
+Use the native build commands above, `stress plan-cautious`, and a fresh frozen
+source/executable directory with `cautious_protocol.json` copied to its
+`protocol.json`. Then run:
+
+```sh
+bash experiments/convex_rotary_recurrence/run.sh WORKSPACE STORAGE FREEZE COHORT -cautious
+```
+
+Individual commands gain the same suffix: `train-cautious`, `score-cautious`,
+`verify-cautious`; family is `plain`, `fixed` or `rotary`. The original failed
+producer remains immutable and is replayed using its original frozen binary.

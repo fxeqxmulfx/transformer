@@ -99,3 +99,21 @@ pub(crate) fn random_start(objects: usize, family: Family, rng: &mut Random) -> 
     }
     a
 }
+
+/// CM99 matched positional initialization isolates fixed versus learned frequencies.
+pub(crate) fn starts(
+    objects: usize,
+    family: Family,
+    rng: &mut Random,
+    frequency_start: Option<[f64; 2]>,
+) -> [Atom; 2] {
+    let mut identity = Atom::identity_start(objects, family);
+    let mut random = random_start(objects, family, rng);
+    if family == Family::Rotary
+        && let Some(frequency) = frequency_start
+    {
+        identity.frequency = Some(frequency);
+        random.frequency = Some(frequency);
+    }
+    [identity, random]
+}

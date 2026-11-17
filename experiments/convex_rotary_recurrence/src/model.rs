@@ -45,7 +45,7 @@ impl Model {
                 .flatten()
                 .chain(zero.output.iter().flatten())
                 .any(|&z| z != C::default())
-            || zero.frequency.is_some_and(|f| f != [0.; 2])
+            || zero.frequency != self.family.initial_frequency()
         {
             return Err("unused-capacity component changed".into());
         }

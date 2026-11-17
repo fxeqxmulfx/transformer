@@ -5,8 +5,13 @@ use serde_json::{Value, json};
 use std::path::Path;
 fn run() -> Result<()> {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    let command = args.first().map_or("", String::as_str);
-    let text = experiment::PROTOCOL;
+    let raw_command = args.first().map_or("", String::as_str);
+    let command = raw_command.trim_end_matches("-cautious");
+    let text = if raw_command.ends_with("-cautious") {
+        experiment::CAUTIOUS_PROTOCOL
+    } else {
+        experiment::PROTOCOL
+    };
     if args.len() == 1 && command == "plan" {
         let p: Value = serde_json::from_str(text)?;
         for case in p["cases"].as_array().ok_or("cases")? {
@@ -21,6 +26,7 @@ fn run() -> Result<()> {
                     json!({"case":name,"family":family,"objects":task.vocab,
                     "budget":model.budget,"batch":batch,"training_examples":task.splits["train"].len(),
                     "selection":task.selection,"real_coordinates_per_component":family.coordinates(task.vocab),
+                    "trainable_real_coordinates_per_component":family.trainable_coordinates(task.vocab),
                     "initial_reservation_bytes":model.reservation(batch)?,"source_fingerprint":experiment::fingerprint()})
                 );
             }
@@ -28,7 +34,7 @@ fn run() -> Result<()> {
         return Ok(());
     }
     if args.len() != 8 {
-        return Err("usage: stress plan | stress train|score|verify WORKSPACE STORAGE COHORT CASE plain|rotary mini|forward SEED".into());
+        return Err("usage: stress plan[-cautious] | stress train|score|verify[-cautious] WORKSPACE STORAGE COHORT CASE plain|fixed|rotary mini|forward SEED".into());
     }
     let workspace = Path::new(&args[1]);
     let storage = Path::new(&args[2]);

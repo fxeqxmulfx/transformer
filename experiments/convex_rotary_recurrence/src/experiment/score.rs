@@ -161,6 +161,8 @@ pub fn run(
         || model.budget != expected.budget
         || model.family != family
         || meta["real_coordinates_per_component"] != json!(family.coordinates(task.vocab))
+        || meta["trainable_real_coordinates_per_component"]
+            != json!(family.trainable_coordinates(task.vocab))
         || receipt["components_stored"] != json!(model.atoms.len())
     {
         return Err("checkpoint capacity/domain mismatch".into());

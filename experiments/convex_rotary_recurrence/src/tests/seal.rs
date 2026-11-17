@@ -5,11 +5,13 @@ use serde_json::{Value, json};
 fn scoring_requires_both_families_and_unchanged_producer_and_endpoint() {
     let root = std::env::temp_dir().join(format!("rotary-seal-{}", std::process::id()));
     std::fs::create_dir(&root).unwrap();
-    assert!(experiment::score::sealed(&root).is_err());
-    let protocol: Value = serde_json::from_str(experiment::PROTOCOL).unwrap();
+    assert!(experiment::score::sealed_with_protocol(&root, experiment::CAUTIOUS_PROTOCOL).is_err());
+    let protocol: Value = serde_json::from_str(experiment::CAUTIOUS_PROTOCOL).unwrap();
     let binary = original::hash(&std::fs::read(std::env::current_exe().unwrap()).unwrap());
-    for family in [Family::Plain, Family::Rotary] {
-        assert!(experiment::score::sealed(&root).is_err());
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
+        assert!(
+            experiment::score::sealed_with_protocol(&root, experiment::CAUTIOUS_PROTOCOL).is_err()
+        );
         for case in protocol["cases"].as_array().unwrap() {
             for mode in ["mini", "forward"] {
                 let cell =
@@ -24,7 +26,7 @@ fn scoring_requires_both_families_and_unchanged_producer_and_endpoint() {
             }
         }
     }
-    experiment::score::sealed(&root).unwrap();
+    experiment::score::sealed_with_protocol(&root, experiment::CAUTIOUS_PROTOCOL).unwrap();
     let cell = experiment::score::cell(
         &root,
         "gpt-probe-key-value-binding",
@@ -33,10 +35,10 @@ fn scoring_requires_both_families_and_unchanged_producer_and_endpoint() {
         Family::Rotary,
     );
     std::fs::write(cell.join("endpoint.json"), b"{\"changed\":true}").unwrap();
-    assert!(experiment::score::sealed(&root).is_err());
+    assert!(experiment::score::sealed_with_protocol(&root, experiment::CAUTIOUS_PROTOCOL).is_err());
     std::fs::write(cell.join("endpoint.json"), b"{}\n").unwrap();
-    experiment::score::sealed(&root).unwrap();
+    experiment::score::sealed_with_protocol(&root, experiment::CAUTIOUS_PROTOCOL).unwrap();
     std::fs::write(cell.join("metadata.json"), b"{}").unwrap();
-    assert!(experiment::score::sealed(&root).is_err());
+    assert!(experiment::score::sealed_with_protocol(&root, experiment::CAUTIOUS_PROTOCOL).is_err());
     std::fs::remove_dir_all(root).unwrap();
 }

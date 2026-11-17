@@ -15,6 +15,7 @@ use std::{fs, io::Write, path::Path, time::Instant};
 
 pub mod score;
 pub const PROTOCOL: &str = include_str!("../protocol.json");
+pub const CAUTIOUS_PROTOCOL: &str = include_str!("../cautious_protocol.json");
 
 pub fn fingerprint() -> String {
     let mut digest = Sha256::new();
@@ -31,6 +32,7 @@ pub fn fingerprint() -> String {
         include_bytes!("../Cargo.toml"),
         include_bytes!("../Cargo.lock"),
         PROTOCOL.as_bytes(),
+        CAUTIOUS_PROTOCOL.as_bytes(),
         original::fingerprint().as_bytes(),
     ] {
         digest.update((bytes.len() as u64).to_le_bytes());
@@ -55,11 +57,33 @@ pub fn protocol(mode: &str, seed: u64, text: &str) -> Result<(Value, Config)> {
         query_step: p["query_step"].as_f64().ok_or("query step")?,
         sweeps: p["component_sweeps"].as_u64().ok_or("sweeps")? as usize,
         line_iterations: p["line_iterations"].as_u64().ok_or("line iterations")? as usize,
+        step_ceiling: step_ceiling(&p, 0)?,
+        frequency_start: match p["frequency_initialization"].as_str() {
+            None => None,
+            Some("matched-fixed")
+                if p["fixed_frequency"] == json!(Family::Fixed.initial_frequency()) =>
+            {
+                Family::Fixed.initial_frequency()
+            }
+            _ => return Err("unknown frequency initialization".into()),
+        },
     };
     Ok((p, config))
 }
 
+/// CM99 ceiling at the zero-based update; a feasibility condition, not convergence.
+pub fn step_ceiling(protocol: &Value, update: usize) -> Result<f64> {
+    match protocol["step_schedule"].as_str() {
+        None => Ok(1.),
+        Some("two-over-t-plus-two") => Ok(2. / (update as f64 + 2.)),
+        _ => Err("unknown convex step schedule".into()),
+    }
+}
+
 pub fn initial_model(objects: usize, protocol: &Value, family: Family) -> Result<Model> {
+    if family == Family::Fixed && protocol["fixed_frequency"] != json!(family.initial_frequency()) {
+        return Err("fixed frequency differs from declared model".into());
+    }
     if !protocol["families"]
         .as_array()
         .ok_or("families")?
@@ -103,6 +127,7 @@ pub fn train(
         &json!({"source_fingerprint":fingerprint(),
         "protocol":protocol,"case":case,"original":original_row,"objects":task.vocab,"selection":task.selection,
         "seed":seed,"mode":mode,"family":family,"budget":budget,"real_coordinates_per_component":family.coordinates(task.vocab),
+        "trainable_real_coordinates_per_component":family.trainable_coordinates(task.vocab),
         "binary_sha256":original::hash(&fs::read(std::env::current_exe()?)?)}),
     )?;
     let mut trace = fs::OpenOptions::new()
@@ -137,6 +162,10 @@ pub fn train(
             return Err("complete model allocation exceeds reservation cap".into());
         }
         let rss = guard::admit(reservation, workspace, storage)?;
+        let config = Config {
+            step_ceiling: step_ceiling(&protocol, update)?,
+            ..config
+        };
         let receipt = train::step(&mut model, &records, config, &mut component_rng)?;
         examples += end - cursor;
         targets += records.len();

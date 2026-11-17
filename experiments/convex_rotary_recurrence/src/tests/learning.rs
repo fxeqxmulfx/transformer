@@ -57,8 +57,10 @@ fn exact_absence_skip_equals_dense_search_and_keeps_all_coordinates() {
         .iter()
         .map(|r| train::scalars(&base[0], r.target, Mode::ForwardMini, 1e-4).unwrap())
         .collect();
-    for family in [Family::Plain, Family::Rotary] {
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
         let mut sparse = Search {
+            family,
+            frequency_start: None,
             base: &base,
             signals: &signals,
             records: &records,
@@ -67,6 +69,8 @@ fn exact_absence_skip_equals_dense_search_and_keeps_all_coordinates() {
             coordinate_trials: [0; 3],
         };
         let mut dense = Search {
+            family,
+            frequency_start: None,
             base: &base,
             signals: &signals,
             records: &records,
@@ -129,7 +133,7 @@ fn both_modes_learn_swapped_order_without_witness_weights_and_replay() {
             target: 5,
         },
     ];
-    for family in [Family::Plain, Family::Rotary] {
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
         for mode in [Mode::Mini, Mode::ForwardMini] {
             let mut m = Model::zero(7, 16., family).unwrap();
             let mut rng = Random::new(31);
@@ -138,6 +142,8 @@ fn both_modes_learn_swapped_order_without_witness_weights_and_replay() {
                 query_step: 1e-4,
                 sweeps: 6,
                 line_iterations: 64,
+                step_ceiling: 1.,
+                frequency_start: None,
             };
             for _ in 0..6 {
                 let receipt = train::step(&mut m, &records, config, &mut rng).unwrap();
@@ -203,4 +209,127 @@ fn duplicate_original_records_and_short_tails_are_retained() {
     assert_eq!(tail[1].prefix, &[0, 2, 1]);
     assert_eq!(tail[0].target, 1);
     assert_eq!(tail[1].target, 2);
+}
+
+#[test]
+fn bounded_line_search_uses_the_actual_ce_interval_and_refuses_invalid_caps() {
+    let records = [Record {
+        prefix: &[0, 1],
+        target: 0,
+    }];
+    let base = vec![vec![0., 0.]];
+    let candidate = vec![vec![8., -8.]];
+    for ceiling in [1., 0.1, 2. / 129.] {
+        let (eta, loss, cost) =
+            train::line_search(&base, &candidate, &records, 64, ceiling).unwrap();
+        assert_eq!(eta, ceiling);
+        let actual = cross_entropy(&[8. * ceiling, -8. * ceiling], 0).unwrap();
+        assert_eq!(loss, actual);
+        assert_eq!(cost, 68);
+        assert!(loss < cross_entropy(&base[0], 0).unwrap());
+    }
+    for ceiling in [0., -1., 1.01, f64::NAN, f64::INFINITY] {
+        assert!(train::line_search(&base, &candidate, &records, 64, ceiling).is_err());
+    }
+}
+
+#[test]
+fn actual_feasible_minibatch_improvement_can_harm_the_combined_ce() {
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
+        let mut model = Model::zero(2, 3f64.ln(), family).unwrap();
+        let initial = cross_entropy(&model.logits(&[0, 1]).unwrap(), 0).unwrap();
+        model
+            .mix(Atom::bias(2, family, 0, 1.).unwrap(), 1.)
+            .unwrap();
+        let first = cross_entropy(&model.logits(&[0, 1]).unwrap(), 0).unwrap();
+        let second = cross_entropy(&model.logits(&[1, 0]).unwrap(), 1).unwrap();
+        assert!(first < initial);
+        assert!((first + second) / 2. > initial);
+    }
+}
+
+#[test]
+fn capped_steps_preserve_the_fixed_schedule_and_all_original_coordinates() {
+    let p: serde_json::Value = serde_json::from_str(crate::experiment::CAUTIOUS_PROTOCOL).unwrap();
+    let records = [
+        Record {
+            prefix: &[2, 4],
+            target: 3,
+        },
+        Record {
+            prefix: &[4, 2],
+            target: 5,
+        },
+    ];
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
+        for mode in [Mode::Mini, Mode::ForwardMini] {
+            let mut model = Model::zero(7, 16., family).unwrap();
+            let mut rng = Random::new(31);
+            for t in 0..6 {
+                let ceiling = crate::experiment::step_ceiling(&p, t).unwrap();
+                let receipt = train::step(
+                    &mut model,
+                    &records,
+                    Config {
+                        mode,
+                        query_step: 1e-4,
+                        sweeps: 6,
+                        line_iterations: 64,
+                        step_ceiling: ceiling,
+                        frequency_start: Family::Fixed.initial_frequency(),
+                    },
+                    &mut rng,
+                )
+                .unwrap();
+                assert!(receipt.eta >= 0. && receipt.eta <= ceiling);
+                assert_eq!(receipt.step_ceiling, ceiling);
+                assert_eq!(receipt.coordinate_trials[2] > 0, family == Family::Rotary);
+                model.validate().unwrap();
+                for a in &model.atoms {
+                    assert_eq!(a.transition.len(), 7);
+                    assert_eq!(a.output.len(), 7);
+                    if family == Family::Fixed {
+                        assert_eq!(a.frequency, Family::Fixed.initial_frequency());
+                    }
+                }
+            }
+            for r in &records {
+                assert_eq!(model.next_object(r.prefix).unwrap(), r.target);
+            }
+        }
+    }
+}
+
+#[test]
+fn fixed_and_learned_starts_match_every_coordinate_before_frequency_training() {
+    let mut fixed_rng = Random::new(73);
+    let mut learned_rng = Random::new(73);
+    let f = Family::Fixed.initial_frequency();
+    let fixed = coordinates::starts(9, Family::Fixed, &mut fixed_rng, f);
+    let learned = coordinates::starts(9, Family::Rotary, &mut learned_rng, f);
+    for (a, b) in fixed.iter().zip(&learned) {
+        assert_eq!(
+            serde_json::to_value(a).unwrap(),
+            serde_json::to_value(b).unwrap()
+        );
+        assert_eq!(a.frequency, f);
+    }
+    assert_eq!(fixed_rng.below(1000), learned_rng.below(1000));
+    let mut invalid = fixed[0].clone();
+    invalid.frequency = Some([1., 0.02]);
+    assert!(invalid.validate(9, Family::Fixed).is_err());
+    assert!(invalid.validate(9, Family::Rotary).is_ok());
+}
+
+#[test]
+fn fixed_protocol_and_trainable_coordinate_accounting_are_explicit() {
+    let mut p: serde_json::Value =
+        serde_json::from_str(crate::experiment::CAUTIOUS_PROTOCOL).unwrap();
+    assert_eq!(Family::Fixed.coordinates(100), 1206);
+    assert_eq!(Family::Fixed.trainable_coordinates(100), 1204);
+    assert_eq!(Family::Rotary.trainable_coordinates(100), 1206);
+    crate::experiment::initial_model(100, &p, Family::Fixed).unwrap();
+    p["fixed_frequency"] = serde_json::json!([1., 0.02]);
+    assert!(crate::experiment::initial_model(100, &p, Family::Fixed).is_err());
+    assert!(crate::experiment::protocol("mini", 1, &p.to_string()).is_err());
 }

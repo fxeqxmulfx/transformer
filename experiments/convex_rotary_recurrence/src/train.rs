@@ -1,4 +1,4 @@
-//! CM97/98 feasible ordinary-CE queries and convex mixture updates.
+//! CM97/98/99 feasible ordinary-CE queries and convex mixture updates.
 //! Ported from scalar recurrence1786526f with full matrix/frequency proposals.
 //! The component search has no recurrent backward pass in either mode.
 use crate::{Result, model::Model, proposal::Search};
@@ -15,6 +15,8 @@ pub struct Config {
     pub query_step: f64,
     pub sweeps: usize,
     pub line_iterations: usize,
+    pub step_ceiling: f64,
+    pub frequency_start: Option<[f64; 2]>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -27,6 +29,7 @@ pub struct Receipt {
     pub coordinate_trials: [usize; 3],
     pub line_loss_queries: usize,
     pub eta: f64,
+    pub step_ceiling: f64,
     pub component_trial_ce: f64,
     pub components_stored: usize,
     pub maximum_operator_norm_excess: f64,
@@ -56,7 +59,11 @@ pub(crate) fn line_search(
     candidate: &[Vec<f64>],
     records: &[Record<'_>],
     iterations: usize,
+    ceiling: f64,
 ) -> Result<(f64, f64, usize)> {
+    if !ceiling.is_finite() || ceiling <= 0. || ceiling > 1. {
+        return Err("invalid convex line-search ceiling".into());
+    }
     let evaluate = |eta: f64| -> Result<f64> {
         let mut total = 0.;
         for ((x, y), record) in base.iter().zip(candidate).zip(records) {
@@ -69,14 +76,14 @@ pub(crate) fn line_search(
         }
         Ok(total / records.len() as f64)
     };
-    let (mut lo, mut hi) = (0., 1.);
+    let (mut lo, mut hi) = (0., ceiling);
     let ratio = (5f64.sqrt() - 1.) / 2.;
     let (mut x, mut y) = (hi - ratio * (hi - lo), lo + ratio * (hi - lo));
     let (mut fx, mut fy) = (evaluate(x)?, evaluate(y)?);
     let (mut best_eta, mut best_loss) = (0., evaluate(0.)?);
-    let fone = evaluate(1.)?;
+    let fone = evaluate(ceiling)?;
     if fone < best_loss {
-        best_eta = 1.;
+        best_eta = ceiling;
         best_loss = fone;
     }
     for _ in 0..iterations {
@@ -112,6 +119,15 @@ pub fn step(
     if records.is_empty() || config.line_iterations == 0 || config.sweeps == 0 {
         return Err("empty batch or component/line search".into());
     }
+    if !config.step_ceiling.is_finite()
+        || config.step_ceiling <= 0.
+        || config.step_ceiling > 1.
+        || config
+            .frequency_start
+            .is_some_and(|f| f.iter().any(|x| !x.is_finite()))
+    {
+        return Err("invalid prospective update settings".into());
+    }
     model.shrink_for_queries(config.query_step)?;
     let mut base = Vec::with_capacity(records.len());
     let mut signals = Vec::with_capacity(records.len());
@@ -129,6 +145,8 @@ pub fn step(
     }
     centre_ce /= records.len() as f64;
     let mut search = Search {
+        family: model.family,
+        frequency_start: config.frequency_start,
         base: &base,
         signals: &signals,
         records,
@@ -153,8 +171,13 @@ pub fn step(
                 .collect())
         })
         .collect::<Result<_>>()?;
-    let (eta, after_ce, line_loss_queries) =
-        line_search(&base, &candidate, records, config.line_iterations)?;
+    let (eta, after_ce, line_loss_queries) = line_search(
+        &base,
+        &candidate,
+        records,
+        config.line_iterations,
+        config.step_ceiling,
+    )?;
     model.mix(atom, eta)?;
     Ok(Receipt {
         records: records.len(),
@@ -169,6 +192,7 @@ pub fn step(
         coordinate_trials: search.coordinate_trials,
         line_loss_queries,
         eta,
+        step_ceiling: config.step_ceiling,
         component_trial_ce,
         components_stored: model.atoms.len(),
         maximum_operator_norm_excess: model.validate()?,

@@ -1,5 +1,5 @@
 //! CM97 Pair and CM98 Rotary: full complex matrices under the product maximum norm.
-//! Both frequencies are learned real parameters; no per-position feature table.
+//! CM99 adds an explicit fixed-frequency control; all content coordinates remain learned.
 use crate::{C, Result};
 use serde::{Deserialize, Serialize};
 pub type State = [C; 2];
@@ -9,12 +9,14 @@ pub type Matrix = [State; 2];
 #[serde(rename_all = "lowercase")]
 pub enum Family {
     Plain,
+    Fixed,
     Rotary,
 }
 impl Family {
     pub fn parse(s: &str) -> Result<Self> {
         match s {
             "plain" => Ok(Self::Plain),
+            "fixed" => Ok(Self::Fixed),
             "rotary" => Ok(Self::Rotary),
             _ => Err("unknown recurrent family".into()),
         }
@@ -22,11 +24,22 @@ impl Family {
     pub fn name(self) -> &'static str {
         match self {
             Self::Plain => "plain",
+            Self::Fixed => "fixed",
             Self::Rotary => "rotary",
         }
     }
     pub fn coordinates(self, objects: usize) -> usize {
+        4 + 12 * objects + if self == Self::Plain { 0 } else { 2 }
+    }
+    pub fn trainable_coordinates(self, objects: usize) -> usize {
         4 + 12 * objects + if self == Self::Rotary { 2 } else { 0 }
+    }
+    pub fn initial_frequency(self) -> Option<[f64; 2]> {
+        match self {
+            Self::Plain => None,
+            Self::Fixed => Some([1., 0.01]),
+            Self::Rotary => Some([0.; 2]),
+        }
     }
 }
 
@@ -48,7 +61,7 @@ pub fn operator(m: Matrix, v: State) -> State {
 impl Atom {
     pub fn zero(objects: usize, family: Family) -> Self {
         Self {
-            frequency: (family == Family::Rotary).then_some([0.; 2]),
+            frequency: family.initial_frequency(),
             initial: [C::default(); 2],
             transition: vec![[[C::default(); 2]; 2]; objects],
             output: vec![[C::default(); 2]; objects],
@@ -76,7 +89,8 @@ impl Atom {
         if objects == 0
             || self.transition.len() != objects
             || self.output.len() != objects
-            || self.frequency.is_some() != (family == Family::Rotary)
+            || self.frequency.is_some() != (family != Family::Plain)
+            || (family == Family::Fixed && self.frequency != family.initial_frequency())
             || self
                 .frequency
                 .is_some_and(|f| f.iter().any(|x| !x.is_finite()))

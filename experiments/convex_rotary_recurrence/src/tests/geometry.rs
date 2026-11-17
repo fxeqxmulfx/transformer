@@ -35,7 +35,7 @@ fn rotate(z: &mut [f64; 4], theta: [f64; 2], position: f64) {
 }
 #[test]
 fn full_complex_execution_matches_independent_real_four_matrix_product() {
-    for family in [Family::Plain, Family::Rotary] {
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
         let a = fixture(family);
         a.validate(3, family).unwrap();
         let prefix = [2, 0, 2, 1, 1];
@@ -85,7 +85,7 @@ fn full_complex_execution_matches_independent_real_four_matrix_product() {
 }
 #[test]
 fn norm_budgets_and_signed_queries_are_actual_complete_models() {
-    for family in [Family::Plain, Family::Rotary] {
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
         let mut m = Model::zero(3, 16., family).unwrap();
         m.mix(fixture(family), 0.8).unwrap();
         let h = 1e-4;
@@ -125,7 +125,7 @@ fn norm_budgets_and_signed_queries_are_actual_complete_models() {
 #[test]
 fn opaque_renaming_and_zero_frequency_preserve_actual_execution() {
     let rename = [2, 0, 1];
-    for family in [Family::Plain, Family::Rotary] {
+    for family in [Family::Plain, Family::Fixed, Family::Rotary] {
         let a = fixture(family);
         let mut b = a.clone();
         for (i, &j) in rename.iter().enumerate() {

@@ -8768,3 +8768,14 @@ preserves either the full or fixed-frequency domain for arbitrary object types.
 These26 new theorems establish feasibility and a failure mechanism, not an
 optimizer convergence or unseen-answer guarantee. Full Lean checks precede
 native fixed/plain/learned-rotary capped-step comparisons.
+
+After CM99 passes all checks and lands at18c7409b, the native cautious protocol
+compares plain, fixed(1,0.01), and learned rotary recurrence at128 original
+updates, both modes and seed1. Fixed and learned candidate starts share the
+same content and initial frequencies; only learned frequencies can change.
+Accepted convex steps are capped2/(zero-based t+2), with the original component
+comparison unchanged. Fixed-family bias queries use the same fixed frequencies.
+Record stored versus trainable coordinates separately. The plain comparison
+isolates the cap versus the first producer; the learned comparison also changes
+its initialization and is described accordingly. Seal all six endpoints before
+scoring/replay; preserve every failure and resource limit.
