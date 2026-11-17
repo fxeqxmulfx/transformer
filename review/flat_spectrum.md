@@ -21738,3 +21738,54 @@ Formalization: `LearnedBilinear/SharedAtoms`. The proofs make a new shared
 factor experiment concrete while keeping the input/output contract and the
 optimization, identification and depth limitations explicit. They do not
 resolve the active generalization goal without new original-split evidence.
+
+## CM93. Positive geometry separates bias capacity from object interactions
+
+The first frozen CM92 native run fails in both minibatch modes: training
+accuracy133/4704 and held-out accuracy1/4705, with exact raw-logit replays.
+At the Mini endpoint, component-mass-weighted squared query/context bias
+energies are0.9780685/0.9783835, excluding the zero component. This is a
+measured dominance of always-present input addresses, not a proof that the
+model class or every possible optimizer is incapable of generalizing.
+
+Choose fixed nonzero real scales a[q] and b[d], without labels or semantic
+meanings for object IDs. Execute the learned query vector a*v and context
+vector b*w. On the complete joint real coordinates this is the linear map
+D(r)[z]=a[q(z)]*b[d(z)]*r[z], shared across every original class and both
+complex components. It has an explicit inverse when every scale is nonzero.
+Thus no coordinate direction is removed. The new fixed-budget domain is the
+linear image D(CM92-domain(B)), which is convex and still has finite actual
+factor representations. Ordinary original-object CE is convex on it. The
+bounded image is not asserted equal to the old region; this changes the
+capacity geometry, not merely the name of the coordinates.
+
+Scaling commutes with a complete coordinate perturbation, multiplying its
+actual raw response by a[q]*b[d]. The complete indexed pullback therefore
+receives this factor without losing duplicate records, short tails, possible
+coordinates or original classes. If every squared joint scale is at most one,
+complete coordinate energy cannot increase, so the image still satisfies the
+CM91 bound E(p)<=B^2. This is a sufficient bound, not a capacity-only guarantee
+of correct unseen labels.
+
+The proposed dimension-only geometry sets both bias-address scales to1/sqrt(V)
+and all object, position and shared pair address scales to one, for positive
+original vocabulary size V. Every scale is strictly positive and at most one.
+The two bias factors multiply to1/V. Every learned numerical coordinate remains
+trainable; no fixed semantic embedding or task-specific answer rule is added.
+The input remains an immutable-object sequence and the output one next original
+object. The existing higher-context parity limitation remains.
+
+Forward queries must account for this changed bias response. The scaled image
+of CM92's signed query point has the centre logits with one class changed by
+plus/minus eta*B*a[none]*b[none]. To request the same raw CE step h>0, reserve
+eta=h/(B*a[none]*b[none]), requiring h<=B*a[none]*b[none]. Both signed queries
+remain feasible. Under dimension scaling this is eta=h*V/B, not h/B. Their
+ordinary CE difference is exactly the finite class-bias difference at the
+requested step. Both Mini and forward-only Mini must use the same centre,
+and native complete responses must include the new coordinate scales.
+
+Formalization: `SharedAtoms/Scaling`. These are geometry, capacity, actual
+forward and finite-query identities. They do not prove a better component
+oracle, a convergence rate, target-family membership or new stress accuracy.
+Any native test uses a separate frozen protocol and preserves the first failed
+shared-factor producer and its original-data evidence.
