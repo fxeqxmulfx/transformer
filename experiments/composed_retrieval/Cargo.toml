@@ -57,6 +57,11 @@ path = "src/bin/reconcile-rewrite.rs"
 required-features = ["rewrite-cohort"]
 
 [[bin]]
+name = "distance-decay"
+path = "src/bin/distance-decay.rs"
+required-features = ["rewrite-cohort"]
+
+[[bin]]
 name = "compare-learned-radii"
 path = "src/bin/compare-learned-radii.rs"
 required-features = ["radii-cohort"]

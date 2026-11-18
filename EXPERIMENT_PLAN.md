@@ -9581,3 +9581,11 @@ all 345 splits, including novel Boolean probes, exact generation with
 scratchpads and the one-prompt random language control. Seal both
 144-endpoint builds before scoring. Combine the two CM117 studies only
 after the repeated models, receipts, metrics and raw files agree.
+
+Task 422 bounds the executed distance-decayed link and proves which
+offsets short prefixes can observe. The training-only grid reproduced all
+42 original Rewrite-cohort fits. Distinct-symbol copy remained exact at
+every distance setting, with 192 residuals unobserved. Separate slope
+and residual parameters can compensate at every length. Test a smaller
+relative function whose near-distance observations constrain its long
+tail, retaining ordinary next-object supervision on the original records.

@@ -22934,3 +22934,46 @@ quadratically. Optimizing all radii, phases and routes jointly requires
 separate analysis. The native training-only intervention below measures
 whether bounded changes could correct the observed original pairs. An
 intervention is distinct from learning those values from scratch.
+
+## CM118. Distance decay and the offsets observable from short prefixes
+
+Let both normalized positional reads use the same effective potential
+$u(\delta)=v(\delta)-a|\delta|$, where $v$ is a learned signed residual
+and $a\geq0$. A model with all residuals trainable has the same finite
+score family as CM117. The coefficient changes how a training update can
+act on many distances together. The bound $|z_c|\leq B+D$ continues
+to hold for every input prefix, including the model's own continuations.
+
+In the positional row starting at $j$, write $w_{jk}$ for the normalized
+weight of destination $k$. Its odds relative to staying at $j$ are
+
+$$
+w_{jk}=w_{jj}\exp\big(v(k-j)-v(0)-a|k-j|\big).
+$$
+
+If a finite set of destinations $F$ has distances at least $L$ and
+residual gaps $v(k-j)-v(0)\leq M$, its total weight is at most
+$|F|\,w_{jj}\exp(M-aL)$. This estimates the mass of the executed
+row. The final winning class also depends on the content weights,
+second read, rotation, radii and decoder.
+
+A prefix with at most $H+1$ original objects has at most $H$ memory
+positions. Both reads access only offsets $-H<\delta<H$. Agreement
+of the effective potentials on that interval, with all other weights
+fixed, implies identical complete class logits and CE for every such
+training prefix. The restriction can matter on the very next length.
+Take two objects with phase values zero and $\pi$, a uniform content
+match, unit radii and one unrotated read. Set one signed residual to
+$\log 3$ and all others to zero. Choosing $+1$ or $-1$ gives identical
+scores on every prefix of length at most two and opposite strict
+winners on the prefix $[\mathrm{false},\mathrm{true},\mathrm{false}]$.
+
+Even observations at every length cannot distinguish $(v,a)$ from
+$(v+t|\cdot|,a+t)$ when both coefficients are admissible. Their
+effective potentials agree everywhere. At fixed residuals, the ordinary
+training CE has distance derivative
+$-\sum_\delta |\delta|\,\partial\mathrm{CE}/\partial u(\delta)$.
+Each original training occurrence contributes with its original weight.
+The CM117 conditional convexity result concerns the radius product on a
+fixed pair. It supplies no joint convexity claim for these normalized
+positional reads. [Training intervention](../experiments/composed_retrieval/distance_decay/README.md)
