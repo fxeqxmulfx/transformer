@@ -72,3 +72,36 @@ bash experiments/composed_retrieval/run.sh "$PWD" /run/media/misha/storage \
   "$PWD" /run/media/misha/storage "$base/composed-retrieval/output-offsets51-v1" \
   "$base/composed-retrieval/output-prefix9-v1" "$out"
 ```
+
+## Held-out results
+
+Copy with distinct symbols met its original target at all three seeds in
+both training methods. It generated all 376 expected objects on all 32
+novel validation sequences and all 64 ordinary test sequences exactly.
+These splits contain words of length 8 through 16. On both longer tests,
+of lengths 32 and 64, it copied zero of 64 sequences exactly at every
+seed. The other five cases missed their original targets. All six missed
+the strict all-split target.
+
+| Original case | Exact training sequences out of 128, seeds 0 / 1 / 2 | Exact novel validation sequences out of 32, seeds 0 / 1 / 2 | Exact ordinary test sequences out of 64, seeds 0 / 1 / 2 |
+| --- | --- | --- | --- |
+| Copy, repeated symbols | 2 / 3 / 1 | 0 / 0 / 0 | 0 / 0 / 0 |
+| Copy, distinct symbols | 128 / 128 / 128 | 32 / 32 / 32 | 64 / 64 / 64 |
+| Reverse, repeated symbols | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 |
+| Reverse, distinct symbols | 94 / 97 / 94 | 0 / 1 / 0 | 0 / 0 / 2 |
+| Sort, repeated symbols | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 |
+| Sort, distinct symbols | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 |
+
+At length 64, distinct-symbol copy generated 0, 4 and 8 correct objects
+out of 4,160. With the reference prefix supplied at each position, the
+same models got 0, 1 and 1 correct. The failure therefore persists on
+correct prefixes. The two training methods agreed on the exact count for
+all 198 case, seed and split comparisons. Generated object counts differed
+in 20 of those comparisons.
+
+Both independent builds of `9a222cfd` sealed all 84 fits before scoring
+and replayed 1,848 raw files. The repeated lookup matched its previous
+models, training receipts and all 264 raw files. Counting overlaps once
+gives **64 of 165 cases measured, 10 passing their original criterion and
+8 passing the strict criterion** for CM116. Six original arithmetic
+sources remain unavailable and 95 cases are outside these cohorts.

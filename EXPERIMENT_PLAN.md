@@ -9552,6 +9552,14 @@ input-derived limit. Compare generated and teacher-forced accuracy on every
 split after both builds seal. Verify the repeated lookup before adding the
 six cases to the original 165-case ledger.
 
+Task 418 measured one further original pass. Distinct-symbol copy reached
+32/32 exact novel validation and 64/64 ordinary test sequences at every
+seed and in both training modes. At each longer test length it produced
+zero of 64 sequences exactly. On length 64 its teacher-forced correct
+object counts were 0, 1 and 1 of 4,160. The other five Rewrite cases missed
+the original threshold. The matched CM116 total is 10 original and eight
+strict passes in 64 measured cases, with six unavailable and 95 outside.
+
 Task 419 tests whether CM117's learned object magnitudes can address the
 observed product errors. Its original-training-only intervention reproduced
 all raw logits of 288 arithmetic models. At modulus 97, setting the selected
