@@ -37,10 +37,13 @@ pub const REWRITE_PROTOCOL: &str = include_str!("../rewrite/protocol.json");
 pub const RADII_PROTOCOL: &str = include_str!("../product_radii/protocol.json");
 pub const GENERATION_PROTOCOL: &str = include_str!("../generation/protocol.json");
 pub const PROFILE_PROTOCOL: &str = include_str!("../distance_profile/protocol.json");
+pub const CHAIN_PROTOCOL: &str = include_str!("../chains/protocol.json");
 pub const PROTOCOL: &str = if cfg!(feature = "profile-cohort") {
     PROFILE_PROTOCOL
 } else if cfg!(feature = "generation-cohort") {
     GENERATION_PROTOCOL
+} else if cfg!(feature = "chain-cohort") {
+    CHAIN_PROTOCOL
 } else if cfg!(feature = "radii-cohort") {
     RADII_PROTOCOL
 } else if cfg!(feature = "rewrite-cohort") {
@@ -147,11 +150,28 @@ pub fn protocol() -> Result<Protocol> {
         crate::generation_cohort::configure(&mut p)?;
         Ok(p)
     }
-    #[cfg(not(any(feature = "generation-cohort", feature = "profile-cohort")))]
+    #[cfg(all(
+        feature = "chain-cohort",
+        not(any(feature = "generation-cohort", feature = "profile-cohort"))
+    ))]
+    {
+        let mut p = parent_protocol()?;
+        crate::chains::configure(&mut p)?;
+        Ok(p)
+    }
+    #[cfg(not(any(
+        feature = "generation-cohort",
+        feature = "profile-cohort",
+        feature = "chain-cohort"
+    )))]
     parent_protocol()
 }
 pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
     let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
+    #[cfg(feature = "chain-cohort")]
+    if p.name == crate::chains::NAME && id != crate::chains::OVERLAP {
+        return crate::chains::original(s, p.data_seed);
+    }
     #[cfg(feature = "generation-cohort")]
     if p.name == crate::generation_cohort::NAME {
         return crate::generation_cohort::original(id, s);
@@ -208,6 +228,10 @@ pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
 
 #[cfg(feature = "arithmetic-cohort")]
 pub fn inventory(p: &Protocol, inputs: &std::path::Path) -> Result<Value> {
+    #[cfg(feature = "chain-cohort")]
+    if p.name == crate::chains::NAME {
+        return crate::chains::inventory(p, inputs);
+    }
     #[cfg(feature = "profile-cohort")]
     if p.signed_profile {
         return crate::profile::inventory(p, inputs);

@@ -297,8 +297,9 @@ mod tests {
     fn live_rewrite_scores_record_each_original_and_model_written_prefix() -> Result<()> {
         let p = data::protocol()?;
         let id = "suite-copy-repeat";
-        let (task, _) = data::original(&p, id)?;
-        let model = Model::new(task.vocab, p.cases[id].context, &p, 0)?;
+        let source = data::parent_protocol()?;
+        let (task, _) = data::original(&source, id)?;
+        let model = Model::new(task.vocab, source.cases[id].context, &p, 0)?;
         let rows = &task.splits["train"][..2];
         let exposure = Exposure::new(rows, task.vocab, false)?;
         let (scored, bytes) = split(&model, rows, &exposure)?;

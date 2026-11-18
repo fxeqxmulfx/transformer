@@ -1,5 +1,6 @@
 //! Original modular-composition sampling and final-answer masks. Only the
 //! resulting raw object prefixes and final labels are needed by a learner.
+pub mod inventory;
 use crate::Result;
 use baseline::{
     arithmetic_data::SplitMix64,

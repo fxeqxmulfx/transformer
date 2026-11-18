@@ -4,6 +4,8 @@ pub use baseline::Result;
 pub mod arithmetic;
 #[cfg(feature = "chain-data")]
 pub mod chain_data;
+#[cfg(feature = "chain-cohort")]
+pub mod chains;
 pub mod cohort;
 pub mod data;
 pub mod evaluation;

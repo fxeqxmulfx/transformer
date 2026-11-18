@@ -1,0 +1,25 @@
+{
+  "name": "composed-retrieval-original-chains13-product-radii-v1",
+  "training_protocol_sha256": "470ca63ab9cf23293c9503f96fff21b3bb269fdfd4ffe537ee5024bb73e6d228",
+  "chain_source_manifest_sha256": "3242bf86ce41f61d92dda5c4b9c2f65c8fc11ed64d97ebb35d996e584cd2effc",
+  "overlap": "arithmetic-add",
+  "data_seed": 1,
+  "batch": 256,
+  "selection": "validation",
+  "metric": "sequence_accuracy",
+  "target": 0.99,
+  "cases": {
+    "modular-chain-p17-l1": "70d690e26a21b53eb6144fb9f45710026d7993a337577278adc1357c0d8ca9d6",
+    "modular-chain-p17-l2": "a1f634071bc11bf44473908a7026a4fc9e820a2cd74d2f18ab8f827a5f63c139",
+    "modular-chain-p17-l4": "2d5645166c9641215b533e76d190758740e366596adc1623f9f27d36064301ee",
+    "modular-chain-p17-l8": "eb7794ea442ffbbd556b7d897a1979beac8564171b7e8650b8f827948c8006e5",
+    "modular-chain-p193-l1": "be1c35727ad8e810b246b8ed949cd3f6bb4ea4ad665ecf4ebc026430baa7cd17",
+    "modular-chain-p193-l2": "d4a4e1060d02f29eedae7aba120d80083ae7deeaf787cecfb97169fce55e3ec1",
+    "modular-chain-p193-l4": "1ede49c1fd98d7c729dd86d0398eee4a3ffaff0305d6c75921e0ec06f977fc77",
+    "modular-chain-p193-l8": "59ab27ca2d02190443683ef92a110514ded6c9cc383967a4ba4e65f3ea44f067",
+    "modular-chain-p97-l1": "b33032b069f24426e925838c3d35087ad2272ddc78e4ee8bae41fd29de3e52e4",
+    "modular-chain-p97-l2": "5affcf039a6dd47e18b0657fd5b88f5543a1571abde12ed44bc176effff3c151",
+    "modular-chain-p97-l4": "b788169372e822a1a46f5ae9dd45e117b9a389892c7f8313e4e58c20c88eba59",
+    "modular-chain-p97-l8": "f317e7d903c47547c6ee8e41648d0ce7a4c2425383e5de7891b91eeddc997631"
+  }
+}

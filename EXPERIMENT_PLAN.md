@@ -9603,3 +9603,9 @@ and supervises only the final object. Two native implementations agree on
 the 36 dense tensors at the original data seed 1. All 72 retained seed-11
 input and labeled-row hashes also reproduce. These 49,152 examples are
 available for training. The source audit scores zero models.
+
+Task 425 applies the same learned-radius model to all twelve original
+chain cases and repeats modulo-97 addition. Fit on 2,048 original
+short prefixes per chain with ordinary final-object cross-entropy.
+Keep validation and doubled-length accuracy separate and compare
+the addition control with its 64-case parent before counting new cases.
