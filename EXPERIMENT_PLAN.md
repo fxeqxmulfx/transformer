@@ -9618,6 +9618,12 @@ short prefixes per chain with ordinary final-object cross-entropy.
 Keep validation and doubled-length accuracy separate and compare
 the addition control with its 64-case parent before counting new cases.
 
+Both builds completed all 156 fits and replayed 912 raw files. The
+addition control matched in all 48 files against the parent. Zero of
+the 12 new chains passed, with at most 108/1,024 validation answers or
+92/1,024 doubled-length answers correct. The reconciled CM117 count is
+76 measured, 10 original passes and 8 strict passes out of 165.
+
 Task 426 tests whether the two occurrences of a repeated key can be
 distinguished using its learned predecessor. CM120 proves the physical
 odds law and an ambiguity in complete predictions after short training.

@@ -42,3 +42,36 @@ bash "$experiment/run.sh" "$PWD" /run/media/misha/storage "$producer" "$out" cha
 When the generation study has also completed, passing its directory as
 the final argument checks both overlaps and combines all three studies
 under the same architecture and training protocol.
+
+## Held-out results
+
+All twelve modular chains missed the original 99% validation criterion
+and the strict criterion. Each entry is the range of correct final answers
+out of 1,024 across the three seeds and both training methods.
+
+| Modulus | Training steps in the chain | Validation exact | Double-length exact |
+| ---: | ---: | ---: | ---: |
+| 17 | 1 | 89–108 | 77–84 |
+| 17 | 2 | 72–76 | 56–92 |
+| 17 | 4 | 66–77 | 63–82 |
+| 17 | 8 | 61–69 | 68–77 |
+| 97 | 1 | 7–12 | 9–15 |
+| 97 | 2 | 6–12 | 7–13 |
+| 97 | 4 | 3–9 | 8–15 |
+| 97 | 8 | 7–14 | 8–11 |
+| 193 | 1 | 5–6 | 5–7 |
+| 193 | 2 | 4–7 | 4–8 |
+| 193 | 4 | 1–8 | 4–8 |
+| 193 | 8 | 3–8 | 4–12 |
+
+The strongest validation fit answered 108/1,024 correctly on the
+one-step modulo-17 chain. On four-step chains modulo 193, training
+accuracy reached 999–1,057 of 2,048 while validation stayed at 1–8 of
+1,024. The training gain gave little information about unseen answers.
+
+Both builds of `9df38fb5` produced matching endpoints and replayed
+all 912 raw files. The six modulo-97 addition fits reproduced the
+parent's training receipts and all 48 original raw files. Counting that
+control once brings CM117 to **76 of 165 cases measured, 10 original
+passes and 8 strict passes**. Six original arithmetic sources remain
+unavailable, and 83 other cases fall outside these two reconciled cohorts.
