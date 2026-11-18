@@ -27,6 +27,8 @@ pub struct Model {
     pub learned_product_radii: bool,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub signed_profile: bool,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub predecessor_match: bool,
     pub weights: Vec<f64>,
 }
 
@@ -45,12 +47,13 @@ pub struct Layout {
     pub product: usize,
     pub output_offsets: Range<usize>,
     pub radii: Range<usize>,
+    pub predecessor: Option<usize>,
     output_offset_bound: f64,
 }
 
 impl Layout {
     pub fn new(vocab: usize, context: usize) -> Result<Self> {
-        Self::with_extensions(vocab, context, None, false, false)
+        Self::with_extensions(vocab, context, None, false, false, false)
     }
     fn with_extensions(
         vocab: usize,
@@ -58,6 +61,7 @@ impl Layout {
         bound: Option<f64>,
         radii: bool,
         signed_profile: bool,
+        predecessor_match: bool,
     ) -> Result<Self> {
         if vocab == 0 || context < 2 {
             return Err("empty vocabulary or insufficient context".into());
@@ -89,6 +93,7 @@ impl Layout {
         let scalars = range(4)?;
         let output_offsets = range(if bound.is_some() { vocab } else { 0 })?;
         let radii = range(if radii { vocab } else { 0 })?;
+        let predecessor = range(usize::from(predecessor_match && context > 2))?.next();
         Ok(Self {
             key,
             value,
@@ -103,8 +108,12 @@ impl Layout {
             product: scalars.start + 3,
             output_offsets,
             radii,
+            predecessor,
             output_offset_bound: bound.unwrap_or(0.),
         })
+    }
+    fn len(&self) -> usize {
+        self.predecessor.map_or(self.radii.end, |i| i + 1)
     }
     pub fn offset(&self, j: usize, k: usize) -> usize {
         self.relation.start + self.relation.len() / 2 + k - j
@@ -162,9 +171,10 @@ impl Model {
             p.output_offset_bound,
             p.learned_product_radii,
             p.signed_profile,
+            p.predecessor_match,
         )?;
         let mut rng = Random::new(seed);
-        let mut weights = vec![0.; l.radii.end];
+        let mut weights = vec![0.; l.len()];
         weights[l.radii.clone()].fill(1.);
         for x in &mut weights[..l.start.end] {
             *x = (2. * rng.random() - 1.) * PI;
@@ -179,6 +189,7 @@ impl Model {
             output_offset_bound: p.output_offset_bound,
             learned_product_radii: p.learned_product_radii,
             signed_profile: p.signed_profile,
+            predecessor_match: l.predecessor.is_some(),
             weights,
         };
         model.validate()?;
@@ -191,8 +202,10 @@ impl Model {
             self.output_offset_bound,
             self.learned_product_radii,
             self.signed_profile,
+            self.predecessor_match,
         )?;
-        if self.weights.len() != l.radii.end
+        if self.predecessor_match != l.predecessor.is_some()
+            || self.weights.len() != l.len()
             || !self.capacity.is_finite()
             || self.capacity < 0.
             || self.weights.iter().any(|w| !w.is_finite())

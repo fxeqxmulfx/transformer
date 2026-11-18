@@ -65,18 +65,23 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
                 .collect(),
         )
     };
-    let jump = |o: usize| {
+    let kernel = |o: usize, v: usize| {
+        (0..WIDTH)
+            .map(|d| (w[l.key.start + o * WIDTH + d] - w[l.key.start + v * WIDTH + d]).cos())
+            .sum::<f64>()
+            / WIDTH as f64
+    };
+    let jump = |o: usize, i: usize| {
         let key = probabilities(
             x.iter()
                 .enumerate()
                 .map(|(j, &v)| {
-                    let mean = (0..WIDTH)
-                        .map(|d| {
-                            (w[l.key.start + o * WIDTH + d] - w[l.key.start + v * WIDTH + d]).cos()
-                        })
-                        .sum::<f64>()
-                        / WIDTH as f64;
-                    w[l.scale] * mean
+                    let comparison = match (l.predecessor, i, j) {
+                        (Some(t), 1.., 1..) => w[t] * kernel(x[i - 1], x[j - 1]),
+                        _ => 0.,
+                    };
+                    w[l.scale] * kernel(o, v)
+                        + comparison
                         + w[l.bias.start + if j == 0 { m.vocabulary } else { x[j - 1] }]
                         + w[l.recency] * j as f64
                 })
@@ -86,8 +91,8 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
             .map(|k| (0..n).map(|j| key[j] * link(j)[k]).sum::<f64>())
             .collect::<Vec<_>>()
     };
-    let first = jump(q);
-    let second: Vec<_> = x.iter().map(|&o| jump(o)).collect();
+    let first = jump(q, n);
+    let second: Vec<_> = x.iter().enumerate().map(|(i, &o)| jump(o, i)).collect();
     (0..m.vocabulary)
         .map(|c| {
             let mut one = 0.;
@@ -125,6 +130,9 @@ fn fixture() -> Result<Model> {
     }
     for (i, r) in m.weights[l.radii.clone()].iter_mut().enumerate() {
         *r = 0.2 + i as f64 * 0.13;
+    }
+    if let Some(t) = l.predecessor {
+        m.weights[t] = 0.7;
     }
     Ok(m)
 }
@@ -172,7 +180,9 @@ fn operator_matches_literal_paths_boundaries_and_renamings() -> Result<()> {
 }
 #[test]
 fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<()> {
-    let mut m = fixture()?;
+    check_gradients(fixture()?)
+}
+fn check_gradients(mut m: Model) -> Result<()> {
     let l = m.validate()?;
     let xs = [
         Sample {
@@ -254,6 +264,92 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
                 );
             }
         }
+    }
+    Ok(())
+}
+
+#[cfg(feature = "radii-cohort")]
+#[test]
+fn predecessor_scores_match_the_parent_at_zero_and_the_literal_paths_elsewhere() -> Result<()> {
+    let mut p = data::protocol()?;
+    p.predecessor_match = false;
+    let mut parent = Model::new(5, 7, &p, 3)?;
+    let pair = Model::new(5, 2, &p, 3)?;
+    p.predecessor_match = true;
+    assert_eq!(Model::new(5, 2, &p, 3)?, pair);
+    let mut m = Model::new(5, 7, &p, 3)?;
+    let l = m.validate()?;
+    let i = l.predecessor.unwrap();
+    assert_eq!(i, parent.weights.len());
+    assert_eq!(&m.weights[..i], &parent.weights);
+    m.weights[l.depth] = 0.37;
+    m.weights[l.product] = 0.42;
+    for i in l.relation.clone() {
+        let a = (i as f64 * 0.37).sin();
+        m.weights[i] = if l.is_profile_decay(i) {
+            0.25 + a.abs()
+        } else {
+            a
+        };
+    }
+    for (j, r) in m.weights[l.radii.clone()].iter_mut().enumerate() {
+        *r = 0.25 + 0.1 * j as f64;
+    }
+    parent.weights.copy_from_slice(&m.weights[..i]);
+    let inputs = [&[][..], &[2], &[1, 0], &[1, 1, 2], &[0, 1, 1, 1, 0]];
+    let lengths = [1, 2, 4];
+    let baseline = Tables::new(&parent, &lengths)?;
+    for t in [0., -0.7, 0.7] {
+        m.weights[i] = t;
+        let table = Tables::new(&m, &lengths)?;
+        for xs in inputs {
+            let actual = table.logits(&m, &table.pass(&m, xs).hidden);
+            if t == 0. || xs.len() <= 2 {
+                assert_eq!(
+                    actual,
+                    baseline.logits(&parent, &baseline.pass(&parent, xs).hidden)
+                );
+            } else if xs == [0, 1, 1, 1, 0] {
+                let old = baseline.logits(&parent, &baseline.pass(&parent, xs).hidden);
+                assert!(actual.iter().zip(old).any(|(z, v)| (z - v).abs() > 1e-6));
+            }
+            for (v, expected) in actual.iter().zip(literal(&m, xs)) {
+                assert!((v - expected).abs() < 2e-13);
+            }
+        }
+        check_gradients(m.clone())?;
+    }
+    m.weights[l.key.start..l.key.start + WIDTH].fill(0.);
+    m.weights[l.key.start + WIDTH..l.key.start + 2 * WIDTH].fill(PI);
+    for t in [-0.6, 0., 0.4] {
+        m.weights[i] = t;
+        let table = Tables::new(&m, &[4])?;
+        let rows = table.pass(&m, &[0, 1, 1, 1, 0]).attention;
+        let odds = rows[5] * rows[15] / (rows[7] * rows[13]);
+        assert!((odds.ln() - 4. * t).abs() < 2e-13);
+    }
+    Ok(())
+}
+
+#[cfg(feature = "radii-cohort")]
+#[test]
+fn both_optimizers_train_the_shared_predecessor_coefficient() -> Result<()> {
+    let mut p = data::protocol()?;
+    crate::prefix::configure_from(&mut p, data::REWRITE_PROTOCOL, true)?;
+    p.predecessor_match = true;
+    p.updates = 3;
+    let (task, _) = data::original(&p, "suite-copy-repeat")?;
+    let rows = &task.splits["train"][..2];
+    for mode in &p.modes {
+        let mut m = Model::new(task.vocab, p.cases["suite-copy-repeat"].context, &p, 0)?;
+        let i = m.validate()?.predecessor.unwrap();
+        let receipt = train::fit(&mut m, rows, 2, mode, 0, &p, || Ok(()))?;
+        assert!(m.weights[i].abs() > 1e-8);
+        assert_eq!(receipt["min_visits"], p.updates);
+        assert_eq!(
+            receipt["forward_loss_queries"].as_u64().unwrap() > 0,
+            mode == "forward"
+        );
     }
     Ok(())
 }

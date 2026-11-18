@@ -9617,3 +9617,12 @@ chain cases and repeats modulo-97 addition. Fit on 2,048 original
 short prefixes per chain with ordinary final-object cross-entropy.
 Keep validation and doubled-length accuracy separate and compare
 the addition control with its 64-case parent before counting new cases.
+
+Task 426 tests whether the two occurrences of a repeated key can be
+distinguished using its learned predecessor. CM120 proves the physical
+odds law and an ambiguity in complete predictions after short training.
+On all 42 frozen CM117 endpoints the original training vectors replay.
+Every repeated-copy training prefix supplies a pair of occurrences with
+different predecessors. Changing only the shared coefficient gives at
+most four exact repeated-copy training sequences out of 128. Jointly
+training the coefficient and both reads is the next comparison.

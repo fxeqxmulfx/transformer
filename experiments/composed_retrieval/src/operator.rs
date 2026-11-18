@@ -34,6 +34,7 @@ pub struct Tables {
     pub start: Wave,
     pub similarity: Vec<f64>,
     affinity: Vec<f64>,
+    predecessor_affinity: Vec<f64>,
     pub links: Vec<Vec<f64>>,
 }
 impl Tables {
@@ -58,6 +59,11 @@ impl Tables {
                     .ok_or("key kernel overflow")?
             ],
             affinity: vec![0.; m.vocabulary * m.vocabulary],
+            predecessor_affinity: if m.predecessor_match {
+                vec![1.; m.vocabulary * m.vocabulary]
+            } else {
+                vec![]
+            },
             links: vec![vec![]; m.context],
             layout: l,
         };
@@ -77,6 +83,7 @@ impl Tables {
     }
     fn key_row(&mut self, m: &Model, o: usize) {
         let t = m.weights[self.layout.scale];
+        let coefficient = self.layout.predecessor.map_or(0., |i| m.weights[i]);
         for v in 0..m.vocabulary {
             let (i, j) = (o * m.vocabulary + v, v * m.vocabulary + o);
             let s = self.keys[o].dot(&self.keys[v]) / WIDTH as f64;
@@ -85,6 +92,11 @@ impl Tables {
             self.similarity[j] = s;
             self.affinity[i] = k;
             self.affinity[j] = k;
+            if coefficient != 0. {
+                let comparison = (coefficient * s - coefficient.abs()).exp();
+                self.predecessor_affinity[i] = comparison;
+                self.predecessor_affinity[j] = comparison;
+            }
         }
     }
     fn link_rows(&mut self, m: &Model, n: usize) {
@@ -126,6 +138,10 @@ impl Tables {
             for (k, &s) in self.affinity.iter_mut().zip(&self.similarity) {
                 *k = (a * s - a.abs()).exp();
             }
+        } else if l.predecessor == Some(i) && a != 0. {
+            for (k, &s) in self.predecessor_affinity.iter_mut().zip(&self.similarity) {
+                *k = (a * s - a.abs()).exp();
+            }
         }
     }
     fn attention(&self, m: &Model, x: &[usize], q: usize) -> Vec<f64> {
@@ -135,6 +151,8 @@ impl Tables {
         }
         let l = &self.layout;
         let t = m.weights[l.scale];
+        let coefficient = l.predecessor.map_or(0., |i| m.weights[i]);
+        let boundary = (-coefficient.abs()).exp();
         let prior: Vec<_> = (0..n)
             .map(|j| {
                 m.weights[l.bias.start + if j == 0 { m.vocabulary } else { x[j - 1] }]
@@ -144,9 +162,22 @@ impl Tables {
         let peak = prior.iter().copied().fold(f64::NEG_INFINITY, f64::max);
         let positional: Vec<_> = prior.iter().map(|p| (p - peak).exp()).collect();
         let mut a = vec![0.; (n + 1) * n];
-        for (o, row) in x.iter().copied().chain([q]).zip(a.chunks_exact_mut(n)) {
+        for (i, (o, row)) in x
+            .iter()
+            .copied()
+            .chain([q])
+            .zip(a.chunks_exact_mut(n))
+            .enumerate()
+        {
             for ((slot, &id), &w) in row.iter_mut().zip(x).zip(&positional) {
                 *slot = self.affinity[o * m.vocabulary + id] * w;
+            }
+            let previous_query = x[..i].last().copied().filter(|_| coefficient != 0.);
+            if let Some(u) = previous_query {
+                row[0] *= boundary;
+                for (slot, &v) in row[1..].iter_mut().zip(x) {
+                    *slot *= self.predecessor_affinity[u * m.vocabulary + v];
+                }
             }
             let z: f64 = row.iter().sum();
             if z.is_normal() && row.iter().all(|&v| v.is_normal()) {
@@ -156,6 +187,11 @@ impl Tables {
             } else {
                 for ((slot, &id), &p) in row.iter_mut().zip(x).zip(&prior) {
                     *slot = t * self.similarity[o * m.vocabulary + id] + p;
+                }
+                if let Some(u) = previous_query {
+                    for (slot, &v) in row[1..].iter_mut().zip(x) {
+                        *slot += coefficient * self.similarity[u * m.vocabulary + v];
+                    }
                 }
                 softmax(row);
             }

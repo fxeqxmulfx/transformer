@@ -18,6 +18,7 @@ enum Change {
     Bias(usize),
     Link(usize),
     Scale,
+    Predecessor,
     Recency,
     Depth,
     Product,
@@ -45,6 +46,8 @@ impl Change {
             Self::Link(first_distance)
         } else if i == l.scale {
             Self::Scale
+        } else if l.predecessor == Some(i) {
+            Self::Predecessor
         } else if i == l.recency {
             Self::Recency
         } else if i == l.depth {
@@ -148,7 +151,7 @@ impl<'a> Original<'a> {
                 return self.loss;
             }
             Change::Link(offset) if n <= 1 || offset >= n => return self.loss,
-            Change::Scale | Change::Recency if n <= 1 => return self.loss,
+            Change::Scale | Change::Recency | Change::Predecessor if n <= 1 => return self.loss,
             _ => t.pass(m, prefix).hidden,
         };
         cross_entropy(&t.logits(m, &hidden), self.sample.target)

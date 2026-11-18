@@ -1,64 +1,24 @@
 //! Training-only CM118 intervention on the complete frozen CM116 Rewrite
 //! cohort. Reload original objects and compare every baseline training logit.
-use baseline::{
-    data::Example,
-    hash,
-    metrics::{self, Predictor},
-};
-use bilinear::guard;
+#[path = "shared/training.rs"]
+mod training;
+use baseline::data::Example;
 use composed_retrieval::{Result, data, model::Model, operator::Tables, train};
-use learned_retrieval::cohort::{raw_file, read};
 use serde_json::{Value, json};
-use std::{
-    cell::RefCell,
-    collections::{BTreeMap, BTreeSet},
-    fs,
-    path::Path,
-};
 
 const PRODUCER: &str = "9a222cfdd9c7364a864749f90dfc5d89d1d86a3f";
 const GRID: [f64; 7] = [0., 0.0625, 0.125, 0.25, 0.5, 1., 2.];
-
-struct TrainingPredictor<'a> {
-    model: &'a Model,
-    tables: Tables,
-    bytes: Option<RefCell<Vec<u8>>>,
-}
-impl Predictor for TrainingPredictor<'_> {
-    fn vocab(&self) -> usize {
-        self.model.vocabulary
-    }
-    fn logits(&self, prefix: &[i64]) -> Vec<f64> {
-        let prefix = self
-            .model
-            .objects(prefix)
-            .expect("validated original train prefix");
-        let values = self
-            .tables
-            .logits(self.model, &self.tables.pass(self.model, &prefix).hidden);
-        if let Some(bytes) = &self.bytes {
-            bytes
-                .borrow_mut()
-                .extend(values.iter().flat_map(|x| x.to_le_bytes()));
-        }
-        values
-    }
-}
 
 fn intervention(m: &Model, rows: &[Example], raw: &[u8], after: &Value) -> Result<Value> {
     let layout = m.validate()?;
     let samples = train::samples(m, rows)?;
     let batch: Vec<_> = samples.iter().flatten().collect();
-    let mut lengths: BTreeSet<_> = batch
+    let reach = batch
         .iter()
-        .map(|s| s.prefix.len().saturating_sub(1))
-        .collect();
-    let reach = lengths.last().ok_or("empty supervision")?.saturating_sub(1);
-    for row in rows.iter().filter(|r| !r.prompt.is_empty()) {
-        let n = row.prompt.len() - 1;
-        lengths.extend(n..n + row.limit);
-    }
-    let lengths: Vec<_> = lengths.into_iter().collect();
+        .map(|s| s.prefix.len().saturating_sub(2))
+        .max()
+        .ok_or("empty supervision")?;
+    let lengths = training::lengths(&batch, rows);
     let residual = &m.weights[layout.relation.clone()];
     let center = residual.len() / 2;
     let unseen = residual
@@ -110,24 +70,14 @@ fn intervention(m: &Model, rows: &[Example], raw: &[u8], after: &Value) -> Resul
     }
     let mut grid = Vec::new();
     for decay in GRID {
-        let perturbed = with_decay(decay);
-        let predictor = TrainingPredictor {
-            model: &perturbed,
-            tables: Tables::new(&perturbed, &lengths)?,
-            bytes: (decay == 0.).then(RefCell::default),
-        };
-        let scores = metrics::evaluate(&predictor, rows)?;
-        let teacher = scores.get("teacher_forced").unwrap_or(&scores);
-        if let Some(bytes) = predictor.bytes
-            && (bytes.into_inner() != raw
-                || teacher["correct"] != after["correct"]
-                || teacher["targets"] != after["targets"]
-                || (teacher["loss"].as_f64().ok_or("training CE")? - origin).abs() > 1e-12)
-        {
-            return Err("zero decay differs from sealed training vectors or receipt".into());
-        }
-        grid.push(json!({"decay":decay,"ce":teacher["loss"],"teacher_correct":teacher["correct"],
-            "correct":scores["correct"],"exact":scores["exact"],"targets":scores["targets"],"examples":scores["examples"]}));
+        let mut score = training::scores(
+            &with_decay(decay),
+            &lengths,
+            rows,
+            (decay == 0.).then_some((raw, after)),
+        )?;
+        score["decay"] = json!(decay);
+        grid.push(score);
     }
     Ok(
         json!({"max_observed_distance":reach,"unobserved_residuals":unseen.count(),
@@ -136,75 +86,5 @@ fn intervention(m: &Model, rows: &[Example], raw: &[u8], after: &Value) -> Resul
 }
 
 fn main() -> Result<()> {
-    let args: Vec<_> = std::env::args_os().skip(1).collect();
-    let [workspace, storage, study, arm] = args.as_slice() else {
-        return Err("expected WORKSPACE STORAGE CM116_REWRITE_OUTPUT original|repeat".into());
-    };
-    let arm = arm
-        .to_str()
-        .filter(|x| matches!(*x, "original" | "repeat"))
-        .ok_or("unknown arm")?;
-    let study = Path::new(study);
-    guard::admit(1 << 30, Path::new(workspace), Path::new(storage))?;
-    let root = study.join(arm).join("run");
-    let seal = read(&root.join("sealed/manifest.json"))?;
-    let identity = &seal["identity"];
-    if data::PROTOCOL != data::REWRITE_PROTOCOL
-        || identity["producer"] != PRODUCER
-        || fs::read_to_string(study.join("producer.commit"))?.trim() != PRODUCER
-        || identity["protocol_sha256"] != hash(data::REWRITE_PROTOCOL.as_bytes())
-        || identity["binary_sha256"] != hash(&fs::read(study.join(arm).join("composed-retrieval"))?)
-    {
-        return Err("unrecognized frozen Rewrite study".into());
-    }
-    let p = data::protocol()?;
-    let mut cases = BTreeMap::new();
-    for (id, spec) in &p.cases {
-        let (source, pins) = data::original(&p, id)?;
-        let mut cells = BTreeMap::new();
-        for mode in &p.modes {
-            for seed in &p.seeds {
-                let cell = format!("{mode}-{seed}");
-                let key = format!("{id}/{cell}");
-                let bytes = fs::read(root.join(&key).join("receipt.json"))?;
-                let receipt: Value = serde_json::from_slice(&bytes)?;
-                let weights = fs::read(root.join(&key).join("model.json"))?;
-                if seal["cells"][&key] != hash(&bytes)
-                    || receipt["data_fingerprints"] != pins
-                    || receipt["endpoint_sha256"] != hash(&weights)
-                    || receipt["identity"] != *identity
-                    || receipt["case"] != *id
-                    || receipt["mode"] != *mode
-                    || receipt["seed"] != *seed
-                {
-                    return Err("training receipt or endpoint differs".into());
-                }
-                let m: Model = serde_json::from_slice(&weights)?;
-                if m.context != spec.context || m.vocabulary != spec.vocabulary {
-                    return Err("incompatible model dimensions".into());
-                }
-                let raw = fs::read(raw_file(
-                    &root.join(id).join("scores"),
-                    &format!("{cell}-final"),
-                    "train",
-                ))?;
-                cells.insert(
-                    cell,
-                    intervention(
-                        &m,
-                        &source.splits["train"],
-                        &raw,
-                        &receipt["training"]["after"],
-                    )?,
-                );
-            }
-        }
-        cases.insert(id, cells);
-    }
-    serde_json::to_writer_pretty(
-        std::io::stdout().lock(),
-        &json!({"model_producer":PRODUCER,"data_split":"train","cases":cases}),
-    )?;
-    println!();
-    Ok(())
+    training::rewrite_sweep(PRODUCER, data::REWRITE_PROTOCOL, intervention)
 }

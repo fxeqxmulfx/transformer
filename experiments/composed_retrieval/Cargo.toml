@@ -80,6 +80,11 @@ path = "src/bin/compare-learned-radii.rs"
 required-features = ["radii-cohort"]
 
 [[bin]]
+name = "predecessor-signal"
+path = "src/bin/predecessor-signal.rs"
+required-features = ["radii-cohort"]
+
+[[bin]]
 name = "compare-signed-profile"
 path = "src/bin/compare-signed-profile.rs"
 required-features = ["profile-cohort"]

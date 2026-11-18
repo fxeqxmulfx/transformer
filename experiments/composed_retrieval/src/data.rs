@@ -82,6 +82,8 @@ pub struct Protocol {
     pub learned_product_radii: bool,
     #[serde(default)]
     pub signed_profile: bool,
+    #[serde(default)]
+    pub predecessor_match: bool,
     pub initial_key_scale: f64,
     pub initial_depth: f64,
     pub initial_log_odds: Option<f64>,

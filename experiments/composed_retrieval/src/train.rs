@@ -147,7 +147,12 @@ impl Choices {
             .collect();
         Self {
             tables,
-            always: l.start.clone().chain(l.scale..=l.product).collect(),
+            always: l
+                .start
+                .clone()
+                .chain(l.scale..=l.product)
+                .chain(l.predecessor)
+                .collect(),
         }
     }
     fn next(&mut self, count: usize) -> Vec<usize> {
@@ -208,6 +213,8 @@ pub fn fit(
     let l = m.validate()?;
     if m.output_offset_bound != p.output_offset_bound
         || m.learned_product_radii != p.learned_product_radii
+        || m.signed_profile != p.signed_profile
+        || m.predecessor_match != (p.predecessor_match && m.context > 2)
     {
         return Err("model coordinate domains differ from the training protocol".into());
     }
