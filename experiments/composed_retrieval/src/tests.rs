@@ -43,7 +43,28 @@ fn literal(m: &Model, xs: &[usize]) -> Vec<f64> {
             .collect();
     }
     let q = q.unwrap();
-    let link = |j: usize| probabilities((0..n).map(|k| w[l.offset(j, k)]).collect());
+    let link = |j: usize| {
+        probabilities(
+            (0..n)
+                .map(|k| {
+                    if !m.signed_profile {
+                        return w[l.offset(j, k)];
+                    }
+                    let d = k as isize - j as isize;
+                    if d == 0 {
+                        return 0.;
+                    }
+                    let side = usize::from(d > 0);
+                    let near = w[l.relation.start + side];
+                    if d.unsigned_abs() == 1 {
+                        near
+                    } else {
+                        near - w[l.relation.start + 2 + side] * (d.unsigned_abs() - 1) as f64
+                    }
+                })
+                .collect(),
+        )
+    };
     let jump = |o: usize| {
         let key = probabilities(
             x.iter()
@@ -94,6 +115,9 @@ fn fixture() -> Result<Model> {
     let l = m.validate()?;
     for i in l.bias.start..l.scale {
         m.weights[i] = (i as f64 * 0.97).sin();
+        if l.is_profile_decay(i) {
+            m.weights[i] = m.weights[i].abs() + 0.25;
+        }
     }
     m.weights[l.recency] = -0.14;
     for (c, b) in m.weights[l.output_offsets.clone()].iter_mut().enumerate() {
@@ -200,6 +224,10 @@ fn all_gradients_and_feasible_queries_match_independent_complete_ce() -> Result<
                 m.weights[l.radii.start] = 0.;
                 m.weights[l.radii.start + 1] = 1.;
             }
+            if l.signed_profile {
+                m.weights[l.relation.start + 2] = 0.;
+                t.refresh(&m, l.relation.start + 2);
+            }
         }
         let original = m.clone();
         let forward = query::differences(&mut m, &mut t, &batch, &coords, h, None)?;
@@ -283,7 +311,12 @@ fn inhabits_both_lean_capacity_witnesses() -> Result<()> {
     m.weights.fill(0.);
     m.weights[l.scale] = 64.;
     m.weights[l.bias.start] = -64.;
-    m.weights[l.offset(0, 1)] = 64.;
+    if l.signed_profile {
+        m.weights[l.relation.start + 1] = 64.;
+        m.weights[l.relation.start + 3] = 64.;
+    } else {
+        m.weights[l.offset(0, 1)] = 64.;
+    }
     m.weights[l.depth] = 31. / 32.;
     m.weights[l.product] = 1. / 32.;
     for bank in [&l.key, &l.value, &l.phase] {
@@ -492,5 +525,68 @@ fn old_coordinates_and_unit_radius_initial_scores_agree_exactly() -> Result<()> 
     let mut bad = model;
     bad.weights[l.radii.start] = 1.1;
     assert!(bad.validate().is_err());
+    Ok(())
+}
+
+#[cfg(feature = "profile-cohort")]
+#[test]
+fn signed_profile_allocates_only_visible_coordinates_and_starts_at_parent_logits() -> Result<()> {
+    let p = data::protocol()?;
+    let mut parent = p.clone();
+    parent.signed_profile = false;
+    for (context, count) in [(2, 0), (3, 2), (4, 4), (9, 4)] {
+        let current = Model::new(5, context, &p, 1)?;
+        let old = Model::new(5, context, &parent, 1)?;
+        let l = current.validate()?;
+        assert_eq!(l.relation.len(), count);
+        assert!(!String::from_utf8_lossy(&serde_json::to_vec(&old)?).contains("signed_profile"));
+        let current_tables = Tables::new(&current, &(0..context).collect::<Vec<_>>())?;
+        let old_tables = Tables::new(&old, &(0..context).collect::<Vec<_>>())?;
+        let input: Vec<_> = (0..context).map(|i| i % 5).collect();
+        for length in 0..=context {
+            let x = &input[..length];
+            assert_eq!(
+                current_tables.logits(&current, &current_tables.pass(&current, x).hidden),
+                old_tables.logits(&old, &old_tables.pass(&old, x).hidden)
+            );
+        }
+        if count == 4 {
+            let mut invalid = current;
+            invalid.weights[l.relation.start + 3] = -0.1;
+            assert!(invalid.validate().is_err());
+        }
+    }
+    Ok(())
+}
+
+#[cfg(feature = "profile-cohort")]
+#[test]
+fn arithmetic_control_keeps_fitted_common_coordinates_in_both_optimizers() -> Result<()> {
+    let mut p = data::protocol()?;
+    p.updates = 4;
+    let mut parent = p.clone();
+    parent.signed_profile = false;
+    let (task, _) = data::original(&p, "arithmetic-add")?;
+    let rows = &task.splits["train"][..8];
+    for mode in &p.modes {
+        let mut a = Model::new(task.vocab, 2, &parent, 0)?;
+        let mut b = Model::new(task.vocab, 2, &p, 0)?;
+        let receipt_a = train::fit(&mut a, rows, 4, mode, 0, &parent, || Ok(()))?;
+        let receipt_b = train::fit(&mut b, rows, 4, mode, 0, &p, || Ok(()))?;
+        let old = a.validate()?;
+        let new = b.validate()?;
+        assert!(new.relation.is_empty());
+        assert_eq!(old.relation.len(), 1);
+        assert_eq!(
+            &a.weights[..old.relation.start],
+            &b.weights[..new.relation.start]
+        );
+        assert_eq!(
+            &a.weights[old.relation.end..],
+            &b.weights[new.relation.end..]
+        );
+        assert_eq!(receipt_a["after"], receipt_b["after"]);
+        assert_eq!(receipt_a["batch_sha256"], receipt_b["batch_sha256"]);
+    }
     Ok(())
 }

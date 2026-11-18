@@ -9589,3 +9589,10 @@ every distance setting, with 192 residuals unobserved. Separate slope
 and residual parameters can compensate at every length. Test a smaller
 relative function whose near-distance observations constrain its long
 tail, retaining ordinary next-object supervision on the original records.
+
+Task 423 compares that signed geometric profile with CM117 on the six
+Rewrite tasks, novel key/value binding, two-hop lookup, multi-query
+recall and addition modulo 97. The model learns both directional levels
+and decays, along with every representation and output weight. Keep
+the parent initialization and all original minibatches matched. Seal 120
+fits before testing free generation and the two held-out criteria.

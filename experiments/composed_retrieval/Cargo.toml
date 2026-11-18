@@ -14,6 +14,7 @@ output-offsets = ["arithmetic-cohort", "logodds-depth"]
 prefix-cohort = ["output-offsets", "dep:synthetic-data"]
 rewrite-cohort = ["prefix-cohort"]
 radii-cohort = ["rewrite-cohort"]
+profile-cohort = ["radii-cohort"]
 generation-cohort = ["radii-cohort", "dep:frequency-data", "dep:parity-data"]
 
 [[bin]]
@@ -65,6 +66,11 @@ required-features = ["rewrite-cohort"]
 name = "compare-learned-radii"
 path = "src/bin/compare-learned-radii.rs"
 required-features = ["radii-cohort"]
+
+[[bin]]
+name = "compare-signed-profile"
+path = "src/bin/compare-signed-profile.rs"
+required-features = ["profile-cohort"]
 
 [[bin]]
 name = "reconcile-generation"

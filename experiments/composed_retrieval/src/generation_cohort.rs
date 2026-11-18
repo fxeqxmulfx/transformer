@@ -190,7 +190,7 @@ pub fn preflight(p: &Protocol, inputs: &Path) -> Result<Value> {
     Ok(out)
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(feature = "profile-cohort")))]
 mod tests {
     use super::*;
 

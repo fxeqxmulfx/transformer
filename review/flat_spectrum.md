@@ -22977,3 +22977,36 @@ Each original training occurrence contributes with its original weight.
 The CM117 conditional convexity result concerns the radius product on a
 fixed pair. It supplies no joint convexity claim for these normalized
 positional reads. [Training intervention](../experiments/composed_retrieval/distance_decay/README.md)
+
+## CM119. A signed geometric relative-position profile
+
+The training-only CM118 measurements leave many offset tables compatible
+with the original short copy examples. Replace the free table by two learned
+adjacent levels $b_-,b_+$ and two nonnegative learned decays $a_-,a_+$.
+Fix the central potential to zero. In direction $s$, at distance $h\geq1$,
+use $b_s-a_s(h-1)$ in every positional row of both reads. This causal
+rule uses only positions in the visible memory. Each object representation,
+content comparison, gate, magnitude and readout retains its CM117 meaning.
+
+For any source position $j$ and visible destination $k$, the positional
+probability is the probability at $j$ times the exponential of the
+effective potential at $k-j$. Moving one additional place into the same
+tail multiplies the probability by $\exp(-a_s)$, at every sequence
+length. The boundary changes the common row normalization. The complete
+class logits retain the absolute bound $B+D$.
+
+Suppose the physical probabilities of a five-position row centered at
+its third position are known. The odds at distances $+1$ and $-1$
+relative to the center identify the two adjacent levels. The odds at
+$+2$ and $-2$ then identify the decays. Two profiles with identical
+probabilities on that row coincide on every signed offset. Keeping the
+other model weights fixed therefore gives identical complete predictions
+on all prefixes. Ordinary training supplies next-object labels and fits
+all parameters jointly. This identification result requires the stronger
+observation of positional probabilities.
+
+Only coordinates that can affect a legal input are allocated. A two-object
+context has none, a three-object context has the two levels, and larger
+contexts have all four. Zero initialization gives exactly the CM117 initial
+weights on every positional row. The model learns four numbers at the
+largest context in place of 257 independent signed-offset entries.

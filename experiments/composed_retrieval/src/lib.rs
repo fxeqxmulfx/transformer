@@ -14,6 +14,8 @@ pub mod model;
 pub mod operator;
 #[cfg(feature = "prefix-cohort")]
 pub mod prefix;
+#[cfg(feature = "profile-cohort")]
+pub mod profile;
 mod query;
 #[cfg(feature = "output-offsets")]
 pub mod radial;

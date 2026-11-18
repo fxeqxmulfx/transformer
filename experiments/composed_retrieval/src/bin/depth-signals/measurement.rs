@@ -107,7 +107,7 @@ mod tests {
         let mut m = Model::new(5, 5, &data::protocol()?, 1)?;
         let l = m.validate()?;
         for i in l.relation.clone() {
-            m.weights[i] = (i as f64).sin() * 3.;
+            m.weights[i] = l.project(i, (i as f64).sin() * 3.);
         }
         let rows = [
             Sample {

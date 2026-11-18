@@ -25,6 +25,8 @@ pub struct Model {
     pub output_offset_bound: Option<f64>,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub learned_product_radii: bool,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub signed_profile: bool,
     pub weights: Vec<f64>,
 }
 
@@ -36,6 +38,7 @@ pub struct Layout {
     pub start: Range<usize>,
     pub bias: Range<usize>,
     pub relation: Range<usize>,
+    pub signed_profile: bool,
     pub scale: usize,
     pub recency: usize,
     pub depth: usize,
@@ -47,13 +50,14 @@ pub struct Layout {
 
 impl Layout {
     pub fn new(vocab: usize, context: usize) -> Result<Self> {
-        Self::with_extensions(vocab, context, None, false)
+        Self::with_extensions(vocab, context, None, false, false)
     }
     fn with_extensions(
         vocab: usize,
         context: usize,
         bound: Option<f64>,
         radii: bool,
+        signed_profile: bool,
     ) -> Result<Self> {
         if vocab == 0 || context < 2 {
             return Err("empty vocabulary or insufficient context".into());
@@ -62,10 +66,14 @@ impl Layout {
             return Err("output-offset bound must be positive and finite".into());
         }
         let table = vocab.checked_mul(WIDTH).ok_or("table size overflow")?;
-        let offsets = (context - 2)
-            .checked_mul(2)
-            .and_then(|v| v.checked_add(1))
-            .ok_or("offset size overflow")?;
+        let offsets = if signed_profile {
+            2 * (context - 2).min(2)
+        } else {
+            (context - 2)
+                .checked_mul(2)
+                .and_then(|v| v.checked_add(1))
+                .ok_or("offset size overflow")?
+        };
         let mut end = 0usize;
         let mut range = |length| -> Result<Range<usize>> {
             let first = end;
@@ -88,6 +96,7 @@ impl Layout {
             start,
             bias,
             relation,
+            signed_profile,
             scale: scalars.start,
             recency: scalars.start + 1,
             depth: scalars.start + 2,
@@ -100,11 +109,40 @@ impl Layout {
     pub fn offset(&self, j: usize, k: usize) -> usize {
         self.relation.start + self.relation.len() / 2 + k - j
     }
+    pub fn profile_score(&self, weights: &[f64], j: usize, k: usize) -> f64 {
+        let gap = j.abs_diff(k);
+        if gap == 0 {
+            return 0.;
+        }
+        let level = self.relation.start + usize::from(k > j);
+        if gap == 1 {
+            weights[level]
+        } else {
+            weights[level] - weights[level + 2] * (gap - 1) as f64
+        }
+    }
+    pub fn add_link_gradient(&self, grad: &mut [f64], j: usize, k: usize, value: f64) {
+        if !self.signed_profile {
+            grad[self.offset(j, k)] += value;
+        } else if j != k {
+            let level = self.relation.start + usize::from(k > j);
+            grad[level] += value;
+            let gap = j.abs_diff(k);
+            if gap > 1 {
+                grad[level + 2] -= (gap - 1) as f64 * value;
+            }
+        }
+    }
+    pub fn is_profile_decay(&self, i: usize) -> bool {
+        self.signed_profile && self.relation.contains(&i) && i - self.relation.start >= 2
+    }
     pub fn project(&self, i: usize, weight: f64) -> f64 {
         if i == self.depth || i == self.product || self.radii.contains(&i) {
             weight.clamp(0., 1.)
         } else if self.output_offsets.contains(&i) {
             weight.clamp(-self.output_offset_bound, self.output_offset_bound)
+        } else if self.is_profile_decay(i) {
+            weight.max(0.)
         } else {
             weight
         }
@@ -123,6 +161,7 @@ impl Model {
             context,
             p.output_offset_bound,
             p.learned_product_radii,
+            p.signed_profile,
         )?;
         let mut rng = Random::new(seed);
         let mut weights = vec![0.; l.radii.end];
@@ -139,6 +178,7 @@ impl Model {
             capacity: p.capacity,
             output_offset_bound: p.output_offset_bound,
             learned_product_radii: p.learned_product_radii,
+            signed_profile: p.signed_profile,
             weights,
         };
         model.validate()?;
@@ -150,11 +190,15 @@ impl Model {
             self.context,
             self.output_offset_bound,
             self.learned_product_radii,
+            self.signed_profile,
         )?;
         if self.weights.len() != l.radii.end
             || !self.capacity.is_finite()
             || self.capacity < 0.
             || self.weights.iter().any(|w| !w.is_finite())
+            || l.relation
+                .clone()
+                .any(|i| l.is_profile_decay(i) && self.weights[i] < 0.)
             || self.weights[l.radii.clone()]
                 .iter()
                 .any(|v| !(0. ..=1.).contains(v))

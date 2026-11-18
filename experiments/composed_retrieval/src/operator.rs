@@ -89,8 +89,14 @@ impl Tables {
     }
     fn link_rows(&mut self, m: &Model, n: usize) {
         for (j, row) in self.links[n].chunks_exact_mut(n).enumerate() {
-            let i = self.layout.offset(j, 0);
-            row.copy_from_slice(&m.weights[i..i + n]);
+            if self.layout.signed_profile {
+                for (k, value) in row.iter_mut().enumerate() {
+                    *value = self.layout.profile_score(&m.weights, j, k);
+                }
+            } else {
+                let i = self.layout.offset(j, 0);
+                row.copy_from_slice(&m.weights[i..i + n]);
+            }
             softmax(row);
         }
     }

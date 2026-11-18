@@ -74,7 +74,7 @@ fn route_backward(
         let adj = |k: usize| pass.second_keys[j] * dm2[k] + aq[j] * dm1[k];
         let mean: f64 = row.iter().enumerate().map(|(k, &b)| b * adj(k)).sum();
         for (k, &b) in row.iter().enumerate() {
-            g[l.offset(j, k)] += b * (adj(k) - mean);
+            l.add_link_gradient(g, j, k, b * (adj(k) - mean));
         }
     }
 }

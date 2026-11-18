@@ -36,7 +36,10 @@ pub const PREFIX_PROTOCOL: &str = include_str!("../prefix/protocol.json");
 pub const REWRITE_PROTOCOL: &str = include_str!("../rewrite/protocol.json");
 pub const RADII_PROTOCOL: &str = include_str!("../product_radii/protocol.json");
 pub const GENERATION_PROTOCOL: &str = include_str!("../generation/protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "generation-cohort") {
+pub const PROFILE_PROTOCOL: &str = include_str!("../distance_profile/protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "profile-cohort") {
+    PROFILE_PROTOCOL
+} else if cfg!(feature = "generation-cohort") {
     GENERATION_PROTOCOL
 } else if cfg!(feature = "radii-cohort") {
     RADII_PROTOCOL
@@ -74,6 +77,8 @@ pub struct Protocol {
     pub output_offset_bound: Option<f64>,
     #[serde(default)]
     pub learned_product_radii: bool,
+    #[serde(default)]
+    pub signed_profile: bool,
     pub initial_key_scale: f64,
     pub initial_depth: f64,
     pub initial_log_odds: Option<f64>,
@@ -89,7 +94,7 @@ pub struct Protocol {
     /// A count selects a seeded cycle in each table. None visits every model coordinate.
     pub coordinates_per_table: Option<usize>,
 }
-pub fn protocol() -> Result<Protocol> {
+pub(crate) fn parent_protocol() -> Result<Protocol> {
     let mut p: Protocol = serde_json::from_str(BASE_PROTOCOL)?;
     if cfg!(feature = "dense-forward") {
         let dense: Value = serde_json::from_str(DENSE_PROTOCOL)?;
@@ -121,8 +126,6 @@ pub fn protocol() -> Result<Protocol> {
     crate::prefix::configure(&mut p)?;
     #[cfg(feature = "radii-cohort")]
     crate::radii_cohort::configure(&mut p)?;
-    #[cfg(feature = "generation-cohort")]
-    crate::generation_cohort::configure(&mut p)?;
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256
@@ -130,6 +133,22 @@ pub fn protocol() -> Result<Protocol> {
         return Err("frozen protocol, width or original suite changed".into());
     }
     Ok(p)
+}
+pub fn protocol() -> Result<Protocol> {
+    #[cfg(feature = "profile-cohort")]
+    {
+        let mut p = parent_protocol()?;
+        crate::profile::configure(&mut p)?;
+        Ok(p)
+    }
+    #[cfg(all(feature = "generation-cohort", not(feature = "profile-cohort")))]
+    {
+        let mut p = parent_protocol()?;
+        crate::generation_cohort::configure(&mut p)?;
+        Ok(p)
+    }
+    #[cfg(not(any(feature = "generation-cohort", feature = "profile-cohort")))]
+    parent_protocol()
 }
 pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
     let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
@@ -189,6 +208,10 @@ pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
 
 #[cfg(feature = "arithmetic-cohort")]
 pub fn inventory(p: &Protocol, inputs: &std::path::Path) -> Result<Value> {
+    #[cfg(feature = "profile-cohort")]
+    if p.signed_profile {
+        return crate::profile::inventory(p, inputs);
+    }
     #[cfg(feature = "generation-cohort")]
     if p.name == crate::generation_cohort::NAME {
         return crate::generation_cohort::preflight(p, inputs);

@@ -37,7 +37,12 @@ impl Change {
         } else if l.bias.contains(&i) {
             Self::Bias(i - l.bias.start)
         } else if l.relation.contains(&i) {
-            Self::Link((i - l.relation.start).abs_diff(l.relation.len() / 2))
+            let first_distance = if l.signed_profile {
+                if l.is_profile_decay(i) { 2 } else { 1 }
+            } else {
+                (i - l.relation.start).abs_diff(l.relation.len() / 2)
+            };
+            Self::Link(first_distance)
         } else if i == l.scale {
             Self::Scale
         } else if i == l.recency {

@@ -1,0 +1,11 @@
+{
+  "name": "composed-retrieval-signed-profile10-v1",
+  "training_protocol_sha256": "470ca63ab9cf23293c9503f96fff21b3bb269fdfd4ffe537ee5024bb73e6d228",
+  "cases": ["arithmetic-add", "gpt-probe-key-value-binding", "suite-copy-repeat", "suite-copy-unique", "suite-lookup", "suite-mqar", "suite-reverse-repeat", "suite-reverse-unique", "suite-sort-repeat", "suite-sort-unique"],
+  "initial_adjacent_level": 0,
+  "initial_decay": 0,
+  "minimum_decay": 0,
+  "learning_rate": "routing_lr",
+  "relative_scores": "Center zero. Each nonzero signed displacement has a learned directional adjacent level minus a nonnegative directional decay times its absolute distance beyond one. Instantiate only coordinates reachable at the declared context.",
+  "comparison": "Use original CM117 object models and minibatches. Refit all coordinates for 1024 updates at seeds 0, 1 and 2 with both optimizers. Seal both entire independent 60-endpoint builds before scoring. Compare all initial logits, batch receipts, raw and exact criteria on every original split. Retain the complete 165-case ledger."
+}

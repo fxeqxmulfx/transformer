@@ -160,6 +160,7 @@ impl<'a> Run<'a> {
                         || model.capacity != p.capacity
                         || model.output_offset_bound != p.output_offset_bound
                         || model.learned_product_radii != p.learned_product_radii
+                        || model.signed_profile != p.signed_profile
                         || model.context != s.context
                         || model.vocabulary != s.vocabulary
                     {
