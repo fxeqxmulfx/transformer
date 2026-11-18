@@ -9575,6 +9575,14 @@ same original minibatches. Seal both independent 384-endpoint builds
 before scoring. Preserve original failure, control and source-unavailable
 rows when comparing the two architectures.
 
+Both CM117 builds sealed all 768 fits and replayed 6,360 raw files.
+Modulo-97 multiplication passed the original and strict criteria in all
+six fits. Modulo-193 division fell below 99% at seed 0 in both modes.
+The original and strict counts are 10 and 8 among 64 measured cases.
+Subtraction modulo 97 became exact at all seeds. Binding and two-hop
+lookup remained exact, and distinct-symbol copy reproduced zero complete
+sequences on each long test. [Matched counts](experiments/composed_retrieval/product_radii/README.md)
+
 Task 421 applies the same trained-radius protocol to the 23 remaining
 original synthetic generation cases, repeating copy as a control. Verify
 all 345 splits, including novel Boolean probes, exact generation with

@@ -93,3 +93,47 @@ bash experiments/composed_retrieval/run.sh "$PWD" /run/media/misha/storage \
   "$base/composed-retrieval/output-offsets51-v1" "$base/composed-retrieval/output-prefix9-v1" \
   "$base/composed-retrieval/output-rewrite7-v1" "$out"
 ```
+
+## Held-out results
+
+Learning one radius per object changed which arithmetic case passed.
+Multiplication modulo 97 crossed 99% at all three seeds in both
+optimizers. Division modulo 193 fell to 98.70% at seed 0 in both.
+The complete 64-case cohort has **10 original passes and 8 strict
+passes** under each architecture. A case must pass at all three seeds
+in both modes. The strict count requires at least 99% raw objects and
+99% exact sequences on every held-out split.
+
+| Original validation set | Examples per seed | CM116 exact, seeds 0 / 1 / 2 | CM117 exact, seeds 0 / 1 / 2 |
+| --- | ---: | --- | --- |
+| Addition modulo 97 | 4,705 | 4,705 / 4,705 / 4,705 | 4,705 / 4,705 / 4,705 |
+| Subtraction modulo 97 | 4,705 | 4,705 / 4,686 / 4,704 | 4,705 / 4,705 / 4,705 |
+| Multiplication modulo 97 | 4,705 | 4,596 / 4,612 / 4,577 | 4,701 / 4,700 / 4,681 |
+| Affine product `a + ab` modulo 97 | 4,705 | 4,618 / 4,652 / 4,629 | 4,643 / 4,660 / 4,675 |
+| Division modulo 97 | 4,656 | 4,624 / 4,591 / 4,617 | 4,574 / 4,654 / 4,651 |
+| Division modulo 193 | 18,528 | 18,429 / 18,358 / 18,436 | 18,287 / 18,473 / 18,468 |
+
+Both optimizers gave the same counts in the table. Across the 384
+case, seed and optimizer combinations, original passes rose from 66
+to 74 and strict passes rose from 54 to 62. Four of the six affine
+product fits crossed 99%. Binding remained
+exact on all 512 novel validation examples and all 512 test examples.
+Two-hop lookup generated 64/64 correct sequences at each of lengths
+24, 48 and 96. Distinct-symbol copy generated 32/32 novel validation
+sequences and 64/64 ordinary test sequences, then 0/64 at length 32
+and 0/64 at length 64. Multi-query recall met its original 95%
+criterion with 32, 32 and 31 exact novel validation sequences out of
+32. Three constant-answer controls are included in both pass counts.
+
+With the fitted weights held fixed, resetting the radii to one reduced
+the number of correct training objects in 242 of 384 fits, increased it
+in 12 and preserved it in 130. Keeping the learned radii gave lower
+training cross-entropy in 274 fits, higher in 12 and equal in 98.
+This intervention uses the original training records.
+
+Two independent builds of `e5bb48c7` sealed 768 fits before scoring.
+Their 6,360 raw files matched and replayed. The parent comparison matched
+all 1,590 initial raw files and every training minibatch fingerprint.
+The full 165-case catalog
+has 64 measured cases, six with unavailable original arithmetic data,
+and 95 outside this comparison.
