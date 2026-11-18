@@ -1,0 +1,9 @@
+{
+  "name": "composed-retrieval-predecessor10-v1",
+  "training_protocol_sha256": "470ca63ab9cf23293c9503f96fff21b3bb269fdfd4ffe537ee5024bb73e6d228",
+  "roster_protocol_sha256": "0c22d3d1c5f33e44415b770b83240b6f876f6079fb18964917948247b8f179f0",
+  "initial_coefficient": 0,
+  "learning_rate": "routing_lr",
+  "content_scores": "Add one real coefficient times the mean cosine similarity of the query and candidate predecessors, sharing the existing key phases across both content reads. Missing predecessors contribute zero. Contexts of at most two objects have no additional parameter.",
+  "comparison": "Start every coordinate from the original CM117 initialization and refit on the same original training minibatches for 1024 updates. Use all ten cases from the pinned roster, three seeds and both optimizers. Seal both independent builds before scoring. Compare all raw initial scores and complete singleton control, then raw objects and exact sequences on every original split."
+}

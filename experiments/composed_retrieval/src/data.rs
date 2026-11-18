@@ -37,8 +37,11 @@ pub const REWRITE_PROTOCOL: &str = include_str!("../rewrite/protocol.json");
 pub const RADII_PROTOCOL: &str = include_str!("../product_radii/protocol.json");
 pub const GENERATION_PROTOCOL: &str = include_str!("../generation/protocol.json");
 pub const PROFILE_PROTOCOL: &str = include_str!("../distance_profile/protocol.json");
+pub const PREDECESSOR_PROTOCOL: &str = include_str!("../predecessor/protocol.json");
 pub const CHAIN_PROTOCOL: &str = include_str!("../chains/protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "profile-cohort") {
+pub const PROTOCOL: &str = if cfg!(feature = "predecessor-cohort") {
+    PREDECESSOR_PROTOCOL
+} else if cfg!(feature = "profile-cohort") {
     PROFILE_PROTOCOL
 } else if cfg!(feature = "generation-cohort") {
     GENERATION_PROTOCOL
@@ -140,13 +143,22 @@ pub(crate) fn parent_protocol() -> Result<Protocol> {
     Ok(p)
 }
 pub fn protocol() -> Result<Protocol> {
-    #[cfg(feature = "profile-cohort")]
+    #[cfg(feature = "predecessor-cohort")]
+    {
+        let mut p = parent_protocol()?;
+        crate::profile::configure_predecessor(&mut p)?;
+        Ok(p)
+    }
+    #[cfg(all(feature = "profile-cohort", not(feature = "predecessor-cohort")))]
     {
         let mut p = parent_protocol()?;
         crate::profile::configure(&mut p)?;
         Ok(p)
     }
-    #[cfg(all(feature = "generation-cohort", not(feature = "profile-cohort")))]
+    #[cfg(all(
+        feature = "generation-cohort",
+        not(any(feature = "profile-cohort", feature = "predecessor-cohort"))
+    ))]
     {
         let mut p = parent_protocol()?;
         crate::generation_cohort::configure(&mut p)?;
@@ -154,7 +166,11 @@ pub fn protocol() -> Result<Protocol> {
     }
     #[cfg(all(
         feature = "chain-cohort",
-        not(any(feature = "generation-cohort", feature = "profile-cohort"))
+        not(any(
+            feature = "generation-cohort",
+            feature = "profile-cohort",
+            feature = "predecessor-cohort"
+        ))
     ))]
     {
         let mut p = parent_protocol()?;
@@ -162,6 +178,7 @@ pub fn protocol() -> Result<Protocol> {
         Ok(p)
     }
     #[cfg(not(any(
+        feature = "predecessor-cohort",
         feature = "generation-cohort",
         feature = "profile-cohort",
         feature = "chain-cohort"
@@ -234,8 +251,8 @@ pub fn inventory(p: &Protocol, inputs: &std::path::Path) -> Result<Value> {
     if p.name == crate::chains::NAME {
         return crate::chains::inventory(p, inputs);
     }
-    #[cfg(feature = "profile-cohort")]
-    if p.signed_profile {
+    #[cfg(any(feature = "profile-cohort", feature = "predecessor-cohort"))]
+    if p.signed_profile || p.predecessor_match {
         return crate::profile::inventory(p, inputs);
     }
     #[cfg(feature = "generation-cohort")]

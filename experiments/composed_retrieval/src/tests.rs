@@ -353,6 +353,26 @@ fn both_optimizers_train_the_shared_predecessor_coefficient() -> Result<()> {
     }
     Ok(())
 }
+
+#[cfg(feature = "predecessor-cohort")]
+#[test]
+fn singleton_arithmetic_fit_reproduces_the_complete_parent_model_and_receipt() -> Result<()> {
+    let mut p = data::protocol()?;
+    p.updates = 4;
+    let mut parent = p.clone();
+    parent.predecessor_match = false;
+    let (source, _) = data::original(&p, "arithmetic-add")?;
+    let rows = &source.splits["train"][..8];
+    for mode in &p.modes {
+        let mut a = Model::new(source.vocab, 2, &parent, 0)?;
+        let mut b = Model::new(source.vocab, 2, &p, 0)?;
+        let old = train::fit(&mut a, rows, 4, mode, 0, &parent, || Ok(()))?;
+        let new = train::fit(&mut b, rows, 4, mode, 0, &p, || Ok(()))?;
+        assert_eq!(old, new);
+        assert_eq!(serde_json::to_vec(&a)?, serde_json::to_vec(&b)?);
+    }
+    Ok(())
+}
 #[test]
 fn log_odds_queries_match_the_literal_model_and_chain_rule() -> Result<()> {
     let mut m = fixture()?;
@@ -574,6 +594,7 @@ fn arithmetic_cohort_uses_the_original_log_odds_updates() -> Result<()> {
 #[test]
 fn old_models_and_zero_offsets_give_the_same_logits() -> Result<()> {
     let mut p = data::protocol()?;
+    p.predecessor_match = false;
     p.learned_product_radii = false;
     let m = Model::new(5, 6, &p, 0)?;
     let l = m.validate()?;
@@ -604,6 +625,7 @@ fn old_models_and_zero_offsets_give_the_same_logits() -> Result<()> {
 #[test]
 fn old_coordinates_and_unit_radius_initial_scores_agree_exactly() -> Result<()> {
     let mut p = data::protocol()?;
+    p.predecessor_match = false;
     let model = Model::new(5, 7, &p, 2)?;
     let l = model.validate()?;
     assert_eq!(&model.weights[l.radii.clone()], &[1.; 5]);

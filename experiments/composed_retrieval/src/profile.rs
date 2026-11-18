@@ -1,5 +1,5 @@
-//! The original ten-case comparison changes only the shape of the signed
-//! positional law. Reuse all verified data from the parent 64-case cohort.
+//! Matched ten-case studies of signed distances and predecessor matching.
+//! Each study reuses the same original examples and complete CM117 training.
 use crate::{
     Result,
     data::{self, PROFILE_PROTOCOL, Protocol},
@@ -26,21 +26,50 @@ struct Definition {
 pub fn configure(p: &mut Protocol) -> Result<()> {
     let d: Definition = serde_json::from_str(PROFILE_PROTOCOL)?;
     if d.training_protocol_sha256 != hash(data::RADII_PROTOCOL.as_bytes())
-        || !p.learned_product_radii
-        || p.cases.len() != 64
-        || p.coordinates_per_table.is_some()
         || d.initial_adjacent_level != 0.
         || d.initial_decay != 0.
         || d.minimum_decay != 0.
         || d.learning_rate != "routing_lr"
-        || d.cases.len() != 10
-        || !d.cases.iter().all(|id| p.cases.contains_key(id))
     {
         return Err("signed profile or original source roster differs".into());
     }
-    p.cases.retain(|id, _| d.cases.contains(id));
+    select(p, &d.cases)?;
     p.name = d.name;
     p.signed_profile = true;
+    Ok(())
+}
+
+fn select(p: &mut Protocol, cases: &BTreeSet<String>) -> Result<()> {
+    if !p.learned_product_radii
+        || p.signed_profile
+        || p.predecessor_match
+        || p.cases.len() != 64
+        || p.coordinates_per_table.is_some()
+        || cases.len() != 10
+        || !cases.iter().all(|id| p.cases.contains_key(id))
+    {
+        return Err("unexpected model, training budget or pilot roster".into());
+    }
+    p.cases.retain(|id, _| cases.contains(id));
+    Ok(())
+}
+
+pub fn configure_predecessor(p: &mut Protocol) -> Result<()> {
+    let d: Value = serde_json::from_str(data::PREDECESSOR_PROTOCOL)?;
+    if d["training_protocol_sha256"] != hash(data::RADII_PROTOCOL.as_bytes())
+        || d["roster_protocol_sha256"] != hash(PROFILE_PROTOCOL.as_bytes())
+        || d["initial_coefficient"] != 0
+        || d["learning_rate"] != "routing_lr"
+    {
+        return Err("changed contextual matching or pilot source".into());
+    }
+    let roster: Definition = serde_json::from_str(PROFILE_PROTOCOL)?;
+    select(p, &roster.cases)?;
+    p.name = d["name"]
+        .as_str()
+        .ok_or("missing predecessor study name")?
+        .into();
+    p.predecessor_match = true;
     Ok(())
 }
 
@@ -75,7 +104,7 @@ pub fn inventory(p: &Protocol, inputs: &Path) -> Result<Value> {
         return Err("incomplete pilot or missing-source accounting".into());
     }
     Ok(
-        json!({"protocol_sha256":hash(PROFILE_PROTOCOL.as_bytes()),"cases":entries,"fits":fits,
+        json!({"protocol_sha256":hash(data::PROTOCOL.as_bytes()),"cases":entries,"fits":fits,
         "raw_bytes_upper_bound":one*4*p.seeds.len() as u64*p.modes.len() as u64}),
     )
 }

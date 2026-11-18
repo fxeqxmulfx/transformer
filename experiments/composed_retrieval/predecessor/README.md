@@ -60,3 +60,32 @@ for arm in original repeat; do
 done
 cmp "$base/predecessor-signal-original.json" "$base/predecessor-signal-repeat.json"
 ```
+
+## Joint training
+
+The ten-case study fits the new scalar from zero together with every
+CM117 coordinate. Both content reads retain the original free table of
+signed positional scores. At context length two every content row has
+at most one entry and the model stores the exact parent parameter vector.
+
+| Study choice | Frozen value |
+| --- | --- |
+| Original cases | The six Rewrite cases, two-hop lookup, multi-query recall, unseen key/value binding and modulo-97 addition |
+| Training | 1,024 original minibatch updates per case, seeds 0, 1 and 2, both analytic and forward-only optimizers |
+| New coefficient | One unrestricted real value trained at the existing routing learning rate |
+| Independent verification | Seal all 120 fits before scoring, then replay raw class scores and greedy output on every original split |
+
+The comparison checks the parent initialization and every minibatch
+fingerprint. On the arithmetic control it also compares complete fitted
+model parameters and every final raw score. The report gives per-seed
+results, fitted coefficients and both benchmark pass criteria.
+
+```sh
+base=/run/media/misha/storage/transformer-runs
+out="$base/composed-retrieval/predecessor10-v1"
+producer=$(git log --diff-filter=A --format=%H -- experiments/composed_retrieval/predecessor/protocol.json)
+bash experiments/composed_retrieval/run.sh "$PWD" /run/media/misha/storage \
+  "$producer" "$out" predecessor-cohort "$base/arithmetic-data/inputs-v1"
+"$out/original/target/release/compare-predecessor" "$PWD" /run/media/misha/storage \
+  "$base/composed-retrieval/learned-radii64-v1" "$out"
+```

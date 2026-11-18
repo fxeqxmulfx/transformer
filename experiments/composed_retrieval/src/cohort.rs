@@ -161,6 +161,7 @@ impl<'a> Run<'a> {
                         || model.output_offset_bound != p.output_offset_bound
                         || model.learned_product_radii != p.learned_product_radii
                         || model.signed_profile != p.signed_profile
+                        || model.predecessor_match != (p.predecessor_match && s.context > 2)
                         || model.context != s.context
                         || model.vocabulary != s.vocabulary
                     {

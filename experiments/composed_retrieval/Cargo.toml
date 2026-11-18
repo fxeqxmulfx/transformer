@@ -17,6 +17,7 @@ prefix-cohort = ["output-offsets", "dep:synthetic-data"]
 rewrite-cohort = ["prefix-cohort"]
 radii-cohort = ["rewrite-cohort"]
 profile-cohort = ["radii-cohort"]
+predecessor-cohort = ["radii-cohort"]
 generation-cohort = ["radii-cohort", "dep:frequency-data", "dep:parity-data"]
 
 [[bin]]
@@ -88,6 +89,11 @@ required-features = ["radii-cohort"]
 name = "compare-signed-profile"
 path = "src/bin/compare-signed-profile.rs"
 required-features = ["profile-cohort"]
+
+[[bin]]
+name = "compare-predecessor"
+path = "src/bin/compare-predecessor.rs"
+required-features = ["predecessor-cohort"]
 
 [[bin]]
 name = "reconcile-generation"

@@ -9626,3 +9626,9 @@ Every repeated-copy training prefix supplies a pair of occurrences with
 different predecessors. Changing only the shared coefficient gives at
 most four exact repeated-copy training sequences out of 128. Jointly
 training the coefficient and both reads is the next comparison.
+
+Task 427 trains the full preceding-object comparison from zero on the
+ten-case pilot. Match each CM117 initial prediction and sampled minibatch.
+The singleton-memory addition control must reproduce the complete fitted
+parent model. Compare the original and strict criteria on every held-out
+split after both independent builds finish fitting.
