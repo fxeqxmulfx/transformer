@@ -7,6 +7,7 @@ publish = false
 [workspace]
 
 [features]
+chain-data = []
 dense-forward = []
 logodds-depth = ["dense-forward"]
 arithmetic-cohort = ["dense-forward", "dep:arithmetic-data"]
@@ -16,6 +17,11 @@ rewrite-cohort = ["prefix-cohort"]
 radii-cohort = ["rewrite-cohort"]
 profile-cohort = ["radii-cohort"]
 generation-cohort = ["radii-cohort", "dep:frequency-data", "dep:parity-data"]
+
+[[bin]]
+name = "chain-inventory"
+path = "src/bin/chain-inventory.rs"
+required-features = ["chain-data"]
 
 [[bin]]
 name = "reconcile-arithmetic"

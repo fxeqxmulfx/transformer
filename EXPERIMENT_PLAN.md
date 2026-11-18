@@ -9596,3 +9596,10 @@ recall and addition modulo 97. The model learns both directional levels
 and decays, along with every representation and output weight. Keep
 the parent initialization and all original minibatches matched. Seal 120
 fits before testing free generation and the two held-out criteria.
+
+Task 424 restores the original data for all twelve modular composition
+cases. The source uses a separate stream for twice the composition length
+and supervises only the final object. Two native implementations agree on
+the 36 dense tensors at the original data seed 1. All 72 retained seed-11
+input and labeled-row hashes also reproduce. These 49,152 examples are
+available for training. The source audit scores zero models.

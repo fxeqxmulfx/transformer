@@ -1,0 +1,16 @@
+{
+  "commits": {
+    "diff-gpt": "5a37c515639f23037d191b0659a5a0853984328d",
+    "transformer": "07a39ac2f3f533c356be86a5db0bca50d6f01903"
+  },
+  "files": {
+    "plan.json": ["diff-gpt", "research/current_grokking/plan.json", "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7"],
+    "adapters.py": ["diff-gpt", "research/current_grokking/adapters.py", "4c36782edbb785432a7dfd71cf291acde2a1bf2c9337f27b5df854ec826cdbc2"],
+    "data.py": ["diff-gpt", "research/current_grokking/data.py", "39f33f090ff29a71fb3bc8c458946c0db42c26c49fa0351ee4c82723e7d8e718"],
+    "specification.py": ["transformer", "python/src/lab/domain/modular_composition.py", "3ce39cb47fc0d1030dc222f281a0079d273eec0e628c0a83f41f1d932682ed03"],
+    "modular_composition.py": ["transformer", "python/src/lab/infrastructure/benchmarks/modular_composition.py", "e38992481b27b74be915cf7d9ddf39c0cfae2b96fa751f29143664959db9fa72"],
+    "rotary.py": ["transformer", "python/src/lab/infrastructure/benchmarks/rotary.py", "e732d2ff1e4e15d2991b1adf9eb810e58dbafe294c4acd97a8c555e808fdaed8"],
+    "rotary_random.py": ["transformer", "python/src/lab/infrastructure/rotary_random.py", "e0839cc61796dce9fe418f41a4cba41a160593bf43b313f6cac0ffe4d3cc10c3"],
+    "results.json": ["transformer", "experiments/modular_composition/results.json", "9ac63422cb269ebfa477d28e9c186ff69663cbf83df22f1c2f1102cf971dc677"]
+  }
+}
