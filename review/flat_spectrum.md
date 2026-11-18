@@ -23010,3 +23010,50 @@ context has none, a three-object context has the two levels, and larger
 contexts have all four. Zero initialization gives exactly the CM117 initial
 weights on every positional row. The model learns four numbers at the
 largest context in place of 257 independent signed-offset entries.
+
+## CM120. Learned matching of preceding objects
+
+In CM117 and CM119, two occurrences of the same candidate object have
+the same current-key similarity to any given query. Their positional and
+predecessor biases can favor one occurrence. The odds between them are
+independent of the query, even when the two occurrences have different
+preceding objects. This restriction applies to each normalized content
+row before the two reads and positional transitions.
+
+Use the existing learned key phases to compare two preceding objects.
+Write $K(a,u)$ for their mean cosine difference, with value zero if
+either object is absent. Add $tK(a,u)$ to the original content logit,
+where $a$ precedes the query and $u$ precedes the candidate. The final
+query uses the last object of its memory as its predecessor. An inner
+query at position $i$ uses the object at $i-1$ when it exists. Both
+reads share the scalar $t$ and all key phases. Every visible position
+participates in normalization.
+
+Let $j,k$ be occurrences of the same symbol with predecessors $u,v$.
+For two query rows with predecessors $a,b$, their normalized weights obey
+
+$$
+w_{aj}w_{bk}=\exp\!\big(t[K(a,u)-K(a,v)+K(b,v)-K(b,u)]\big)w_{ak}w_{bj}.
+$$
+
+All other source-position biases cancel. In the memory $[0,1,1,1]$,
+the inner queries at positions one and three both read object one.
+With antipodal learned keys for zero and one, the multiplier is
+$\exp(4t)$. Two numerical content rows with a nonzero bracket identify
+$t$ at fixed keys. Ordinary training observes final next-object labels.
+
+Both normalized reads and the radius-weighted product remain within
+their original capacity. The full logit bound is $B+D$ at every input
+length. The zero coefficient recovers CM117, and every coefficient gives
+the same complete scores as CM117 on all prefixes of length at most two.
+On the longer prefix $[0,1,0]$, opposite coefficients can give opposite
+strict winning classes at the same other weights. At fixed complete
+features ordinary cross-entropy is convex in the output offsets.
+The content softmax depends nonlinearly on the jointly trained key
+phases and coefficient.
+
+The training-only intervention uses both archived CM117 builds, all
+six Rewrite tasks and two-hop lookup. Check all teacher and greedy
+training vectors at zero, the complete training-loss derivative at zero,
+and the fixed coefficients $-4,-2,-1,0,1,2,4$. These measurements use
+the original training examples and their ordinary next-object targets.
