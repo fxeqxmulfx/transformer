@@ -35,7 +35,10 @@ pub const FAMILY_PROTOCOL: &str = if cfg!(feature = "output-offsets") {
 pub const PREFIX_PROTOCOL: &str = include_str!("../prefix/protocol.json");
 pub const REWRITE_PROTOCOL: &str = include_str!("../rewrite/protocol.json");
 pub const RADII_PROTOCOL: &str = include_str!("../product_radii/protocol.json");
-pub const PROTOCOL: &str = if cfg!(feature = "radii-cohort") {
+pub const GENERATION_PROTOCOL: &str = include_str!("../generation/protocol.json");
+pub const PROTOCOL: &str = if cfg!(feature = "generation-cohort") {
+    GENERATION_PROTOCOL
+} else if cfg!(feature = "radii-cohort") {
     RADII_PROTOCOL
 } else if cfg!(feature = "rewrite-cohort") {
     REWRITE_PROTOCOL
@@ -118,6 +121,8 @@ pub fn protocol() -> Result<Protocol> {
     crate::prefix::configure(&mut p)?;
     #[cfg(feature = "radii-cohort")]
     crate::radii_cohort::configure(&mut p)?;
+    #[cfg(feature = "generation-cohort")]
+    crate::generation_cohort::configure(&mut p)?;
     if p.width != WIDTH
         || hash(SUITE.as_bytes()) != p.suite_sha256
         || hash(learned_retrieval_transfer::CATALOG.as_bytes()) != p.catalog_sha256
@@ -128,6 +133,10 @@ pub fn protocol() -> Result<Protocol> {
 }
 pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
     let s = p.cases.get(id).ok_or("case outside frozen cohort")?;
+    #[cfg(feature = "generation-cohort")]
+    if p.name == crate::generation_cohort::NAME {
+        return crate::generation_cohort::original(id, s);
+    }
     #[cfg(feature = "prefix-cohort")]
     if p.name == crate::prefix::NAME || (p.learned_product_radii && s.metadata_sha256.is_some()) {
         return crate::prefix::original(id, s);
@@ -180,6 +189,10 @@ pub fn original(p: &Protocol, id: &str) -> Result<(Task, Value)> {
 
 #[cfg(feature = "arithmetic-cohort")]
 pub fn inventory(p: &Protocol, inputs: &std::path::Path) -> Result<Value> {
+    #[cfg(feature = "generation-cohort")]
+    if p.name == crate::generation_cohort::NAME {
+        return crate::generation_cohort::preflight(p, inputs);
+    }
     #[cfg(feature = "radii-cohort")]
     if p.learned_product_radii {
         return crate::radii_cohort::preflight(p, inputs);

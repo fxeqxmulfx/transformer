@@ -1,6 +1,6 @@
 //! Metrics ported from diff-gpt 3555299, complex_geometry_suite/native/src/metrics.rs.
-//! Same complete-split, greedy rollout, EOS and residue-pooling semantics; CPU f64
-//! logits replace the source's CUDA f32 buffers. Only supervised prefixes are scored.
+//! Greedy EOS, surplus-token and final-answer counts follow the original
+//! synthetic/generation.py. CPU f64 logits replace the CUDA f32 buffers.
 use crate::{
     Result,
     channel::{Channel, argmax, cross_entropy},
@@ -137,7 +137,7 @@ pub fn evaluate(model: &impl Predictor, examples: &[Example]) -> Result<Value> {
     let field = examples[0].field.is_some();
     let mut teacher = Counts::new(vocab);
     let mut generated = Counts::new(vocab);
-    let (mut generated_tokens, mut ended, mut final_correct) = (0, 0, 0);
+    let (mut generated_tokens, mut extra_tokens, mut ended, mut final_correct) = (0, 0, 0, 0);
     let (mut mse, mut covered, mut native_correct) = (0., 0, 0);
     for e in examples {
         let mut exact = true;
@@ -180,7 +180,8 @@ pub fn evaluate(model: &impl Predictor, examples: &[Example]) -> Result<Value> {
         let eos = tokens.last() == Some(&17);
         ended += usize::from(eos);
         generated_tokens += tokens.len();
-        let final_hit = if matches!(e.task.as_str(), "parity" | "boolean_and") {
+        extra_tokens += tokens.len().saturating_sub(e.answer.len());
+        let final_hit = if matches!(e.task.as_str(), "mode" | "parity") {
             eos && tokens.len() >= 2
                 && tokens[tokens.len() - 2] as i64 == e.answer[e.answer.len() - 2]
         } else {
@@ -213,7 +214,7 @@ pub fn evaluate(model: &impl Predictor, examples: &[Example]) -> Result<Value> {
         result["final_answer_accuracy"] = (final_correct as f64 / examples.len() as f64).into();
         result["eos_rate"] = (ended as f64 / examples.len() as f64).into();
         result["generated_tokens"] = generated_tokens.into();
-        result["extra_tokens"] = 0.into();
+        result["extra_tokens"] = extra_tokens.into();
         result
     } else {
         teacher.report()

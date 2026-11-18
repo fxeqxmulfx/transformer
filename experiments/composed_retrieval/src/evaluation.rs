@@ -193,7 +193,7 @@ fn generation_split(
     }
     let mut lengths = BTreeSet::new();
     for e in examples {
-        generation::validate_source(e, m.vocabulary)?;
+        generation::validate_shifted(e, m.vocabulary)?;
         m.objects(&e.tokens)?;
         let first_memory = e.prompt.len() - 1;
         lengths.extend(first_memory..first_memory + e.limit);

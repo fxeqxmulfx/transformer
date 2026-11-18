@@ -12,15 +12,30 @@ pub fn validate_source(row: &Example, vocabulary: usize) -> Result<()> {
         || row.prompt.last() != Some(&18)
         || row.limit != p - 1
         || row.answer.len() != row.limit
+    {
+        return Err("invalid original Rewrite prompt or input-derived limit".into());
+    }
+    validate_shifted(row, vocabulary)
+}
+
+pub fn validate_shifted(row: &Example, vocabulary: usize) -> Result<()> {
+    let p = row.prompt.len();
+    let n = row.answer.len();
+    if p == 0
+        || row.limit == 0
+        || row.limit > 4097
+        || p + row.limit > 8195
+        || n > row.limit
+        || (matches!(row.task.as_str(), "mode" | "parity") && n < 2)
         || row.answer.last() != Some(&17)
-        || row.answer[..row.limit - 1].contains(&17)
+        || row.answer[..n - 1].contains(&17)
         || row.field.is_some()
         || row.row_index.is_some()
-        || row.tokens.len() != p + row.limit - 1
+        || row.tokens.len() != p + n - 1
         || row.changes.len() != row.tokens.len()
         || row.targets.len() != row.tokens.len()
         || row.tokens[..p] != row.prompt
-        || row.tokens[p..] != row.answer[..row.limit - 1]
+        || row.tokens[p..] != row.answer[..n - 1]
         || row.targets[..p - 1].iter().any(|&t| t != -100)
         || row.targets[p - 1..] != row.answer
         || row
@@ -29,9 +44,16 @@ pub fn validate_source(row: &Example, vocabulary: usize) -> Result<()> {
             .chain(&row.answer)
             .any(|&t| t < 0 || t as usize >= vocabulary)
     {
-        return Err(
-            "invalid original Rewrite mask, prompt, shifted answer or input-derived limit".into(),
-        );
+        return Err("invalid original generation mask, prompt, shifted answer or bound".into());
+    }
+    let mut prior = None;
+    for (&target, &changed) in row.targets.iter().zip(&row.changes) {
+        if changed != (target >= 0 && prior != Some(target)) {
+            return Err("invalid original generation transition mask".into());
+        }
+        if target >= 0 {
+            prior = Some(target);
+        }
     }
     Ok(())
 }
@@ -69,16 +91,17 @@ pub fn decode(
     metrics: &Value,
 ) -> Result<Vec<u8>> {
     if rows.is_empty() || vocabulary <= 18 {
-        return Err("empty Rewrite split or invalid vocabulary".into());
+        return Err("empty generation split or invalid vocabulary".into());
     }
     let mut vectors = bytes.chunks_exact(vocabulary.checked_mul(8).ok_or("vector overflow")?);
     let mut teacher = Vec::new();
     let mut trace = Vec::new();
     let (mut targets, mut correct, mut exact, mut ended) = (0, 0, 0, 0);
+    let mut final_correct = 0;
     let (mut written, mut extra, mut changes, mut change_hits) = (0, 0, 0, 0);
     let mut classes = vec![[0usize; 2]; vocabulary];
     for row in rows {
-        validate_source(row, vocabulary)?;
+        validate_shifted(row, vocabulary)?;
         for (pos, _) in row.targets.iter().enumerate().filter(|&(_, &y)| y >= 0) {
             record_prefix(&mut trace, &row.tokens[..=pos]);
             teacher.extend_from_slice(vectors.next().ok_or("missing teacher-forced logits")?);
@@ -88,6 +111,12 @@ pub fn decode(
             winner(vectors.next().ok_or("missing free-generation logits")?)
         })?;
         let result = scoring::score(&row.answer, &output)?;
+        let final_hit = match row.task.as_str() {
+            "mode" | "parity" => matches!(output.as_slice(), [.., token, 17]
+                if row.answer.iter().rev().nth(1) == Some(&(*token as i64))),
+            _ => result.exact,
+        };
+        final_correct += usize::from(final_hit);
         targets += result.targets;
         correct += result.correct;
         exact += usize::from(result.exact);
@@ -124,7 +153,7 @@ pub fn decode(
         || metrics["generated_tokens"] != written
         || metrics["extra_tokens"] != extra
         || metrics["sequence_accuracy"] != fraction(exact, rows.len())
-        || metrics["final_answer_accuracy"] != fraction(exact, rows.len())
+        || metrics["final_answer_accuracy"] != fraction(final_correct, rows.len())
         || metrics["token_accuracy"] != fraction(correct, targets)
         || metrics["eos_rate"] != fraction(ended, rows.len())
         || metrics["transition_count"] != changes
@@ -171,6 +200,7 @@ mod tests {
                 Some(18) => self.first,
                 Some(36) => 37,
                 Some(37) => 17,
+                Some(38) => 36,
                 Some(39) if self.close => 17,
                 _ => 39,
             };
@@ -266,6 +296,47 @@ mod tests {
                 decode(&rows, 40, &raw, &hash(&trace), &m)?,
                 raw[..3 * 40 * 8]
             );
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn overlong_scratchpad_can_have_a_correct_final_token() -> Result<()> {
+        for task in ["mode", "parity", "boolean_and", "copy"] {
+            let mut row = fixture();
+            row.task = task.into();
+            row.limit = 4;
+            let rows = [row];
+            let model = Fixture {
+                first: 38,
+                close: true,
+                queries: RefCell::default(),
+                raw: RefCell::default(),
+            };
+            let m = metrics::evaluate(&model, &rows)?;
+            assert_eq!(m["targets"], 3);
+            assert_eq!(m["exact"], 0);
+            assert_eq!(m["generated_tokens"], 4);
+            assert_eq!(m["extra_tokens"], 1);
+            assert_eq!(
+                m["final_answer_accuracy"],
+                if matches!(task, "mode" | "parity") {
+                    1.
+                } else {
+                    0.
+                }
+            );
+            let mut trace = Vec::new();
+            for prefix in model.queries.into_inner() {
+                record_prefix(&mut trace, &prefix);
+            }
+            let digest = hash(&trace);
+            let bytes = model.raw.into_inner();
+            let teacher = decode(&rows, 40, &bytes, &digest, &m)?;
+            assert_eq!(teacher, bytes[..3 * 40 * 8]);
+            let mut wrong = m;
+            wrong["extra_tokens"] = json!(0);
+            assert!(decode(&rows, 40, &bytes, &digest, &wrong).is_err());
         }
         Ok(())
     }

@@ -19,11 +19,11 @@ pub const NAME: &str = if cfg!(feature = "rewrite-cohort") {
 };
 
 #[derive(Deserialize)]
-struct Source {
-    vocabulary: usize,
-    context: usize,
-    training_targets: usize,
-    metadata_sha256: String,
+pub(crate) struct Source {
+    pub vocabulary: usize,
+    pub context: usize,
+    pub training_targets: usize,
+    pub metadata_sha256: String,
 }
 #[derive(Deserialize)]
 struct Definition {
@@ -157,8 +157,28 @@ pub(crate) fn inventory_from(
     rewrite: bool,
 ) -> Result<Value> {
     let d: Definition = serde_json::from_str(definition)?;
+    source_inventory(
+        p,
+        inputs,
+        definition,
+        &d.plan_sha256,
+        &d.cases,
+        rewrite,
+        original,
+    )
+}
+
+pub(crate) fn source_inventory(
+    p: &Protocol,
+    inputs: &Path,
+    definition: &str,
+    plan_sha256: &str,
+    sources: &BTreeMap<String, Source>,
+    rollout: bool,
+    load: impl Fn(&str, &CaseSpec) -> Result<(Task, Value)>,
+) -> Result<Value> {
     let bytes = fs::read(inputs.join("plan.json"))?;
-    if hash(&bytes) != d.plan_sha256 {
+    if hash(&bytes) != plan_sha256 {
         return Err("original DiffGPT plan changed".into());
     }
     let plan: Value = serde_json::from_slice(&bytes)?;
@@ -170,33 +190,49 @@ pub(crate) fn inventory_from(
         let [row] = matching.as_slice() else {
             return Err("missing or duplicate original case".into());
         };
-        if row["batch"] != spec.batch
+        let source_label = if id == "random-lm-control" {
+            "control-seed0"
+        } else {
+            id
+        };
+        if row["kind"] != "synthetic"
+            || row["batch"] != spec.batch
             || row["data_seed"] != p.data_seed
             || row["target"] != spec.target
             || row["metric"] != spec.metric
-            || row["data"]["label"] != id.as_str()
+            || row["data"]["label"] != source_label
         {
-            return Err("original case configuration changed".into());
+            return Err(format!("original synthetic case configuration changed on {id}").into());
         }
-        let (task, meta) = original(id, spec)?;
-        if meta["splits"]["train"]["targets"] != d.cases[id].training_targets {
+        let (task, meta) = load(id, spec)?;
+        let mut counts = BTreeMap::new();
+        for (name, rows) in &task.splits {
+            let targets = rows
+                .iter()
+                .flat_map(|r| &r.targets)
+                .filter(|&&t| t >= 0)
+                .count();
+            let limits: usize = rows.iter().map(|r| r.limit).sum();
+            one_pass += 8 * spec.vocabulary as u64 * (targets + limits) as u64;
+            counts.insert(
+                name,
+                json!({"examples":rows.len(),"targets":targets,
+                "max_context":rows.iter().map(|r|r.tokens.len()).max().ok_or("empty split")?}),
+            );
+        }
+        let splits = json!(counts);
+        if !meta["splits"].is_null() && splits != meta["splits"] {
+            return Err("source row dimensions disagree".into());
+        }
+        if splits["train"]["targets"] != sources[id].training_targets {
             return Err("training target multiplicity changed".into());
         }
-        for split in meta["splits"]
-            .as_object()
-            .ok_or("split dimensions")?
-            .values()
-        {
-            one_pass += 8 * spec.vocabulary as u64 * split["targets"].as_u64().ok_or("targets")?;
-        }
-        let generation_limits: usize = task.splits.values().flatten().map(|row| row.limit).sum();
-        one_pass += 8 * spec.vocabulary as u64 * generation_limits as u64;
-        entries.insert(id,json!({"dimensions":{"vocabulary":spec.vocabulary,"context":spec.context,"splits":meta["splits"]},
+        entries.insert(id,json!({"dimensions":{"vocabulary":spec.vocabulary,"context":spec.context,"splits":splits},
             "split_fingerprints":meta}));
     }
     let fits = p.cases.len() * p.seeds.len() * p.modes.len() * 2;
     let bytes = one_pass * 4 * p.seeds.len() as u64 * p.modes.len() as u64;
-    let size_key = if rewrite {
+    let size_key = if rollout {
         "raw_bytes_upper_bound"
     } else {
         "raw_bytes"

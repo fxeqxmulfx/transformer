@@ -7,6 +7,8 @@ pub mod data;
 pub mod evaluation;
 #[cfg(feature = "rewrite-cohort")]
 pub mod generation;
+#[cfg(feature = "generation-cohort")]
+pub mod generation_cohort;
 pub mod gradient;
 pub mod model;
 pub mod operator;

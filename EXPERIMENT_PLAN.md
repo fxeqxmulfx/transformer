@@ -9566,3 +9566,10 @@ native optimizers update all old coordinates and each new radius on the
 same original minibatches. Seal both independent 384-endpoint builds
 before scoring. Preserve original failure, control and source-unavailable
 rows when comparing the two architectures.
+
+Task 421 applies the same trained-radius protocol to the 23 remaining
+original synthetic generation cases, repeating copy as a control. Verify
+all 345 splits, including novel Boolean probes, exact generation with
+scratchpads and the one-prompt random language control. Seal both
+144-endpoint builds before scoring. Combine the two CM117 studies only
+after the repeated models, receipts, metrics and raw files agree.

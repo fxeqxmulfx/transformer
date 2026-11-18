@@ -306,11 +306,14 @@ fn inhabits_both_lean_capacity_witnesses() -> Result<()> {
 #[test]
 fn original_fingerprints_masks_and_optimizer_clocks() -> Result<()> {
     let mut p = data::protocol()?;
+    let manifest: serde_json::Value = serde_json::from_str(data::PROTOCOL)?;
     for (id, s) in &p.cases {
         let (task, pins) = data::original(&p, id)?;
         assert_eq!(s.train, task.splits["train"].len());
         let m = Model::new(task.vocab, s.context, &p, 0)?;
-        let targets = if id.starts_with("suite-") {
+        let targets = if let Some(n) = manifest["cases"][id]["training_targets"].as_u64() {
+            usize::try_from(n)?
+        } else if id.starts_with("suite-") {
             pins["splits"]["train"]["targets"]
                 .as_u64()
                 .ok_or("source target count")? as usize

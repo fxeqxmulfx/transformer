@@ -39,7 +39,9 @@ dependencies = [
  "convex-bilinear-sequence",
  "convex-stress-arithmetic-data",
  "convex-stress-catalog",
+ "convex-stress-frequency-data",
  "convex-stress-minibatch",
+ "convex-stress-parity-data",
  "convex-stress-remaining-synthetic-data",
  "learned-retrieval",
  "learned-retrieval-transfer",
@@ -170,6 +172,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "convex-stress-frequency-data"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-generative-data",
+ "serde_json",
+ "sha2 0.11.1",
+]
+
+[[package]]
 name = "convex-stress-generative-data"
 version = "0.1.0"
 dependencies = [
@@ -196,6 +207,15 @@ dependencies = [
  "rayon",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "convex-stress-parity-data"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-generative-data",
+ "serde_json",
+ "sha2 0.11.1",
 ]
 
 [[package]]

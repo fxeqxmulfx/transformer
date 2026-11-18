@@ -1,0 +1,158 @@
+{
+  "batch": 32,
+  "cases": {
+    "random-lm-control": {
+      "context": 35,
+      "metadata_sha256": "100f0f8e4bb05dd3e20beb388a34cd2463fe44cbad17e552988453a502b01aed",
+      "training_targets": 72,
+      "vocabulary": 105
+    },
+    "suite-addition-forward-hints-balanced": {
+      "context": 105,
+      "metadata_sha256": "ee8eb53fbf0c08b35bcf799f99f0105bd146feee9ac257f95180e49db9989611",
+      "training_targets": 1196,
+      "vocabulary": 229
+    },
+    "suite-addition-forward-hints-standard": {
+      "context": 105,
+      "metadata_sha256": "9530be343bb802fc1006e92fe6e75f869d4534c5fe8de5093a99d0e335a3951a",
+      "training_targets": 1108,
+      "vocabulary": 229
+    },
+    "suite-addition-forward-plain-balanced": {
+      "context": 54,
+      "metadata_sha256": "e76b91078e9c50f45f052052f3854d65cb7e4706344ac632f9c6be44c2b6c815",
+      "training_targets": 662,
+      "vocabulary": 100
+    },
+    "suite-addition-forward-plain-standard": {
+      "context": 54,
+      "metadata_sha256": "fd80c211da51e74c0c63534f3272800a5f59eb1870332f574cefb94d92b7be60",
+      "training_targets": 618,
+      "vocabulary": 100
+    },
+    "suite-addition-reverse-hints-balanced": {
+      "context": 105,
+      "metadata_sha256": "ec3c7d7339fa10e2b06a3148075d7885f0d74601c1bc3e02da26c17033bc82bd",
+      "training_targets": 1196,
+      "vocabulary": 229
+    },
+    "suite-addition-reverse-hints-standard": {
+      "context": 105,
+      "metadata_sha256": "bc0a4494cbb4f91091747e8644f361afaac4fb28a4ef8e1b5a45ce5cfc7039f2",
+      "training_targets": 1108,
+      "vocabulary": 229
+    },
+    "suite-addition-reverse-plain-balanced": {
+      "context": 54,
+      "metadata_sha256": "d5c2053f955444312a652f9daef689b7bd3bef20bfa313bcfb4cf5915ea5dcb0",
+      "training_targets": 662,
+      "vocabulary": 100
+    },
+    "suite-addition-reverse-plain-standard": {
+      "context": 54,
+      "metadata_sha256": "0e8c3d2043a2c7ac5f498a8611e9bdc86252e4c6f8bcabf3d1e679c6473eca72",
+      "training_targets": 618,
+      "vocabulary": 100
+    },
+    "suite-boolean-and-random": {
+      "context": 67,
+      "metadata_sha256": "c9ff7b2665e0488b1cb16ea10e0534d65af0cd85b92342cdc89f6ff4a312bb92",
+      "training_targets": 256,
+      "vocabulary": 100
+    },
+    "suite-boolean-and-shift": {
+      "context": 67,
+      "metadata_sha256": "1837c86d0d26df569a3ea7ba775113a1503cdcb8843eb5fd0efb4959582e830e",
+      "training_targets": 256,
+      "vocabulary": 100
+    },
+    "suite-copy-repeat": {
+      "context": 130,
+      "metadata_sha256": "eb30ffd91de9869c8042a71f754d09e3b5419695fecfd93fca64f5ef3448743f",
+      "training_targets": 1690,
+      "vocabulary": 100
+    },
+    "suite-count": {
+      "context": 68,
+      "metadata_sha256": "e20bbb06a2976faa858babb3ec798cfab96497906f9ff26fe56d639fa90c8c79",
+      "training_targets": 1610,
+      "vocabulary": 229
+    },
+    "suite-histogram-bos": {
+      "context": 131,
+      "metadata_sha256": "015f619cbadcf542f554f04580d41f3a5e7a852b8f96357314c3de26b2ad7067",
+      "training_targets": 1794,
+      "vocabulary": 229
+    },
+    "suite-histogram-no-bos": {
+      "context": 129,
+      "metadata_sha256": "6e13a000fb32ce70f4a242d5165d95e45937f7f678485729f0957140ce925eb8",
+      "training_targets": 1666,
+      "vocabulary": 229
+    },
+    "suite-histogram2": {
+      "context": 131,
+      "metadata_sha256": "623029f5d406dc4e57f50ee1f6dcff4558b3caf5b39ad436e9bb9bdb53361121",
+      "training_targets": 1786,
+      "vocabulary": 229
+    },
+    "suite-mode-counts": {
+      "context": 195,
+      "metadata_sha256": "6b66ebb6620b457069a28b1849dbf8e4cd01e68faea6f01d1407d066d175d2e4",
+      "training_targets": 1114,
+      "vocabulary": 229
+    },
+    "suite-mode-itemized": {
+      "context": 195,
+      "metadata_sha256": "9d4525bd0f48a72cd8a0cc6889d979290272d3444e4b48aedd3d2a9d2bf02c60",
+      "training_targets": 1114,
+      "vocabulary": 229
+    },
+    "suite-mode-none": {
+      "context": 67,
+      "metadata_sha256": "15f4879d4a3705d9f5ae13036aadcf4ef422be7f59deb1585f3c1726f5d9e928",
+      "training_targets": 256,
+      "vocabulary": 100
+    },
+    "suite-most_freq": {
+      "context": 131,
+      "metadata_sha256": "bde03cde47ed53709677d41445129262b32b10bfc8f414295651895fbdb57c4f",
+      "training_targets": 1798,
+      "vocabulary": 100
+    },
+    "suite-parity-none": {
+      "context": 67,
+      "metadata_sha256": "98d3d5ef9db4be6f06ad7184bfbd09c7dbb47d2763fe985d8a119b43a77afc85",
+      "training_targets": 256,
+      "vocabulary": 100
+    },
+    "suite-parity-ones-hints": {
+      "context": 259,
+      "metadata_sha256": "0b50e3c947c399c8382302ade546a3324cc990c9a9a4013d35dde90578c54bb7",
+      "training_targets": 1816,
+      "vocabulary": 229
+    },
+    "suite-parity-running": {
+      "context": 131,
+      "metadata_sha256": "4de9e2dc3e9b352025304f5db90452473c9eff9ff766606a389f67127fa62626",
+      "training_targets": 1768,
+      "vocabulary": 100
+    },
+    "suite-parity-running-hints": {
+      "context": 259,
+      "metadata_sha256": "7d95fa5d48b2d8d787e163c3f869679135ace65de6689168ccef058b5096a470",
+      "training_targets": 3280,
+      "vocabulary": 229
+    }
+  },
+  "frequency_sha256": "1ae2f83a69a84f8acea05c31c99594ab4e67dff14bb46e52f50e10c47295f3de",
+  "metric": "sequence_accuracy",
+  "name": "composed-retrieval-original-generation24-product-radii-v1",
+  "parity_sha256": "504dd5225bd1accd86520e789ec0d257e85d7da94e1fcc06df2f79b55413fd50",
+  "plan_sha256": "d404cd3eb84345b3cea2b38d009402705d2ccfa7fbe45e11221d812b6c0a23e7",
+  "remaining_sha256": "a7cef601caa5d8d04478f560159949b807c263cd962b4d6271ab78a6eb493b27",
+  "selection": "validation/novel",
+  "target": 0.95,
+  "training_protocol_sha256": "470ca63ab9cf23293c9503f96fff21b3bb269fdfd4ffe537ee5024bb73e6d228"
+}

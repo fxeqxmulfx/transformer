@@ -14,6 +14,7 @@ output-offsets = ["arithmetic-cohort", "logodds-depth"]
 prefix-cohort = ["output-offsets", "dep:synthetic-data"]
 rewrite-cohort = ["prefix-cohort"]
 radii-cohort = ["rewrite-cohort"]
+generation-cohort = ["radii-cohort", "dep:frequency-data", "dep:parity-data"]
 
 [[bin]]
 name = "reconcile-arithmetic"
@@ -60,7 +61,14 @@ name = "compare-learned-radii"
 path = "src/bin/compare-learned-radii.rs"
 required-features = ["radii-cohort"]
 
+[[bin]]
+name = "reconcile-generation"
+path = "src/bin/reconcile-generation.rs"
+required-features = ["generation-cohort"]
+
 [dependencies]
+frequency-data = { package = "convex-stress-frequency-data", path = "../convex_stress_frequency_data", optional = true }
+parity-data = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data", optional = true }
 synthetic-data = { package = "convex-stress-remaining-synthetic-data", path = "../convex_stress_remaining_synthetic_data", optional = true }
 arithmetic-data = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data", optional = true }
 baseline = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
