@@ -6,13 +6,15 @@ public import Transformer.Grokking.FlatSpectrum.Recall.ALiBiWindow
 /-!
 # The nearer tokens bound every bias that decreases with the distance
 
-Source: `review/flat_spectrum.md`, *A positional bias at the scale `s log n`* (added), item PB3,
-for the ALiBi bias of arXiv:2505.22842v4, §2.2, Lemma 2 (`Transformer.BAM.alibi`), and the scale
-`s log n` of SSMax, arXiv:2501.19399v1, §2.
+Source: `review/flat_spectrum.md`, *A positional bias at the scale `s log n`* (added), items PB3
+and PB6, for the ALiBi bias of arXiv:2505.22842v4, §2.2, Lemma 2 (`Transformer.BAM.alibi`), and
+the scale `s log n` of SSMax, arXiv:2501.19399v1, §2.
 
 With raw scores bounded by `B`, attention at the scale `s log n` misses the indicator dictionary
-of a token `j₀` by at least `2k / (k + n^{2sB})`, where `k` counts tokens whose bias is at least
-that of `j₀` (`le_one_sub_biasedLogScaleAttention_of_subset`). A bias that does not increase with
+of a token `j₀` by at least `2W / (W + n^{2sB} e^{b j₀})`, where `W = ∑_{j ∈ S} e^{b j}` is the
+prior weight of any set `S` of other tokens (`le_one_sub_biasedLogScaleAttention_of_weight`), so
+by at least `2k / (k + n^{2sB})`, where `k` counts tokens whose bias is at least that of `j₀`
+(`le_one_sub_biasedLogScaleAttention_of_subset`). A bias that does not increase with
 the distance, as ALiBi's `−m r` at every slope `m ≥ 0` or `−α log(1 + r)` at every `α ≥ 0`, makes
 all the `R` nearer tokens such rivals of the key at the distance `R`, so that key misses by at
 least `2R / (R + n^{2sB})` (`le_one_sub_biasedLogScaleAttention_of_nearer`): the error of
@@ -27,14 +29,15 @@ namespace Transformer.Grokking.FlatSpectrum.Recall
 
 open Finset Filter Topology
 
-/-- **The tokens of no less bias bound the miss** (`review/flat_spectrum.md`, PB3): with raw
+/-- **The prior weight of the rivals bounds the miss** (`review/flat_spectrum.md`, PB6): with raw
 scores bounded by `B`, attention at the scale `s log n`, `s ≥ 0`, with a bias `b` answers the
-value `1` at `j₀` and `−1` elsewhere with an error of at least `2k / (k + n^{2sB})`, where `k` is
-the size of a set `S ∌ j₀` of tokens whose bias is at least that of `j₀`. -/
-theorem le_one_sub_biasedLogScaleAttention_of_subset {ι : Type*} [Fintype ι] [DecidableEq ι]
+value `1` at `j₀` and `−1` elsewhere with an error of at least `2W / (W + n^{2sB} e^{b j₀})`,
+where `W = ∑_{j ∈ S} e^{b j}` is the prior weight of a set `S ∌ j₀`. -/
+theorem le_one_sub_biasedLogScaleAttention_of_weight {ι : Type*} [Fintype ι] [DecidableEq ι]
     {s B : ℝ} (hs : 0 ≤ s) {b z : ι → ℝ} (hz : ∀ j, |z j| ≤ B) {j₀ : ι} {S : Finset ι}
-    (hS : j₀ ∉ S) (hb : ∀ j ∈ S, b j₀ ≤ b j) :
-    2 * (S.card : ℝ) / (S.card + (Fintype.card ι : ℝ) ^ (2 * s * B)) ≤
+    (hS : j₀ ∉ S) :
+    2 * (∑ j ∈ S, Real.exp (b j)) /
+        (∑ j ∈ S, Real.exp (b j) + (Fintype.card ι : ℝ) ^ (2 * s * B) * Real.exp (b j₀)) ≤
       1 - biasedLogScaleAttention s b z (fun j => if j = j₀ then 1 else -1) := by
   have hn : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩
   have hlog : 0 ≤ s * Real.log (Fintype.card ι) :=
@@ -46,29 +49,54 @@ theorem le_one_sub_biasedLogScaleAttention_of_subset {ι : Type*} [Fintype ι] [
   rw [biasedLogScaleAttention, one_sub_softmaxAttention_indicator,
     ← add_sum_erase _ _ (mem_univ j₀), hng]
   set c := s * Real.log (Fintype.card ι) with hc
-  have hX : (S.card : ℝ) * Real.exp (b j₀ - c * B) ≤
-      ∑ j ∈ univ.erase j₀, Real.exp (c * z j + b j) := by
-    calc (S.card : ℝ) * Real.exp (b j₀ - c * B) = ∑ j ∈ S, Real.exp (b j₀ - c * B) := by
-          rw [sum_const, nsmul_eq_mul]
-      _ ≤ ∑ j ∈ S, Real.exp (c * z j + b j) := sum_le_sum fun j hj => Real.exp_le_exp.2 (by
-          have := mul_le_mul_of_nonneg_left (neg_le_of_abs_le (hz j)) hlog
-          linarith [hb j hj])
-      _ ≤ ∑ j ∈ univ.erase j₀, Real.exp (c * z j + b j) :=
-          sum_le_sum_of_subset_of_nonneg
-            (fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hS, mem_univ _⟩)
-            fun _ _ _ => (Real.exp_pos _).le
-  have hA : Real.exp (c * z j₀ + b j₀) ≤ Real.exp (2 * c * B) * Real.exp (b j₀ - c * B) := by
+  set W := ∑ j ∈ S, Real.exp (b j) with hW
+  have hX : Real.exp (-(c * B)) * W ≤ ∑ j ∈ univ.erase j₀, Real.exp (c * z j + b j) := by
+    rw [hW, mul_sum]
+    refine le_trans (sum_le_sum fun j _ => ?_) (sum_le_sum_of_subset_of_nonneg
+      (fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hS, mem_univ _⟩)
+      fun _ _ _ => (Real.exp_pos _).le)
     rw [← Real.exp_add]
+    refine Real.exp_le_exp.2 ?_
+    have := mul_le_mul_of_nonneg_left (neg_le_of_abs_le (hz j)) hlog
+    linarith
+  have hA : Real.exp (c * z j₀ + b j₀) ≤
+      Real.exp (2 * c * B) * Real.exp (b j₀) * Real.exp (-(c * B)) := by
+    rw [← Real.exp_add, ← Real.exp_add]
     refine Real.exp_le_exp.2 ?_
     have := mul_le_mul_of_nonneg_left (le_of_abs_le (hz j₀)) hlog
     linarith
-  have hk : (0 : ℝ) ≤ S.card := Nat.cast_nonneg _
-  have hK := Real.exp_pos (2 * c * B)
+  have hW0 : 0 ≤ W := sum_nonneg fun _ _ => (Real.exp_pos _).le
+  have hKb := mul_pos (Real.exp_pos (2 * c * B)) (Real.exp_pos (b j₀))
   have hA0 := Real.exp_pos (c * z j₀ + b j₀)
   have hX0 : 0 ≤ ∑ j ∈ univ.erase j₀, Real.exp (c * z j + b j) :=
     sum_nonneg fun _ _ => (Real.exp_pos _).le
-  rw [div_le_div_iff₀ (by positivity) (by positivity)]
-  nlinarith [mul_le_mul_of_nonneg_left hA hk, mul_le_mul_of_nonneg_left hX hK.le]
+  rw [div_le_div_iff₀ (by linarith) (by linarith)]
+  nlinarith [mul_le_mul_of_nonneg_left hA hW0, mul_le_mul_of_nonneg_left hX hKb.le]
+
+/-- Three tokens, the first of raw score `1` against the prior weight of the third. -/
+example := le_one_sub_biasedLogScaleAttention_of_weight (s := 1) (B := 1) zero_le_one
+  (b := ![0, 0, -1]) (z := ![1, 0, 0]) (fun j => by fin_cases j <;> simp) (j₀ := 0) (S := {2})
+  (by decide)
+
+/-- **The tokens of no less bias bound the miss** (`review/flat_spectrum.md`, PB3): with raw
+scores bounded by `B`, attention at the scale `s log n`, `s ≥ 0`, with a bias `b` answers the
+value `1` at `j₀` and `−1` elsewhere with an error of at least `2k / (k + n^{2sB})`, where `k` is
+the size of a set `S ∌ j₀` of tokens whose bias is at least that of `j₀`. -/
+theorem le_one_sub_biasedLogScaleAttention_of_subset {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {s B : ℝ} (hs : 0 ≤ s) {b z : ι → ℝ} (hz : ∀ j, |z j| ≤ B) {j₀ : ι} {S : Finset ι}
+    (hS : j₀ ∉ S) (hb : ∀ j ∈ S, b j₀ ≤ b j) :
+    2 * (S.card : ℝ) / (S.card + (Fintype.card ι : ℝ) ^ (2 * s * B)) ≤
+      1 - biasedLogScaleAttention s b z (fun j => if j = j₀ then 1 else -1) := by
+  refine le_trans ?_ (le_one_sub_biasedLogScaleAttention_of_weight hs hz hS)
+  have hW : (S.card : ℝ) * Real.exp (b j₀) ≤ ∑ j ∈ S, Real.exp (b j) := by
+    rw [← nsmul_eq_mul, ← sum_const]
+    exact sum_le_sum fun j hj => Real.exp_le_exp.2 (hb j hj)
+  have hK : 0 < (Fintype.card ι : ℝ) ^ (2 * s * B) :=
+    Real.rpow_pos_of_pos (by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩) _
+  have he := Real.exp_pos (b j₀)
+  have hk : (0 : ℝ) ≤ S.card := Nat.cast_nonneg _
+  rw [div_le_div_iff₀ (by linarith) (by nlinarith)]
+  nlinarith [mul_le_mul_of_nonneg_left hW hK.le]
 
 /-- Three tokens, the first of raw score `1` and a rival of equal bias. -/
 example := le_one_sub_biasedLogScaleAttention_of_subset (s := 1) (B := 1) zero_le_one

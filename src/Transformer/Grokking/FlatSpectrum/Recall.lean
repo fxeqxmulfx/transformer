@@ -29,6 +29,8 @@ public import Transformer.Grokking.FlatSpectrum.Recall.ALiBiWindow
 public import Transformer.Grokking.FlatSpectrum.Recall.NearerTokens
 public import Transformer.Grokking.FlatSpectrum.Recall.FittedSlope
 public import Transformer.Grokking.FlatSpectrum.Recall.LogBias
+public import Transformer.Grokking.FlatSpectrum.Recall.PowerBias
+public import Transformer.Grokking.FlatSpectrum.Recall.PowerThreshold
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -115,7 +117,12 @@ The slope `log(1 + 1/D)` fitted to a span `D ≤ n^ρ` reaches that threshold: i
 of the span when `s g > ρ`, and loses the keys beyond `κ (D + 1) log n`, `κ > 2 s B`
 (`FittedSlope`). The bias `−log(1 + r)` reaches it at every distance at once: every bias weighs
 some distance `R` by at least `(R + 1) H_n`, this one weighs every distance by exactly that, and it
-recalls every key with `R + 1 ≤ n^ρ` when `s g > ρ` (`LogBias`).
+recalls every key with `R + 1 ≤ n^ρ` when `s g > ρ` (`LogBias`). The bias `−α log(1 + r)`,
+`α ≥ 0`, has the threshold `τ = α ρ + max(0, 1 − α)` at the distance `n^ρ`: its prior weighs at
+most `α / (α − 1)` above `α = 1` and `n^{1−α} / (1 − α)` below it (`PowerBias`), the keys within
+`n^ρ` are recalled when `s g > τ`, and the keys beyond it are lost when `2 s B < τ`
+(`PowerThreshold`). A wrong coefficient raises the threshold `ρ` of `α = 1` by `(α − 1) ρ` above
+it and by `(1 − α)(1 − ρ)` below it.
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

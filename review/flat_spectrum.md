@@ -4112,17 +4112,65 @@ there. A fitted ALiBi slope has it only on its span (PB4), and a fixed slope onl
 distances (PB2). Derived from the threshold, the positional bias that serves every distance is
 logarithmic in the distance, not linear.
 
+### PB6. A wrong coefficient of the bias `−α log(1 + r)`
+
+The bias `−α log(1 + r)`, `α ≥ 0`, is the power prior `(1 + r)^{−α}`, so the distances weigh
+against a key at the distance `R` by `W_R = (R + 1)^α ∑_r (1 + r)^{−α}`. By Bernoulli's
+inequality, `(1 − α)(r + 1)^{−α} ≤ (r + 1)^{1−α} − r^{1−α}` for `α < 1` and
+`(α − 1)(r + 1)^{−α} ≤ r^{1−α} − (r + 1)^{1−α}` for `α > 1` and `r ≥ 1`, and the sums telescope:
+
+```
+∑_{r<n} (1 + r)^{−α} ≤ n^{1−α} / (1 − α)  (α < 1),    ∑_{r<n} (1 + r)^{−α} ≤ α / (α − 1)  (α > 1),
+```
+
+against `H_n ≤ 1 + log n` at `α = 1` (PB5). By PB2 a key at a distance `R` with `R + 1 ≤ n^ρ`
+and the lead `g` is answered within `2C (R + 1)^α n^{−sg} ∑_r (1 + r)^{−α}`, at most
+`2C α/(α − 1) n^{αρ − sg}` above `α = 1` and `2C/(1 − α) n^{αρ + 1 − α − sg}` below it.
+
+In the other direction, let the raw scores be bounded by `B` and let a set `S ∌ j₀` have the
+prior weight `W = ∑_{j ∈ S} e^{b_j}`. In `1 − att = 2X / (A + X)` (PB1), `X ≥ n^{−sB} W` and
+`A ≤ n^{sB} e^{b_{j₀}}`, so
+
+```
+1 − att ≥ 2W / (W + n^{2sB} e^{b_{j₀}}),
+```
+
+which is PB3 at `W ≥ k e^{b_{j₀}}`. A key at a distance `R ≥ n^ρ` has `e^{b_R} ≤ n^{−αρ}`, and its
+rivals weigh at least `1`, the weight of the distance `0`, and at least
+`(n − 1) n^{−α} ≥ n^{1−α} / 2`. So it misses by an error that tends to `2` when `2 s B < α ρ`,
+and for `α < 1` when `2 s B < α ρ + 1 − α`. The distance `n^ρ` has the threshold
+
+```
+τ(α, ρ) = α ρ + max(0, 1 − α):
+```
+
+the keys within `n^ρ` are recalled when `s g > τ`, and the keys beyond it are lost when
+`2 s B < τ`. At `α = 1` it is the threshold `ρ` of PB5, the least that PB3 allows. For
+`0 < ρ < 1` a wrong coefficient raises it:
+
+- too steep, `α > 1`, by `(α − 1) ρ`: a far key weighs `(1 + R)^{−α}` against the weight `1` of
+  the query's own token;
+- too gentle, `α < 1`, by `(1 − α)(1 − ρ)`: the rivals of every key weigh `n^{1−α}`, and at
+  `α = 0` the threshold is the `2 s B = 1` of SA5 at every distance.
+
+SSMax pays for the error: the scale `s log n` recalls the keys within `n^ρ` once
+`s g > τ(α, ρ)`, so a wrong coefficient costs `(α − 1) ρ / g` or `(1 − α)(1 − ρ) / g` of the
+scale `s`, linear in `|α − 1|`. A wrong ALiBi slope costs more. A fixed slope loses the keys at
+a distance `n^ρ`, `ρ > 0`, at every scale, since they lie beyond `κ log n` for every `κ` (PB2).
+A slope fitted to a span `D` loses the keys beyond `κ (D + 1) log n` for `κ > 2 s B` (PB4), so a
+key at a distance `R` past the span needs `2 s B ≥ R / ((D + 1) log n)`, a scale that grows with
+`R / D`.
+
 ### Scope
 
-Proved: PB1 to PB5. Not covered: a lower bound of order `D` on the rivals of a key well inside
-the span `D` of a fitted slope, the coefficients `α ≠ 1` of the bias `−α log(1 + r)`, and whether
-training finds such a bias.
+Proved: PB1 to PB6. Not covered: a lower bound of order `D` on the rivals of a key well inside
+the span `D` of a fitted slope, and whether training finds such a bias or its coefficient.
 
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias`, `ALiBiWindow`,
-`NearerTokens`, `FittedSlope` and `LogBias`, namespace `Transformer.Grokking.FlatSpectrum.Recall`,
-proved without `sorry`.
+`NearerTokens`, `FittedSlope`, `LogBias`, `PowerBias` and `PowerThreshold`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -4131,6 +4179,7 @@ proved without `sorry`.
 | PB3 | `le_one_sub_biasedLogScaleAttention_of_subset`, `le_one_sub_biasedLogScaleAttention_of_nearer`, `exists_lt_error_of_nearer`, `exists_lt_alibi_error_of_rpow_le` | The bias need only be at the distance `R` at most its value at every nearer distance, not decreasing everywhere. The fading statements take the indicator dictionary of values `±1` and the keys at the distances `R ≥ n^ρ`; at `ρ ≥ 1` they are vacuous, so the keys at a distance proportional to `n` are reached through a `ρ` between `2 s B` and `1`. |
 | PB4 | `abs_sub_fittedSlope_le`, `exists_forall_fittedSlope_recall`, `le_one_sub_fittedSlope`, `exists_lt_fittedSlope_error` | The span is a natural number `D ≥ 1` and the slope `Real.log (1 + 1 / D)`; the recall statement takes the spans `D ≤ n^ρ` and the keys at the distances `R ≤ D`, the fading statement every span `D ≥ 1`. The sharp threshold for one-hot raw scores is this item with PB3, not one statement. |
 | PB5 | `exists_mul_harmonic_le_sum_exp`, `sum_exp_logBias`, `sum_one_div_succ_le`, `abs_sub_logBias_le`, `exists_forall_logBias_recall`, `exists_lt_logBias_error` | `H_n` is the sum `∑ r : Fin n, 1 / ((r : ℝ) + 1)`, bounded through Mathlib's `harmonic_le_one_add_log`; the bias is `fun r : Fin n => -Real.log ((r : ℝ) + 1)`. The recall statement takes the keys with `R + 1 ≤ n^ρ`, the fading statement those with `R ≥ n^ρ`. The least `max_R W_R / (R + 1)` is the pair of the first two statements, not one statement. |
+| PB6 | `le_one_sub_biasedLogScaleAttention_of_weight`, `mul_rpow_neg_le_sub_of_lt_one`, `mul_rpow_neg_le_sub_of_one_lt`, `sum_rpow_neg_le_of_lt_one`, `sum_rpow_neg_le_of_one_lt`, `one_le_sum_erase_rpow_neg`, `rpow_one_sub_le_two_mul_sum_erase`, `abs_sub_powerBias_le`, `exists_forall_powerBias_recall_of_sum_le`, `exists_forall_powerBias_recall`, `exists_lt_powerBias_error_of_le_sum`, `exists_lt_powerBias_error` | The bias is `fun r : Fin n => -(α * Real.log ((r : ℝ) + 1))` with `α ≥ 0`, and `max 0 (1 - α)` is the threshold's second term. The weighted bound takes any finite type of tokens and any real bias; PB3's `le_one_sub_biasedLogScaleAttention_of_subset` is proved from it. The recall statement takes the keys with `R + 1 ≤ n^ρ` and is PB5's at `α = 1`; the fading statement takes the keys with `R ≥ n^ρ` and the indicator dictionary of values `±1`. The two helper statements take any power of `n` bounding the prior's mass or the rivals' weight. The costs `(α − 1) ρ` and `(1 − α)(1 − ρ)`, the scale they cost, and the comparison with ALiBi are read off these statements and those of PB2 and PB4, not stated. |
 
 ## The block languages across a cut (added)
 
