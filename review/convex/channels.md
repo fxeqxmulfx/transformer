@@ -7,10 +7,10 @@ and convex spectral upper bounds. Flat spectrum enters only as a capacity bound.
 continues in [`moments.md`](moments.md).
 
 The labels CR, CC, B, MF, CFt, CF, O, CI and SB are this file's. Its CC1–CC8 are not the codec
-items CC1–CC7 of [`../flat_spectrum.md`](../flat_spectrum.md), to which Theorem A, R, AR, WD, XE
-and the other earlier labels refer, and its B1–B3 are not the rounding certificates B1–B9 of
-[`../actual_network/execution.md`](../actual_network/execution.md). CM is in
-[`moments.md`](moments.md).
+items CC1–CC7 of [`../diffgpt/steps.md`](../diffgpt/steps.md), and its B1–B3 are not the
+rounding certificates B1–B9 of [`../actual_network/execution.md`](../actual_network/execution.md).
+Theorem A, R, AR, WD, XE and the other earlier labels refer to
+[`../flat_spectrum.md`](../flat_spectrum.md). CM is in [`moments.md`](moments.md).
 
 ## Convex answer-loss recall
 

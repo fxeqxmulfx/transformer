@@ -13,8 +13,9 @@ sections or labels refers to the file named here.
 | *Alias symmetry and training*, *Sampled updates can break aliases*, *Learning transfer*, *Optimizer memory*, *Gradient forcing* | S1–S7, T1–T6, M1–M6, F1–F4 | [`schedule_free/training.md`](schedule_free/training.md) |
 | *Convex answer-loss recall* through *Convex spectral upper bounds* | CR, CC1–CC8, B1–B3, MF, CFt, CF, O, CI, SB | [`convex/channels.md`](convex/channels.md) |
 | *Coupling complex class moments* | CM1–CM120 | [`convex/moments.md`](convex/moments.md) |
+| *The wrap of a step is a comparison*, *The step is the phase of a sum of two phases*, *The rate of a recipe*, *A comparison of two free scores*, *The numbers of the tokens*, *The encoder: steps and levels*, *The carry of the codec*, *The decoder holds the level* | CW1–CW10, CH1–CH9, RR1–RR7, CS1–CS7, NT1–NT8, EN1–EN6, CC1–CC7, DL1–DL6 | [`diffgpt/steps.md`](diffgpt/steps.md) |
 
 Some letters name items in more than one file: B, F, M, S and T in `actual_network/`,
-`schedule_free/` and `convex/`, and FF in *Feature forecasts* and in *Future forcing from
-checkpoint moments*. The section a citation names decides. The codec items CC1–CC7 and the
+`schedule_free/` and `convex/`, CC in `diffgpt/` and `convex/`, and FF in *Feature forecasts*
+and in *Future forcing from checkpoint moments*. The section a citation names decides. The
 R1–R4 of *Flat kernels of any shape* stay in `flat_spectrum.md`.
