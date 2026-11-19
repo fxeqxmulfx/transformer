@@ -3760,6 +3760,21 @@ One-hot keys reach this scale. With the score `β/2` at the queried key and `−
 `e^{2B} = 2 (m − 1) / ε` suffices: the bound is sharp up to the factor `2 / (1 − ε)`. The
 scores of SA2 are of order `β m²`: dimension two is paid by a larger scale.
 
+The average over dictionaries halves what the worst one costs. Bind the queried key to `1` and
+every other key to `−1`. Then `a = −1`, and with `R` the weight of the other tokens and `Z` the
+sum of the weights, `1 − att = 2R / Z ≥ 2ρ`. Recall of values `±1` to accuracy `ε` at every
+pair has `2ρ ≤ ε`:
+
+```
+(m − 1)(2 − ε) ≤ ε e^{2B},
+```
+
+and recall by the sign, an error below `1` everywhere, has `m − 1 < e^{2B}`. Against this bound
+the one-hot scale `e^{2B} = 2 (m − 1) / ε` is sharp up to the factor `2 / (2 − ε)`. At a fixed
+`B` the error of the worst dictionary tends to `2` as `m` grows: for every `ε < 2`, from some
+`m` on, every query has a dictionary answered with an error above `ε`. The answer tends to the
+opposite value.
+
 The transformers of the paper round to fixed precision outside `sumdiv` (Appendix
 `app:transformers`, Equation `eq:att`): their weights are `round(exp s)`, which vanish below
 the last bit. That is how a layer of width 5 with `O(log c)` bits recalls there
@@ -3832,14 +3847,14 @@ Not covered:
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Softmax`, `SoftmaxRecall`,
-`SoftmaxScale`, `QueryFree` and `LogScale`, namespace `Transformer.Grokking.FlatSpectrum.Recall`,
-proved without `sorry`.
+`SoftmaxScale`, `Fading`, `QueryFree` and `LogScale`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | SA1 | `softmaxAttention`, `abs_softmaxAttention_sub_le` | The tokens are any finite type; scores and values are real. |
 | SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign`, `exists_softmaxAttention_not_hasCutWidth` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
-| SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. |
+| SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error`, `one_sub_softmaxAttention_indicator`, `two_mul_le_one_sub_softmaxAttention_indicator`, `sub_one_mul_two_sub_le_of_softmaxAttention_recall`, `sub_one_lt_exp_of_softmaxAttention_sign`, `exists_lt_softmaxAttention_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. The worst dictionary is `π k = decide (k = q)`. The statement for growing `m` takes `m + 1` keys, `Fin (m + 1)`, and scores `s m q k b` with one bound `B` for every `m`. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
 | SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. |
 
