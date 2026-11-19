@@ -7,6 +7,7 @@ public import Transformer.KERPLE.Section3_Schoenberg
 public import Transformer.KERPLE.Section3_Integral
 public import Transformer.KERPLE.Section3_Powers
 public import Transformer.KERPLE.Section4_Attention
+public import Transformer.KERPLE.Section4_BiasKernel
 public import Transformer.KERPLE.SectionA_ShiftLemma
 
 /-!
@@ -37,6 +38,10 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
   kernel), the shift invariance (*) of the Softmax that removes `c`, the composite kernel PD exactly
   when the bias kernel is, the power and logarithmic variants CPD, and ALiBi as the power variant
   at `r₂ = 1`.
+* `Section4_BiasKernel`: §4's claim that the bias kernel `c + k̃` "is positive definite using
+  Lemma 1" is false for both variants: no real `c` makes either PD on the positions `ℕ`, a PD bias
+  kernel on `0, …, L` needs `c ≥ r₁ L^{r₂}/2` (respectively `r₁ log(1 + r₂ L)/2`), and at `r₂ = 2`
+  three positions already defeat every `c`.
 * `SectionA_ShiftLemma`: Lemma 1 (the CPD shift lemma, Appendix A.1) is false: `x + y` is CPD on
   `ℝ` and `c + x + y` is PD for no real `c`, nor is `c − (x − y)²`; step (iii) of its proof fails
   at `diag(1, −1)`. Its steps (iv)–(vi) prove the corrected lemma: on a finite set, a strictly CPD
