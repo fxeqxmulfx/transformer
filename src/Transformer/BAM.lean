@@ -5,6 +5,7 @@ public import Transformer.BAM.SectionA_Notation
 public import Transformer.BAM.Section2_Priors
 public import Transformer.BAM.Section2_GeneralizedGaussian
 public import Transformer.BAM.Section2_Locality
+public import Transformer.BAM.Section2_IgnoresLocal
 
 /-!
 # Bayesian Attention Mechanism
@@ -28,4 +29,6 @@ weight `0`.
   distance `1`, another works).
 * `Section2_Locality`: Lemmas 3 and 4 (ALiBi and GGD-BAM with `β > 0` are local), for bounded
   content scores, uniformly in the context; false without the bound.
+* `Section2_IgnoresLocal`: Theorem 3 (with `β < 0` the query ignores its own key), for `μ = 0` as
+  in its proof; false for `μ ≠ 0`.
 -/
