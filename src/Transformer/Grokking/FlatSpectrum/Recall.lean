@@ -31,6 +31,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.FittedSlope
 public import Transformer.Grokking.FlatSpectrum.Recall.LogBias
 public import Transformer.Grokking.FlatSpectrum.Recall.PowerBias
 public import Transformer.Grokking.FlatSpectrum.Recall.PowerThreshold
+public import Transformer.Grokking.FlatSpectrum.Recall.PriorBudget
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -122,7 +123,11 @@ recalls every key with `R + 1 ≤ n^ρ` when `s g > ρ` (`LogBias`). The bias `�
 most `α / (α − 1)` above `α = 1` and `n^{1−α} / (1 − α)` below it (`PowerBias`), the keys within
 `n^ρ` are recalled when `s g > τ`, and the keys beyond it are lost when `2 s B < τ`
 (`PowerThreshold`). A wrong coefficient raises the threshold `ρ` of `α = 1` by `(α − 1) ρ` above
-it and by `(1 − α)(1 − ρ)` below it.
+it and by `(1 − α)(1 − ρ)` below it. The prior is a budget: a key answered within `ε < 2` has the
+prior at least `(2 − ε) / (2 − ε + ε n^{2sB})`, so under every bias at most
+`1 + ε n^{2sB} / (2 − ε)` tokens are answered within `ε`, and below `2 s B = 1` a vanishing
+fraction of the distances; a key whose rivals outweigh it by `w n^γ` is lost below `2 s B = γ`
+(`PriorBudget`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

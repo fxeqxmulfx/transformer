@@ -4161,16 +4161,48 @@ A slope fitted to a span `D` loses the keys beyond `κ (D + 1) log n` for `κ > 
 key at a distance `R` past the span needs `2 s B ≥ R / ((D + 1) log n)`, a scale that grows with
 `R / D`.
 
+### PB7. The prior is a budget
+
+Let the raw scores be bounded by `B`, `s ≥ 0`, and let the token `j₀` be answered within `ε`:
+its indicator dictionary of values `±1` misses by `1 − att ≤ ε`. The weighted bound of PB6, with
+all the other tokens as `S`, gives
+
+```
+(2 − ε) ∑_j e^{b_j} ≤ (2 − ε + ε n^{2sB}) e^{b_{j₀}},
+```
+
+so for `ε < 2` the prior `p_{j₀} = e^{b_{j₀}} / ∑_j e^{b_j}` of `j₀` is at least
+`(2 − ε) / (2 − ε + ε n^{2sB})`. The priors sum to `1`, the identity `∑_R 1/W_R = 1` of PB5, so
+for `0 ≤ ε < 2`, under every bias, at most
+
+```
+1 + ε n^{2sB} / (2 − ε)
+```
+
+tokens are answered within `ε`. The raw scores may change with the token that holds the key; the
+bias may not. At `ε = 1`, the answers of the right sign, the count is below `1 + n^{2sB}`. Below
+`2 s B = 1` it is `o(n)`: for every `δ > 0`, from some length on, at most `δ n` of the `n`
+distances are answered within `ε`, under every bias of each length. Since no miss exceeds `2`,
+the miss averaged over the position of the key tends to `2`, the opposite value, whatever the
+prior. PB1 says that no bias helps the worst position, PB7 that none helps the average one: the
+bias chooses which keys the scale reaches, not how many. BAM's passkey retrieval averages over 20
+evenly spaced depths `kL/19` (§3.1); PB7 bounds the average over all `n` depths.
+
+Conversely, a key whose rivals outweigh it in the prior is lost. If
+`∑_{r ≠ R} e^{b_r} ≥ w n^γ e^{b_R}` with `w > 0`, the weighted bound gives a miss of at least
+`2 / (1 + n^{2sB − γ} / w)`, which tends to `2` when `2 s B < γ`. PB3 is the case `w = 1`,
+`γ = ρ`.
+
 ### Scope
 
-Proved: PB1 to PB6. Not covered: a lower bound of order `D` on the rivals of a key well inside
+Proved: PB1 to PB7. Not covered: a lower bound of order `D` on the rivals of a key well inside
 the span `D` of a fitted slope, and whether training finds such a bias or its coefficient.
 
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias`, `ALiBiWindow`,
-`NearerTokens`, `FittedSlope`, `LogBias`, `PowerBias` and `PowerThreshold`, namespace
-`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+`NearerTokens`, `FittedSlope`, `LogBias`, `PowerBias`, `PowerThreshold` and `PriorBudget`,
+namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -4180,6 +4212,7 @@ the span `D` of a fitted slope, and whether training finds such a bias or its co
 | PB4 | `abs_sub_fittedSlope_le`, `exists_forall_fittedSlope_recall`, `le_one_sub_fittedSlope`, `exists_lt_fittedSlope_error` | The span is a natural number `D ≥ 1` and the slope `Real.log (1 + 1 / D)`; the recall statement takes the spans `D ≤ n^ρ` and the keys at the distances `R ≤ D`, the fading statement every span `D ≥ 1`. The sharp threshold for one-hot raw scores is this item with PB3, not one statement. |
 | PB5 | `exists_mul_harmonic_le_sum_exp`, `sum_exp_logBias`, `sum_one_div_succ_le`, `abs_sub_logBias_le`, `exists_forall_logBias_recall`, `exists_lt_logBias_error` | `H_n` is the sum `∑ r : Fin n, 1 / ((r : ℝ) + 1)`, bounded through Mathlib's `harmonic_le_one_add_log`; the bias is `fun r : Fin n => -Real.log ((r : ℝ) + 1)`. The recall statement takes the keys with `R + 1 ≤ n^ρ`, the fading statement those with `R ≥ n^ρ`. The least `max_R W_R / (R + 1)` is the pair of the first two statements, not one statement. |
 | PB6 | `le_one_sub_biasedLogScaleAttention_of_weight`, `mul_rpow_neg_le_sub_of_lt_one`, `mul_rpow_neg_le_sub_of_one_lt`, `sum_rpow_neg_le_of_lt_one`, `sum_rpow_neg_le_of_one_lt`, `one_le_sum_erase_rpow_neg`, `rpow_one_sub_le_two_mul_sum_erase`, `abs_sub_powerBias_le`, `exists_forall_powerBias_recall_of_sum_le`, `exists_forall_powerBias_recall`, `exists_lt_powerBias_error_of_le_sum`, `exists_lt_powerBias_error` | The bias is `fun r : Fin n => -(α * Real.log ((r : ℝ) + 1))` with `α ≥ 0`, and `max 0 (1 - α)` is the threshold's second term. The weighted bound takes any finite type of tokens and any real bias; PB3's `le_one_sub_biasedLogScaleAttention_of_subset` is proved from it. The recall statement takes the keys with `R + 1 ≤ n^ρ` and is PB5's at `α = 1`; the fading statement takes the keys with `R ≥ n^ρ` and the indicator dictionary of values `±1`. The two helper statements take any power of `n` bounding the prior's mass or the rivals' weight. The costs `(α − 1) ρ` and `(1 − α)(1 − ρ)`, the scale they cost, and the comparison with ALiBi are read off these statements and those of PB2 and PB4, not stated. |
+| PB7 | `mul_sum_exp_le_of_one_sub_le`, `one_sub_biasedLogScaleAttention_le_two`, `card_le_of_one_sub_le`, `exists_card_filter_le_mul`, `exists_lt_one_sub_of_le_sum_erase` | The first three statements take any finite type of tokens and any real bias; the raw scores of `card_le_of_one_sub_le` are a family `z j₀` indexed by the token of the key, the bias is one function. The asymptotic statements take the tokens `Fin n`, with a bias and raw scores chosen at each length. The identity `∑_R 1/W_R = 1` enters as `∑_{j₀ ∈ T} e^{b_{j₀}} ≤ ∑_j e^{b_j}`. The limit `2` of the average miss is read off `exists_card_filter_le_mul` and `one_sub_biasedLogScaleAttention_le_two`, not stated. |
 
 ## The block languages across a cut (added)
 
