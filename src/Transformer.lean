@@ -34,6 +34,7 @@ public import Transformer.Convexifying
 public import Transformer.Zoology
 public import Transformer.ConvexRecall
 public import Transformer.CausalRecall
+public import Transformer.MRCR
 public import Transformer.Muon
 public import Transformer.DASH
 public import Transformer.AdaFisher
@@ -274,7 +275,8 @@ The Zoology development is partial; its aggregator records the remaining
 source claims and resource gaps. `Transformer.ConvexRecall` is a new
 cross-paper construction with explicit changes to the original models.
 `Transformer.CausalRecall` bounds the recall of causal models that read the
-context through a summary formed before the query.
+context through a summary formed before the query. `Transformer.MRCR` takes
+the long-context benchmark MRCR-V2 apart into components and states each one.
 -/
 
 @[expose] public section
