@@ -59,6 +59,7 @@ public import Transformer.Residual.RMSBackward
 public import Transformer.AttentionResiduals
 public import Transformer.DeepSeekV41
 public import Transformer.RoPE
+public import Transformer.BAM
 public import Transformer.Weil
 public import Transformer.Rotate90
 public import Transformer.SequenceModel
@@ -225,6 +226,11 @@ Formalizations of papers on the mathematics and architecture of Transformers:
 The RoPE development formalizes the mathematical results specified in
 `review/rope_context.md`; empirical accuracy, training behavior, and calibrated
 probability bounds outside that coverage are not claimed as proved.
+
+49. Bianchessi, Aguirre, Barros, Kupssinskü — arXiv:2505.22842v4, "Bayesian
+   Attention Mechanism: A Probabilistic Framework for Positional Encoding and
+   Context Length Extrapolation". Attention as an expectation and its
+   content–position factorization, §2.1.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
