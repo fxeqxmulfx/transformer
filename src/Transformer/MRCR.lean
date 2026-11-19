@@ -14,6 +14,7 @@ public import Transformer.MRCR.PhraseKeyLogits
 public import Transformer.MRCR.PhraseKeyPrev
 public import Transformer.MRCR.PhraseKeyPrevCorrect
 public import Transformer.MRCR.PhraseKeyRope
+public import Transformer.MRCR.PhraseKeyRotary
 public import Transformer.MRCR.PhraseKeySandwich
 public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
@@ -67,8 +68,11 @@ kernel of KERPLE, and with SSMax of any of these, the logit divided by `1`, `√
 (`Transformer.MRCR.PhraseKeyGrams`, `Transformer.MRCR.PhraseKeyLogits`). Sandwich's bias does not
 decay: it comes back near its maximum at distances without bound, where it beats its value at the
 token before, so no head with it reads that token alone and the construction has no Sandwich
-version (`Transformer.MRCR.PhraseKeySandwich`). SSMax that scales the dot product alone, RoPE at
-irrational angles, and Sandwich by other means are left open.
+version (`Transformer.MRCR.PhraseKeySandwich`). Nor does a RoPE score of the distance decay, at
+any frequencies: it converges only if it is constant, and a far key comes back within any margin
+of the token before, so the construction has no version with RoPE's grid, YaRN's rescaled grid
+and temperature, or LeRoPE's learned frequencies (`Transformer.MRCR.PhraseKeyRotary`). SSMax
+that scales the dot product alone, and RoPE or Sandwich by other means, are left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so

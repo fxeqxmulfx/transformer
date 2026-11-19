@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before); RoPE at other angles, SSMax of the dot product alone, and Sandwich by other means, open |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -205,10 +205,22 @@ every divisor, compression ratio and dot product (`not_readsPrev_sandwich`,
 `not_readsPrev_ssmax_sandwich`). Only the construction is ruled out: whether several layers with
 Sandwich read the token before otherwise is open.
 
+Nor can RoPE be one of them, at any frequencies (`Transformer.MRCR.PhraseKeyRotary`). A head
+whose query and key carry a constant pair in each rotated plane adds to the dot product a RoPE
+score of the distance (`ropeLogit`), and such a score converges only if it is constant
+(`ropeScore_eq_of_tendsto`): returns `d` as far as wanted bring the score at `t + d` within any
+margin of the score at `t`. So the key at the distance `1 + d` scores within `1/(2g)` of the key
+at the distance `1`, and `ReadsPrev` fails for every frequency, coefficient, divisor, temperature
+`g > 0` and dot product (`not_readsPrev_ropeLogit`). Changing the frequencies does not help:
+YaRN rescales them and multiplies the whole logit by its temperature, arXiv:2309.00071v3,
+Eq. (14) and Definition 2 (`yarnLogit`, `not_readsPrev_yarn`), and LeRoPE learns them,
+arXiv:2607.10134v1, Eq. (5) (`not_readsPrev_lerope`). Again only the construction is ruled out.
+
 Not proved:
 
-- RoPE at other angles. The rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`; the usual frequencies
-  `10000^{−2c/d}` are not of this form, and for them no logic and no lower bound is in Lean.
+- RoPE by other means. The construction above fails at every set of frequencies
+  (`PhraseKeyRotary`); the rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`, and for the usual
+  frequencies `10000^{−2c/d}` no logic and no lower bound for every RoPE transformer is in Lean.
 - SSMax of the dot product alone, `s log n · q·k` plus a bias that it does not scale. The reading
   layers above need the logit at the position before to vanish at every length, which a fixed
   `b` does not give when only the dot product grows with `log n`; this variant is not treated.
