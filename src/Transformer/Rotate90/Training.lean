@@ -6,7 +6,7 @@ public import Transformer.Rotate90.Training.Sampling
 /-!
 # Actual Rotate90 training can preserve an incorrect quotient code
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*. At every finite
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*. At every finite
 width and depth, the actual full-table embedding gradient preserves invariance
 under a multiplicative subgroup S when gcd(K, |S|)=1. All three uses of the tied
 embedding, every RMSNorm, the residual stack and the full softmax are retained.

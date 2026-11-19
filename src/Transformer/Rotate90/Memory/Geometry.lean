@@ -6,7 +6,7 @@ public import Transformer.Rotate90.Memory.Basic
 /-!
 # Correct powered-division parameters need not average correctly
 
-Source: `review/flat_spectrum.md`, *Optimizer memory*, M3--M5. The existing
+Source: `review/schedule_free/training.md`, *Optimizer memory*, M3--M5. The existing
 constructive solution supplies two antipodal solutions of every prime-powered
 task. Their midpoint is the zero model. This is an obstruction in the actual
 finite parameter space, not in a surrogate loss or an infinite-width limit.

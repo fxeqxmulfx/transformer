@@ -6,7 +6,7 @@ public import Mathlib.GroupTheory.OrderOfElement
 /-!
 # The actual tied embedding gradient preserves quotient symmetry
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*, gradient theorem.
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*, gradient theorem.
 The first lookup, second lookup and output each contribute to the same tensor's
 gradient. The three contributions are proved invariant separately, using the
 full-table arithmetic symmetry. Coprimality of k and the subgroup order makes

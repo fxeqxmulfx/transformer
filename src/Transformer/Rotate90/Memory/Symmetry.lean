@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Learning.Basic
 /-!
 # Parameter negation and nonconvex prediction averaging
 
-Source: `review/flat_spectrum.md`, *Optimizer memory*, M3--M4. Negating all
+Source: `review/schedule_free/training.md`, *Optimizer memory*, M3--M4. Negating all
 parameters preserves the actual finite-stack logits: input and hidden states
 change sign, the gate/value products do not, and the tied readout changes sign
 again. This is not oddness of SiLU. The zero parameter midpoint has uniform

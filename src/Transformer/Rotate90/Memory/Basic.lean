@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Memory.Defs
 /-!
 # The exact memory clock of stopped Schedule-Free AdamW
 
-Source: `review/flat_spectrum.md`, *Optimizer memory*, M2. This is an identity
+Source: `review/schedule_free/training.md`, *Optimizer memory*, M2. This is an identity
 for the source two-buffer trajectory, including the real gradient oracle and
 raw second-moment updates. Positive stored total prevents a zero denominator.
 The effective time scale is W/M², not the zero current learning rate.

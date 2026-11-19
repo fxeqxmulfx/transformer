@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Training.Sampling.Optimizer
 /-!
 # Actual sampled Rotate90 updates break exact aliases
 
-Source: `review/flat_spectrum.md`, *Sampled updates can break aliases*, equations
+Source: `review/schedule_free/training.md`, *Sampled updates can break aliases*, equations
 (S3), (S6) and the nonzero witness. The gradient is that of the real normalized
 tied model, and the step is the existing source Schedule-Free recurrence. A
 single valid equation a=b=1 works for every natural exponent. Arbitrary finite

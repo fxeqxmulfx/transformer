@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Learning.Basic
 /-!
 # A stopped base with live Schedule-Free averaging history
 
-Source: `review/flat_spectrum.md`, *Optimizer memory*, M1--M2, and the revised
+Source: `review/schedule_free/training.md`, *Optimizer memory*, M1--M2, and the revised
 source `trainingStep`. Setting the learning rate to zero removes base updates
 and decay, but does not reset the stored maximum or averaging total. Raw second
 moments still follow the supplied gradients. The default averaging powers are

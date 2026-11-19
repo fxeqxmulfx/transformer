@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Training.Sampling.Basic
 /-!
 # The sampled gradient measures label imbalance at a collapsed embedding
 
-Source: `review/flat_spectrum.md`, *Sampled updates can break aliases*, equations
+Source: `review/schedule_free/training.md`, *Sampled updates can break aliases*, equations
 (S3)--(S5), (S7). Batches are finite indexed families, so repeated examples are allowed.
 Their loss is the ordinary mean of actual tied-model cross-entropies. A collapsed
 embedding has a common hidden state on all inputs, for arbitrary branch weights.

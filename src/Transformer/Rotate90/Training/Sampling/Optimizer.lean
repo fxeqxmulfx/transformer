@@ -6,7 +6,7 @@ public import Transformer.Rotate90.Training.Optimizer
 /-!
 # A source Schedule-Free AdamW update can separate equal coordinates
 
-Source: `review/flat_spectrum.md`, *Sampled updates can break aliases*, equation
+Source: `review/schedule_free/training.md`, *Sampled updates can break aliases*, equation
 (S6), and the source recurrence cited in `ScheduleFree.AdamW.Defs`. The initial
 query and base agree and their second moment is zero. A positive first rate
 makes the averaging coefficient one; bias correction gives |g| + epsilon.

@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Training.Defs
 /-!
 # The observable obstruction from an aliased embedding
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*, readout theorem.
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*, readout theorem.
 All classes remain in the softmax, including labels outside the power map's image.
 Equal embedding rows force equal logits for every hidden state. For a nonzero
 answer, the subgroup orbit gives a log-cardinality lower bound on cross-entropy.

@@ -6,7 +6,7 @@ public import Transformer.Rotate90.Training.Readout
 /-!
 # A genuine training obstruction despite sufficient actual-model capacity
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*, failure and
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*, failure and
 limit theorems. Exact alias symmetry prevents a unique correct answer, even
 though `Power.exists_weights_width16_any_depth` supplies successful weights.
 This disproves unconditional convergence from every initialization. It does

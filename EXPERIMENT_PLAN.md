@@ -2662,7 +2662,7 @@ escape theorem covers every prime with a nontrivial subgroup and a positive
 hidden coordinate. This is a local escape mechanism, not a convergence or
 generalization theorem for random starts or partially collapsed checkpoints.
 No new training run or optimizer change was needed; the completed controls
-remain the empirical source. See `review/flat_spectrum.md`, *Sampled updates
+remain the empirical source. See `review/schedule_free/training.md`, *Sampled updates
 can break aliases*, for the exact scope and the remaining learning gap.
 
 **2026-10-31 completed learning-gap cycle, requested by the user.**

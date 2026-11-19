@@ -7,7 +7,7 @@ public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 /-!
 # Differentiating the actual tied loss at a collapsed embedding
 
-Source: `review/flat_spectrum.md`, *Sampled updates can break aliases*, equations
+Source: `review/schedule_free/training.md`, *Sampled updates can break aliases*, equations
 (S1)--(S3). Every output row initially agrees, but all three embedding occurrences
 are differentiated. The hidden-state derivative cancels from cross-entropy:
 at this point it adds the same scalar to every logit. It is not frozen or omitted.

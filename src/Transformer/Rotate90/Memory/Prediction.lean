@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Memory.Geometry
 /-!
 # Predictions inherited by a stopped evaluation trajectory
 
-Source: `review/flat_spectrum.md`, *Optimizer memory*, M6. At positive epsilon,
+Source: `review/schedule_free/training.md`, *Optimizer memory*, M6. At positive epsilon,
 continuity of the actual all-parameter network transfers the stopped optimizer
 limit to logits and full-softmax loss. Every strict comparison at the saved
 base eventually holds along the evaluation path, including a wrong winner.

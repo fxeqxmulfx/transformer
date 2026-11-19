@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Training.Sampling.Escape
 /-!
 # Sampled training can break a full-table alias invariant
 
-Source: `review/flat_spectrum.md`, *Sampled updates can break aliases*. At a
+Source: `review/schedule_free/training.md`, *Sampled updates can break aliases*. At a
 collapsed tied embedding, the actual minibatch gradient equals the difference
 between uniform probability and empirical target frequency, times the common
 hidden vector. Every input lookup, residual block, SiLU gate and RMSNorm remains

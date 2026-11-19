@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Training.Defs
 /-!
 # Differentiability of the actual finite-depth training objective
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*, derivative
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*, derivative
 justification. All hidden states here use the current Peri-RMSNorm loop. The
 branch matrices are fixed only while taking the embedding partial derivative;
 the result holds for every matrix choice and every finite number of blocks.

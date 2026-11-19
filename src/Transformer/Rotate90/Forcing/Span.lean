@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Forcing.Basic
 /-!
 # What decay and averaging cannot add to the initial parameter span
 
-Source: `review/flat_spectrum.md`, *Gradient forcing*, F3. The initial span
+Source: `review/schedule_free/training.md`, *Gradient forcing*, F3. The initial span
 is a subspace of actual parameter vectors, not a rank approximation to the
 task matrix. A normalized-gradient input outside it is necessary for escape,
 but escape is not sufficient for learning or generalization. No eigenvalue,

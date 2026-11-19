@@ -7,7 +7,7 @@ public import Mathlib.Topology.Algebra.Module.FiniteDimension
 /-!
 # Actual Rotate90 loss with the three uses of its embedding exposed
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*. The auxiliary
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*. The auxiliary
 untied function exposes the two lookup occurrences and the output occurrence of
 E only for differentiation. Restricting to the diagonal recovers exactly the
 current tied network, with every residual block and normalization retained.

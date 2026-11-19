@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Memory
 /-!
 # Actual source matrices and normalized-gradient forcing
 
-Source: `review/flat_spectrum.md`, *Gradient forcing*, F1--F2;
+Source: `review/schedule_free/training.md`, *Gradient forcing*, F1--F2;
 `optimizers/src/lean_optim/schedule_free_adamw.py`, `step`.
 The homogeneous part contains the old-query decay and historical averaging.
 Only its scalar clock is independent of gradients: the forcing retains the

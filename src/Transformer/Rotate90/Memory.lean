@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Memory.Prediction
 /-!
 # Optimizer history and finite-network parameter averaging
 
-Source: `review/flat_spectrum.md`, *Optimizer memory*, M1--M6.
+Source: `review/schedule_free/training.md`, *Optimizer memory*, M1--M6.
 The actual Schedule-Free source continues averaging at zero current rate.
 Its exact history-dependent clock drives evaluation weights to the saved base,
 and the actual finite model eventually inherits that base's strict comparisons.

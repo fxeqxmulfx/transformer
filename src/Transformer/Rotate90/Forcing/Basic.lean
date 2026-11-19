@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Forcing.Defs
 /-!
 # Finite source evolution and transported gradient history
 
-Source: `review/flat_spectrum.md`, *Gradient forcing*, F2. Matrix products
+Source: `review/schedule_free/training.md`, *Gradient forcing*, F2. Matrix products
 and forced response are defined independently of the optimizer trajectory.
 The source identity identifies their sum with both actual buffers. The
 transported impulses use the actual normalized gradients, not predictions

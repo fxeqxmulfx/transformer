@@ -6,7 +6,7 @@ public import Transformer.Landscape.SaddleAvoidance.Sublevel
 /-!
 # Source update, softmax calibration and finite-step curvature
 
-Source: `review/flat_spectrum.md`, *Learning transfer*, T2--T5.
+Source: `review/schedule_free/training.md`, *Learning transfer*, T2--T5.
 The complete Schedule-Free evaluation displacement includes averaging and
 query decay. Full-softmax loss bounds wrong winners and ties. C² regularity
 provides finite segment-curvature constants, but not useful numerical values.

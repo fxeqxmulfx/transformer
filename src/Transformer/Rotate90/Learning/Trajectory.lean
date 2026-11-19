@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Learning.Basic
 /-!
 # Actual sampled training and a finite-time classification certificate
 
-Source: `review/flat_spectrum.md`, *Learning transfer*, T2--T6. Each update
+Source: `review/schedule_free/training.md`, *Learning transfer*, T2--T6. Each update
 differentiates the complete network at y on its specified minibatch; the
 evaluation loss is at the optimizer's x. Arbitrary finite batches permit the
 actual short-tail sampler. Initial history is explicit (the lab starts its

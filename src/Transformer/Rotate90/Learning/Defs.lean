@@ -6,7 +6,7 @@ public import Transformer.ScheduleFree.AdamW.Basic
 /-!
 # All trainable coordinates of the finite Rotate90 stack
 
-Source: `review/flat_spectrum.md`, *Learning transfer*, equations T1--T3;
+Source: `review/schedule_free/training.md`, *Learning transfer*, equations T1--T3;
 `python/src/lab/infrastructure/nn/peri_rotary.py`, `forward`.
 The shared embedding and every gate, value and output entry vary together.
 The list of layer indices fixes their order; `List.finRange d` instantiates

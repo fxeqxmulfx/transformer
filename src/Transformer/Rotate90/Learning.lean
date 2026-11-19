@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Learning.Trajectory
 /-!
 # Actual finite-stack learning transfer
 
-Source: `review/flat_spectrum.md`, *Learning transfer*, T1--T6.
+Source: `review/schedule_free/training.md`, *Learning transfer*, T1--T6.
 Joint analyticity, exact revised Schedule-Free evaluation displacement,
 full-softmax classification calibration, segment-curvature descent and
 finite-time bounds are proved. The actual minibatch trajectory differentiates

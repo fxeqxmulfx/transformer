@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Training.Basic
 /-!
 # The exact data symmetry behind quotient-code training
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*, full-table
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*, full-table
 reindexing. Independently multiply the first operand by r and the second by s.
 Their powered quotient is multiplied by (r/s)^k. Permuting the three auxiliary
 tables accordingly leaves full-table cross-entropy unchanged. This identity

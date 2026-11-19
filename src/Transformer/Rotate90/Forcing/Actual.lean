@@ -6,7 +6,7 @@ public import Transformer.Rotate90.Learning.Trajectory
 /-!
 # Gradient response of the actual finite Rotate90 model
 
-Source: `review/flat_spectrum.md`, *Gradient forcing*, F3--F4. The oracle
+Source: `review/schedule_free/training.md`, *Gradient forcing*, F3--F4. The oracle
 differentiates the jointly varying tied embedding and every layer matrix.
 The existing analyticity theorem justifies this gradient at positive RMS
 epsilon. The algebraic identities below also hold for the total Lean gradient

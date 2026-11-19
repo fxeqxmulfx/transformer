@@ -6,7 +6,7 @@ public import Transformer.ScheduleFree.AdamW.Defs
 /-!
 # Schedule-Free AdamW preserves the actual full-table alias symmetry
 
-Source: `review/flat_spectrum.md`, *Alias symmetry and training*, optimizer theorem;
+Source: `review/schedule_free/training.md`, *Alias symmetry and training*, optimizer theorem;
 the revised source recurrence formalized in `ScheduleFree.AdamW.Defs`. Symmetry
 must hold in the query, base and second-moment rows, not only the evaluated E.
 Initialization supplies all three conditions. Coordinatewise normalization, decay
