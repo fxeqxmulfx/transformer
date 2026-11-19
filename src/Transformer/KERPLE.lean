@@ -13,6 +13,7 @@ public import Transformer.KERPLE.Section5_ComplicatedKernels
 public import Transformer.KERPLE.SectionA_ShiftLemma
 public import Transformer.KERPLE.SectionA_PDFunctions
 public import Transformer.KERPLE.SectionA_DistancePowers
+public import Transformer.KERPLE.SectionA_GaussianKernels
 
 /-!
 # KERPLE
@@ -63,4 +64,6 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
   (`exp(−x²)`) and holds with `ψ` CPD instead of PD; Proposition 2's first part is false for every
   `p > 0`: no real `c` makes `c − |x − y|^p` PD on `ℝ` or on `ℕ`, and ALiBi admits no PD kernel
   `c − |m − n|` (§1). Its second part holds.
+* `SectionA_GaussianKernels`: Appendix A.3, the four Gaussian-like composite kernels, with positions
+  in `ℝ`: PD for powers in `(0, 2]`, and not PD for powers `> 2`.
 -/
