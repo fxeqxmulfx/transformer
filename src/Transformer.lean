@@ -278,6 +278,16 @@ probability bounds outside that coverage are not claimed as proved.
    radial solution is a choice, and with it the rotations are the only
    solutions.
 
+53. Su — kexue.fm/archives/9708 (2023), "The road to upgrading the
+   Transformer, 12: ReRoPE for infinite extrapolation?", with its code,
+   github.com/bojone/rerope at acfe788. Leaky ReRoPE's and ReRoPE's relative
+   positions, locality and bounded positions, the limit `k → ∞`, the two
+   attention matrices and their merge, decoding with one matrix, why one RoPE
+   pass does not suffice, the `log n` query scale and the reference code:
+   the sections Review, Fusion, Computation and Experiments.
+   ReRoPE's second matrix is `q_iᵀ R^{−w} k_j`, not `q_iᵀ R^w k_j`; the leaky
+   decoding form needs `k ≥ 1`.
+
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
 (arXiv:2602.15763v2) was downloaded for context; its scope is not silently

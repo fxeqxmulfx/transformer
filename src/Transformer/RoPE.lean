@@ -15,6 +15,8 @@ public import Transformer.RoPE.BaseBounds.Section4_LongTermDecay
 public import Transformer.RoPE.BaseBounds.Section4_BaseBound
 public import Transformer.RoPE.RoFormer.Section3_Derivation
 public import Transformer.RoPE.RoFormer.Section3_Properties
+public import Transformer.RoPE.ReRoPE.Section3_SinglePass
+public import Transformer.RoPE.ReRoPE.Section4_Experiments
 public import Transformer.RoPE.FrequencyBands.Section5_Variance
 public import Transformer.RoPE.Diagnostics.SectionA4_Response
 public import Transformer.RoPE.Diagnostics.SectionC6_Margins

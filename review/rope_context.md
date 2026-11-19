@@ -24,6 +24,7 @@ The ICLR proceedings PDF is pinned by its proceedings identifier and hash.
 | Karypis et al., *LeRoPE* | [arXiv:2607.10134v1](https://arxiv.org/abs/2607.10134v1) | `papers/arXiv-2607.10134v1/paper.pdf` |
 | Wu, Du and Peng, *RoPE at the End of Its Rope?* | [arXiv:2609.39929v1](https://arxiv.org/abs/2609.39929v1) | `papers/arXiv-2609.39929v1/paper.pdf` |
 | Su et al., *RoFormer* | [arXiv:2104.09864v5](https://arxiv.org/abs/2104.09864v5) | `papers/arXiv-2104.09864v5/roformer_arxiv.tex` (TeX source) |
+| Su, *Transformer升级之路：12、无限外推的ReRoPE？* (ReRoPE, Leaky ReRoPE), 2023-08-07 | [kexue.fm/archives/9708](https://web.archive.org/web/2023id_/https://kexue.fm/archives/9708) (2023 archive snapshot); code [bojone/rerope@acfe788](https://github.com/bojone/rerope/tree/acfe78840357a94d0bb504cb8865eeaa752df1a6) | `papers/kexue-9708-rerope/page.html`, `page.txt`; `papers/github-bojone-rerope/` |
 
 PDF SHA-256:
 
@@ -42,6 +43,15 @@ TeX source SHA-256:
 
 ```text
 2104.09864v5 roformer_arxiv.tex f296bf76e65f308d07af20823375f42eb7806352cd5647d140e55c274c0302cc
+```
+
+Post and code SHA-256:
+
+```text
+kexue-9708 page.html 0f1c270c1cd47b40e77227827d877509e691460f78f8621941a67d6b689854b9
+kexue-9708 page.txt 9867d0f8d8f79a6b0f8759c5437a16b4f923e200a3754d80509f139e08536f1d
+rerope@acfe788 rerope_patch.py 5c68798f2af0086b008c4dd297137e36bd72d96ce13199fcf4491635c0d4dfd8
+rerope@acfe788 leaky_rerope_patch.py 9364b88d75bf53caef2dcb18eac0c73de5cfd4ea2c497f4dbe72204870b3ae96
 ```
 
 ## Statement-to-source coverage
@@ -64,6 +74,9 @@ witness examples beside them.
 | RoFormer §3.2, Eqs. (12)–(16), and §3.4.2, Eq. (34) | `RoFormer/Section3_Rotary.lean` | The 2D solution and its inner product; Eq. (13) as multiplication by `e^{imθ}`; the block-diagonal rotary matrix, its group law, transpose and orthogonality; Eq. (16) with the left factor `x_mᵀ W_qᵀ`; the sparse realization. |
 | RoFormer §3.4.1, Eqs. (20)–(33) | `RoFormer/Section3_Derivation.lean` | The rotations solve the relative-position equations; with the source's radial solution they are the only solutions, and the initial condition forces `γ = 0`; without that choice, a solution that is not a rotation. |
 | RoFormer §3.3 and §3.4.3, Eqs. (19) and (35)–(37) | `RoFormer/Section3_Properties.lean` | The complex form of the score; the summation-by-parts bound with `h_{d/2} = 0`; relative weights and a query-independent key–value summary in linear attention; a negative numerator weight with nonnegative features. |
+| ReRoPE post, 重温 and 融合, matrices (rope), (leaky-rerope), (rerope) | `ReRoPE/Section2_Fusion.lean` | Leaky ReRoPE keeps every position inside the window, and for a window below the training length some `k` keeps all positions of any length below it; Position Interpolation bounds the positions but moves every nonzero one; the limit `k → ∞` is ReRoPE, whose positions stay in `[0, w]`, while every finite `k` exceeds any training length on long inputs; `k = 1` is RoPE, and the positions are RoPE's through a Leaky ReLU and a ReLU. |
+| ReRoPE post, 计算 | `ReRoPE/Section3_Computation.lean`, `ReRoPE/Section3_SinglePass.lean` | Leaky ReRoPE's second attention matrix; ReRoPE's second matrix with `R^{−w}`, and a counterexample to the printed `R^w`; the merged matrices are RoPE scores at the rectified positions; the one-matrix decoding forms, the leaky one for `k ≥ 1`; one RoPE pass with any absolute positions has relative positions linear up to whole turns, so it gives neither ReRoPE (`w ≥ 1`) nor Leaky ReRoPE (`k > 1`) at a frequency in `(0, 2π)`. |
+| ReRoPE post, 实验, and `bojone/rerope` at acfe788 | `ReRoPE/Section4_Experiments.lean` | The query scale `max(1, log_T n)` is 1 up to the training length and above 1 beyond; the code's offset `w(k − 1)` gives the source's query position; its decoding table holds Leaky ReRoPE's positions and its `−sin` rotation is `R^{−t}`, so both decoding paths give the merged scores. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
@@ -170,6 +183,16 @@ retrieval, perplexity, and positional-resolution metrics.
    With that choice the rotations are the only solutions, and the initial
    condition already forces `gamma = 0`. The decay of the averaged `|S_j|` is
    read off Figure 2 and is not formalized.
+9. **ReRoPE post, 计算: ReRoPE's second matrix has `R^{-w}`.** The post prints
+   `a^(2)_{i,j} = (R^w q_i)^T k_j = q_i^T R^w k_j`; the rotation moves to the
+   key transposed, so the second form is `q_i^T R^{-w} k_j`, as in the post's
+   decoding form `R^{max(j-i,-w)}`. With one pair, `theta = pi/2`, `w = 1`,
+   `q = e_1` and `k = e_2`, the printed sides are `1` and `-1`. The leaky
+   decoding form `R^{max(j-i,(j-i+w)/k-w)}` needs the implicit `k >= 1`; the
+   code's decoding table needs only `k != 0`. "Realizing the matrices takes
+   two attention matrices" holds for one RoPE pass with arbitrary absolute
+   positions at a frequency in `(0, 2pi)`, with `w >= 1` and `k > 1`. The
+   accuracy and loss tables are measurements and are not formalized.
 
 ## Arbitrary coefficients and learned weights
 
