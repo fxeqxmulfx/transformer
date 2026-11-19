@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles; templated asks, other angles and ALiBi open) |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations; other angles and ALiBi open) |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -110,7 +110,7 @@ whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, an
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
-## Asks in words (proved, rounded transformers without positions or with RoPE at rational angles)
+## Asks in words (proved, rounded transformers without positions or with RoPE at rational angles, also templated)
 
 MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
 above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
@@ -141,10 +141,24 @@ the bit before the dummy is `b`. Hence `Σ*bΣ` is in `TL[◁#, MOD]` at no dept
 `TL[◁#, Y] ⊄ TL[◁#, MOD]` (`exists_definableY_not_definableMod`), which arXiv:2506.16055v3 does
 not state.
 
+Templated conversations defeat the same transformers (`Transformer.MRCR.PhraseKeyTemplated`,
+`PhraseKeyTemplatedLimits`). A templated conversation is a list of turns, each the ask
+"`f` about `t`" answered by one or more tokens, closed by a query (`Templated`); among those
+whose query is answered, no formula of `TL[◁#, MOD]` accepts exactly those that `v` answers
+(`not_phraseAnswers_templated_mod`), and so no rounded transformer without positions, with RoPE
+or with sinusoidal encodings at rational angles does (`not_phraseAnswers_templated`,
+`not_phraseAnswers_templated_rope`, `not_phraseAnswers_templated_sinusoidal`), given two formats,
+two topics and two answers. The blocks start at a topic: the block of a bit is the topic `t₁`,
+answers, and "`f_c` about", where `f_c` is `f₀` for `b` and `f₁` for `a`; so the key of an ask
+straddles two blocks. The conversation opens with "`f₁` about", which moves into the formula
+(`Transformer.CRASP.FormP.leftQuot`, the left quotient, at the same depth and free of `Y` if the
+formula is), and closes by the topic `t₀`, an answer `v`, the ask "`f₀` about `t₀`", an answer
+`v'` and the query for the first ask "`f₀` about `t₀`": that is the ask before the close if the
+last block is of `b`, answered by `v`, and the one in the close otherwise, answered by `v'`
+(`phraseAnswer_closing_iff`).
+
 Not proved:
 
-- Templated conversations. The text that defeats the transformer is a run of format words and
-  `about` before the ask; MRCR alternates templated asks with answers.
 - RoPE at other angles. The rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`; the usual frequencies
   `10000^{−2c/d}` are not of this form, and for them no logic and no lower bound is in Lean.
 - ALiBi. It rounds to `TL[◁#, Y]` (`Transformer.CRASP.exists_mem_TLClY_of_alibi`), where

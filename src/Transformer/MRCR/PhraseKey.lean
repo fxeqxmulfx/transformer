@@ -31,9 +31,10 @@ bits (`CRASP.RTfr.comap`), give a formula of `TL[◁#]` over the bits that tells
 `u·baa`, against `CRASP.exists_models_iff_secondLast`.
 
 The conversations that defeat it are not templated: the text before the ask is a run of format
-words and `about`, where MRCR alternates templated asks with answers. That templated conversations
-defeat it as well is not proved here. That RoPE and sinusoidal encodings at rational angles, which
-round to `TL[◁#, MOD]`, fail too is `Transformer.MRCR.PhraseKeyRope`.
+words and `about`, where MRCR alternates templated asks with answers. Templated conversations whose
+query is answered defeat it as well (`Transformer.MRCR.PhraseKeyTemplatedLimits`). That RoPE and
+sinusoidal encodings at rational angles, which round to `TL[◁#, MOD]`, fail too is
+`Transformer.MRCR.PhraseKeyRope`.
 -/
 
 @[expose] public section

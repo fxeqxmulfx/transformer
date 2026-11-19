@@ -10,6 +10,8 @@ public import Transformer.MRCR.Ordinal
 public import Transformer.MRCR.PartScore
 public import Transformer.MRCR.PhraseKey
 public import Transformer.MRCR.PhraseKeyRope
+public import Transformer.MRCR.PhraseKeyTemplated
+public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.Returns
 public import Transformer.MRCR.RotaryCopy
 public import Transformer.MRCR.Ties
@@ -47,8 +49,12 @@ a string of bits it would have to accept the conversations whose bits end in `ba
 of `TL[◁#]` tells `u·aba` from `u·baa` for every `u` (`Transformer.CRASP.SecondLast`).
 `Transformer.MRCR.PhraseKeyRope` does the same for RoPE and sinusoidal encodings at rational
 angles: on blocks of one period a formula of `TL[◁#, MOD]` is one of `TL[◁#]`, so positions read
-modulo a fixed number do not help (`Transformer.CRASP.SecondLastMod`). ALiBi, whose logic
-`TL[◁#, Y]` reads the previous token, is left open.
+modulo a fixed number do not help (`Transformer.CRASP.SecondLastMod`).
+`Transformer.MRCR.PhraseKeyTemplated` and `Transformer.MRCR.PhraseKeyTemplatedLimits` extend
+both to templated conversations, turns of an ask and its answer closed by an answered query: in
+blocks that start at a topic the key of an ask straddles two blocks, and the opening ask moves
+into the formula (`Transformer.CRASP.LeftQuotient`). ALiBi, whose logic `TL[◁#, Y]` reads the
+previous token, is left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so
