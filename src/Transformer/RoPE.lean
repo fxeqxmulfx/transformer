@@ -9,7 +9,10 @@ public import Transformer.RoPE.YaRN.Section3_Algorithm
 public import Transformer.RoPE.YaRN.Approximation
 public import Transformer.RoPE.LeRoPE.Section3_LearnedFrequencies
 public import Transformer.RoPE.LongRoPE2.Section2_Rescaling
+public import Transformer.RoPE.BaseBounds.Section2_OOD
 public import Transformer.RoPE.BaseBounds.Section4_ExpectedScores
+public import Transformer.RoPE.BaseBounds.Section4_LongTermDecay
+public import Transformer.RoPE.BaseBounds.Section4_BaseBound
 public import Transformer.RoPE.FrequencyBands.Section5_Variance
 public import Transformer.RoPE.Diagnostics.SectionA4_Response
 public import Transformer.RoPE.Diagnostics.SectionC6_Margins

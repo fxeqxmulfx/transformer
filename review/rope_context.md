@@ -51,6 +51,9 @@ witness examples beside them.
 | YaRN §3.2–3.4, Eqs. (10)–(15), Definitions 1–2 | `YaRN/Section3_Ramp.lean`, `YaRN/Section3_Temperature.lean`, `YaRN/Section3_Algorithm.lean` | The actual rotation-count ramp in all three regimes; context-derived scale; positive compressed frequencies; the squared Q/K temperature gain; exact softmax odds and preservation of logit order; the complete score construction, identity without extension, and fixed-activation slope and margin bounds. |
 | Derived investigation of YaRN §3.3, Eq. (14), using existing ALM and Imbalance softmax results | `YaRN/Retention.lean`, `YaRN/Calibration.lean`, `YaRN/Approximation.lean` | Exact probability-preserving temperature under an explicit score model; a worst-case bound for arbitrary scores with a certified positive gap; changed-gap calibration; impossibility of a length-only rule even with positive margins; the local linear coefficient and exact quadratic approximation error. |
 | Men §4.2–4.3, Appendix A | `BaseBounds/Section4_ExpectedScores.lean` | The integral identity for the expected score gap under explicit coefficient moments; its nonzero-variance sign criterion; a counterexample to the omitted zero-mean/cross-moment implication. |
+| Men §2.2, Eq. (6) | `BaseBounds/Section2_OOD.lean` | The NTK base identity in the source's notation; every period of base 500 is below 4096. |
+| Men §4.1, Eq. (7) | `BaseBounds/Section4_LongTermDecay.lean` | Summation by parts; the bound with RoFormer's complex pair products and `h_{d/2} = 0`; a counterexample to the printed real products. |
+| Men §4.2–4.3, Eqs. (10)–(11) | `BaseBounds/Section4_CosineSums.lean`, `BaseBounds/Section4_ContextLength.lean`, `BaseBounds/Section4_BaseBound.lean` | Bounded partial sums of the cosine kernel; it turns negative for all distinct frequencies in `(0, pi)` and is not antitone; the attained supremum of Eq. (10) for every base above 1; nonempty Eq. (11) set with at least two pairs; the lower-bound property and monotonicity of `base_L`; context length 1 for one pair. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
@@ -137,6 +140,19 @@ retrieval, perplexity, and positional-resolution metrics.
    conditional context-length theorem are outside the deterministic response
    results covered here. No unproved probability estimate is introduced as an
    axiom or hidden in a structure field.
+6. **Men Eq. (7) needs RoFormer's complex products.** With the printed real
+   products `h_l = q[2l:2l+1]^T k[2l:2l+1]`, one pair with `q = (1, 0)`,
+   `k = (0, 1)` has `h_0 = 0` and a right side of `0`, while the score at
+   `m = 1` is `sin 1`. The complex products `h_l = q_l conj(k_l)` with
+   `h_{d/2} = 0` give the bound by summation by parts.
+7. **Men §4.2–4.3: every base bounds the context length.** The source
+   observes a negative kernel "for a very small base value". For all distinct
+   frequencies in `(0, pi)`, hence for every RoPE base above 1, the kernel has
+   bounded partial sums and turns negative, so `L_theta` is finite and
+   attained. The kernel is not antitone in the distance, contrary to the
+   literal "decreases". Eq. (11) needs the implicit range `base > 1` (at
+   `base = 0` the kernel is `cos m + d/2 - 1 >= 0`) and at least two pairs; it
+   gives a necessary bound only, and Table 1 stays numerical.
 
 ## Arbitrary coefficients and learned weights
 

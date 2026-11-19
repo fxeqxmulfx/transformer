@@ -207,7 +207,12 @@ Formalizations of papers on the mathematics and architecture of Transformers:
    of Large Language Models". Bandwise interpolation and NTK scaling, §3/A.2.
 
 43. Men et al. — arXiv:2405.14591v1, "Base of RoPE Bounds Context Length".
-   Expected-score discrimination with explicit corrected moments, §4/Appendix A.
+   Expected-score discrimination with explicit corrected moments, the NTK
+   identity and base-500 periods, the attention-score bound of Eq. (7), the
+   context length and base bound of Eqs. (10)–(11): §2.2, §4, Appendix A.
+   Eq. (7) holds with RoFormer's complex pair products, not the printed real
+   ones; the kernel turns negative for every base above 1, so every base
+   bounds the context length, and it is not antitone.
 
 44. Shang et al. — arXiv:2502.20082v1, "LongRoPE2: Near-Lossless LLM Context
    Window Scaling". Coordinatewise phase constraints and mixed windows, §2/§3.3.
