@@ -1,5 +1,6 @@
 module
 
+public import Transformer.Grokking.FlatSpectrum.Recall.Sign
 public import Transformer.Grokking.FlatSpectrum.Recall.Softmax
 
 /-!
@@ -18,6 +19,8 @@ within `2 B (m − 1) e^{−β/2}` of `φ(π q)` (`softmaxAttention_recall_error
 every `m` (`exists_softmaxAttention_recall`), and the sign of the attention is the bound value
 (`exists_softmaxAttention_recall_sign`). Without the exponential the same scores have cut
 width two, and no readout of cut width `d < m` recalls (`Recall.Width`, `Recall.Attention`).
+So the attention itself has no cut width `d < m` (`exists_softmaxAttention_not_hasCutWidth`):
+no `d` numbers formed from the dictionary before the query and read linearly by it give it.
 The scale `β` grows with `m`; `Recall.SoftmaxScale` shows that it must.
 -/
 
@@ -131,6 +134,21 @@ theorem exists_softmaxAttention_recall_sign (m : ℕ) :
   have h1 := abs_le.1 (h q π)
   cases hq : π q <;> simp only [hq, Bool.false_eq_true, ite_false, ite_true] at h1 <;>
     simp only [Bool.false_eq_true, iff_false, not_lt, iff_true] <;> linarith [h1.1, h1.2]
+
+/-- **At dimension two softmax attention has no cut width below the number of keys**
+(`review/flat_spectrum.md`, *Softmax attention escapes the cut*, from SA2 and AR5): for the
+projections that recall `m` bindings by their sign, no readout `g q + ∑_{r < d} a_r(q) b_r(π)`
+with `d < m` is the attention. Whatever `d` numbers `b_r(π)` are formed from the dictionary
+before the query, the query cannot combine them linearly into the attention: its summary of the
+context can only be formed at the query. -/
+theorem exists_softmaxAttention_not_hasCutWidth (m : ℕ) :
+    ∃ (qf kf : Fin m → Fin 2 → ℝ), ∀ d < m, ¬HasCutWidth d fun (q : Fin m) (π : Fin m → Bool) =>
+      softmaxAttention (fun j => ∑ r, qf q r * kf j r) (fun j => if π j then 1 else -1) := by
+  obtain ⟨qf, kf, h⟩ := exists_softmaxAttention_recall_sign m
+  refine ⟨qf, kf, fun d hd hF => ?_⟩
+  have hle := hF.card_le_of_sign h
+  rw [Fintype.card_fin] at hle
+  omega
 
 /-- Three keys with values `±1`, to accuracy `1/10`. -/
 example := exists_softmaxAttention_recall 3 (fun b : Bool => if b then (1 : ℝ) else -1)

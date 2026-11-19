@@ -3717,9 +3717,13 @@ largest at `j = q` and smaller by at least `β/2` elsewhere. By SA1, for `|φ| �
   `2 B m e^{−β/2}`, whatever value that token carries.
 
 Without the exponential the same scores give a readout of cut width two, which recalls at
-most two bindings (AR8). So for one layer in exact arithmetic the second half of Claim 1 of
-the Zoology paper, "attention models can solve it with near-constant dimensionality", holds
-with constant dimension; its first half for one layer is AR6.
+most two bindings (AR8). With it, at a scale `β` at which its sign recalls, the attention has
+no cut width `d < m`: by AR5 a readout of cut width `d` whose sign recalls `m` bindings has
+`m ≤ d`. No `d` numbers formed from the dictionary before the query, read linearly by it,
+give the attention; it forms its summary of the context at the query. So for one layer in
+exact arithmetic the second half of Claim 1 of the Zoology paper, "attention models can solve
+it with near-constant dimensionality", holds with constant dimension; its first half for one
+layer is AR6.
 
 ### SA3. The price is the scale of the scores
 
@@ -3810,7 +3814,7 @@ without `sorry`.
 | Item | Lean | Differences |
 | --- | --- | --- |
 | SA1 | `softmaxAttention`, `abs_softmaxAttention_sub_le` | The tokens are any finite type; scores and values are real. |
-| SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
+| SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign`, `exists_softmaxAttention_not_hasCutWidth` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
 | SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
 

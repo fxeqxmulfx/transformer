@@ -54,11 +54,11 @@ Softmax attention is not such a readout (*Softmax attention escapes the cut* of 
 attention of Yang, Cadilhac and Chiang, *Knee-Deep in C-RASP: A Transformer Depth Hierarchy*,
 §2.1, averages the values with the weights `exp s_j` (`Softmax`). With scores that pair the
 query with the key it recalls every number of bindings to every accuracy at projection
-dimension two (`SoftmaxRecall`), and it pays in the scale of its scores: bounded by `B`, they
-leave a squared error of at least the fraction `((m − 1) / (e^{2B} + m − 1))²` of the variance
-of `φ` (`SoftmaxScale`). With scores that ignore the query, as in the transformers that paper
-builds from formulas, a linear readout read by its sign recalls at most `d + 1` bindings
-(`QueryFree`).
+dimension two, so it has no cut width below the number of keys (`SoftmaxRecall`), and it
+pays in the scale of its scores: bounded by `B`, they leave a squared error of at least the
+fraction `((m − 1) / (e^{2B} + m − 1))²` of the variance of `φ` (`SoftmaxScale`). With scores
+that ignore the query, as in the transformers that paper builds from formulas, a linear readout
+read by its sign recalls at most `d + 1` bindings (`QueryFree`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least
