@@ -19,7 +19,9 @@ No formula of `TL[◁#, MOD]` answers the query of a conversation whose asks are
 `Transformer.MRCR.PhraseKeyTemplatedLimits`). One of `TL[◁#, Y]` of depth two does, on every
 string (`definableY_phraseAnswer`). `Y` reads the words of an ask at its topic (`askEnd`) and at
 the answer after it (`answerHere`); a count of depth one tells that `r` such asks stand before
-that ask (`needle`); a count of depth two finds the needle from the query (`queryForm`).
+that ask (`needle`); a count of depth two finds the needle from the query (`queryForm`). Over
+grams of four tokens it is a formula of `TL[◁#]`, which rounded transformers with ALiBi, KERPLE
+or SSMax run (`Transformer.MRCR.PhraseKeyGrams`, `Transformer.MRCR.PhraseKeyLogits`).
 -/
 
 @[expose] public section

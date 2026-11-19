@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two; other angles and an ALiBi transformer open) |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`; RoPE at other angles, and SSMax of the dot product alone, open) |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -110,7 +110,7 @@ whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, an
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
-## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`)
+## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`, and transformers with ALiBi, KERPLE or SSMax)
 
 MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
 above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
@@ -167,15 +167,40 @@ format word (`count_add_two_of_askAt`, `needle`). At the end, the query for "`f`
 `r` asks before it and a count of the needle of at least `1` (`queryForm`), over all queries,
 accept exactly the conversations that `v` answers (`models_phraseAnswerForm`).
 
+A rounded transformer of five layers answers it as well, at a precision and width that do not
+depend on the length (`Transformer.MRCR.PhraseKeyLogits`). arXiv:2506.16055v3 compiles only
+`TL[◁#]`, into transformers without positions (`thm:TLCl_to_rtfr`), and not `Y`; here a logit of
+the positions computes `Y` (`Transformer.CRASP.LTfr`, `Transformer.CRASP.Grams`). Three layers
+read the last four tokens into a gram: a reading layer gives a key the dot product `b` when its
+gram differs from that of the query and `0` when it is the same, and the logit sends the query
+position and, if its gram differs, the one before it to `0`, and every other position to at most
+`−1` (`ReadsPrev`). Floor rounding keeps those one or two positions, and the feed-forward map
+reads the two grams off their sum (`layer_read`). Over the grams `Y^m Q_a` is a formula of
+`TL[◁#]` (`symAt`), so the answer formula is one of `TL[◁#]` of depth two (`phraseAnswerG_mem`,
+`mem_lang_phraseAnswerG`), and two more layers run the transformer of `thm:TLCl_to_rtfr` for it
+with every dot product `−1`: the logits of a query are then all negative or all `0`, and
+attention averages, as without positions. The construction needs `b < 2^(p−1)`. A logit divided
+by `√d` or `d` needs a `b` that grows with the width, and a true comparison of constants
+conjoined to the formula raises the precision past it (`pad`, `exists_recognizes`). The logit
+can be:
+
+- ALiBi, `eq:alibi`: of slope `1` as a `PTfr` (`exists_alibi_phraseAnswer`), or of a slope `a`
+  with the logit divided by `c d`, for any positive `c d` such as `1`, `√d` or `d`
+  (`exists_scale_alibi_phraseAnswer`);
+- KERPLE, arXiv:2205.09921v2, `eq:krpe`, with the logarithmic kernel or the power kernel of any
+  exponent `r₂ > 0`, divided by `c d` (`exists_kerpleLog_phraseAnswer`,
+  `exists_kerplePower_phraseAnswer`);
+- SSMax, arXiv:2501.19399v1, `eq:ssmax`, of each of these with `s log 2 ≥ 1`, which multiplies
+  the whole logit, bias included, by `s log n` (`exists_ssmax_alibi_phraseAnswer`,
+  `exists_ssmax_kerpleLog_phraseAnswer`, `exists_ssmax_kerplePower_phraseAnswer`).
+
 Not proved:
 
 - RoPE at other angles. The rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`; the usual frequencies
   `10000^{−2c/d}` are not of this form, and for them no logic and no lower bound is in Lean.
-- An ALiBi transformer. ALiBi rounds to `TL[◁#, Y]` (`Transformer.CRASP.exists_mem_TLClY_of_alibi`),
-  where the task is definable at depth two (above); that some ALiBi transformer answers it is not
-  proved: arXiv:2506.16055v3 compiles only `TL[◁#]`, into transformers without positions
-  (`thm:TLCl_to_rtfr`, `Transformer.CRASP.exists_rtfr_of_mem_TLCl`). Of the encodings that
-  arXiv:2506.16055v3 rounds, ALiBi is the only one that the argument above does not exclude.
+- SSMax of the dot product alone, `s log n · q·k` plus a bias that it does not scale. The reading
+  layers above need the logit at the position before to vanish at every length, which a fixed
+  `b` does not give when only the dot product grows with `log n`; this variant is not treated.
 
 ## Copy by position (proved, RoPE)
 

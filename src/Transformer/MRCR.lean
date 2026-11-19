@@ -9,6 +9,8 @@ public import Transformer.MRCR.NearMissThreshold
 public import Transformer.MRCR.Ordinal
 public import Transformer.MRCR.PartScore
 public import Transformer.MRCR.PhraseKey
+public import Transformer.MRCR.PhraseKeyGrams
+public import Transformer.MRCR.PhraseKeyLogits
 public import Transformer.MRCR.PhraseKeyPrev
 public import Transformer.MRCR.PhraseKeyPrevCorrect
 public import Transformer.MRCR.PhraseKeyRope
@@ -57,8 +59,12 @@ both to templated conversations, turns of an ask and its answer closed by an ans
 blocks that start at a topic the key of an ask straddles two blocks, and the opening ask moves
 into the formula (`Transformer.CRASP.LeftQuotient`). ALiBi rounds to `TL[◁#, Y]`, whose `Y` reads
 the previous token, and there a formula of depth two answers the query
-(`Transformer.MRCR.PhraseKeyPrev`, `Transformer.MRCR.PhraseKeyPrevCorrect`); that an ALiBi
-transformer does is left open.
+(`Transformer.MRCR.PhraseKeyPrev`, `Transformer.MRCR.PhraseKeyPrevCorrect`). A rounded
+transformer of five layers answers it at every length too: three layers read the last four
+tokens into a gram, and two run that formula over the grams. It does so with ALiBi, with either
+kernel of KERPLE, and with SSMax of any of these, the logit divided by `1`, `√d` or `d`
+(`Transformer.MRCR.PhraseKeyGrams`, `Transformer.MRCR.PhraseKeyLogits`). SSMax that scales the
+dot product alone, and RoPE at irrational angles, are left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so

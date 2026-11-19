@@ -29,7 +29,8 @@ As in `Transformer.MRCR.PhraseKey`, the conversations that defeat it are not tem
 ones whose query is answered are `Transformer.MRCR.PhraseKeyTemplatedLimits`. ALiBi, which rounds
 to `TL[◁#, Y]`, is not covered: `Y` reads the previous token, and `Σ*bΣ`, the core of the
 argument, is definable with it (`CRASP.exists_definableY_not_definableMod`); `TL[◁#, Y]` even
-answers the query, at depth two (`Transformer.MRCR.PhraseKeyPrevCorrect`).
+answers the query, at depth two (`Transformer.MRCR.PhraseKeyPrevCorrect`), and so does a rounded
+transformer with ALiBi (`Transformer.MRCR.PhraseKeyLogits`).
 -/
 
 @[expose] public section
