@@ -2,6 +2,7 @@ module
 
 public import Transformer.KERPLE.Section3_Kernels
 public import Transformer.KERPLE.Section3_Facts
+public import Transformer.KERPLE.Section3_Schoenberg
 
 /-!
 # KERPLE
@@ -16,4 +17,7 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `Section3_Facts`: §3.2, Fact 2 (CPD kernels are closed under nonnegative scaling and sums) and
   Fact 4 (`−‖x − x'‖²` is CPD on every real inner product space); the two-point inequalities of PD
   kernels and of CPD kernels vanishing on the diagonal.
+* `Section3_Schoenberg`: products, powers and exponentials of PD kernels are PD, and Schoenberg's
+  theorem (`exp(t k̃)` is PD for a CPD `k̃` and `t ≥ 0`), on which Facts 3, 5 and 6 rest; CPD
+  kernels are closed under pointwise limits.
 -/
