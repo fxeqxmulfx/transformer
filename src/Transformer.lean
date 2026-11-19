@@ -269,6 +269,15 @@ probability bounds outside that coverage are not claimed as proved.
    reference code's frequencies start at `1` where Eq. (6)'s end at `1/10000`,
    which changes the attention.
 
+52. Su et al. — arXiv:2104.09864v5, "RoFormer: Enhanced Transformer with Rotary
+   Position Embedding". The 2D solution and its rotation matrix, the rotary
+   matrix, its group law and orthogonality, relative scores, the sparse
+   realization, the 2D derivation, the long-term decay bound, and RoPE with
+   linear attention: §3.2–3.4, Eqs. (12)–(19) and (20)–(37).
+   Eq. (16)'s left factor is `x_mᵀ W_qᵀ`, not `xᵀ W_q`; the derivation's
+   radial solution is a choice, and with it the rotations are the only
+   solutions.
+
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
 (arXiv:2602.15763v2) was downloaded for context; its scope is not silently

@@ -1,7 +1,7 @@
 # RoPE parameters, context length, and endpoint dependence
 
-The development covers the mathematical results listed below from eight
-downloaded manuscripts. It distinguishes the rotary dimension, the number of
+The development covers the mathematical results listed below from the
+downloaded manuscripts and posts. It distinguishes the rotary dimension, the number of
 tokens, the largest relative distance, the frequency grid, and the learned
 content-dependent score. All source files are reachable through
 `Transformer.RoPE` and `Transformer`.
@@ -23,6 +23,7 @@ The ICLR proceedings PDF is pinned by its proceedings identifier and hash.
 | Wu, Liu and Jadbabaie, *How Data Shapes RoPE Frequency Usage* | [arXiv:2607.07678v1](https://arxiv.org/abs/2607.07678v1) | `papers/arXiv-2607.07678v1/paper.pdf` |
 | Karypis et al., *LeRoPE* | [arXiv:2607.10134v1](https://arxiv.org/abs/2607.10134v1) | `papers/arXiv-2607.10134v1/paper.pdf` |
 | Wu, Du and Peng, *RoPE at the End of Its Rope?* | [arXiv:2609.39929v1](https://arxiv.org/abs/2609.39929v1) | `papers/arXiv-2609.39929v1/paper.pdf` |
+| Su et al., *RoFormer* | [arXiv:2104.09864v5](https://arxiv.org/abs/2104.09864v5) | `papers/arXiv-2104.09864v5/roformer_arxiv.tex` (TeX source) |
 
 PDF SHA-256:
 
@@ -35,6 +36,12 @@ ICLR-PR1PPxvG9Q dcd030428f6b36ef6f089b80677f41a6868e33d33cc93953503f7e84b5f36bf8
 2607.07678v1 1757378003f19cf0b1b7743d9c6fd724f3f616555c0c86e0f7537186ca5efe39
 2607.10134v1 a5ff7cdcbde2196dce3919659ca5252e0f9246e657b0fb47affc74ab13d05c1e
 2609.39929v1 709c51e6c8aa0fe8fde7b83604b1c68a6598381f2420ff94a92e6be16ab77162
+```
+
+TeX source SHA-256:
+
+```text
+2104.09864v5 roformer_arxiv.tex f296bf76e65f308d07af20823375f42eb7806352cd5647d140e55c274c0302cc
 ```
 
 ## Statement-to-source coverage
@@ -54,6 +61,9 @@ witness examples beside them.
 | Men §2.2, Eq. (6) | `BaseBounds/Section2_OOD.lean` | The NTK base identity in the source's notation; every period of base 500 is below 4096. |
 | Men §4.1, Eq. (7) | `BaseBounds/Section4_LongTermDecay.lean` | Summation by parts; the bound with RoFormer's complex pair products and `h_{d/2} = 0`; a counterexample to the printed real products. |
 | Men §4.2–4.3, Eqs. (10)–(11) | `BaseBounds/Section4_CosineSums.lean`, `BaseBounds/Section4_ContextLength.lean`, `BaseBounds/Section4_BaseBound.lean` | Bounded partial sums of the cosine kernel; it turns negative for all distinct frequencies in `(0, pi)` and is not antitone; the attained supremum of Eq. (10) for every base above 1; nonempty Eq. (11) set with at least two pairs; the lower-bound property and monotonicity of `base_L`; context length 1 for one pair. |
+| RoFormer §3.2, Eqs. (12)–(16), and §3.4.2, Eq. (34) | `RoFormer/Section3_Rotary.lean` | The 2D solution and its inner product; Eq. (13) as multiplication by `e^{imθ}`; the block-diagonal rotary matrix, its group law, transpose and orthogonality; Eq. (16) with the left factor `x_mᵀ W_qᵀ`; the sparse realization. |
+| RoFormer §3.4.1, Eqs. (20)–(33) | `RoFormer/Section3_Derivation.lean` | The rotations solve the relative-position equations; with the source's radial solution they are the only solutions, and the initial condition forces `γ = 0`; without that choice, a solution that is not a rotation. |
+| RoFormer §3.3 and §3.4.3, Eqs. (19) and (35)–(37) | `RoFormer/Section3_Properties.lean` | The complex form of the score; the summation-by-parts bound with `h_{d/2} = 0`; relative weights and a query-independent key–value summary in linear attention; a negative numerator weight with nonnegative features. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
@@ -153,6 +163,13 @@ retrieval, perplexity, and positional-resolution metrics.
    literal "decreases". Eq. (11) needs the implicit range `base > 1` (at
    `base = 0` the kernel is `cos m + d/2 - 1 >= 0`) and at least two pairs; it
    gives a necessary bound only, and Table 1 stays numerical.
+8. **RoFormer Eq. (16) and §3.4.1.** Eq. (16) prints
+   `x^T W_q R_{n-m} W_k x_n`; its left factor is `(W_q x_m)^T = x_m^T W_q^T`.
+   The derivation picks the radial solution `R_q(x_q, m) = ||q||` ("a
+   straightforward solution"): `q 2^m` and `k 2^{-n}` also solve Eqs. (21)–(22).
+   With that choice the rotations are the only solutions, and the initial
+   condition already forces `gamma = 0`. The decay of the averaged `|S_j|` is
+   read off Figure 2 and is not formalized.
 
 ## Arbitrary coefficients and learned weights
 
