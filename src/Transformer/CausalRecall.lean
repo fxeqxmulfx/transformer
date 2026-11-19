@@ -5,6 +5,7 @@ public import Transformer.CausalRecall.Summary
 public import Transformer.CausalRecall.Recurrent
 public import Transformer.CausalRecall.MQAR
 public import Transformer.CausalRecall.Separation
+public import Transformer.CausalRecall.QueryFirst
 
 /-!
 # Recall through a query-free summary
@@ -28,4 +29,10 @@ the matcher of one layer and width `5`, which compares a query with a key: at
 every depth and summary width, some length has the matcher decide every
 instance, while each model of the class decides the index instances right on
 three quarters of the queries for fewer than half of the sets of keys.
+
+The bound is on the order of the query and the context, not on recurrence.
+`Transformer.CausalRecall.QueryFirst` gives a recurrent network that reads the
+query before the bindings and holds the key it waits for or the value it has
+found: `|K| + |V|` states recall every dictionary, at least `max(|K|, |V|)` are
+needed, and the same tokens with the query last need `|V|^|K|`.
 -/
