@@ -1,0 +1,4 @@
+# The toolchain gpt 5a37c51 pins for the control.
+[toolchain]
+channel = "1.99.1"
+components = ["clippy", "rustfmt"]

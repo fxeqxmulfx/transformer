@@ -23,6 +23,7 @@ it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |
+| [`alibi_kerple`](alibi_kerple) | 525 cells: 5 arms × 35 tasks × 3 seeds, against gpt's recorded LeRoPE cohort | Can a distance bias added after SSMax's gain (ALiBi, KERPLE log and power, −log(1 + r), or none) replace LeRoPE in gpt's main model? Does KERPLE's log bias find −log(1 + r)? |
 | [`convex_bilinear_sequence`](convex_bilinear_sequence) | Five cases × two modes, plus two scaled addition runs; seed1 | Both modes pass2/5 original primary tests. Scaled addition reaches100% training but0% held-out accuracy. All12 checkpoints reproduce complete raw logits/metrics; length transfer, recall and parity remain below99%. |
 | [`convex_shared_atoms`](convex_shared_atoms) | Five cases × three training seeds × two modes, plus refinement controls | Addition reaches4705/4705 held-out in all six cells. Overall12/30 primary successes; recall, parity and long Boolean failures remain. All raw logits replay; addition seed1 exactly matches the earlier dense producer. |
 | [`convex_recurrent_sequence`](convex_recurrent_sequence) | Both original AND tasks and parity16/20/24 × three training seeds × two modes | All30 models reach100% raw/exact on every original split, including Boolean length32/64 and shifts. Full raw-logit replays match; repeated seed1 equals the first producer. Order-sensitive recall remains unresolved. |
