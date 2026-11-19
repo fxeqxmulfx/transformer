@@ -14,6 +14,8 @@ public import Transformer.KERPLE.SectionA_ShiftLemma
 public import Transformer.KERPLE.SectionA_PDFunctions
 public import Transformer.KERPLE.SectionA_DistancePowers
 public import Transformer.KERPLE.SectionA_GaussianKernels
+public import Transformer.KERPLE.SectionA_DiagonalDominance
+public import Transformer.KERPLE.SectionA_GaussianPositions
 
 /-!
 # KERPLE
@@ -66,4 +68,9 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
   `c − |m − n|` (§1). Its second part holds.
 * `SectionA_GaussianKernels`: Appendix A.3, the four Gaussian-like composite kernels, with positions
   in `ℝ`: PD for powers in `(0, 2]`, and not PD for powers `> 2`.
+* `SectionA_DiagonalDominance`: a symmetric kernel `k ≥ 0` with unit diagonal and off-diagonal row
+  sums at most `1` is PD; the row sums of `exp(−r|m − n|^p)` on `ℕ` for `r ≥ 1` and `p ≥ 2`.
+* `SectionA_GaussianPositions`: on the integer positions of attention, A.3's power constraint is
+  not needed at scales `r ≥ 1`: `exp(−r|m − n|^p)`, (3-para-bias) and (2-para-wht) are PD on `ℕ`
+  for every power `p ≥ 2`, while `exp(−|x − y|³)` is not PD on `ℝ`.
 -/
