@@ -4,6 +4,7 @@ public import Transformer.BAM.Section2_BayesianAttention
 public import Transformer.BAM.SectionA_Notation
 public import Transformer.BAM.Section2_Priors
 public import Transformer.BAM.Section2_GeneralizedGaussian
+public import Transformer.BAM.Section2_Locality
 
 /-!
 # Bayesian Attention Mechanism
@@ -25,4 +26,6 @@ weight `0`.
 * `Section2_GeneralizedGaussian`: §2.3, the GGD-BAM bias and prior, ALiBi as its case `β = 1`,
   and Theorem 2 (for `0 < β < 1` the GGD penalty is below ALiBi's; the proof's witness fails at
   distance `1`, another works).
+* `Section2_Locality`: Lemmas 3 and 4 (ALiBi and GGD-BAM with `β > 0` are local), for bounded
+  content scores, uniformly in the context; false without the bound.
 -/
