@@ -44,7 +44,7 @@ Source: arXiv:2410.06833v1, §3.2, `g=h'` in `lem: PL.borjan`. -/
 theorem interaction_sub_abs_le_one (β : ℝ) (hβ : 0 < β) (x y : ℝ) :
     |Causal.h_pot β x - Causal.h_pot β y| ≤ |x - y| := by
   have hlip : LipschitzWith 1 (Causal.h_pot β) := by
-    apply lipschitzWith_of_nnnorm_deriv_le
+    apply lipschitzWith_of_nnNorm_deriv_le
       (fun u => (Causal.hasDerivAt_h_pot β u).differentiableAt)
     intro u
     rw [(Causal.hasDerivAt_h_pot β u).deriv]

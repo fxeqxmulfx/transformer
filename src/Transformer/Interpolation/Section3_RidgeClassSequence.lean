@@ -95,7 +95,7 @@ theorem exists_ridge_class_sequence {ι : Type*} [Fintype ι]
   classical
   generalize hdef : Fintype.card ι - Nat.card (Set.range (fun k => barycenterDirection (ν k))) = n
   induction n using Nat.strong_induction_on generalizing ν with
-  | h n ih =>
+  | ind n ih =>
     by_cases hclasses : Function.Injective (fun k => barycenterDirection (ν k))
     · exact ⟨[], Nat.zero_le _, hν, hinj, hclasses⟩
     · obtain ⟨p, u, b, -, hQ, hnewinj, hp, hs, -⟩ :=

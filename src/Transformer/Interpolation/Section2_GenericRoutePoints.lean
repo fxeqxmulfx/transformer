@@ -52,7 +52,8 @@ theorem exists_mem_open_avoiding_planes (hd : 3 ≤ d) (O : Set (SSphere d)) (hO
   obtain ⟨r, hr, hrO⟩ := Metric.isOpen_iff.mp hO w₀ hw₀
   have hD : Dense (⋂ pq : F,
       ((Submodule.span ℝ ({pq.1.1, pq.1.2} : Set (EucSpace d)) : Set (EucSpace d))ᶜ)) :=
-    dense_iInter_of_isOpen (fun _ => (Submodule.span ℝ _).closed_of_finiteDimensional.isOpen_compl)
+    dense_iInter_of_isOpen
+      (fun _ => (Submodule.span ℝ _).isClosed_of_finiteDimensional.isOpen_compl)
       (fun _ => dense_compl_proper_subspace _ (span_pair_ne_top_of_three_le hd _ _))
   have hρ : 0 < min r 1 / 2 := by positivity
   obtain ⟨v, hvball, hvD⟩ := hD.inter_open_nonempty (Metric.ball (w₀ : EucSpace d) (min r 1 / 2))

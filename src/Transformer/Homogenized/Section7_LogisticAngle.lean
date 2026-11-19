@@ -75,7 +75,7 @@ theorem logistic_arcsin_martingale_of_initial_range
       (fun s ω => 2 * (1 - u s ω ^ 2))
       (fun s hs => stronglyMeasurable_const.mul (stronglyMeasurable_const.sub ((hu.adapted s hs.1).pow 2)))
       (fun ω => continuousOn_const.mul (continuousOn_const.sub
-        (((hu.cont ω).mono (fun s hs => hs.1)).pow 2))) t ht
+        (((hu.cont ω).mono Set.Icc_subset_Ici_self).pow 2))) t ht
     exact (((hθm t ht.1).sub ((hθm 0 le_rfl).mono (ℱ.mono ht.1))).pow 2).sub hi
   · intro t ht
     filter_upwards [heq] with ω hω

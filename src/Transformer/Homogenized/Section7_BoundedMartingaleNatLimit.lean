@@ -64,7 +64,7 @@ theorem exists_nat_limit_of_bounded_martingale
     simpa only [measure_univ, ENNReal.one_rpow, one_mul, ENNReal.ofReal_coe_nnreal] using hh
   let L := Filtration.limitProcess f G P
   have hlim : ∀ᵐ ω ∂P, Tendsto (fun n : ℕ => M n ω) atTop (𝓝 (L ω)) :=
-    hm.submartingale.ae_tendsto_limitProcess hb
+    hm.submartingale.ae_tendsto_limitProcess ((iSup_le hb).trans_lt ENNReal.coe_lt_top)
   have hLm : StronglyMeasurable L :=
     Filtration.stronglyMeasurable_limitProcess.mono (iSup_le (fun n => G.le n))
   have hLb : ∀ᵐ ω ∂P, |L ω| ≤ C := by

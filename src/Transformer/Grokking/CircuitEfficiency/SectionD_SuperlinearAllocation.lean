@@ -56,7 +56,7 @@ theorem superlinear_minimizer_positive_weights (trainLoss : ℝ → ℝ)
 
 example : 0 < (2 / 5 : ℝ) ∧ 0 < (1 / 5 : ℝ) := by
   apply superlinear_minimizer_positive_weights (fun t => (t - 1) ^ 2) 1 1 2 2
-  all_goals try norm_num
+  all_goals norm_num
   intro u v _ _
   exact quadratic_mse_budget_minimum u v
 
@@ -85,7 +85,7 @@ theorem positive_minimizer_transfer_local (trainLoss : ℝ → ℝ)
 
 example : IsLocalMin (fun epsilon : ℝ =>
     powerBudgetLoss (fun t => (t - 1) ^ 2) 1 1 2 2 (2 / 5 + epsilon) (1 / 5 - epsilon)) 0 := by
-  apply positive_minimizer_transfer_local <;> try norm_num
+  apply positive_minimizer_transfer_local <;> norm_num
   intro u v _ _
   exact quadratic_mse_budget_minimum u v
 
@@ -113,7 +113,7 @@ theorem superlinear_minimizer_cost_balance (trainLoss : ℝ → ℝ)
 example : (1 : ℝ) * (2 / 5 : ℝ) ^ ((2 : ℝ) - 1) =
     2 * (1 / 5 : ℝ) ^ ((2 : ℝ) - 1) := by
   apply superlinear_minimizer_cost_balance (fun t => (t - 1) ^ 2) 1
-  all_goals try norm_num
+  all_goals norm_num
   intro u v _ _
   exact quadratic_mse_budget_minimum u v
 
@@ -158,7 +158,7 @@ theorem superlinear_minimizer_weight_ratio (trainLoss : ℝ → ℝ)
 
 example : (2 / 5 : ℝ) / (1 / 5) = ((2 : ℝ) / 1) ^ (((2 : ℝ) - 1)⁻¹) := by
   apply superlinear_minimizer_weight_ratio (fun t => (t - 1) ^ 2) 1
-  all_goals try norm_num
+  all_goals norm_num
   intro u v _ _
   exact quadratic_mse_budget_minimum u v
 

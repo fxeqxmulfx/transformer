@@ -77,7 +77,7 @@ theorem periodicEnergyDomain_closed (N D : ℕ) (floor budget energy : ℝ) :
       continuous_const
   have hs : IsClosed {x : (Fin N → ℝ) × Matrix (Fin (N + 1)) (Fin D) ℝ |
       (energyCoupledMemoryMatrix energy ((x.1, 0), x.2)).PosSemidef} :=
-    Matrix.posSemidef_is_closed.preimage (periodicEnergyMatrix_continuous N D energy)
+    isClosed_setOfPred_posSemidef.preimage (periodicEnergyMatrix_continuous N D energy)
   exact hp.inter (hb.inter hs)
 
 /-- The fixed adjacent affine edge readout is continuous in every learned output coordinate.

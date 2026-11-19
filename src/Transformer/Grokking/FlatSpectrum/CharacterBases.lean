@@ -49,8 +49,8 @@ theorem conjTranspose_mul_taskKernel_mul {r : ZMod p} (hr : r ≠ 0) :
     (taskKernel (· * ·) fun c => ZMod.stdAddChar (r * c))ᴴ *
       taskKernel (· * ·) (fun c => ZMod.stdAddChar (r * c)) = (p : ℂ) • 1 := by
   ext b c
-  simp only [mul_apply, conjTranspose_apply, taskKernel, of_apply, Matrix.smul_apply, one_apply,
-    smul_eq_mul]
+  simp only [Matrix.mul_apply, conjTranspose_apply, taskKernel, of_apply, Matrix.smul_apply,
+    Matrix.one_apply, smul_eq_mul]
   rw [Finset.sum_congr rfl fun a _ => (by
     rw [star_stdAddChar_mul, show r * (a * c) - r * (a * b) = a * (r * (c - b)) by ring] :
       star (ZMod.stdAddChar (r * (a * b))) * ZMod.stdAddChar (r * (a * c)) =

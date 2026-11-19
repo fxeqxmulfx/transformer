@@ -1,21 +1,28 @@
 Selected proof dependencies for the BatchSize diffusion construction.
 
-Sources, under Apache License 2.0:
+Source, under Apache License 2.0:
   https://github.com/RemyDegenne/brownian-motion
   revision 314f04a34ff75e18fd383917ae7fe7d77beb1b6f
-  https://github.com/RemyDegenne/kolmogorov_extension4
-  revision 7d76e184c3d2138a2741baf923b57e9a01b9cf25
 
 Original authors include Remy Degenne, Etienne Marion and Peter Pfaffelhuber.
 Copyright and author notices in the source files are retained.
 
 Only the continuous Brownian construction and its import closure are copied.
 No stochastic-integral, financial, blueprint or unproved modules are included.
-The finite-dimensional Brownian laws use Mathlib's existing projectiveFamily.
+The finite-dimensional Brownian laws use Mathlib's existing projectiveFamily,
+and their projective limit uses the Kolmogorov extension that Mathlib v4.36.0
+upstreamed (Mathlib.MeasureTheory.Constructions.KolmogorovExtension). It
+replaces the copy of https://github.com/RemyDegenne/kolmogorov_extension4
+that this directory carried before.
 Unused increment-to-Gaussian, time-inversion, zero-one-law and duplicate
 continuous-map measurable-space proofs have been omitted from BrownianMotion.
-The port targets Lean/Mathlib v4.34.0: the changes use explicit coercions and
-indices, updated theorem names and imports, and equivalent proof steps.
+The port targeted Lean/Mathlib v4.34.0 and now builds with v4.36.0: the changes
+use explicit coercions and indices, updated theorem names and imports, and
+equivalent proof steps. Since v4.36.0 makes `Set` a structure, a set-valued
+definition over noncomputable data is marked `noncomputable`, and an inclusion
+Lean no longer infers uses Mathlib's `Set.ofPred_and`. Calls of `contrapose!`
+and `by_contra!` whose negation pushing no longer changes anything become
+`contrapose` and `by_contra this`; Mathlib's linter now warns about them.
 Topology's local instance lets and deprecated conditional rewrite names are
 updated without disabling linters. All other definitions and mathematical
 conclusions of the retained results are preserved.

@@ -71,7 +71,7 @@ theorem attnFieldOf_eq_valueMap_softBary {d : ℕ} (β : ℝ) (θ : HeadParam d)
 Dirac token measure every function is integrable. -/
 example {d : ℕ} (β : ℝ) (θ : HeadParam d) (x z : EucSpace d) :
     Integrable (fun y => attnWeight β θ x y • y) (Measure.dirac z) :=
-  integrable_dirac enorm_lt_top
+  integrable_dirac eNorm_lt_top
 
 /-! ### The kernel -/
 

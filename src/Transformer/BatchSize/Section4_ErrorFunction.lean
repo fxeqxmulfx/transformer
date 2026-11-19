@@ -53,10 +53,10 @@ theorem errorFunction_contDiff : ContDiff ℝ (⊤ : ℕ∞) errorFunction := by
 derivative at zero, Section 4.3, equation (3). -/
 theorem errorFunction_lipschitz :
     LipschitzWith (Real.toNNReal (2 / Real.sqrt Real.pi)) errorFunction := by
-  apply lipschitzWith_of_nnnorm_deriv_le
+  apply lipschitzWith_of_nnNorm_deriv_le
     (fun x => (errorFunction_hasDerivAt x).differentiableAt)
   intro x
-  rw [← NNReal.coe_le_coe, coe_nnnorm, (errorFunction_hasDerivAt x).deriv]
+  rw [← NNReal.coe_le_coe, coe_nnNorm, (errorFunction_hasDerivAt x).deriv]
   have hc : 0 ≤ 2 / Real.sqrt Real.pi := by positivity
   rw [Real.coe_toNNReal _ hc, Real.norm_eq_abs,
     abs_of_nonneg (mul_nonneg hc (Real.exp_pos _).le)]

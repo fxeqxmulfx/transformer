@@ -131,7 +131,7 @@ theorem temperatureBarycenterCorrelation_taylor_bound {d n : ℕ} (hn : 0 < n)
   have hu := uniqueDiffOn_Icc (show (0 : ℝ) < 1 by norm_num)
   have hd : derivWithin f (Icc (0 : ℝ) 1) 0 = deriv f 0 :=
     (hf.differentiable (by norm_num) 0).hasDerivAt.hasDerivWithinAt.derivWithin (hu 0 (by norm_num))
-  have h := taylor_mean_remainder_bound (n := 1) (show (0 : ℝ) ≤ 1 by norm_num) hf.contDiffOn hβ
+  have h := taylor_mean_remainder_bound (n := 1) hf.contDiffOn hβ
     (C := 10 * (M ^ 2 + N ^ 2)) (fun y hy => by
       rw [iteratedDerivWithin_eq_iteratedDeriv hu (hf.contDiffAt) hy, iteratedDeriv_succ, iteratedDeriv_one,
         Real.norm_eq_abs]

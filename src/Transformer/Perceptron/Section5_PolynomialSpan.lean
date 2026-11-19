@@ -61,7 +61,7 @@ mixed polynomial tests. Actual difference quotients give membership. -/
 theorem deriv_mem_spherePowerSpan {d k : ℕ} (f : ℝ → C(SSphere d, ℝ))
     (f' : C(SSphere d, ℝ)) (hf : ∀ r, f r ∈ spherePowerSpan d k)
     (hd : HasDerivAt f f' 0) : f' ∈ spherePowerSpan d k := by
-  exact (spherePowerSpan d k).closed_of_finiteDimensional.mem_of_tendsto
+  exact (spherePowerSpan d k).isClosed_of_finiteDimensional.mem_of_tendsto
     hd.tendsto_slope_zero (Eventually.of_forall fun r =>
       (spherePowerSpan d k).smul_mem r⁻¹ ((spherePowerSpan d k).sub_mem (hf (0 + r)) (hf 0)))
 

@@ -37,7 +37,7 @@ theorem scalar_analytic_gradient_inequality (f : ℝ → ℝ) (z : ℝ)
     have he : f y - f z = 0 := hV y hy
     rw [he]
     simp
-  obtain ⟨m, g, hg, hg0, hfactor⟩ := hF.exists_eventuallyEq_pow_smul_nonzero_iff.2 hzero
+  obtain ⟨m, g, hg, hg0, hfactor⟩ := hF.exists_eventuallyEq_pow_smul_ne_zero_iff.2 hzero
   have hm : m ≠ 0 := by
     intro hm
     have he := hfactor.self_of_nhds

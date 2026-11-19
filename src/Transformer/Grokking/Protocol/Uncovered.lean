@@ -159,7 +159,7 @@ lemma uniformPerm_pos_of_mem {n : ℕ} {A : Set (Equiv.Perm (Fin n))} {π : Equi
     (hπ : π ∈ A) : 0 < uniformPerm n A := by
   have hle : ((Finset.univ : Finset (Equiv.Perm (Fin n))).card : ENNReal)⁻¹ * Measure.dirac π A ≤
       uniformPerm n A := by
-    simp only [uniformPerm, Measure.uniformOfFinset, Measure.coe_finsetSum, Measure.coe_smul,
+    simp only [uniformPerm, Measure.uniformOfFinset, FunLike.coe_sum, FunLike.coe_smul,
       Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
     exact Finset.single_le_sum (f := fun a => ((Finset.univ : Finset (Equiv.Perm (Fin n))).card :
       ENNReal)⁻¹ * Measure.dirac a A) (fun _ _ => zero_le) (Finset.mem_univ π)

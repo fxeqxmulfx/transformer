@@ -34,7 +34,7 @@ theorem analytic_ramified_polynomial_root (d : ℕ) (a : Fin d → ℝ → ℝ)
       ∀ᶠ s in nhds (0 : ℝ), polynomialFamily d a (s ^ q, g s) = 0 := by
   classical
   induction d using Nat.strong_induction_on with
-  | h d ih =>
+  | ind d ih =>
     cases d with
     | zero =>
       obtain ⟨t, y, hy⟩ := hroots.exists

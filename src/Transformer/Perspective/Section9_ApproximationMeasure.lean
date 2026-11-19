@@ -92,7 +92,7 @@ theorem not_universal_approximation_measure :
       (g : SSphere (d + 1) → E), ∫ y, g y ∂ν = (1 / 2 : ℝ) • g x₀ + (1 / 2 : ℝ) • g x₁ := by
     intro E _ _ _ g
     have hi : ∀ a, MeasureTheory.Integrable g (Measure.dirac a) := fun a =>
-      integrable_dirac enorm_lt_top
+      integrable_dirac eNorm_lt_top
     rw [hν, integral_add_measure ((hi x₀).smul_measure (by simp)) ((hi x₁).smul_measure (by simp)),
       integral_smul_measure, integral_smul_measure, integral_dirac, integral_dirac]
     simp [ENNReal.toReal_inv]

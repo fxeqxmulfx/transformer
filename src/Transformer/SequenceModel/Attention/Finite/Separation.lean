@@ -38,7 +38,7 @@ theorem exists_nonzero_forms (L : A → EucSpace d →L[ℝ] ℝ)
     exact hx (LinearMap.mem_ker.mp hm)
   have hd : Dense (⋂ a, (P a : Set (EucSpace d))ᶜ) :=
     dense_iInter_of_isOpen
-      (fun a => (P a).closed_of_finiteDimensional.isOpen_compl)
+      (fun a => (P a).isClosed_of_finiteDimensional.isOpen_compl)
       (fun a => Interpolation.dense_compl_proper_subspace (P a) (hp a))
   obtain ⟨w, hw, hpw⟩ := hd.inter_open_nonempty (Metric.ball center r)
     Metric.isOpen_ball (Metric.nonempty_ball.mpr hr)

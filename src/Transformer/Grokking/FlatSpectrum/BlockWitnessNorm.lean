@@ -44,7 +44,7 @@ lemma splitColumns_gram (C : Finset n) :
       if j ∈ C then ![(1 : ℂ), 0] p * ![(1 : ℂ), 0] q else ![(0 : ℂ), 1] p * ![(0 : ℂ), 1] q := by
     fin_cases p <;> fin_cases q <;> by_cases hj : j ∈ C <;> simp [splitColumns, hj]
   ext p q
-  simp only [mul_apply, conjTranspose_apply]
+  simp only [Matrix.mul_apply, conjTranspose_apply]
   rw [sum_congr rfl fun j _ => h p q j, sum_ite_mem_univ]
   fin_cases p <;> fin_cases q <;> simp [diagonal]
 
@@ -62,7 +62,7 @@ lemma gram_onesSubBlock (R : Finset m) (C : Finset n) (t : ℝ) :
     by_cases hi : i ∈ R <;> by_cases hj : j ∈ C <;> by_cases hj' : j' ∈ C <;>
       simp [onesSubBlock, hi, hj, hj', Complex.conj_ofReal]
   ext j j'
-  simp only [mul_apply, conjTranspose_apply]
+  simp only [Matrix.mul_apply, conjTranspose_apply]
   rw [sum_congr rfl fun i _ => h j j' i, sum_ite_mem_univ]
   by_cases hj : j ∈ C <;> by_cases hj' : j' ∈ C <;>
     simp [splitColumns, hj, hj', Fin.sum_univ_two] <;> ring

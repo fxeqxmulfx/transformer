@@ -67,7 +67,7 @@ theorem summable_changeOrigin_weighted_majorant {n : ℕ}
               ((∑' _ : {t : Finset (Fin (k + l)) // t.card = l}, ‖p (k + l)‖₊) *
                 r ^ k) * s ^ l := by
             gcongr
-            exact p.nnnorm_changeOriginSeries_le_tsum k l
+            exact p.nnNorm_changeOriginSeries_le_tsum k l
           _ = ∑' _ : {t : Finset (Fin (k + l)) // t.card = l},
               ‖p (k + l)‖₊ * s ^ l * r ^ k := by
             calc
@@ -104,7 +104,7 @@ theorem le_radius_weightedCoefficientSeries {n : ℕ}
     (s : ℝ≥0∞) ≤ (weightedCoefficientSeries p r).radius := by
   have hr : (r : ℝ≥0∞) < p.radius :=
     (show (r : ℝ≥0∞) ≤ s + r by simp).trans_lt hsr
-  apply FormalMultilinearSeries.le_radius_of_summable_nnnorm
+  apply FormalMultilinearSeries.le_radius_of_summable_nnNorm
   refine NNReal.summable_of_le (fun l ↦ ?_)
     (summable_changeOrigin_weighted_majorant p s r hsr)
   gcongr

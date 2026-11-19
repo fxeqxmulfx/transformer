@@ -39,7 +39,7 @@ right of `0`. -/
 theorem eventually_lt_of_hasDerivAt {φ : ℝ → ℝ} {φ' : ℝ} (hφ : HasDerivAt φ φ' 0)
     (h : φ' < 0) : ∀ᶠ η in 𝓝[>] 0, φ η < φ 0 := by
   have hs := (hasDerivAt_iff_tendsto_slope.1 hφ).mono_left
-    (nhdsWithin_mono _ fun x (hx : 0 < x) => hx.ne')
+    (nhdsGT_le_nhdsNE 0)
   filter_upwards [hs.eventually (gt_mem_nhds h), self_mem_nhdsWithin] with η hη (hη0 : 0 < η)
   rw [slope_def_field, sub_zero, div_lt_iff₀ hη0, zero_mul] at hη
   linarith

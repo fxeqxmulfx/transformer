@@ -42,7 +42,7 @@ theorem compact_gradient_minimum_critical_cluster {N : ℕ}
       w ∈ closure (energyFiberGradientMinima E K S) := by
   classical
   have hzK : z ∈ K := hK.isClosed.closure_subset
-    (closure_mono (fun y hy => hy.1) hacc)
+    (closure_mono (Set.sep_subset K _) hacc)
   obtain ⟨y, hy, hyt⟩ := mem_closure_iff_seq_limit.mp hacc
   have hmin (n : ℕ) := compact_gradient_minimum_on_energy_fiber E K hK hE
     (E (y n)) ⟨y n, (hy n).1, rfl⟩

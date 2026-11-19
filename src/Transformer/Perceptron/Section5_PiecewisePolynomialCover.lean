@@ -145,7 +145,8 @@ theorem exists_finset_polynomial_cover (σ : ℝ → ℝ) (hσ : Continuous σ)
   refine ⟨Finset.univ.image P, fun x => ?_⟩
   obtain ⟨p, hp⟩ := exists_mem_polynomialIntervalCell_closure B x
   refine ⟨P p, Finset.mem_image.mpr ⟨p, Finset.mem_univ p, rfl⟩, ?_⟩
-  exact closure_minimal (hP p) (isClosed_eq hσ (P p).continuous) hp
+  exact closure_minimal (t := {s | σ s = (P p).eval s}) (fun s hs => hP p s hs)
+    (isClosed_eq hσ (P p).continuous) hp
 
 /-- All actual continuity, piecewise-polynomial and global Lipschitz
 inputs hold jointly for the original ReLU activation, including at its

@@ -103,7 +103,7 @@ theorem indep_comap_of_tendsto [IsProbabilityMeasure P] {𝒢 : MeasurableSpace 
     exact tendsto_nhds_unique h1
       ((tendsto_integral_of_dominated_convergence _ hF (integrable_const _) hb hl).const_mul _)
   have h := congrArg (fun μ => μ S) key
-  simp only [Measure.map_apply hY hS, Measure.restrict_apply (hY hS), Measure.smul_apply,
+  simp only [Measure.map_apply hY hS, Measure.restrict_apply (hY hS), smul_apply,
     smul_eq_mul] at h
   rw [h, mul_comm]
 

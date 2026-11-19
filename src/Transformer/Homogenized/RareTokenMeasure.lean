@@ -70,8 +70,8 @@ theorem integral_rareTokenLaw {ε : ℝ} (hε : ε ∈ Set.Icc 0 1)
     (f : EucSpace 2 → E) :
     ∫ z, f z ∂rareTokenLaw ε = (1 - ε) • f (-rareAtom) + ε • f rareAtom := by
   rw [rareTokenLaw, integral_add_measure
-    ((integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top)
-    ((integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top),
+    ((integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top)
+    ((integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top),
     integral_smul_measure, integral_smul_measure, integral_dirac, integral_dirac,
     ENNReal.toReal_ofReal (sub_nonneg.mpr hε.2), ENNReal.toReal_ofReal hε.1]
 
@@ -82,8 +82,8 @@ theorem integrable_rareTokenLaw (ε : ℝ)
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : EucSpace 2 → E) : Integrable f (rareTokenLaw ε) := by
   apply Integrable.add_measure
-  · exact (integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top
-  · exact (integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top
+  · exact (integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top
+  · exact (integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top
 
 /-- The transport plan keeps the majority atom fixed and moves the rare atom
 to the majority atom. -/
@@ -109,8 +109,8 @@ example : (1 / 2 : ℝ) ∈ Set.Icc 0 1 := by norm_num
 theorem integral_rareTokenCoupling_cost {ε : ℝ} (hε : ε ∈ Set.Icc 0 1) :
     ∫ p, dist p.1 p.2 ^ 2 ∂rareTokenCoupling ε = 4 * ε := by
   rw [rareTokenCoupling, integral_add_measure
-    ((integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top)
-    ((integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top)]
+    ((integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top)
+    ((integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top)]
   simp [dist_rareAtom_neg, ENNReal.toReal_ofReal hε.1]
   ring
 

@@ -92,7 +92,7 @@ lemma ae_mem_support (μ : Measure S) [FiniteSupport μ] : ∀ᵐ x ∂μ, x ∈
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
   · simp only [Measure.entropySupport, ne_eq, Finset.mem_filter] at h
     exact h.2
-  · contrapose! h
+  · contrapose h
     exact measure_mono_null (by simpa using h) (measure_compl_support μ)
 
 instance finiteSupport_zero : FiniteSupport (0 : Measure S) where
@@ -285,7 +285,9 @@ lemma measureEntropy_univ_smul : Hm[(μ Set.univ)⁻¹ • μ] = Hm[μ] := by
     simp [hμ_fin]
   cases eq_zero_or_neZero μ with
   | inl hμ => simp [hμ]
-  | inr hμ => simp [measureEntropy]
+  | inr hμ =>
+    have h : (μ Set.univ).toReal ≠ 0 := measureReal_univ_ne_zero
+    simp [measureEntropy, h]
 
 lemma measureEntropy_nonneg (μ : Measure S) : 0 ≤ Hm[μ] := by
   by_cases hμ_fin : IsFiniteMeasure μ
@@ -600,7 +602,7 @@ lemma measureMutualInfo_nonneg_aux {μ : Measure (S × U)} [FiniteSupport μ]
   have hE' : μ (E1 ×ˢ E2 : Finset (S × U))ᶜ = 0 := by
     refine measure_mono_null ?_ hE
     intro ⟨s, u⟩
-    contrapose!
+    contrapose
     intro h
     simp only [mem_compl_iff, SetLike.mem_coe, mem_support, ne_eq, Decidable.not_not,
       Finset.coe_product, mem_prod, not_and, Classical.not_imp] at h ⊢
@@ -653,7 +655,7 @@ lemma measureMutualInfo_nonneg_aux {μ : Measure (S × U)} [FiniteSupport μ]
       constructor
       · refine measure_mono_null ?_ hE
         rintro ⟨s, u⟩ ⟨rfl, h2⟩
-        contrapose! h2
+        contrapose h2
         simp only [mem_compl_iff, SetLike.mem_coe, mem_support, ne_eq, Decidable.not_not,
           Finset.mem_image, Prod.exists, exists_eq_right, iUnion_exists, mem_iUnion,
           mem_singleton_iff, Prod.mk.injEq, true_and, exists_prop, exists_and_right,
@@ -670,7 +672,7 @@ lemma measureMutualInfo_nonneg_aux {μ : Measure (S × U)} [FiniteSupport μ]
       constructor
       · refine measure_mono_null ?_ hE
         rintro ⟨s, u⟩ ⟨rfl, h2⟩
-        contrapose! h2
+        contrapose h2
         simp only [mem_compl_iff, SetLike.mem_coe, mem_support, ne_eq, Decidable.not_not,
           Finset.mem_image, Prod.exists, exists_and_right, exists_eq_right, iUnion_exists,
           mem_iUnion, mem_singleton_iff, Prod.mk.injEq, and_true, exists_prop, exists_eq_right', E1,

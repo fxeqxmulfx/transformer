@@ -108,24 +108,24 @@ theorem taskEnergyMatrix_posSemidef (edge : Fin 2) :
         fin_cases edge <;> fin_cases i <;> fin_cases j <;>
           norm_num [C, Matrix.fromRows, Matrix.mul_apply, Matrix.conjTranspose_apply,
             Fin.sum_univ_succ, Matrix.of_apply, Sum.elim, Matrix.transpose_apply, Matrix.one_apply,
-            taskEnergyTarget, taskEnergyParameters]
+            taskEnergyTarget, taskEnergyParameters, Function.swap]
       | inr j =>
         fin_cases edge <;> fin_cases i <;> fin_cases j <;>
           norm_num [C, Matrix.fromRows, Matrix.mul_apply, Matrix.conjTranspose_apply,
             Fin.sum_univ_succ, Matrix.of_apply, Sum.elim, Matrix.transpose_apply, Matrix.one_apply,
-            taskEnergyTarget, taskEnergyParameters]
+            taskEnergyTarget, taskEnergyParameters, Function.swap]
     | inr i =>
       cases j with
       | inl j =>
         fin_cases edge <;> fin_cases i <;> fin_cases j <;>
           norm_num [C, Matrix.fromRows, Matrix.mul_apply, Matrix.conjTranspose_apply,
             Fin.sum_univ_succ, Matrix.of_apply, Sum.elim, Matrix.transpose_apply, Matrix.one_apply,
-            taskEnergyTarget, taskEnergyParameters]
+            taskEnergyTarget, taskEnergyParameters, Function.swap]
       | inr j =>
         fin_cases edge <;> fin_cases i <;> fin_cases j <;>
           norm_num [C, Matrix.fromRows, Matrix.mul_apply, Matrix.conjTranspose_apply,
             Fin.sum_univ_succ, Matrix.of_apply, Sum.elim, Matrix.transpose_apply, Matrix.one_apply,
-            taskEnergyTarget, taskEnergyParameters]
+            taskEnergyTarget, taskEnergyParameters, Function.swap]
   rw [he]
   exact (taskEnergyAttention_posSemidef edge).mul_mul_conjTranspose_same C
 

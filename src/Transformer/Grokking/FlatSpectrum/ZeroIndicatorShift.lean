@@ -139,8 +139,8 @@ theorem conjTranspose_mul_shiftedZeroIndicatorKernel_apply (hp : p ≠ 2) (μ : 
     ((shiftedZeroIndicatorKernel p μ)ᴴ * shiftedZeroIndicatorKernel p μ) b b' =
       ((1 - 2 * μ + p * μ ^ 2 - 2 * μ * (negSqIndicator p b + negSqIndicator p b') +
         if b = b' then 2 * negSqIndicator p b else 0 : ℝ) : ℂ) := by
-  simp only [mul_apply, conjTranspose_apply, shiftedZeroIndicatorKernel_apply, Complex.star_def,
-    Complex.conj_ofReal, ← Complex.ofReal_mul, ← Complex.ofReal_sum]
+  simp only [Matrix.mul_apply, conjTranspose_apply, shiftedZeroIndicatorKernel_apply,
+    Complex.star_def, Complex.conj_ofReal, ← Complex.ofReal_mul, ← Complex.ofReal_sum]
   congr 1
   have h (a : ZMod p) : ((if a ^ 3 + a * b = 0 then (1 : ℝ) else 0) - μ) *
       ((if a ^ 3 + a * b' = 0 then 1 else 0) - μ) =

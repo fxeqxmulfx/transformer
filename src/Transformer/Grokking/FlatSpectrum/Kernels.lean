@@ -80,7 +80,8 @@ theorem stdAddChar_mul_conjTranspose :
     (Matrix.of fun a b : ZMod p => ZMod.stdAddChar (a * b)) *
       (Matrix.of fun a b : ZMod p => ZMod.stdAddChar (a * b))ᴴ = (p : ℂ) • 1 := by
   ext a c
-  simp only [mul_apply, of_apply, conjTranspose_apply, Matrix.smul_apply, one_apply, smul_eq_mul]
+  simp only [Matrix.mul_apply, of_apply, conjTranspose_apply, Matrix.smul_apply, Matrix.one_apply,
+    smul_eq_mul]
   rw [Finset.sum_congr rfl fun b _ => (by
     rw [mul_comm, star_stdAddChar_mul, show a * b - c * b = b * (a - c) by ring] :
       ZMod.stdAddChar (a * b) * star (ZMod.stdAddChar (c * b)) = ZMod.stdAddChar (b * (a - c))),
@@ -91,8 +92,8 @@ theorem stdAddChar_mul_conjTranspose :
 theorem conjTranspose_mul_cubicKernel :
     (cubicKernel p)ᴴ * cubicKernel p = (p : ℂ) • 1 := by
   ext b d
-  simp only [mul_apply, conjTranspose_apply, cubicKernel, taskKernel, of_apply,
-    Matrix.smul_apply, one_apply, smul_eq_mul]
+  simp only [Matrix.mul_apply, conjTranspose_apply, cubicKernel, taskKernel, of_apply,
+    Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
   rw [Finset.sum_congr rfl fun a _ => (by
     rw [star_stdAddChar_mul, show a ^ 3 + a * d - (a ^ 3 + a * b) = a * (d - b) by ring] :
       star (ZMod.stdAddChar (a ^ 3 + a * b)) * ZMod.stdAddChar (a ^ 3 + a * d) =
@@ -104,8 +105,8 @@ theorem conjTranspose_mul_cubicKernel :
 theorem cubicKernel_mul_conjTranspose :
     cubicKernel p * (cubicKernel p)ᴴ = (p : ℂ) • 1 := by
   ext a c
-  simp only [mul_apply, conjTranspose_apply, cubicKernel, taskKernel, of_apply,
-    Matrix.smul_apply, one_apply, smul_eq_mul]
+  simp only [Matrix.mul_apply, conjTranspose_apply, cubicKernel, taskKernel, of_apply,
+    Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
   rw [Finset.sum_congr rfl fun b _ => (by
     rw [mul_comm, star_stdAddChar_mul,
       show a ^ 3 + a * b - (c ^ 3 + c * b) = (a ^ 3 - c ^ 3) + b * (a - c) by ring,

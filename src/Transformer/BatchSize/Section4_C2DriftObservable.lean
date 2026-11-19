@@ -28,7 +28,7 @@ Lipschitz constant, Section 4.3, Theorem 1. -/
 theorem C2_fderiv_lipschitz {d : ℕ} (φ : EucSpace d → ℝ) (R : NNReal)
     (hφ : ContDiff ℝ 2 φ) (hH : ∀ x, ‖iteratedFDeriv ℝ 2 φ x‖ ≤ R) :
     LipschitzWith R (fderiv ℝ φ) := by
-  apply lipschitzWith_of_nnnorm_fderiv_le
+  apply lipschitzWith_of_nnNorm_fderiv_le
     ((hφ.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num))
   intro x
   change ‖fderiv ℝ (fderiv ℝ φ) x‖ ≤ R

@@ -43,7 +43,8 @@ theorem nuclearNorm_flat_fill {K : Matrix n n ℂ}
     mul_one]
 
 example := nuclearNorm_flat_fill (K := !![(1 : ℂ), 1; 1, -1]) (i := 0) (j := 0)
-  (by ext a b; fin_cases a <;> fin_cases b <;> simp [mul_apply, Fin.sum_univ_two] <;> norm_num)
+  (by ext a b; fin_cases a <;> fin_cases b <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num)
   (by simp) le_rfl 2
 
 /-- **Corollary**, the source's formula: for real `s ≤ N`,
@@ -66,7 +67,8 @@ theorem nuclearNorm_flat_fill_real {K : Matrix n n ℂ}
   ring
 
 example := nuclearNorm_flat_fill_real (K := !![(1 : ℂ), 1; 1, -1]) (i := 0) (j := 0)
-  (by ext a b; fin_cases a <;> fin_cases b <;> simp [mul_apply, Fin.sum_univ_two] <;> norm_num)
+  (by ext a b; fin_cases a <;> fin_cases b <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num)
   (by simp) le_rfl (s := 2) (by simp)
 
 /-- `F(s) ≥ 4 − 4/N + |s − 2|²/N`: a complex `s` only makes the fill costlier,
@@ -175,7 +177,8 @@ theorem isMinOn_flat_fill_iff {K : Matrix n n ℂ} (hK : Kᴴ * K = (Fintype.car
     exact le_add_of_nonneg_right (div_nonneg (sq_nonneg _) hN0.le)
 
 example := isMinOn_flat_fill_iff (K := !![(1 : ℂ), 1; 1, -1]) (i := 0) (j := 0)
-  (by ext a b; fin_cases a <;> fin_cases b <;> simp [mul_apply, Fin.sum_univ_two] <;> norm_num)
+  (by ext a b; fin_cases a <;> fin_cases b <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num)
   (by simp) le_rfl (X := !![(1 : ℂ), 1; 1, -1]) (fun _ _ => rfl)
 
 end Transformer.Grokking.FlatSpectrum

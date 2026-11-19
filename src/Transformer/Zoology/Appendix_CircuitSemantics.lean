@@ -29,7 +29,7 @@ theorem ArithmeticCircuit.computes_unique {inputs outputs : ℕ}
         z₁ ⟨m, hm⟩ = z₂ ⟨m, hm⟩ := by
       intro m
       induction m using Nat.strong_induction_on with
-      | h m ih =>
+      | ind m ih =>
           intro hm
           let node : Fin c.size := ⟨m, hm⟩
           have hpred : ∀ j : Fin c.size, j < node → z₁ j = z₂ j := by

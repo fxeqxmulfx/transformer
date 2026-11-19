@@ -130,7 +130,7 @@ theorem gridMax_mono (M : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (ω : Ω) :
 theorem ofReal_gridMax_le (M : ℝ≥0 → Ω → ℝ) (T : ℝ≥0) (n : ℕ) (ω : Ω) :
     ENNReal.ofReal (gridMax M T n ω) ≤ ⨆ t ∈ Icc 0 T, ‖M t ω‖ₑ := by
   obtain ⟨k, hk, h⟩ := exists_runningMax_eq (fun k ω => |M (dyadicTime T n k) ω|) (2 ^ n) ω
-  rw [gridMax, h, ← Real.enorm_eq_ofReal_abs]
+  rw [gridMax, h, ← Real.eNorm_eq_ofReal_abs]
   exact le_iSup₂ (f := fun t (_ : t ∈ Icc 0 T) => ‖M t ω‖ₑ) (dyadicTime T n k)
     ⟨zero_le, dyadicTime_le hk⟩
 
@@ -141,9 +141,9 @@ theorem iSup_enorm_eq_iSup_gridMax {ω : Ω}
     ⨆ t ∈ Icc 0 T, ‖M t ω‖ₑ = ⨆ n, ENNReal.ofReal (gridMax M T n ω) := by
   refine le_antisymm (iSup₂_le fun t ht => ?_) (iSup_le fun n => ofReal_gridMax_le M T n ω)
   obtain ⟨k, hk, hlim⟩ := exists_dyadicTime_tendsto ht.2
-  refine le_of_tendsto' ((hω t).enorm.tendsto.comp hlim) fun n => ?_
+  refine le_of_tendsto' ((hω t).eNorm.tendsto.comp hlim) fun n => ?_
   calc ‖M (dyadicTime T n (k n)) ω‖ₑ = ENNReal.ofReal |M (dyadicTime T n (k n)) ω| :=
-        Real.enorm_eq_ofReal_abs _
+        Real.eNorm_eq_ofReal_abs _
     _ ≤ ENNReal.ofReal (gridMax M T n ω) := ENNReal.ofReal_le_ofReal
         (le_runningMax (f := fun k ω => |M (dyadicTime T n k) ω|) (hk n) ω)
     _ ≤ _ := le_iSup (fun n => ENNReal.ofReal (gridMax M T n ω)) n
@@ -177,7 +177,7 @@ theorem lintegral_enorm_sq_le_of_le (hM : Martingale M ℱ P) {s t : ℝ≥0} (h
   have h : eLpNorm (M s) 2 P ≤ eLpNorm (M t) 2 P :=
     (eLpNorm_congr_ae (hM.2 s t hst)).symm.le.trans (eLpNorm_condExp_le_eLpNorm _ one_le_two)
   have hsq : ∀ u, ∫⁻ ω, ‖M u ω‖ₑ ^ 2 ∂P = eLpNorm (M u) 2 P ^ 2 := fun u => by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ENNReal.ofNat_ne_top
+    rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top
       ((hM.1 u).mono (ℱ.le u)).aestronglyMeasurable, ← ENNReal.rpow_natCast,
       ← ENNReal.rpow_mul]
     norm_num

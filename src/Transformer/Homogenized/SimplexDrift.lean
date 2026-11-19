@@ -207,7 +207,7 @@ example (β : ℝ) :
         (Measure.dirac (0 : HeadParam 2))) := by
   refine ⟨by norm_num, inferInstance,
     ⟨fun k => by simp [PiLp.norm_single], fun k l hkl => ?_⟩, ?_, ?_,
-    fun _ _ => integrable_dirac enorm_lt_top⟩
+    fun _ _ => integrable_dirac eNorm_lt_top⟩
   · simp [EuclideanSpace.inner_single_left, hkl.symm]
   · intro c x _ k
     rw [integral_dirac]

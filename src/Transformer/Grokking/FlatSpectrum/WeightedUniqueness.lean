@@ -121,17 +121,17 @@ theorem eq_vecMulVec_of_transport {a : m → ℂ} {b : n → ℂ} {Ω : Set (m �
       (mem_univ k)), add_neg_cancel]
   ext i j
   by_cases hi : a i = 0
-  · rw [vecMulVec_apply, hi, zero_mul, hUV, mul_apply]
+  · rw [vecMulVec_apply, hi, zero_mul, hUV, Matrix.mul_apply]
     exact sum_eq_zero fun k _ => by rw [hUz i hi k, zero_mul]
   by_cases hj : b j = 0
-  · rw [vecMulVec_apply, hj, mul_zero, hUV, mul_apply]
+  · rw [vecMulVec_apply, hj, mul_zero, hUV, Matrix.mul_apply]
     exact sum_eq_zero fun k _ => by rw [conjTranspose_apply, hVz j hj k, star_zero, mul_zero]
   have hall (k : Fin r) : x i k = y j k := by
     have h := hΩ (fun i => x i k) (fun j => -y j k) (fun ij hij hi hj => hcell ij hij hi hj k)
       i j hi hj
     rwa [← sub_eq_add_neg, sub_eq_zero] at h
   have h1 : (x * yᴴ) i j = 1 := by
-    rw [mul_apply, ← Complex.ofReal_one, ← hu i hi, Complex.ofReal_sum]
+    rw [Matrix.mul_apply, ← Complex.ofReal_one, ← hu i hi, Complex.ofReal_sum]
     refine sum_congr rfl fun k _ => ?_
     rw [conjTranspose_apply, ← hall k, Complex.star_def, Complex.mul_conj', Complex.ofReal_pow]
   rw [hxy] at h1

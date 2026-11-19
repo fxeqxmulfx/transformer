@@ -54,7 +54,7 @@ theorem nuclearNorm_vecMulVec_add_single {a b : n → ℂ} (ha : ∀ k, ‖a k�
   have hsingle : frame a i * single (0 : Fin 2) (0 : Fin 2) (1 : ℂ) *
       (frame (fun l => star (b l)) j)ᴴ = single i j 1 := by
     ext k l
-    simp only [mul_apply, single_apply, conjTranspose_apply, Fin.sum_univ_two, frame_zero]
+    simp only [Matrix.mul_apply, single_apply, conjTranspose_apply, Fin.sum_univ_two, frame_zero]
     rcases eq_or_ne k i with rfl | hk
     · rcases eq_or_ne l j with rfl | hl
       · simp

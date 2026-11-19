@@ -51,7 +51,7 @@ theorem gaussianMixture_far_centers_tail (d r : ℕ) (σ : ℝ) (hσ : 0 < σ)
     exact (mul_le_mul_of_nonneg_left hmono (Real.exp_pos R).le).trans
       (radial_gaussian_exp_norm_sq_tail d σ hσ (Real.sqrt (r : ℝ) • w i) R)
   have hsum : (∑ i : Idx r, F i).real E = ∑ i : Idx r, (F i).real E := by
-    simp only [measureReal_def, Measure.finsetSum_apply]
+    simp only [measureReal_def, sum_apply]
     rw [ENNReal.toReal_sum]
     intro i _
     let _ : IsProbabilityMeasure (F i) :=

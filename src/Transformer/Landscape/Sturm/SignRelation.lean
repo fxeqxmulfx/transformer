@@ -11,7 +11,7 @@ revision 53ce31466dc5ff520463249d470119c1e0006e22.
 module
 
 public import Transformer.Landscape.Sturm.Chains
-public import Transformer.Landscape.Sturm.Sign
+public import Mathlib.Topology.Instances.Sign
 public import Mathlib.Analysis.Polynomial.Order
 
 public import Mathlib.Topology.Algebra.Polynomial
@@ -91,7 +91,7 @@ Auxiliary for Appendix D.1, `lem: loj`, of arXiv:2510.22026v2. -/
 theorem eval_sign_eq_of_no_zero {q : Polynomial ℝ} {a b : ℝ} (hab : a ≤ b)
     (hz : ∀ x ∈ Set.Icc a b, q.eval x ≠ 0) :
     SignType.sign (q.eval a) = SignType.sign (q.eval b) :=
-  sign_eq_of_continuousOn isPreconnected_Icc q.continuous.continuousOn hz
+  isPreconnected_Icc.sign_eq_of_continuousOn q.continuous.continuousOn hz
     ⟨le_refl a, hab⟩ ⟨hab, le_refl b⟩
 
 /-- Build the sign-pattern relation `SignRelation` between the evaluations of a

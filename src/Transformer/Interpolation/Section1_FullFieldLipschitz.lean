@@ -34,7 +34,7 @@ theorem lipschitzWith_perceptron_argument (W U : ParamMatrix d) (b : EucSpace d)
       W ((EuclideanSpace.equiv (Fin d) ℝ).symm (fun i => max ((U x + b) i) 0))) := by
   apply LipschitzWith.of_dist_le_mul
   intro x y
-  simpa only [NNReal.coe_mul, coe_nnnorm, dist_eq_norm] using norm_perceptron_argument_sub_le W U b x y
+  simpa only [NNReal.coe_mul, coe_nnNorm, dist_eq_norm] using norm_perceptron_argument_sub_le W U b x y
 
 /-- At a fixed original time and law, the complete original field is
 continuous at every ambient query. Source auxiliary:

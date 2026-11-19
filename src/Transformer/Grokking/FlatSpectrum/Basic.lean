@@ -24,14 +24,14 @@ omit [Fintype n] [DecidableEq n] in
 /-- Diagonal Gram entries are squared column lengths. -/
 lemma conjTranspose_mul_self_apply_self (A : Matrix m n ℂ) (i : n) :
     (Aᴴ * A) i i = ((∑ k, ‖A k i‖ ^ 2 : ℝ) : ℂ) := by
-  simp only [mul_apply, conjTranspose_apply, Complex.ofReal_sum, Complex.ofReal_pow]
+  simp only [Matrix.mul_apply, conjTranspose_apply, Complex.ofReal_sum, Complex.ofReal_pow]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [Complex.star_def, Complex.conj_mul']
 
 /-- The trace pairing `tr (Aᴴ B) = ∑ conj (A i j) B i j`. -/
 lemma trace_conjTranspose_mul {k : Type*} [Fintype k] (A B : Matrix m k ℂ) :
     (Aᴴ * B).trace = ∑ i, ∑ j, star (A i j) * B i j := by
-  simp only [trace, diag_apply, mul_apply, conjTranspose_apply]
+  simp only [trace, diag_apply, Matrix.mul_apply, conjTranspose_apply]
   exact Finset.sum_comm
 
 /-- Cauchy–Schwarz for finite complex sums. -/
@@ -96,7 +96,7 @@ theorem norm_trace_le_nuclearNorm {Z : Matrix m n ℂ} (hZ : IsContraction Z)
       rw [conjTranspose_mul, Matrix.mul_assoc, Matrix.trace_mul_comm, Matrix.mul_assoc,
         Matrix.mul_assoc, hU', Matrix.mul_one]
     rw [← this]
-    simp only [trace, diag_apply, mul_apply, conjTranspose_apply]
+    simp only [trace, diag_apply, Matrix.mul_apply, conjTranspose_apply]
   have hcol (i : n) : ∑ k, ‖(X * U) k i‖ ^ 2 = hX.eigenvalues i := by
     have h := congrFun (congrFun (eigenvectorUnitary_conj hX) i) i
     rw [diagonal_apply_eq, show Uᴴ * (Xᴴ * X) * U = (X * U)ᴴ * (X * U) by

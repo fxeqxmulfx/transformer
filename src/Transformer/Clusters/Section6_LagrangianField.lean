@@ -70,7 +70,7 @@ theorem W2_map_le_norm_sub (μ₀ : Measure (EucSpace d)) [IsProbabilityMeasure 
         Real.sqrt_le_sqrt (integral_mono_of_nonneg (ae_of_all _ fun _ => by positivity)
           (integrable_const _) (ae_of_all _ fun x => by
             have := (Y - Z).norm_coe_le_norm x
-            rw [BoundedContinuousFunction.coe_sub, Pi.sub_apply] at this
+            rw [FunLike.coe_sub, Pi.sub_apply] at this
             show ‖Y x - Z x‖ ^ 2 ≤ ‖Y - Z‖ ^ 2
             gcongr))
     _ = ‖Y - Z‖ := by simp
@@ -110,7 +110,7 @@ theorem lipschitzOnWith_lagrangianField (ρ : ℝ) :
   rw [Real.coe_toNNReal _ (by positivity), dist_eq_norm, dist_eq_norm]
   refine (BoundedContinuousFunction.norm_le (by positivity)).2 fun x => ?_
   have hYZ := (Y - Z).norm_coe_le_norm x
-  rw [BoundedContinuousFunction.coe_sub, Pi.sub_apply] at hYZ ⊢
+  rw [FunLike.coe_sub, Pi.sub_apply] at hYZ ⊢
   calc ‖lagrangianField Q K V μ₀ Y x - lagrangianField Q K V μ₀ Z x‖
       ≤ L * ‖Y x - Z x‖ + C * W2 (μ₀.map Y) (μ₀.map Z) :=
         hCμ _ _ inferInstance inferInstance (isCarriedBy_map μ₀ Y (hρ Y hY))

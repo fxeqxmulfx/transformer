@@ -60,7 +60,7 @@ noncomputable def perturbationNu : ProbSphere 3 :=
       Measure (SSphere 3)) +
     (15 / 26 : ENNReal) • (halfDirac 3 (perturbationAtom 4) (perturbationAtom 5) :
       Measure (SSphere 3)), ⟨by
-        simp only [Measure.add_apply, Measure.smul_apply, smul_eq_mul, measure_univ, mul_one]
+        simp only [add_apply, smul_apply, smul_eq_mul, measure_univ, mul_one]
         rw [← ENNReal.add_div]
         norm_num
         exact ENNReal.div_self (by norm_num) (by simp)⟩⟩

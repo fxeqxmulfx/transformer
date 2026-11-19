@@ -1,9 +1,9 @@
 module
 
 public import Transformer.ALM.BinSearch
-public import Batteries.Recycling.RBTree.Depth
-import all Batteries.Recycling.RBTree.Depth
-public import Batteries.Recycling.RBTree.Lemmas
+public import RBTree.Depth
+import all RBTree.Depth
+public import RBTree.Lemmas
 
 /-!
 # The container the query actually descends
@@ -32,7 +32,7 @@ is the comparison of the two: for any nonempty envelope the tree's price is at
 least the array's and at most twice it.
 
 Source: `vm-rs/alm-hull/src/tree.rs`, `Tree::lower_bound_slope`; Guibas-Sedgewick
-1978 for the balance factor, via `Batteries.Recycling.RBTree.Depth`.
+1978 for the balance factor, via `RBTree.Depth` (`third_party/RBTree`).
 -/
 
 @[expose] public section

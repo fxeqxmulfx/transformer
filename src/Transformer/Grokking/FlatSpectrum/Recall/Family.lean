@@ -104,8 +104,8 @@ theorem isFlat_familyKernel (hD : IsPairwiseUniform D lam) (hφ : ∑ v, φ v = 
     IsFlat ((familyKernel φ D).map ((↑) : ℝ → ℂ)) (lam * Fintype.card ν * ∑ v, φ v ^ 2) := by
   refine Or.inr ?_
   ext q q'
-  simp only [mul_apply, conjTranspose_apply, map_apply, familyKernel, of_apply,
-    Matrix.smul_apply, smul_eq_mul, one_apply, RCLike.star_def, Complex.conj_ofReal,
+  simp only [Matrix.mul_apply, conjTranspose_apply, map_apply, familyKernel, of_apply,
+    Matrix.smul_apply, smul_eq_mul, Matrix.one_apply, RCLike.star_def, Complex.conj_ofReal,
     ← Complex.ofReal_mul, ← Complex.ofReal_sum]
   rw [hD.sum_mul hφ]
   split_ifs <;> simp

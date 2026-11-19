@@ -114,7 +114,7 @@ example : Measurable (Prod.fst : ℝ × ℝ → ℝ) ∧ Measurable (Prod.snd : 
     (∀ u v : ℝ, |u| < 1 → |v| < 1 →
       Integrable (fun x : ℝ × ℝ => exp (u * x.1 + v * x.2)) (Measure.dirac 0)) ∧
     |(0 : ℝ)| < 1 ∧ |(0 : ℝ)| < 1 :=
-  ⟨measurable_fst, measurable_snd, fun _ _ _ _ => integrable_dirac enorm_lt_top, by norm_num, by norm_num⟩
+  ⟨measurable_fst, measurable_snd, fun _ _ _ _ => integrable_dirac eNorm_lt_top, by norm_num, by norm_num⟩
 
 /-- The signed form of `integrable_abs_pow_mul_exp`. -/
 theorem integrable_pow_mul_exp (hX : Measurable X) (hY : Measurable Y)
@@ -133,7 +133,7 @@ example : Measurable (Prod.fst : ℝ × ℝ → ℝ) ∧ Measurable (Prod.snd : 
     (∀ u v : ℝ, |u| < 1 → |v| < 1 →
       Integrable (fun x : ℝ × ℝ => exp (u * x.1 + v * x.2)) (Measure.dirac 0)) ∧
     |(0 : ℝ)| < 1 ∧ |(0 : ℝ)| < 1 :=
-  ⟨measurable_fst, measurable_snd, fun _ _ _ _ => integrable_dirac enorm_lt_top, by norm_num, by norm_num⟩
+  ⟨measurable_fst, measurable_snd, fun _ _ _ _ => integrable_dirac eNorm_lt_top, by norm_num, by norm_num⟩
 
 /-- **The mixed moments differentiate under the integral**: one more power of
 `X` in the integrand is one derivative in the parameter of `X`.
@@ -194,7 +194,7 @@ example : Measurable (Prod.fst : ℝ × ℝ → ℝ) ∧ Measurable (Prod.snd : 
     (∀ u v : ℝ, |u| < 1 → |v| < 1 →
       Integrable (fun x : ℝ × ℝ => exp (u * x.1 + v * x.2)) (Measure.dirac 0)) ∧
     |(0 : ℝ)| < 1 ∧ |(0 : ℝ)| < 1 :=
-  ⟨measurable_fst, measurable_snd, fun _ _ _ _ => integrable_dirac enorm_lt_top, by norm_num, by norm_num⟩
+  ⟨measurable_fst, measurable_snd, fun _ _ _ _ => integrable_dirac eNorm_lt_top, by norm_num, by norm_num⟩
 
 end General
 

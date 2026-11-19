@@ -66,7 +66,7 @@ theorem recallKernel_mul_conjTranspose {φ : ν → ℂ} (hφ : ∑ v, φ v = 0)
       (((Fintype.card ν : ℝ) ^ (Fintype.card κ - 1) * ∑ v, ‖φ v‖ ^ 2 : ℝ) : ℂ) •
         (1 : Matrix κ κ ℂ) := by
   ext q q'
-  simp only [mul_apply, conjTranspose_apply, recallKernel, of_apply, Matrix.smul_apply,
+  simp only [Matrix.mul_apply, conjTranspose_apply, recallKernel, of_apply, Matrix.smul_apply,
     smul_eq_mul]
   by_cases h : q = q'
   · subst h

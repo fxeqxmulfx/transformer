@@ -140,7 +140,7 @@ theorem isPolyOfDegreeLE_zero_attentionTransform_iff_density {d : ℕ}
     rw [withDensity_const] at heq
     have hmass : ENNReal.ofReal C = 1 := by
       have h := congrArg (fun m : Measure (SSphere d) => m univ) heq
-      simpa only [measure_univ, Measure.smul_apply, smul_eq_mul, mul_one] using h.symm
+      simpa only [measure_univ, smul_apply, smul_eq_mul, mul_one] using h.symm
     rw [hmass, one_smul] at heq
     exact (isPolyOfDegreeLE_zero_attentionTransform_iff_eq_uniform β hβ μ ν hν).mpr heq
 

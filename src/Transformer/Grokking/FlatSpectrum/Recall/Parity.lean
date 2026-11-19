@@ -70,8 +70,8 @@ theorem parityKernel_mul_conjTranspose :
     parityKernel κ * (parityKernel κ)ᴴ =
       (((2 : ℝ) ^ Fintype.card κ : ℝ) : ℂ) • (1 : Matrix (Finset κ) (Finset κ) ℂ) := by
   ext S T
-  simp only [mul_apply, conjTranspose_apply, parityKernel, of_apply, Matrix.smul_apply,
-    smul_eq_mul, one_apply, RCLike.star_def, Complex.conj_ofReal]
+  simp only [Matrix.mul_apply, conjTranspose_apply, parityKernel, of_apply, Matrix.smul_apply,
+    smul_eq_mul, Matrix.one_apply, RCLike.star_def, Complex.conj_ofReal]
   rw [← Complex.ofReal_one, ← Complex.ofReal_zero]
   simp only [← Complex.ofReal_mul, ← Complex.ofReal_sum]
   rw [sum_prod_mul_prod]

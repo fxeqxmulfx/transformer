@@ -95,11 +95,11 @@ theorem exists_collapse_chain (i j : Fin d) (hij : i ≠ j) (a : ℕ → SSphere
     refine ⟨P :: L, ?_, ?_⟩
     · intro Q hQ
       rcases List.mem_cons.mp hQ with rfl | hQ
-      · exact ⟨Φ, hP.mono (subset_biUnion_of_mem (u := fun l => Metric.ball (a l) R)
+      · exact ⟨Φ, hP.mono (subset_iUnion₂ (s := fun l (_ : l < n + 1) => Metric.ball (a l) R) 0
           n.succ_pos)⟩
       · obtain ⟨Ψ, hΨ⟩ := hL Q hQ
         refine ⟨Ψ, hΨ.mono (iUnion₂_subset fun l hl => ?_)⟩
-        exact subset_biUnion_of_mem (u := fun l => Metric.ball (a l) R) (by omega : l + 1 < n + 1)
+        exact subset_iUnion₂ (s := fun l (_ : l < n + 1) => Metric.ball (a l) R) (l + 1) (by omega)
     · rw [phaseSequenceLaw_cons, pow_succ, mul_assoc]
       refine (mul_le_mul_right ?_ _).trans hLm
       exact (mul_le_mul_right (measure_mono (Metric.ball_subset_ball hrR)) _).trans hmass
@@ -134,9 +134,9 @@ theorem exists_collapse_routes (i j : Fin d) (hij : i ≠ j) {ι : Type*}
       (phaseSequenceLaw Lp ν)
     refine ⟨Lp ++ L', ?_, fun q hq => ?_⟩
     · refine AllLocalIn.append (hLp.mono ?_) (hL'.mono ?_)
-      · exact subset_biUnion_of_mem (u := fun q => ⋃ l < n q, Metric.ball (a q l) R)
-          List.mem_cons_self
-      · exact biUnion_subset_biUnion_left fun q hq => List.mem_cons_of_mem p hq
+      · exact subset_iUnion₂
+          (s := fun q (_ : q ∈ p :: rest) => ⋃ l < n q, Metric.ball (a q l) R) p List.mem_cons_self
+      · exact iUnion₂_mono' fun q hq => ⟨q, List.mem_cons_of_mem p hq, subset_rfl⟩
     · rw [phaseSequenceLaw_append]
       rcases List.mem_cons.mp hq with rfl | hq
       · refine hmp.trans (hL'.le_of_disjoint _ _ (Set.disjoint_left.mpr fun x hx hxU => ?_))

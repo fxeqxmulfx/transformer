@@ -73,7 +73,7 @@ theorem exists_gauge (e : C ≃ ZMod p) (r s : n → ZMod p)
     ∃ α : ZMod p, α ≠ 0 ∧ ∀ c, z c = α * (e c - e c₀) := by
   have hv : (⟨_, code_sub_mem_pinnedCodes e r s hreal c₀⟩ : pinnedCodes p cell labels c₀) ≠ 0 :=
     fun h => code_sub_ne_zero e c₀ (congrArg Subtype.val h)
-  obtain ⟨α, hα⟩ := (finrank_eq_one_iff_of_nonzero' _ hv).1 hrank ⟨z, hz⟩
+  obtain ⟨α, hα⟩ := (finrank_eq_one_iff_of_ne_zero' _ hv).1 hrank ⟨z, hz⟩
   have hzα : ∀ c, z c = α * (e c - e c₀) := fun c =>
     (congrFun (congrArg Subtype.val hα) c).symm
   exact ⟨α, fun h0 => hz0 (funext fun c => by rw [hzα c, h0, zero_mul]; rfl), hzα⟩
@@ -126,7 +126,7 @@ theorem finrank_pinnedCodes_eq_one_iff (e : C ≃ ZMod p) (r s : n → ZMod p)
   · intro haff
     have hv : (⟨_, code_sub_mem_pinnedCodes e r s hreal c₀⟩ : pinnedCodes p cell labels c₀) ≠ 0 :=
       fun h => code_sub_ne_zero e c₀ (congrArg Subtype.val h)
-    rw [finrank_eq_one_iff_of_nonzero' _ hv]
+    rw [finrank_eq_one_iff_of_ne_zero' _ hv]
     rintro ⟨w, hw⟩
     obtain ⟨α, β, hαβ⟩ := haff w hw.1
     have h0 : α * e c₀ + β = 0 := (hαβ c₀).symm.trans hw.2

@@ -20,9 +20,10 @@ namespace Transformer.Grokking.FlatSpectrum
 
 /-- `review/flat_spectrum.md`, Torch check: the centered value is `31.5` at `p = 97`, as
 `31.498 < r_eff < 31.499`. -/
-theorem effectiveRank_centeredZeroIndicatorKernel_97 [Fact (Nat.Prime 97)] :
+theorem effectiveRank_centeredZeroIndicatorKernel_97 :
     31.498 < effectiveRank (centeredZeroIndicatorKernel 97) ∧
       effectiveRank (centeredZeroIndicatorKernel 97) < 31.499 := by
+  have : Fact (Nat.Prime 97) := ⟨by norm_num⟩
   have h2 : (97 : ℝ) * (97 - 3) / √2 = 4559 * √2 := by
     rw [div_eq_iff (by positivity), mul_assoc, Real.mul_self_sqrt (by norm_num)]
     norm_num
@@ -52,13 +53,12 @@ theorem effectiveRank_centeredZeroIndicatorKernel_97 [Fact (Nat.Prime 97)] :
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
 
-example := @effectiveRank_centeredZeroIndicatorKernel_97 ⟨by norm_num⟩
-
 /-- `review/flat_spectrum.md`, Torch check: the centered value is `60.0` at `p = 199`, as
 `60.024 < r_eff < 60.025`. -/
-theorem effectiveRank_centeredZeroIndicatorKernel_199 [Fact (Nat.Prime 199)] :
+theorem effectiveRank_centeredZeroIndicatorKernel_199 :
     60.024 < effectiveRank (centeredZeroIndicatorKernel 199) ∧
       effectiveRank (centeredZeroIndicatorKernel 199) < 60.025 := by
+  have : Fact (Nat.Prime 199) := ⟨by norm_num⟩
   have h2 : (199 : ℝ) * (199 - 3) / √2 = 19502 * √2 := by
     rw [div_eq_iff (by positivity), mul_assoc, Real.mul_self_sqrt (by norm_num)]
     norm_num
@@ -88,13 +88,12 @@ theorem effectiveRank_centeredZeroIndicatorKernel_199 [Fact (Nat.Prime 199)] :
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
 
-example := @effectiveRank_centeredZeroIndicatorKernel_199 ⟨by norm_num⟩
-
 /-- `review/flat_spectrum.md`, Torch check: "r_eff = 0.359p" at `p = 47`, as
 `0.3586 < r_eff/47 < 0.3587`. -/
-theorem effectiveRank_centeredZeroIndicatorKernel_div_47 [Fact (Nat.Prime 47)] :
+theorem effectiveRank_centeredZeroIndicatorKernel_div_47 :
     0.3586 < effectiveRank (centeredZeroIndicatorKernel 47) / 47 ∧
       effectiveRank (centeredZeroIndicatorKernel 47) / 47 < 0.3587 := by
+  have : Fact (Nat.Prime 47) := ⟨by norm_num⟩
   have h2 : (47 : ℝ) * (47 - 3) / √2 = 1034 * √2 := by
     rw [div_eq_iff (by positivity), mul_assoc, Real.mul_self_sqrt (by norm_num)]
     norm_num
@@ -123,13 +122,12 @@ theorem effectiveRank_centeredZeroIndicatorKernel_div_47 [Fact (Nat.Prime 47)] :
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
 
-example := @effectiveRank_centeredZeroIndicatorKernel_div_47 ⟨by norm_num⟩
-
 /-- `review/flat_spectrum.md`, Torch check: "r_eff = 0.345p" at `p = 61`, as
 `0.3449 < r_eff/61 < 0.3450`. -/
-theorem effectiveRank_centeredZeroIndicatorKernel_div_61 [Fact (Nat.Prime 61)] :
+theorem effectiveRank_centeredZeroIndicatorKernel_div_61 :
     0.3449 < effectiveRank (centeredZeroIndicatorKernel 61) / 61 ∧
       effectiveRank (centeredZeroIndicatorKernel 61) / 61 < 0.3450 := by
+  have : Fact (Nat.Prime 61) := ⟨by norm_num⟩
   have h2 : (61 : ℝ) * (61 - 3) / √2 = 1769 * √2 := by
     rw [div_eq_iff (by positivity), mul_assoc, Real.mul_self_sqrt (by norm_num)]
     norm_num
@@ -158,13 +156,12 @@ theorem effectiveRank_centeredZeroIndicatorKernel_div_61 [Fact (Nat.Prime 61)] :
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
 
-example := @effectiveRank_centeredZeroIndicatorKernel_div_61 ⟨by norm_num⟩
-
 /-- `review/flat_spectrum.md`, Torch check: "r_eff = 0.325p" at `p = 97`, as
 `0.3247 < r_eff/97 < 0.3248`. -/
-theorem effectiveRank_centeredZeroIndicatorKernel_div_97 [Fact (Nat.Prime 97)] :
+theorem effectiveRank_centeredZeroIndicatorKernel_div_97 :
     0.3247 < effectiveRank (centeredZeroIndicatorKernel 97) / 97 ∧
       effectiveRank (centeredZeroIndicatorKernel 97) / 97 < 0.3248 := by
+  have : Fact (Nat.Prime 97) := ⟨by norm_num⟩
   obtain ⟨h1, h2⟩ := effectiveRank_centeredZeroIndicatorKernel_97
   constructor
   · rw [lt_div_iff₀ (by norm_num)]
@@ -172,20 +169,17 @@ theorem effectiveRank_centeredZeroIndicatorKernel_div_97 [Fact (Nat.Prime 97)] :
   · rw [div_lt_iff₀ (by norm_num)]
     linarith
 
-example := @effectiveRank_centeredZeroIndicatorKernel_div_97 ⟨by norm_num⟩
-
 /-- `review/flat_spectrum.md`, Torch check: "r_eff = 0.302p" at `p = 199`, as
 `0.3016 < r_eff/199 < 0.3017`. -/
-theorem effectiveRank_centeredZeroIndicatorKernel_div_199 [Fact (Nat.Prime 199)] :
+theorem effectiveRank_centeredZeroIndicatorKernel_div_199 :
     0.3016 < effectiveRank (centeredZeroIndicatorKernel 199) / 199 ∧
       effectiveRank (centeredZeroIndicatorKernel 199) / 199 < 0.3017 := by
+  have : Fact (Nat.Prime 199) := ⟨by norm_num⟩
   obtain ⟨h1, h2⟩ := effectiveRank_centeredZeroIndicatorKernel_199
   constructor
   · rw [lt_div_iff₀ (by norm_num)]
     linarith
   · rw [div_lt_iff₀ (by norm_num)]
     linarith
-
-example := @effectiveRank_centeredZeroIndicatorKernel_div_199 ⟨by norm_num⟩
 
 end Transformer.Grokking.FlatSpectrum

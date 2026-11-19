@@ -47,7 +47,7 @@ lemma weightedWitness_apply (a : m → ℂ) (b : n → ℂ) (R : Finset m) (C : 
   have hp' : (p : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hp
   have hsum : (weightedFactorL a R p s * (weightedFactorR b C p s)ᴴ) i j =
       a i * b j * (blockFactorL R s * (blockFactorR C s)ᴴ) i j := by
-    simp only [mul_apply, conjTranspose_apply, weightedFactorL, weightedFactorR, of_apply,
+    simp only [Matrix.mul_apply, conjTranspose_apply, weightedFactorL, weightedFactorR, of_apply,
       star_mul', Complex.star_def, Complex.conj_conj, Complex.conj_ofReal, mul_sum]
     refine sum_congr rfl fun k _ => ?_
     push_cast

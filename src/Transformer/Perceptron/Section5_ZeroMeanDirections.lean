@@ -159,10 +159,10 @@ example : IsOpen (univ : Set (SSphere 2)) ∧ circlePoint 0 ≠ circlePoint π �
   · apply (Measure.mem_support_iff_forall _).mpr
     intro U hU
     have hx : circlePoint 0 ∈ U := mem_of_mem_nhds hU
-    simp [Measure.add_apply, Measure.smul_apply, hx]
+    simp [add_apply, smul_apply, hx]
   · apply (Measure.mem_support_iff_forall _).mpr
     intro U hU
     have hx : circlePoint π ∈ U := mem_of_mem_nhds hU
-    simp [Measure.add_apply, Measure.smul_apply, hx]
+    simp [add_apply, smul_apply, hx]
 
 end Transformer.Perceptron

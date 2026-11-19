@@ -116,7 +116,7 @@ instance isMarkovKernel_saHistoryKernel {d n : ℕ} (β γ : ℝ) (X₀ : Idx n 
   intro h
   apply isProbabilityMeasure_iff.mpr
   change (∑ c : Idx n → Idx n, jointAttWeight β (saHistoryConfig γ X₀ h) c • Measure.dirac (SAHistory.cons c h)) univ = 1
-  simp only [Measure.finsetSum_apply, Measure.smul_apply, Measure.dirac_apply_of_mem (mem_univ _),
+  simp only [sum_apply, smul_apply, Measure.dirac_apply_of_mem (mem_univ _),
     smul_eq_mul, mul_one]
   exact sum_jointAttWeight β _
 
@@ -131,7 +131,7 @@ theorem saHistoryKernel_marginal {d n : ℕ} (β γ : ℝ) (X₀ : Idx n → Euc
   classical
   change (∑ c : Idx n → Idx n, jointAttWeight β (saHistoryConfig γ X₀ h) c •
     Measure.dirac (SAHistory.cons c h)) _ = _
-  simp only [Measure.finsetSum_apply, Measure.smul_apply,
+  simp only [sum_apply, smul_apply,
     Measure.dirac_apply' _ ((Set.to_countable _).measurableSet), smul_eq_mul]
   have heq (c : Idx n → Idx n) :
       ({h' : SAHistory n | saHistoryConfig γ X₀ h' i ∈ A}).indicator 1 (SAHistory.cons c h) =

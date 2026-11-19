@@ -74,7 +74,7 @@ theorem optimizerEulerLimit_increment_fourthMoment {d : ℕ} (method : UpdateKin
   let a := diffusionNoiseScale method η B f σ
   let Aη : NNReal := ‖Real.sqrt η‖₊ * A
   have hAη : ∀ x k, |a x k| ≤ Aη := by
-    simpa only [Aη, NNReal.coe_mul, coe_nnnorm, Real.norm_eq_abs,
+    simpa only [Aη, NNReal.coe_mul, coe_nnNorm, Real.norm_eq_abs,
       abs_of_nonneg (Real.sqrt_nonneg _)] using haA η hη
   let X (m : ℕ) := dyadicEuler b a x₀ v m
   let Z (m : ℕ) := dyadicEuler b a x₀ s m
@@ -99,7 +99,7 @@ theorem optimizerEulerLimit_increment_fourthMoment {d : ℕ} (method : UpdateKin
   have hroot : Real.sqrt η ^ 4 = η ^ 2 := by
     rw [show Real.sqrt η ^ 4 = (Real.sqrt η ^ 2) ^ 2 by ring, Real.sq_sqrt hη]
   have hscale : (Aη : ℝ) ^ 4 = η ^ 2 * (A : ℝ) ^ 4 := by
-    simp only [Aη, NNReal.coe_mul, coe_nnnorm, Real.norm_eq_abs,
+    simp only [Aη, NNReal.coe_mul, coe_nnNorm, Real.norm_eq_abs,
       abs_of_nonneg (Real.sqrt_nonneg _), mul_pow, hroot]
   refine ⟨hint, hmoment.trans_eq ?_⟩
   dsimp only [R]

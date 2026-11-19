@@ -35,11 +35,11 @@ open MeasureTheory
 
 /-- The coins on which the witness's entry comes back rounded up: the unit
 cube cut at `14/17` in the first coordinate (§4.2). -/
-def coinsUp : Set (Fin 16 → ℝ) :=
+noncomputable def coinsUp : Set (Fin 16 → ℝ) :=
   Set.univ.pi fun i => if i = 0 then Set.Ico (0 : ℝ) (14 / 17) else Set.Icc (0 : ℝ) 1
 
 /-- The coins on which it comes back rounded down: the rest of the cube. -/
-def coinsDown : Set (Fin 16 → ℝ) :=
+noncomputable def coinsDown : Set (Fin 16 → ℝ) :=
   Set.univ.pi fun i => if i = 0 then Set.Icc (14 / 17 : ℝ) 1 else Set.Icc (0 : ℝ) 1
 
 theorem measurableSet_coinsUp : MeasurableSet coinsUp :=

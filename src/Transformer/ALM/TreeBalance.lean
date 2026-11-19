@@ -2,7 +2,7 @@ module
 
 public import Transformer.ALM.TreeQuery
 public import Mathlib.Logic.Relation
-import all Batteries.Recycling.RBTree.Depth
+import all RBTree.Depth
 
 /-!
 # Rebalancing moves nodes and not the order they are in
@@ -20,7 +20,7 @@ It cannot, and the reason is structural rather than arithmetic. Read
 `tree.rs` lines 520-680: every write those two functions perform is either
 `lk_mut(_).red = _`, which is a colour, or a call to `rotate_left` /
 `rotate_right`, which is the standard rotation. So each step is `Step` below,
-each acts on one subtree at one position (`RBNode.Path`, Batteries' zipper for
+each acts on one subtree at one position (`RBNode.Path`, `RBTree`'s zipper for
 this same tree type), and `toList_of_stepAt` is that none of them changes the
 in-order sequence. `toList_of_rebalances` closes that under any number of
 steps, and `lowerBound_eq_find_of_rebalances` is the conclusion the container
@@ -114,7 +114,7 @@ theorem toList_run (s : Step) (t : RBNode α) : (s.run t).toList = t.toList := b
 
 /-- One step of the rebalancing, taken where the loop is standing: a subtree at
 the end of some path is replaced by a rotation or a recolouring of itself. The
-path is Batteries' zipper for this tree, which is the `parent` chain `tree.rs`
+path is `RBTree`'s zipper for this tree, which is the `parent` chain `tree.rs`
 walks. -/
 inductive StepAt : RBNode α → RBNode α → Prop where
   | mk (p : Path α) (s : Step) (t : RBNode α) : StepAt (p.fill t) (p.fill (s.run t))

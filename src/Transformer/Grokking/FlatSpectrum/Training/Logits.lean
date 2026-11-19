@@ -78,7 +78,7 @@ theorem sum_mul_exp_sub_le_of_mem_Icc {p d : C → ℝ} (hp : ∀ c, 0 ≤ p c) 
   simp only [ProbabilityTheory.mgf, hint, one_mul] at h
   refine h.trans (le_of_eq ?_)
   congr 1
-  simp only [NNReal.coe_pow, NNReal.coe_div, coe_nnnorm, Real.norm_eq_abs,
+  simp only [NNReal.coe_pow, NNReal.coe_div, coe_nnNorm, Real.norm_eq_abs,
     abs_of_nonneg (sub_nonneg.mpr hab), NNReal.coe_ofNat]
   ring
 

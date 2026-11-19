@@ -68,12 +68,12 @@ theorem W2_le_of_cluster_masses {M : ℕ} (ν : Measure (SSphere d)) [IsProbabil
       rw [measure_iUnion (fun k l hkl => (hdisj hkl).mono inter_subset_right inter_subset_right)
         (fun k => ht.inter (hE k)), tsum_fintype]
     calc μ₁ t = ∑ k, c k * ν (t ∩ E k) := by
-          simp [hμ₁_def, Measure.coe_finsetSum, Measure.restrict_apply ht]
+          simp [hμ₁_def, Measure.restrict_apply ht]
       _ ≤ ∑ k, ν (t ∩ E k) := Finset.sum_le_sum fun k _ => mul_le_of_le_one_left' (hc1 k)
       _ = ν (⋃ k, t ∩ E k) := hU.symm
       _ ≤ ν t := measure_mono (iUnion_subset fun k => inter_subset_left)
   have hμ₁univ : μ₁ univ = ∑ k, β k := by
-    simp only [hμ₁_def, Measure.coe_finsetSum, Finset.sum_apply, Measure.smul_apply,
+    simp only [hμ₁_def, FunLike.coe_sum, Finset.sum_apply, smul_apply,
       Measure.restrict_apply_univ, smul_eq_mul]
     exact Finset.sum_congr rfl fun k _ => hcβ k
   set m : ℝ≥0∞ := ∑ k, ((α k : ℝ≥0∞) - β k) with hm_def
@@ -86,12 +86,12 @@ theorem W2_le_of_cluster_masses {M : ℕ} (ν : Measure (SSphere d)) [IsProbabil
   set ν₂ : Measure (SSphere d) := ν - μ₁ with hν₂_def
   have hν₂add : ν₂ + μ₁ = ν := Measure.sub_add_cancel_of_le hμ₁
   have hν₂univ : ν₂ univ = m := by
-    have h1 : ν₂ univ + μ₁ univ = 1 := by rw [← Measure.add_apply, hν₂add, measure_univ]
+    have h1 : ν₂ univ + μ₁ univ = 1 := by rw [← add_apply, hν₂add, measure_univ]
     rw [hμ₁univ] at h1
     exact (ENNReal.add_left_inj hβtop).mp (h1.trans hmβ.symm)
   set τ₂ : Measure (SSphere d) := ∑ k, ((α k : ℝ≥0∞) - β k) • Measure.dirac (x k) with hτ₂_def
   have hτ₂univ : τ₂ univ = m := by
-    simp [hτ₂_def, hm_def, Measure.coe_finsetSum]
+    simp [hτ₂_def, hm_def]
   have : IsFiniteMeasure ν₂ := ⟨by rw [hν₂univ]; exact hm_top.lt_top⟩
   have : IsFiniteMeasure τ₂ := ⟨by rw [hτ₂univ]; exact hm_top.lt_top⟩
   have hcancel (ρ : Measure (SSphere d)) (hρ : ρ univ = m) : m⁻¹ • m • ρ = ρ := by

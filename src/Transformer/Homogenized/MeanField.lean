@@ -89,7 +89,7 @@ theorem integral_empMeasure {d n : ℕ} {E : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [CompleteSpace E] (x : Idx n → EucSpace d) (f : EucSpace d → E) :
     ∫ y, f y ∂(empMeasure x) = ((n : ℝ))⁻¹ • ∑ k : Idx n, f (x k) := by
   rw [empMeasure, integral_smul_measure,
-    integral_finsetSum_measure (fun k _ => integrable_dirac (enorm_lt_top))]
+    integral_finsetSum_measure (fun k _ => integrable_dirac (eNorm_lt_top))]
   simp [ENNReal.toReal_inv, integral_dirac]
 
 /-- The attention field at the empirical measure of a configuration is the
@@ -189,7 +189,7 @@ example {d : ℕ} (β : ℝ) (μ : Measure (EucSpace d)) (x y v : EucSpace d) :
       (inner (𝕜 := ℝ) (fluctOf β (Measure.dirac (0 : HeadParam d)) μ θ y) (proj d y v)) •
         fluctOf β (Measure.dirac (0 : HeadParam d)) μ θ x)
       (Measure.dirac (0 : HeadParam d)) :=
-  integrable_dirac enorm_lt_top
+  integrable_dirac eNorm_lt_top
 
 end Homogenized
 end Transformer

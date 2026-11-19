@@ -127,6 +127,85 @@ module interfaces would misclassify all 39 direct holes as indirect rests and
 erase their positions from the index. The audit still distinguishes the two;
 it now exits nonzero on any indirect rest or nonstandard extra axiom.
 
+## Lean 4.36 compatibility
+
+Lean and Mathlib are updated from 4.35.0 to stable 4.36.0. The Batteries
+that Mathlib 4.36.0 pins no longer has the red-black tree modules: on
+2026-10-05 they moved to `leanprover-community/batteries-recycling`.
+`ALM.TreeQuery` and `ALM.TreeBalance` use them, so the five-module import
+closure of `RBTree.Depth` and `RBTree.Lemmas` is copied unchanged into
+`third_party/RBTree` as its own library, with the license and a `NOTICE`.
+Those sources rely on auto-bound implicit arguments, so that one library keeps
+Lean's default `autoImplicit`; the other three libraries still disable it.
+
+Mathlib 4.36.0 upstreamed two results this repository carried as copies, and
+the copies are deleted. Mathlib's Kolmogorov extension
+(`Mathlib.MeasureTheory.Constructions.KolmogorovExtension`) replaces the three
+`KolmogorovExtension4` files of `third_party/Stochastic`, 554 lines with 30
+theorems; the Brownian projective limit imports Mathlib's version.
+`IsPreconnected.sign_eq_of_continuousOn` replaces `Landscape/Sturm/Sign.lean`
+and its two lemmas, and `eval_sign_eq_of_no_zero` now uses Mathlib's. A
+`dt dup` scan of every declaration in `src/`, matched against the 4,401 names
+that are new in Mathlib 4.36.0, found no other copy. Only the names
+`exists_cutoff`, `northPole` and `IsUniform` recur, for unrelated statements.
+
+`Set` is now a structure. Nine set-valued definitions built from
+noncomputable data, eight in `src/` and `denseCountable` in
+`third_party/Stochastic`, are marked `noncomputable`. Lean no longer infers
+the set behind a membership projection such as `h.1`, so those proofs name the
+set (`(t := …)`) or rewrite with `Set.ofPred_and`. `Filter.EventuallyEq` of
+two sets now compares membership by `↔` instead of `=`, so the `propext`
+steps are gone. `Polynomial` is an abbreviation of `AddMonoidAlgebra`, and
+polynomial extensionality goes through `AddMonoidAlgebra.ext`.
+`Matrix.mul_apply` and `Matrix.one_apply` are protected and are written
+qualified in 32 files. The 233 uses of 46 deprecated names in the retained
+files are replaced by their successors, mostly as Lean's warnings suggest;
+where the successor takes a different form, as for
+`Submodule.isClosed_of_finiteDimensional`, `isClosed_setOfPred_posSemidef`
+and `tsum_le_tsum`, the call is adapted by hand.
+
+Mathlib's new linters are satisfied, not disabled. A `contrapose!` or
+`by_contra!` whose negation pushing no longer changes anything becomes
+`contrapose` or `by_contra this`: one in `src/`, eight in
+`third_party/Entropy` and three in `third_party/Stochastic`. The unused-tactic
+linter flags `all_goals` around a single goal and `try` around a tactic that
+always succeeds; eight such wrappers in `src/` and one in
+`third_party/Entropy` are dropped. In `Clusters/Section7_Symmetric.lean` its
+suggestion fails, because in one of the cases `norm_num` already closes the
+goal, so that proof is restructured instead. Mathlib 4.36.0 also drops the
+`[Finite n]` hypothesis of `Matrix.posSemidef_conjTranspose_mul_self`, so
+`IsContraction.posSemidef_one_sub`, and `IsContraction.smul_proj_add`, which
+is proved from it, no longer use the section's `[Fintype n]`. The linter for
+unused section variables flags it, and both lemmas now omit it.
+
+The new `concreteInstances` linter rejects instance binders without free
+variables. Eleven numerical theorems at fixed primes assumed
+`[Fact (Nat.Prime N)]`: `rank_cubicKernelMulChar_97`,
+`effectiveRank_cubicKernelMulChar_97`, `meanSq_condMean_cube_add_mul_lt_97`,
+`effectiveRank_zeroIndicatorKernel_97` and `_199`, and the six
+`effectiveRank_centeredZeroIndicatorKernel` values at 47, 61, 97 and 199.
+Their statements do not need primality to typecheck: the kernels,
+`effectiveRank` and `ZMod.stdAddChar` need at most `NeZero N`. Each proof now
+opens with `have : Fact (Nat.Prime N) := ⟨by norm_num⟩`, so each statement
+loses a hypothesis that always held and keeps its conclusion. The eight
+`example`s that existed only to supply that instance are removed.
+
+Every theorem and lemma statement was compared as text with the previous
+commit: all 26,945 in `src/` and the 680 in `third_party/Entropy` and
+`third_party/Stochastic`. Besides the deletions above, the two Sturm lemmas
+and the 30 Kolmogorov theorems, these eleven are the only changes. The
+comparison reads each statement from its keyword to `:=` or to its first
+match arm, so it does not see the two `omit`s above; no other section
+variable changes.
+
+Following the instruction of 2026-11-07, the checks call Lean directly
+instead of `./run.py`. `LAKE_ARTIFACT_CACHE=false lake build` completed all
+28,620 jobs with the 36 retained `sorry` warnings and no other warning.
+`lake env lean scripts/Axioms.lean` reported
+`36 sorry · 0 resting on a sorry · 0 extra axioms`. The regenerated index has
+5,133 modules, 26,943 theorems, 36 `sorry`, zero vacuous statements and
+zero placeholders.
+
 ## Numerical regression tests
 
 The original tests compared current CPU floating-point bytes with archived

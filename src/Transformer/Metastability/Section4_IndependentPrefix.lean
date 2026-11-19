@@ -61,7 +61,6 @@ theorem iidSphere_snoc_event (d m : ℕ) (ν : Measure (SSphere d)) [IsProbabili
   change MeasurePreserving e (iidSphere d (m + 1) ν) (ν.prod (iidSphere d m ν)) at hp
   have he (p : SSphere d × (Fin m → SSphere d)) : e.symm p = Fin.snoc p.2 p.1 := by
     simp [e, MeasurableEquiv.piFinSuccAbove_symm_apply]
-    rfl
   have hs := hB.preimage e.symm.measurable
   have hpre : e ⁻¹' (e.symm ⁻¹' B) = B := by ext X; simp
   have h := hp.measure_preimage hs.nullMeasurableSet

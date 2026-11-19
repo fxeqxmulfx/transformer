@@ -36,7 +36,7 @@ omit [DecidableEq n] in
 lemma meanProj_mul_meanProj [Nonempty n] : meanProj n * meanProj n = meanProj n := by
   ext i j
   have h : (Fintype.card n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
-  simp only [meanProj, mul_apply, of_apply, sum_const, card_univ, nsmul_eq_mul]
+  simp only [meanProj, Matrix.mul_apply, of_apply, sum_const, card_univ, nsmul_eq_mul]
   field_simp
 
 omit [DecidableEq n] in
@@ -49,14 +49,14 @@ omit [DecidableEq n] in
 lemma meanProj_mul {Y : Matrix n n ℂ} (hY : ∀ j, ∑ i, Y i j = 1) :
     meanProj n * Y = meanProj n := by
   ext i j
-  simp only [meanProj, mul_apply, of_apply, ← mul_sum, hY, mul_one]
+  simp only [meanProj, Matrix.mul_apply, of_apply, ← mul_sum, hY, mul_one]
 
 omit [DecidableEq n] in
 /-- `Y Q = Q` when every row of `Y` sums to one. -/
 lemma mul_meanProj {Y : Matrix n n ℂ} (hY : ∀ i, ∑ j, Y i j = 1) :
     Y * meanProj n = meanProj n := by
   ext i j
-  simp only [meanProj, mul_apply, of_apply, ← sum_mul, hY, one_mul]
+  simp only [meanProj, Matrix.mul_apply, of_apply, ← sum_mul, hY, one_mul]
 
 omit [DecidableEq n] in
 /-- Every row and every column of `Q` sums to one. -/
@@ -73,7 +73,7 @@ omit [DecidableEq n] in
 lemma meanProj_mul_onesMatrix [Nonempty n] : meanProj n * onesMatrix n = onesMatrix n := by
   ext i j
   have h : (Fintype.card n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
-  simp only [meanProj, onesMatrix, mul_apply, of_apply, mul_one, sum_const, card_univ,
+  simp only [meanProj, onesMatrix, Matrix.mul_apply, of_apply, mul_one, sum_const, card_univ,
     nsmul_eq_mul]
   field_simp
 
@@ -81,13 +81,13 @@ omit [DecidableEq n] in
 /-- The rows of `Q M` agree. -/
 lemma meanProj_mul_apply (M : Matrix n n ℂ) (i i' j : n) :
     (meanProj n * M) i j = (meanProj n * M) i' j := by
-  simp [meanProj, mul_apply]
+  simp [meanProj, Matrix.mul_apply]
 
 omit [DecidableEq n] in
 /-- The columns of `M Q` agree. -/
 lemma mul_meanProj_apply (M : Matrix n n ℂ) (i j j' : n) :
     (M * meanProj n) i j = (M * meanProj n) i j' := by
-  simp [meanProj, mul_apply]
+  simp [meanProj, Matrix.mul_apply]
 
 /-- For a Hermitian projection `Q` and a contraction `Z₀`, `Q + (1 − Q) Z₀ (1 − Q)` is a
 contraction: `1 − Zᴴ Z = (1 − Q) (1 − Z₀ᴴ Z₀ + (Q Z₀)ᴴ (Q Z₀)) (1 − Q)`. -/
@@ -127,7 +127,7 @@ example := eq_zero_of_nuclearNorm_eq_zero (A := (0 : Matrix (Fin 2) (Fin 2) ℂ)
 theorem nuclearNorm_onesMatrix : nuclearNorm (onesMatrix n) = Fintype.card n := by
   refine le_antisymm ?_ (card_le_nuclearNorm_le_of_unimodular (by simp [onesMatrix])).1
   have h := nuclearNorm_le_of_eq_mul (X := onesMatrix n) (of fun (_ : n) (_ : Unit) => (1 : ℂ))
-    (of fun (_ : n) (_ : Unit) => (1 : ℂ)) (by ext i j; simp [onesMatrix, mul_apply])
+    (of fun (_ : n) (_ : Unit) => (1 : ℂ)) (by ext i j; simp [onesMatrix, Matrix.mul_apply])
   have hf : frobeniusSq (of fun (_ : n) (_ : Unit) => (1 : ℂ)) = Fintype.card n := by
     simp [frobeniusSq]
   rw [hf] at h

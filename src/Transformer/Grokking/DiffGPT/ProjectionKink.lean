@@ -34,6 +34,7 @@ lemma one_sub_mul_one_sub {P : Matrix m m ℂ} (hPP : P * P = P) : (1 - P) * (1 
 
 example := one_sub_mul_one_sub (P := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (Matrix.one_mul 1)
 
+omit [Fintype n] in
 /-- `1 − Zᴴ P Z ≥ 0` for a contraction `Z` and an orthogonal projection `P`: it is
 `(1 − Zᴴ Z) + ((1 − P) Z)ᴴ ((1 − P) Z)`. -/
 lemma _root_.Transformer.Grokking.FlatSpectrum.IsContraction.posSemidef_one_sub

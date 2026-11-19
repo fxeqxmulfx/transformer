@@ -183,7 +183,7 @@ theorem lt_of_forall_isExtreme_segment {V : Set (EucSpace d)} (hVf : V.Finite)
       (𝕜 := ℝ)).isClosed.closure_eq] at hK
     intro b hb
     rw [← hK] at hb
-    exact convexHull_min hext (convex_halfSpace_lt ℓ.toLinearMap.isLinear 0) hb
+    exact (convex_halfSpace_lt ℓ.toLinearMap.isLinear 0).convexHull_subset_iff.2 hext hb
   obtain ⟨t, ht, b, hb, rfl⟩ := hD x hx
   have htpos : 0 < t := ht.lt_of_ne fun h0 => hxp (by rw [← h0, zero_smul, add_zero])
   rw [map_add, map_smul, smul_eq_mul]

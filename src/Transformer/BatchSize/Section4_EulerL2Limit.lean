@@ -81,7 +81,7 @@ theorem optimizerEuler_exists_adapted_limit {d : ℕ} (method : UpdateKind) (η 
   obtain ⟨A, haA⟩ := diffusionNoiseScale_uniform_bound method B f σ hB hmodel
   exact dyadicEuler_exists_adapted_limit _ _ Kb (‖Real.sqrt η‖₊ * Ka) M
     (‖Real.sqrt η‖₊ * A) hb (ha η hη) hbM
-    (by simpa only [NNReal.coe_mul, coe_nnnorm, Real.norm_eq_abs,
+    (by simpa only [NNReal.coe_mul, coe_nnNorm, Real.norm_eq_abs,
       abs_of_nonneg (Real.sqrt_nonneg _)] using haA η hη) x₀ T
 
 /-- Joint nonvacuity of the optimizer-limit hypotheses, Section 4.3:

@@ -96,11 +96,11 @@ theorem contDiff_meanAxisClock (w : SSphere d) (κ : ℝ) (ν : Perspective.Prob
 Auxiliary for arXiv:2411.04551v3, §3.2, time rescaling. -/
 theorem lipschitzWith_meanAxisClock (w : SSphere d) (κ : ℝ) (ν : Perspective.ProbSphere d) :
     LipschitzWith ‖κ‖₊ (meanAxisClock w κ ν) := by
-  apply lipschitzWith_of_nnnorm_deriv_le (𝕜 := ℝ)
+  apply lipschitzWith_of_nnNorm_deriv_le (𝕜 := ℝ)
     (fun t => (hasDerivAt_meanAxisClock w κ ν t).differentiableAt)
   intro t
   apply NNReal.coe_le_coe.mp
-  rw [coe_nnnorm, coe_nnnorm, (hasDerivAt_meanAxisClock w κ ν t).deriv, Real.norm_eq_abs, Real.norm_eq_abs, abs_mul]
+  rw [coe_nnNorm, coe_nnNorm, (hasDerivAt_meanAxisClock w κ ν t).deriv, Real.norm_eq_abs, Real.norm_eq_abs, abs_mul]
   exact (mul_le_mul_of_nonneg_left (abs_meanAxisClockSpeed_le_one w ν _) (abs_nonneg κ)).trans_eq (mul_one _)
 
 /-- A vanishing initial mean component gives the zero intrinsic clock.

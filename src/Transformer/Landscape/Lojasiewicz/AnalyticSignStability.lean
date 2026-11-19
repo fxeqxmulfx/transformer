@@ -43,7 +43,7 @@ theorem scalar_analytic_sign_trichotomy (f : ℝ → ℝ) (hf : AnalyticAt ℝ f
         (∀ᶠ t in nhdsWithin (0 : ℝ) (Ioi 0), f t < 0) := by
   by_cases hzero : ∀ᶠ t in nhds (0 : ℝ), f t = 0
   · exact Or.inl (hzero.filter_mono nhdsWithin_le_nhds)
-  obtain ⟨m, g, hg, hg0, hfactor⟩ := hf.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hzero
+  obtain ⟨m, g, hg, hg0, hfactor⟩ := hf.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hzero
   have hpositive : ∀ᶠ t in nhdsWithin (0 : ℝ) (Ioi 0), 0 < t := self_mem_nhdsWithin
   rcases lt_or_gt_of_ne hg0 with hnegative | hunit
   · right; right

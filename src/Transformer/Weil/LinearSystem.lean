@@ -45,7 +45,7 @@ theorem exists_ne_zero_forall_eq_zero {V : Type*} [AddCommGroup V] [Module F V]
       Fintype.card_fin]
   obtain ⟨v, hv, hv0⟩ :=
     (Submodule.ne_bot_iff _).mp (LinearMap.ker_ne_bot_of_finrank_lt (f := L) hrank)
-  refine ⟨v, hv0, fun k => Polynomial.ext fun n => ?_⟩
+  refine ⟨v, hv0, fun k => AddMonoidAlgebra.ext <| Finsupp.ext fun n => ?_⟩
   rw [coeff_zero]
   rcases lt_or_ge n D with hn | hn
   · simpa [L] using congrFun (LinearMap.mem_ker.mp hv) (k, ⟨n, hn⟩)

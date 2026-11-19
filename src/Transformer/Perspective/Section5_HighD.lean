@@ -194,7 +194,7 @@ theorem wendel_full_dimension (hd : 1 ≤ d) :
     calc
       _ = P Set.univ := measure_congr (by
         filter_upwards [hae] with X hX
-        exact propext ⟨fun _ => Set.mem_univ X, fun _ => hX⟩)
+        exact iff_of_true hX (Set.mem_univ X))
       _ = 1 := measure_univ
   rw [hevent, ENNReal.toReal_one]
   have hsum : (∑ k ∈ Finset.range d, (((d - 1).choose k : ℕ) : ℝ)) =

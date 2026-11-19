@@ -29,7 +29,7 @@ def deterministicEulerTest {d : ℕ} (b : EucSpace d → EucSpace d) (η : NNRea
 actual Frechet operator norm, Section 4.3, Theorem 1. -/
 theorem boundedSmoothTest_fderiv_lipschitz {d : ℕ} (φ : EucSpace d → ℝ)
     (hφ : BoundedSmoothTest 2 φ) : LipschitzWith 1 (fderiv ℝ φ) := by
-  apply lipschitzWith_of_nnnorm_fderiv_le
+  apply lipschitzWith_of_nnNorm_fderiv_le
     ((hφ.1.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num))
   intro x
   change ‖fderiv ℝ (fderiv ℝ φ) x‖ ≤ 1

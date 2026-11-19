@@ -88,7 +88,7 @@ noncomputable def uniformPerm (n : ℕ) : Measure (Equiv.Perm (Fin n)) :=
 instance (n : ℕ) : IsProbabilityMeasure (uniformPerm n) := ⟨by
   have hc : ((Fintype.card (Equiv.Perm (Fin n)) : ℕ) : ENNReal) ≠ 0 :=
     Nat.cast_ne_zero.2 Fintype.card_ne_zero
-  simp only [uniformPerm, Measure.uniformOfFinset, Measure.coe_finsetSum, Measure.coe_smul,
+  simp only [uniformPerm, Measure.uniformOfFinset, FunLike.coe_sum, FunLike.coe_smul,
     Finset.sum_apply, Pi.smul_apply, measure_univ, smul_eq_mul, mul_one, Finset.sum_const,
     Finset.card_univ, nsmul_eq_mul]
   exact ENNReal.mul_inv_cancel hc (ENNReal.natCast_ne_top _)⟩

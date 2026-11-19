@@ -123,7 +123,7 @@ theorem isVertexList_firstPhaseSegment : IsVertexList firstPhaseSegment firstPha
       norm_num [firstPhaseVertices] at heq
   · apply Set.Subset.antisymm
     · rintro x ⟨i, rfl⟩
-      apply StrictConvexSpace.sphere_subset_extremePoints_closedBall 0 (by norm_num : (1 : ℝ) ≠ 0)
+      apply StrictConvexSpace.sphere_subset_extremePoints_closedBall 0 1
       fin_cases i <;> simp [firstPhaseVertices]
     · rw [firstPhaseSegment_hull]
       exact extremePoints_convexHull_subset

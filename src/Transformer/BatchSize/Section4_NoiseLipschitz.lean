@@ -39,10 +39,10 @@ theorem signNoiseResponse_lipschitzOn (R : ℝ) :
   have hC := signNoiseResponse_contDiff.continuous_deriv (by simp)
   obtain ⟨C, hCbound⟩ := isCompact_Icc.exists_bound_of_continuousOn
     (hC.continuousOn (s := Set.Icc (-R) R))
-  refine ⟨C.toNNReal, (convex_Icc (-R) R).lipschitzOnWith_of_nnnorm_deriv_le
+  refine ⟨C.toNNReal, (convex_Icc (-R) R).lipschitzOnWith_of_nnNorm_deriv_le
     (fun u _ => signNoiseResponse_contDiff.differentiable (by simp) u) ?_⟩
   intro u hu
-  rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal']
+  rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal']
   exact (hCbound u hu).trans (le_max_left _ _)
 
 /-- Both Brownian noise amplitudes have a state Lipschitz constant

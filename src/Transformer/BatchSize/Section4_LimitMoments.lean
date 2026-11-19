@@ -32,7 +32,7 @@ theorem meanSquare_tendstoInMeasure {Ω E : Type*} [MeasurableSpace Ω]
   have hn := (tendsto_iff_norm_sub_tendsto_zero.mp hLp)
   have heq (n : ℕ) : eLpNorm (X n - Y) 2 P =
       ENNReal.ofReal ‖(hX n).toLp (X n) - hY.toLp Y‖ := by
-    rw [ofReal_norm, ← (hX n).toLp_sub hY, Lp.enorm_def]
+    rw [ofReal_norm, ← (hX n).toLp_sub hY, Lp.eNorm_def]
     exact (eLpNorm_congr_ae ((hX n).sub hY).coeFn_toLp).symm
   have h := (ENNReal.continuous_ofReal.tendsto (0 : ℝ)).comp hn
   simp only [Function.comp_def, ENNReal.ofReal_zero] at h
@@ -87,8 +87,8 @@ theorem fourthMoment_le_of_meanSquare_tendsto {Ω E : Type*} [MeasurableSpace Ω
     (continuous_pow 4).comp_aestronglyMeasurable hY.aestronglyMeasurable.norm
   have hformula (f : Ω → ℝ) (hi : Integrable f P) (hf : ∀ ω, 0 ≤ f ω) :
       eLpNorm f 1 P = ENNReal.ofReal (∫ ω, f ω ∂P) := by
-    rw [eLpNorm_one_eq_lintegral_enorm hi.aestronglyMeasurable,
-      ← ofReal_integral_norm_eq_lintegral_enorm hi]
+    rw [eLpNorm_one_eq_lintegral_eNorm hi.aestronglyMeasurable,
+      ← ofReal_integral_norm_eq_lintegral_eNorm hi]
     congr 1
     apply integral_congr_ae
     exact Eventually.of_forall fun ω => Real.norm_of_nonneg (hf ω)

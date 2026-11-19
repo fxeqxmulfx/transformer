@@ -91,7 +91,7 @@ theorem predictionHull_excess_le (A : K → Set (Table m n C))
   linarith [scaled_ideal_le hs cell labels (predictionHull_rows A hA hQ)]
 
 private def witness : Table Bool Unit Bool := pointMass (fun x _ => x)
-private def family (k : Bool) : Set (Table Bool Unit Bool) :=
+private noncomputable def family (k : Bool) : Set (Table Bool Unit Bool) :=
   {if k then witness else uniform}
 
 private theorem family_rows (k : Bool) (P : Table Bool Unit Bool) (hP : P ∈ family k) :

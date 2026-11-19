@@ -20,7 +20,7 @@ are uniformly dense in `C⁰(𝕊^{d-1})`").
 
 @[expose] public section
 
-open scoped BigOperators BoundedContinuousFunction
+open scoped BigOperators BoundedContinuousFunction Pointwise
 open MeasureTheory
 
 namespace Transformer
@@ -54,7 +54,7 @@ theorem exists_mono_of_mem_closure {g : SSphere d →ᵇ ℝ}
     obtain ⟨k, I, hI⟩ := hf
     obtain ⟨l, J, hJ⟩ := hg
     refine ⟨k + l, Fin.append I J, fun x => ?_⟩
-    rw [BoundedContinuousFunction.mul_apply, hI, hJ, mono, mono,
+    rw [mul_apply, hI, hJ, mono, mono,
       mono, Fin.prod_univ_add]
     simp [Fin.append_left, Fin.append_right]
 
@@ -95,11 +95,11 @@ theorem measure_eq_of_integral_mono_eq (μ₁ μ₂ : Measure (SSphere d))
       exact h k I
     | zero => simp
     | add f g _ _ hf hg =>
-      simp only [BoundedContinuousFunction.coe_add, Pi.add_apply]
+      simp only [FunLike.coe_add, Pi.add_apply]
       rw [integral_add (f.integrable _) (g.integrable _),
         integral_add (f.integrable _) (g.integrable _), hf, hg]
     | smul a f _ hf =>
-      simp only [BoundedContinuousFunction.coe_smul, smul_eq_mul]
+      simp only [FunLike.coe_smul, Pi.smul_apply, smul_eq_mul]
       rw [integral_const_mul, integral_const_mul, hf]
 
 /-- The hypothesis of `measure_eq_of_integral_mono_eq` is satisfiable: a

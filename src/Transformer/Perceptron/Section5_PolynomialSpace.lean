@@ -84,7 +84,7 @@ spaces in `lem: quadpol` (i). Its actual finite-dimensional image gives
 closedness; this is distinct from density of all polynomial degrees. -/
 theorem isClosed_spherePolynomialSpace (d k : ℕ) :
     IsClosed (spherePolynomialSpace d k : Set C(SSphere d, ℝ)) :=
-  (spherePolynomialSpace d k).closed_of_finiteDimensional
+  (spherePolynomialSpace d k).isClosed_of_finiteDimensional
 
 /-- Enlarging the original degree bound includes the actual original
 polynomial space in the new one. Source: arXiv:2601.21366v2, §5.1,

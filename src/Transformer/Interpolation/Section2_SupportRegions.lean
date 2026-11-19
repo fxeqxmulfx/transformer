@@ -21,6 +21,7 @@ with pairwise disjoint hulls of their closures.
 @[expose] public section
 
 open Real Set
+open scoped Pointwise
 
 namespace Transformer.Interpolation
 

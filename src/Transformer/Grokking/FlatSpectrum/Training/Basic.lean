@@ -125,7 +125,7 @@ lemma frobeniusSq_mul_le (A : Matrix l m ℂ) (B : Matrix m n ℂ) :
     have h := norm_sum_star_mul_le Finset.univ (fun k => star (A i k)) fun k => B k j
     simp only [star_star, norm_star] at h
     calc ‖(A * B) i j‖ ^ 2 ≤ (√(∑ k, ‖A i k‖ ^ 2) * √(∑ k, ‖B k j‖ ^ 2)) ^ 2 := by
-          rw [mul_apply]
+          rw [Matrix.mul_apply]
           gcongr
       _ = _ := by
           rw [mul_pow, Real.sq_sqrt (Finset.sum_nonneg fun _ _ => sq_nonneg _),

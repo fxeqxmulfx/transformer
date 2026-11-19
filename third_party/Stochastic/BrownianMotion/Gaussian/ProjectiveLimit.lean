@@ -5,7 +5,7 @@ Authors: Rémy Degenne
 -/
 module
 
-public import KolmogorovExtension4.KolmogorovExtension
+public import Mathlib.MeasureTheory.Constructions.KolmogorovExtension
 public import Mathlib.Probability.BrownianMotion.GaussianProjectiveFamily
 public import Mathlib.Probability.HasLaw
 

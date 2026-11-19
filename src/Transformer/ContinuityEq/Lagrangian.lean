@@ -104,7 +104,7 @@ theorem map_flow_closedBall_compl (hw : IsFlowField w L M) {ν : Measure E} {R :
     (hν : ν (closedBall 0 R)ᶜ = 0) (s t : ℝ) :
     ν.map (flow w s t) (closedBall 0 (R + M * |t - s|))ᶜ = 0 := by
   rw [Measure.map_apply (hw.continuous_flow s t).measurable measurableSet_closedBall.compl]
-  exact measure_mono_null (fun x hx hx' => hx (mem_closedBall_zero_iff.2
+  exact measure_mono_null (t := (closedBall 0 R)ᶜ) (fun x hx hx' => hx (mem_closedBall_zero_iff.2
     (hw.norm_flow_le (mem_closedBall_zero_iff.1 hx') s t))) hν
 
 /-- **Uniqueness for the linear continuity equation.**  A weak solution on

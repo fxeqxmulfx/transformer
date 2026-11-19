@@ -49,7 +49,7 @@ theorem physical_norm (b : Bool) : ‖physical b‖ = if b then 9 else 4 := by
     fin_cases d <;> fin_cases e <;> cases b <;>
       norm_num [physical, row, diagonalChange, Matrix.mul_apply,
         Matrix.conjTranspose_apply, Matrix.diagonal]
-  · have h := Matrix.norm_entry_le_entrywise_sup_norm (physical b)
+  · have h := Matrix.norm_apply_le_norm (physical b)
       (i := some (0, b)) (j := some (0, b))
     cases b <;> norm_num [physical, row, diagonalChange, Matrix.mul_apply,
       Matrix.conjTranspose_apply, Matrix.diagonal] at h ⊢ <;> exact h

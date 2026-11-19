@@ -167,7 +167,7 @@ zero measure every `h ∈ L²` has norm `0`. -/
 theorem isCylindricalWiener_zero [IsProbabilityMeasure P] (ℱ : Filtration ℝ≥0 m) :
     IsCylindricalWiener (0 : Measure Θ) ℱ P fun _ _ _ => 0 := by
   refine ⟨fun _ _ _ _ => ae_of_all _ fun _ => by simp, fun h => ?_⟩
-  have hh : ‖h‖₊ = 0 := by simp [Lp.nnnorm_def]
+  have hh : ‖h‖₊ = 0 := by simp [Lp.nnNorm_def]
   rw [hh, zero_pow two_ne_zero]
   exact isBrownian_zero ℱ
 

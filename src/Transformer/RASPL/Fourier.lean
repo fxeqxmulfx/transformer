@@ -74,7 +74,7 @@ lemma chi_mul_chi (S T : Finset (Fin n)) (x : Cube n) :
     Finset.disjoint_left.2 fun a ha ha' => (Finset.mem_sdiff.1 ha').2 (Finset.mem_sdiff.1 ha).1
   have hd : chi (symmDiff S T) x
       = (∏ i ∈ S \ T, bitSign (x i)) * ∏ i ∈ T \ S, bitSign (x i) := by
-    rw [chi, show symmDiff S T = (S \ T) ∪ (T \ S) from Finset.sup_eq_union,
+    rw [chi, show symmDiff S T = (S \ T) ∪ (T \ S) from symmDiff_def S T,
       Finset.prod_union hdisj]
   rw [hS, hT, hd, show ∀ a b c d : ℝ, a * b * (c * d) = a * c * (b * d) from fun _ _ _ _ => by ring,
     hsq, mul_one]

@@ -85,11 +85,11 @@ theorem massConcentrationQ1_sqrt (d N : ℕ) (ν : Idx N → Perspective.ProbSph
   set μ₀ := ρ.restrict Q + ρ Qᶜ • Measure.dirac x₀ with hμ₀
   have hμprob : IsProbabilityMeasure μ₀ := by
     constructor
-    rw [hμ₀, Measure.add_apply, Measure.smul_apply, smul_eq_mul, Measure.restrict_apply_univ,
+    rw [hμ₀, add_apply, smul_apply, smul_eq_mul, Measure.restrict_apply_univ,
       measure_univ (μ := Measure.dirac x₀), mul_one, measure_add_measure_compl hQ, measure_univ]
   refine ⟨⟨μ₀, hμprob⟩, ?_, ?_⟩
   · show μ₀ Qᶜ = 0
-    rw [hμ₀, Measure.add_apply, Measure.smul_apply, Measure.restrict_apply hQ.compl,
+    rw [hμ₀, add_apply, smul_apply, Measure.restrict_apply hQ.compl,
       Set.compl_inter_self, measure_empty, Measure.dirac_apply' _ hQ.compl,
       Set.indicator_of_notMem (Set.notMem_compl_iff.2 hx₀)]
     simp

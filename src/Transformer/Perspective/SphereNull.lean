@@ -138,7 +138,7 @@ theorem measure_eq_zero_iff_volume_sphereCone (hd : 1 ≤ d) {P : Measure (Spher
     (hP : UniformTuple d n P) (A : Set (SphereTuple d n)) :
     P A = 0 ↔ volume (sphereCone hd A) = 0 := by
   rw [volume_sphereCone hd, mul_eq_zero, or_iff_left pi_volumeIoiPow_univ_ne_zero,
-    eq_pi_shellLaw hd P hP, pi_shellLaw_eq hd, Measure.smul_apply, smul_eq_mul, mul_eq_zero,
+    eq_pi_shellLaw hd P hP, pi_shellLaw_eq hd, smul_apply, smul_eq_mul, mul_eq_zero,
     or_iff_right (pow_ne_zero _ (ENNReal.inv_ne_zero.2 (measure_ne_top _ _)))]
 
 /-- **Almost every configuration is almost every direction:** a property of the

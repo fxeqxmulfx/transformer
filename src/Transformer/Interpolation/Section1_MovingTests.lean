@@ -97,8 +97,8 @@ noncomputable def sphericalIntegralCLM (μ : Perspective.ProbSphere d) :
         (f.integrable (μ := (μ : Measure (SSphere d))))
         (g.integrable (μ := (μ : Measure (SSphere d))))
       map_smul' := fun c f => by
-        simpa only [BoundedContinuousFunction.coe_smul, smul_eq_mul, RingHom.id_apply]
-          using integral_smul c (f : SSphere d → ℝ) }
+        simpa only [FunLike.coe_smul, Pi.smul_apply, smul_eq_mul,
+          RingHom.id_apply] using integral_smul c (f : SSphere d → ℝ) }
     1 (fun f => by
       change ‖∫ x, f x ∂(μ : Measure (SSphere d))‖ ≤ 1 * ‖f‖
       simpa only [probReal_univ, mul_one, one_mul] using

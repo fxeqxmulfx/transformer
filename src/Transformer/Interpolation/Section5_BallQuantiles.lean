@@ -61,7 +61,7 @@ theorem measure_one_of_contains_carrier (ν : Measure X) [IsProbabilityMeasure �
   calc
     _ = ν univ := measure_congr (by
       filter_upwards [ae_mem_of_null_carrier_compl ν S hS] with x hx
-      exact propext (iff_true_intro (hA hx)))
+      exact iff_of_true (hA hx) (Set.mem_univ x))
     _ = 1 := measure_univ
 
 /-- Consecutive cumulative masses subtract even when the actual
@@ -74,7 +74,7 @@ theorem measure_sdiff_of_nested_on_carrier (ν : Measure X) [IsFiniteMeasure ν]
   congr 1
   apply measure_congr
   filter_upwards [ae_mem_of_null_carrier_compl ν S hS] with x hx
-  exact propext (or_iff_left_of_imp (hBA x hx))
+  exact (Set.mem_union x A B).trans (or_iff_left_of_imp (hBA x hx))
 
 /-- Successive prescribed cumulative masses give the actual shell
 mass `1/M`. Source: arXiv:2411.04551v3, §5, property 1 of `cl: balls`.

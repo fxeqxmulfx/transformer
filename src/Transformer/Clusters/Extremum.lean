@@ -48,7 +48,7 @@ theorem antitone_sup'_of_hasDerivAt {ι : Type*} [Fintype ι] [Nonempty ι]
     · have hle : g' i x ≤ 0 := hact i x fun j =>
         hmax ▸ Finset.le_sup' (fun k => g k x) (Finset.mem_univ j)
       have ht := (hasDerivAt_iff_tendsto_slope.1 (hg i x)).mono_left
-        (nhdsWithin_mono x (fun z (hz : x < z) => hz.ne'))
+        (nhdsGT_le_nhdsNE x)
       filter_upwards [ht.eventually (gt_mem_nhds (lt_of_le_of_lt hle hr)),
         self_mem_nhdsWithin] with z hz (hxz : x < z)
       rw [slope_def_field, div_lt_iff₀ (sub_pos.2 hxz)] at hz

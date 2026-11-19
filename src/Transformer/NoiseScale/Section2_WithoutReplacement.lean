@@ -91,8 +91,8 @@ theorem sum_apply_mul (i : Fin B) (h : Fin D → ℝ) :
     (∑ σ : Fin B ↪ Fin D, h (σ i)) * D = Fintype.card (Fin B ↪ Fin D) * ∑ d, h d := by
   have := sum_trans_mul_card (⟨fun _ => i, fun a b _ => Subsingleton.elim a b⟩ : Fin 1 ↪ Fin B)
     (fun x => h (x 0))
-  rw [Fintype.card_congr Equiv.uniqueEmbeddingEquivResult, Fintype.card_fin,
-    Fintype.sum_equiv Equiv.uniqueEmbeddingEquivResult (fun x => h (x 0)) h fun _ => rfl] at this
+  rw [Fintype.card_congr Equiv.embeddingUnique, Fintype.card_fin,
+    Fintype.sum_equiv Equiv.embeddingUnique (fun x => h (x 0)) h fun _ => rfl] at this
   exact this
 
 /-- Two examples `σ i`, `σ j`, `i ≠ j`, of a uniform batch are a uniform pair of distinct

@@ -1,0 +1,16 @@
+Red-black trees with their well-formedness, depth and lemma files.
+
+Source, under Apache License 2.0:
+  https://github.com/leanprover-community/batteries-recycling
+  revision b655c13f6e99c9dd1216ffce7c53afbd520553d7
+
+Batteries moved these modules out of Batteries.Recycling.RBTree into that
+repository on 2026-10-05. Mathlib v4.36.0's Batteries no longer has them;
+Transformer.ALM.TreeQuery and Transformer.ALM.TreeBalance need them.
+
+RBTree/Basic.lean, WF.lean, Depth.lean, Alter.lean and Lemmas.lean are the
+import closure of RBTree.Depth and RBTree.Lemmas, copied without change. The
+repository's MonadSatisfying library and RBTree.lean are not included.
+Copyright and author notices in the source files are retained. The sources
+rely on auto-bound implicit arguments and universes, so unlike this
+repository's other libraries, RBTree keeps Lean's default `autoImplicit`.

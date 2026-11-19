@@ -91,7 +91,7 @@ theorem gaussian_tuple_failure_le (d κ : ℕ) (B : ParamMatrix d) :
             (measurable_pi_apply ij.2)) hs, map_pair_stdGaussian hij]
   calc
     μ _ ≤ ∑' ij, μ (E ij) := by rw [hset]; exact measure_iUnion_le E
-    _ ≤ ∑' _ij : Fin κ × Fin κ, p := ENNReal.tsum_le_tsum hE
+    _ ≤ ∑' _ij : Fin κ × Fin κ, p := tsum_le_tsum hE
     _ = (κ : ℝ≥0∞) ^ 2 * p := by simp [pow_two]
 
 /-- All Gaussian vertices own their cells with probability tending to one

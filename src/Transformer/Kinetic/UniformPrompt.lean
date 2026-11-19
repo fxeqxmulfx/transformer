@@ -44,7 +44,7 @@ theorem exists_isUniformPrompt :
   have hne : ENNReal.ofReal (2 * π) ≠ ⊤ := ENNReal.ofReal_ne_top
   refine ⟨(ENNReal.ofReal (2 * π))⁻¹ • volume.restrict (Set.Ioc 0 (0 + 2 * π)), ⟨?_⟩,
     fun j => ?_⟩
-  · rw [Measure.smul_apply, Measure.restrict_apply_univ, Real.volume_Ioc, smul_eq_mul, zero_add,
+  · rw [smul_apply, Measure.restrict_apply_univ, Real.volume_Ioc, smul_eq_mul, zero_add,
       sub_zero, ENNReal.inv_mul_cancel hpos hne]
   · show Measure.map (fun ω : ℝ => (ω : Torus))
         ((ENNReal.ofReal (2 * π))⁻¹ • volume.restrict (Set.Ioc 0 (0 + 2 * π))) = _

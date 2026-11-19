@@ -36,7 +36,7 @@ theorem exists_diffuse_probSphere (d : ℕ) (hd : 2 ≤ d) {S : Set (SSphere d)}
     exact measure_ne_top _ _
   have hprob : IsProbabilityMeasure ((uniformLaw d S)⁻¹ • (uniformLaw d).restrict S) :=
     ⟨by
-      rw [Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul,
+      rw [smul_apply, Measure.restrict_apply_univ, smul_eq_mul,
         ENNReal.inv_mul_cancel hne htop]⟩
   refine ⟨⟨_, hprob⟩, fun y => ?_, ?_⟩
   · have h0 : uniformLaw d {y} = 0 := by
@@ -45,7 +45,7 @@ theorem exists_diffuse_probSphere (d : ℕ) (hd : 2 ≤ d) {S : Set (SSphere d)}
     have hle : ((uniformLaw d).restrict S) {y} ≤ uniformLaw d {y} := Measure.restrict_le_self _
     have hle0 : ((uniformLaw d).restrict S) {y} = 0 := le_zero_iff.mp (h0 ▸ hle)
     show ((uniformLaw d S)⁻¹ • (uniformLaw d).restrict S) {y} = 0
-    rw [Measure.smul_apply, smul_eq_mul, hle0, mul_zero]
+    rw [smul_apply, smul_eq_mul, hle0, mul_zero]
   · refine Measure.support_subset_of_isClosed hS ?_
     have h : ∀ᵐ x ∂(uniformLaw d).restrict S, x ∈ S := ae_restrict_mem hS.measurableSet
     exact Measure.ae_smul_measure h _

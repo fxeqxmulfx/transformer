@@ -61,7 +61,7 @@ theorem choose_card_mul_eq_zero (j : ℕ) {i : ℕ} (hi0 : 0 < i) (hiq : i < Fin
   have h : ((X + 1 : F[X]) ^ (Fintype.card F * j)) =
       expand F (Fintype.card F) ((X + 1) ^ j) := by
     rw [map_pow, FiniteField.Polynomial.expand_card, pow_mul]
-  have := congrArg (coeff · i) h
+  have := congrArg (·.coeff i) h
   simp only [coeff_X_add_one_pow, coeff_expand hq] at this
   rw [this, ite_eq_right (Nat.not_dvd_of_pos_of_lt hi0 hiq)]
 

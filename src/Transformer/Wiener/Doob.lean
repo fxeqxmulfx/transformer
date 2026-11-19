@@ -69,9 +69,9 @@ theorem lintegral_iSup_enorm_sq_le (hM : Martingale M ℱ P)
     _ ≤ 4 * ∫⁻ ω, ‖M T ω‖ₑ ^ 2 ∂P := iSup_le fun n => by
         have h := lintegral_runningMax_sq_le (submartingale_abs_dyadic hM T n)
           (fun _ _ => abs_nonneg _) (2 ^ n) fun k hk => by
-            simp_rw [← Real.enorm_eq_ofReal_abs]
+            simp_rw [← Real.eNorm_eq_ofReal_abs]
             exact ne_top_of_le_ne_top hfin (lintegral_enorm_sq_le_of_le hM (dyadicTime_le hk))
-        simpa only [gridMax, ← Real.enorm_eq_ofReal_abs, dyadicTime_two_pow] using h
+        simpa only [gridMax, ← Real.eNorm_eq_ofReal_abs, dyadicTime_two_pow] using h
 
 /-- **Doob's weak `L²` inequality**: `ε² ℙ(sup_{t ≤ T} |M_t| ≥ ε) ≤ 𝔼[M_T²]` for
 a martingale with almost surely right-continuous paths. Revuz–Yor,
@@ -101,7 +101,7 @@ theorem sq_mul_measure_le_iSup_enorm (hM : Martingale M ℱ P)
       _ = ⨆ n, ENNReal.ofReal δ ^ 2 * P {ω | δ ≤ gridMax M T n ω} := by
         rw [hmono.measure_iUnion, ENNReal.mul_iSup]
       _ ≤ _ := iSup_le fun n => by
-        simpa only [gridMax, ← Real.enorm_eq_ofReal_abs, dyadicTime_two_pow] using
+        simpa only [gridMax, ← Real.eNorm_eq_ofReal_abs, dyadicTime_two_pow] using
           ofReal_sq_mul_measure_le (submartingale_abs_dyadic hM T n)
             (fun _ _ => abs_nonneg _) δ (2 ^ n)
   have hlim : Tendsto (fun δ => ENNReal.ofReal δ ^ 2 * P A) (𝓝[<] ε)
@@ -126,13 +126,13 @@ theorem sq_mul_measureReal_le (hM : Martingale M ℱ P)
     refine (ENNReal.toReal_lt_of_lt_ofReal hlt').not_ge (hω.trans ?_)
     refine Real.iSup_le (fun t => Real.iSup_le (fun ht => ?_) ENNReal.toReal_nonneg)
       ENNReal.toReal_nonneg
-    rw [← Real.norm_eq_abs, ← toReal_enorm]
+    rw [← Real.norm_eq_abs, ← toReal_eNorm]
     exact ENNReal.toReal_mono hlt'.ne_top
       (le_iSup₂ (f := fun t (_ : t ∈ Icc 0 T) => ‖M t ω‖ₑ) t ht)
   have hB : ∫⁻ ω, ‖M T ω‖ₑ ^ 2 ∂P = ENNReal.ofReal (∫ ω, M T ω ^ 2 ∂P) := by
     rw [ofReal_integral_eq_lintegral_ofReal hT.integrable_sq (ae_of_all _ fun _ => sq_nonneg _)]
     refine lintegral_congr fun ω => ?_
-    rw [Real.enorm_eq_ofReal_abs, ← ENNReal.ofReal_pow (abs_nonneg _), sq_abs]
+    rw [Real.eNorm_eq_ofReal_abs, ← ENNReal.ofReal_pow (abs_nonneg _), sq_abs]
   have h := sq_mul_measure_le_iSup_enorm hM hc T ε
   rw [hB] at h
   calc ε ^ 2 * P.real {ω | ε ≤ ⨆ t ∈ Icc 0 T, |M t ω|}

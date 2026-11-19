@@ -38,7 +38,7 @@ noncomputable def angleLaw : Measure ℝ :=
   (ENNReal.ofReal (2 * π))⁻¹ • volume.restrict (Ico 0 (2 * π))
 
 instance isProbabilityMeasure_angleLaw : IsProbabilityMeasure angleLaw :=
-  ⟨by rw [angleLaw, Measure.smul_apply, Measure.restrict_apply_univ, Real.volume_Ico, sub_zero,
+  ⟨by rw [angleLaw, smul_apply, Measure.restrict_apply_univ, Real.volume_Ico, sub_zero,
     smul_eq_mul, ENNReal.inv_mul_cancel (ENNReal.ofReal_pos.2 Real.two_pi_pos).ne'
       ENNReal.ofReal_ne_top]⟩
 
@@ -125,9 +125,9 @@ theorem pi_angleLaw (n : ℕ) :
       (ENNReal.ofReal (2 * π) ^ n)⁻¹ •
         volume.restrict (univ.pi fun _ : Idx n => Ico 0 (2 * π)) := by
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.restrict_apply (MeasurableSet.univ_pi hs),
+  rw [smul_apply, Measure.restrict_apply (MeasurableSet.univ_pi hs),
     ← Set.pi_inter_distrib, volume_pi_pi, smul_eq_mul, ENNReal.inv_pow]
-  simp only [angleLaw, Measure.smul_apply, Measure.restrict_apply (hs _), smul_eq_mul,
+  simp only [angleLaw, smul_apply, Measure.restrict_apply (hs _), smul_eq_mul,
     Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
 /-- **The uniform law on `(𝕊¹)ⁿ` is normalized Lebesgue measure in angles**:

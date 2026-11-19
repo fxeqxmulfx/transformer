@@ -116,7 +116,7 @@ theorem exists_small_disjoint_balls (ν : Measure (SSphere d)) [IsFiniteMeasure 
     · exact ⟨∅, by rw [Finset.sum_empty, zero_add]; exact hsη⟩
     · have hlt : μ s - η < μ s := ENNReal.sub_lt_self (measure_ne_top _ _)
         (hη.trans (not_le.mp hsη)).ne' hη.ne'
-      rw [ENNReal.tsum_eq_iSup_sum] at hcov
+      rw [tsum_eq_iSup_sum] at hcov
       obtain ⟨F, hF⟩ := lt_iSup_iff.mp (hlt.trans_le hcov)
       exact ⟨F, tsub_le_iff_right.mp hF.le⟩
   obtain ⟨F, hF⟩ := hfin

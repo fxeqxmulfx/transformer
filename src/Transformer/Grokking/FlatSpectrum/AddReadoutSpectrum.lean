@@ -41,8 +41,8 @@ lemma fourierMatrix_mul_conjTranspose :
 lemma conjTranspose_fourierMatrix_mul :
     (fourierMatrix N)ᴴ * fourierMatrix N = (N : ℂ) • 1 := by
   ext b c
-  simp only [fourierMatrix, mul_apply, conjTranspose_apply, of_apply, Matrix.smul_apply,
-    one_apply, smul_eq_mul]
+  simp only [fourierMatrix, Matrix.mul_apply, conjTranspose_apply, of_apply, Matrix.smul_apply,
+    Matrix.one_apply, smul_eq_mul]
   rw [sum_congr rfl fun k _ => (by
     rw [star_stdAddChar_mul, show k * c - k * b = k * (c - b) by ring] :
       star (ZMod.stdAddChar (k * b)) * ZMod.stdAddChar (k * c) = ZMod.stdAddChar (k * (c - b))),
@@ -58,7 +58,7 @@ theorem taskKernel_add_eq_fourier (g : ZMod N → ℂ) :
   ext a b
   have h := congrFun (ZMod.dft.symm_apply_apply g) (a + b)
   rw [ZMod.invDFT_apply, smul_eq_mul] at h
-  rw [Matrix.smul_apply, smul_eq_mul, mul_apply]
+  rw [Matrix.smul_apply, smul_eq_mul, Matrix.mul_apply]
   simp only [taskKernel, of_apply, mul_diagonal, fourierMatrix]
   rw [← h, one_div]
   congr 1

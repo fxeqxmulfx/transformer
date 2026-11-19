@@ -37,7 +37,7 @@ theorem optimizerDiffusion_bounded_lipschitz {d : ℕ} (method : UpdateKind)
   obtain ⟨M, hbM⟩ := diffusionDrift_uniform_bound method B f σ hmodel
   obtain ⟨A, haA⟩ := diffusionNoiseScale_uniform_bound method B f σ hB hmodel
   refine ⟨Kb, ‖Real.sqrt η‖₊ * Ka, M, ‖Real.sqrt η‖₊ * A, hb, ha η hη, hbM, ?_⟩
-  simpa only [NNReal.coe_mul, coe_nnnorm, Real.norm_eq_abs,
+  simpa only [NNReal.coe_mul, coe_nnNorm, Real.norm_eq_abs,
     abs_of_nonneg (Real.sqrt_nonneg _)] using haA η hη
 
 /-- The paper's actual optimizer generator is the diagonal

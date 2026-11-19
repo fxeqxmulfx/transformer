@@ -69,7 +69,7 @@ theorem radialProj_comp_isometry {d : ℕ} (U : EucSpace d ≃ₗᵢ[ℝ] EucSpa
 
 /-- The punctured unit ball of `ℝ^d`: the set the radial projection is applied
 to, chosen open so that its Lebesgue measure is positive without computing it. -/
-def puncturedBall (d : ℕ) : Set (EucSpace d) := Metric.ball 0 1 \ {0}
+noncomputable def puncturedBall (d : ℕ) : Set (EucSpace d) := Metric.ball 0 1 \ {0}
 
 theorem isOpen_puncturedBall (d : ℕ) : IsOpen (puncturedBall d) :=
   Metric.isOpen_ball.sdiff isClosed_singleton
@@ -104,7 +104,7 @@ theorem uniformAmbient_apply {d : ℕ} {s : Set (EucSpace d)} (hs : MeasurableSe
     uniformAmbient d s =
       (volume (puncturedBall d))⁻¹ *
         volume (radialProj d ⁻¹' s ∩ puncturedBall d) := by
-  rw [uniformAmbient, Measure.smul_apply, smul_eq_mul,
+  rw [uniformAmbient, smul_apply, smul_eq_mul,
     Measure.map_apply (measurable_radialProj d) hs,
     Measure.restrict_apply ((measurable_radialProj d) hs)]
 

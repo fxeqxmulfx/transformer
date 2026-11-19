@@ -167,7 +167,7 @@ theorem isMinOn_iff_exists_certificate {U : Matrix m r ℂ} {V : Matrix n r ℂ}
 example := (isMinOn_iff_exists_certificate (U := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (V := 1)
   (by simp) (by simp) (s := ![1, 2]) (fun k => by fin_cases k <;> norm_num) rfl
   (Ω := {ij | ij.1 = ij.2})).2
-  ⟨0, by simp, by simp, isContraction_zero, fun i j hij => by simpa [one_apply] using hij⟩
+  ⟨0, by simp, by simp, isContraction_zero, fun i j hij => by simpa [Matrix.one_apply] using hij⟩
 
 omit [Fintype r] [DecidableEq r] in
 /-- **Theorem A at full column rank**: if `K = U diag(s) Vᴴ` with `s > 0` and `V` square, `K` is a
@@ -191,6 +191,6 @@ theorem isMinOn_iff_of_full_rank {U : Matrix m n ℂ} {V : Matrix n n ℂ} (hU :
 
 example := (isMinOn_iff_of_full_rank (U := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (V := 1)
   (by simp) (by simp) (s := ![1, 2]) (fun k => by fin_cases k <;> norm_num) rfl
-  (Ω := {ij | ij.1 = ij.2})).2 fun i j hij => by simpa [one_apply] using hij
+  (Ω := {ij | ij.1 = ij.2})).2 fun i j hij => by simpa [Matrix.one_apply] using hij
 
 end Transformer.Grokking.FlatSpectrum

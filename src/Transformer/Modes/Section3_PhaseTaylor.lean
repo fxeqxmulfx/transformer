@@ -86,7 +86,7 @@ theorem norm_complexExp_imaginary_taylor (u : ℝ) (n : ℕ) :
     rw [iteratedDeriv_complexExp_real]
     simp [c, norm_pow, Complex.norm_exp]
   have h := taylor_mean_remainder_bound (a := (0 : ℝ)) (b := 1)
-    (C := |u| ^ (n + 1)) (n := n) (by norm_num)
+    (C := |u| ^ (n + 1)) (n := n)
     (hc.contDiffOn.of_le (by simp)) (by simp : (1 : ℝ) ∈ Set.Icc 0 1) hb
   dsimp [f] at h
   rw [taylorWithinEval_complexExp_real] at h

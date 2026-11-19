@@ -23,7 +23,7 @@ open GPTMini Landscape.Neural
 /-- B2: sigmoid is globally 1-Lipschitz, by its actual derivative. -/
 theorem sigmoid_error (x y : ℝ) : |Real.sigmoid x - Real.sigmoid y| ≤ |x - y| := by
   have h : LipschitzWith 1 Real.sigmoid :=
-    lipschitzWith_of_nnnorm_deriv_le differentiable_sigmoid (fun t => by
+    lipschitzWith_of_nnNorm_deriv_le differentiable_sigmoid (fun t => by
       change ‖deriv Real.sigmoid t‖ ≤ (1 : ℝ)
       rw [Real.deriv_sigmoid, Real.norm_eq_abs,
         abs_of_nonneg (mul_nonneg (Real.sigmoid_nonneg t) (sub_nonneg.mpr (Real.sigmoid_le_one t)))]

@@ -65,7 +65,7 @@ theorem measureReal_mul_sq_le_W2_sq (μ ν : Measure X) [IsProbabilityMeasure μ
           by_cases hpA : p.1 ∈ A
           · rw [Set.indicator_of_mem (Set.mk_mem_prod hpA (Set.mem_univ _))]
             exact pow_le_pow_left₀ hδ (hAB _ hpA _ hp) 2
-          · rw [Set.indicator_of_notMem (fun h => hpA h.1)]
+          · rw [Set.indicator_of_notMem (fun h => hpA (Set.mem_prod.mp h).1)]
             positivity
   obtain ⟨c0, hc0⟩ := transportCosts_nonempty μ ν
   have hinf : μ.real A * δ ^ 2 ≤ sInf (transportCosts μ ν) := le_csInf ⟨c0, hc0⟩ hc

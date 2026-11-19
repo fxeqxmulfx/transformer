@@ -72,7 +72,7 @@ theorem nuclearNorm_block {J : Matrix n k ℂ} (hJ : Jᴴ * J = 1) {c : ℝ} (hc
 
 example (B : Matrix (Fin 2) (Fin 2) ℂ) :=
   nuclearNorm_block (J := (of fun i j => if (i : ℕ) = j then 1 else 0 : Matrix (Fin 3) (Fin 2) ℂ))
-    (by ext i j; fin_cases i <;> fin_cases j <;> simp [mul_apply, Fin.sum_univ_three])
+    (by ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_three])
     zero_le_one B
 
 /-- Cayley–Hamilton for `2 × 2` matrices. -/

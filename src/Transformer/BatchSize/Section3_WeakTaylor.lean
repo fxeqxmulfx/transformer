@@ -61,7 +61,7 @@ theorem uniform_first_order_taylor {d : ℕ} (φ : EucSpace d → ℝ) (M : ℝ)
       hcoeff 1 (by omega) 0 (by norm_num), lossLine]
     exact gradientCorrelation_eq_fderiv φ x u (hf.differentiable (by norm_num) x)
   have h := taylor_mean_remainder_bound (n := 1) (a := 0) (b := 1) (x := 1)
-    (by norm_num) hline.contDiffOn (by norm_num) hb
+    hline.contDiffOn (by norm_num) hb
   rw [ht, Real.norm_eq_abs] at h
   simpa [lossLine, sub_add_eq_sub_sub] using h
 

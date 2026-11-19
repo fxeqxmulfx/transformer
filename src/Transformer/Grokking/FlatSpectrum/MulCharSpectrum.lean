@@ -138,20 +138,22 @@ example := @effectiveRank_cubicKernelMulChar 5 ⟨Nat.prime_five⟩ _ (by decide
 
 /-- "Effective rank 48 of 97", `review/flat_spectrum.md`, Theorem B: at `p = 97`,
 `rank K = 48` for every nontrivial `χ`. -/
-theorem rank_cubicKernelMulChar_97 [Fact (Nat.Prime 97)] {χ : MulChar (ZMod 97) ℂ}
+theorem rank_cubicKernelMulChar_97 {χ : MulChar (ZMod 97) ℂ}
     (hχ : χ ≠ 1) : (cubicKernelMulChar χ).rank = 48 := by
+  have : Fact (Nat.Prime 97) := ⟨by norm_num⟩
   have h := rank_cubicKernelMulChar (by norm_num) hχ
   norm_num at h
   exact_mod_cast h
 
-example := @rank_cubicKernelMulChar_97 ⟨by norm_num⟩ _
+example := @rank_cubicKernelMulChar_97 _
   (@quadraticChar_ringHomComp_ne_one 97 ⟨by norm_num⟩ (by decide))
 
 /-- "Effective rank 48 of 97", `review/flat_spectrum.md`, Theorem B: at `p = 97`,
 `47.9 < r_eff K < 48` for every nontrivial `χ`. -/
-theorem effectiveRank_cubicKernelMulChar_97 [Fact (Nat.Prime 97)] {χ : MulChar (ZMod 97) ℂ}
+theorem effectiveRank_cubicKernelMulChar_97 {χ : MulChar (ZMod 97) ℂ}
     (hχ : χ ≠ 1) :
     47.9 < effectiveRank (cubicKernelMulChar χ) ∧ effectiveRank (cubicKernelMulChar χ) < 48 := by
+  have : Fact (Nat.Prime 97) := ⟨by norm_num⟩
   rw [effectiveRank_cubicKernelMulChar (by norm_num) hχ, show ((97 : ℕ) : ℝ) = 97 by norm_num,
     show (97 : ℝ) + 1 = 98 by norm_num, show ((97 : ℝ) - 3) / 2 = 47 by norm_num,
     show (2 : ℝ) * 97 = 194 by norm_num, show ((97 : ℝ) - 1) ^ 2 = 9216 by norm_num]
@@ -169,7 +171,7 @@ theorem effectiveRank_cubicKernelMulChar_97 [Fact (Nat.Prime 97)] {χ : MulChar 
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
 
-example := @effectiveRank_cubicKernelMulChar_97 ⟨by norm_num⟩ _
+example := @effectiveRank_cubicKernelMulChar_97 _
   (@quadraticChar_ringHomComp_ne_one 97 ⟨by norm_num⟩ (by decide))
 
 end Transformer.Grokking.FlatSpectrum

@@ -140,8 +140,8 @@ theorem gaussianMixtureComponent_eq_average (d r : ℕ) (σ : ℝ) (hσ : 0 < σ
     rw [ENNReal.ofReal_sum_of_nonneg (s := Finset.univ)
       (f := fun i : Idx r => f i x) (by intro i _; dsimp [f]; positivity)]
   ext E
-  rw [withDensity_apply', Measure.smul_apply]
-  simp only [Measure.finsetSum_apply]
+  rw [withDensity_apply', smul_apply]
+  simp only [sum_apply]
   simp_rw [withDensity_apply']
   conv_lhs => arg 2; ext x; rw [hval x]
   rw [lintegral_const_mul' (ENNReal.ofReal ((r : ℝ)⁻¹))

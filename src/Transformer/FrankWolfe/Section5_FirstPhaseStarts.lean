@@ -68,7 +68,7 @@ theorem firstPhaseStart_mem_cell {m : ℝ} (hm : m ∈ Ioo (0 : ℝ) (1 / 4)) :
   apply (mem_cell_iff _ firstPhaseSegment_hull _ _).mpr
   refine ⟨firstPhaseStart_mem_segment hm i, fun j => ?_⟩
   fin_cases i <;> fin_cases j <;> simp [firstPhaseStart, firstPhaseAssignment, firstPhaseVertices]
-  all_goals linarith [hm.2]
+  linarith [hm.2]
 
 /-- The source's actual minimum nonvertex distance is exactly m.
 Source: arXiv:2508.09628v1, §5, `lem: first.phase`, original initial data. -/

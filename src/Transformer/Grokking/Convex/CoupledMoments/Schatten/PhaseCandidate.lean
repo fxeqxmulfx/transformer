@@ -36,8 +36,8 @@ omit [Fintype C] in
 theorem phaseCode_gram (e : C ≃ ZMod q) :
     (phaseCode e)ᴴ * phaseCode e = (q : ℂ) • 1 := by
   ext c d
-  simp only [phaseCode, mul_apply, conjTranspose_apply, Matrix.smul_apply,
-    one_apply, smul_eq_mul]
+  simp only [phaseCode, Matrix.mul_apply, conjTranspose_apply, Matrix.smul_apply,
+    Matrix.one_apply, smul_eq_mul]
   rw [sum_congr rfl fun f _ => (by
     rw [star_stdAddChar_mul, show f * e d - f * e c = f * (e d - e c) by ring] :
       star (ZMod.stdAddChar (f * e c)) * ZMod.stdAddChar (f * e d) =

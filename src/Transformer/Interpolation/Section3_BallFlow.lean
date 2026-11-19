@@ -102,7 +102,7 @@ theorem map_collapseMap (μ : Measure (SSphere d)) (S : Set (SSphere d)) (hS : M
   classical
   ext A hA
   rw [Measure.map_apply (measurable_collapseMap S hS ω) hA, collapseInto,
-    Measure.add_apply, Measure.smul_apply, Measure.restrict_apply hA, Measure.dirac_apply' ω hA]
+    add_apply, smul_apply, Measure.restrict_apply hA, Measure.dirac_apply' ω hA]
   by_cases hω : ω ∈ A
   · have he : collapseMap S ω ⁻¹' A = S ∪ (A ∩ Sᶜ) := by
       ext x

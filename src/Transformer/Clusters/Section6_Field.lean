@@ -80,9 +80,9 @@ theorem lipschitzOnWith_Icc_of_hasDerivAt {E : Type*} [NormedAddCommGroup E] [No
     {f f' : ℝ → E} (hf : ∀ t, HasDerivAt f (f' t) t) (hf' : Continuous f') (a b : ℝ) :
     ∃ L : ℝ≥0, LipschitzOnWith L f (Icc a b) := by
   obtain ⟨C, hC⟩ := isCompact_Icc.exists_bound_of_continuousOn (hf'.continuousOn (s := Icc a b))
-  refine ⟨C.toNNReal, (convex_Icc a b).lipschitzOnWith_of_nnnorm_hasDerivWithin_le
+  refine ⟨C.toNNReal, (convex_Icc a b).lipschitzOnWith_of_nnNorm_hasDerivWithin_le
     (fun t _ => (hf t).hasDerivWithinAt) fun t ht => ?_⟩
-  rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal']
+  rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal']
   exact (hC t ht).trans (le_max_left _ _)
 
 /-- The hypotheses of `lipschitzOnWith_Icc_of_hasDerivAt` are satisfiable: the

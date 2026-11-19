@@ -42,7 +42,7 @@ theorem interaction_sub_abs_le (β : ℝ) (hβ : 0 ≤ β) (x y : ℝ) :
     |Causal.h_pot β x - Causal.h_pot β y| ≤ (1 + β) * |x - y| := by
   let L : ℝ≥0 := ⟨1 + β, by linarith⟩
   have hlip : LipschitzWith L (Causal.h_pot β) := by
-    apply lipschitzWith_of_nnnorm_deriv_le (fun u => (Causal.hasDerivAt_h_pot β u).differentiableAt)
+    apply lipschitzWith_of_nnNorm_deriv_le (fun u => (Causal.hasDerivAt_h_pot β u).differentiableAt)
     intro u
     rw [(Causal.hasDerivAt_h_pot β u).deriv]
     exact_mod_cast interaction_derivative_abs_le β hβ u

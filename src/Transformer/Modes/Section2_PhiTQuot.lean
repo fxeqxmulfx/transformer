@@ -150,7 +150,7 @@ theorem phiAlpha_eq {β : ℝ} (hβ : 0 < β) (t : ℝ) (h3 : qVar β t ≠ 0)
   generalize qVar' β t = G at hD ⊢
   generalize qCov β t = H at hD ⊢
   have hD' : 6 * F * G * β - t ^ 2 * H ^ 2 ≠ 0 := by
-    contrapose! hD; field_simp; linarith
+    contrapose hD; field_simp; linarith
   have hsq : (β ^ ((1 : ℝ) / 2)) ^ 2 = β := by
     rw [← Real.rpow_natCast, ← Real.rpow_mul hβ.le]; norm_num
   field_simp

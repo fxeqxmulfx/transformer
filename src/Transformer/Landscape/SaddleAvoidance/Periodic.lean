@@ -111,7 +111,7 @@ theorem exists_lipschitzWith_of_periodic {F : Type*} [NormedAddCommGroup F] [Nor
     (hH x).trans ((le_max_right M H).trans (Real.le_coe_toNNReal _))
   exact ⟨(max M H).toNNReal, fun x => (hM x).trans ((le_max_left M H).trans
     (Real.le_coe_toNNReal _)),
-    lipschitzWith_of_nnnorm_fderiv_le (hg.differentiable one_ne_zero) fun x => hHL x⟩
+    lipschitzWith_of_nnNorm_fderiv_le (hg.differentiable one_ne_zero) fun x => hHL x⟩
 
 /-- The hypotheses of `exists_lipschitzWith_of_periodic` hold for `sin` on the
 line and the period `2π`, which spans `ℝ`. -/
@@ -152,7 +152,7 @@ theorem exists_lipschitzWith_gradient_of_isCompact {f : E → ℝ} (hf : ContDif
     (hH x).trans ((le_max_right M H).trans (Real.le_coe_toNNReal _))
   refine ⟨(max M H).toNNReal, fun x => (hM x).trans ((le_max_left M H).trans
     (Real.le_coe_toNNReal _)), hHL, ?_⟩
-  exact lipschitzWith_of_nnnorm_fderiv_le (hg.differentiable one_ne_zero) fun x => hHL x
+  exact lipschitzWith_of_nnNorm_fderiv_le (hg.differentiable one_ne_zero) fun x => hHL x
 
 /-- **A `C²` function invariant under a set of translations spanning `E` has
 a bounded gradient, a bounded Hessian and a globally Lipschitz gradient**,

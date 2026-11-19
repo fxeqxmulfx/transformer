@@ -28,7 +28,7 @@ namespace Transformer.Modes
 
 /-- The left, middle, and right open branches of the original score in `eq:Fn`.
 Source: arXiv:2412.09080v3, §2.1; these are the intervals cut out by its derivative. -/
-def kdeScoreBranch (β : ℝ) (b : Fin 3) : Set ℝ :=
+noncomputable def kdeScoreBranch (β : ℝ) (b : Fin 3) : Set ℝ :=
   ![Iio (-kdeScoreRadius β), Ioo (-kdeScoreRadius β) (kdeScoreRadius β),
     Ioi (kdeScoreRadius β)] b
 
@@ -103,7 +103,7 @@ theorem hasDerivAt_kdeScoreInverse {β : ℝ} (hβ : 0 < β) (b : Fin 3) (y : �
       (deriv (kdeScore β) (kdeScoreInverse β b y))⁻¹ y := by
   rcases hy with ⟨s, hs, rfl⟩
   rw [kdeScoreInverse_kdeScore hβ b s hs]
-  have hstrict := ((contDiff_kdeScore (k := 1) β).contDiffAt (x := s)).hasStrictDerivAt
+  have hstrict := ((contDiff_kdeScore (k := 1) β).contDiffAt (x := s)).hasStrictDerivAt_deriv
     (by norm_num)
   have hleft : ∀ᶠ u in 𝓝 s, kdeScoreInverse β b (kdeScore β u) = u := by
     filter_upwards [(isOpen_kdeScoreBranch β b).mem_nhds hs] with u hu

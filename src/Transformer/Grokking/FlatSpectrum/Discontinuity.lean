@@ -122,7 +122,7 @@ theorem exists_tendsto_fract_mul_iff (α : ℚ) :
   have h2 := key (α.den - 1) (by omega)
     ((Nat.coprime_self_sub_left (by omega)).mpr (Nat.coprime_one_left _))
   have hq0 : (α.den : ℝ) ≠ 0 := by positivity
-  rw [h1, div_left_inj' hq0, Nat.cast_sub (by omega)] at h2
+  rw [h1, div_left_inj₀ hq0, Nat.cast_sub (by omega)] at h2
   have : (α.den : ℝ) = 2 := by push_cast at h2; linarith
   norm_cast at this
   omega

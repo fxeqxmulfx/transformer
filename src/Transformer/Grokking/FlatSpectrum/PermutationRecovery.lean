@@ -35,7 +35,7 @@ lemma sum_norm_sq_sub_eq {m r : Type*} [Fintype r] (U : Matrix m r ℂ) (V : Mat
     (i : m) (j : n) :
     ∑ k, ‖U i k - V j k‖ ^ 2 =
       ∑ k, ‖U i k‖ ^ 2 + ∑ k, ‖V j k‖ ^ 2 - 2 * ((U * Vᴴ) i j).re := by
-  rw [mul_apply, Complex.re_sum, mul_sum, ← sum_add_distrib, ← sum_sub_distrib]
+  rw [Matrix.mul_apply, Complex.re_sum, mul_sum, ← sum_add_distrib, ← sum_sub_distrib]
   refine sum_congr rfl fun k _ => ?_
   simp only [conjTranspose_apply, Complex.star_def, ← Complex.normSq_eq_norm_sq,
     Complex.normSq_sub]
@@ -108,7 +108,7 @@ theorem eq_onesMatrix_of_perm {Ω : Set (n × n)} {σ : Equiv.Perm n} (hσ : ∀
     have h := hΩ (fun i => U i k) (fun j => -V j k) (fun ij hij => hcell ij hij k) i j
     rwa [← sub_eq_add_neg, sub_eq_zero] at h
   ext i j
-  rw [hUV, mul_apply, onesMatrix, of_apply, ← Complex.ofReal_one, ← hu i, Complex.ofReal_sum]
+  rw [hUV, Matrix.mul_apply, onesMatrix, of_apply, ← Complex.ofReal_one, ← hu i, Complex.ofReal_sum]
   refine sum_congr rfl fun k _ => ?_
   rw [conjTranspose_apply, ← hall i j k, Complex.star_def, Complex.mul_conj', Complex.ofReal_pow]
 

@@ -36,7 +36,7 @@ theorem isProbabilityMeasure_empiricalMeasure (hn : 0 < n) (X : SphereTuple d n)
     IsProbabilityMeasure (empiricalMeasure d n X) := by
   constructor
   have hn' : (0 : ℝ) < n := by exact_mod_cast hn
-  simp only [empiricalMeasure, Measure.smul_apply, Measure.finsetSum_apply,
+  simp only [empiricalMeasure, smul_apply, sum_apply,
     measure_univ, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
     nsmul_eq_mul, mul_one]
   change ENNReal.ofReal ((n : ℝ)⁻¹) * (n : ℝ≥0∞) = 1
@@ -75,7 +75,7 @@ theorem integrable_empiricalMeasure {E : Type*} [NormedAddCommGroup E] [NormedSp
   apply Integrable.smul_measure_nnreal
   apply integrable_finsetSum_measure.mpr
   intro i _
-  exact integrable_dirac enorm_lt_top
+  exact integrable_dirac eNorm_lt_top
 
 /-- Integration against the actual empirical measure is a finite average.
 Source: arXiv:2312.10794v5, §3.1, `eq: mean.field.ips`. -/
@@ -83,7 +83,7 @@ theorem integral_empiricalMeasure {E : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] [CompleteSpace E] (X : SphereTuple d n) (f : SSphere d → E) :
     (∫ x, f x ∂empiricalMeasure d n X) = (n : ℝ)⁻¹ • ∑ i : Idx n, f (X i) := by
   rw [empiricalMeasure, integral_smul_nnreal_measure,
-    integral_finsetSum_measure (fun i _ => integrable_dirac enorm_lt_top)]
+    integral_finsetSum_measure (fun i _ => integrable_dirac eNorm_lt_top)]
   simp only [integral_dirac, NNReal.smul_def,
     Real.coe_toNNReal _ (inv_nonneg.mpr (Nat.cast_nonneg n))]
 

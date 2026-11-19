@@ -156,15 +156,15 @@ theorem not_massConcentrationQ1 : ¬ ∃ C : ℝ, 0 < C ∧
   have he'Q : e' ∉ positiveQuadrant 1 := antipode_notMem_positiveQuadrant
   have hprob : IsProbabilityMeasure ν0 := by
     constructor
-    simp only [ν0, Measure.add_apply, Measure.smul_apply, measure_univ, smul_eq_mul, mul_one]
+    simp only [ν0, add_apply, smul_apply, measure_univ, smul_eq_mul, mul_one]
     rw [← ENNReal.ofReal_add (by linarith) hη.le]
     simp
   let ν : Idx 1 → Perspective.ProbSphere 1 := fun _ => ⟨ν0, hprob⟩
   have hmass : ∀ i : Idx 1, Measure.map id (ν i : Measure (SSphere 1)) (positiveQuadrant 1)
       = ENNReal.ofReal (1 - η) := by
     intro i
-    simp only [Measure.map_id, ν, ProbabilityMeasure.coe_mk, ν0, Measure.add_apply,
-      Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ hQ,
+    simp only [Measure.map_id, ν, ProbabilityMeasure.coe_mk, ν0, add_apply,
+      smul_apply, smul_eq_mul, Measure.dirac_apply' _ hQ,
       Set.indicator_of_mem heQ, Set.indicator_of_notMem he'Q]
     simp
   obtain ⟨μ, hμQ, hW⟩ := hQ1 1 1 ν η hη id 1 LipschitzWith.id Function.bijective_id hmass 0
@@ -178,8 +178,8 @@ theorem not_massConcentrationQ1 : ¬ ∃ C : ℝ, 0 < C ∧
       exact one_le_dist_antipode_of_mem hb) zero_le_one
   have hne : e' ≠ e := fun h => he'Q (h ▸ heQ)
   have hA : (ν 0 : Measure (SSphere 1)).real {e'} = η := by
-    simp only [measureReal_def, ν, ProbabilityMeasure.coe_mk, ν0, Measure.add_apply,
-      Measure.smul_apply, smul_eq_mul, Measure.dirac_apply' _ (measurableSet_singleton e'),
+    simp only [measureReal_def, ν, ProbabilityMeasure.coe_mk, ν0, add_apply,
+      smul_apply, smul_eq_mul, Measure.dirac_apply' _ (measurableSet_singleton e'),
       Set.indicator_of_mem (Set.mem_singleton e'),
       Set.indicator_of_notMem (fun h => hne (Set.mem_singleton_iff.1 h).symm)]
     simp [hη.le]

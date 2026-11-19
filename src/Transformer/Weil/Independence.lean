@@ -30,10 +30,11 @@ vanishes at `Y = X^n`: the coefficient of `X^{n k + i}`, `i < n`, in `Φ(X^n)` i
 coefficient of the `k`-th coefficient of `Φ`. -/
 theorem eq_zero_of_eval_X_pow_eq_zero {n : ℕ} {Φ : R[X][X]}
     (hdeg : ∀ k, (Φ.coeff k).natDegree < n) (h : Φ.eval (X ^ n) = 0) : Φ = 0 := by
-  refine Polynomial.ext fun k => Polynomial.ext fun i => ?_
+  refine AddMonoidAlgebra.ext <| Finsupp.ext fun k =>
+    AddMonoidAlgebra.ext <| Finsupp.ext fun i => ?_
   rw [coeff_zero, coeff_zero]
   rcases lt_or_ge i n with hi | hi
-  · have hc := congrArg (coeff · (n * k + i)) h
+  · have hc := congrArg (·.coeff (n * k + i)) h
     simp only [eval_eq_sum_range, finsetSum_coeff, coeff_zero, ← pow_mul,
       coeff_mul_X_pow'] at hc
     rw [Finset.sum_eq_single k] at hc

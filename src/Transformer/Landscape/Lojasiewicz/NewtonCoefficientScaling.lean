@@ -39,7 +39,7 @@ theorem analytic_newton_coefficient_scaling {d : ℕ} (a : Fin d → ℝ → ℝ
     by_cases hzero : ∀ᶠ t in nhds (0 : ℝ), a i t = 0
     · exact ⟨1, fun _ => 0, by omega, analyticAt_const, fun _ => rfl, by simpa using hzero⟩
     obtain ⟨m, g, hg, hg0, hfac⟩ :=
-      (ha i).exists_eventuallyEq_pow_smul_nonzero_iff.mpr hzero
+      (ha i).exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hzero
     have hm : 0 < m := by
       by_contra hn
       have hm0 : m = 0 := by omega

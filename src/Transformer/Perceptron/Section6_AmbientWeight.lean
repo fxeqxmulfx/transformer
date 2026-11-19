@@ -51,7 +51,7 @@ theorem hasFPowerSeriesOnBall_attentionKernel {d : ℕ} (B : EucSpace d →ₗ[�
     exact NormedSpace.exp_hasFPowerSeriesOnBall
   have hc : HasFPowerSeriesOnBall (fun z => Real.exp (L z))
       ((NormedSpace.expSeries ℝ ℝ).compContinuousLinearMap L) 0 ⊤ := by
-    simpa only [Function.comp_def, ENNReal.top_div, enorm_ne_top, ite_false] using
+    simpa only [Function.comp_def, ENNReal.top_div, eNorm_ne_top, ite_false] using
       he.compContinuousLinearMap (u := L) (x := 0)
   have ht := (hc.const_smul (c := Real.exp (inner (𝕜 := ℝ) x (B (y : EucSpace d))))).comp_sub x
   simp only [zero_add] at ht

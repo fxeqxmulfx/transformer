@@ -79,7 +79,7 @@ theorem sourceSlopes_injective (d : ℕ) (hd : 0 < d) (N : ℕ) :
   intro i j h
   apply integerSlopes_injective N
   have hs : Real.sqrt (d : ℝ) ≠ 0 := (Real.sqrt_pos.mpr (Nat.cast_pos.mpr hd)).ne'
-  exact (div_left_inj' hs).mp h
+  exact (div_left_inj₀ hs).mp h
 
 /-- P3: the last query's actual exponentiated scores on original tokens.
 The final self term is retained, including when there is only one token. -/

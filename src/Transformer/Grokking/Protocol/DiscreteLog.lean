@@ -34,7 +34,7 @@ def powFive (m : ℤ) : ZMod 97 := (5 : ZMod 97) ^ m
 
 /-- **`5` generates the nonzero residues modulo 97**: its order is `96`. -/
 theorem orderOf_five : orderOf (5 : ZMod 97) = 96 := by
-  refine orderOf_eq_of_pow_and_pow_div_prime (by norm_num) (by decide) fun p hp hd => ?_
+  refine orderOf_eq_of_pow_and_pow_div_prime (by decide) fun p hp hd => ?_
   have h : p = 2 ∨ p = 3 := by
     rw [show (96 : ℕ) = 2 ^ 5 * 3 by norm_num] at hd
     rcases (Nat.Prime.dvd_mul hp).1 hd with h | h

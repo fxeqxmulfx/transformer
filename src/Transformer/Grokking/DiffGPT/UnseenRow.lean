@@ -30,6 +30,7 @@ open scoped ComplexOrder
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
+omit [Fintype n] in
 /-- **Two weighted blocks of rows**: for an orthogonal projection `P`, contractions `Z`, `Z'`
 and `c² + s² ≤ 1`, the matrix `c P Z + s (1 − P) Z'` is a contraction. -/
 theorem _root_.Transformer.Grokking.FlatSpectrum.IsContraction.smul_proj_add

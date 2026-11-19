@@ -139,7 +139,7 @@ rotation-invariant probability measures (`eq_of_rotation_invariant`). -/
 theorem shellLaw_eq_surfaceMeasure (hd : 1 ≤ d) :
     shellLaw hd = (surfaceMeasure d univ)⁻¹ • surfaceMeasure d := by
   have : IsProbabilityMeasure ((surfaceMeasure d univ)⁻¹ • surfaceMeasure d) :=
-    ⟨by rw [Measure.smul_apply, smul_eq_mul,
+    ⟨by rw [smul_apply, smul_eq_mul,
       ENNReal.inv_mul_cancel (surfaceMeasure_univ_ne_zero hd) (measure_ne_top _ _)]⟩
   exact eq_of_rotation_invariant _ _ (shellLaw_isometry hd) fun U => by
     rw [Measure.map_smul _ (measurable_sphereMap d U).aemeasurable, surfaceMeasure_isometry]
@@ -153,8 +153,8 @@ theorem pi_shellLaw_eq (hd : 1 ≤ d) :
     Measure.pi (fun _ : Idx n => shellLaw hd) =
       (surfaceMeasure d univ)⁻¹ ^ n • Measure.pi fun _ : Idx n => surfaceMeasure d := by
   refine Measure.pi_eq fun s _ => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, shellLaw_eq_surfaceMeasure hd, smul_eq_mul]
-  simp only [Measure.smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
+  rw [smul_apply, Measure.pi_pi, shellLaw_eq_surfaceMeasure hd, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
     Finset.card_univ, Fintype.card_fin]
 
 /-- The hypothesis of `pi_shellLaw_eq` holds for `d = 3`. -/

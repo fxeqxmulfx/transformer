@@ -31,7 +31,7 @@ namespace Transformer
 abbrev EucSpace (d : ℕ) : Type := EuclideanSpace ℝ (Fin d)
 
 /-- The unit sphere `𝕊^{d-1} ⊂ ℝ^d`. -/
-abbrev Sphere (d : ℕ) : Set (EucSpace d) := Metric.sphere (0 : EucSpace d) 1
+noncomputable abbrev Sphere (d : ℕ) : Set (EucSpace d) := Metric.sphere (0 : EucSpace d) 1
 
 /-- The sphere as a subtype, useful when we want a bundled object. -/
 abbrev SSphere (d : ℕ) : Type := Metric.sphere (0 : EucSpace d) 1

@@ -131,7 +131,7 @@ theorem lipschitzWith_gradient_phaseEnergy :
   rw [gradient_phaseEnergy, dist_eq_norm, dist_eq_norm, ← Finset.sum_sub_distrib,
     NNReal.coe_sum, Finset.sum_mul]
   refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun r _ => ?_)
-  rw [← sub_smul, norm_smul, Real.norm_eq_abs, NNReal.coe_pow, coe_nnnorm]
+  rw [← sub_smul, norm_smul, Real.norm_eq_abs, NNReal.coe_pow, coe_nnNorm]
   calc |sin ⟪m r, ψ⟫ - sin ⟪m r, φ⟫| * ‖m r‖ ≤ |⟪m r, ψ⟫ - ⟪m r, φ⟫| * ‖m r‖ :=
         mul_le_mul_of_nonneg_right (abs_sin_sub_sin_le _ _) (norm_nonneg _)
     _ = |⟪m r, ψ - φ⟫| * ‖m r‖ := by rw [inner_sub_right]

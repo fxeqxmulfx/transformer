@@ -49,13 +49,13 @@ noncomputable def riceCounterLaw : Measure (ℝ × ℂ) :=
 
 instance : IsProbabilityMeasure riceCounterScaleLaw := by
   constructor
-  rw [riceCounterScaleLaw, Measure.smul_apply, Measure.restrict_apply_univ, Real.volume_Ioo, smul_eq_mul,
+  rw [riceCounterScaleLaw, smul_apply, Measure.restrict_apply_univ, Real.volume_Ioo, smul_eq_mul,
     ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
   norm_num
 
 instance : IsProbabilityMeasure riceCounterDiskLaw := by
   constructor
-  rw [riceCounterDiskLaw, Measure.smul_apply, Measure.restrict_apply_univ, Complex.volume_ball, smul_eq_mul]
+  rw [riceCounterDiskLaw, smul_apply, Measure.restrict_apply_univ, Complex.volume_ball, smul_eq_mul]
   simp only [ENNReal.ofReal_one, one_pow, one_mul, ENNReal.coe_nnreal_eq, NNReal.coe_real_pi]
   rw [← ENNReal.ofReal_mul (inv_nonneg.mpr Real.pi_pos.le), inv_mul_cancel₀ Real.pi_pos.ne', ENNReal.ofReal_one]
 
@@ -110,7 +110,7 @@ theorem riceCounterScale_small_mass_le (a : ℝ) :
     intro r
     change |r| < a ↔ -a < r ∧ r < a
     exact abs_lt
-  rw [he, riceCounterScaleLaw, Measure.smul_apply, smul_eq_mul]
+  rw [he, riceCounterScaleLaw, smul_apply, smul_eq_mul]
   calc
     _ ≤ ENNReal.ofReal (1 / 2 : ℝ) * volume (Ioo (-a) a) :=
       by gcongr; exact Measure.restrict_le_self
@@ -129,7 +129,7 @@ theorem riceCounterScale_small_mass_eq (a : ℝ) (ha : a ≤ 1) :
     change |r| < a ↔ -a < r ∧ r < a
     exact abs_lt
   have hsub : Ioo (-a) a ⊆ Ioo (-1 : ℝ) 1 := by intro r hr; constructor <;> linarith [hr.1, hr.2]
-  rw [he, riceCounterScaleLaw, Measure.smul_apply, smul_eq_mul, Measure.restrict_apply measurableSet_Ioo,
+  rw [he, riceCounterScaleLaw, smul_apply, smul_eq_mul, Measure.restrict_apply measurableSet_Ioo,
     inter_eq_left.mpr hsub, Real.volume_Ioo, ← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
   congr 1
   ring

@@ -84,7 +84,7 @@ theorem rot_error (η : ℝ) (hη : 0 < η) (hη1 : η ≤ 1) :
         (interpChain η ((fun _ : Unit => rotChain η 0) ω) (η / 2)) ∂Measure.dirac ()) -
       (fun x : Idx 1 → EucSpace 2 => x 0 1) (rotFlow (η / 2))| = Real.sin (η / 2) := by
   have hfl : ⌊η / 2 / η⌋₊ = 0 := by
-    rw [div_div_cancel_left' hη.ne', Nat.floor_eq_zero]; norm_num
+    rw [div_div_cancel_left₀ hη.ne', Nat.floor_eq_zero]; norm_num
   rw [integral_dirac]
   simp only [interpChain, hfl]
   rw [rotFlow_apply]

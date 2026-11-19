@@ -51,7 +51,7 @@ theorem isProbabilityMeasure_uniformSphere (hd : 1 ≤ d) :
   have htop : (volume : Measure (EucSpace d)).toSphere Set.univ ≠ ⊤ :=
     measure_ne_top _ _
   exact ⟨by
-    simp only [uniformSphere, Measure.smul_apply, smul_eq_mul]
+    simp only [uniformSphere, smul_apply, smul_eq_mul]
     exact ENNReal.inv_mul_cancel h0 htop⟩
 
 /-- The hypothesis of `isProbabilityMeasure_uniformSphere` is satisfiable:
@@ -67,7 +67,7 @@ theorem uniformSphere_cap {δ : ℝ} (hδ : δ ∈ Set.Icc 0 Real.pi) (hd : d �
     (x e : SSphere d) :
     uniformSphere d { y : SSphere d | geoDist d x y ≤ δ }
       = volume (coneCap (e : EucSpace d) δ) / volume (coneCap (e : EucSpace d) Real.pi) := by
-  simp only [uniformSphere, Measure.smul_apply, smul_eq_mul]
+  simp only [uniformSphere, smul_apply, smul_eq_mul]
   rw [← cap_pi x, toSphere_cap hδ x, toSphere_cap ⟨pi_pos.le, le_rfl⟩ x,
     volume_coneCap_eq x e δ, volume_coneCap_eq x e Real.pi, ← ENNReal.div_eq_inv_mul,
     ENNReal.mul_div_mul_left _ _ (by exact_mod_cast hd) (ENNReal.natCast_ne_top d)]

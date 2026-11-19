@@ -118,7 +118,7 @@ theorem limit_eq_endpoint_of_bounded_logistic_clock (u : ℝ → ℝ)
     dsimp [q]
     nlinarith
   have hqi (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) : IntervalIntegrable q volume a b :=
-    (hqc.mono (fun t ht => (le_min ha hb).trans ht.1)).intervalIntegrable
+    (hqc.mono (t := uIcc a b) fun t ht => (le_min ha hb).trans ht.1).intervalIntegrable
   have hqlim : Tendsto q atTop (𝓝 (2 * (1 - L ^ 2))) :=
     (tendsto_const_nhds.sub (hl.pow 2)).const_mul 2
   obtain ⟨S, hS⟩ := eventually_atTop.mp (hqlim.eventually (eventually_gt_nhds

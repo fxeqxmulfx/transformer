@@ -72,7 +72,7 @@ theorem diffusionDrift_fderiv_lipschitz {d : ℕ} (method : UpdateKind) (B : ℕ
   obtain ⟨H, hH⟩ := diffusionDrift_second_derivative_bound method B f σ hmodel
   have hb : ContDiff ℝ 2 (diffusionDrift method B f σ) :=
     (regularGaussianModel_smooth_coefficients method 0 B f σ hmodel).1.of_le (by norm_num)
-  refine ⟨H, lipschitzWith_of_nnnorm_fderiv_le
+  refine ⟨H, lipschitzWith_of_nnNorm_fderiv_le
     ((hb.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num)) ?_⟩
   intro x
   change ‖fderiv ℝ (fderiv ℝ (diffusionDrift method B f σ)) x‖ ≤ H

@@ -74,7 +74,7 @@ theorem correlation_bounds_aperiodic_false (lam β : ℝ) (hβ : β ≠ 0) :
     rwa [hA0, hB0] at h
   have hev : ∀ᶠ t in 𝓝[>] (0 : ℝ), 0 < t ∧ xB t - xA t ≠ 0 :=
     eventually_mem_nhdsWithin.and ((hd.eventually_ne (gptField_three_pi_sub_zero lam β hβ)).filter_mono
-      (nhdsWithin_mono _ fun t (ht : 0 < t) => ht.ne'))
+      (nhdsGT_le_nhdsNE 0))
   obtain ⟨t₀, ht₀, hΔ⟩ := hev.exists
   set R : ℝ := C * (((2 : Idx 3) : ℝ) + 1)⁻¹ *
     Real.exp (Real.sqrt (C * t₀ * Real.log ((((2 : Idx 3) : ℝ) + 1) / (((1 : Idx 3) : ℝ) + 1)))) *

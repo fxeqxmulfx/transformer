@@ -91,7 +91,7 @@ theorem inner_momentVec (x : EucSpace d) (t : ℝ) :
     eval_C, eval_pow, eval_X]
 
 theorem coeff_coordPoly (x : EucSpace d) (k : Fin d) : (coordPoly d x).coeff k = x k := by
-  simp [coordPoly, finsetSum_coeff, Fin.val_inj]
+  simp [coordPoly, Fin.val_inj]
 
 theorem natDegree_coordPoly_le (x : EucSpace d) : (coordPoly d x).natDegree ≤ d - 1 :=
   natDegree_sum_le_of_forall_le _ _ fun k _ =>

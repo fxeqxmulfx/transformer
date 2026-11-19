@@ -65,7 +65,7 @@ example := residual_forecast (1 : ℝ) 2 2 4 1 2 (by norm_num) (by norm_num)
 /-- FF2: the source sigmoid has global Lipschitz constant 1/4.
 The proof bounds its actual derivative, not a surrogate gate. -/
 theorem sigmoid_quarter_lipschitz : LipschitzWith (1 / 4) Real.sigmoid := by
-  apply lipschitzWith_of_nnnorm_deriv_le differentiable_sigmoid
+  apply lipschitzWith_of_nnNorm_deriv_le differentiable_sigmoid
   intro t
   change ‖deriv Real.sigmoid t‖ ≤ (1 / 4 : ℝ)
   rw [Real.deriv_sigmoid, Real.norm_eq_abs,

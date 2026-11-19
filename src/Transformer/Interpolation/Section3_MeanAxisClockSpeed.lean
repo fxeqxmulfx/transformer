@@ -100,11 +100,11 @@ theorem monotone_meanAxisClockSpeed (w : SSphere d) (ν : Perspective.ProbSphere
 Auxiliary for arXiv:2411.04551v3, §3.2, `lem: induction.barycenter`. -/
 theorem lipschitzWith_meanAxisClockSpeed (w : SSphere d) (ν : Perspective.ProbSphere d) :
     LipschitzWith 1 (meanAxisClockSpeed w ν) := by
-  apply lipschitzWith_of_nnnorm_deriv_le (𝕜 := ℝ)
+  apply lipschitzWith_of_nnNorm_deriv_le (𝕜 := ℝ)
     (fun q => (hasDerivAt_meanAxisClockSpeed w ν q).differentiableAt)
   intro q
   apply NNReal.coe_le_coe.mp
-  rw [coe_nnnorm, Real.norm_eq_abs, abs_of_nonneg (meanAxisClockSpeed_deriv_bounds w ν q).1]
+  rw [coe_nnNorm, Real.norm_eq_abs, abs_of_nonneg (meanAxisClockSpeed_deriv_bounds w ν q).1]
   exact (meanAxisClockSpeed_deriv_bounds w ν q).2
 
 /-- The coefficient is C1, by continuity of its actual transported

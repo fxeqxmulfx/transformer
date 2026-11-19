@@ -78,7 +78,7 @@ theorem hasDerivAt_scalarMoment (hf : Measurable f) (hE : HasScalarExpMomentsOn 
 at a point, where every function is integrable. -/
 example : Measurable (id : ℝ → ℝ) ∧ HasScalarExpMomentsOn (Measure.dirac (0 : ℝ)) id 1 ∧
     |(0 : ℝ)| < 1 :=
-  ⟨measurable_id, fun _ _ => integrable_dirac enorm_lt_top, by norm_num⟩
+  ⟨measurable_id, fun _ _ => integrable_dirac eNorm_lt_top, by norm_num⟩
 
 /-- **The third derivative of the moment generating function at the origin is
 the third moment.**
@@ -100,7 +100,7 @@ theorem iteratedDeriv_three_scalarMoment (hf : Measurable f) (hE : HasScalarExpM
 /-- The hypotheses of `iteratedDeriv_three_scalarMoment` are satisfiable. -/
 example : Measurable (id : ℝ → ℝ) ∧ HasScalarExpMomentsOn (Measure.dirac (0 : ℝ)) id 1 ∧
     (0 : ℝ) < 1 :=
-  ⟨measurable_id, fun _ _ => integrable_dirac enorm_lt_top, one_pos⟩
+  ⟨measurable_id, fun _ _ => integrable_dirac eNorm_lt_top, one_pos⟩
 
 end Modes
 end Transformer

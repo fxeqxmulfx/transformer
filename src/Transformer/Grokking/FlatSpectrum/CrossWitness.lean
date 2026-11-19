@@ -43,7 +43,7 @@ lemma crossWitness_eq_mul {m α β : ℝ} (hm : m * m = (Fintype.card n : ℝ) -
     crossWitness i₀ j₀ = crossFactor i₀ m α β * (crossFactor j₀ m α (-β))ᴴ := by
   have hinv : m * m⁻¹ = 1 := mul_inv_cancel₀ hm0
   ext i j
-  rw [mul_apply, Fin.sum_univ_two]
+  rw [Matrix.mul_apply, Fin.sum_univ_two]
   simp only [crossWitness, crossFactor, conjTranspose_apply, of_apply, cons_val_zero,
     cons_val_one, Complex.star_def, Complex.conj_ofReal, ← Complex.ofReal_mul,
     ← Complex.ofReal_add, Complex.ofReal_inj]

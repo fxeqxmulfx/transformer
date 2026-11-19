@@ -128,7 +128,7 @@ lemma lintegral_div_edist_le_sum_integral_edist_le (hT : Metric.ediam U < ∞)
         rw [hη_succ k, ← mul_assoc, ENNReal.mul_inv_cancel (by norm_num) (by norm_num), one_mul]
         refine le_of_not_ge (Nat.find_min hη_dist ?_)
         simp [hk]
-  refine le_trans ?_ (Summable.le_tsum (ENNReal.summable) k (fun _ _ ↦ zero_le))
+  refine le_trans ?_ (Summable.le_tsum (CompleteLattice.summable) k (fun _ _ ↦ zero_le))
   rw [ENNReal.div_eq_inv_mul]
   refine mul_le_mul ?_ ?_ zero_le zero_le
   · rw [ENNReal.inv_le_iff_inv_le, ← ENNReal.inv_rpow, mul_assoc, ENNReal.rpow_mul,
@@ -250,7 +250,7 @@ lemma finite_kolmogorov_chentsov
     rw [ENNReal.iSup_eq_zero]; rintro ⟨t, ht⟩
     simp [h ⟨s, hs⟩ ⟨t, ht⟩, hX.p_pos]
   have hM : (M : ℝ≥0∞) ≠ 0 := by
-    contrapose! h_ae
+    contrapose h_ae
     rw [Filter.eventually_all]; intro s
     rw [Filter.eventually_all]; intro t
     rw_mod_cast [h_ae] at hX
@@ -266,8 +266,9 @@ lemma finite_kolmogorov_chentsov
     ENNReal.toReal_pos_iff.mpr ⟨h_diam_zero, h_diam⟩
   apply le_trans
     (lintegral_div_edist_le_sum_integral_edist_le h_diam hX hβ_pos hT'U)
-  apply ENNReal.tsum_le_tsum
+  apply tsum_le_tsum
   intro k
+  beta_reduce
   wlog hc : c ≠ ∞
   · simp only [not_ne_iff.mp hc, ne_eq, ENNReal.rpow_eq_zero_iff, OfNat.ofNat_ne_zero, false_and,
       ENNReal.ofNat_ne_top, or_self, not_false_eq_true, ENNReal.mul_top, ENNReal.toReal_top,

@@ -51,7 +51,8 @@ theorem conjTranspose_mul_classKernel (f : G → G → G) (c : G)
     (huniq : ∀ a b b', f a b = c → f a b' = c → b' = b) :
     (classKernel f c)ᴴ * classKernel f c = diagonal fun b => ((#{a | f a b = c} : ℕ) : ℂ) := by
   ext b b'
-  simp only [mul_apply, conjTranspose_apply, classKernel, taskKernel, of_apply, diagonal_apply]
+  simp only [Matrix.mul_apply, conjTranspose_apply, classKernel, taskKernel, of_apply,
+    diagonal_apply]
   rcases eq_or_ne b b' with rfl | hbb
   · rw [ite_eq_left rfl, ← sum_boole]
     refine sum_congr rfl fun a _ => ?_

@@ -71,7 +71,7 @@ theorem measure_eq_zero_of_volume_preimage {n : ℕ} {P : Measure (SphereTuple 2
   have hB := measurable_anglesToSphere (measurable_sphereAngles hT')
   refine measure_mono_null hAB ?_
   rw [eq_map_angleCube hP,
-    Measure.map_apply measurable_anglesToSphere (measurable_sphereAngles hT'), Measure.smul_apply,
+    Measure.map_apply measurable_anglesToSphere (measurable_sphereAngles hT'), smul_apply,
     Measure.restrict_apply hB, smul_eq_mul]
   exact mul_eq_zero_of_right _ (measure_mono_null (inter_subset_left.trans hsub) hT'0)
 

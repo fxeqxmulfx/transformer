@@ -40,7 +40,7 @@ example : 2 ≤ 2 := le_rfl
 /-- **The uniform law on the sphere has no atoms** in dimension `d ≥ 2`. -/
 theorem uniformSphere_singleton (d : ℕ) (hd : 2 ≤ d) (y : SSphere d) :
     uniformSphere d {y} = 0 := by
-  simp only [uniformSphere, Measure.smul_apply, toSphere_singleton d hd y, smul_zero]
+  simp only [uniformSphere, smul_apply, toSphere_singleton d hd y, smul_zero]
 
 /-- The hypothesis of `uniformSphere_singleton` is satisfiable: the circle, `d = 2`. -/
 example : 2 ≤ 2 := le_rfl
@@ -52,7 +52,7 @@ theorem uniformSphere_pos_of_isOpen (d : ℕ) {U : Set (SSphere d)} (hU : IsOpen
   have htop : (volume : Measure (EucSpace d)).toSphere Set.univ ≠ ⊤ := measure_ne_top _ _
   have hpos : 0 < (volume : Measure (EucSpace d)).toSphere U :=
     hU.measure_pos _ hne
-  simp only [uniformSphere, Measure.smul_apply, smul_eq_mul]
+  simp only [uniformSphere, smul_apply, smul_eq_mul]
   exact ENNReal.mul_pos (ENNReal.inv_ne_zero.mpr htop) hpos.ne'
 
 /-- The hypotheses of `uniformSphere_pos_of_isOpen` are satisfiable: the whole circle is open and

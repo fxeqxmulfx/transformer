@@ -66,11 +66,11 @@ theorem conjTranspose_mul_frame {v : n → ℂ} {j : n} (hj : ‖v j‖ = 1)
     rw [Finset.sum_congr rfl fun k _ => h k, Finset.sum_sub_distrib, hv]
     simp
   have h00 : ((frame v j)ᴴ * frame v j) 0 0 = 1 := by
-    simp [mul_apply, frame_zero]
+    simp [Matrix.mul_apply, frame_zero]
   have h01 : ((frame v j)ᴴ * frame v j) 0 1 = 0 := by
-    simp [mul_apply, frame_zero, frame_one]
+    simp [Matrix.mul_apply, frame_zero, frame_one]
   have h10 : ((frame v j)ᴴ * frame v j) 1 0 = 0 := by
-    simp [mul_apply, frame_zero, frame_one]
+    simp [Matrix.mul_apply, frame_zero, frame_one]
   have h11 : ((frame v j)ᴴ * frame v j) 1 1 = 1 := by
     rw [conjTranspose_mul_self_apply_self]
     have h (k : n) : ‖frame v j k 1‖ ^ 2 =
@@ -94,7 +94,8 @@ lemma mul_conjTranspose_of_flat {K : Matrix n n ℂ} (hN : Fintype.card n ≠ 0)
   rw [← h2, smul_smul, mul_inv_cancel₀ hN0, one_smul]
 
 example := mul_conjTranspose_of_flat (K := !![(1 : ℂ), 1; 1, -1]) (by simp)
-  (by ext a b; fin_cases a <;> fin_cases b <;> simp [mul_apply, Fin.sum_univ_two] <;> norm_num)
+  (by ext a b; fin_cases a <;> fin_cases b <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num)
 
 /-- **Corollary**, exact form, `review/flat_spectrum.md`: for flat `K` (`K* K = N I`) with
 `|K_ij| = 1` and `N ≥ 2`, changing the entry `(i, j)` by `t` gives
@@ -111,7 +112,7 @@ theorem nuclearNorm_flat_add_single {K : Matrix n n ℂ}
   have hN0 : (Fintype.card n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
   have hrow (k : n) : ∑ m, K k m * star (K i m) = if k = i then (Fintype.card n : ℂ) else 0 := by
     have h := congrFun (congrFun (mul_conjTranspose_of_flat (by omega) hK) k) i
-    simpa [mul_apply, one_apply] using h
+    simpa [Matrix.mul_apply, Matrix.one_apply] using h
   set u : n → ℂ := fun k => star (K i k) with hudef
   have hu : ∑ k, ‖u k‖ ^ 2 = Fintype.card n := by
     have h := hrow i
@@ -130,7 +131,7 @@ theorem nuclearNorm_flat_add_single {K : Matrix n n ℂ}
     have hl : star (J l 0) = if l = j then 1 else 0 := by
       simp only [J, frame_zero]
       split_ifs <;> simp
-    simp only [mul_apply, Fin.sum_univ_two, conjTranspose_apply, Matrix.add_apply,
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, conjTranspose_apply, Matrix.add_apply,
       Matrix.smul_apply, vecMulVec_apply, smul_eq_mul, hBdef, of_apply, cons_val', cons_val_zero,
       cons_val_one, empty_val', cons_val_fin_one, hl]
     linear_combination (t / Fintype.card n * (if l = j then 1 else 0)) * hk
@@ -142,7 +143,7 @@ theorem nuclearNorm_flat_add_single {K : Matrix n n ℂ}
     rw [hM, Matrix.mul_add, Matrix.mul_one, Matrix.mul_smul]
     congr 1
     ext k l
-    simp only [Matrix.smul_apply, single_apply, smul_eq_mul, mul_apply, vecMulVec_apply]
+    simp only [Matrix.smul_apply, single_apply, smul_eq_mul, Matrix.mul_apply, vecMulVec_apply]
     rw [show ∑ m, K k m * (u m * (if l = j then 1 else 0)) =
         (∑ m, K k m * star (K i m)) * (if l = j then 1 else 0) by
       rw [Finset.sum_mul]
@@ -182,7 +183,8 @@ theorem nuclearNorm_flat_add_single {K : Matrix n n ℂ}
   ring
 
 example := nuclearNorm_flat_add_single (K := !![(1 : ℂ), 1; 1, -1]) (i := 0) (j := 0)
-  (by ext a b; fin_cases a <;> fin_cases b <;> simp [mul_apply, Fin.sum_univ_two] <;> norm_num)
+  (by ext a b; fin_cases a <;> fin_cases b <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num)
   (by simp) le_rfl 1
 
 end Transformer.Grokking.FlatSpectrum

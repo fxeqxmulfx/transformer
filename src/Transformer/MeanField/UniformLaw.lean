@@ -35,7 +35,7 @@ Borel one — is the subspace σ-algebra that `Causal.uniformSphere` is built on
 the two are equal, though not by definition. -/
 theorem sphereMeasurableSpace_eq_subtype :
     Perspective.sphereMeasurableSpace d = Subtype.instMeasurableSpace :=
-  (Subtype.borelSpace (Metric.sphere (0 : EucSpace d) 1)).measurable_eq.symm
+  (Subtype.borelSpace (· ∈ Metric.sphere (0 : EucSpace d) 1)).measurable_eq.symm
 
 /-- **The uniform law on `𝕊^{d-1}`** over the Borel σ-algebra of
 `𝒫(𝕊^{d-1})`: `Causal.uniformSphere` carried across

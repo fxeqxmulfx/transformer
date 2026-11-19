@@ -36,7 +36,7 @@ theorem analytic_square_root_after_ramification (f : ℝ → ℝ)
   · refine ⟨fun _ => 0, analyticAt_const, ?_⟩
     filter_upwards [ht.eventually hzero] with t htzero
     simp [htzero]
-  obtain ⟨m, u, hu, hu0, hfactor⟩ := hf.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hzero
+  obtain ⟨m, u, hu, hu0, hfactor⟩ := hf.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hzero
   have hunit : 0 < u 0 := by
     have hnonneg : 0 ≤ u 0 := by
       by_contra hn

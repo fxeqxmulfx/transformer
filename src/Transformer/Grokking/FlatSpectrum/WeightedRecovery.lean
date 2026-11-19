@@ -53,8 +53,8 @@ lemma rowDiv_mul_apply {r : Type*} [Fintype r] (a : m → ℂ) (b : n → ℂ) (
     (V : Matrix n r ℂ) (i : m) (j : n) :
     ((of fun i k => (a i)⁻¹ * U i k) * (of fun j k => (star (b j))⁻¹ * V j k)ᴴ) i j =
       (a i)⁻¹ * (U * Vᴴ) i j * (b j)⁻¹ := by
-  simp only [mul_apply, conjTranspose_apply, of_apply, star_mul', star_inv₀, star_star, mul_sum,
-    sum_mul]
+  simp only [Matrix.mul_apply, conjTranspose_apply, of_apply, star_mul', star_inv₀, star_star,
+    mul_sum, sum_mul]
   exact sum_congr rfl fun k _ => by ring
 
 /-- Under a transport plan from `|a_i|²` to `|b_j|²`, with `U Vᴴ = a bᵀ` on `Ω`,
@@ -115,7 +115,7 @@ example := sum_sum_mul_norm_sq_sub_of_transport (a := ![2, 1]) (b := ![2, 1])
   (isTransportPlan_perm (σ := 1) (Fin.forall_fin_two.mpr ⟨by simp, by simp⟩)
     fun _ => sq_nonneg _) (U := of fun i (_ : Fin 1) => ![2, 1] i)
   (V := of fun j (_ : Fin 1) => star (![2, 1] j)) fun _ _ => by
-    simp [mul_apply, vecMulVec_apply]
+    simp [Matrix.mul_apply, vecMulVec_apply]
 
 /-- **A transport plan bounds the norm**, `review/flat_spectrum.md`, Theorem G, item 1: if `Ω`
 carries a plan from `|a_i|²` to `|b_j|²`, every `X` equal to `a bᵀ` on `Ω` has
@@ -154,7 +154,7 @@ theorem nuclearNorm_vecMulVec_le [DecidableEq n] (a : m → ℂ) (b : n → ℂ)
   have h := nuclearNorm_le_of_eq_mul (of fun i (_ : Fin 1) => a i)
     (of fun j (_ : Fin 1) => star (b j)) (X := vecMulVec a b) (by
       ext i j
-      simp [mul_apply, vecMulVec_apply])
+      simp [Matrix.mul_apply, vecMulVec_apply])
   simpa [frobeniusSq] using h
 
 end Transformer.Grokking.FlatSpectrum

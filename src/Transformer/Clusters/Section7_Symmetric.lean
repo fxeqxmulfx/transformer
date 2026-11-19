@@ -104,12 +104,14 @@ theorem sum_weighted_symSign (u : ℝ) (i : Idx 3) :
         / ∑ l : Idx 3, Real.exp (symSign i * symSign l * u ^ 2)) * (symSign j * u)
       = symSign i * symDrift u := by
   have hi : ∀ k : Idx 3, k = 0 ∨ k = 1 ∨ k = 2 := by decide
+  have h : Real.exp (u ^ 2) + 1 + Real.exp (-u ^ 2) ≠ 0 := by positivity
+  -- `norm_num` closes the middle token's case, whose sign is zero.
   rcases hi i with rfl | rfl | rfl <;>
-    · have h : Real.exp (u ^ 2) + 1 + Real.exp (-u ^ 2) ≠ 0 := by positivity
-      simp only [Fin.sum_univ_three, symSign_zero, symSign_one, symSign_two, symDrift]
-      norm_num
-      all_goals field_simp
-      all_goals ring
+    simp only [Fin.sum_univ_three, symSign_zero, symSign_one, symSign_two, symDrift] <;>
+    norm_num
+  all_goals
+    field_simp
+    ring
 
 /-- **The reduction.**  The drift `e:Idnonresca` puts on the `i`-th token of
 the symmetric triple is `s_i` times `symDrift u`: the middle token does not

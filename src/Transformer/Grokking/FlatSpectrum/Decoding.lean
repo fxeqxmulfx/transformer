@@ -95,7 +95,7 @@ lemma cos_le_cos_odd {m k : ℕ} (hk : k < 2 * m + 1) :
     obtain ⟨h0', hπ'⟩ := hθ m le_rfl
     refine ⟨cos_le_cos_of_nonneg_of_le_pi h0 hπ' (by gcongr), fun h => ?_, fun h => by rw [h]⟩
     have h1 := injOn_cos ⟨h0, hπ⟩ ⟨h0', hπ'⟩ h
-    rw [div_left_inj' hp.ne', mul_right_inj' (mul_ne_zero two_ne_zero pi_ne_zero)] at h1
+    rw [div_left_inj₀ hp.ne', mul_right_inj' (mul_ne_zero two_ne_zero pi_ne_zero)] at h1
     exact_mod_cast h1
   rcases le_or_gt k m with hkm | hkm
   · obtain ⟨h1, h2⟩ := key k hkm

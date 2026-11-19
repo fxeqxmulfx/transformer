@@ -40,7 +40,7 @@ noncomputable def atomicProb {N : ℕ} (m : Idx N → ℝ) (z : Idx N → SSpher
     (hm : ∀ i, 0 ≤ m i) (hsum : ∑ i, m i = 1) : Perspective.ProbSphere d :=
   ⟨∑ i, ENNReal.ofReal (m i) • Measure.dirac (z i), by
     refine ⟨?_⟩
-    simp only [Measure.coe_finsetSum, Finset.sum_apply, Measure.smul_apply, smul_eq_mul,
+    simp only [FunLike.coe_sum, Finset.sum_apply, smul_apply, smul_eq_mul,
       measure_univ, mul_one]
     rw [← ENNReal.ofReal_sum_of_nonneg (fun i _ => hm i), hsum, ENNReal.ofReal_one]⟩
 

@@ -18,7 +18,7 @@ lemma Metric.IsSeparated.disjoint_ball {E : Type*} [PseudoEMetricSpace E] {s : S
     {ε : ℝ≥0∞} (hs : IsSeparated ε s) : s.PairwiseDisjoint (Metric.eball · (ε / 2)) := by
   intro x hx y hy hxy
   have hxy := hs hx hy hxy
-  by_contra!
+  by_contra this
   obtain ⟨z, hz1, hz2⟩ := Set.not_disjoint_iff.1 this
   refine lt_irrefl (edist x y) ?_ |>.elim
   calc
@@ -30,7 +30,7 @@ lemma Metric.IsSeparated.disjoint_closedBall {E : Type*} [PseudoEMetricSpace E] 
     {ε : ℝ≥0∞} (hs : IsSeparated ε s) : s.PairwiseDisjoint (Metric.closedEBall · (ε / 2)) := by
   intro x hx y hy hxy
   have hxy := hs hx hy hxy
-  by_contra!
+  by_contra this
   obtain ⟨z, hz1, hz2⟩ := Set.not_disjoint_iff.1 this
   refine lt_irrefl (edist x y) ?_ |>.elim
   calc

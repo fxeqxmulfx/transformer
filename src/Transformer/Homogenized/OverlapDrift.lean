@@ -81,7 +81,7 @@ example {d n : ℕ} (β : ℝ) (X : Idx n → EucSpace d) (i j : Idx n) :
       Integrable (fun θ => ‖Gfield β (Measure.dirac (0 : HeadParam d)) X θ i‖ ^ 2
           + ‖Gfield β (Measure.dirac (0 : HeadParam d)) X θ j‖ ^ 2)
           (Measure.dirac (0 : HeadParam d)) :=
-  ⟨fun _ => by simp, integrable_dirac enorm_lt_top, integrable_dirac enorm_lt_top⟩
+  ⟨fun _ => by simp, integrable_dirac eNorm_lt_top, integrable_dirac eNorm_lt_top⟩
 
 /-! ### The explicit drift under Gaussian initialization -/
 

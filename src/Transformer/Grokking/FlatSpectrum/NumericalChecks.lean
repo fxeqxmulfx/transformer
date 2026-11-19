@@ -46,14 +46,15 @@ theorem cube_bound_97 :
 
 /-- Source: `review/flat_spectrum.md`, Theorem B, numerical check: at `p = 97` and `r ≠ 0`,
 `‖E[ψ_r(a b) | a³ + a b]‖² < 0.053`. -/
-theorem meanSq_condMean_cube_add_mul_lt_97 [Fact (Nat.Prime 97)] {r : ZMod 97} (hr : r ≠ 0) :
+theorem meanSq_condMean_cube_add_mul_lt_97 {r : ZMod 97} (hr : r ≠ 0) :
     meanSq (condMean (fun ab : ZMod 97 × ZMod 97 => ab.1 ^ 3 + ab.1 * ab.2)
       fun ab => ZMod.stdAddChar (r * (ab.1 * ab.2))) < 0.053 := by
+  have : Fact (Nat.Prime 97) := ⟨by norm_num⟩
   have h := meanSq_condMean_cube_add_mul_le_sqrt hr
   simp only [Nat.cast_ofNat] at h
   exact h.trans_lt cube_bound_97.2
 
-example := @meanSq_condMean_cube_add_mul_lt_97 ⟨by norm_num⟩ 1 (by decide)
+example := @meanSq_condMean_cube_add_mul_lt_97 1 (by decide)
 
 variable {p : ℕ} [Fact p.Prime]
 

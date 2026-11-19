@@ -88,9 +88,10 @@ example := @effectiveRank_zeroIndicatorKernel 5 ⟨Nat.prime_five⟩ (by decide)
 
 /-- `review/flat_spectrum.md`, Torch check: the uncentered value is `31.01` at `p = 97`, as
 `31.014 < r_eff < 31.015`. -/
-theorem effectiveRank_zeroIndicatorKernel_97 [Fact (Nat.Prime 97)] :
+theorem effectiveRank_zeroIndicatorKernel_97 :
     31.014 < effectiveRank (zeroIndicatorKernel 97) ∧
       effectiveRank (zeroIndicatorKernel 97) < 31.015 := by
+  have : Fact (Nat.Prime 97) := ⟨by norm_num⟩
   rw [effectiveRank, nuclearNorm_zeroIndicatorKernel (by norm_num),
     frobeniusSq_zeroIndicatorKernel (by norm_num), div_pow, Real.sq_sqrt (by norm_num),
     show ((97 : ℕ) : ℝ) = 97 by norm_num, show (97 : ℝ) + 1 = 98 by norm_num,
@@ -109,13 +110,12 @@ theorem effectiveRank_zeroIndicatorKernel_97 [Fact (Nat.Prime 97)] :
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
 
-example := @effectiveRank_zeroIndicatorKernel_97 ⟨by norm_num⟩
-
 /-- `review/flat_spectrum.md`, Torch check: the uncentered value is `59.53` at `p = 199`, as
 `59.532 < r_eff < 59.533`. -/
-theorem effectiveRank_zeroIndicatorKernel_199 [Fact (Nat.Prime 199)] :
+theorem effectiveRank_zeroIndicatorKernel_199 :
     59.532 < effectiveRank (zeroIndicatorKernel 199) ∧
       effectiveRank (zeroIndicatorKernel 199) < 59.533 := by
+  have : Fact (Nat.Prime 199) := ⟨by norm_num⟩
   rw [effectiveRank, nuclearNorm_zeroIndicatorKernel (by norm_num),
     frobeniusSq_zeroIndicatorKernel (by norm_num), div_pow, Real.sq_sqrt (by norm_num),
     show ((199 : ℕ) : ℝ) = 199 by norm_num, show (199 : ℝ) + 1 = 200 by norm_num,
@@ -133,8 +133,6 @@ theorem effectiveRank_zeroIndicatorKernel_199 [Fact (Nat.Prime 199)] :
     nlinarith
   · rw [div_lt_iff₀ (by norm_num)]
     nlinarith
-
-example := @effectiveRank_zeroIndicatorKernel_199 ⟨by norm_num⟩
 
 /-- `review/flat_spectrum.md`, Torch check: "p/4+√(p/2) gives 31.21" at `p = 97`, as
 `31.214 < 97/4 + √(97/2) < 31.215`. -/

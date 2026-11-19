@@ -85,7 +85,7 @@ noncomputable def fairCoin : Measure Bool :=
 
 instance : IsProbabilityMeasure fairCoin := by
   constructor
-  rw [fairCoin, Measure.smul_apply, Measure.add_apply, measure_univ, measure_univ,
+  rw [fairCoin, smul_apply, add_apply, measure_univ, measure_univ,
     smul_eq_mul]
   rw [show (1 : ℝ≥0∞) + 1 = 2 by norm_num, ENNReal.inv_mul_cancel (by norm_num) (by norm_num)]
 
@@ -94,7 +94,7 @@ theorem integral_fairCoin {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : Bool → E) :
     ∫ ω, f ω ∂fairCoin = (2 : ℝ)⁻¹ • (f true + f false) := by
   rw [fairCoin, integral_smul_measure,
-    integral_add_measure (integrable_dirac enorm_lt_top) (integrable_dirac enorm_lt_top),
+    integral_add_measure (integrable_dirac eNorm_lt_top) (integrable_dirac eNorm_lt_top),
     integral_dirac, integral_dirac]
   norm_num
 
@@ -123,7 +123,7 @@ theorem integral_radLaw {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     ∫ θ, f θ ∂radLaw
       = (2 : ℝ)⁻¹ • (f (radMatrix true, 0) + f (radMatrix false, 0)) := by
   rw [radLaw, integral_smul_measure,
-    integral_add_measure (integrable_dirac enorm_lt_top) (integrable_dirac enorm_lt_top),
+    integral_add_measure (integrable_dirac eNorm_lt_top) (integrable_dirac eNorm_lt_top),
     integral_dirac, integral_dirac]
   norm_num
 

@@ -39,7 +39,7 @@ noncomputable def mixDirac (μ : Perspective.ProbSphere d) (z : SSphere d) (ε :
     (h0 : 0 ≤ ε) (h1 : ε ≤ 1) : Perspective.ProbSphere d :=
   ⟨ENNReal.ofReal (1 - ε) • (μ : Measure (SSphere d)) + ENNReal.ofReal ε • Measure.dirac z,
     ⟨by
-      simp only [Measure.add_apply, Measure.smul_apply, measure_univ, smul_eq_mul, mul_one]
+      simp only [add_apply, smul_apply, measure_univ, smul_eq_mul, mul_one]
       rw [← ENNReal.ofReal_add (by linarith) h0, sub_add_cancel, ENNReal.ofReal_one]⟩⟩
 
 @[simp] theorem coe_mixDirac (μ : Perspective.ProbSphere d) (z : SSphere d) {ε : ℝ}

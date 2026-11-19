@@ -33,10 +33,10 @@ noncomputable def graphMatrix (σ : Equiv.Perm n) (a b : n → ℂ) : Matrix n n
 lemma conjTranspose_graphMatrix_mul {σ : Equiv.Perm n} {a b : n → ℂ} (ha : ∀ i, ‖a i‖ = 1)
     (hb : ∀ j, ‖b j‖ = 1) : (graphMatrix σ a b)ᴴ * graphMatrix σ a b = 1 := by
   ext j k
-  rw [mul_apply, ← Equiv.sum_comp σ.symm, sum_eq_single j (fun x _ hx => by simp [graphMatrix, hx])
-    fun h => absurd (mem_univ j) h]
+  rw [Matrix.mul_apply, ← Equiv.sum_comp σ.symm,
+    sum_eq_single j (fun x _ hx => by simp [graphMatrix, hx]) fun h => absurd (mem_univ j) h]
   simp only [conjTranspose_apply, graphMatrix, of_apply, Equiv.apply_symm_apply, ↓reduceIte,
-    one_apply]
+    Matrix.one_apply]
   split_ifs with h
   · subst h
     rw [Complex.star_def, Complex.conj_mul', norm_mul, ha, hb]

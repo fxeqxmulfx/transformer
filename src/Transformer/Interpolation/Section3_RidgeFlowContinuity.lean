@@ -108,11 +108,11 @@ theorem lipschitzWith_ridgeFlow_time {d : ℕ} (p u : EucSpace d) (b : ℝ) (x�
   have hC : 0 ≤ 4 * (|b| + ‖u‖) * ‖p‖ := by positivity
   have hLip : LipschitzWith (Real.toNNReal (4 * (|b| + ‖u‖) * ‖p‖))
       (fun s => (ridgeFlow p u b x₀ s : EucSpace d)) := by
-    apply lipschitzWith_of_nnnorm_deriv_le (𝕜 := ℝ)
+    apply lipschitzWith_of_nnNorm_deriv_le (𝕜 := ℝ)
       (fun s => (hasDerivAt_ridgeFlow_extension p u b x₀ s).differentiableAt)
     intro s
     apply NNReal.coe_le_coe.mp
-    rw [coe_nnnorm, Real.coe_toNNReal _ hC, (hasDerivAt_ridgeFlow_extension p u b x₀ s).deriv]
+    rw [coe_nnNorm, Real.coe_toNNReal _ hC, (hasDerivAt_ridgeFlow_extension p u b x₀ s).deriv]
     have h := norm_ridgeGlobalField_le p u b (ridgeFlow p u b x₀ s)
     simpa only [mem_sphere_zero_iff_norm.mp (ridgeFlow p u b x₀ s).2, mul_one] using h
   exact hLip.subtype_mk _

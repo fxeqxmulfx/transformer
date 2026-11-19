@@ -91,7 +91,6 @@ theorem logistic_limit {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
   rw [hmean] at hplus hminus
   have hposEvent : {ω | Real.sin (L ω) = 1} =ᵐ[P] {ω | L ω = Real.pi / 2} := by
     filter_upwards [hangle] with ω hω
-    apply propext
     rcases hω with h | h
     · simp [h]
     · rw [h, Real.sin_neg, Real.sin_pi_div_two]
@@ -101,7 +100,6 @@ theorem logistic_limit {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
         exact (hne hbad.symm).elim
   have hnegEvent : {ω | Real.sin (L ω) = -1} =ᵐ[P] {ω | L ω = -(Real.pi / 2)} := by
     filter_upwards [hangle] with ω hω
-    apply propext
     rcases hω with h | h
     · rw [h, Real.sin_pi_div_two]
       constructor

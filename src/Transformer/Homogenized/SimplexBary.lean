@@ -170,7 +170,7 @@ example (β : ℝ) (i j : Idx 2) :
           attnProb β θ.2 (fun k : Idx 2 => (EuclideanSpace.single k (1 : ℝ) : EucSpace 2)) j k)
         (Measure.dirac (0 : HeadParam 2)) := by
   refine ⟨inferInstance, ⟨fun k => by simp [PiLp.norm_single], fun k l hkl => ?_⟩,
-    integrable_dirac enorm_lt_top⟩
+    integrable_dirac eNorm_lt_top⟩
   simp [EuclideanSpace.inner_single_left, hkl.symm]
 
 end Homogenized

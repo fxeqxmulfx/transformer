@@ -79,8 +79,8 @@ closed upwards, and raising it keeps the cell. -/
 example : ScoreFit ({((), ())} : Set (Unit × Unit)) (fun _ => 0) (fun _ => 1)
     ((fun _ => 0) + (∅ : Set Unit).indicator fun _ => 5)
     ((fun _ => 1) + (Set.univ : Set Unit).indicator fun _ => 5) :=
-  scoreFit_indicator (fun _ _ => ⟨fun hle _ => absurd hle (by norm_num), fun _ hA => hA.elim⟩)
-    (by norm_num)
+  scoreFit_indicator (A := ∅) (B := Set.univ)
+    (fun _ _ => ⟨fun hle _ => absurd hle (by norm_num), fun _ hA => hA.elim⟩) (by norm_num)
 
 /-- **CS3**, `review/diffgpt/steps.md`: a cell whose column is in sets closed upwards and
 whose row is not has fitting scores with the row below the column. -/

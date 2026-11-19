@@ -152,7 +152,8 @@ theorem volume_sphereShell_pos (hd : 1 ≤ d) : 0 < volume (sphereShell d) := by
   norm_num
 
 theorem volume_sphereShell_lt_top : volume (sphereShell d) < ⊤ :=
-  (measure_mono fun _ hy => mem_ball_zero_iff.mpr hy.2).trans_lt measure_ball_lt_top
+  (measure_mono (s := sphereShell d) fun _ hy => mem_ball_zero_iff.mpr hy.2).trans_lt
+    measure_ball_lt_top
 
 instance (hd : 1 ≤ d) : IsFiniteMeasure (shellMeasure hd) :=
   ⟨by rw [shellMeasure_univ]; exact volume_sphereShell_lt_top⟩
@@ -162,7 +163,7 @@ noncomputable def shellLaw (hd : 1 ≤ d) : Measure (SSphere d) :=
   (volume (sphereShell d))⁻¹ • shellMeasure hd
 
 instance isProbabilityMeasure_shellLaw (hd : 1 ≤ d) : IsProbabilityMeasure (shellLaw hd) :=
-  ⟨by rw [shellLaw, Measure.smul_apply, shellMeasure_univ, smul_eq_mul,
+  ⟨by rw [shellLaw, smul_apply, shellMeasure_univ, smul_eq_mul,
     ENNReal.inv_mul_cancel (volume_sphereShell_pos hd).ne' volume_sphereShell_lt_top.ne]⟩
 
 /-- The shell law is rotation invariant. -/

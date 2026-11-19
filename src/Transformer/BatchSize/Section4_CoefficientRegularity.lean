@@ -30,7 +30,7 @@ theorem regularGaussianModel_lipschitz {d : ℕ} (f : EucSpace d → ℝ)
   have hdf : Differentiable ℝ (fderiv ℝ f) :=
     (hf.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num)
   have hLipD : LipschitzWith K (fderiv ℝ f) := by
-    apply lipschitzWith_of_nnnorm_fderiv_le hdf
+    apply lipschitzWith_of_nnNorm_fderiv_le hdf
     intro x
     change ‖fderiv ℝ (fderiv ℝ f) x‖ ≤ L
     rw [← norm_iteratedFDeriv_one (fderiv ℝ f), norm_iteratedFDeriv_fderiv]
@@ -43,7 +43,7 @@ theorem regularGaussianModel_lipschitz {d : ℕ} (f : EucSpace d → ℝ)
       (InnerProductSpace.toDual ℝ (EucSpace d)).symm (fderiv ℝ f y)‖ ≤ _
     rw [← map_sub, LinearIsometryEquiv.norm_map]
     exact hLipD.norm_sub_le x y
-  · apply lipschitzWith_of_nnnorm_fderiv_le (hσ.differentiable (by norm_num))
+  · apply lipschitzWith_of_nnNorm_fderiv_le (hσ.differentiable (by norm_num))
     intro x
     change ‖fderiv ℝ σ x‖ ≤ L
     rw [← norm_iteratedFDeriv_one σ]

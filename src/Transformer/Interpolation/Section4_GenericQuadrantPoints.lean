@@ -46,7 +46,7 @@ theorem exists_quadrant_unit_avoiding_subspaces [Fintype ι] (hd : 1 ≤ d)
     (P : ι → Submodule ℝ (EucSpace d)) (hP : ∀ i, P i ≠ ⊤) :
     ∃ w : SSphere d, w ∈ positiveQuadrant d ∧ ∀ i, (w : EucSpace d) ∉ P i := by
   have hD : Dense (⋂ i, (P i : Set (EucSpace d))ᶜ) :=
-    dense_iInter_of_isOpen (fun i => (P i).closed_of_finiteDimensional.isOpen_compl)
+    dense_iInter_of_isOpen (fun i => (P i).isClosed_of_finiteDimensional.isOpen_compl)
       (fun i => dense_compl_proper_subspace (P i) (hP i))
   obtain ⟨v, hvball, hvoutside⟩ := hD.inter_open_nonempty
     (Metric.ball (onesBias d) (1 / 2)) Metric.isOpen_ball (Metric.nonempty_ball.mpr (by norm_num))

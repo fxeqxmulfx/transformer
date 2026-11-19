@@ -84,7 +84,7 @@ theorem exists_finite_order_analytic_direction {N : ℕ} (E : EucSpace N → ℝ
     rw [hpzero]
     simp
   obtain ⟨m, u, hu, hu0, hfactor⟩ :=
-    hline.analyticAt.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hlineNe
+    hline.analyticAt.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hlineNe
   have hm : 0 < m := Nat.pos_of_ne_zero (by
     intro hzero
     have heq := hfactor.self_of_nhds

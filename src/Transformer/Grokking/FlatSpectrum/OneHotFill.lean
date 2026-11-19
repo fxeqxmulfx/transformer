@@ -52,7 +52,7 @@ theorem nuclearNorm_updateRow_zero_lt (X : Matrix m n ℂ) {i : m} {j : n} (hij 
       by_contra h
       push Not at h
       apply hij
-      rw [hX, mul_apply]
+      rw [hX, Matrix.mul_apply]
       simp [h]
     exact Finset.sum_pos' (fun s _ => sq_nonneg _) ⟨s, mem_univ _, pow_pos (norm_pos_iff.mpr hs) 2⟩
   have h1 := nuclearNorm_le_of_eq_mul (U.updateRow i 0) V hUV

@@ -39,7 +39,7 @@ theorem choose_eq_zero_of_pow_dvd {k n b : ℕ} (hn : p ^ k ∣ n) (hb : ¬p ^ k
   obtain ⟨j, rfl⟩ := hn
   have h : ((X + 1 : F[X]) ^ (p ^ k * j)) = expand F (p ^ k) ((X + 1) ^ j) := by
     rw [pow_mul, add_pow_char_pow, one_pow, map_pow, map_add, expand_X, map_one]
-  have := congrArg (coeff · b) h
+  have := congrArg (·.coeff b) h
   simp only [coeff_X_add_one_pow, coeff_expand (pow_pos (Fact.out : p.Prime).pos k)] at this
   rwa [ite_eq_right hb] at this
 

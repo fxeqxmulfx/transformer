@@ -37,9 +37,9 @@ arXiv:2604.01978v1, §3.1, auxiliary to the kernel counterexample. -/
 theorem integrable_sparseMixture {Ω E : Type*} [MeasurableSpace Ω]
     [MeasurableSingletonClass Ω] [NormedAddCommGroup E] [NormedSpace ℝ E]
     (p : ℝ) (a b z : Ω) (f : Ω → E) : Integrable f (sparseMixture p a b z) := by
-  exact ((integrable_dirac enorm_lt_top).add_measure
-    (integrable_dirac enorm_lt_top)).smul_measure ENNReal.ofReal_ne_top |>.add_measure
-      ((integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top)
+  exact ((integrable_dirac eNorm_lt_top).add_measure
+    (integrable_dirac eNorm_lt_top)).smul_measure ENNReal.ofReal_ne_top |>.add_measure
+      ((integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top)
 
 /-- The exact three-atom expectation, including the mass at zero. Source:
 arXiv:2604.01978v1, §3.1, auxiliary to `lem:Kernel_regularity`. -/
@@ -49,11 +49,11 @@ theorem integral_sparseMixture {Ω E : Type*} [MeasurableSpace Ω]
     ∫ ω, f ω ∂sparseMixture p a b z =
       (p / 2) • (f a + f b) + (1 - p) • f z := by
   rw [sparseMixture, integral_add_measure
-    (((integrable_dirac enorm_lt_top).add_measure (integrable_dirac enorm_lt_top)).smul_measure
+    (((integrable_dirac eNorm_lt_top).add_measure (integrable_dirac eNorm_lt_top)).smul_measure
       ENNReal.ofReal_ne_top)
-    ((integrable_dirac enorm_lt_top).smul_measure ENNReal.ofReal_ne_top),
+    ((integrable_dirac eNorm_lt_top).smul_measure ENNReal.ofReal_ne_top),
     integral_smul_measure, integral_smul_measure,
-    integral_add_measure (integrable_dirac enorm_lt_top) (integrable_dirac enorm_lt_top),
+    integral_add_measure (integrable_dirac eNorm_lt_top) (integrable_dirac eNorm_lt_top),
     integral_dirac, integral_dirac, integral_dirac,
     ENNReal.toReal_ofReal (by linarith [hp.1]),
     ENNReal.toReal_ofReal (sub_nonneg.mpr hp.2)]
@@ -67,7 +67,7 @@ theorem isProbabilityMeasure_sparseMixture {Ω : Type*} [MeasurableSpace Ω]
     IsProbabilityMeasure (sparseMixture p a b z) := by
   constructor
   have hhalf : 0 ≤ p / 2 := by linarith [hp.1]
-  simp only [sparseMixture, Measure.add_apply, Measure.smul_apply, measure_univ,
+  simp only [sparseMixture, add_apply, smul_apply, measure_univ,
     smul_eq_mul, mul_add, mul_one]
   rw [← ENNReal.ofReal_add hhalf hhalf,
     ← ENNReal.ofReal_add (add_nonneg hhalf hhalf) (sub_nonneg.mpr hp.2)]

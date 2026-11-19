@@ -57,7 +57,7 @@ example := @sum_ite_sq_eq' 5 ⟨Nat.prime_five⟩ (by decide) 1 (by decide) fun 
 theorem cubicKernelMulChar_mul_conjTranspose_apply (hχ : χ ≠ 1) (a a' : ZMod p) :
     (cubicKernelMulChar χ * (cubicKernelMulChar χ)ᴴ) a a' =
       χ a * star (χ a') * ((if a' ^ 2 = a ^ 2 then (p : ℂ) else 0) - 1) := by
-  simp only [mul_apply, conjTranspose_apply, cubicKernelMulChar, taskKernel, of_apply]
+  simp only [Matrix.mul_apply, conjTranspose_apply, cubicKernelMulChar, taskKernel, of_apply]
   have hrow (b : ZMod p) : χ (a ^ 3 + a * b) * star (χ (a' ^ 3 + a' * b)) =
       χ a * star (χ a') * (star (χ (a' ^ 2 + b)) * χ (a ^ 2 + b)) := by
     rw [show a ^ 3 + a * b = a * (a ^ 2 + b) by ring,
@@ -89,7 +89,7 @@ theorem cubicKernelMulChar_mul_conjTranspose_sq (hp : p ≠ 2) (hχ : χ ≠ 1) 
       (2 * p : ℂ) • (cubicKernelMulChar χ * (cubicKernelMulChar χ)ᴴ) -
         ((p : ℂ) + 1) • of fun a a' => χ a * star (χ a') := by
   ext a a''
-  rw [mul_apply]
+  rw [Matrix.mul_apply]
   simp only [Matrix.sub_apply, Matrix.smul_apply, of_apply, smul_eq_mul,
     cubicKernelMulChar_mul_conjTranspose_apply hχ]
   by_cases ha : a = 0
@@ -122,7 +122,7 @@ theorem cubicKernelMulChar_mul_conjTranspose_mul_outer (hp : p ≠ 2) (hχ : χ 
     cubicKernelMulChar χ * (cubicKernelMulChar χ)ᴴ * (of fun a a' => χ a * star (χ a')) =
       ((p : ℂ) + 1) • of fun a a' => χ a * star (χ a') := by
   ext a a''
-  rw [mul_apply]
+  rw [Matrix.mul_apply]
   simp only [Matrix.smul_apply, of_apply, smul_eq_mul,
     cubicKernelMulChar_mul_conjTranspose_apply hχ]
   by_cases ha : a = 0

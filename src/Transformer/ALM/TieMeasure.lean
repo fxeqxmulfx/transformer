@@ -107,8 +107,8 @@ theorem volume_tie_locus_family (K : Fin n → EucSpace m) :
     exact Set.mem_iUnion.mpr ⟨(i, j), hij, hq⟩
   refine MeasureTheory.measure_mono_null hsub (MeasureTheory.measure_iUnion_null fun p => ?_)
   rcases eq_or_ne (K p.1) (K p.2) with h | h
-  · convert MeasureTheory.measure_empty (μ := MeasureTheory.volume (α := EucSpace m))
-    exact Set.eq_empty_of_forall_notMem fun q hq => hq.1 h
+  · refine MeasureTheory.measure_mono_null (fun q hq => ?_) MeasureTheory.measure_empty
+    exact (hq.1 h).elim
   · exact MeasureTheory.measure_mono_null (fun q hq => hq.2) (volume_tieLocus h)
 
 /-- **So almost every query separates the stored keys.**  The usable form of

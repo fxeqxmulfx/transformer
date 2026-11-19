@@ -81,7 +81,7 @@ theorem optimizerEulerLimit_meanSquare_rate {d : ℕ} (method : UpdateKind)
   obtain ⟨A, haA⟩ := diffusionNoiseScale_uniform_bound method B f σ hB hmodel
   let Aη : NNReal := ‖Real.sqrt η‖₊ * A
   have hAη : ∀ x k, |diffusionNoiseScale method η B f σ x k| ≤ Aη := by
-    simpa only [Aη, NNReal.coe_mul, coe_nnnorm, Real.norm_eq_abs,
+    simpa only [Aη, NNReal.coe_mul, coe_nnNorm, Real.norm_eq_abs,
       abs_of_nonneg (Real.sqrt_nonneg _)] using haA η hη
   let X := dyadicEuler (diffusionDrift method B f σ) (diffusionNoiseScale method η B f σ) x₀ t
   have hX (m : ℕ) : MemLp (X m) 2 (brownianNoiseLaw d) :=

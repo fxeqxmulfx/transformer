@@ -85,7 +85,7 @@ theorem not_two_balls (z₀ z₁ : SSphere d) (R₀ R₁ : ℝ)
               ≤ (μ T : Measure (SSphere d)) (Metric.ball z₀ R₀ ∩ Metric.ball z₁ R₁) := by
   rintro ⟨W, U, b, φ, -, hφ, h⟩
   exact not_forall_mass_into d _ φ _ _ T (1 - ε) hT.le (by linarith)
-    (fun hs => hsub fun x hx => (hs hx).2) hφ h
+    (fun hs => hsub (hs.trans Set.inter_subset_right)) hφ h
 
 /-- **`lem: tubular.mass.movement` in the source's order is false.**
 

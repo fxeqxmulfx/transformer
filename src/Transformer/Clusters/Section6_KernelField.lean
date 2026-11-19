@@ -47,11 +47,11 @@ theorem lipschitzWith_attentionKernel (Q K V : ParamMatrix d) {R : ℝ} (hR : 0 
     (μ : Measure (EucSpace d)) [IsProbabilityMeasure μ] (hsupp : IsCarriedBy μ R) :
     LipschitzWith (2 * ‖(ContinuousLinearMap.adjoint Q).comp K‖ * ‖V‖ * R ^ 2).toNNReal
       (attentionKernel Q K V μ) := by
-  refine lipschitzWith_of_nnnorm_fderiv_le
+  refine lipschitzWith_of_nnNorm_fderiv_le
     (fun x => (hasFDerivAt_attentionKernel Q K V R hR μ inferInstance hsupp x).differentiableAt)
     fun x => ?_
   obtain ⟨D, hD, hDle⟩ := attentionKernel_hasFDerivAt Q K V R hR μ inferInstance hsupp x
-  rw [hD.fderiv, ← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ (by positivity)]
+  rw [hD.fderiv, ← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal _ (by positivity)]
   exact hDle
 
 /-- **`𝒳` is jointly Lipschitz in the point and the measure**: for probability

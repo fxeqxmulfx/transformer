@@ -109,7 +109,7 @@ theorem negSqFrame_conjTranspose_mul (hp : p ≠ 2) :
     · simpa using h1'
     · simpa using h2
   ext i j
-  simp only [mul_apply, conjTranspose_apply, negSqFrame, of_apply, Complex.star_def,
+  simp only [Matrix.mul_apply, conjTranspose_apply, negSqFrame, of_apply, Complex.star_def,
     Complex.conj_ofReal, ← Complex.ofReal_mul, ← Complex.ofReal_sum, key, diagonal_apply]
   split_ifs <;> simp
 
@@ -161,7 +161,7 @@ theorem conjTranspose_mul_shiftedZeroIndicatorKernel (hp : p ≠ 2) (μ : ℝ) :
   ext b b'
   rw [conjTranspose_mul_shiftedZeroIndicatorKernel_apply hp]
   simp only [Matrix.add_apply, Matrix.smul_apply, negSqProjection, Matrix.sub_apply,
-    diagonal_apply, vecMulVec_apply, smul_eq_mul, mul_apply, Fin.sum_univ_two, negSqFrame,
+    diagonal_apply, vecMulVec_apply, smul_eq_mul, Matrix.mul_apply, Fin.sum_univ_two, negSqFrame,
     shiftedGramBlock, conjTranspose_apply, of_apply, Complex.star_def, Complex.conj_ofReal,
     Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val', Matrix.empty_val',
     Matrix.cons_val_fin_one, Fin.isValue]

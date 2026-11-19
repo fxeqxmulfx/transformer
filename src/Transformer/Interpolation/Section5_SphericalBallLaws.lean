@@ -97,16 +97,16 @@ theorem exists_small_cap_ball_diffuse (hd : 2 ≤ d) (p : SSphere d)
   let μ : Measure (SSphere d) := (σ S)⁻¹ • σ.restrict S
   have hμ : IsProbabilityMeasure μ := ⟨by
     change ((σ S)⁻¹ • σ.restrict S) univ = 1
-    rw [Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul,
+    rw [smul_apply, Measure.restrict_apply_univ, smul_eq_mul,
       ENNReal.inv_mul_cancel hpos.ne' htop]⟩
   refine ⟨⟨μ, hμ⟩, fun y r => ?_, ?_⟩
   · have hle : σ.restrict S (sphere y r) ≤ σ (sphere y r) := Measure.restrict_le_self _
     have hnull : σ.restrict S (sphere y r) = 0 :=
       le_zero_iff.mp (hle.trans_eq (uniform_sphere_boundary_null hd σ hσ y r))
     change ((σ S)⁻¹ • σ.restrict S) (sphere y r) = 0
-    rw [Measure.smul_apply, hnull, smul_zero]
+    rw [smul_apply, hnull, smul_zero]
   · change ((σ S)⁻¹ • σ.restrict S) Sᶜ = 0
-    rw [Measure.smul_apply, Measure.restrict_apply isClosed_closedBall.measurableSet.compl]
+    rw [smul_apply, Measure.restrict_apply isClosed_closedBall.measurableSet.compl]
     simp [S]
 
 /-- Null actual spheres imply absence of actual point masses, since

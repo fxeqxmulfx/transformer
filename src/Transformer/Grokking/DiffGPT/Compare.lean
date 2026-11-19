@@ -38,7 +38,7 @@ variable {n : ℕ}
 theorem compareKernel_add_conjTranspose (n : ℕ) :
     compareKernel n + (compareKernel n)ᴴ = ((2 * 1 : ℝ) : ℂ) • 1 := by
   ext i j
-  rw [Matrix.add_apply, conjTranspose_apply, Matrix.smul_apply, one_apply]
+  rw [Matrix.add_apply, conjTranspose_apply, Matrix.smul_apply, Matrix.one_apply]
   simp only [compareKernel, of_apply]
   rcases lt_trichotomy i j with h | h | h
   · simp [h.le, h.not_ge, h.ne]

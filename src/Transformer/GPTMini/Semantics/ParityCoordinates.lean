@@ -60,7 +60,7 @@ theorem decoderState_score (p a b q u : ℝ) (token : Fin countConfig.vocab_size
     simp [decoderState, inner_add_left, inner_add_right, inner_sub_right,
       real_inner_smul_left, controlUnit, phaseUnit, bosUnit, parityUnit, eosUnit,
       EuclideanSpace.inner_single_left]
-  all_goals omega
+  omega
 
 /-- The parity sign has unit magnitude at every integer count.
 Source: CountSpline's EVEN/ODD sign definition, including the zero-count endpoint. -/

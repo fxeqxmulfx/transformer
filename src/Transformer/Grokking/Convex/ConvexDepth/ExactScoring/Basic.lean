@@ -64,7 +64,7 @@ theorem normalized_eq_iff (w : X → I → ℝ) (source : K → I → ℝ)
         headLogits (ContextInterpolation.features (fun x => SignedContext.normalized (w x)) source) W x b ↔
       numerator (w x) source W a = numerator (w x) source W b := by
   rw [normalized_head, normalized_head]
-  exact div_left_inj' (ne_of_gt (SignedContext.normalizer_pos (w x)))
+  exact div_left_inj₀ (ne_of_gt (SignedContext.normalizer_pos (w x)))
 
 /-- Realification for a rectangular complex source bank, CM63. The sign of
 the imaginary feature matches the actual complex multiplication. -/

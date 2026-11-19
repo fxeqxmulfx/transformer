@@ -26,8 +26,8 @@ variable {p : ℕ} [Fact p.Prime]
 theorem conjTranspose_mul_taskKernel_add {χ : MulChar (ZMod p) ℂ} (hχ : χ ≠ 1) :
     (taskKernel (· + ·) χ)ᴴ * taskKernel (· + ·) χ = (p : ℂ) • 1 - of fun _ _ => 1 := by
   ext v v'
-  simp only [mul_apply, conjTranspose_apply, taskKernel, of_apply, Matrix.sub_apply,
-    Matrix.smul_apply, one_apply, smul_eq_mul]
+  simp only [Matrix.mul_apply, conjTranspose_apply, taskKernel, of_apply, Matrix.sub_apply,
+    Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
   rw [← Equiv.sum_comp (Equiv.addRight (-v)), Finset.sum_congr rfl fun w _ => by
     rw [Equiv.coe_addRight, neg_add_cancel_right, show w + -v + v' = w + (v' - v) by ring],
     sum_star_mulChar_mul_add hχ]
@@ -47,7 +47,7 @@ lemma smul_one_sub_mul_self :
   have hJ : (of fun _ _ => 1 : Matrix (ZMod p) (ZMod p) ℂ) * (of fun _ _ => 1) =
       (p : ℂ) • of fun _ _ => 1 := by
     ext a b
-    simp [mul_apply, ZMod.card]
+    simp [Matrix.mul_apply, ZMod.card]
   rw [Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_sub, Matrix.smul_mul, Matrix.smul_mul,
     Matrix.one_mul, Matrix.one_mul, Matrix.mul_smul, Matrix.mul_one, hJ]
   module

@@ -188,6 +188,6 @@ example : IsMinOn (localRegularizedMemoryObjective (oneHotContextCodes (fun j : 
       ((oneHotContextCodes (fun j : Fin 4 => j) * W) 0 0) ^ 2
   rw [oneHotContextCodes_mul, oneHotContextCodes_mul]
   norm_num [Matrix.of_apply]
-  all_goals exact sq_nonneg (W 0 0)
+  exact sq_nonneg (W 0 0)
 
 end Transformer.GPTMini.Sparsemax

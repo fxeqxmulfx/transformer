@@ -53,9 +53,9 @@ theorem circlePoint_mem_support_of_isAtomicOnCircle {N : ℕ} {m θ : Idx N → 
   apply (Measure.mem_support_iff_forall _).mpr
   intro U hU
   have hx : circlePoint (θ i) ∈ U := mem_of_mem_nhds hU
-  rw [hatom.eq_sum, Measure.finsetSum_apply]
+  rw [hatom.eq_sum, sum_apply]
   have hpos : 0 < (ENNReal.ofReal (m i) • Measure.dirac (circlePoint (θ i))) U := by
-    rw [Measure.smul_apply, smul_eq_mul, Measure.dirac_apply_of_mem hx, mul_one]
+    rw [smul_apply, smul_eq_mul, Measure.dirac_apply_of_mem hx, mul_one]
     exact ENNReal.ofReal_pos.mpr (hatom.mass_pos i)
   have hle := Finset.single_le_sum
     (f := fun j : Idx N => (ENNReal.ofReal (m j) • Measure.dirac (circlePoint (θ j))) U)

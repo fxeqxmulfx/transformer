@@ -58,7 +58,7 @@ theorem cycleAvg_mul_fourierMatrix :
       (permAvg (Equiv.refl (ZMod N)) (Equiv.addRight 1) *ᵥ fun j => fourierMatrix N j k) i :=
     rfl
   have h2 : (meanProj (ZMod N) * fourierMatrix N) i k = if k = 0 then 1 else 0 := by
-    simp only [meanProj, fourierMatrix, mul_apply, of_apply, ← mul_sum, sum_stdAddChar_mul,
+    simp only [meanProj, fourierMatrix, Matrix.mul_apply, of_apply, ← mul_sum, sum_stdAddChar_mul,
       ZMod.card]
     split_ifs
     · exact inv_mul_cancel₀ (by exact_mod_cast NeZero.ne N)
@@ -166,7 +166,7 @@ lemma cycleAvg_mulVec_stdAddChar (hN : 2 ≤ N) :
   ext l
   have h := congrFun (congrFun cycleAvg_mul_fourierMatrix l) 1
   simp only [mul_diagonal, one_ne_zero, ite_false, sub_zero] at h
-  simpa [fourierMatrix, mul_apply, mulVec, dotProduct, mul_comm] using h
+  simpa [fourierMatrix, Matrix.mul_apply, mulVec, dotProduct, mul_comm] using h
 
 /-- **The bound is reached**: for `N ≥ 2`, `‖(Y − Q) ψ‖² = cos²(π/N) ‖ψ‖²`. -/
 theorem sum_norm_sq_mulVec_cycleAvg_stdAddChar (hN : 2 ≤ N) :

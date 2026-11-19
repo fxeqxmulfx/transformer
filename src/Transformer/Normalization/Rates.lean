@@ -179,7 +179,7 @@ theorem not_forall_initial_velocity_small :
     (ContinuousLinearMap.id ℝ (EucSpace 1)) (ContinuousLinearMap.id ℝ (EucSpace 1))
     (fun x y => abs_real_inner_le_norm x y) ContinuousLinearMap.norm_id_le
     hsize hdim
-  rw [Measure.coe_zero, Pi.zero_apply, nonpos_iff_eq_zero, tsub_eq_zero_iff_le,
+  rw [FunLike.coe_zero, Pi.zero_apply, nonpos_iff_eq_zero, tsub_eq_zero_iff_le,
     ENNReal.one_le_ofReal] at hbad
   have : ((2 : ℕ) : ℝ) ^ (-c) < 1 :=
     Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (neg_neg_iff_pos.mpr hc)

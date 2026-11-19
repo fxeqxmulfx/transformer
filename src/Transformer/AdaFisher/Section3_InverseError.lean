@@ -63,7 +63,7 @@ theorem inverseErrorOriginal_inverse_norm : ‖inverseErrorOriginal⁻¹‖ = 1 
   · calc
       (1 : ℝ) = ‖Matrix.diagonal (fun p : Fin 2 × Fin 2 =>
         ((1 + (p.1 : ℝ)) * (1 + (p.2 : ℝ)))⁻¹) (0, 0) (0, 0)‖ := by norm_num
-      _ ≤ _ := Matrix.norm_entry_le_entrywise_sup_norm _
+      _ ≤ _ := Matrix.norm_apply_le_norm _
 
 /-- The inverse-error norm is at least `|1/δ-1|`, Proposition 3.2,
 Appendix A.2. The original diagonal approximation error is exactly zero. -/
@@ -79,7 +79,7 @@ theorem inverseError_lower (δ : ℝ) (hδ : 0 < δ) :
       rw [inverseErrorApprox, fisherMatrix, diagonal_inverse _ hnonzero,
         inverseErrorOriginal, diagonal_inverse _ (by intro p; positivity)]
       simp [fisherDiagonal, Real.norm_eq_abs]
-    _ ≤ _ := Matrix.norm_entry_le_entrywise_sup_norm _
+    _ ≤ _ := Matrix.norm_apply_le_norm _
 
 example : (0 : ℝ) < 1 / 1000 := by norm_num
 

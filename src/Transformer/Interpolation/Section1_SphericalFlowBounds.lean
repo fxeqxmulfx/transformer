@@ -85,10 +85,10 @@ theorem lipschitzWith_spherical_trajectory_time (F : EucSpace d → EucSpace d) 
     (hB : ∀ x : SSphere d, ‖F x‖ ≤ B) (X : ℝ → SSphere d)
     (hX : ∀ t, HasDerivAt (fun s => (X s : EucSpace d)) (F (X t)) t) : LipschitzWith B X := by
   have hLip : LipschitzWith B (fun s => (X s : EucSpace d)) := by
-    apply lipschitzWith_of_nnnorm_deriv_le (𝕜 := ℝ) (fun s => (hX s).differentiableAt)
+    apply lipschitzWith_of_nnNorm_deriv_le (𝕜 := ℝ) (fun s => (hX s).differentiableAt)
     intro s
     apply NNReal.coe_le_coe.mp
-    rw [coe_nnnorm, (hX s).deriv]
+    rw [coe_nnNorm, (hX s).deriv]
     exact hB (X s)
   exact hLip.subtype_mk _
 

@@ -104,7 +104,7 @@ theorem IsSAProcess.measure_inter_prod {β γ : ℝ} {X₀ : Idx n → EucSpace 
           ENNReal.ofReal (attWeight β (x t) i j) *
             A.indicator (fun _ => (1 : ℝ≥0∞)) ((1 - γ) • x t i + γ • x t j) := fun j =>
         (hw j).mul ((measurable_const.indicator hA).comp (hcomb j))
-      rw [Measure.finsetSum_apply, lintegral_finsetSum _ fun j _ => hmj j]
+      rw [sum_apply, lintegral_finsetSum _ fun j _ => hmj j]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [Measure.map_apply (hg j) (hB.prod hA), withDensity_apply _ ((hg j) (hB.prod hA)), hμ,
         Measure.restrict_restrict ((hg j) (hB.prod hA))]
@@ -167,7 +167,7 @@ theorem IsSAProcess.measure_inter_prod {β γ : ℝ} {X₀ : Idx n → EucSpace 
         (fun x => (x t, (1 - γ) • x t i + γ • x t j))) 𝒜 =
       ∫⁻ x in S, ∑ j, ENNReal.ofReal (attWeight β (x t) i j) *
         𝒜.indicator (fun _ => (1 : ℝ≥0∞)) (x t, (1 - γ) • x t i + γ • x t j) ∂P := by
-    rw [Measure.finsetSum_apply, lintegral_finsetSum _ fun j _ => hmj j]
+    rw [sum_apply, lintegral_finsetSum _ fun j _ => hmj j]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [Measure.map_apply (hg j) h𝒜, withDensity_apply _ ((hg j) h𝒜), hμ,
       ← lintegral_indicator ((hg j) h𝒜)]

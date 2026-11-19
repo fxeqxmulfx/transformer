@@ -168,7 +168,7 @@ theorem multiplicationCircuit_parallel_output (a b : ℝ) :
     intro i
     fin_cases i <;>
       norm_num [multiplicationCircuit, multiplicationCircuitLevel]
-    all_goals decide
+    decide
   have hbound : ∀ i : Fin multiplicationCircuit.size,
       multiplicationCircuitLevel i < 2 := by
     intro i

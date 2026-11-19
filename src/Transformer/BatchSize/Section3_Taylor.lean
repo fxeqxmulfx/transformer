@@ -86,7 +86,7 @@ theorem directional_taylor_remainder {d : ℕ} (f : EucSpace d → ℝ)
   have hline : ContDiff ℝ 3 (lossLine f x u) :=
     hf.comp (contDiff_const.add (contDiff_id.smul_const u))
   obtain ⟨C, hC⟩ := exists_taylor_mean_remainder_bound
-    (n := 2) (a := 0) (b := 1) (by norm_num) hline.contDiffOn
+    (n := 2) (a := 0) (b := 1) hline.contDiffOn
   refine ⟨max C 0, le_max_right _ _, ?_⟩
   intro η hη
   have hcoeff (n : ℕ) (hn : n ≤ 3) :

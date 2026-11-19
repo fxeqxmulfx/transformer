@@ -28,7 +28,7 @@ abbrev RecallSlot (n : ℕ) := Option (Fin n)
 
 /-- Only strictly earlier pairs and the null slot can receive mass. -/
 def allowedSlots {n : ℕ} (i : Fin n) : Set (RecallSlot n) :=
-  fun slot => match slot with
+  Set.ofPred fun slot => match slot with
   | none => True
   | some j => j < i
 

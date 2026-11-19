@@ -117,7 +117,7 @@ theorem isLittleO_tail_sqrt {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) {B : ℕ 
 the interval the Gaussian approximation is valid on.
 
 Source: arXiv:2412.09080v3, `eq:T`. -/
-def intervalT (n : ℕ) (β w : ℝ) : Set ℝ :=
+noncomputable def intervalT (n : ℕ) (β w : ℝ) : Set ℝ :=
   Set.Icc (-Real.sqrt (2 * Real.log n - Real.log β - w))
     (Real.sqrt (2 * Real.log n - Real.log β - w))
 
@@ -125,7 +125,7 @@ def intervalT (n : ℕ) (β w : ℝ) : Set ℝ :=
 if `β ≤ n^{2/3}`, and `T' = ∅` otherwise.
 
 Source: arXiv:2412.09080v3, `eq:T'`. -/
-def intervalT' (n : ℕ) (β : ℝ) : Set ℝ :=
+noncomputable def intervalT' (n : ℕ) (β : ℝ) : Set ℝ :=
   if β ≤ (n : ℝ) ^ ((2 : ℝ) / 3) then
     Set.Icc (-Real.sqrt (2 * Real.log n - 3 * Real.log β))
       (Real.sqrt (2 * Real.log n - 3 * Real.log β))

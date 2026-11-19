@@ -63,7 +63,7 @@ theorem summable_nnnorm_changeOriginSeries_mul_pow {n : ℕ}
     ‖p.changeOriginSeries k l‖₊ * r ^ k ≤
         (∑' _ : {t : Finset (Fin (k + l)) // t.card = l}, ‖p (k + l)‖₊) * r ^ k := by
       gcongr
-      exact p.nnnorm_changeOriginSeries_le_tsum k l
+      exact p.nnNorm_changeOriginSeries_le_tsum k l
     _ = ∑' _ : {t : Finset (Fin (k + l)) // t.card = l},
         ‖p (k + l)‖₊ * r ^ k := by rw [NNReal.tsum_mul_right]
 
@@ -72,7 +72,7 @@ theorem summable_weightedCoordinateSeries {n : ℕ}
     (p : FormalMultilinearSeries ℝ (Ambient n) ℝ) (r : ℝ≥0)
     (hr : (r : ℝ≥0∞) < p.radius) (l : ℕ) :
     Summable (fun k : ℕ ↦ weightedCoordinateSeries p r k l) := by
-  refine Summable.of_nnnorm_bounded
+  refine Summable.of_nnNorm_bounded
     (summable_nnnorm_changeOriginSeries_mul_pow p r hr l) (fun k ↦ ?_)
   exact nnnorm_weightedCoordinateSeries_le p r k l
 
@@ -95,7 +95,7 @@ theorem nnnorm_weightedCoefficientSeries_le {n : ℕ}
   calc
     ‖∑' k : ℕ, weightedCoordinateSeries p r k l‖₊ ≤
         ∑' k : ℕ, ‖weightedCoordinateSeries p r k l‖₊ :=
-      nnnorm_tsum_le (summable_nnnorm_weightedCoordinateSeries p r hr l)
+      nnNorm_tsum_le (summable_nnnorm_weightedCoordinateSeries p r hr l)
     _ ≤ ∑' k : ℕ, ‖p.changeOriginSeries k l‖₊ * r ^ k := by
       apply Summable.tsum_le_tsum
       · intro k

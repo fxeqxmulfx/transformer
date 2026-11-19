@@ -95,7 +95,7 @@ theorem tsum_martingale_unit_excursion_ne_top
       (∑' n : ℕ, ENNReal.ofReal (∫ ω, (M ((n : ℝ) + 1) ω - M n ω) ^ 2 ∂P)) / (a : ENNReal) := by
     calc
       _ ≤ ∑' n : ℕ, ENNReal.ofReal (∫ ω, (M ((n : ℝ) + 1) ω - M n ω) ^ 2 ∂P) / (a : ENNReal) :=
-        ENNReal.tsum_le_tsum hineq
+        tsum_le_tsum hineq
       _ = _ := by simp only [div_eq_mul_inv, ENNReal.tsum_mul_right]
   exact ne_top_of_le_ne_top
     (ENNReal.div_ne_top (tsum_ofReal_integral_sq_nat_martingale_increments_ne_top P ℱ M hM C hb) ha0) hs

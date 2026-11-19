@@ -96,7 +96,7 @@ example := det_sinKernel (p := 5) 1
 /-- `P M` flips the rows of `M`. -/
 lemma rowFlip_mul {n : Type*} (M : Matrix (ZMod p) n ℂ) : rowFlip * M = M.submatrix Neg.neg id := by
   ext a b
-  simp [rowFlip, mul_apply]
+  simp [rowFlip, Matrix.mul_apply]
 
 example := rowFlip_mul (1 : Matrix (ZMod 5) (ZMod 5) ℂ)
 
@@ -104,7 +104,7 @@ example := rowFlip_mul (1 : Matrix (ZMod 5) (ZMod 5) ℂ)
 lemma rowFlip_mul_rowFlip : (rowFlip : Matrix (ZMod p) (ZMod p) ℂ) * rowFlip = 1 := by
   rw [rowFlip_mul]
   ext a b
-  simp [rowFlip, one_apply, eq_comm]
+  simp [rowFlip, Matrix.one_apply, eq_comm]
 
 example := rowFlip_mul_rowFlip (p := 5)
 
@@ -162,8 +162,8 @@ example := @trace_rowFlip 5 ⟨Nat.prime_five⟩ (by decide)
 theorem cubicKernelMulShift_mul_conjTranspose {r : ZMod p} (hr : r ≠ 0) :
     cubicKernelMulShift r * (cubicKernelMulShift r)ᴴ = (p : ℂ) • 1 := by
   ext a c
-  simp only [mul_apply, conjTranspose_apply, cubicKernelMulShift, taskKernel, of_apply,
-    Matrix.smul_apply, one_apply, smul_eq_mul]
+  simp only [Matrix.mul_apply, conjTranspose_apply, cubicKernelMulShift, taskKernel, of_apply,
+    Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
   rw [Finset.sum_congr rfl fun b _ => (by
     rw [mul_comm, star_stdAddChar_mul, show r * (a ^ 3 + a * b) - r * (c ^ 3 + c * b) =
       r * (a ^ 3 - c ^ 3) + b * (r * (a - c)) by ring, AddChar.map_add_eq_mul] :

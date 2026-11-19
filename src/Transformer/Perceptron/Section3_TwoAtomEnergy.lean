@@ -36,7 +36,7 @@ variable {d : ℕ}
 arXiv:2601.21366v2, §3.2, `eq: atomic.thm.bound`. -/
 noncomputable def twoAtomProb (x y : SSphere d) : Perspective.ProbSphere d :=
   ⟨(1 / 2 : ℝ≥0∞) • Measure.dirac x + (1 / 2 : ℝ≥0∞) • Measure.dirac y,
-    ⟨by simpa [Measure.add_apply, Measure.smul_apply] using ENNReal.inv_two_add_inv_two⟩⟩
+    ⟨by simpa [add_apply, smul_apply] using ENNReal.inv_two_add_inv_two⟩⟩
 
 /-- The measure underlying the two-atom constructor;
 arXiv:2601.21366v2, §3.2, `eq: atomic.thm.bound`. -/
@@ -77,7 +77,7 @@ example : (basePoint 0 : SSphere 1) ∈
   apply (Measure.mem_support_iff_forall _).mpr
   intro U hU
   have hx : (basePoint 0 : SSphere 1) ∈ U := mem_of_mem_nhds hU
-  simp [Measure.add_apply, Measure.smul_apply, hx]
+  simp [add_apply, smul_apply, hx]
 
 /-- A Monge perturbation preserves the two masses;
 arXiv:2601.21366v2, §2.2 and §3.2, proof of `thm: bound`. -/

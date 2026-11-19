@@ -65,7 +65,7 @@ theorem min_curve_ge_barrier (f f' : ι → ℝ → ℝ) (B B' : ℝ → ℝ) (a
             simpa using ((hasDerivAt_id x).sub_const x).const_mul ρ
           exact (hd i x).add h1
         have hslope := (hasDerivAt_iff_tendsto_slope.mp hg).mono_left
-          (nhdsWithin_mono x fun z hz => ne_of_gt hz)
+          (nhdsGT_le_nhdsNE x)
         filter_upwards [hslope.eventually_const_lt (by linarith : 0 < f' i x + ρ),
           self_mem_nhdsWithin] with z hz hzx
         have hzx' : 0 < z - x := sub_pos.mpr hzx

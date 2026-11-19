@@ -83,7 +83,7 @@ theorem not_hyp_propagation :
   set q := ψ (T₁ 0 y)
   have hpq : p ≠ q := fun e => antipode_ne 3 x ((hT₁ 0).2.1 (hinj e)).symm
   have := congrArg (fun m : Measure (SSphere 3) => m {p}) h0
-  simp only [Measure.add_apply, Measure.smul_apply, smul_eq_mul, Measure.dirac_apply_of_mem
+  simp only [add_apply, smul_apply, smul_eq_mul, Measure.dirac_apply_of_mem
     (Set.mem_singleton p)] at this
   rw [Measure.dirac_apply' _ (measurableSet_singleton p), Measure.dirac_apply' _
     (measurableSet_singleton p)] at this
