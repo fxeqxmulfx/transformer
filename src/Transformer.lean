@@ -60,6 +60,7 @@ public import Transformer.AttentionResiduals
 public import Transformer.DeepSeekV41
 public import Transformer.RoPE
 public import Transformer.BAM
+public import Transformer.KERPLE
 public import Transformer.Weil
 public import Transformer.Rotate90
 public import Transformer.SequenceModel
@@ -235,6 +236,10 @@ probability bounds outside that coverage are not claimed as proved.
    Lemma 2 needs its normalizer, Lemmas 3–4 bounded content, Theorem 3 `μ = 0`;
    Theorem 4 fails for bounded content and holds relative to NoPE; Appendix K's
    `Z` is the reciprocal of the overlap it is equated with.
+
+50. Chi, Fan, Ramadge, Rudnicky — arXiv:2205.09921v2, "KERPLE: Kernelized
+   Relative Positional Embedding for Length Extrapolation". PD and CPD kernels
+   and the facts that build CPD kernels: §3.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
