@@ -1,5 +1,7 @@
 module
 
+public import Transformer.MRCR.CountHead
+public import Transformer.MRCR.CountLookup
 public import Transformer.MRCR.Counting
 public import Transformer.MRCR.InnerNeedle
 public import Transformer.MRCR.NearMiss
@@ -31,4 +33,7 @@ last of them, and no raw score of the distance returns a needle with a needle on
 `Transformer.MRCR.Ordinal` returns the needle with the desired index, counted from the start, by
 a formula of depth two and so by a rounded transformer of two layers
 (`Transformer.MRCR.Counting` relates its counts to cardinalities).
+`Transformer.MRCR.CountHead` and `Transformer.MRCR.CountLookup` do the same with the real softmax
+at the scale `s log n`: one head counts the earlier needles of each key, a second compares the
+count with the ordinal of the query and returns the needle at every length.
 -/

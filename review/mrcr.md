@@ -28,7 +28,7 @@ what is proved in Lean and what is not.
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
-| Count then look up | both at the scale `s log n` | open |
+| Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
 | Copy | return the whole answer, token by token | open |
 | Training | whether a trained model has the gaps | not attempted (the user, 2026-11-19) |
 
@@ -82,5 +82,29 @@ has depth two (`nthAnswers_mem`) and holds exactly when `v` answers (`sat_nthAns
 rounded transformer of two layers whose attention ignores the query recognizes the task at every
 length (`exists_rtfr_nthAnswers`). The first layer counts, the second compares the count with
 the ordinal. Counted from the end the task is out of reach already at the last needle: no rounded
-transformer recognizes the latest binding at every length (`Transformer.CRASP.not_recallsLatest`). The real softmax at
-the scale `s log n` doing the same two steps is the next row.
+transformer recognizes the latest binding at every length
+(`Transformer.CRASP.not_recallsLatest`). The next section takes the same two steps with the real
+softmax at the scale `s log n`.
+
+## Count then look up (proved, real softmax)
+
+After a BOS the rows `t` carry keys `κ t` and values; `occ κ t` counts the rows up to `t` with the
+key of `t`, `t` included. The first head, at the row `t`, attends causally to the BOS and the rows
+up to `t` with the raw score `1` at the BOS and at the rows of the key of `t`, and reads `1` at the
+BOS only. The `occ κ t + 1` leading tokens tie, so at the scale `s₁ log n`, `s₁ ≥ 1`, the head
+returns `1 / (occ κ t + 1)` within `(t + 2)^{1 − s₁}` (`abs_countHead_sub_le`). Rows of one key
+have distinct counts (`occ_lt_occ`).
+
+The second head, at the query for the key `q` and the ordinal `r`, scores the row `t` by
+`[κ t = q] − K_r (c_t − 1/(r + 2))²` with `K_r = ((r + 2)(r + 3))²` and the BOS by `0`; the
+score is bilinear in `(e_κ, 1, c, c²)` against features of the query, and the feedforward layer
+supplies `c²`. Every count `o ≠ r + 1` puts `1/(o + 1)` at least `1/((r + 2)(r + 3))` from
+`1/(r + 2)` (`one_le_lookupWeight_mul_sq`), so the needle leads by
+`g = 1 − 2 K_r 2^{1 − s₁}` and the second head is within `2 C m (m + 1)^{−s₂ g}` of its value
+(`abs_lookupHead_sub_le`). For every bound `R` on the ordinal and every `s₂ > 1` some `s₁` returns
+the needle to every accuracy from some number of rows on, whatever the keys and the values
+(`exists_forall_lookupHead_recall`). The first rows keep an error of `2^{1 − s₁}` at every length,
+so `2 K_R 2^{1 − s₁}` must stay below `1`: the proof takes `2^{s₁ − 1} > 4 K_R s₂ / (s₂ − 1)`,
+whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, and the weight `K_r` of
+the second head grows like `r⁴`. The query token is left out of the second head; its score would
+be at most `0`.
