@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`; RoPE at other angles, and SSMax of the dot product alone, open) |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before); RoPE at other angles, SSMax of the dot product alone, and Sandwich by other means, open |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -193,6 +193,17 @@ can be:
 - SSMax, arXiv:2501.19399v1, `eq:ssmax`, of each of these with `s log 2 ≥ 1`, which multiplies
   the whole logit, bias included, by `s log n` (`exists_ssmax_alibi_phraseAnswer`,
   `exists_ssmax_kerpleLog_phraseAnswer`, `exists_ssmax_kerplePower_phraseAnswer`).
+
+Sandwich, arXiv:2212.10356v2, Eq. (6), cannot be one of them (`Transformer.MRCR.PhraseKeySandwich`).
+Its bias `(Σ_i cos(tθ_i) − d̄/2)/h` is `0` at the distance `0` and negative elsewhere, but it does not
+decay: `exists_returns` over enough positions leaves returns `t` as large as wanted with every
+phase `tθ_i` near a multiple of `2π` (`exists_return_ge`), and there the bias beats its value at
+the distance `1` (`exists_sandwich_lt`). A key at such a distance gets a larger logit than the
+same key at the distance `1`, with or without SSMax (`sandwichLogit_lt`,
+`ssmax_sandwichLogit_lt`), so no head reads the token before alone, and `ReadsPrev` fails for
+every divisor, compression ratio and dot product (`not_readsPrev_sandwich`,
+`not_readsPrev_ssmax_sandwich`). Only the construction is ruled out: whether several layers with
+Sandwich read the token before otherwise is open.
 
 Not proved:
 

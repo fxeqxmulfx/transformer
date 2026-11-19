@@ -14,6 +14,7 @@ public import Transformer.MRCR.PhraseKeyLogits
 public import Transformer.MRCR.PhraseKeyPrev
 public import Transformer.MRCR.PhraseKeyPrevCorrect
 public import Transformer.MRCR.PhraseKeyRope
+public import Transformer.MRCR.PhraseKeySandwich
 public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.Returns
@@ -63,8 +64,11 @@ the previous token, and there a formula of depth two answers the query
 transformer of five layers answers it at every length too: three layers read the last four
 tokens into a gram, and two run that formula over the grams. It does so with ALiBi, with either
 kernel of KERPLE, and with SSMax of any of these, the logit divided by `1`, `√d` or `d`
-(`Transformer.MRCR.PhraseKeyGrams`, `Transformer.MRCR.PhraseKeyLogits`). SSMax that scales the
-dot product alone, and RoPE at irrational angles, are left open.
+(`Transformer.MRCR.PhraseKeyGrams`, `Transformer.MRCR.PhraseKeyLogits`). Sandwich's bias does not
+decay: it comes back near its maximum at distances without bound, where it beats its value at the
+token before, so no head with it reads that token alone and the construction has no Sandwich
+version (`Transformer.MRCR.PhraseKeySandwich`). SSMax that scales the dot product alone, RoPE at
+irrational angles, and Sandwich by other means are left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so
