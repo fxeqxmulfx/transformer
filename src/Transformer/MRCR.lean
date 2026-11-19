@@ -13,6 +13,7 @@ public import Transformer.MRCR.PhraseKeyGrams
 public import Transformer.MRCR.PhraseKeyLogits
 public import Transformer.MRCR.PhraseKeyPrev
 public import Transformer.MRCR.PhraseKeyPrevCorrect
+public import Transformer.MRCR.PhraseKeyReRope
 public import Transformer.MRCR.PhraseKeyRope
 public import Transformer.MRCR.PhraseKeyRotary
 public import Transformer.MRCR.PhraseKeySandwich
@@ -71,8 +72,11 @@ token before, so no head with it reads that token alone and the construction has
 version (`Transformer.MRCR.PhraseKeySandwich`). Nor does a RoPE score of the distance decay, at
 any frequencies: it converges only if it is constant, and a far key comes back within any margin
 of the token before, so the construction has no version with RoPE's grid, YaRN's rescaled grid
-and temperature, or LeRoPE's learned frequencies (`Transformer.MRCR.PhraseKeyRotary`). SSMax
-that scales the dot product alone, and RoPE or Sandwich by other means, are left open.
+and temperature, or LeRoPE's learned frequencies (`Transformer.MRCR.PhraseKeyRotary`). Clamping
+the distance at a window, as ReRoPE does, makes the score constant from the window on, and then
+five layers answer the query at every window `W ≥ 2`, under SSMax too
+(`Transformer.MRCR.PhraseKeyReRope`). SSMax that scales the dot product alone, and RoPE or
+Sandwich by other means, are left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so

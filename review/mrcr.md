@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -110,7 +110,7 @@ whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, an
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
-## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`, and transformers with ALiBi, KERPLE or SSMax)
+## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`, and transformers with ALiBi, KERPLE, SSMax or RoPE clamped at a window)
 
 MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
 above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
@@ -215,6 +215,19 @@ at the distance `1`, and `ReadsPrev` fails for every frequency, coefficient, div
 YaRN rescales them and multiplies the whole logit by its temperature, arXiv:2309.00071v3,
 Eq. (14) and Definition 2 (`yarnLogit`, `not_readsPrev_yarn`), and LeRoPE learns them,
 arXiv:2607.10134v1, Eq. (5) (`not_readsPrev_lerope`). Again only the construction is ruled out.
+
+Clamping the distance repairs it (`Transformer.MRCR.PhraseKeyReRope`). ReRoPE (Su, 2023), which
+arXiv:2309.00071v3, §2.3, cites without its formula, clamps RoPE's relative position at a window;
+`reropeLogit` reads it as the distance `min (i − j) W`, ours. From the window on the logit no
+longer depends on the distance (`reropeLogit_of_le`), so it converges. One frequency `θ` with
+`θ (W + 2) ≤ π` and the sine coefficient `−β / sin θ`, `β = b / c ≥ 3`, score `0`, `−β` and at most
+`−2β cos θ ≤ −4β/3` at the clamped distances `0`, `1` and `2, …, W` (`sin_two_mul_le_sin`,
+`two_thirds_le_cos`), so `ReadsPrev` holds at every window `W ≥ 2` (`readsPrev_rerope`) and five
+layers answer spelled asks, the logit divided by any positive `c d`, with or without SSMax
+(`exists_rerope_phraseAnswer`, `exists_ssmax_rerope_phraseAnswer`). RoPE's grid `10000^{−2m/d}`
+for `d = 128` has a frequency near `1.2 · 10^{−4}`, enough for windows up to about `2.7 · 10^4`
+(a hand computation, not in Lean). The coefficients are parameters of the logit, like ALiBi's
+slope; that a rounded query and key carry them in a constant pair is not modelled.
 
 Not proved:
 

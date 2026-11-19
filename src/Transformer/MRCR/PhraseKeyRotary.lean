@@ -24,9 +24,10 @@ that, since every set of frequencies has such returns. In particular the key at 
 the token before and at most `−1` at every key two or more tokens back. `ReadsPrev` fails for
 every frequency, coefficient, divisor, temperature `g > 0` and dot product
 (`not_readsPrev_ropeLogit`, `not_readsPrev_yarn`, `not_readsPrev_lerope`), and the five layers
-of `Transformer.MRCR.PhraseKeyLogits` have no RoPE, YaRN or LeRoPE version. Whether RoPE reads
-it by other means, such as a head whose rounded weights vanish without a margin, is not settled
-here.
+of `Transformer.MRCR.PhraseKeyLogits` have no RoPE, YaRN or LeRoPE version. Clamping the
+distance at a window makes the score constant from the window on, and then a head reads the
+token before (`Transformer.MRCR.PhraseKeyReRope`). Whether RoPE reads it by other means, such
+as a head whose rounded weights vanish without a margin, is not settled here.
 -/
 
 @[expose] public section
