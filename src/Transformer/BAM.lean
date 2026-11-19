@@ -8,6 +8,7 @@ public import Transformer.BAM.Section2_Locality
 public import Transformer.BAM.Section2_IgnoresLocal
 public import Transformer.BAM.Section2_LongContext
 public import Transformer.BAM.Section2_Intuition
+public import Transformer.BAM.SectionC_Parametrization
 
 /-!
 # Bayesian Attention Mechanism
@@ -39,4 +40,7 @@ weight `0`.
 * `Section2_Intuition`: §2.5, the shapes of the priors (the GGD peaks at `μ`, beyond the causal
   mask if `μ > 0`; for `β < 0` it grows with distance and is not a density), attention fading
   without a positional bias, and the scalable softmax identity.
+* `SectionC_Parametrization`: Appendix C, the learnable parameters `θ_μ`, `θ_α`, `θ_β`: with
+  `ε = 0` the bias is GGD-BAM's, for every `α > 0` and `β ≠ 0`; `ε > 0` keeps it finite, and as
+  `ε → 0` it tends to GGD-BAM's.
 -/
