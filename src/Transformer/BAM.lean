@@ -2,6 +2,7 @@ module
 
 public import Transformer.BAM.Section2_BayesianAttention
 public import Transformer.BAM.SectionA_Notation
+public import Transformer.BAM.Section2_Priors
 
 /-!
 # Bayesian Attention Mechanism
@@ -18,4 +19,6 @@ weight `0`.
 * `SectionA_Notation`: Appendix A, the uniform, Laplace and generalized Gaussian (GGD) priors;
   the GGD is a density, `β = 1` is Laplace, `β = 2` is Normal, larger `β` is more localized and
   smaller `β` has the heavier tail.
+* `Section2_Priors`: §2.2, Lemma 1 (the causal mask is the uniform prior) and Lemma 2 (ALiBi is
+  the prior `Uniform · Laplace`, up to the normalizer its proof drops; false without it).
 -/
