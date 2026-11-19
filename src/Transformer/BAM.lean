@@ -1,6 +1,7 @@
 module
 
 public import Transformer.BAM.Section2_BayesianAttention
+public import Transformer.BAM.SectionA_Notation
 
 /-!
 # Bayesian Attention Mechanism
@@ -14,4 +15,7 @@ weight `0`.
 
 * `Section2_BayesianAttention`: §2.1, Definition 1 (attention is an expectation of the values) and
   Theorem 1 (an additive score factors the weight into content and position marginals over `Z`).
+* `SectionA_Notation`: Appendix A, the uniform, Laplace and generalized Gaussian (GGD) priors;
+  the GGD is a density, `β = 1` is Laplace, `β = 2` is Normal, larger `β` is more localized and
+  smaller `β` has the heavier tail.
 -/
