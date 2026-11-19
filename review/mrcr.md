@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax), `RotaryPrevHead` (with every plane rotated, keys arbitrarily far keep a weight at least `1` at precision `0`, so a head of the first layer does not attend to the token before alone); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax), `RotaryPrevHead` (with every plane rotated, keys arbitrarily far keep a weight at least `1` at precision `0`, so a head of the first layer does not attend to the token before alone), `RotaryPartialHead` (with a plane left unrotated, as in partial RoPE or LeRoPE at the frequency `2π`, a head attends to the token before alone, without a margin); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -241,13 +241,25 @@ frequencies and temperature (`exists_one_le_weight_yarn`). This holds for each p
 and a key vector, so for a head of the first layer, whose vectors depend on the token alone. A
 plane left unrotated, as in partial RoPE, adds a constant term and escapes the argument.
 
+And it does escape (`Transformer.MRCR.RotaryPartialHead`). At the frequency `θ₀ = arccos(3/5)`
+with the coefficients `3, 4`, and an unrotated plane with the coefficient `−5`, the score is
+`5 cos((t − 1) θ₀) − 5` (`ropeScore_partial`): `0` at the distance `1` and below `0` at every
+other, since `θ₀` is no rational multiple of `π` by Niven's theorem
+(`cos_int_mul_partialAngle_ne_one`). The weights are `1` at the token before and `0` elsewhere
+(`val_round_exp_ropeScore_partial`), and with values in `{0, 1}` the head returns the value of the
+token before (`sum_val_round_partial`). Partial RoPE has such planes, and LeRoPE gets one by
+learning the frequency `2π` (`exists_lerope_partial`). The head has no margin, so the five layers
+above, which read with one, do not take it as it stands.
+
 Not proved:
 
 - RoPE by other means. The construction above fails at every set of frequencies
   (`PhraseKeyRotary`), and with every plane rotated even a head without a margin gives far keys a
-  weight (`RotaryPrevHead`); deeper heads, readings through mixtures and partial RoPE are not
-  treated. The rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`, and for the usual
-  frequencies `10000^{−2c/d}` no logic and no lower bound for every RoPE transformer is in Lean.
+  weight (`RotaryPrevHead`); deeper heads and readings through mixtures are not treated. Partial
+  RoPE has an exact head without a margin (`RotaryPartialHead`), but the five layers need a
+  reader without a margin, which is not built. The rounding to `TL[◁#, MOD]` needs
+  `θ_c ∈ π ℚ`, and for the usual frequencies `10000^{−2c/d}` no logic and no lower bound for
+  every RoPE transformer is in Lean.
 - SSMax of the dot product alone, `s log n · q·k` plus a bias that it does not scale. The reading
   layers above need the logit at the position before to vanish at every length, which a fixed
   `b` does not give when only the dot product grows with `log n`; this variant is not treated.

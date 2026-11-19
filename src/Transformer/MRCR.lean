@@ -21,6 +21,7 @@ public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.Returns
 public import Transformer.MRCR.RotaryCopy
+public import Transformer.MRCR.RotaryPartialHead
 public import Transformer.MRCR.RotaryPrevHead
 public import Transformer.MRCR.Ties
 
@@ -78,8 +79,10 @@ the distance at a window, as ReRoPE does, makes the score constant from the wind
 five layers answer the query at every window `W ≥ 2`, under SSMax too
 (`Transformer.MRCR.PhraseKeyReRope`). Without a margin, at precision `0`, a negative logit
 already drops a key, yet RoPE with every plane rotated still gives keys arbitrarily far a weight
-(`Transformer.MRCR.RotaryPrevHead`). SSMax that scales the dot product alone, and RoPE or
-Sandwich by other means, are left open.
+(`Transformer.MRCR.RotaryPrevHead`); with a plane left unrotated, as in partial RoPE or when
+LeRoPE learns the frequency `2π`, a head attends to the token before alone, without a margin
+(`Transformer.MRCR.RotaryPartialHead`). SSMax that scales the dot product alone, a reader without
+a margin for the five layers, and RoPE or Sandwich by other means, are left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so

@@ -20,8 +20,8 @@ at least `0` at distances as large as wanted (`exists_nonneg_ropeScore`), and th
 at least `1` (`exists_one_le_weight_rope`), with RoPE's grid `base^{−2m/d}`
 (`exists_one_le_weight_grid`) and with YaRN's frequencies and temperature (arXiv:2309.00071v3,
 Definition 2, `exists_one_le_weight_yarn`) too. So a head of the first layer, whose vectors depend
-on the token alone, weighs a key of any token placed that far beside the token before. A deeper
-head, whose vectors depend on the context, and a reading through mixtures are not settled here.
+on the token alone, weighs a key of any token placed that far beside the token before. Deeper
+heads and mixtures are open; an unrotated plane escapes (`Transformer.MRCR.RotaryPartialHead`).
 -/
 
 @[expose] public section
