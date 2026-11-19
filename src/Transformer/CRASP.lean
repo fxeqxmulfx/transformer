@@ -83,6 +83,15 @@ public import Transformer.CRASP.PositionalReductionEquiv
 public import Transformer.CRASP.PositionalDepth
 public import Transformer.CRASP.PositionalHierarchy
 public import Transformer.CRASP.EncodingHierarchy
+public import Transformer.CRASP.LogitTransformers
+public import Transformer.CRASP.Grams
+public import Transformer.CRASP.GramsLayer
+public import Transformer.CRASP.GramsRead
+public import Transformer.CRASP.GramsRun
+public import Transformer.CRASP.GramsCorrect
+public import Transformer.CRASP.GramsPad
+public import Transformer.CRASP.GramsLogits
+public import Transformer.CRASP.GramsForms
 
 /-!
 # Knee-Deep in C-RASP: a transformer depth hierarchy
@@ -226,6 +235,11 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.EncodingUpperBounds`, `CRASP.EncodingLowerBounds` | all three positional hierarchy bounds, including depth zero |
 | `CRASP.PositionalHierarchy` | what they simulate |
 | `CRASP.EncodingHierarchy` | the depth hierarchy under position encodings |
+| `CRASP.LogitTransformers` | rounded transformers whose logit is a map of the positions and the dot product: ALiBi, KERPLE, SSMax, and a divisor |
+| `CRASP.Grams`, `CRASP.GramsLayer`, `CRASP.GramsRead`, `CRASP.GramsRun`, `CRASP.GramsCorrect` | `n` layers with such a logit read the last `n + 1` tokens into a gram, and the next run any transformer over the grams |
+| `CRASP.GramsPad` | every formula of `TL[◁#]` over the grams, at a precision that outgrows the dot product the logit needs |
+| `CRASP.GramsLogits` | ALiBi, KERPLE's two kernels and SSMax of any of them read the token before, with the logit divided by `1`, `√d` or `d` |
+| `CRASP.GramsForms` | `Y^m Q_a` over the grams, and counts over the grams as counts over the word |
 
 Two things the paper carries are deliberately absent. `lem:bb` and
 `lem:piecewise_testable_depth_majtwo` sit inside `\iffalse` blocks in the
@@ -236,7 +250,7 @@ either: it is a statement about circuits, which this development does not
 model. One remark the source leaves in a comment, after
 `thm:transformer_equivalence`, is formalized all the same: PARITY is in
 `TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
-Six results are in no paper: Zoology's recall, once each value sits beside
+Seven results are in no paper: Zoology's recall, once each value sits beside
 its key, is counting at depth `1` over a finite vocabulary
 (`CRASP.AlignedRecall`); a transformer whose attention ignores the query, as
 that one's does, needs a width growing with the vocabulary to recall over as
@@ -250,12 +264,16 @@ recalls with a constant factor fewer bits a position (`CRASP.MatchingRecall`,
 symbol, so that no transformer recalls the latest value of a rebound key
 (`CRASP.SecondLast`, `CRASP.LatestRecall`); closing every string by a fixed
 word costs no depth (`CRASP.Suffix`), nor does opening it by one in
-`TL[◁#]^pos` (`CRASP.LeftQuotient`); and on blocks of one period a formula
+`TL[◁#]^pos` (`CRASP.LeftQuotient`); on blocks of one period a formula
 of `TL[◁#, MOD]` is one of `TL[◁#]`, so that positions read modulo a fixed
 number do not read the previous symbol either, which `Y` does: `TL[◁#, Y]`
 is not contained in `TL[◁#, MOD]`, and no transformer with RoPE or sinusoidal
 encodings at rational angles recognizes `Σ*bΣ` (`CRASP.ModBlocks`,
-`CRASP.SecondLastMod`).
+`CRASP.SecondLastMod`); and a logit of the positions that weighs the token
+before above the earlier ones, as ALiBi, KERPLE and SSMax of either do with
+the logit divided by `1`, `√d` or `d`, reads the last tokens into grams, so
+that a transformer with it recognizes every language of `TL[◁#]` over the
+grams (`CRASP.Grams`, `CRASP.GramsPad`, `CRASP.GramsLogits`).
 -/
 
 @[expose] public section
