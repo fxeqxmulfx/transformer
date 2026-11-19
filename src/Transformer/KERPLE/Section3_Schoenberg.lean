@@ -56,14 +56,16 @@ theorem IsPDKernel.exp {k : X → X → ℝ} (hk : IsPDKernel k) :
       (∑ i, ∑ j, c i * c j * Real.exp (k (x i) (x j))) := by
     refine hasSum_sum fun i _ => hasSum_sum fun j _ => ?_
     rw [Real.exp_eq_exp_ℝ]
-    refine (NormedSpace.expSeries_div_hasSum_exp (k (x i) (x j))).mul_left (c i * c j) |>.congr_fun ?_
+    refine ((NormedSpace.expSeries_div_hasSum_exp (k (x i) (x j))).mul_left (c i * c j)).congr_fun
+      ?_
     intro n
     simp only [div_eq_inv_mul]
   refine hs.nonneg fun n => ?_
   rw [sum_sum_smul (fun x y => k x y ^ n)]
   exact mul_nonneg (by positivity) ((hk.pow n).2 N x c)
 
-/-- `f(x) k(x, y) f(y)` is PD when `k` is: its form is that of `k` with coefficients `c_i f(x_i)`. -/
+/-- `f(x) k(x, y) f(y)` is PD when `k` is: its form is that of `k` with the coefficients
+`c_i f(x_i)`. -/
 theorem IsPDKernel.mul_left_right {k : X → X → ℝ} (hk : IsPDKernel k) (f : X → ℝ) :
     IsPDKernel fun x y => f x * k x y * f y := by
   refine ⟨fun x y => by simp only [hk.1 x y]; ring, fun N x c => ?_⟩
@@ -97,7 +99,8 @@ theorem IsCPDKernel.isPDKernel_sub {k : X → X → ℝ} (hk : IsCPDKernel k) (z
       ring
 
 /-- The hypothesis of `IsCPDKernel.isPDKernel_sub` holds for `−‖x − y‖²` on `ℝ`. -/
-example : IsPDKernel fun x y : ℝ => -‖x - y‖ ^ 2 - -‖x - 0‖ ^ 2 - -‖0 - y‖ ^ 2 + -‖(0 : ℝ) - 0‖ ^ 2 :=
+example :
+    IsPDKernel fun x y : ℝ => -‖x - y‖ ^ 2 - -‖x - 0‖ ^ 2 - -‖0 - y‖ ^ 2 + -‖(0 : ℝ) - 0‖ ^ 2 :=
   isCPDKernel_neg_norm_sub_sq.isPDKernel_sub 0
 
 /-- **Schoenberg's theorem, `t = 1`.** If `k̃` is CPD then `exp k̃` is PD: with any point `z`,

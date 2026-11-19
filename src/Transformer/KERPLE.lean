@@ -3,6 +3,8 @@ module
 public import Transformer.KERPLE.Section3_Kernels
 public import Transformer.KERPLE.Section3_Facts
 public import Transformer.KERPLE.Section3_Schoenberg
+public import Transformer.KERPLE.Section3_Integral
+public import Transformer.KERPLE.Section3_Powers
 
 /-!
 # KERPLE
@@ -20,4 +22,9 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `Section3_Schoenberg`: products, powers and exponentials of PD kernels are PD, and Schoenberg's
   theorem (`exp(t k̃)` is PD for a CPD `k̃` and `t ≥ 0`), on which Facts 3, 5 and 6 rest; CPD
   kernels are closed under pointwise limits.
+* `Section3_Integral`: `s^α C_α = ∫_0^∞ (1 − e^{−st}) t^{−1−α} dt` for `0 < α < 1`, with
+  `0 < C_α < ∞`, and integrals of CPD kernels are CPD.
+* `Section3_Powers`: Fact 3 (`−(−k̃)^α` for `0 < α < 1` and `−log(1 − k̃)` are CPD when `k̃ ≤ 0` is)
+  and Corollary 1 (`−a ‖x − x'‖^p` and `−b log(1 + a ‖x − x'‖^p)` are CPD for `0 < p ≤ 2`), with
+  the iterations the paper mentions after it.
 -/
