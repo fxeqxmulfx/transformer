@@ -7,6 +7,7 @@ public import Transformer.BAM.Section2_GeneralizedGaussian
 public import Transformer.BAM.Section2_Locality
 public import Transformer.BAM.Section2_IgnoresLocal
 public import Transformer.BAM.Section2_LongContext
+public import Transformer.BAM.Section2_Intuition
 
 /-!
 # Bayesian Attention Mechanism
@@ -35,4 +36,7 @@ weight `0`.
 * `Section2_LongContext`: Theorem 4 (with `β < 0` attention to distant keys does not vanish) is
   false for bounded content: attention fades; what its proof shows, that GGD-BAM keeps the NoPE
   weight of distant keys, holds.
+* `Section2_Intuition`: §2.5, the shapes of the priors (the GGD peaks at `μ`, beyond the causal
+  mask if `μ > 0`; for `β < 0` it grows with distance and is not a density), attention fading
+  without a positional bias, and the scalable softmax identity.
 -/
