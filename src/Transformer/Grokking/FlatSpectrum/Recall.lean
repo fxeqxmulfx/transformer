@@ -15,6 +15,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Fading
 public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
 public import Transformer.Grokking.FlatSpectrum.Recall.LogScale
 public import Transformer.Grokking.FlatSpectrum.Recall.Threshold
+public import Transformer.Grokking.FlatSpectrum.Recall.RawGap
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -69,7 +70,11 @@ tokens, which long-context systems take (*The Mean-Field Dynamics of Transformer
 by itself: raw scores that lead by a fixed `g` with `s g > 1` recall at every large number of
 keys, and raw scores bounded by `B` with `2 s B < 1` fade (`LogScale`). For one-hot raw scores `±B`
 the worst error is exactly `2m / (n^{2sB} + m)`: at the threshold `2 s B = 1` every answer keeps
-its sign, and the error tends to `1` (`Threshold`).
+its sign, and the error tends to `1` (`Threshold`). The lead is limited by the geometry of the
+raw scores `⟨u_i, v_j⟩`: if every key leads every other by more than `a b` at its own query,
+with `‖u_i‖ ≤ a` and `‖v_j‖ ≤ b`, the keys are affinely independent, at most `d + 1` in
+dimension `d`; the diff-gpt model needs a raw lead above `1` and has it for at most `d + 1` keys
+of head width `d` (`RawGap`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

@@ -3860,6 +3860,18 @@ no accuracy better than `1` holds at every length. The queried key keeps the wei
 `n / (2n − 1)`, which tends to `1/2`, as the diagonal weight of the equiangular model does at
 `γ (1 − ρ) = 1`.
 
+The gap that the recall statement asks for is limited by the geometry of the raw scores. Let
+the raw score of the query of the key `i` at the key `j` be `⟨u_i, v_j⟩`, with `‖u_i‖ ≤ a` and
+`‖v_j‖ ≤ b`. If every key leads every other key by more than `a b` at its own query, the keys
+are affinely independent, so in dimension `d` there are at most `d + 1` of them. Proof: Radon's
+theorem splits affinely dependent keys into two parts whose convex hulls share a point `x`; a
+key of the first part leads `x` by more than `a b`, so `‖v_i − x‖ > b ≥ ‖v_i‖` and
+`⟨x, v_i⟩ < ‖x‖² / 2`, and that convex half-space then holds `x` itself, which is absurd. The
+diff-gpt model of `Transformer.MHC.PeriRMS` takes `s = 1` and the raw score `(1/d) ⟨q̂, k̂⟩`
+with `‖q̂‖, ‖k̂‖ ≤ √d` after Q/K RMS and rotary phases, for the head width `d`. So the raw gap
+above `1` that it needs holds for at most `d + 1` keys at once, whatever the training; at
+`d = 1` two keys reach the bound.
+
 ### SA6. Scope
 
 Proved: SA1 to SA5 as stated.
@@ -3873,13 +3885,14 @@ Not covered:
   tokens are not bounded.
 - SA4 is for a linear readout of one layer, read by its sign. A regression bound for it and a
   nonlinear readout after it are not proved.
-- SA5 takes the raw scores as given: that a trained model keeps a fixed gap as the length grows
-  is not treated.
+- SA5 bounds the number of keys with a raw gap above `a b`, not the error once there are more:
+  how many other keys come within that gap of a queried key, and so whether recall fails, is not
+  treated. Whether a trained model keeps a fixed gap as the length grows is an empirical question.
 
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Softmax`, `SoftmaxRecall`,
-`SoftmaxScale`, `Fading`, `QueryFree`, `LogScale` and `Threshold`, namespace
+`SoftmaxScale`, `Fading`, `QueryFree`, `LogScale`, `Threshold` and `RawGap`, namespace
 `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
@@ -3888,7 +3901,7 @@ Not covered:
 | SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign`, `exists_softmaxAttention_not_hasCutWidth` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
 | SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error`, `one_sub_softmaxAttention_indicator`, `two_mul_le_one_sub_softmaxAttention_indicator`, `sub_one_mul_two_sub_le_of_softmaxAttention_recall`, `sub_one_lt_exp_of_softmaxAttention_sign`, `exists_lt_softmaxAttention_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. The worst dictionary is `π k = decide (k = q)`. The statement for growing `m` takes `m + 1` keys, `Fin (m + 1)`, and scores `s m q k b` with one bound `B` for every `m`. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
-| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. |
+| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold`, `convex_inner_lt`, `affineIndependent_of_inner_gap`, `card_le_finrank_add_one_of_inner_gap`, `card_le_of_rawScore_gap`, `rotateHead_one` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. The gap statements take queries and keys in any real inner product space, finite-dimensional for the count. The diff-gpt statement takes the rotary phases of every query and every key as given, with `d > 0` and `eps > 0`; its example has the head width `1`, where the rotary map is the identity. |
 
 ## The block languages across a cut (added)
 
