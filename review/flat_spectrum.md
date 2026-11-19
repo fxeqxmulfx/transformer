@@ -1827,30 +1827,11 @@ learn such tasks. The full-table P193 fitting control reaches 100% training
 accuracy after its early 58.62% endpoint; fitting with every label supplied
 is a separate statement from heldout recovery.
 
-The residual audit identified a second gap: an exact real identity does not
-ensure stable floating-point execution or backward accumulation. Original
-XSA cancellation on repeated values is amplified by Peri-RMSNorm over depth.
-Centering improves outputs but alone can make shared-parameter FP32 gradients
-much less accurate. The final guarded common-prefix implementation passes an
-actual-source FP32/FP64 audit. Seventeen Lean theorems prove centered/clipped
-source equivalence, common prefix states through arbitrary finite depth and
-the tied readout, for arbitrary rotary phases. Those equalities justify the
-implementation; the numerical errors are measured separately. The frozen long
-runs retain the old arithmetic, so their late grokking is not attributed to
-this correction. See `review/residual_connections.md` for every failure stage.
-
-Finally, the known-solution depth-attention toy rejects an unconditional
-trainability inference from bounded Q/K scores: unit-scale normalized queries
-learn all three declared data seeds, whereas magnitude 1e6 can leave tiny
-query gradients and fail within the same 2,000 updates. Key-only queries can
-saturate to exact zero FP32 gradients; their zero-initialized controls succeed.
-The normalized score and Lipschitz theorems remain valid. Initialization,
-parameter scaling, optimizer dynamics and execution fidelity are additional
-premises, not consequences of flat or rank-one spectra. Full-model residual
-ablation and paired deep numerical retraining remain tasks #145 and #148;
-polynomial-resource source constructions and learning guarantees remain #139
-and #133/#134.
-
+The residual audit and the known-solution depth-attention toy of the same day are in
+[`residual_connections.md`](residual_connections.md), *Repeated-input numerical audit* and
+*Normalized depth attention*; the two paragraphs that summarized them here are at its end.
+Their point for this note: initialization, parameter scaling, optimizer dynamics and execution
+fidelity are further premises of learning, not consequences of flat or rank-one spectra.
 
 The complete continuation audit finishes all ten cases within 6,283.38 seconds
 of the 7,200-second cap. Every source-to-initial full state matches bitwise;
