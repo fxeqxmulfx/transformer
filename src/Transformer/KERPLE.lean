@@ -1,6 +1,7 @@
 module
 
 public import Transformer.KERPLE.Section3_Kernels
+public import Transformer.KERPLE.Section3_Embedding
 public import Transformer.KERPLE.Section3_Facts
 public import Transformer.KERPLE.Section3_Schoenberg
 public import Transformer.KERPLE.Section3_Integral
@@ -17,6 +18,9 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 
 * `Section3_Kernels`: §3.1, Definitions 1 and 2, Definition 1 as Mathlib's positive
   semidefiniteness, and "a PD kernel offset by a constant is CPD".
+* `Section3_Embedding`: §3.1, PD kernels are inner products of a feature map into a Hilbert space,
+  and Fact 1: a CPD kernel vanishing on the diagonal is `−‖φ(x) − φ(x')‖²` for a map `φ` into a
+  Hilbert space; conversely such a kernel is CPD.
 * `Section3_Facts`: §3.2, Fact 2 (CPD kernels are closed under nonnegative scaling and sums) and
   Fact 4 (`−‖x − x'‖²` is CPD on every real inner product space); the two-point inequalities of PD
   kernels and of CPD kernels vanishing on the diagonal.
