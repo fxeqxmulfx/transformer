@@ -4,6 +4,7 @@ public import Transformer.CausalRecall.Basic
 public import Transformer.CausalRecall.Summary
 public import Transformer.CausalRecall.Recurrent
 public import Transformer.CausalRecall.MQAR
+public import Transformer.CausalRecall.QueryFree
 public import Transformer.CausalRecall.Separation
 public import Transformer.CausalRecall.QueryFirst
 
@@ -24,11 +25,15 @@ the `L` summaries of the context, and so bounds their recall by `|R|^L`.
 the class. `Transformer.CausalRecall.MQAR` turns the bound into one on Zoology's
 aligned multi-query recall: deciding whether `v` answers the last query over
 `c` tokens needs `2^{c-1} ≤ |R|^L`, and few sets of keys are decided right on
-many queries. `Transformer.CausalRecall.Separation` separates from the class
+many queries. `Transformer.CausalRecall.QueryFree` places in the class the
+rounded transformers whose attention ignores the query, with summaries of
+`(2^p (n + 1) + 1)^{2d + 1}` values on contexts of `n` tokens.
+`Transformer.CausalRecall.Separation` separates from the class
 the matcher of one layer and width `5`, which compares a query with a key: at
 every depth and summary width, some length has the matcher decide every
 instance, while each model of the class decides the index instances right on
-three quarters of the queries for fewer than half of the sets of keys.
+three quarters of the queries for fewer than half of the sets of keys, and so
+does each of those transformers.
 
 The bound is on the order of the query and the context, not on recurrence.
 `Transformer.CausalRecall.QueryFirst` gives a recurrent network that reads the

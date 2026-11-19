@@ -1,6 +1,6 @@
 module
 
-public import Transformer.CausalRecall.MQAR
+public import Transformer.CausalRecall.QueryFree
 public import Transformer.CRASP.RecallSeparation
 
 /-!
@@ -23,6 +23,12 @@ of the sets, and so does not decide every consistent instance
 and `1`, those sets number at most `|R|^L 4^{2^t} / 27^{2^t / 4}`; since
 `27² > 2 · 16²`, this is below `2^{2^t} / 2` once
 `2^{1 + w L (2t + 3)} < 2^{2^t / 8}`, which `mul_lt_two_pow_sub_one` gives.
+
+`Transformer.CausalRecall.QueryFree` places the transformers of
+`exists_matcher_not_queryFree` in the class, with summaries of `2 (2d + 1)`
+numbers of `2t + 3` bits, so the separation holds for them as well, on three
+quarters of the queries and at any number of fractional bits
+(`exists_matcher_not_queryFree_part`).
 
 At the same logarithmic precision and any fixed depth and summary width,
 comparing a query with a key recalls exactly, while a summary formed before
@@ -117,5 +123,45 @@ theorem exists_matcher_not_summary (L w : ℕ) :
   rw [filter_true_of_mem fun S _ => hq S, card_univ, Fintype.card_fun, Fintype.card_bool,
     Fintype.card_fin] at happrox
   omega
+
+/-- **Comparing a query with a key separates recall from attention that ignores
+the query, even in part**: at every depth `k` and width `d` there is `t` such
+that, over `2^t + 1` tokens and `2^t + 1` rows at `2t + 3` bits, the matcher of
+one layer and width `5`, with no fractional bits, decides whether `v` answers
+on every instance, while a transformer of depth `k` and width `d` whose
+attention ignores the query, at any number of fractional bits, decides the
+index instances right on three quarters of the queries for fewer than half of
+the sets `S` of `2^t` keys, and so does not decide every consistent instance.
+`Transformer.CRASP.exists_matcher_not_queryFree` has the last conclusion over
+`2^t` tokens. -/
+theorem exists_matcher_not_queryFree_part (k d : ℕ) :
+    ∃ t : ℕ, ∀ v : Fin (2 ^ t + 1),
+      (∀ x : MQARInstance (2 ^ t + 1) (2 ^ t + 1),
+        (matcher v : RTfr _ (2 * t + 3) 0 5 1).Accepts (bos (word x)) ↔
+          PriorAnswer x (Fin.last _) v) ∧
+      ∀ (s : ℕ) (T : RTfr (Option (Fin (2 ^ t + 1) × Fin (2 ^ t + 1) × Fin (2 ^ t + 1)))
+          (2 * t + 3) s d k), T.QueryFree →
+        2 * #{S : Fin (2 ^ t) → Bool | 3 * 2 ^ t ≤ 4 * #{q |
+          T.Accepts (bos (word (indexInstance (Nat.two_pow_pos t) v S (2 ^ t) q))) ↔
+            PriorAnswer (indexInstance (Nat.two_pow_pos t) v S (2 ^ t) q) (Fin.last _) v}} <
+          2 ^ 2 ^ t ∧
+        ¬ ∀ x : MQARInstance (2 ^ t + 1) (2 ^ t + 1), Consistent x →
+          (T.Accepts (bos (word x)) ↔ PriorAnswer x (Fin.last _) v) := by
+  obtain ⟨t, ht⟩ := exists_matcher_not_summary k (2 * (2 * d + 1))
+  refine ⟨t, fun v => ⟨(ht v).1, fun s T hT => ?_⟩⟩
+  have hbase : 2 ^ (2 * t + 3) * (2 ^ t + 1) + 1 ≤ 2 ^ (2 * (2 * t + 3)) := by
+    have h₁ : 1 ≤ 2 ^ t := Nat.one_le_two_pow
+    have h₂ : 2 ^ t + 2 ≤ 2 ^ (2 * t + 3) := by
+      rw [show 2 ^ (2 * t + 3) = 2 ^ t * 2 ^ t * 8 by ring]
+      nlinarith
+    rw [show 2 ^ (2 * (2 * t + 3)) = 2 ^ (2 * t + 3) * 2 ^ (2 * t + 3) by ring]
+    nlinarith [Nat.mul_le_mul_left (2 ^ (2 * t + 3)) h₂]
+  have hR : Fintype.card (MsgCodes d (2 * t + 3) (2 ^ t)) ≤
+      2 ^ (2 * (2 * d + 1) * (2 * t + 3)) := by
+    rw [card_msgCodes]
+    calc _ ≤ (2 ^ (2 * (2 * t + 3))) ^ (2 * d + 1) := Nat.pow_le_pow_left hbase _
+      _ = _ := by rw [← pow_mul]; congr 1; ring
+  have h := (ht v).2 (queryFreeModel T (2 ^ t)) (length_queryFreeLayers T _ 0 k).le hR
+  simpa only [accepts_word_queryFreeModel_iff T hT] using h
 
 end Transformer.CausalRecall

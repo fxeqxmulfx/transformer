@@ -32,8 +32,8 @@ def recurrent {S : Type*} (step : S → X → S) (s₀ : S) (o : S → Y) : Mode
   layers := [⟨fun zs => (zs.map Prod.fst).foldl step s₀, fun _ z s => (z.1, step s z.1)⟩]
   out z := o z.2
 
-theorem map_fst_mapIdx {S : Type*} (s₀ : S) (xs : List X) :
-    (xs.mapIdx fun _ x => (x, s₀)).map Prod.fst = xs := by
+theorem map_fst_mapIdx {S : Type*} (g : X → S) (xs : List X) :
+    (xs.mapIdx fun _ x => (x, g x)).map Prod.fst = xs := by
   induction xs with
   | nil => rfl
   | cons y ys ih => simp [List.mapIdx_cons, ih]
