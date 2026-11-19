@@ -9,7 +9,9 @@ components. New CM sections go here.
 The labels CR, CC, B, MF, CFt, CF, O, CI and SB are in [`channels.md`](channels.md), CCa in
 [`../convex_causal.md`](../convex_causal.md) and CD in [`../convex_depth.md`](../convex_depth.md).
 Theorem A, Theorem E, R, AR, WD, XE and the other earlier labels are in
-[`../flat_spectrum.md`](../flat_spectrum.md).
+[`../flat_spectrum.md`](../flat_spectrum.md), except the R1 information bound and JC3, which are
+in [`../actual_network/sequence_models.md`](../actual_network/sequence_models.md) and
+[`../actual_network/transport.md`](../actual_network/transport.md).
 
 ## Coupling complex class moments
 

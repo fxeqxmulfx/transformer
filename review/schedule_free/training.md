@@ -8,10 +8,13 @@ equations (T1–T6), the stored averaging history (M1–M6) and the two-buffer u
 recurrence forced by normalized gradients (F1–F4). The Lean is in
 `Transformer.Rotate90.Training`, `Learning`, `Memory` and `Forcing`.
 
-These labels are this file's, not the S1–S2, T1–T4, M1–M5 and F1–F6 of
-[`../flat_spectrum.md`](../flat_spectrum.md). That note holds Theorem A and *Actual network
-expressivity for every exponent*, the result these sections start from; its *General
-positional models* identifies the Schedule-Free recurrence with the run of F1–F4.
+These labels are this file's, not the S1–S2, T1–T4 and F1–F6 of
+[`../actual_network/sequence_models.md`](../actual_network/sequence_models.md) or the M1–M5 of
+[`../actual_network/execution.md`](../actual_network/execution.md).
+[`../flat_spectrum.md`](../flat_spectrum.md) holds Theorem A and *Actual network expressivity
+for every exponent*, the result these sections start from. *General positional models* in
+[`../actual_network/sequence_models.md`](../actual_network/sequence_models.md) identifies the
+Schedule-Free recurrence with the run of F1–F4.
 
 ## Alias symmetry and training
 
