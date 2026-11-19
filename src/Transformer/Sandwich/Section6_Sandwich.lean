@@ -1,10 +1,11 @@
 module
 
 public import Mathlib.Analysis.Real.Pi.Irrational
+public import Transformer.Sandwich.Section5_ReceptiveField
 public import Transformer.Sandwich.Section5_Sinusoidal
 
 /-!
-# §6.1 Sandwich
+# §6.1–6.2 Sandwich
 
 Chi, Fan, Rudnicky, Ramadge, arXiv:2212.10356v2, §6.1: "we drop the cross terms and keep only the
 inner product of two positional embeddings at `m` and `n`. Now `p_m^⊤ p_n` with `m, n ∈ [1, L]`
@@ -25,6 +26,8 @@ scaled softmax is done in Eq. (1)".
   (`sandwich_eq_zero_iff`), and `≥ −2D/h` (`neg_le_sandwich`): bounded, unlike ALiBi's bias.
 * `sandwichHeads D H`: head `j` has the compression ratio `h = (j + 1) · 8/H`, ALiBi's exponent;
   `score` adds the bias after the scaling, as §6.1 says.
+* `avgModel_contributes_coe`, `sandwich_contributes`: §6.2, a real bias such as Sandwich's bounds
+  no receptive field: every token `n ≤ m` contributes to the averaging model.
 -/
 
 @[expose] public section
@@ -152,5 +155,30 @@ theorem exponent_pos {H : ℕ} (j : Fin H) : 0 < exponent H j := by
   have : (0 : ℝ) < H := by exact_mod_cast j.pos
   unfold exponent
   positivity
+
+/-- **A real bias does not bound the receptive field**: it is finite at every distance, so every
+token `n ≤ m` contributes to the one-layer averaging model, however far from `m`. -/
+theorem avgModel_contributes_coe (r : ℕ → ℝ) {m n : ℕ} (hn : n ≤ m) :
+    Contributes ((avgModel 1).predict fun _ t => (r t : EReal)) m n :=
+  avgModel_contributes_of_finite (w := m - n + 1)
+    (fun t _ => ⟨EReal.coe_ne_bot _, EReal.coe_ne_top _⟩) le_rfl (by omega) hn (by omega)
+
+/-- The hypothesis of `avgModel_contributes_coe` holds for the first of `8192` tokens under
+KERPLE's logarithmic bias `−log(1 + t)`. -/
+example : Contributes ((avgModel 1).predict fun _ t => ((-Real.log (1 + t) : ℝ) : EReal)) 8191 0 :=
+  avgModel_contributes_coe (fun t => -Real.log (1 + t)) (Nat.zero_le _)
+
+/-- **Sandwich uses the tokens beyond `L_tr`** (§6.2: "Sandwich is the first parameter-free RPE
+that truly makes use of distant token information beyond `L_tr = 512`"): under Sandwich's bias
+every token `n ≤ m` contributes to the averaging model, so no `L_tr` bounds its TRF, unlike the
+`R(w − 1) + 1` of windowed attention (`isGreatest_trf`). -/
+theorem sandwich_contributes (D : ℕ) (h : ℝ) {m n : ℕ} (hn : n ≤ m) :
+    Contributes ((avgModel 1).predict fun _ t => (sandwich D h t : EReal)) m n :=
+  avgModel_contributes_coe (fun t => sandwich D h t) hn
+
+/-- The hypothesis of `sandwich_contributes` holds for the first of `8192` tokens, `d̄ = 128` and
+`h = 8` (Figure 3). -/
+example : Contributes ((avgModel 1).predict fun _ t => (sandwich 64 8 t : EReal)) 8191 0 :=
+  sandwich_contributes 64 8 (Nat.zero_le _)
 
 end Transformer.Sandwich

@@ -49,7 +49,8 @@ scheme is a bias of the distance added to the scaled logit, `−∞` masking the
   `n ≤ m` contributes, so the receptive field is not bounded by `L_tr`.
 * `Section6_Sandwich`: §6.1, `p_m^⊤ p_n = Σ_i cos((m − n) θ_i)` with the maximum `d̄/2` at
   `m = n` only, and Eq. (6): a relative bias, at most `0`, `0` only at the distance `0`, and at
-  least `−d̄/h`.
+  least `−d̄/h`; §6.2, under a real bias such as Sandwich's every token contributes, so no `L_tr`
+  bounds the TRF.
 * `Section6_KERPLE`: §6.2–6.3, the smoothed Sandwich is KERPLE's logarithmic bias kernel, and its
   attention is KERPLE's with `r₁ = 0.825 √k` since Sandwich adds its bias after the scaling; the
   exact Sandwich is no logarithmic bias; the plateau; T5's distinct and shared buckets.
