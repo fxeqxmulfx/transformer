@@ -21,6 +21,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.InductionExact
 public import Transformer.Grokking.FlatSpectrum.Recall.InductionPhases
 public import Transformer.Grokking.FlatSpectrum.Recall.CausalCopy
 public import Transformer.Grokking.FlatSpectrum.Recall.CausalFading
+public import Transformer.Grokking.FlatSpectrum.Recall.CausalRecall
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -91,7 +92,8 @@ The lead tends to `0`, `1/2` or `1` as `s₁` is below, at or above `1`, and the
 as the cyclic head over its prefix of `L` tokens, with the weight `L^{s₁} / (L^{s₁} + L − 1)`: the
 copy of a key is set by its position, not by the length of the context (`CausalCopy`). Layer 2
 fades at every key whose copy `w_q` has `s₂ w_q < 1`, and below `s₁ = 1` at every key from some
-key on (`CausalFading`).
+key on (`CausalFading`); it recalls a key with `s₂ w_q > 1` that its key token copies less than
+its value token does (`CausalRecall`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

@@ -12,10 +12,12 @@ the task of arXiv:2312.04927v1, §3.
 Softmax attention misses the value of a token by at most `2 C` times the weight of the other
 tokens, for values bounded by `C` (`abs_sub_softmaxAttention_le`), and the indicator dictionary,
 `+1` at the token and `−1` at the others, misses it by exactly twice that weight
-(`one_sub_softmaxAttention_indicator`). One-hot raw scores, `B` at the queried key and `−B` at
-the other `m` keys, leave the other keys the weight `m / (n^{2sB} + m)` at the scale `s log n`
-over `n = m + 1` keys (`oneHot_erase_div_sum`). So the worst error over the dictionaries of
-values `±1` is exactly
+(`one_sub_softmaxAttention_indicator`). At the scale `s log n` the weights are powers of `n`,
+and the miss is at most `2 C` times the weight of the other tokens over that of the token alone
+(`abs_sub_logScaleAttention_le_sum_erase`). One-hot raw scores, `B` at the queried key and `−B`
+at the other `m` keys, leave the other keys the weight `m / (n^{2sB} + m)` at the scale
+`s log n` over `n = m + 1` keys (`oneHot_erase_div_sum`). So the worst error over the
+dictionaries of values `±1` is exactly
 
     2m / (n^{2sB} + m)                (`isGreatest_oneHot_logScaleAttention_error`),
 
@@ -61,6 +63,32 @@ theorem abs_sub_softmaxAttention_le {ι : Type*} [Fintype ι] [DecidableEq ι] {
 
 /-- Two tokens with scores `1` and `0` and values `±1`. -/
 example := abs_sub_softmaxAttention_le (s := (![1, 0] : Fin 2 → ℝ)) (v := ![1, -1]) (C := 1)
+  (fun j => by fin_cases j <;> simp) 0
+
+/-- **The weight of the other tokens bounds the miss from above** (`review/flat_spectrum.md`,
+SA5, from SA1): attention at the scale `s log n` answers the value of `j₀` within `2 C` times the
+weight of the other tokens over that of `j₀`, for values bounded by `C`. -/
+theorem abs_sub_logScaleAttention_le_sum_erase {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {s C : ℝ} {z v : ι → ℝ} (hv : ∀ j, |v j| ≤ C) (j₀ : ι) :
+    |v j₀ - logScaleAttention s z v| ≤ 2 * C *
+      ((∑ j ∈ univ.erase j₀, (Fintype.card ι : ℝ) ^ (s * z j)) /
+        (Fintype.card ι : ℝ) ^ (s * z j₀)) := by
+  have hn : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩
+  have h (j : ι) : Real.exp (s * Real.log (Fintype.card ι) * z j) =
+      (Fintype.card ι : ℝ) ^ (s * z j) := by
+    rw [Real.rpow_def_of_pos hn]
+    ring_nf
+  have hA := abs_sub_softmaxAttention_le (s := fun j => s * Real.log (Fintype.card ι) * z j) hv j₀
+  simp only [h] at hA
+  have hR : 0 ≤ ∑ j ∈ univ.erase j₀, (Fintype.card ι : ℝ) ^ (s * z j) :=
+    sum_nonneg fun j _ => (Real.rpow_pos_of_pos hn _).le
+  refine hA.trans (mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_left hR
+    (Real.rpow_pos_of_pos hn _) ?_) (by linarith [(abs_nonneg _).trans (hv j₀)]))
+  rw [← add_sum_erase _ _ (mem_univ j₀)]
+  exact le_add_of_nonneg_right hR
+
+/-- Two tokens with raw scores `1` and `0` and values `1` and `−1`. -/
+example := abs_sub_logScaleAttention_le_sum_erase (s := 1) (z := ![1, 0]) (v := ![1, -1]) (C := 1)
   (fun j => by fin_cases j <;> simp) 0
 
 /-- One-hot raw scores `±B` at the scale `s log n` over `n = m + 1` keys leave the keys other
