@@ -6,6 +6,7 @@ public import Transformer.BAM.Section2_Priors
 public import Transformer.BAM.Section2_GeneralizedGaussian
 public import Transformer.BAM.Section2_Locality
 public import Transformer.BAM.Section2_IgnoresLocal
+public import Transformer.BAM.Section2_LongContext
 
 /-!
 # Bayesian Attention Mechanism
@@ -31,4 +32,7 @@ weight `0`.
   content scores, uniformly in the context; false without the bound.
 * `Section2_IgnoresLocal`: Theorem 3 (with `β < 0` the query ignores its own key), for `μ = 0` as
   in its proof; false for `μ ≠ 0`.
+* `Section2_LongContext`: Theorem 4 (with `β < 0` attention to distant keys does not vanish) is
+  false for bounded content: attention fades; what its proof shows, that GGD-BAM keeps the NoPE
+  weight of distant keys, holds.
 -/
