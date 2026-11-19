@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
+public import Transformer.Grokking.DiffGPT.StepHalfPlane
 
 /-!
 # The sign of the step is a real kernel of rank two with its modulus normalized
@@ -24,7 +24,7 @@ the modulus of that channel normalized.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Complex Real
 
@@ -108,4 +108,4 @@ theorem stepHalfPlane_div_abs {p a b : ℕ} (ha : a < p) (hb : b < p) :
 /-- From `50` and `90` the next value is `43` and the step after it wraps. -/
 example := stepHalfPlane_div_abs (p := 97) (a := 50) (b := 90) (by norm_num) (by norm_num)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

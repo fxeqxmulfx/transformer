@@ -21,9 +21,9 @@ part of `E` outside both ranges costs more than the part inside can save. For on
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix
+open Matrix FlatSpectrum
 open scoped ComplexOrder
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -36,7 +36,8 @@ example := one_sub_mul_one_sub (P := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (Matrix.o
 
 /-- `1 − Zᴴ P Z ≥ 0` for a contraction `Z` and an orthogonal projection `P`: it is
 `(1 − Zᴴ Z) + ((1 − P) Z)ᴴ ((1 − P) Z)`. -/
-lemma IsContraction.posSemidef_one_sub {P : Matrix m m ℂ} (hP : Pᴴ = P)
+lemma _root_.Transformer.Grokking.FlatSpectrum.IsContraction.posSemidef_one_sub
+    {P : Matrix m m ℂ} (hP : Pᴴ = P)
     (hPP : P * P = P) {Z : Matrix m n ℂ} (hZ : IsContraction Z) :
     (1 - Zᴴ * P * Z).PosSemidef := by
   have h : 1 - Zᴴ * P * Z = (1 - Zᴴ * Z) + ((1 - P) * Z)ᴴ * ((1 - P) * Z) := by
@@ -52,7 +53,8 @@ example := (isContraction_one (n := Fin 2)).posSemidef_one_sub (P := 1) (by simp
 
 /-- **Two blocks of contractions**: for orthogonal projections `P`, `Q` and contractions `Z`,
 `Z'`, the matrix `P Z Q + (1 − P) Z' (1 − Q)` is a contraction. -/
-theorem IsContraction.proj_add_proj {P : Matrix m m ℂ} {Q : Matrix n n ℂ} (hP : Pᴴ = P)
+theorem _root_.Transformer.Grokking.FlatSpectrum.IsContraction.proj_add_proj
+    {P : Matrix m m ℂ} {Q : Matrix n n ℂ} (hP : Pᴴ = P)
     (hPP : P * P = P) (hQ : Qᴴ = Q) (hQQ : Q * Q = Q) {Z Z' : Matrix m n ℂ}
     (hZ : IsContraction Z) (hZ' : IsContraction Z') :
     IsContraction (P * Z * Q + (1 - P) * Z' * (1 - Q)) := by
@@ -162,4 +164,4 @@ example := isMinOn_compl_singleton_of_proj (K := (0 : Matrix (Fin 2) (Fin 2) ℂ
   (Q := 0) (i := 0) (j := 0) (by simp) (by simp) (by simp) (by simp) (by simp) (by simp)
   (by rw [Matrix.zero_mul, Matrix.zero_mul, nuclearNorm_zero]; exact nuclearNorm_nonneg _)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

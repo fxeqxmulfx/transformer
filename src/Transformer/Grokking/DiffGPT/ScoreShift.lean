@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
+public import Transformer.Grokking.DiffGPT.StepHalfPlane
 
 /-!
 # A comparison of two free scores keeps its seen cells under a shift
@@ -24,7 +24,7 @@ is open: with `i ∉ A` and `j ∈ B` some fitting scores have `f' i < h' j`
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 variable {m n : Type*}
 
@@ -116,4 +116,4 @@ example : ∃ f' h', ScoreFit ({(true, ())} : Set (Bool × Unit)) (fun i => if i
     (by rintro _ rfl; exact ⟨fun _ _ => Set.mem_univ _, fun hlt _ => absurd hlt (by norm_num)⟩)
     (Set.mem_univ _) (Set.notMem_empty _)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

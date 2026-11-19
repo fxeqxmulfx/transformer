@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.Compare
+public import Transformer.Grokking.DiffGPT.Compare
 
 /-!
 # The step of an additive recurrence modulo `p`: a residue and a wrap
@@ -22,7 +22,7 @@ CW6. A difference encoding of the recurrence `x ↦ (b + x) % p` writes the inte
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Matrix
 
@@ -97,4 +97,4 @@ theorem wrapKernel_submatrix (p : ℕ) :
   ext i j
   simp
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

@@ -13,6 +13,7 @@ public import Transformer.Grokking.DivisionOrbits
 public import Transformer.Grokking.Composition
 public import Transformer.Grokking.CircuitEfficiency
 public import Transformer.Grokking.FlatSpectrum
+public import Transformer.Grokking.DiffGPT
 
 /-! Exact mathematical formulations of grokking and its candidate
 measurements. Current scope: finite-class confidence and decisions, and
@@ -38,6 +39,7 @@ the flat spectrum of the character kernel `ψ (a³ + a b)`, which no proper
 training set recovers by minimum-nuclear-norm interpolation, whose
 minimum-norm fill of one missing cell decodes to a wrong answer, and whose
 label correlates with the intermediate `ψ_r(a b)` only to order `p^{-1/2}`,
-while its real readouts `cos` and `sin` are singular, of rank `(p ± 1)/2`. -/
+while its real readouts `cos` and `sin` are singular, of rank `(p ± 1)/2`,
+and the integer steps in which DiffGPT writes a recurrence modulo `p`. -/
 
 @[expose] public section

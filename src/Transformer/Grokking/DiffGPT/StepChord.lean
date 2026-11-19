@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
+public import Transformer.Grokking.DiffGPT.StepHalfPlane
 
 /-!
 # The chord of the sum
@@ -25,7 +25,7 @@ items CH1 and CH2.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Complex Real
 
@@ -129,4 +129,4 @@ theorem norm_stepChord {p a b : ℕ} (ha : a < p) (hb : b < p) :
 
 example := norm_stepChord (p := 97) (a := 50) (b := 60) (by norm_num) (by norm_num)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

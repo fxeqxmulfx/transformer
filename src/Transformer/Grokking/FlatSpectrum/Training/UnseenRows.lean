@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.UnseenRow
+public import Transformer.Grokking.DiffGPT.UnseenRow
 public import Transformer.Grokking.FlatSpectrum.Training.SeenMargin
 
 /-!
@@ -40,7 +40,7 @@ theorem IsDecayedMin.row_eq_zero
     (hL : ∀ X Y : Matrix m n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = Y ij.1 ij.2) → L X = L Y)
     (hlam : 0 < lam) (h : IsDecayedMin L lam U V) {i : m} (hi : ∀ j, (i, j) ∉ Ω) (j : n) :
     (U * Vᴴ) i j = 0 :=
-  row_eq_zero_of_isMinOn hi (fun _ _ => rfl) (h.isMinOn_nuclearNorm hL hlam) j
+  DiffGPT.row_eq_zero_of_isMinOn hi (fun _ _ => rfl) (h.isMinOn_nuclearNorm hL hlam) j
 
 /-- **A trained product is zero on an unseen column** (`review/flat_spectrum.md`, item
 XE12). -/
@@ -48,7 +48,7 @@ theorem IsDecayedMin.col_eq_zero
     (hL : ∀ X Y : Matrix m n ℂ, (∀ ij ∈ Ω, X ij.1 ij.2 = Y ij.1 ij.2) → L X = L Y)
     (hlam : 0 < lam) (h : IsDecayedMin L lam U V) {j : n} (hj : ∀ i, (i, j) ∉ Ω) (i : m) :
     (U * Vᴴ) i j = 0 :=
-  col_eq_zero_of_isMinOn hj (fun _ _ => rfl) (h.isMinOn_nuclearNorm hL hlam) i
+  DiffGPT.col_eq_zero_of_isMinOn hj (fun _ _ => rfl) (h.isMinOn_nuclearNorm hL hlam) i
 
 variable [Fintype S] [Fintype C] {φ : C → ℂ} {cell : S → m × n} {y : S → C}
 

@@ -6,8 +6,9 @@ DiffGPT task *Fibonacci mod 97*, a recurrence modulo `p` that the model reads an
 integer steps: the wrap of a step is a comparison (CW), the step is the phase of a sum (CH), the
 decay of two training recipes (RR), what the training cells decide for a learner with free
 scores (CS), the tokens as numbers (NT), steps against levels (EN), the carry of the codec (CC)
-and the level the decoder holds (DL). The Lean is mostly in `Transformer.Grokking.FlatSpectrum`;
-each *Lean* section names its modules.
+and the level the decoder holds (DL). The Lean is mostly in `Transformer.Grokking.DiffGPT`, where
+it moved from `Transformer.Grokking.FlatSpectrum` the same day; each *Lean* section names its
+modules.
 
 These labels are this file's; its CC1–CC7 are not the CC1–CC8 of
 [`../convex/channels.md`](../convex/channels.md). M, Lemma 1, Proposition 2, Theorems A to G,
@@ -260,9 +261,11 @@ Not covered:
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, modules `StepWrap`, `PolarDiagonal`, `Compare`,
+`src/Transformer/Grokking/DiffGPT/`, modules `StepWrap`, `PolarDiagonal`, `Compare`,
 `ProjectionKink`, `MergedLevels`, `CompareFill`, `WrapFill`, `StepHalfPlane` and `UnseenRow`,
-namespace `Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+namespace `Transformer.Grokking.DiffGPT`; proved without `sorry`. The three `IsContraction`
+lemmas of CW3 and CW8 are in `Transformer.Grokking.FlatSpectrum.IsContraction`, the namespace of
+that definition.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -502,8 +505,8 @@ Not covered:
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, modules `StepChord`, `StepPhase`, `StepSign` and
-`StepPole`, namespace `Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+`src/Transformer/Grokking/DiffGPT/`, modules `StepChord`, `StepPhase`, `StepSign` and
+`StepPole`, namespace `Transformer.Grokking.DiffGPT`; proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -886,8 +889,8 @@ Not covered:
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, modules `ScoreShift` and `ScoreChain`, namespace
-`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+`src/Transformer/Grokking/DiffGPT/`, modules `ScoreShift` and `ScoreChain`, namespace
+`Transformer.Grokking.DiffGPT`; proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -1169,8 +1172,8 @@ harmonics or decay of the table, which were fixed before the runs and not tuned.
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, modules `StepNumbers` and `ScoreNumbers`, namespace
-`Transformer.Grokking.FlatSpectrum`, and `src/Transformer/Grokking/GradientEvidence/`, module
+`src/Transformer/Grokking/DiffGPT/`, modules `StepNumbers` and `ScoreNumbers`, namespace
+`Transformer.Grokking.DiffGPT`, and `src/Transformer/Grokking/GradientEvidence/`, module
 `RecipeToward`, namespace `Transformer.Grokking.GradientEvidence`; proved without `sorry`.
 
 | Item | Lean | Differences |
@@ -1322,8 +1325,8 @@ the comparison of CS1, the steps that few states read (EN2), or the two tokens o
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, module `StepLevel`, namespace
-`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+`src/Transformer/Grokking/DiffGPT/`, module `StepLevel`, namespace
+`Transformer.Grokking.DiffGPT`; proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -1524,8 +1527,8 @@ The wrap errors and, after "and", the residue errors of the same runs, seeds 11,
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, module `StepCarry`, namespace
-`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+`src/Transformer/Grokking/DiffGPT/`, module `StepCarry`, namespace
+`Transformer.Grokking.DiffGPT`; proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -1705,8 +1708,8 @@ recipe and at 100% in the selected main.
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/`, module `StepDomain`, namespace
-`Transformer.Grokking.FlatSpectrum`; proved without `sorry`.
+`src/Transformer/Grokking/DiffGPT/`, module `StepDomain`, namespace
+`Transformer.Grokking.DiffGPT`; proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |

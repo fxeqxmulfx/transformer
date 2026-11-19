@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ScoreShift
+public import Transformer.Grokking.DiffGPT.ScoreShift
 public import Mathlib.Analysis.Convex.Hull
 
 /-!
@@ -24,7 +24,7 @@ The scores of CS1 are of this kind: `2 d₁` in the number `d₁` of the first t
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 variable {m n E F : Type*} [AddCommGroup E] [Module ℝ E] [AddCommGroup F] [Module ℝ F]
 
@@ -117,4 +117,4 @@ example : (-1 : ℝ) - (0 : ℝ →ₗ[ℝ] ℝ) 0 ≤ (3 • LinearMap.id : ℝ
       · exact ⟨(2, ()), ⟨by simp, by norm_num⟩, by simp⟩
       · exact ⟨1 / 2, 1 / 2, by norm_num, by norm_num, by norm_num, by ext <;> simp⟩)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

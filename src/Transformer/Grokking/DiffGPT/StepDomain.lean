@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepCarry
+public import Transformer.Grokking.DiffGPT.StepCarry
 
 /-!
 # The decoder holds the level: the wrap of a step is the domain of the series
@@ -19,7 +19,7 @@ not.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 /-- **DL1**, `review/diffgpt/steps.md`: the step from the level `x` is the only integer with
 the residue of `b` that keeps the series in its domain `[0, p)`. -/
@@ -63,4 +63,4 @@ example : ¬(0 ≤ ((60 : ℕ) : ℤ) + (modStep 97 50 60 + 1 * (97 : ℕ)) ∧
     ((60 : ℕ) : ℤ) + (modStep 97 50 60 + 1 * (97 : ℕ)) < (97 : ℕ)) :=
   modStep_add_mul_not_mem (by norm_num) 50 60 one_ne_zero
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

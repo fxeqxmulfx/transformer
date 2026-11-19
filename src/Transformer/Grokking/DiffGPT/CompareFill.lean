@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.Compare
+public import Transformer.Grokking.DiffGPT.Compare
 
 /-!
 # One unseen cell at the boundary of the comparison kernel
@@ -20,9 +20,9 @@ it has not seen with the opposite of the truth.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix
+open Matrix FlatSpectrum
 open scoped ComplexOrder
 
 variable {n : ℕ}
@@ -147,4 +147,4 @@ example : (compareKernel 2 + (2 : ℂ) • single 1 0 1 : Matrix (Fin 2) (Fin 2)
   ne_of_isMinOn_compareKernel_succ (i := 0) rfl (add_smul_single_apply_of_mem _)
     (isMinOn_compareKernel_flip_succ (i := 0) rfl)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

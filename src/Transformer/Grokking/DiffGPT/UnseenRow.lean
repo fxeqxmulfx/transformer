@@ -2,7 +2,7 @@ module
 
 public import Transformer.Grokking.FlatSpectrum.OneCell
 public import Transformer.Grokking.FlatSpectrum.OnesCertificate
-public import Transformer.Grokking.FlatSpectrum.ProjectionKink
+public import Transformer.Grokking.DiffGPT.ProjectionKink
 
 /-!
 # An unseen row is zero in every minimum
@@ -23,16 +23,17 @@ answers `0` there, which decodes to no value.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix
+open Matrix FlatSpectrum
 open scoped ComplexOrder
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
 
 /-- **Two weighted blocks of rows**: for an orthogonal projection `P`, contractions `Z`, `Z'`
 and `c² + s² ≤ 1`, the matrix `c P Z + s (1 − P) Z'` is a contraction. -/
-theorem IsContraction.smul_proj_add {P : Matrix m m ℂ} (hP : Pᴴ = P) (hPP : P * P = P)
+theorem _root_.Transformer.Grokking.FlatSpectrum.IsContraction.smul_proj_add
+    {P : Matrix m m ℂ} (hP : Pᴴ = P) (hPP : P * P = P)
     {Z Z' : Matrix m n ℂ} (hZ : IsContraction Z) (hZ' : IsContraction Z') {c s : ℝ}
     (hcs : c ^ 2 + s ^ 2 ≤ 1) :
     IsContraction ((c : ℂ) • (P * Z) + (s : ℂ) • ((1 - P) * Z')) := by
@@ -172,4 +173,4 @@ example (i : Fin 2) : (0 : Matrix (Fin 2) (Fin 2) ℂ) i 0 = 0 :=
     (fun _ h => absurd h (by simp))
     (isMinOn_iff.mpr fun Y _ => by rw [nuclearNorm_zero]; exact nuclearNorm_nonneg Y) i
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

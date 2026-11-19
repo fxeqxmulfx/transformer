@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepLevel
+public import Transformer.Grokking.DiffGPT.StepLevel
 
 /-!
 # The carry of a quantizer of steps: why one step has two tokens
@@ -23,7 +23,7 @@ two rows.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 /-- The floor of a sum is the sum of the floors, and one more exactly when the two fractional
 parts reach `1` together. -/
@@ -109,4 +109,4 @@ theorem carriedStep_two :
       rw [Int.floor_eq_iff]; norm_num]
     norm_num
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

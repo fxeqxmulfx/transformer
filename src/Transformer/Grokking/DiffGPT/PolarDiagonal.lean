@@ -19,9 +19,9 @@ cell (`not_isMinOn_of_add_conjTranspose`). The identity matrix is the case `A = 
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix Finset
+open Matrix Finset FlatSpectrum
 open scoped ComplexOrder
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -145,4 +145,4 @@ example : ¬IsMinOn nuclearNorm
       (1 : Matrix (Fin 2) (Fin 2) ℂ) ij.1 ij.2} 1 :=
   not_isMinOn_of_add_conjTranspose (c := 1) (i := 0) one_pos (by simp [two_smul]) (by simp)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

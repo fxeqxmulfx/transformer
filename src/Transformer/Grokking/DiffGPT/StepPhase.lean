@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepChord
+public import Transformer.Grokking.DiffGPT.StepChord
 
 /-!
 # The step is the phase of a sum of two phases
@@ -26,7 +26,7 @@ angle when the modulus of the sum is normalized.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Complex Real
 
@@ -160,4 +160,4 @@ theorem exp_modStep_eq_stepPhaseSum {p a b : ℕ} (ha : a < p) (hb : b < p) :
 
 example := exp_modStep_eq_stepPhaseSum (p := 97) (a := 50) (b := 90) (by norm_num) (by norm_num)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

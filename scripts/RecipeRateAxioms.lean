@@ -1,6 +1,6 @@
 import Transformer
 
-/-! Audit *The rate of a recipe* of `review/flat_spectrum.md`, items RR1–RR4. -/
+/-! Audit *The rate of a recipe* of `review/diffgpt/steps.md`, items RR1–RR4. -/
 
 #print axioms Transformer.Grokking.GradientEvidence.mainAdamPath_eq_sum
 #print axioms Transformer.Grokking.GradientEvidence.mainMoments_zero

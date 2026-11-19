@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepPhase
+public import Transformer.Grokking.DiffGPT.StepPhase
 
 /-!
 # One angle places the wrap of every cell
@@ -24,7 +24,7 @@ boundary on its own.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Complex Real
 
@@ -167,4 +167,4 @@ example : stepChordAt 97 50 90 (1 / 1000) / (‖stepChordAt 97 50 90 (1 / 1000)�
     rw [abs_of_pos (by norm_num), lt_div_iff₀ (by norm_num), lt_div_iff₀ (by norm_num)]
     nlinarith [two_le_pi])
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

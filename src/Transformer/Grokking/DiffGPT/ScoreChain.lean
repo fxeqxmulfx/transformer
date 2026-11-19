@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ScoreShift
+public import Transformer.Grokking.DiffGPT.ScoreShift
 public import Mathlib.Logic.Relation
 
 /-!
@@ -28,7 +28,7 @@ scores and `f i + 1 = h j` has fitting scores with `h' j ≤ f' i`.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Relation
 
@@ -167,4 +167,4 @@ example : ∃ f' h', ScoreFit (∅ : Set (Unit × Unit)) (fun _ => ((2 : ℤ) : 
     (fun _ => ((3 : ℤ) : ℝ)) f' h' ∧ h' () ≤ f' () :=
   exists_scoreFit_le_of_add_one (F := fun _ => 2) (H := fun _ => 3) rfl (Set.notMem_empty _)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

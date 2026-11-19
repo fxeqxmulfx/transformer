@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ProjectionKink
+public import Transformer.Grokking.DiffGPT.ProjectionKink
 
 /-!
 # Merged levels: two equal rows and two equal columns
@@ -19,9 +19,9 @@ column can each be merged with another one by the value that merges them.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix Finset
+open Matrix Finset FlatSpectrum
 open scoped ComplexOrder
 
 variable {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
@@ -169,4 +169,4 @@ example : IsMinOn nuclearNorm
   isMinOn_of_row_eq_of_col_eq (i' := 1) (j' := 1) (by decide) (by decide) (fun _ => rfl)
     fun _ => rfl
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

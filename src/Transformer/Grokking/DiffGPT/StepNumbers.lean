@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.ScoreShift
+public import Transformer.Grokking.DiffGPT.ScoreShift
 
 /-!
 # The wrap from the numbers of the two steps, at any frequency
@@ -21,7 +21,7 @@ coefficients for all tokens. For `0 < ω` and `ω p ≤ π` the wrap is a half-p
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Complex Real
 
@@ -82,4 +82,4 @@ theorem modStep_neg_iff_sin_pos {p a b : ℕ} (hb : b < p) {ω : ℝ} (hω : 0 <
 example := modStep_neg_iff_sin_pos (p := 97) (a := 50) (b := 60) (by norm_num)
   (ω := 1 / 100) (by norm_num) (by nlinarith [two_le_pi])
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

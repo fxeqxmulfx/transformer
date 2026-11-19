@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepWrap
+public import Transformer.Grokking.DiffGPT.StepWrap
 
 /-!
 # The wrap of a step is a half-plane of a phase of rank one
@@ -25,7 +25,7 @@ does recover, and it holds the same bit. The difference is the readout.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
 open Complex Real
 
@@ -122,4 +122,4 @@ theorem modStep_neg_iff_im_neg {p a b : ℕ} (ha : a < p) (hb : b < p) :
 
 example := modStep_neg_iff_im_neg (p := 97) (a := 50) (b := 60) (by norm_num) (by norm_num)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

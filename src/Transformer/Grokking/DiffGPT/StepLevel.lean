@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.StepWrap
+public import Transformer.Grokking.DiffGPT.StepWrap
 
 /-!
 # Levels and steps: what an encoder asks of the model
@@ -24,9 +24,9 @@ the value.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Finset
+open Finset FlatSpectrum
 
 /-- **EN1**, `review/diffgpt/steps.md`: the level to write after the levels `b` and `x` is the
 entry of the kernel of `a + b`. -/
@@ -132,4 +132,4 @@ theorem card_levelsRead_snd (p : ℕ) [NeZero p] (y : ZMod p) :
       simp, fun _ => rfl⟩ : {s : ZMod p × ZMod p // (levelsRead p s).2 = y} ≃ ZMod p),
     ZMod.card]
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

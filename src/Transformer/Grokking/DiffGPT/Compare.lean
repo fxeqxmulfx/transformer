@@ -1,7 +1,7 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.MergedLevels
-public import Transformer.Grokking.FlatSpectrum.PolarDiagonal
+public import Transformer.Grokking.DiffGPT.MergedLevels
+public import Transformer.Grokking.DiffGPT.PolarDiagonal
 
 /-!
 # The comparison kernel
@@ -23,9 +23,9 @@ the diagonal, `i = j`, and the cells just below it, `i = j + 1`.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix Finset
+open Matrix Finset FlatSpectrum
 open scoped ComplexOrder
 
 /-- The comparison kernel: `1` where `i ≤ j`, `−1` where `j < i`,
@@ -109,4 +109,4 @@ example : ¬IsMinOn nuclearNorm
     (compareKernel 2) :=
   not_isMinOn_compareKernel_succ (i := 0) (i' := 1) rfl (by simp)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT

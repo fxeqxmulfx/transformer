@@ -1,7 +1,7 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.CompareFill
-public import Transformer.Grokking.FlatSpectrum.StepWrap
+public import Transformer.Grokking.DiffGPT.CompareFill
+public import Transformer.Grokking.DiffGPT.StepWrap
 
 /-!
 # The wrap of a step is not recovered at its boundary
@@ -24,9 +24,9 @@ at the wrap boundary against the truth: it answers `b − p` for `b`, or `b` for
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum
+namespace Transformer.Grokking.DiffGPT
 
-open Matrix
+open Matrix FlatSpectrum
 open scoped ComplexOrder
 
 /-- Reindexing the rows and the columns carries a minimum of the nuclear norm to a minimum. -/
@@ -150,4 +150,4 @@ example : (wrapKernel 3 + (2 : ℂ) • single 1 2 1 : Matrix (Fin 3) (Fin 3) �
   ne_of_isMinOn_wrapKernel (Or.inr rfl) (add_smul_single_apply_of_mem _)
     (isMinOn_wrapKernel_flip_succ rfl)
 
-end Transformer.Grokking.FlatSpectrum
+end Transformer.Grokking.DiffGPT
