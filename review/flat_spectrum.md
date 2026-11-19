@@ -3981,6 +3981,54 @@ without `sorry`.
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
 | SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold`, `convex_inner_lt`, `affineIndependent_of_inner_gap`, `card_le_finrank_add_one_of_inner_gap`, `card_le_of_rawScore_gap`, `rotateHead_one`, `abs_logScaleAttention_comp_sub_le`, `prevToken`, `prevToken_eq_iff`, `keyChannel`, `prevTokenHead`, `inductionHead`, `abs_inductionHead_sub_le`, `exists_forall_inductionHead_recall`, `logScaleAttention_ite`, `card_keyValueTokens`, `prevTokenHead_eq`, `copyLead`, `inductionHead_eq_logScaleAttention`, `sub_inductionHead_eq`, `abs_sub_inductionHead_le`, `isGreatest_inductionHead_error`, `tendsto_two_mul_add_two`, `copyLead_eq`, `tendsto_copyLead_of_tendsto`, `tendsto_copyLead_of_lt`, `tendsto_copyLead_one`, `tendsto_copyLead_of_gt`, `exists_forall_inductionHead_recall_of_tendsto`, `exists_lt_inductionHead_error_of_tendsto`, `exists_forall_inductionHead_one_recall`, `exists_lt_inductionHead_error_of_lt_one`, `causalCopy`, `causalCopy_eq`, `copyWeight`, `prevTokenHead_value`, `causalCopy_value`, `causalCopy_value_eq_prevTokenHead`, `causalCopy_key`, `causalCopy_of_lt`, `causalCopy_of_gt`, `causalCopy_nonneg`, `copyWeight_eq`, `tendsto_copyWeight_of_tendsto`, `tendsto_valuePrefix`, `tendsto_causalCopy_value_of_lt`, `tendsto_causalCopy_value_one`, `tendsto_causalCopy_value_of_gt`, `causalPos`, `card_causalTokens`, `causalInductionHead`, `sum_erase_div_le_one_sub_logScaleAttention`, `le_one_sub_logScaleAttention`, `le_one_sub_causalInductionHead`, `exists_lt_causalInductionHead_error`, `exists_lt_causalInductionHead_error_of_lt_one`, `abs_sub_logScaleAttention_le_sum_erase`, `causalPos_injective`, `causalCopy_le_key`, `causalCopy_le_inv`, `abs_sub_causalInductionHead_le`, `exists_forall_causalInductionHead_recall`, `rpow_div_le_one_sub_logScaleAttention`, `le_one_sub_causalInductionHead_of_key`, `exists_lt_causalInductionHead_error_of_key`, `exists_lt_causalInductionHead_error_first`, `causalCopy_key_lt_value_iff`, `causalCopy_key_lt_copyWeight`, `copyWeight_le_one`, `exists_lt_causalInductionHead_error_of_scale_lt_one`, `exists_forall_causalInductionHead_recall_one`, `exists_lt_causalInductionHead_error_one`, `exists_forall_causalInductionHead_recall_of_gt` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. The gap statements take queries and keys in any real inner product space, finite-dimensional for the count. The diff-gpt statement takes the rotary phases of every query and every key as given, with `d > 0` and `eps > 0`; its example has the head width `1`, where the rotary map is the identity. The two-layer statement takes any finite tokens, a partner of every token, and the leads `g₁` and `g₂`; the induction head takes the tokens `Fin (m + 1) × Bool`, a key token and a value token for every key, read cyclically, with one-hot key channels. Its closed form holds at every real `s₁` and `s₂`, with `n = 2m + 2` written out. The phase statements take the limit `a` of the lead as the hypothesis `Tendsto (copyLead s₁) atTop (𝓝 a)` and need no sign of `s₁` or `s₂`; the fading statements take values `±1`. The causal copy takes positions and keys in `ℕ`; the copy weight `copyWeight s x` takes a real number `x` of tokens. The causal head reads the `n` tokens of the context at the scale `s₂ log n`, as the cyclic head does, and not the query token itself; its fading statements take the indicator dictionary of values `±1`. The causal recall statement takes a fixed key `q : ℕ` and the queries `k : Fin (m + 1)` with `k = q`. |
 
+## A positional bias at the scale `s log n` (added)
+
+ALiBi adds the bias `−m |j − i|` to the score of the key `j` at the query `i`, with a slope
+`m > 0` fixed before training; as a prior over the positions it is a Laplace distribution of
+scale `1/m` (Bianchessi, Aguirre, Barros, Kupssinskü, *Bayesian Attention Mechanism: A
+Probabilistic Framework for Positional Encoding and Context Length Extrapolation*,
+arXiv:2505.22842v4, §2.2, Lemma 2; `Transformer.BAM.alibi`). SSMax multiplies the scores by
+`s log n` over `n` tokens (Nakanishi, *Scalable-Softmax Is Superior for Attention*,
+arXiv:2501.19399v1, §2). This section asks which slope recall needs, and what the scale
+`s log n` changes. A bias `b` of the positions adds `b_j` to the score of the token `j`; at the
+scale `s log n` the weights are `n^{s z_j} e^{b_j}`, and ALiBi has `b_r = −m r` at the distance
+`r` from the query.
+
+### PB1. No bias helps the worst position
+
+Let `j₀` be a token of least bias, `b_{j₀} ≤ b_j` for every `j`, and let `v` be `1` at `j₀` and
+`−1` elsewhere. For all scores `t`, the scores `t + b` answer `v` at least as badly as `t`:
+
+```
+1 − att(t, v) ≤ 1 − att(t + b, v).
+```
+
+Proof. `1 − att(t, v) = 2X / (A + X)` with `A = e^{t_{j₀}}` and `X = Σ_{j ≠ j₀} e^{t_j}` (SA3).
+With the bias, `A' = e^{b_{j₀}} A` and `X' = Σ_{j ≠ j₀} e^{t_j + b_j} ≥ e^{b_{j₀}} X`, so
+`X A' ≤ X' A`, which is `2X / (A + X) ≤ 2X' / (A' + X')`. ∎
+
+Every bias has a token of least bias; for ALiBi it is the farthest token. With one-hot raw
+scores, `B` at the queried key and `−B` at the other `m` keys, the worst error over the
+dictionaries of values `±1` without a bias is `2m / (n^{2sB} + m)` at every position (SA5). A
+key at a position of least bias is answered with at least that error. So over the positions of
+the key and the dictionaries no bias lowers the worst error, and the bias `0` attains it: for a
+key that may sit at any position the best slope is `0`, at every scale, and at the scale
+`s log n` the threshold `2 s B = 1` stays.
+
+### Scope
+
+Proved: PB1. Not covered: a key at a known distance, for which a slope helps, and the window
+that a fixed slope leaves at the scale `s log n`.
+
+### Lean
+
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, module `PositionBias`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| PB1 | `biasedLogScaleAttention`, `biasedLogScaleAttention_zero`, `one_sub_softmaxAttention_indicator_le_add`, `exists_le_oneHot_biasedLogScaleAttention_error`, `oneHot_logScaleAttention_error_le_biased` | The bias is any real function of the tokens, not only of the distance to the query. The first statement takes any finite type of tokens, the others the `m + 1` keys `Fin (m + 1)` with one-hot raw scores. "No bias lowers the worst error" is: for every bias, every key and every dictionary, the error without the bias is at most the error with it at some key and some dictionary. |
+
 ## The block languages across a cut (added)
 
 The depth hierarchy of arXiv:2506.16055v3 is witnessed by one family of languages (§2.4,
