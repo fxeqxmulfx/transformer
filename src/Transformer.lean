@@ -287,6 +287,19 @@ probability bounds outside that coverage are not claimed as proved.
    the sections Review, Fusion, Computation and Experiments.
    ReRoPE's second matrix is `q_iᵀ R^{−w} k_j`, not `q_iᵀ R^w k_j`; the leaky
    decoding form needs `k ≥ 1`.
+54. bloc97 — r/LocalLLaMA post 14lz7j5 (2023), "NTK-Aware Scaled RoPE allows
+   LLaMA models to have extended (8k+) context size without any fine-tuning
+   and minimal perplexity degradation", with its comment thread. Position
+   Interpolation's displacement between adjacent tokens vanishes; the
+   NTK-aware base `base·α^{d/(d−2)}` keeps a lower bound for every `α` and
+   tells all integer positions apart; the last pair's factor `1/α`; the base
+   `base·α` overshoots the slowest phase by `α^{2/d}`; the clock analogy.
+55. Su — kexue.fm/archives/9675 (2023), "The road to upgrading the
+   Transformer, 10: RoPE is a β-base encoding". Digits, extrapolation,
+   interpolation and base conversion (`⌈∛2000⌉ = 13`), Eqs. (1)–(3), the
+   range `β^{d/2}`, `λ = k^{2/(d−2)}` and the NTK-aware base, and the limits
+   `λ → 1` and `k^{2/(d−2)}/k^{2/d} → 1`. The highest-frequency term is
+   `n/β^0`, not `n/β`.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report

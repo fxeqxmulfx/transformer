@@ -25,6 +25,8 @@ The ICLR proceedings PDF is pinned by its proceedings identifier and hash.
 | Wu, Du and Peng, *RoPE at the End of Its Rope?* | [arXiv:2609.39929v1](https://arxiv.org/abs/2609.39929v1) | `papers/arXiv-2609.39929v1/paper.pdf` |
 | Su et al., *RoFormer* | [arXiv:2104.09864v5](https://arxiv.org/abs/2104.09864v5) | `papers/arXiv-2104.09864v5/roformer_arxiv.tex` (TeX source) |
 | Su, *Transformer升级之路：12、无限外推的ReRoPE？* (ReRoPE, Leaky ReRoPE), 2023-08-07 | [kexue.fm/archives/9708](https://web.archive.org/web/2023id_/https://kexue.fm/archives/9708) (2023 archive snapshot); code [bojone/rerope@acfe788](https://github.com/bojone/rerope/tree/acfe78840357a94d0bb504cb8865eeaa752df1a6) | `papers/kexue-9708-rerope/page.html`, `page.txt`; `papers/github-bojone-rerope/` |
+| bloc97, *NTK-Aware Scaled RoPE allows LLaMA models to have extended (8k+) context size without any fine-tuning and minimal perplexity degradation*, r/LocalLLaMA, 2023-06-29, with its comment thread | [reddit.com/r/LocalLLaMA/comments/14lz7j5](https://web.archive.org/web/2023id_/https://www.reddit.com/r/LocalLLaMA/comments/14lz7j5/) (2023 archive snapshot) | `papers/reddit-14lz7j5-ntk-aware/post.html`, `post.txt` |
+| Su, *Transformer升级之路：10、RoPE是一种β进制编码* (RoPE is a β-base encoding), 2023-07-06 | [kexue.fm/archives/9675](https://web.archive.org/web/2023id_/https://kexue.fm/archives/9675) (2023 archive snapshot) | `papers/kexue-9675-ntk-beta/page.html`, `page.txt` |
 
 PDF SHA-256:
 
@@ -52,6 +54,10 @@ kexue-9708 page.html 0f1c270c1cd47b40e77227827d877509e691460f78f8621941a67d6b689
 kexue-9708 page.txt 9867d0f8d8f79a6b0f8759c5437a16b4f923e200a3754d80509f139e08536f1d
 rerope@acfe788 rerope_patch.py 5c68798f2af0086b008c4dd297137e36bd72d96ce13199fcf4491635c0d4dfd8
 rerope@acfe788 leaky_rerope_patch.py 9364b88d75bf53caef2dcb18eac0c73de5cfd4ea2c497f4dbe72204870b3ae96
+reddit-14lz7j5 post.html 83cbd181e2c93741d9be5a13f41c91ddc129be07a4464c9f7c526a38ce02423f
+reddit-14lz7j5 post.txt 7299392a982b22ee36b8945debdce615df7ac654c04aea4f53e7058e42f91398
+kexue-9675 page.html 26cc7d7b3692b6c14a3bf10c36d23d7417d0198f3948a87c3531a2ba66b175a7
+kexue-9675 page.txt 420a438947be5d2f715759a012f933bf8b364bc48d653ae4c16172ad6d5194fc
 ```
 
 ## Statement-to-source coverage
@@ -77,6 +83,10 @@ witness examples beside them.
 | ReRoPE post, 重温 and 融合, matrices (rope), (leaky-rerope), (rerope) | `ReRoPE/Section2_Fusion.lean` | Leaky ReRoPE keeps every position inside the window, and for a window below the training length some `k` keeps all positions of any length below it; Position Interpolation bounds the positions but moves every nonzero one; the limit `k → ∞` is ReRoPE, whose positions stay in `[0, w]`, while every finite `k` exceeds any training length on long inputs; `k = 1` is RoPE, and the positions are RoPE's through a Leaky ReLU and a ReLU. |
 | ReRoPE post, 计算 | `ReRoPE/Section3_Computation.lean`, `ReRoPE/Section3_SinglePass.lean` | Leaky ReRoPE's second attention matrix; ReRoPE's second matrix with `R^{−w}`, and a counterexample to the printed `R^w`; the merged matrices are RoPE scores at the rectified positions; the one-matrix decoding forms, the leaky one for `k ≥ 1`; one RoPE pass with any absolute positions has relative positions linear up to whole turns, so it gives neither ReRoPE (`w ≥ 1`) nor Leaky ReRoPE (`k > 1`) at a frequency in `(0, 2π)`. |
 | ReRoPE post, 实验, and `bojone/rerope` at acfe788 | `ReRoPE/Section4_Experiments.lean` | The query scale `max(1, log_T n)` is 1 up to the training length and above 1 beyond; the code's offset `w(k − 1)` gives the source's query position; its decoding table holds Leaky ReRoPE's positions and its `−sin` rotation is `R^{−t}`, so both decoding paths give the merged scores. |
+| NTK-aware post (bloc97) | `NTKAware/Section1_Post.lean` | A rotated vector moves between positions `t` apart by twice the sum of its pairs' contrasts; under Position Interpolation by `s` the displacement between adjacent positions tends to 0; the NTK-aware base keeps the first frequency 1, so the displacement is at least `(8/9)|x_0|²` for every `α`, and a frequency-1 pair tells all integer positions apart because `π` is irrational. |
+| NTK-aware post, comment thread | `NTKAware/Section2_Comments.lean` | The last pair's frequency divided by `α` exactly; with the base `base·α` the slowest phase over `αT` is `α^{2/d}` times the trained one, beyond it for `α > 1`; the clock readings tell apart exactly the times below the slowest period, `43.2k` and `129.6k` seconds. |
+| β-base post, 进制表示 to 进制转换 | `BetaBase/Section1_Representation.lean` | Below `β^L` the digits determine the number; smaller bases need more digits; a reserved digit is 0 exactly below `β^L`; after division by `k ≥ 1` the higher digits step by 0 or 1; the highest differing digit decides the order in every base; `L` digits in base `b` cover `N` numbers iff `b ≥ ⌈N^{1/L}⌉`, and `⌈∛2000⌉ = 13` is the least base. |
+| β-base post, 位置编码 and 追根溯源, Eqs. (1)–(3) | `BetaBase/Section5_Encoding.lean` | Eq. (1) as a floor; the digit is periodic in the quotient; RoPE's angle is `n/β^i`; `d/2` digits reach `k` times as far iff `β' ≥ β k^{2/d}`, and the base `base·k` reaches exactly `k` times; Eq. (3) iff `λ = k^{2/(d−2)}`, whose base is the NTK-aware `base·k^{d/(d−2)}`; `λ → 1` and `k^{2/(d−2)}/k^{2/d} → 1`. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
@@ -193,6 +203,20 @@ retrieval, perplexity, and positional-resolution metrics.
    two attention matrices" holds for one RoPE pass with arbitrary absolute
    positions at a frequency in `(0, 2pi)`, with `w >= 1` and `k > 1`. The
    accuracy and loss tables are measurements and are not formalized.
+10. **NTK-aware scaling: the post, its thread and the β-base post.** bloc97's
+   "all the positions are perfectly distinguishable" does not separate the
+   NTK-aware base from Position Interpolation by exact injectivity: a rational
+   scale keeps integer positions apart too. What separates them is the
+   displacement between adjacent positions, which interpolation sends to 0 and
+   the NTK-aware base bounds below. The clock analogy holds when the hours are
+   slowed by 2 against the new 90-minute hours, the reading under which
+   `129.6k` follows; slowed by 2 against the seconds they would give `86.4k`.
+   The clock is "a RoPE with a base of 60" only up to the hour hand, which
+   turns once per 12 turns of the minute hand. Su's β-base post calls `n/β`
+   the highest-frequency term; the highest is `n/β^0 = n`, which no change of
+   base touches, and `n/β` is the second. After Eq. (1) the text divides by
+   `β^{k-1}` for `β^{m-1}`. The perplexity graphs and the accuracy table are
+   measurements and are not formalized.
 
 ## Arbitrary coefficients and learned weights
 
