@@ -36,7 +36,8 @@ The proof of arXiv:2312.04927v1, Appendix, *The Multiple-Query Associative Recal
 `prop: app-attention`, uses two layers of attention without softmax and moves the value to the
 key token instead. The cyclic reading stands for a first token without a key. With a causal mask
 the scale at a token is `s log` of the length of its prefix: `Recall.CausalCopy`,
-`Recall.CausalFading`, `Recall.CausalRecall` and `Recall.CausalKeyToken` treat that case.
+`Recall.CausalFading`, `Recall.CausalRecall`, `Recall.CausalKeyToken` and `Recall.CausalPhases`
+treat that case.
 -/
 
 @[expose] public section
