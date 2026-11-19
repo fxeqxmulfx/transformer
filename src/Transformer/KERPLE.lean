@@ -16,6 +16,8 @@ public import Transformer.KERPLE.SectionA_DistancePowers
 public import Transformer.KERPLE.SectionA_GaussianKernels
 public import Transformer.KERPLE.SectionA_DiagonalDominance
 public import Transformer.KERPLE.SectionA_GaussianPositions
+public import Transformer.KERPLE.SectionA_EffectiveLength
+public import Transformer.KERPLE.SectionA_Attenuation
 
 /-!
 # KERPLE
@@ -73,4 +75,12 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `SectionA_GaussianPositions`: on the integer positions of attention, A.3's power constraint is
   not needed at scales `r ≥ 1`: `exp(−r|m − n|^p)`, (3-para-bias) and (2-para-wht) are PD on `ℕ`
   for every power `p ≥ 2`, while `exp(−|x − y|³)` is not PD on `ℝ`.
+* `SectionA_EffectiveLength`: Appendix A.5, the effective length `min{d : k̃(0, d) < −2}` is the
+  one crossing of `−2` of a decreasing kernel; the power and logarithmic variants strictly
+  decrease, with effective lengths `⌊(2/r₁)^{1/r₂}⌋ + 1` and `⌊(e^{2/r₁} − 1)/r₂⌋ + 1`; ALiBi's
+  depend on the head alone; the head counts of the cumulative curves.
+* `SectionA_Attenuation`: Appendix A.5, a bias `−2` in the Softmax's argument attenuates by
+  `exp(−2) ∈ (0.135, 0.136)`, but Eq. 1 divides `k̃` by `√d`, and at §5.1's `d = 64` a bias `−2`
+  attenuates by `exp(−1/4) > 3/4`; A.5's reading holds with the bias added after the scaling. The
+  logarithmic variant's bias is `o(d^p)` for every power `p > 0`.
 -/
