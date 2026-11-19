@@ -253,8 +253,9 @@ probability bounds outside that coverage are not claimed as proved.
    Length Extrapolation via the Lens of Receptive Field Analysis". The causal
    transformer with positional biases, ALiBi and windowed attention, receptive
    fields and extrapolation, the cumulative normalized gradient, Sinusoidal and
-   Rotary, Sandwich and its connection to KERPLE and T5, Sandwich's reference
-   code: §3, §5, §6.1–6.3, Appendix E.
+   Rotary, Sandwich and its connection to KERPLE and T5, the cost of inference
+   with a cache window, Sandwich's reference code: §3, §5, §6.1–6.3,
+   Appendices B and E.
    The theoretical receptive field is `R(w − 1) + 1`, not `wR`; `w = 100` gives
    `1189`; the printed `ERF = min {m | c_m > 0.99}` is always the first
    position; the smoothed Sandwich is KERPLE with `r₁ = 0.825 √k`, not `0.825`,
