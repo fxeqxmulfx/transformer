@@ -1,11 +1,11 @@
 # Why x³ + xy resists: a flat spectrum
 
 Source note for `Transformer.Grokking.FlatSpectrum`, received from the user on
-2026-10-28 and kept verbatim below. Section names (Setting, Lemma 1,
-Proposition 2, Theorem A, Corollary, Theorem B, Readout-free version) are the
-labels the Lean docstrings cite. The section *Torch check* after the note keeps
-another session's recomputation of it, and *Lean status* maps each claim to its
-declarations.
+2026-10-28 and kept verbatim below, except for one optimizer name taken out of *How it
+fits together* on 2026-11-19. Section names (Setting, Lemma 1, Proposition 2, Theorem A,
+Corollary, Theorem B, Readout-free version) are the labels the Lean docstrings cite. The
+section *Torch check* after the note keeps another session's recomputation of it, and
+*Lean status* maps each claim to its declarations.
 
 Sections on other subjects moved out of this note on 2026-11-19.
 [`flat_spectrum_moved.md`](flat_spectrum_moved.md) lists them, with their labels and the files
@@ -97,7 +97,7 @@ E chooses the readout, so the right invariant is the minimum of r_eff(φ∘f) ov
 - Weight decay favors minimum-norm solutions. Theorem A says that solution actively prefers wrong answers on unseen pairs, which is the memorization basin.
 - Theorem B says gradients have no first-order path to the intermediate that would make the task two rank-1 steps. This is the modular version of the staircase/leap condition (Abbe, Boix-Adserà, Misiakiewicz 2022–23).
 - Giving the model that intermediate as an extra target removes exactly this obstruction. b/a² reaches 99.8% and survives after the target is dropped; a+b and random targets give nothing.
-- Theorem A depends only on the objective and Theorem B only on the labels. That fits AdamW and ScheduleFree failing the same way.
+- Theorem A depends only on the objective and Theorem B only on the labels. That fits AdamW and a second optimizer failing the same way.
 
 Proven: Lemma 1, Proposition 2, Theorem A with its corollary, and Theorem B. They are finite-dimensional linear algebra plus Gauss sums, so they could go into Lean when you say so. Nothing is written there. Still open: the readout-free bound, and whether the real network (norms, SiLU) behaves like the factorization model.
 
@@ -1504,7 +1504,7 @@ different constraints from matching one fixed scalar readout on the training cel
 In particular, a low classification loss fixes inequalities between logits, not their
 values. With positive epsilon RMSNorm is only approximately invariant to positive
 rescaling away from zero. Its parameter penalty cannot be identified with the nuclear
-norm of the answer kernel by the pure-factorization lemma. AdamW and Schedule-Free AdamW
+norm of the answer kernel by the pure-factorization lemma. The optimizers that train it
 also supply no theorem here that their finite iterates find a global penalty minimum.
 The missing connection is an assumption to measure, not a consequence of flatness.
 
@@ -1625,8 +1625,8 @@ and rejects treating the minimum effective rank of one readout as a learning cri
 
 The retry is specified before new training in
 [`hypotheses.json`](../experiments/rotate90_power_learning/hypotheses.json): repeat the
-three aliasing cases and three controls with seeds 17 and 23; compare Schedule-Free
-AdamW at three rates in the aliasing cases. Fourier analysis uses the reachable
+three aliasing cases and three controls with seeds 17 and 23; compare three optimizer
+rates in the aliasing cases. Fourier analysis uses the reachable
 nonzero **output** labels, not an assumed full label group. The approximate rule calls
 an alias of size `g` when at least 95% of centered output-embedding energy lies at
 frequencies divisible by `g`. It predicts over 95% accuracy after raising both outputs
@@ -1774,7 +1774,7 @@ All declarations below are in `Transformer.Grokking.FlatSpectrum.FeatureCodes`.
 This generalization proves representation, exact recovery under explicit hypotheses, and
 conditional error tolerance. The neural network's objective is still cross-entropy, its
 readout is tied, and its state is normalized and nonlinear. No theorem identifies its
-parameter penalty with `Φ`, proves convergence of Schedule-Free AdamW, or guarantees a
+parameter penalty with `Φ`, proves convergence of its optimizer, or guarantees a
 width/depth-dependent success rate. The new margin results can be applied to actual logits
 once their error relative to an ideal score construction is bounded. A small discarded
 spectral-energy fraction alone does not supply that uniform error bound.
@@ -1923,7 +1923,7 @@ particular, failure of a frozen-kernel training limit alone supplies no such
 argument about finite feature-learning networks. No infinite limit is needed
 for the positive expressivity theorem here.
 
-The W16/D1 failures in the Schedule-Free study therefore cannot be explained
+The W16/D1 failures of the earlier training runs therefore cannot be explained
 by the absence of a correct function in that architecture. The larger models'
 success remains evidence about training under the measured data, initialization
 and optimizer settings. This theorem does not establish convergence, a basin
@@ -1946,12 +1946,12 @@ All declarations are in `Transformer.Rotate90.Power`, imported by
 
 ## Experimental corrections to learning implications (2026-11-01)
 
-The actual normalized RoPE source transformer was tested with Schedule-Free
-AdamW on division and `a^3 + ab mod P`, including approximately parameter-matched
+The actual normalized RoPE source transformer was trained on division and
+`a^3 + ab mod P`, including approximately parameter-matched
 W256D1/W128D4 models. A frozen 48-case screen, profiles, and a separate ten-case
 full-state continuation are recorded in `experiments/modular_composition/`
-and `modular_composition_long/`. The continuation preserves query, base,
-second moments, averaging clock, sampler, labels and splits. Python 3.15,
+and `modular_composition_long/`. The continuation preserves the whole optimizer
+state, the sampler, labels and splits. Python 3.15,
 Torch 2.15 and CUDA max-autotune are used throughout learning.
 
 All four long division pairs finish at 100% heldout accuracy. P97 W256D1
@@ -4952,8 +4952,8 @@ token, and then the argument gives nothing beyond CW6.
 These numbers are measured, not proved: `research/diffgpt_flat_spectrum/` of the `diff-gpt`
 repository, Rust and Kernite, FP32 on a GTX 1050. The task is that of CW9. The model is the
 historical real transformer of that repository: width 128, one layer, one head, a tied
-embedding and readout `E`, parameter-free normalizations `N` of the mean square, ScheduleFree
-AdamW with weight decay 1, 5000 updates of 512 examples. At the last position it holds
+embedding and readout `E`, parameter-free normalizations `N` of the mean square, its
+historical optimizer with weight decay 1, 5000 updates of 512 examples. At the last position it holds
 
 ```
 mid = N(E(t₂)) + N(W_o (v(t₁) ⊥ v(t₂))),    out = mid + N(FFN(N(mid))),    logits = E N(out);
@@ -5050,7 +5050,7 @@ Added on 2026-11-10 and proved in Lean. In WD1 a step of the decayed descent is
 `W ← (1 − η M) W`: what the gradient of the loss does not feed shrinks by `1 − η λ` a step,
 and that is how a run leaves the fits that are not the decayed minimum of WD2. This section
 counts these factors for two recipes of 5000 updates on the task of CH8. The historical real
-transformer of CH8 is trained by ScheduleFree AdamW with the rate 0.03 and the weight
+transformer of CH8 is trained by its historical optimizer with the rate 0.03 and the weight
 decay 1, and reaches 90% of the held-out states. The selected main of the `diff-gpt`
 repository is trained by AdamW with rates up to 0.001 and the weight decay 0.1, and does not.
 In the second recipe every update reaches the end of the run with a weight of at least one
@@ -5119,12 +5119,10 @@ and `β'` the two bias corrections,
 
 and `c η · ρ / c = η ρ`. Induction on the updates. ∎
 
-The same holds for the revised ScheduleFree AdamW, the optimizer of the historical recipe,
-with the learning rate `c · lr`, the decay `decay / c` and the epsilon `ε / c` from `c` times
-the first point: the evaluation, base and query points of the run are `c` times those of the
-other run. Its second moments are over `c²`, its averaging total is times `c^ratePower`, and
-the averaging coefficients are the same; the first maximal rate is the sentinel `−1`, which
-does not scale and which no rate sees.
+The same holds for the historical optimizer, with the learning rate `c · lr`, the decay
+`decay / c` and the epsilon `ε / c` from `c` times the first point: every point of its run is
+`c` times that of the other run, its second moments are over `c²`, and its averaging weights
+are the same.
 
 So on a loss without a scale a recipe is the products `η ρ` and `η ε` and the ratio
 `p_0 / η`.
@@ -5166,12 +5164,12 @@ Not covered:
   own: with `G(c w) = G(w) / c` the norm of the gradient moves against a fixed threshold.
 - Which coordinates of a trained model receive no gradient. RR1 and RR2 are about the decay
   term alone.
-- ScheduleFree AdamW in RR1 and RR2. Its decay is taken at the query point and its evaluation
-  point is an average of the base points, so a coordinate without gradient does not follow
+- The historical optimizer in RR1 and RR2. It takes its decay at one point and evaluates the
+  model at an average of earlier points, so a coordinate without gradient does not follow
   the product. Computed for the historical recipe, not proved: 0.61 of it remains after 33
   updates, 0.14 after 100 and `8 · 10⁻⁶` after 5000, with changes of sign.
 - The two optimizers against each other. RR3 is within one optimizer. That AdamW at the
-  product 0.03 trains as ScheduleFree AdamW at that product is not claimed.
+  product 0.03 trains as the historical optimizer at that product is not claimed.
 - RR5, beyond the numbers of RR7: three seeds of one task.
 
 ### RR7. The two models under both recipes (numerical)
@@ -5188,14 +5186,14 @@ states for the seeds 11, 17, 23 with axial positions and 81.97%, 88.84%, 77.38% 
 positions; the FP32 build ends at 79.32%, 88.35%, 77.87% and 81.44%, 89.39%, 78.25%. The
 precision of the products is not the cause of the miss.
 
-In the historical real model the AdamW of the selected main replaces ScheduleFree AdamW, with
-its schedule, betas and clip, and with the weight decay `ρ` on every coordinate. In the
+In the historical real model the AdamW of the selected main replaces the historical optimizer,
+with its schedule, betas and clip, and with the weight decay `ρ` on every coordinate. In the
 selected main `ρ` is the decay of its complex matrices; its real coordinates keep 0.1 and its
 frequencies 0.
 
 | Model | Recipe | Right of 4704, seeds 11, 17, 23 | Share | First update at 90% | Training loss at the end |
 | --- | --- | --- | --- | --- | --- |
-| Historical | ScheduleFree AdamW, rate 0.03, decay 1 | 4468, 4386, 4344 | 94.98%, 93.24%, 92.35% | 1300, 1500, 1150 | 0.039, 0.035, 0.036 |
+| Historical | historical optimizer, rate 0.03, decay 1 | 4468, 4386, 4344 | 94.98%, 93.24%, 92.35% | 1300, 1500, 1150 | 0.039, 0.035, 0.036 |
 | Historical | AdamW of the selected main, `ρ = 0.1` | 362, 464, 1419 | 7.70%, 9.86%, 30.17% | none | `1.3 · 10⁻⁶`, `1.3 · 10⁻⁶`, `1.1 · 10⁻⁶` |
 | Historical | the same, `ρ = 1` | 4168, 4315, 4235 | 88.61%, 91.73%, 90.03% | none, 3700, 4500 | `7.3 · 10⁻⁵`, `9.9 · 10⁻⁵`, `1.4 · 10⁻⁴` |
 | Historical | the same, `ρ = 3` | 4341, 4336, 4276 | 92.28%, 92.18%, 90.90% | 2000, 1700, 2100 | 0.0022, 0.0026, 0.0023 |
@@ -5249,8 +5247,8 @@ namespace `Transformer.Grokking.GradientEvidence`; and
 | Item | Lean | Differences |
 | --- | --- | --- |
 | RR1 | `mainAdamPath_eq_sum`, `mainMoments_zero`, `mainDirection_zero`, `mainAdamPath_zero`; in closed loop `mainAdamStep`, `mainAdamRun`, `mainAdamGradients`, `mainAdamRun_moments`, `mainAdamRun_fst`, `mainAdamRun_of_zero` | The path is `mainAdamPath` of AD3, with betas 0.9 and 0.95; the product after the update `s` is over `Finset.Ico (s + 1) t`. The statements hold for every real `ρ`, `ε` and every rates; with zero moments the direction is `0 / (0 + ε)`, which is `0` in Lean for `ε = 0` as well. `mainAdamRun` holds the weights and the two moments of all coordinates, and the gradient is taken at the weights. |
-| RR2 | `one_sub_sum_le_prod`, `half_le_prod_main`, `half_le_prod_Ico_main`, `one_sub_pow_le_exp`, `historical_remainder` | The first is for a finite set of indices. The recipe of the selected main is `0 ≤ η s ≤ 1/1000` at every step with the decay `1/10`; the bounds hold over every set of at most 5000 steps, and over `Finset.Ico (s + 1) t` for `t ≤ 5000`. The numbers 4.4495 and 0.64 of its schedule are computed, not in Lean. The last statement is `mainAdamPath` with the constant rate `3/100` and the decay `1`: AdamW, not ScheduleFree AdamW. |
-| RR3 | `atScale`, `mainAdamStep_atScale`, `mainAdamRun_atScale`; `scaled`, `rate_scaled`, `IsScaled`, `isScaled_initial`, `query_scaled`, `step_isScaled`, `run_isScaled`, `run_scaled` | Homogeneity is asked at the one scale `c`: `G (fun j => c * w j) i = G w i / c` for all `w`, and for the oracle of ScheduleFree AdamW at every step. That a loss without a scale has such a gradient is not a Lean statement. ScheduleFree AdamW is `Transformer.ScheduleFree.AdamW.run`, the revised update of facebookresearch/schedule_free, and needs `0 ≤ lr`. `IsScaled c p s s'` relates two states; the maximal rates are compared after a nonnegative rate has entered. The last sentence of the item is not a Lean statement. |
+| RR2 | `one_sub_sum_le_prod`, `half_le_prod_main`, `half_le_prod_Ico_main`, `one_sub_pow_le_exp`, `historical_remainder` | The first is for a finite set of indices. The recipe of the selected main is `0 ≤ η s ≤ 1/1000` at every step with the decay `1/10`; the bounds hold over every set of at most 5000 steps, and over `Finset.Ico (s + 1) t` for `t ≤ 5000`. The numbers 4.4495 and 0.64 of its schedule are computed, not in Lean. The last statement is `mainAdamPath` with the constant rate `3/100` and the decay `1`: AdamW, not the historical optimizer. |
+| RR3 | `atScale`, `mainAdamStep_atScale`, `mainAdamRun_atScale`; `scaled`, `rate_scaled`, `IsScaled`, `isScaled_initial`, `query_scaled`, `step_isScaled`, `run_isScaled`, `run_scaled` | Homogeneity is asked at the one scale `c`: `G (fun j => c * w j) i = G w i / c` for all `w`, and for the gradient oracle of the historical optimizer at every step. That a loss without a scale has such a gradient is not a Lean statement. The historical optimizer is `Transformer.ScheduleFree.AdamW.run` and needs `0 ≤ lr`. `IsScaled c p s s'` relates two states; the maximal rates are compared after a nonnegative rate has entered. The last sentence of the item is not a Lean statement. |
 | RR4 | `historical`, `scaled_historical` | `historical` has ten warm-up steps, betas 0.9 and 0.98 and the default averaging powers 0 and 2. The first point thirty times smaller is the start of `run_scaled`. The comparison with the selected main is not a Lean statement. |
 
 ## A comparison of two free scores (added)
@@ -5824,7 +5822,7 @@ is changed. The predictions were fixed before the runs.
 
 | Model | Recipe | Right of 4704, seeds 11, 17, 23 | Share | First update at 90% | First at 99% | Share with steps (RR7) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Historical | ScheduleFree AdamW, rate 0.03, decay 1 | 4666, 4682, 4625 | 99.19%, 99.53%, 98.32% | 350, 200, 400 | 850, 550, 500 | 94.98%, 93.24%, 92.35% |
+| Historical | historical optimizer, rate 0.03, decay 1 | 4666, 4682, 4625 | 99.19%, 99.53%, 98.32% | 350, 200, 400 | 850, 550, 500 | 94.98%, 93.24%, 92.35% |
 | Historical | AdamW of the selected main, `ρ = 0.1` | 4704, 4704, 4704 | 100%, 100%, 100% | 300, 300, 300 | 350, 350, 350 | 7.70%, 9.86%, 30.17% |
 | Historical | the same, `ρ = 3` | 4702, 4703, 4702 | 99.96%, 99.98%, 99.96% | 250, 250, 250 | 300, 300, 300 | 92.28%, 92.18%, 90.90% |
 | Historical | the same, `ρ = 10` | 4702, 4704, 4704 | 99.96%, 100%, 100% | 250, 200, 250 | 250, 250, 1100 | 94.30%, 94.37%, 91.62% |
@@ -6015,7 +6013,7 @@ the registered one; DL6 has the same runs decoded with the domain.
 
 | Model | Recipe | Share on the grid of the task (RR7) | Scale 2, the tokenizer of the task | Scale 2, one grid at every row |
 | --- | --- | --- | --- | --- |
-| Historical | ScheduleFree AdamW, rate 0.03, decay 1 | 94.98%, 93.24%, 92.35% | 96.64%, 96.79%, 94.52% | 94.45%, 94.03%, 95.30% |
+| Historical | historical optimizer, rate 0.03, decay 1 | 94.98%, 93.24%, 92.35% | 96.64%, 96.79%, 94.52% | 94.45%, 94.03%, 95.30% |
 | Historical | AdamW of the selected main, `ρ = 0.1` | 7.70%, 9.86%, 30.17% | 69.62%, 69.86%, 33.23% | 71.47%, 84.06%, 81.16% |
 | Historical | the same, `ρ = 10` | 94.30%, 94.37%, 91.62% | 92.73%, 86.84%, 92.05% | 81.68%, 79.32%, 82.48% |
 | Selected main | its recipe, `ρ = 0.1` | 79.32%, 88.35%, 77.87% | 90.67%, 91.92%, 93.24% | 95.79%, 96.15%, 93.54% |
