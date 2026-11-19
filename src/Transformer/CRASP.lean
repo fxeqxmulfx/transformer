@@ -58,6 +58,8 @@ public import Transformer.CRASP.ModBlocksDepth
 public import Transformer.CRASP.ModBlocksCount
 public import Transformer.CRASP.ModBlocksCorrect
 public import Transformer.CRASP.Suffix
+public import Transformer.CRASP.LeftQuotient
+public import Transformer.CRASP.LeftQuotientCorrect
 public import Transformer.CRASP.FiniteFunction
 public import Transformer.CRASP.ConstantLayer
 public import Transformer.CRASP.Collapse
@@ -170,6 +172,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.RecallSeparation` | at that precision no query-free transformer of a fixed depth and width recalls, and none at all below `p d = log₂ c` |
 | `CRASP.LatestRecall` | no rounded transformer recalls the latest value of a rebound key, which over one key is `Σ*bΣ` |
 | `CRASP.Suffix` | a fixed suffix costs no depth: the right quotient of a language of `TL[◁#]_k` by a word is one |
+| `CRASP.LeftQuotient`, `CRASP.LeftQuotientCorrect` | a fixed prefix costs no depth in `TL[◁#]^pos`: the left quotient of a formula by a word is one, and adds no `Y` or `MOD` |
 | `CRASP.ModBlocks`, `CRASP.ModBlocksDepth` | on blocks of one period a formula of `TL[◁#, MOD]` is one of `TL[◁#]` over the bits, one level deeper |
 | `CRASP.ModBlocksCount`, `CRASP.ModBlocksCorrect` | the translation simulates the formula, also with a fixed string in place of the last block |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
@@ -246,7 +249,8 @@ recalls with a constant factor fewer bits a position (`CRASP.MatchingRecall`,
 `CRASP.RecallSeparation`); without positions no depth reads the previous
 symbol, so that no transformer recalls the latest value of a rebound key
 (`CRASP.SecondLast`, `CRASP.LatestRecall`); closing every string by a fixed
-word costs no depth (`CRASP.Suffix`); and on blocks of one period a formula
+word costs no depth (`CRASP.Suffix`), nor does opening it by one in
+`TL[◁#]^pos` (`CRASP.LeftQuotient`); and on blocks of one period a formula
 of `TL[◁#, MOD]` is one of `TL[◁#]`, so that positions read modulo a fixed
 number do not read the previous symbol either, which `Y` does: `TL[◁#, Y]`
 is not contained in `TL[◁#, MOD]`, and no transformer with RoPE or sinusoidal
