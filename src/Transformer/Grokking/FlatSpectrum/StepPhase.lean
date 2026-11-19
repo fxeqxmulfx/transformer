@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepChord
 /-!
 # The step is the phase of a sum of two phases
 
-Source: `review/flat_spectrum.md`, *The step is the phase of a sum of two phases* (added),
+Source: `review/diffgpt/steps.md`, *The step is the phase of a sum of two phases* (added),
 items CH3 and CH4. Along the values `a`, `b`, `x = (a + b) % p` let `d₁ = b − a` and
 `d₂ = modStep p a b` be the steps read and `d₃ = modStep p b x` the step to write.
 
@@ -30,7 +30,7 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Complex Real
 
-/-- **The step is the phase of a chord**, `review/flat_spectrum.md`, item CH3: along `a`,
+/-- **The step is the phase of a chord**, `review/diffgpt/steps.md`, item CH3: along `a`,
 `b`, `(a + b) % p`, with `d₂ = modStep p a b` and `d₃` the step to write,
 `exp (iπ d₃ / p) = exp (iπ / 4p) · exp (−iπ d₂ / 2p) · stepChord / ‖stepChord‖`. -/
 theorem exp_modStep_eq_stepChord {p a b : ℕ} (ha : a < p) (hb : b < p) :
@@ -84,7 +84,7 @@ example := exp_modStep_eq_stepChord (p := 97) (a := 50) (b := 60) (by norm_num) 
 /-- From `50` and `90` the next value is `43`, and `90 + 43` wraps. -/
 example := exp_modStep_eq_stepChord (p := 97) (a := 50) (b := 90) (by norm_num) (by norm_num)
 
-/-- **The characters of odd order of the step**, `review/flat_spectrum.md`, item CH3: a
+/-- **The characters of odd order of the step**, `review/diffgpt/steps.md`, item CH3: a
 character `ψ` of `ℤ/p` times the phase of order `2p` is the kernel of rank one
 `ψ (d₁) · ψ (d₂)` times the phase of the chord. -/
 theorem addChar_mul_exp_modStep {p a b : ℕ} (ψ : AddChar (ZMod p) ℂ) (ha : a < p) (hb : b < p) :
@@ -99,12 +99,12 @@ example (ψ : AddChar (ZMod 97) ℂ) :=
   addChar_mul_exp_modStep ψ (a := 50) (b := 90) (by norm_num) (by norm_num)
 
 /-- The sum of a phase of the last step read, `exp (iπ / 2p) · exp (3πi d₂ / p)`, and a phase
-of the step before it, `exp (−2πi d₁ / p)`; `review/flat_spectrum.md`, item CH4. -/
+of the step before it, `exp (−2πi d₁ / p)`; `review/diffgpt/steps.md`, item CH4. -/
 noncomputable def stepPhaseSum (p a b : ℕ) : ℂ :=
   cexp (π * I / (2 * p)) * cexp (3 * π * I * (modStep p a b : ℂ) / p) +
     cexp (-(2 * π * I * ((b : ℂ) - a)) / p)
 
-/-- The sum of the two phases is the chord, turned: `review/flat_spectrum.md`, item CH4. -/
+/-- The sum of the two phases is the chord, turned: `review/diffgpt/steps.md`, item CH4. -/
 theorem stepPhaseSum_eq (p a b : ℕ) :
     stepPhaseSum p a b =
       cexp (π * I / (2 * p)) * cexp (-(2 * π * I * ((b : ℂ) - a)) / p) * stepChord p a b := by
@@ -134,7 +134,7 @@ theorem norm_stepPhaseSum (p a b : ℕ) : ‖stepPhaseSum p a b‖ = ‖stepChor
     rw [h, Complex.norm_exp_ofReal_mul_I]
   rw [stepPhaseSum_eq, norm_mul, norm_mul, h1, h2, one_mul, one_mul]
 
-/-- **The step is the phase of a sum of two phases**, `review/flat_spectrum.md`, item CH4:
+/-- **The step is the phase of a sum of two phases**, `review/diffgpt/steps.md`, item CH4:
 `exp (iπ d₃ / p)` is a kernel of rank one and modulus one in the two steps read, times the sum
 of one phase of each of them with its modulus normalized. -/
 theorem exp_modStep_eq_stepPhaseSum {p a b : ℕ} (ha : a < p) (hb : b < p) :

@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Hull
 /-!
 # Scores that are linear in given numbers: a cell of a hull is not open
 
-Source: `review/flat_spectrum.md`, *The numbers of the tokens* (added), item NT4.
+Source: `review/diffgpt/steps.md`, *The numbers of the tokens* (added), item NT4.
 In CS3 to CS5 the score of every row and column is free, and a cell is open unless a chain of
 seen cells links its two tokens. Give every row a vector `φ i` and every column a vector `ψ j`
 of numbers, and let the scores of the learner be linear in them: `f' i = u (φ i)` and
@@ -38,7 +38,7 @@ def seenLtPairs (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) (φ : m → 
     Set (E × F) :=
   (fun c : m × n => (φ c.1, ψ c.2)) '' {c | c ∈ Ω ∧ f c.1 < h c.2}
 
-/-- **NT4**, `review/flat_spectrum.md`: scores linear in the numbers that fit the seen cells
+/-- **NT4**, `review/diffgpt/steps.md`: scores linear in the numbers that fit the seen cells
 have the column at most the row at every cell in the hull of the seen cells with that
 answer. -/
 theorem ScoreFit.le_of_mem_convexHull {Ω : Set (m × n)} {f : m → ℝ} {h : n → ℝ} {φ : m → E}
@@ -54,7 +54,7 @@ theorem ScoreFit.le_of_mem_convexHull {Ω : Set (m × n)} {f : m → ℝ} {h : n
   simp only [Set.mem_ofPred_eq, LinearMap.coprod_apply] at this
   linarith
 
-/-- **NT4**, `review/flat_spectrum.md`: and the row below the column at every cell in the hull
+/-- **NT4**, `review/diffgpt/steps.md`: and the row below the column at every cell in the hull
 of the seen cells with that answer. -/
 theorem ScoreFit.lt_of_mem_convexHull {Ω : Set (m × n)} {f : m → ℝ} {h : n → ℝ} {φ : m → E}
     {ψ : n → F} {u : E →ₗ[ℝ] ℝ} {w : F →ₗ[ℝ] ℝ} {θ : ℝ}
@@ -82,7 +82,7 @@ example : (LinearMap.id : ℝ →ₗ[ℝ] ℝ) 0 < (1 : ℝ) - (0 : ℝ →ₗ[�
     (φ := fun _ => (0 : ℝ)) (ψ := fun _ => (0 : ℝ)) (i := ()) (j := ())
     (by rintro c rfl; simp) (subset_convexHull ℝ _ ⟨((), ()), ⟨rfl, by norm_num⟩, rfl⟩)
 
-/-- **NT4**, `review/flat_spectrum.md`: when the scores are linear in the numbers, every fit
+/-- **NT4**, `review/diffgpt/steps.md`: when the scores are linear in the numbers, every fit
 that is linear in them answers as they do at a cell in the hull of the seen cells of either
 answer. -/
 theorem scoreFit_linear_iff {Ω : Set (m × n)} {φ : m → E} {ψ : n → F} {u₀ u : E →ₗ[ℝ] ℝ}

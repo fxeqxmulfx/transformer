@@ -6,7 +6,7 @@ public import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Commute
 /-!
 # The polar factor of `c + A`, `A` skew-Hermitian
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW2.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW2.
 Let `K + Kᴴ = 2c` with `c > 0`: `K = c + A` with `Aᴴ = −A`. Then `K` is invertible
 (`det_ne_zero_of_add_conjTranspose`), as `Re ⟨v, K v⟩ = c ‖v‖²`, and normal. Its polar factor
 is `W = K S`, `S = (Kᴴ K)^{-1/2}` (`gramInvSqrt`), and `S` commutes with `K`, so
@@ -112,7 +112,7 @@ theorem polarFactor_add_conjTranspose {K : Matrix n n ℂ} {c : ℝ}
 example := polarFactor_add_conjTranspose (K := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (c := 1)
   (by simp [two_smul])
 
-/-- **The polar factor has a positive diagonal**, `review/flat_spectrum.md`, item CW2: for
+/-- **The polar factor has a positive diagonal**, `review/diffgpt/steps.md`, item CW2: for
 `K + Kᴴ = 2c`, `c > 0`, `Re W_ii = c S_ii` with `S = (Kᴴ K)^{-1/2}`, and `S_ii > 0`. -/
 theorem re_polarFactor_apply_self {K : Matrix n n ℂ} {c : ℝ} (hc : 0 < c)
     (hK : K + Kᴴ = ((2 * c : ℝ) : ℂ) • 1) (i : n) :
@@ -127,7 +127,7 @@ theorem re_polarFactor_apply_self {K : Matrix n n ℂ} {c : ℝ} (hc : 0 < c)
 example (i : Fin 2) := re_polarFactor_apply_self (K := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (c := 1)
   one_pos (by simp [two_smul]) i
 
-/-- **A missing diagonal cell is not recovered**, `review/flat_spectrum.md`, item CW2: a `K`
+/-- **A missing diagonal cell is not recovered**, `review/diffgpt/steps.md`, item CW2: a `K`
 with `K + Kᴴ = 2c`, `c > 0`, is not a minimum of the nuclear norm among the matrices equal to it
 on `Ω` when `Ω` misses a diagonal cell. -/
 theorem not_isMinOn_of_add_conjTranspose {K : Matrix n n ℂ} {c : ℝ} (hc : 0 < c)

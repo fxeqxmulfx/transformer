@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
 /-!
 # The sign of the step is a real kernel of rank two with its modulus normalized
 
-Source: `review/flat_spectrum.md`, *The step is the phase of a sum of two phases* (added),
+Source: `review/diffgpt/steps.md`, *The step is the phase of a sum of two phases* (added),
 item CH6. Along the values `a`, `b`, `x = (a + b) % p` let `d₁ = b − a` and `d₂ = modStep p a b`
 be the steps read. The half-plane value of CW7 is the real number
 
@@ -28,13 +28,13 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Complex Real
 
-/-- The half-plane value of the sum, `review/flat_spectrum.md`, items CW7 and CH6:
+/-- The half-plane value of the sum, `review/diffgpt/steps.md`, items CW7 and CH6:
 `Im (exp (iπ / 2p) · exp (2πi d₁ / p) · exp (3πi d₂ / p))`. -/
 noncomputable def stepHalfPlane (p a b : ℕ) : ℝ :=
   (cexp (π * I / (2 * p)) *
     (cexp (2 * π * I * ((b : ℂ) - a) / p) * cexp (3 * π * I * (modStep p a b : ℂ) / p))).im
 
-/-- **A real kernel of rank at most two**, `review/flat_spectrum.md`, item CH6: the half-plane
+/-- **A real kernel of rank at most two**, `review/diffgpt/steps.md`, item CH6: the half-plane
 value is a sum of two products of a real function of `d₁` and a real function of `d₂`. -/
 theorem stepHalfPlane_eq_add (p a b : ℕ) :
     stepHalfPlane p a b =
@@ -91,7 +91,7 @@ theorem stepHalfPlane_ne_zero {p a b : ℕ} (ha : a < p) (hb : b < p) :
 
 example := stepHalfPlane_ne_zero (p := 97) (a := 50) (b := 90) (by norm_num) (by norm_num)
 
-/-- **The sign of the step is a normalized modulus**, `review/flat_spectrum.md`, item CH6:
+/-- **The sign of the step is a normalized modulus**, `review/diffgpt/steps.md`, item CH6:
 the real kernel of rank at most two `stepHalfPlane`, divided by its absolute value, is `−1`
 where the step to write is negative and `1` where it is not: the entry of `wrapKernel`. -/
 theorem stepHalfPlane_div_abs {p a b : ℕ} (ha : a < p) (hb : b < p) :

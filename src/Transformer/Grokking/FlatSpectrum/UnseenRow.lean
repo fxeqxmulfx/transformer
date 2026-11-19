@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ProjectionKink
 /-!
 # An unseen row is zero in every minimum
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW8.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW8.
 Let `P` be an orthogonal projection on the rows. For contractions `Z`, `Z'` and real `c`, `s`
 with `c² + s² ≤ 1` the matrix `c P Z + s (1 − P) Z'` is a contraction
 (`IsContraction.smul_proj_add`), so the two blocks of rows of `X` are bounded in `ℓ²`
@@ -69,7 +69,7 @@ theorem IsContraction.smul_proj_add {P : Matrix m m ℂ} (hP : Pᴴ = P) (hPP : 
 example := (isContraction_one (n := Fin 2)).smul_proj_add (P := 1) (by simp) (by simp)
   isContraction_one (c := 1) (s := 0) (by norm_num)
 
-/-- **Two blocks of rows in `ℓ²`**, `review/flat_spectrum.md`, item CW8: for an orthogonal
+/-- **Two blocks of rows in `ℓ²`**, `review/diffgpt/steps.md`, item CW8: for an orthogonal
 projection `P`, `‖P X‖_S1² + ‖(1 − P) X‖_S1² ≤ ‖X‖_S1²`. -/
 theorem nuclearNorm_proj_sq_add_sq_le {P : Matrix m m ℂ} (hP : Pᴴ = P) (hPP : P * P = P)
     (X : Matrix m n ℂ) :
@@ -122,7 +122,7 @@ example : nuclearNorm ((0 : Matrix (Fin 2) (Fin 2) ℂ) * (1 : Matrix (Fin 2) (F
     nuclearNorm (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
   nuclearNorm_proj_lt (P := 0) (by simp) (by simp) (by simp)
 
-/-- **An unseen row is zero in every minimum**, `review/flat_spectrum.md`, item CW8: if no
+/-- **An unseen row is zero in every minimum**, `review/diffgpt/steps.md`, item CW8: if no
 cell of row `i` lies in `Ω`, every minimum of the nuclear norm among the matrices equal to `K`
 on `Ω` has a zero row `i`. -/
 theorem row_eq_zero_of_isMinOn {K X : Matrix m n ℂ} {Ω : Set (m × n)} {i : m}
@@ -144,7 +144,7 @@ theorem row_eq_zero_of_isMinOn {K X : Matrix m n ℂ} {Ω : Set (m × n)} {i : m
     rwa [sub_sub_cancel, hEdef, single_mul_apply_same, one_mul] at h1)
   exact absurd (isMinOn_iff.mp hmin _ hmem) (not_le.mpr (nuclearNorm_proj_lt hP hPP hne))
 
-/-- **An unseen column is zero in every minimum**, `review/flat_spectrum.md`, item CW8. -/
+/-- **An unseen column is zero in every minimum**, `review/diffgpt/steps.md`, item CW8. -/
 theorem col_eq_zero_of_isMinOn {K X : Matrix m n ℂ} {Ω : Set (m × n)} {j : n}
     (hj : ∀ i, (i, j) ∉ Ω) (hX : ∀ kl ∈ Ω, X kl.1 kl.2 = K kl.1 kl.2)
     (hmin : IsMinOn nuclearNorm {Y | ∀ kl ∈ Ω, Y kl.1 kl.2 = K kl.1 kl.2} X) (i : m) :

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
 /-!
 # A comparison of two free scores keeps its seen cells under a shift
 
-Source: `review/flat_spectrum.md`, *A comparison of two free scores* (added), items CS1 to CS3.
+Source: `review/diffgpt/steps.md`, *A comparison of two free scores* (added), items CS1 to CS3.
 A table of comparisons has a real score `f i` for each row and `h j` for each column, and its
 cell `(i, j)` says whether `h j ≤ f i`. The wrap of the next step is such a table in the two
 steps read (`modStep_neg_iff_score_le`): it wraps exactly when
@@ -28,7 +28,7 @@ namespace Transformer.Grokking.FlatSpectrum
 
 variable {m n : Type*}
 
-/-- **CS1**, `review/flat_spectrum.md`: the wrap of the next step is a comparison of a score
+/-- **CS1**, `review/diffgpt/steps.md`: the wrap of the next step is a comparison of a score
 of each of the two steps read. With `d₁ = b − a` and `d₂ = modStep p a b` it wraps exactly
 when `p − 3 d₂ − 2p [d₂ < 0] ≤ 2 d₁`. -/
 theorem modStep_neg_iff_score_le {p a b : ℕ} (ha : a < p) (hb : b < p) :
@@ -54,7 +54,7 @@ def ScoreUpClosed (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) (A : Set m
 theorem scoreFit_self (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) : ScoreFit Ω f h f h :=
   fun _ _ => Iff.rfl
 
-/-- **CS2**, `review/flat_spectrum.md`: raising the scores of rows and columns closed upwards
+/-- **CS2**, `review/diffgpt/steps.md`: raising the scores of rows and columns closed upwards
 by one constant `c ≥ 0` keeps every seen comparison. -/
 theorem scoreFit_indicator {Ω : Set (m × n)} {f : m → ℝ} {h : n → ℝ} {A : Set m} {B : Set n}
     (hAB : ScoreUpClosed Ω f h A B) {c : ℝ} (hc : 0 ≤ c) :
@@ -82,7 +82,7 @@ example : ScoreFit ({((), ())} : Set (Unit × Unit)) (fun _ => 0) (fun _ => 1)
   scoreFit_indicator (fun _ _ => ⟨fun hle _ => absurd hle (by norm_num), fun _ hA => hA.elim⟩)
     (by norm_num)
 
-/-- **CS3**, `review/flat_spectrum.md`: a cell whose column is in sets closed upwards and
+/-- **CS3**, `review/diffgpt/steps.md`: a cell whose column is in sets closed upwards and
 whose row is not has fitting scores with the row below the column. -/
 theorem exists_scoreFit_lt {Ω : Set (m × n)} {f : m → ℝ} {h : n → ℝ} {A : Set m} {B : Set n}
     (hAB : ScoreUpClosed Ω f h A B) {i : m} {j : n} (hi : i ∉ A) (hj : j ∈ B) :
@@ -91,7 +91,7 @@ theorem exists_scoreFit_lt {Ω : Set (m × n)} {f : m → ℝ} {h : n → ℝ} {
   simp only [Pi.add_apply, Set.indicator_of_notMem hi, Set.indicator_of_mem hj, add_zero]
   linarith [le_abs_self (f i - h j)]
 
-/-- **CS3**, `review/flat_spectrum.md`: a cell whose row is in sets closed upwards and whose
+/-- **CS3**, `review/diffgpt/steps.md`: a cell whose row is in sets closed upwards and whose
 column is not has fitting scores with the column at most the row. -/
 theorem exists_scoreFit_le {Ω : Set (m × n)} {f : m → ℝ} {h : n → ℝ} {A : Set m} {B : Set n}
     (hAB : ScoreUpClosed Ω f h A B) {i : m} {j : n} (hi : i ∈ A) (hj : j ∉ B) :

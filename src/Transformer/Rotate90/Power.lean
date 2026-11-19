@@ -5,7 +5,8 @@ public import Transformer.Rotate90.Power.Depth
 /-!
 # Powered division in the actual normalized Rotate90 model
 
-Source: `review/flat_spectrum.md`, *Actual network expressivity for every exponent*.
+Source: `review/actual_network/sequence_models.md`,
+*Actual network expressivity for every exponent*.
 For every prime, natural exponent and positive RMSNorm epsilon, explicit tied
 weights strictly classify every numerator and nonzero denominator. The construction
 uses fourteen active residual coordinates and twenty genuine SwiGLU units. Arbitrary

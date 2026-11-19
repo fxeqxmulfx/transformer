@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepCarry
 /-!
 # The decoder holds the level: the wrap of a step is the domain of the series
 
-Source: `review/flat_spectrum.md`, *The decoder holds the level* (added), item DL1. A
+Source: `review/diffgpt/steps.md`, *The decoder holds the level* (added), item DL1. A
 difference encoding of the recurrence `x ↦ (b + x) % p` writes the step `modStep p b x`, and
 the decoder adds it to the level `x`. The decoder holds `x`; the model reads steps and does
 not.
@@ -21,7 +21,7 @@ not.
 
 namespace Transformer.Grokking.FlatSpectrum
 
-/-- **DL1**, `review/flat_spectrum.md`: the step from the level `x` is the only integer with
+/-- **DL1**, `review/diffgpt/steps.md`: the step from the level `x` is the only integer with
 the residue of `b` that keeps the series in its domain `[0, p)`. -/
 theorem eq_modStep_iff {p : ℕ} (hp : 0 < p) (b x : ℕ) (d : ℤ) :
     d = modStep p b x ↔
@@ -46,7 +46,7 @@ theorem eq_modStep_iff {p : ℕ} (hp : 0 < p) (b x : ℕ) (d : ℤ) :
 example : (-47 : ℤ) = modStep 97 50 60 :=
   (eq_modStep_iff (by norm_num) 50 60 (-47)).2 ⟨by decide, by norm_num, by norm_num⟩
 
-/-- **DL1**, `review/flat_spectrum.md`: the other integers of the residue of the step leave
+/-- **DL1**, `review/diffgpt/steps.md`: the other integers of the residue of the step leave
 the domain. A wrong wrap, `k = ±1`, is never a value of the series. -/
 theorem modStep_add_mul_not_mem {p : ℕ} (hp : 0 < p) (b x : ℕ) {k : ℤ} (hk : k ≠ 0) :
     ¬(0 ≤ (x : ℤ) + (modStep p b x + k * p) ∧ (x : ℤ) + (modStep p b x + k * p) < p) := by

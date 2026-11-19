@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.RecipeDecay
 /-!
 # The main model's AdamW depends on rate and decay through their product
 
-Source: `review/flat_spectrum.md`, *The rate of a recipe* (added), items RR1 and RR3.
+Source: `review/diffgpt/steps.md`, *The rate of a recipe* (added), items RR1 and RR3.
 
 `mainAdamRun G ρ eps η p0` is the main model's AdamW on all coordinates at once, with the
 gradient field `G`: betas `0.9` and `0.95` and the coordinate update `bufferedAdamUpdate`.
@@ -71,7 +71,7 @@ theorem mainAdamRun_fst (G : (ι → ℝ) → ι → ℝ) (ρ eps : ℝ) (η : �
     rw [mainAdamPath_source, ← ih, ← mainAdamRun_moments]
     rfl
 
-/-- **RR1 in closed loop**, `review/flat_spectrum.md`: a coordinate whose gradient is zero at
+/-- **RR1 in closed loop**, `review/diffgpt/steps.md`: a coordinate whose gradient is zero at
 every point is its initial value times the product of the decay factors. -/
 theorem mainAdamRun_of_zero (G : (ι → ℝ) → ι → ℝ) (i : ι) (hi : ∀ w, G w i = 0) (ρ eps : ℝ)
     (η : ℕ → ℝ) (p0 : ι → ℝ) (t : ℕ) :
@@ -89,7 +89,7 @@ example (t : ℕ) :=
 def atScale (c : ℝ) (s : (ι → ℝ) × (ι → ℝ) × (ι → ℝ)) : (ι → ℝ) × (ι → ℝ) × (ι → ℝ) :=
   (fun i => c * s.1 i, fun i => s.2.1 i / c, fun i => s.2.2 i / c ^ 2)
 
-/-- **One update at the scale `c`**, `review/flat_spectrum.md`, item RR3: for a gradient field
+/-- **One update at the scale `c`**, `review/diffgpt/steps.md`, item RR3: for a gradient field
 homogeneous of degree `-1` at the scale `c`, the update with the rate `c * η`, the decay
 `ρ / c` and the epsilon `eps / c` of a state at the scale `c` is the update at that scale. -/
 theorem mainAdamStep_atScale {c : ℝ} (hc : 0 < c) (G : (ι → ℝ) → ι → ℝ)
@@ -124,7 +124,7 @@ example (s : (Fin 1 → ℝ) × (Fin 1 → ℝ) × (Fin 1 → ℝ)) :
       atScale 2 (mainAdamStep (fun w i => 1 / w i) (1 / 10) (1 / 100000000) (1 / 1000) 0 s) :=
   mainAdamStep_atScale two_pos _ (fun w i => by rw [div_div, mul_comm]) _ _ _ 0 s
 
-/-- **The runs are the same at the scale `c`**, `review/flat_spectrum.md`, item RR3. -/
+/-- **The runs are the same at the scale `c`**, `review/diffgpt/steps.md`, item RR3. -/
 theorem mainAdamRun_atScale {c : ℝ} (hc : 0 < c) (G : (ι → ℝ) → ι → ℝ)
     (hG : ∀ w i, G (fun j => c * w j) i = G w i / c) (ρ eps : ℝ) (η : ℕ → ℝ) (p0 : ι → ℝ)
     (t : ℕ) :

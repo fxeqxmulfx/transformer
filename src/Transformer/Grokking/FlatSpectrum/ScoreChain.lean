@@ -6,7 +6,7 @@ public import Mathlib.Logic.Relation
 /-!
 # What the seen cells determine of a comparison of two free scores
 
-Source: `review/flat_spectrum.md`, *A comparison of two free scores* (added), items CS3 to CS5.
+Source: `review/diffgpt/steps.md`, *A comparison of two free scores* (added), items CS3 to CS5.
 A link of a chain (`scoreChain`) goes from a column up to a row of a seen cell with
 `h j ≤ f i`, and from a row up to a column of a seen cell with `f i < h j`. Fitting scores
 do not decrease along a chain (`ScoreFit.le_of_chain`). So a chain from the column of a cell
@@ -41,7 +41,7 @@ def scoreChain (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) : m ⊕ n →
   | .inl i, .inr j => (i, j) ∈ Ω ∧ f i < h j
   | _, _ => False
 
-/-- **CS4**, `review/flat_spectrum.md`: fitting scores do not decrease along a chain. -/
+/-- **CS4**, `review/diffgpt/steps.md`: fitting scores do not decrease along a chain. -/
 theorem ScoreFit.le_of_chain (hfit : ScoreFit Ω f h f' h') {u v : m ⊕ n}
     (huv : ReflTransGen (scoreChain Ω f h) u v) : Sum.elim f' h' u ≤ Sum.elim f' h' v := by
   induction huv with
@@ -54,7 +54,7 @@ theorem ScoreFit.le_of_chain (hfit : ScoreFit Ω f h f' h') {u v : m ⊕ n}
     · exact (hfit _ hstep.1).mpr hstep.2
     · exact hstep.elim
 
-/-- **CS4**, `review/flat_spectrum.md`: a chain from the row of a cell to its column puts
+/-- **CS4**, `review/diffgpt/steps.md`: a chain from the row of a cell to its column puts
 the row below the column in all fitting scores. -/
 theorem ScoreFit.lt_of_chain (hfit : ScoreFit Ω f h f' h') {i : m} {j : n}
     (hc : ReflTransGen (scoreChain Ω f h) (.inl i) (.inr j)) : f' i < h' j := by
@@ -81,7 +81,7 @@ theorem scoreUpClosed_chain (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) 
       {j | ReflTransGen (scoreChain Ω f h) u (.inr j)} :=
   fun _ hc => ⟨fun hle hj => hj.tail ⟨hc, hle⟩, fun hlt hi => hi.tail ⟨hc, hlt⟩⟩
 
-/-- **CS3 and CS4**, `review/flat_spectrum.md`: some fitting scores put the row `i` below
+/-- **CS3 and CS4**, `review/diffgpt/steps.md`: some fitting scores put the row `i` below
 the column `j` exactly when no chain of seen cells goes from the column to the row. -/
 theorem exists_scoreFit_lt_iff (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) (i : m) (j : n) :
     (∃ f' h', ScoreFit Ω f h f' h' ∧ f' i < h' j) ↔
@@ -91,7 +91,7 @@ theorem exists_scoreFit_lt_iff (Ω : Set (m × n)) (f : m → ℝ) (h : n → �
     exact not_le.mpr hlt (hfit.le_of_chain hc)
   · exact fun hc => exists_scoreFit_lt (scoreUpClosed_chain Ω f h (.inr j)) hc .refl
 
-/-- **CS3 and CS4**, `review/flat_spectrum.md`: some fitting scores put the column `j` at
+/-- **CS3 and CS4**, `review/diffgpt/steps.md`: some fitting scores put the column `j` at
 most at the row `i` exactly when no chain of seen cells goes from the row to the column. -/
 theorem exists_scoreFit_le_iff (Ω : Set (m × n)) (f : m → ℝ) (h : n → ℝ) (i : m) (j : n) :
     (∃ f' h', ScoreFit Ω f h f' h' ∧ h' j ≤ f' i) ↔
@@ -101,7 +101,7 @@ theorem exists_scoreFit_le_iff (Ω : Set (m × n)) (f : m → ℝ) (h : n → �
     exact not_le.mpr (hfit.lt_of_chain hc) hle
   · exact fun hc => exists_scoreFit_le (scoreUpClosed_chain Ω f h (.inl i)) .refl hc
 
-/-- **CS5**, `review/flat_spectrum.md`: a chain from the column to the row of a cell with
+/-- **CS5**, `review/diffgpt/steps.md`: a chain from the column to the row of a cell with
 equal scores is the cell itself, which is then seen. -/
 theorem mem_of_chain_of_eq {i : m} {j : n} (heq : f i = h j)
     (hc : ReflTransGen (scoreChain Ω f h) (.inr j) (.inl i)) : (i, j) ∈ Ω := by
@@ -118,7 +118,7 @@ theorem mem_of_chain_of_eq {i : m} {j : n} (heq : f i = h j)
           linarith [hstep.2, hstep₂.2]
     · exact hstep.elim
 
-/-- **CS5**, `review/flat_spectrum.md`: a chain from the row to the column of a cell is the
+/-- **CS5**, `review/diffgpt/steps.md`: a chain from the row to the column of a cell is the
 cell itself when no score of a column lies strictly between its two scores. -/
 theorem mem_of_chain_of_gap {i : m} {j : n} (hgap : ∀ j', ¬(f i < h j' ∧ h j' < h j))
     (hc : ReflTransGen (scoreChain Ω f h) (.inl i) (.inr j)) : (i, j) ∈ Ω := by
@@ -141,13 +141,13 @@ example : ((), ()) ∈ (Set.univ : Set (Unit × Unit)) :=
   mem_of_chain_of_gap (f := fun _ => 0) (h := fun _ => 1) (fun _ hj => lt_irrefl _ hj.2)
     (.single ⟨trivial, by norm_num⟩)
 
-/-- **CS5**, `review/flat_spectrum.md`: an unseen cell with equal scores has fitting scores
+/-- **CS5**, `review/diffgpt/steps.md`: an unseen cell with equal scores has fitting scores
 with the row below the column. -/
 theorem exists_scoreFit_lt_of_eq {i : m} {j : n} (heq : f i = h j) (hij : (i, j) ∉ Ω) :
     ∃ f' h', ScoreFit Ω f h f' h' ∧ f' i < h' j :=
   (exists_scoreFit_lt_iff Ω f h i j).mpr fun hc => hij (mem_of_chain_of_eq heq hc)
 
-/-- **CS5**, `review/flat_spectrum.md`: an unseen cell with integer scores, the row one below
+/-- **CS5**, `review/diffgpt/steps.md`: an unseen cell with integer scores, the row one below
 the column, has fitting scores with the column at most at the row. -/
 theorem exists_scoreFit_le_of_add_one {F : m → ℤ} {H : n → ℤ} {i : m} {j : n}
     (hF : F i + 1 = H j) (hij : (i, j) ∉ Ω) :

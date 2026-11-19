@@ -5,7 +5,8 @@ public import Transformer.Rotate90.Basic
 /-!
 # Actual Rotate90 coordinates for every powered-division task
 
-Source: `review/flat_spectrum.md`, *Actual network expressivity for every exponent*,
+Source: `review/actual_network/sequence_models.md`,
+*Actual network expressivity for every exponent*,
 construction and normalization. The source forward pass is
 `grokking_abmod/docs/rotate90-swiglu-model.md`, Model, and `Rotate90.Defs`.
 

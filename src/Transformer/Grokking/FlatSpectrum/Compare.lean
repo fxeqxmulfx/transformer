@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.PolarDiagonal
 /-!
 # The comparison kernel
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW2.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW2.
 The comparison kernel on `n` ordered values has `C_ij = 1` for `i ≤ j` and `−1` for `j < i`.
 It is `1 + A` with `A` skew: `C + Cᴴ = 2` (`compareKernel_add_conjTranspose`). Its boundary is
 the diagonal, `i = j`, and the cells just below it, `i = j + 1`.
@@ -29,7 +29,7 @@ open Matrix Finset
 open scoped ComplexOrder
 
 /-- The comparison kernel: `1` where `i ≤ j`, `−1` where `j < i`,
-`review/flat_spectrum.md`, item CW2. -/
+`review/diffgpt/steps.md`, item CW2. -/
 def compareKernel (n : ℕ) : Matrix (Fin n) (Fin n) ℂ := of fun i j => if i ≤ j then 1 else -1
 
 variable {n : ℕ}
@@ -64,7 +64,7 @@ lemma compareKernel_succ_col {j j' : Fin n} (h : (j : ℕ) + 1 = j') (r : Fin n)
 example (r : Fin 2) := compareKernel_succ_col (n := 2) (j := 0) (j' := 1) rfl r
 
 /-- A missing diagonal cell of the comparison kernel is not recovered,
-`review/flat_spectrum.md`, item CW2. -/
+`review/diffgpt/steps.md`, item CW2. -/
 theorem not_isMinOn_compareKernel_diag {Ω : Set (Fin n × Fin n)} {i : Fin n} (hi : (i, i) ∉ Ω) :
     ¬IsMinOn nuclearNorm
       {X | ∀ kl ∈ Ω, X kl.1 kl.2 = compareKernel n kl.1 kl.2} (compareKernel n) :=
@@ -92,7 +92,7 @@ theorem re_polarFactor_compareKernel_succ {i i' : Fin n} (h : (i : ℕ) + 1 = i'
 example := re_polarFactor_compareKernel_succ (n := 2) (i := 0) (i' := 1) rfl
 
 /-- A missing cell just below the diagonal of the comparison kernel is not recovered,
-`review/flat_spectrum.md`, item CW2. -/
+`review/diffgpt/steps.md`, item CW2. -/
 theorem not_isMinOn_compareKernel_succ {Ω : Set (Fin n × Fin n)} {i i' : Fin n}
     (h : (i : ℕ) + 1 = i') (hi : (i', i) ∉ Ω) :
     ¬IsMinOn nuclearNorm

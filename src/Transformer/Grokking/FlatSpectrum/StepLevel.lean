@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepWrap
 /-!
 # Levels and steps: what an encoder asks of the model
 
-Source: `review/flat_spectrum.md`, *The encoder: steps and levels* (added), items EN1 and EN2.
+Source: `review/diffgpt/steps.md`, *The encoder: steps and levels* (added), items EN1 and EN2.
 A difference encoding of the recurrence `x ↦ (b + x) % p` gives the model the steps between
 the values, and asks for the step to write. A level encoding gives it the values and asks for
 the value.
@@ -28,13 +28,13 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Finset
 
-/-- **EN1**, `review/flat_spectrum.md`: the level to write after the levels `b` and `x` is the
+/-- **EN1**, `review/diffgpt/steps.md`: the level to write after the levels `b` and `x` is the
 entry of the kernel of `a + b`. -/
 theorem addKernel_natCast {p : ℕ} [NeZero p] (b x : ℕ) :
     addKernel p (b : ZMod p) (x : ZMod p) = ZMod.stdAddChar (((b + x) % p : ℕ) : ZMod p) := by
   simp [addKernel, taskKernel]
 
-/-- **EN1**, `review/flat_spectrum.md`: and the entry determines the level: no other level
+/-- **EN1**, `review/diffgpt/steps.md`: and the entry determines the level: no other level
 `y < p` has the phase of the entry. -/
 theorem stdAddChar_eq_addKernel_iff {p : ℕ} [NeZero p] (b x : ℕ) {y : ℕ} (hy : y < p) :
     ZMod.stdAddChar (y : ZMod p) = addKernel p (b : ZMod p) (x : ZMod p) ↔
@@ -47,7 +47,7 @@ example : ZMod.stdAddChar ((13 : ℕ) : ZMod 97) = addKernel 97 ((50 : ℕ) : ZM
     13 = (50 + 60) % 97 :=
   stdAddChar_eq_addKernel_iff 50 60 (by norm_num)
 
-/-- **EN1**, `review/flat_spectrum.md`: a step is not determined by its residue. After a value
+/-- **EN1**, `review/diffgpt/steps.md`: a step is not determined by its residue. After a value
 `0 < b < p` the step is `b` from `x = 0` and `b − p` from `x = p − 1`. -/
 theorem modStep_zero_and_pred {p b : ℕ} (hb0 : 0 < b) (hb : b < p) :
     modStep p b 0 = b ∧ modStep p b (p - 1) = b - p := by
@@ -60,7 +60,7 @@ theorem modStep_zero_and_pred {p b : ℕ} (hb0 : 0 < b) (hb : b < p) :
 example : modStep 97 50 0 = 50 ∧ modStep 97 50 96 = 50 - 97 :=
   modStep_zero_and_pred (by norm_num) (by norm_num)
 
-/-- **EN2**, `review/flat_spectrum.md`: the first step `b − a` is `d` at `p − |d|` of the
+/-- **EN2**, `review/diffgpt/steps.md`: the first step `b − a` is `d` at `p − |d|` of the
 `p²` pairs `(a, b)`. -/
 theorem card_filter_sub_eq (p : ℕ) (d : ℤ) :
     ((range p ×ˢ range p).filter fun s : ℕ × ℕ => (s.2 : ℤ) - s.1 = d).card =
@@ -77,7 +77,7 @@ theorem card_filter_sub_eq (p : ℕ) (d : ℤ) :
   rw [key, card_image_of_injective _ fun i j h => by have := (Prod.mk.inj h).1; omega,
     card_range]
 
-/-- **EN2**, `review/flat_spectrum.md`: the second step `modStep p a b` is `d` at `p − |d|`
+/-- **EN2**, `review/diffgpt/steps.md`: the second step `modStep p a b` is `d` at `p − |d|`
 of the `p²` pairs `(a, b)`. -/
 theorem card_filter_modStep_eq (p : ℕ) (d : ℤ) :
     ((range p ×ˢ range p).filter fun s : ℕ × ℕ => modStep p s.1 s.2 = d).card =
@@ -104,7 +104,7 @@ theorem card_filter_modStep_eq (p : ℕ) (d : ℤ) :
 example : ((range 97 ×ˢ range 97).filter fun s : ℕ × ℕ => modStep 97 s.1 s.2 = -96).card = 1 :=
   card_filter_modStep_eq 97 (-96)
 
-/-- **EN2**, `review/flat_spectrum.md`: the two levels read at the state `(a, b)` are `b` and
+/-- **EN2**, `review/diffgpt/steps.md`: the two levels read at the state `(a, b)` are `b` and
 `a + b`, and they run over all pairs of levels once. -/
 def levelsRead (p : ℕ) : ZMod p × ZMod p ≃ ZMod p × ZMod p where
   toFun s := (s.2, s.1 + s.2)
@@ -112,7 +112,7 @@ def levelsRead (p : ℕ) : ZMod p × ZMod p ≃ ZMod p × ZMod p where
   left_inv s := by simp
   right_inv t := by simp
 
-/-- **EN2**, `review/flat_spectrum.md`: a level is the first level read at `p` states. -/
+/-- **EN2**, `review/diffgpt/steps.md`: a level is the first level read at `p` states. -/
 theorem card_levelsRead_fst (p : ℕ) [NeZero p] (y : ZMod p) :
     Fintype.card {s : ZMod p × ZMod p // (levelsRead p s).1 = y} = p := by
   rw [Fintype.card_congr (⟨fun s => s.1.1, fun a => ⟨(a, y), rfl⟩, fun s => by
@@ -121,7 +121,7 @@ theorem card_levelsRead_fst (p : ℕ) [NeZero p] (y : ZMod p) :
     subst h
     rfl, fun _ => rfl⟩ : {s : ZMod p × ZMod p // (levelsRead p s).1 = y} ≃ ZMod p), ZMod.card]
 
-/-- **EN2**, `review/flat_spectrum.md`: and the second level read at `p` states. -/
+/-- **EN2**, `review/diffgpt/steps.md`: and the second level read at `p` states. -/
 theorem card_levelsRead_snd (p : ℕ) [NeZero p] (y : ZMod p) :
     Fintype.card {s : ZMod p × ZMod p // (levelsRead p s).2 = y} = p := by
   rw [Fintype.card_congr (⟨fun s => s.1.2, fun b => ⟨(y - b, b), by simp [levelsRead]⟩,

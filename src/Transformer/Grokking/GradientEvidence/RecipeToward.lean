@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.RecipeRescale
 /-!
 # A decay toward a fixed value
 
-Source: `review/flat_spectrum.md`, *The numbers of the tokens* (added), item NT3.
+Source: `review/diffgpt/steps.md`, *The numbers of the tokens* (added), item NT3.
 The AdamW of the main model shrinks a coordinate toward zero: `p ← (1 − η ρ) p − η u`. With a
 fixed value `c` for the coordinate, add `η ρ c` after the update (`mainAdamPathToward`):
 
@@ -36,14 +36,14 @@ def mainAdamPathToward (c p0 ρ eps : ℝ) (η g : ℕ → ℝ) : ℕ → ℝ
   | t + 1 => (1 - η t * ρ) * mainAdamPathToward c p0 ρ eps η g t -
       η t * mainDirection g eps t + η t * ρ * c
 
-/-- **NT3**, `review/flat_spectrum.md`: the added term turns the decay toward `c`. -/
+/-- **NT3**, `review/diffgpt/steps.md`: the added term turns the decay toward `c`. -/
 theorem mainAdamPathToward_succ (c p0 ρ eps : ℝ) (η g : ℕ → ℝ) (t : ℕ) :
     mainAdamPathToward c p0 ρ eps η g (t + 1) = mainAdamPathToward c p0 ρ eps η g t -
       η t * ρ * (mainAdamPathToward c p0 ρ eps η g t - c) - η t * mainDirection g eps t := by
   rw [mainAdamPathToward]
   ring
 
-/-- **NT3**, `review/flat_spectrum.md`: the distance to `c` follows the path of RR1. -/
+/-- **NT3**, `review/diffgpt/steps.md`: the distance to `c` follows the path of RR1. -/
 theorem mainAdamPathToward_eq (c p0 ρ eps : ℝ) (η g : ℕ → ℝ) (t : ℕ) :
     mainAdamPathToward c p0 ρ eps η g t = c + mainAdamPath (p0 - c) ρ eps η g t := by
   induction t with
@@ -57,7 +57,7 @@ theorem mainAdamPathToward_zero_value (p0 ρ eps : ℝ) (η g : ℕ → ℝ) (t 
     mainAdamPathToward 0 p0 ρ eps η g t = mainAdamPath p0 ρ eps η g t := by
   rw [mainAdamPathToward_eq, sub_zero, zero_add]
 
-/-- **NT3**, `review/flat_spectrum.md`: a coordinate without gradient returns to `c` by the
+/-- **NT3**, `review/diffgpt/steps.md`: a coordinate without gradient returns to `c` by the
 product of the decay factors of the schedule. -/
 theorem mainAdamPathToward_zero (c p0 ρ eps : ℝ) (η : ℕ → ℝ) (t : ℕ) :
     mainAdamPathToward c p0 ρ eps η (fun _ => 0) t =
@@ -91,7 +91,7 @@ def mainAdamRunToward (c : ι → ℝ) (G : (ι → ℝ) → ι → ℝ) (ρ eps
   | 0 => (p0, fun _ => 0, fun _ => 0)
   | t + 1 => mainAdamStepToward c G ρ eps (η t) t (mainAdamRunToward c G ρ eps η p0 t)
 
-/-- **NT3 in closed loop**, `review/flat_spectrum.md`: the run with the decay toward the table
+/-- **NT3 in closed loop**, `review/diffgpt/steps.md`: the run with the decay toward the table
 `c` is `c` plus the run of the field `q ↦ G (c + q)` from `p0 − c` with the decay toward zero,
 and its moments are the moments of that run. -/
 theorem mainAdamRunToward_eq (c : ι → ℝ) (G : (ι → ℝ) → ι → ℝ) (ρ eps : ℝ) (η : ℕ → ℝ)
@@ -108,7 +108,7 @@ theorem mainAdamRunToward_eq (c : ι → ℝ) (G : (ι → ℝ) → ι → ℝ) 
     refine Prod.ext (funext fun i => ?_) rfl
     ring
 
-/-- **NT3 in closed loop**, `review/flat_spectrum.md`: a coordinate whose gradient is zero at
+/-- **NT3 in closed loop**, `review/diffgpt/steps.md`: a coordinate whose gradient is zero at
 every point returns to its fixed value by the product of the decay factors. -/
 theorem mainAdamRunToward_of_zero (c : ι → ℝ) (G : (ι → ℝ) → ι → ℝ) (i : ι)
     (hi : ∀ w, G w i = 0) (ρ eps : ℝ) (η : ℕ → ℝ) (p0 : ι → ℝ) (t : ℕ) :

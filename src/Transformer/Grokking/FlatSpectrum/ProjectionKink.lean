@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.RankOneFill
 /-!
 # A kink of the nuclear norm between two projections
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW3.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW3.
 Let `P` and `Q` be orthogonal projections with `P K = K = K Q`: `P` fixes the columns of `K`
 and `Q` its rows. For contractions `Z`, `Z'`, the matrix
 `P Z Q + (1 − P) Z' (1 − Q)` is a contraction (`IsContraction.proj_add_proj`):
@@ -106,7 +106,7 @@ lemma trace_conjTranspose_proj_mul {P : Matrix m m ℂ} {Q : Matrix n n ℂ} (hP
 example (Z X : Matrix (Fin 2) (Fin 2) ℂ) :=
   trace_conjTranspose_proj_mul (P := 1) (Q := 1) (by simp) (by simp) Z X
 
-/-- **A kink of the nuclear norm**, `review/flat_spectrum.md`, item CW3: let `P`, `Q` be
+/-- **A kink of the nuclear norm**, `review/diffgpt/steps.md`, item CW3: let `P`, `Q` be
 orthogonal projections with `P K = K = K Q`, and let the part of `E` inside both ranges be no
 longer than the part outside both, `‖P E Q‖_S1 ≤ ‖(1 − P) E (1 − Q)‖_S1`. Then
 `‖K‖_S1 ≤ ‖K + x E‖_S1` for every `x`. -/
@@ -143,7 +143,7 @@ example (x : ℂ) := nuclearNorm_le_add_smul_of_proj (K := (1 : Matrix (Fin 2) (
   (E := 0) (P := 1) (Q := 1) (by simp) (by simp) (by simp) (by simp) (by simp) (by simp)
   (by simp) x
 
-/-- **One cell at a kink**, `review/flat_spectrum.md`, item CW3: under the hypotheses of
+/-- **One cell at a kink**, `review/diffgpt/steps.md`, item CW3: under the hypotheses of
 `nuclearNorm_le_add_smul_of_proj` for `E = e_ij`, the matrix `K` has the least nuclear norm
 among the matrices equal to it at the other cells. -/
 theorem isMinOn_compl_singleton_of_proj {K : Matrix m n ℂ} {P : Matrix m m ℂ}

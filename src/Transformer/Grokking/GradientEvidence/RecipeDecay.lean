@@ -6,7 +6,7 @@ public import Mathlib.Analysis.SpecialFunctions.Exponential
 /-!
 # What the decay of a recipe removes within its run
 
-Source: `review/flat_spectrum.md`, *The rate of a recipe* (added), items RR1 and RR2.
+Source: `review/diffgpt/steps.md`, *The rate of a recipe* (added), items RR1 and RR2.
 
 The path of a coordinate of the main model's AdamW is its initial value and its updates, each
 times the product of the decay factors `1 - η r * ρ` of the later steps (`mainAdamPath_eq_sum`).
@@ -30,7 +30,7 @@ namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 
-/-- **RR1**, `review/flat_spectrum.md`: the path is the initial value and the updates, each
+/-- **RR1**, `review/diffgpt/steps.md`: the path is the initial value and the updates, each
 times the product of the decay factors of the steps after it. -/
 theorem mainAdamPath_eq_sum (p0 ρ eps : ℝ) (η g : ℕ → ℝ) (t : ℕ) :
     mainAdamPath p0 ρ eps η g t = (∏ s ∈ range t, (1 - η s * ρ)) * p0 -
@@ -58,14 +58,14 @@ theorem mainMoments_zero (t : ℕ) : mainMoments (fun _ => 0) t = (0, 0) := by
 theorem mainDirection_zero (eps : ℝ) (t : ℕ) : mainDirection (fun _ => 0) eps t = 0 := by
   simp [mainDirection, mainMoments_zero]
 
-/-- **RR1**, `review/flat_spectrum.md`: a coordinate without gradient is its initial value
+/-- **RR1**, `review/diffgpt/steps.md`: a coordinate without gradient is its initial value
 times the product of the decay factors of the schedule. -/
 theorem mainAdamPath_zero (p0 ρ eps : ℝ) (η : ℕ → ℝ) (t : ℕ) :
     mainAdamPath p0 ρ eps η (fun _ => 0) t = (∏ s ∈ range t, (1 - η s * ρ)) * p0 := by
   rw [mainAdamPath_eq_sum]
   simp [mainDirection_zero]
 
-/-- **RR2**, `review/flat_spectrum.md`: a product of factors `1 - a s` with `0 ≤ a s ≤ 1` is
+/-- **RR2**, `review/diffgpt/steps.md`: a product of factors `1 - a s` with `0 ≤ a s ≤ 1` is
 at least one minus the sum. -/
 theorem one_sub_sum_le_prod (S : Finset ℕ) (a : ℕ → ℝ) (h0 : ∀ s, 0 ≤ a s)
     (h1 : ∀ s, a s ≤ 1) : 1 - ∑ s ∈ S, a s ≤ ∏ s ∈ S, (1 - a s) := by
@@ -81,7 +81,7 @@ example : 1 - ∑ s ∈ range 3, 1 / ((s : ℝ) + 2) ≤ ∏ s ∈ range 3, (1 -
   one_sub_sum_le_prod (range 3) (fun s => 1 / ((s : ℝ) + 2)) (fun s => by positivity)
     (fun s => by rw [div_le_one (by positivity)]; linarith [Nat.cast_nonneg (α := ℝ) s])
 
-/-- **RR2 for the recipe of the selected main**, `review/flat_spectrum.md`: with rates in
+/-- **RR2 for the recipe of the selected main**, `review/diffgpt/steps.md`: with rates in
 `[0, 0.001]` and the decay `0.1`, the product of the decay factors of at most 5000 updates is
 between one half and one. -/
 theorem half_le_prod_main (η : ℕ → ℝ) (h0 : ∀ s, 0 ≤ η s) (h1 : ∀ s, η s ≤ 1 / 1000)
@@ -103,7 +103,7 @@ example :=
   half_le_prod_main (fun _ => 1 / 1000) (fun _ => by norm_num) (fun _ => le_rfl) (range 5000)
     (by simp)
 
-/-- **RR2**, `review/flat_spectrum.md`: in the recipe of the selected main every update
+/-- **RR2**, `review/diffgpt/steps.md`: in the recipe of the selected main every update
 reaches the end of a run of at most 5000 updates with a weight between one half and one. -/
 theorem half_le_prod_Ico_main (η : ℕ → ℝ) (h0 : ∀ s, 0 ≤ η s) (h1 : ∀ s, η s ≤ 1 / 1000)
     (s : ℕ) {t : ℕ} (ht : t ≤ 5000) :
@@ -123,7 +123,7 @@ theorem one_sub_pow_le_exp {x : ℝ} (hx : x ≤ 1) (n : ℕ) :
 example : (1 - 1 / 2 : ℝ) ^ 4 ≤ Real.exp (-((4 : ℕ) * (1 / 2))) :=
   one_sub_pow_le_exp (by norm_num) 4
 
-/-- **RR2 for a constant rate `0.03` and the decay `1`**, `review/flat_spectrum.md`: after
+/-- **RR2 for a constant rate `0.03` and the decay `1`**, `review/diffgpt/steps.md`: after
 5000 updates at most `exp (-150)` of a coordinate without gradient remains. -/
 theorem historical_remainder (p0 eps : ℝ) :
     |mainAdamPath p0 1 eps (fun _ => 3 / 100) (fun _ => 0) 5000| ≤ Real.exp (-150) * |p0| := by

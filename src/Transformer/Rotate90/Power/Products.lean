@@ -6,7 +6,8 @@ public import Transformer.Rotate90.Products
 /-!
 # Ten explicit products in twenty genuine SwiGLU units
 
-Source: `review/flat_spectrum.md`, *Actual network expressivity for every exponent*,
+Source: `review/actual_network/sequence_models.md`,
+*Actual network expressivity for every exponent*,
 weight construction. Four products multiply the powered complex operand codes.
 Six more multiply a's nonconstant coordinates by the constant input coordinate,
 so they can cancel the original input and route the zero flag. Every product uses

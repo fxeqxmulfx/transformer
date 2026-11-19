@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.Compare
 /-!
 # One unseen cell at the boundary of the comparison kernel
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW5.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW5.
 Let the cell `(i, i)` of the comparison kernel `C` be the only unseen one, `0 < i < n − 1`.
 Putting `−1` there makes row `i` equal to row `i + 1` and column `i` equal to column `i − 1`, so
 by `isMinOn_of_row_eq_of_col_eq` the flipped kernel is a minimum of the nuclear norm among the
@@ -50,7 +50,7 @@ lemma mem_add_smul_single_of_mem {m n : Type*} [DecidableEq m] [DecidableEq n]
 example := mem_add_smul_single_of_mem (K := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (X := 1) (i := 0)
   (j := 0) 2 fun _ _ => rfl
 
-/-- **The flipped diagonal cell is a minimum**, `review/flat_spectrum.md`, item CW5: with the
+/-- **The flipped diagonal cell is a minimum**, `review/diffgpt/steps.md`, item CW5: with the
 cell `(i, i)` unseen, `0 < i < n − 1`, the comparison kernel with `−1` in that cell has the
 least nuclear norm among the matrices equal to the kernel at the other cells. -/
 theorem isMinOn_compareKernel_flip_diag {i₀ i i₁ : Fin n} (h₀ : (i₀ : ℕ) + 1 = i)
@@ -75,7 +75,7 @@ theorem isMinOn_compareKernel_flip_diag {i₀ i i₁ : Fin n} (h₀ : (i₀ : �
   rw [isMinOn_iff] at hmin ⊢
   exact fun X hX => hmin X (mem_add_smul_single_of_mem _ hX)
 
-/-- **The flipped cell below the diagonal is a minimum**, `review/flat_spectrum.md`, item CW5:
+/-- **The flipped cell below the diagonal is a minimum**, `review/diffgpt/steps.md`, item CW5:
 with the cell `(i + 1, i)` unseen, the comparison kernel with `1` in that cell has the least
 nuclear norm among the matrices equal to the kernel at the other cells. -/
 theorem isMinOn_compareKernel_flip_succ {i i₁ : Fin n} (h₁ : (i : ℕ) + 1 = i₁) :
@@ -98,7 +98,7 @@ theorem isMinOn_compareKernel_flip_succ {i i₁ : Fin n} (h₁ : (i : ℕ) + 1 =
   rw [isMinOn_iff] at hmin ⊢
   exact fun X hX => hmin X (mem_add_smul_single_of_mem _ hX)
 
-/-- **No minimum keeps the true diagonal cell**, `review/flat_spectrum.md`, item CW5. -/
+/-- **No minimum keeps the true diagonal cell**, `review/diffgpt/steps.md`, item CW5. -/
 theorem ne_of_isMinOn_compareKernel_diag {i : Fin n} {X : Matrix (Fin n) (Fin n) ℂ}
     (hX : ∀ kl ∈ ({(i, i)}ᶜ : Set (Fin n × Fin n)), X kl.1 kl.2 = compareKernel n kl.1 kl.2)
     (hmin : IsMinOn nuclearNorm
@@ -111,7 +111,7 @@ theorem ne_of_isMinOn_compareKernel_diag {i : Fin n} {X : Matrix (Fin n) (Fin n)
   rw [hXC] at hmin
   exact not_isMinOn_compareKernel_diag (i := i) (by simp) hmin
 
-/-- **No minimum keeps the true cell below the diagonal**, `review/flat_spectrum.md`,
+/-- **No minimum keeps the true cell below the diagonal**, `review/diffgpt/steps.md`,
 item CW5. -/
 theorem ne_of_isMinOn_compareKernel_succ {i i₁ : Fin n} (h₁ : (i : ℕ) + 1 = i₁)
     {X : Matrix (Fin n) (Fin n) ℂ}

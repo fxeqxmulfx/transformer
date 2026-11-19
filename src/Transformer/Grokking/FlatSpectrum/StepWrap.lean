@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.Compare
 /-!
 # The step of an additive recurrence modulo `p`: a residue and a wrap
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), items CW1 and
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), items CW1 and
 CW6. A difference encoding of the recurrence `x ↦ (b + x) % p` writes the integer step
 `modStep p b x = (b + x) % p − x` from the value `x`, where `b` is the value before `x`.
 
@@ -27,11 +27,11 @@ namespace Transformer.Grokking.FlatSpectrum
 open Matrix
 
 /-- The integer step from the value `x` to the next value `(b + x) % p` of an additive
-recurrence modulo `p`, where `b` is the value before `x`; `review/flat_spectrum.md`,
+recurrence modulo `p`, where `b` is the value before `x`; `review/diffgpt/steps.md`,
 item CW1. -/
 def modStep (p b x : ℕ) : ℤ := ((b + x) % p : ℕ) - (x : ℤ)
 
-/-- **A step is a residue and a wrap**, `review/flat_spectrum.md`, item CW1: the step is `b`
+/-- **A step is a residue and a wrap**, `review/diffgpt/steps.md`, item CW1: the step is `b`
 if the sum `b + x` stays below `p`, and `b − p` if it wraps. -/
 theorem modStep_eq {p b x : ℕ} (hb : b < p) (hx : x < p) :
     modStep p b x = b - if p ≤ b + x then (p : ℤ) else 0 := by
@@ -59,7 +59,7 @@ example : modStep 97 50 60 < 0 := (modStep_neg_iff (by norm_num) (by norm_num)).
 theorem intCast_modStep (p b x : ℕ) : ((modStep p b x : ℤ) : ZMod p) = b := by
   simp [modStep]
 
-/-- **The residues of the steps add**, `review/flat_spectrum.md`, item CW1: along the values
+/-- **The residues of the steps add**, `review/diffgpt/steps.md`, item CW1: along the values
 `a`, `b`, `(a + b) % p`, the step after them is congruent to the sum of the two steps before
 it, `b − a` and `modStep p a b`. -/
 theorem modStep_modEq_add (p a b : ℕ) :
@@ -68,7 +68,7 @@ theorem modStep_modEq_add (p a b : ℕ) :
   push_cast
   ring
 
-/-- **The phase of a step has rank one**, `review/flat_spectrum.md`, item CW1: every additive
+/-- **The phase of a step has rank one**, `review/diffgpt/steps.md`, item CW1: every additive
 character of the step is the product of its values at the two steps before it. -/
 theorem addChar_modStep {p : ℕ} (ψ : AddChar (ZMod p) ℂ) (a b : ℕ) :
     ψ ((modStep p b ((a + b) % p) : ℤ) : ZMod p) =
@@ -76,12 +76,12 @@ theorem addChar_modStep {p : ℕ} (ψ : AddChar (ZMod p) ℂ) (a b : ℕ) :
   rw [← AddChar.map_add_eq_mul, ← Int.cast_add,
     (ZMod.intCast_eq_intCast_iff _ _ p).mpr (modStep_modEq_add p a b)]
 
-/-- The sign of the step, `review/flat_spectrum.md`, item CW6: `−1` where the sum `b + x`
+/-- The sign of the step, `review/diffgpt/steps.md`, item CW6: `−1` where the sum `b + x`
 wraps past `p`, and `1` where it does not. -/
 def wrapKernel (p : ℕ) : Matrix (Fin p) (Fin p) ℂ :=
   of fun b x => if modStep p b x < 0 then -1 else 1
 
-/-- **The wrap is a comparison**, `review/flat_spectrum.md`, item CW6: the sign of the step
+/-- **The wrap is a comparison**, `review/diffgpt/steps.md`, item CW6: the sign of the step
 is the comparison kernel with its columns reversed, as `b + x < p` reads `b ≤ p − 1 − x`. -/
 theorem wrapKernel_eq_submatrix (p : ℕ) :
     wrapKernel p = (compareKernel p).submatrix (Equiv.refl _) Fin.revPerm := by

@@ -5,7 +5,7 @@ public import Transformer.ScheduleFree.AdamW.Invariants
 /-!
 # Revised AdamW depends on rate and decay through their product
 
-Source: `review/flat_spectrum.md`, *The rate of a recipe* (added), items RR3 and RR4. The
+Source: `review/diffgpt/steps.md`, *The rate of a recipe* (added), items RR3 and RR4. The
 update is that of facebookresearch/schedule_free, commit
 `59ed9b662d5ec5799aded7390b2482758423653c`, as `Defs.lean` has it.
 
@@ -40,7 +40,7 @@ betas `0.9` and `0.98`, epsilon `1e-8`, the default averaging powers. -/
 def historical : Parameters := ⟨⟨3 / 100, 1, 10, 9 / 10, 49 / 50, 1 / 100000000⟩, 0, 2⟩
 
 /-- **The historical recipe at the rate `0.001` is the decay `30`**,
-`review/flat_spectrum.md`, item RR4. -/
+`review/diffgpt/steps.md`, item RR4. -/
 theorem scaled_historical :
     scaled (1 / 30) historical = ⟨⟨1 / 1000, 30, 10, 9 / 10, 49 / 50, 3 / 10000000⟩, 0, 2⟩ := by
   simp only [scaled, historical]
@@ -79,7 +79,7 @@ example (i : Fin 1) : query (scaled 2 historical) (initial fun _ : Fin 1 => 2 * 
     2 * query historical (initial fun _ : Fin 1 => 3) i :=
   query_scaled (isScaled_initial two_pos historical fun _ : Fin 1 => 3) i
 
-/-- **One step at the scale `c`**, `review/flat_spectrum.md`, item RR3: with the gradient
+/-- **One step at the scale `c`**, `review/diffgpt/steps.md`, item RR3: with the gradient
 divided by `c`, the step of the scaled recipe from the scaled state is the scaled step. -/
 theorem step_isScaled {c : ℝ} (hc : 0 < c) {p : Parameters} (hlr : 0 ≤ p.adam.learningRate)
     (t : ℕ) {s s' : State ι} (h : IsScaled c p s s') (g : ι → ℝ) :
@@ -136,7 +136,7 @@ example : IsScaled 2 historical
   step_isScaled two_pos (by norm_num [historical]) 0
     (isScaled_initial two_pos historical fun _ : Fin 1 => 3) fun _ => 1
 
-/-- **The runs are the same at the scale `c`**, `review/flat_spectrum.md`, item RR3: for an
+/-- **The runs are the same at the scale `c`**, `review/diffgpt/steps.md`, item RR3: for an
 oracle homogeneous of degree `-1` at the scale `c`, the run of the scaled recipe from the
 scaled point is the scaled run. -/
 theorem run_isScaled {c : ℝ} (hc : 0 < c) {p : Parameters} (hlr : 0 ≤ p.adam.learningRate)

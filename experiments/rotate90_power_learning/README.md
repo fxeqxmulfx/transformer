@@ -67,7 +67,7 @@ keeps the proved completion theorems and corrects their application to training.
 The feature-code separation, positive-margin and low-rank-score arguments are
 now formalized in `Transformer.Grokking.FlatSpectrum.FeatureCodes`. The frequency-gcd
 formula and the actual-readout norm bound remain mathematical arguments in the note.
-The further [actual-network construction](../../review/flat_spectrum.md#actual-network-expressivity-for-every-exponent)
+The further [actual-network construction](../../review/actual_network/sequence_models.md#actual-network-expressivity-for-every-exponent)
 is formalized in `Transformer.Rotate90.Power`: for every prime and natural K,
 width 16 with hidden size 43 has weights that classify the entire valid table,
 including zero numerators and K=0. This holds at every positive finite depth,

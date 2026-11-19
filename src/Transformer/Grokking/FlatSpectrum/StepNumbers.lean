@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ScoreShift
 /-!
 # The wrap from the numbers of the two steps, at any frequency
 
-Source: `review/flat_spectrum.md`, *The numbers of the tokens* (added), items NT1 and NT2.
+Source: `review/diffgpt/steps.md`, *The numbers of the tokens* (added), items NT1 and NT2.
 In CW7 the phase of the sum has the order `2p`: its frequency `π / p` is that of a character,
 and the term `2p [d₂ < 0]` of the sum disappears. At another frequency `ω` it does not, and the
 phase is still a product of a function of each step (`exp_sum_eq_mul_halfLine`):
@@ -25,7 +25,7 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Complex Real
 
-/-- **NT1**, `review/flat_spectrum.md`: the phase of the sum at any frequency is the phase of
+/-- **NT1**, `review/diffgpt/steps.md`: the phase of the sum at any frequency is the phase of
 `2 d₁`, the phase of `3 d₂`, and one of two constants by the sign of `d₂`. -/
 theorem exp_sum_eq_mul_halfLine {p a b : ℕ} (ha : a < p) (hb : b < p) (ω : ℝ) :
     cexp (ω * I * ((b + (a + b) % p : ℕ) : ℂ)) =
@@ -48,7 +48,7 @@ theorem exp_sum_eq_mul_halfLine {p a b : ℕ} (ha : a < p) (hb : b < p) (ω : �
 example := exp_sum_eq_mul_halfLine (p := 97) (a := 50) (b := 60) (by norm_num) (by norm_num)
   (1 / 100)
 
-/-- **NT2**, `review/flat_spectrum.md`: for `n < 2p` and a frequency `0 < ω` with `ω p ≤ π`,
+/-- **NT2**, `review/diffgpt/steps.md`: for `n < 2p` and a frequency `0 < ω` with `ω p ≤ π`,
 `sin (ω (n + ½ − p))` is positive exactly when `p ≤ n`. -/
 theorem sin_pos_iff_le {p n : ℕ} (hn : n < 2 * p) {ω : ℝ} (hω : 0 < ω) (hp : ω * p ≤ π) :
     0 < Real.sin (ω * (n + 1 / 2 - p)) ↔ p ≤ n := by
@@ -70,7 +70,7 @@ theorem sin_pos_iff_le {p n : ℕ} (hn : n < 2 * p) {ω : ℝ} (hω : 0 < ω) (h
 example : 0 < Real.sin (1 / 100 * ((73 : ℕ) + 1 / 2 - (97 : ℕ))) ↔ 97 ≤ 73 :=
   sin_pos_iff_le (by norm_num) (by norm_num) (by nlinarith [two_le_pi])
 
-/-- **NT2**, `review/flat_spectrum.md`: the next step wraps exactly when the sum, at a
+/-- **NT2**, `review/diffgpt/steps.md`: the next step wraps exactly when the sum, at a
 frequency `0 < ω` with `ω p ≤ π`, is in the upper half of its turn around `p − ½`. -/
 theorem modStep_neg_iff_sin_pos {p a b : ℕ} (hb : b < p) {ω : ℝ} (hω : 0 < ω)
     (hp : ω * p ≤ π) :

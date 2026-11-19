@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepWrap
 /-!
 # The wrap of a step is a half-plane of a phase of rank one
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW7.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW7.
 Along the values `a`, `b`, `x = (a + b) % p` let `d₁ = b − a` and `d₂ = modStep p a b` be the
 two steps that a difference encoding has written. The next step wraps when `p ≤ b + x`, and
 the sum, not reduced, is an integer form in the two steps (`add_eq_steps`):
@@ -29,7 +29,7 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Complex Real
 
-/-- **The sum in the coordinates of the steps**, `review/flat_spectrum.md`, item CW7: along
+/-- **The sum in the coordinates of the steps**, `review/diffgpt/steps.md`, item CW7: along
 `a`, `b`, `x = (a + b) % p`, with `d₁ = b − a` and `d₂ = modStep p a b`,
 `b + x = 2 d₁ + 3 d₂ + 2p [d₂ < 0]`. -/
 theorem add_eq_steps {p a b : ℕ} (ha : a < p) (hb : b < p) :
@@ -53,7 +53,7 @@ theorem modStep_neg_iff_steps {p a b : ℕ} (ha : a < p) (hb : b < p) :
 
 example := modStep_neg_iff_steps (p := 97) (a := 50) (b := 60) (by norm_num) (by norm_num)
 
-/-- **The phase of the sum has rank one**, `review/flat_spectrum.md`, item CW7:
+/-- **The phase of the sum has rank one**, `review/diffgpt/steps.md`, item CW7:
 `exp (iπ (b + x) / p) = exp (2πi d₁ / p) · exp (3πi d₂ / p)`. -/
 theorem exp_sum_eq_mul {p a b : ℕ} (ha : a < p) (hb : b < p) :
     cexp (π * I * ((b + (a + b) % p : ℕ) : ℂ) / p) =
@@ -102,7 +102,7 @@ theorem sin_neg_iff_le {p n : ℕ} (hn : n < 2 * p) :
 example : Real.sin (π * ((73 : ℕ) + 1 / 2) / (97 : ℕ)) < 0 ↔ 97 ≤ 73 :=
   sin_neg_iff_le (by norm_num)
 
-/-- **The wrap is a half-plane of a phase of rank one**, `review/flat_spectrum.md`, item CW7:
+/-- **The wrap is a half-plane of a phase of rank one**, `review/diffgpt/steps.md`, item CW7:
 along `a`, `b`, `(a + b) % p` the next step is negative exactly when the product of a
 unimodular function of `d₁ = b − a` and one of `d₂ = modStep p a b`, turned by `π / 2p`, lies
 below the real axis. -/

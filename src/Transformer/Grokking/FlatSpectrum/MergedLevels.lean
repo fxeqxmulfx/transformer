@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ProjectionKink
 /-!
 # Merged levels: two equal rows and two equal columns
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW4.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW4.
 Let rows `i ≠ i'` of `K` be equal and columns `j ≠ j'` be equal. Then `K` has the least nuclear
 norm among the matrices equal to it off the cell `(i, j)` (`isMinOn_of_row_eq_of_col_eq`). The
 projections of `ProjectionKink` are `mergeProj i i' = 1 − ½ (e_i − e_i') (e_i − e_i')ᴴ`, onto
@@ -137,7 +137,7 @@ lemma nuclearNorm_mul_single_mul_of_proj {A : Matrix m m ℂ} {B : Matrix n n �
 example := nuclearNorm_mul_single_mul_of_proj (A := (1 : Matrix (Fin 2) (Fin 2) ℂ))
   (B := (1 : Matrix (Fin 2) (Fin 2) ℂ)) (by simp) (by simp) (by simp) (by simp) 0 0
 
-/-- **Merged levels**, `review/flat_spectrum.md`, item CW4: if rows `i ≠ i'` of `K` are equal
+/-- **Merged levels**, `review/diffgpt/steps.md`, item CW4: if rows `i ≠ i'` of `K` are equal
 and columns `j ≠ j'` are equal, `K` has the least nuclear norm among the matrices equal to it
 off the cell `(i, j)`. -/
 theorem isMinOn_of_row_eq_of_col_eq {K : Matrix m n ℂ} {i i' : m} {j j' : n} (hi : i ≠ i')

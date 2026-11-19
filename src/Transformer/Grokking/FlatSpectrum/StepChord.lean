@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepHalfPlane
 /-!
 # The chord of the sum
 
-Source: `review/flat_spectrum.md`, *The step is the phase of a sum of two phases* (added),
+Source: `review/diffgpt/steps.md`, *The step is the phase of a sum of two phases* (added),
 items CH1 and CH2.
 
 * The sum of two phases is the product of their half phases, scaled by the cosine of half the
@@ -29,7 +29,7 @@ namespace Transformer.Grokking.FlatSpectrum
 
 open Complex Real
 
-/-- **The sum of two phases**, `review/flat_spectrum.md`, item CH1: it is the product of the
+/-- **The sum of two phases**, `review/diffgpt/steps.md`, item CH1: it is the product of the
 two half phases, scaled by twice the cosine of half the difference of the angles. -/
 theorem exp_mul_I_add_exp_mul_I (α β : ℝ) :
     cexp (α * I) + cexp (β * I) =
@@ -44,18 +44,18 @@ theorem exp_mul_I_add_exp_mul_I (α β : ℝ) :
     Complex.ofReal_mul, Complex.ofReal_cos, Complex.ofReal_ofNat]
 
 /-- Half the angle of the sum, moved by half a step: `φ = π (n + ½) / 2p` for the sum
-`n = b + (a + b) % p`; `review/flat_spectrum.md`, item CH2. -/
+`n = b + (a + b) % p`; `review/diffgpt/steps.md`, item CH2. -/
 noncomputable def halfAngle (p a b : ℕ) : ℝ :=
   π * (((b + (a + b) % p : ℕ) : ℝ) + 1 / 2) / (2 * p)
 
 /-- The chord from `−exp (−iπ / 2p)` to the phase of the sum
 `exp (2πi d₁ / p) · exp (3πi d₂ / p)`: a kernel of rank one in the two steps read, plus a
-constant; `review/flat_spectrum.md`, item CH2. -/
+constant; `review/diffgpt/steps.md`, item CH2. -/
 noncomputable def stepChord (p a b : ℕ) : ℂ :=
   cexp (2 * π * I * ((b : ℂ) - a) / p) * cexp (3 * π * I * (modStep p a b : ℂ) / p) +
     cexp (-(π * I) / (2 * p))
 
-/-- **The chord in polar form**, `review/flat_spectrum.md`, item CH2:
+/-- **The chord in polar form**, `review/diffgpt/steps.md`, item CH2:
 `stepChord = 2 cos φ · exp (i (φ − π / 2p))`. -/
 theorem stepChord_eq {p a b : ℕ} (ha : a < p) (hb : b < p) :
     stepChord p a b = ((2 * Real.cos (halfAngle p a b) : ℝ) : ℂ) *

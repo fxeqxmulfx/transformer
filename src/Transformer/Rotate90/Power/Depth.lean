@@ -5,7 +5,8 @@ public import Transformer.Rotate90.Power.Expressivity
 /-!
 # Every positive finite depth
 
-Source: `review/flat_spectrum.md`, *Actual network expressivity for every exponent*,
+Source: `review/actual_network/sequence_models.md`,
+*Actual network expressivity for every exponent*,
 depth extension; the loop in `python/src/lab/infrastructure/nn/peri_rotary.py`,
 `PeriRotate90.forward`. A stack has one shared embedding and independent gate, value
 and output matrices for each residual block. Each block retains its two RMSNorms;

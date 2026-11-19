@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.StepPhase
 /-!
 # One angle places the wrap of every cell
 
-Source: `review/flat_spectrum.md`, *The step is the phase of a sum of two phases* (added),
+Source: `review/diffgpt/steps.md`, *The step is the phase of a sum of two phases* (added),
 item CH7. The chord of `StepChord` starts at the point `−exp (−iπ / 2p)`, between the phases
 of the sums `p − 1` and `p`. Move that point by an angle `2γ`:
 
@@ -29,7 +29,7 @@ namespace Transformer.Grokking.FlatSpectrum
 open Complex Real
 
 /-- The chord to the phase of the sum from the base point of `stepChord` moved by the angle
-`2γ`; `review/flat_spectrum.md`, item CH7. -/
+`2γ`; `review/diffgpt/steps.md`, item CH7. -/
 noncomputable def stepChordAt (p a b : ℕ) (γ : ℝ) : ℂ :=
   cexp (2 * π * I * ((b : ℂ) - a) / p) * cexp (3 * π * I * (modStep p a b : ℂ) / p) +
     cexp (-(π * I) / (2 * p)) * cexp (((2 * γ : ℝ) : ℂ) * I)
@@ -48,7 +48,7 @@ lemma halfAngle_eq_add {p : ℕ} (hp : 0 < p) (a b : ℕ) :
 
 example := halfAngle_eq_add (p := 97) (by norm_num) 50 90
 
-/-- **The moved chord in polar form**, `review/flat_spectrum.md`, item CH7. -/
+/-- **The moved chord in polar form**, `review/diffgpt/steps.md`, item CH7. -/
 theorem stepChordAt_eq {p a b : ℕ} (ha : a < p) (hb : b < p) (γ : ℝ) :
     stepChordAt p a b γ = ((2 * Real.cos (halfAngle p a b - γ) : ℝ) : ℂ) *
       cexp (((halfAngle p a b - π / (2 * p) + γ : ℝ) : ℂ) * I) := by
@@ -132,7 +132,7 @@ theorem norm_stepChordAt {p a b : ℕ} (ha : a < p) (hb : b < p) (γ : ℝ) :
 
 example := norm_stepChordAt (p := 97) (a := 50) (b := 90) (by norm_num) (by norm_num) 0
 
-/-- **One angle for all cells**, `review/flat_spectrum.md`, item CH7: for a base point moved
+/-- **One angle for all cells**, `review/diffgpt/steps.md`, item CH7: for a base point moved
 by `2γ` with `|γ| < π / 4p`, the normalized chord of every cell is the normalized chord of
 `StepChord` times the same constant `exp (iγ)`. No cell changes its branch. -/
 theorem stepChordAt_div_norm {p a b : ℕ} (ha : a < p) (hb : b < p) {γ : ℝ}

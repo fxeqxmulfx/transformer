@@ -54921,7 +54921,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.Rotate90.Memory](src/Transformer/Rotate90/Memory.lean)** — 16 lines, aggregator
 
-**[Transformer.Rotate90.Power](src/Transformer/Rotate90/Power.lean)** — 20 lines, aggregator
+**[Transformer.Rotate90.Power](src/Transformer/Rotate90/Power.lean)** — 21 lines, aggregator
 
 **[Transformer.Rotate90.Products](src/Transformer/Rotate90/Products.lean)** — 156 lines
 
@@ -55373,92 +55373,92 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.Rotate90.Power`
 
-**[Transformer.Rotate90.Power.Defs](src/Transformer/Rotate90/Power/Defs.lean)** — 150 lines
+**[Transformer.Rotate90.Power.Defs](src/Transformer/Rotate90/Power/Defs.lean)** — 151 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`PairIndex`](src/Transformer/Rotate90/Power/Defs.lean#L29) | abbrev |  |
-| [`pack`](src/Transformer/Rotate90/Power/Defs.lean#L32) | def |  |
-| [`width`](src/Transformer/Rotate90/Power/Defs.lean#L38) | def |  |
-| [`inputScale`](src/Transformer/Rotate90/Power/Defs.lean#L41) | def |  |
-| [`branchScale`](src/Transformer/Rotate90/Power/Defs.lean#L44) | def |  |
-| [`width_pos`](src/Transformer/Rotate90/Power/Defs.lean#L49) | theorem | proved |
-| [`width_eq`](src/Transformer/Rotate90/Power/Defs.lean#L55) | theorem | proved |
-| [`width_add_pairs`](src/Transformer/Rotate90/Power/Defs.lean#L61) | theorem | proved |
-| [`inputScale_pos`](src/Transformer/Rotate90/Power/Defs.lean#L67) | theorem | proved |
-| [`branchScale_pos`](src/Transformer/Rotate90/Power/Defs.lean#L73) | theorem | proved |
-| [`sum_sq_pack`](src/Transformer/Rotate90/Power/Defs.lean#L80) | theorem | proved |
-| [`rmsNorm_of_sum_sq`](src/Transformer/Rotate90/Power/Defs.lean#L86) | theorem | proved |
-| [`rmsNorm_twice_of_sum_sq`](src/Transformer/Rotate90/Power/Defs.lean#L93) | theorem | proved |
-| [`embedding`](src/Transformer/Rotate90/Power/Defs.lean#L106) | def |  |
-| [`raw`](src/Transformer/Rotate90/Power/Defs.lean#L112) | def |  |
-| [`branchVector`](src/Transformer/Rotate90/Power/Defs.lean#L121) | def |  |
+| [`PairIndex`](src/Transformer/Rotate90/Power/Defs.lean#L30) | abbrev |  |
+| [`pack`](src/Transformer/Rotate90/Power/Defs.lean#L33) | def |  |
+| [`width`](src/Transformer/Rotate90/Power/Defs.lean#L39) | def |  |
+| [`inputScale`](src/Transformer/Rotate90/Power/Defs.lean#L42) | def |  |
+| [`branchScale`](src/Transformer/Rotate90/Power/Defs.lean#L45) | def |  |
+| [`width_pos`](src/Transformer/Rotate90/Power/Defs.lean#L50) | theorem | proved |
+| [`width_eq`](src/Transformer/Rotate90/Power/Defs.lean#L56) | theorem | proved |
+| [`width_add_pairs`](src/Transformer/Rotate90/Power/Defs.lean#L62) | theorem | proved |
+| [`inputScale_pos`](src/Transformer/Rotate90/Power/Defs.lean#L68) | theorem | proved |
+| [`branchScale_pos`](src/Transformer/Rotate90/Power/Defs.lean#L74) | theorem | proved |
+| [`sum_sq_pack`](src/Transformer/Rotate90/Power/Defs.lean#L81) | theorem | proved |
+| [`rmsNorm_of_sum_sq`](src/Transformer/Rotate90/Power/Defs.lean#L87) | theorem | proved |
+| [`rmsNorm_twice_of_sum_sq`](src/Transformer/Rotate90/Power/Defs.lean#L94) | theorem | proved |
+| [`embedding`](src/Transformer/Rotate90/Power/Defs.lean#L107) | def |  |
+| [`raw`](src/Transformer/Rotate90/Power/Defs.lean#L113) | def |  |
+| [`branchVector`](src/Transformer/Rotate90/Power/Defs.lean#L122) | def |  |
 
-**[Transformer.Rotate90.Power.Depth](src/Transformer/Rotate90/Power/Depth.lean)** — 153 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`BlockWeights`](src/Transformer/Rotate90/Power/Depth.lean#L28) | abbrev |  |
-| [`block`](src/Transformer/Rotate90/Power/Depth.lean#L34) | def |  |
-| [`stackState`](src/Transformer/Rotate90/Power/Depth.lean#L41) | def |  |
-| [`stackLogit`](src/Transformer/Rotate90/Power/Depth.lean#L46) | def |  |
-| [`blockOfWeights`](src/Transformer/Rotate90/Power/Depth.lean#L51) | def |  |
-| [`zeroBlock`](src/Transformer/Rotate90/Power/Depth.lean#L55) | def |  |
-| [`stackState_singleton`](src/Transformer/Rotate90/Power/Depth.lean#L58) | theorem | proved |
-| [`stackLogit_singleton`](src/Transformer/Rotate90/Power/Depth.lean#L65) | theorem | proved |
-| [`block_zero`](src/Transformer/Rotate90/Power/Depth.lean#L72) | theorem | proved |
-| [`fold_zero_blocks`](src/Transformer/Rotate90/Power/Depth.lean#L78) | theorem | proved |
-| [`stackLogit_padded`](src/Transformer/Rotate90/Power/Depth.lean#L87) | theorem | proved |
-| [`exists_weights_any_depth`](src/Transformer/Rotate90/Power/Depth.lean#L105) | theorem | proved |
-| [`exists_weights_width16_any_depth`](src/Transformer/Rotate90/Power/Depth.lean#L118) | theorem | proved |
-
-**[Transformer.Rotate90.Power.Expressivity](src/Transformer/Rotate90/Power/Expressivity.lean)** — 153 lines
+**[Transformer.Rotate90.Power.Depth](src/Transformer/Rotate90/Power/Depth.lean)** — 154 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`state_weights`](src/Transformer/Rotate90/Power/Expressivity.lean#L31) | theorem | proved |
-| [`logit_weights`](src/Transformer/Rotate90/Power/Expressivity.lean#L46) | theorem | proved |
-| [`weights_correct`](src/Transformer/Rotate90/Power/Expressivity.lean#L65) | theorem | proved |
-| [`exists_weights`](src/Transformer/Rotate90/Power/Expressivity.lean#L77) | theorem | proved |
-| [`exists_weights_width16`](src/Transformer/Rotate90/Power/Expressivity.lean#L85) | theorem | proved |
-| [`exists_weights_width14`](src/Transformer/Rotate90/Power/Expressivity.lean#L93) | theorem | proved |
-| [`exists_weights_width128`](src/Transformer/Rotate90/Power/Expressivity.lean#L100) | theorem | proved |
-| [`width16_parameter_count`](src/Transformer/Rotate90/Power/Expressivity.lean#L107) | theorem | proved |
+| [`BlockWeights`](src/Transformer/Rotate90/Power/Depth.lean#L29) | abbrev |  |
+| [`block`](src/Transformer/Rotate90/Power/Depth.lean#L35) | def |  |
+| [`stackState`](src/Transformer/Rotate90/Power/Depth.lean#L42) | def |  |
+| [`stackLogit`](src/Transformer/Rotate90/Power/Depth.lean#L47) | def |  |
+| [`blockOfWeights`](src/Transformer/Rotate90/Power/Depth.lean#L52) | def |  |
+| [`zeroBlock`](src/Transformer/Rotate90/Power/Depth.lean#L56) | def |  |
+| [`stackState_singleton`](src/Transformer/Rotate90/Power/Depth.lean#L59) | theorem | proved |
+| [`stackLogit_singleton`](src/Transformer/Rotate90/Power/Depth.lean#L66) | theorem | proved |
+| [`block_zero`](src/Transformer/Rotate90/Power/Depth.lean#L73) | theorem | proved |
+| [`fold_zero_blocks`](src/Transformer/Rotate90/Power/Depth.lean#L79) | theorem | proved |
+| [`stackLogit_padded`](src/Transformer/Rotate90/Power/Depth.lean#L88) | theorem | proved |
+| [`exists_weights_any_depth`](src/Transformer/Rotate90/Power/Depth.lean#L106) | theorem | proved |
+| [`exists_weights_width16_any_depth`](src/Transformer/Rotate90/Power/Depth.lean#L119) | theorem | proved |
 
-**[Transformer.Rotate90.Power.Geometry](src/Transformer/Rotate90/Power/Geometry.lean)** — 150 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`character_div_pow`](src/Transformer/Rotate90/Power/Geometry.lean#L29) | theorem | proved |
-| [`zeroFlag_div_pow`](src/Transformer/Rotate90/Power/Geometry.lean#L35) | theorem | proved |
-| [`embedding_sq`](src/Transformer/Rotate90/Power/Geometry.lean#L41) | theorem | proved |
-| [`tiedInput_embedding`](src/Transformer/Rotate90/Power/Geometry.lean#L52) | theorem | proved |
-| [`raw_sq`](src/Transformer/Rotate90/Power/Geometry.lean#L60) | theorem | proved |
-| [`branchVector_sq`](src/Transformer/Rotate90/Power/Geometry.lean#L73) | theorem | proved |
-| [`readout_raw_add_branchVector`](src/Transformer/Rotate90/Power/Geometry.lean#L85) | theorem | proved |
-| [`embedding_odd`](src/Transformer/Rotate90/Power/Geometry.lean#L98) | theorem | proved |
-| [`embedding_zero_exponent`](src/Transformer/Rotate90/Power/Geometry.lean#L107) | theorem | proved |
-| [`residual_even`](src/Transformer/Rotate90/Power/Geometry.lean#L117) | theorem | proved |
-| [`residual_padding`](src/Transformer/Rotate90/Power/Geometry.lean#L127) | theorem | proved |
-
-**[Transformer.Rotate90.Power.Products](src/Transformer/Rotate90/Power/Products.lean)** — 151 lines
+**[Transformer.Rotate90.Power.Expressivity](src/Transformer/Rotate90/Power/Expressivity.lean)** — 154 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`gateCoord`](src/Transformer/Rotate90/Power/Products.lean#L36) | def |  |
-| [`valueCoord`](src/Transformer/Rotate90/Power/Products.lean#L40) | def |  |
-| [`coordinateProjection`](src/Transformer/Rotate90/Power/Products.lean#L44) | def |  |
-| [`pairShape`](src/Transformer/Rotate90/Power/Products.lean#L50) | def |  |
-| [`outputShape`](src/Transformer/Rotate90/Power/Products.lean#L55) | def |  |
-| [`dense_coordinateProjection`](src/Transformer/Rotate90/Power/Products.lean#L63) | theorem | proved |
-| [`weights`](src/Transformer/Rotate90/Power/Products.lean#L73) | def |  |
-| [`embedding_weights`](src/Transformer/Rotate90/Power/Products.lean#L81) | theorem | proved |
-| [`scaled_product`](src/Transformer/Rotate90/Power/Products.lean#L87) | theorem | proved |
-| [`branch_weights`](src/Transformer/Rotate90/Power/Products.lean#L94) | theorem | proved |
-| [`active_hidden_count`](src/Transformer/Rotate90/Power/Products.lean#L111) | theorem | proved |
-| [`gateMatrix_weights_eq`](src/Transformer/Rotate90/Power/Products.lean#L117) | theorem | proved |
-| [`valueMatrix_weights_eq`](src/Transformer/Rotate90/Power/Products.lean#L125) | theorem | proved |
-| [`outputMatrix_weights_eq`](src/Transformer/Rotate90/Power/Products.lean#L133) | theorem | proved |
+| [`state_weights`](src/Transformer/Rotate90/Power/Expressivity.lean#L32) | theorem | proved |
+| [`logit_weights`](src/Transformer/Rotate90/Power/Expressivity.lean#L47) | theorem | proved |
+| [`weights_correct`](src/Transformer/Rotate90/Power/Expressivity.lean#L66) | theorem | proved |
+| [`exists_weights`](src/Transformer/Rotate90/Power/Expressivity.lean#L78) | theorem | proved |
+| [`exists_weights_width16`](src/Transformer/Rotate90/Power/Expressivity.lean#L86) | theorem | proved |
+| [`exists_weights_width14`](src/Transformer/Rotate90/Power/Expressivity.lean#L94) | theorem | proved |
+| [`exists_weights_width128`](src/Transformer/Rotate90/Power/Expressivity.lean#L101) | theorem | proved |
+| [`width16_parameter_count`](src/Transformer/Rotate90/Power/Expressivity.lean#L108) | theorem | proved |
+
+**[Transformer.Rotate90.Power.Geometry](src/Transformer/Rotate90/Power/Geometry.lean)** — 151 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`character_div_pow`](src/Transformer/Rotate90/Power/Geometry.lean#L30) | theorem | proved |
+| [`zeroFlag_div_pow`](src/Transformer/Rotate90/Power/Geometry.lean#L36) | theorem | proved |
+| [`embedding_sq`](src/Transformer/Rotate90/Power/Geometry.lean#L42) | theorem | proved |
+| [`tiedInput_embedding`](src/Transformer/Rotate90/Power/Geometry.lean#L53) | theorem | proved |
+| [`raw_sq`](src/Transformer/Rotate90/Power/Geometry.lean#L61) | theorem | proved |
+| [`branchVector_sq`](src/Transformer/Rotate90/Power/Geometry.lean#L74) | theorem | proved |
+| [`readout_raw_add_branchVector`](src/Transformer/Rotate90/Power/Geometry.lean#L86) | theorem | proved |
+| [`embedding_odd`](src/Transformer/Rotate90/Power/Geometry.lean#L99) | theorem | proved |
+| [`embedding_zero_exponent`](src/Transformer/Rotate90/Power/Geometry.lean#L108) | theorem | proved |
+| [`residual_even`](src/Transformer/Rotate90/Power/Geometry.lean#L118) | theorem | proved |
+| [`residual_padding`](src/Transformer/Rotate90/Power/Geometry.lean#L128) | theorem | proved |
+
+**[Transformer.Rotate90.Power.Products](src/Transformer/Rotate90/Power/Products.lean)** — 152 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`gateCoord`](src/Transformer/Rotate90/Power/Products.lean#L37) | def |  |
+| [`valueCoord`](src/Transformer/Rotate90/Power/Products.lean#L41) | def |  |
+| [`coordinateProjection`](src/Transformer/Rotate90/Power/Products.lean#L45) | def |  |
+| [`pairShape`](src/Transformer/Rotate90/Power/Products.lean#L51) | def |  |
+| [`outputShape`](src/Transformer/Rotate90/Power/Products.lean#L56) | def |  |
+| [`dense_coordinateProjection`](src/Transformer/Rotate90/Power/Products.lean#L64) | theorem | proved |
+| [`weights`](src/Transformer/Rotate90/Power/Products.lean#L74) | def |  |
+| [`embedding_weights`](src/Transformer/Rotate90/Power/Products.lean#L82) | theorem | proved |
+| [`scaled_product`](src/Transformer/Rotate90/Power/Products.lean#L88) | theorem | proved |
+| [`branch_weights`](src/Transformer/Rotate90/Power/Products.lean#L95) | theorem | proved |
+| [`active_hidden_count`](src/Transformer/Rotate90/Power/Products.lean#L112) | theorem | proved |
+| [`gateMatrix_weights_eq`](src/Transformer/Rotate90/Power/Products.lean#L118) | theorem | proved |
+| [`valueMatrix_weights_eq`](src/Transformer/Rotate90/Power/Products.lean#L126) | theorem | proved |
+| [`outputMatrix_weights_eq`](src/Transformer/Rotate90/Power/Products.lean#L134) | theorem | proved |
 
 ### `Transformer.Rotate90.Training`
 

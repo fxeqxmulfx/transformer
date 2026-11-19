@@ -5,7 +5,8 @@ public import Transformer.Rotate90.Power.Products
 /-!
 # The actual Rotate90 model solves every powered-division task
 
-Source: `review/flat_spectrum.md`, *Actual network expressivity for every exponent*,
+Source: `review/actual_network/sequence_models.md`,
+*Actual network expressivity for every exponent*,
 expressivity theorem. The finite model is `Rotate90.logit`, with a tied embedding,
 fixed quarter-turn, genuine SwiGLU, residual and all four positive-epsilon RMSNorms.
 For each prime p and each natural exponent k, explicit weights give the unique correct

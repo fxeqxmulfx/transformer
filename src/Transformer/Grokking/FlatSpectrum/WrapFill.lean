@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.StepWrap
 /-!
 # The wrap of a step is not recovered at its boundary
 
-Source: `review/flat_spectrum.md`, *The wrap of a step is a comparison* (added), item CW6.
+Source: `review/diffgpt/steps.md`, *The wrap of a step is a comparison* (added), item CW6.
 The sign of the step, `wrapKernel p`, is the comparison kernel with its columns reversed, and
 reindexing rows and columns carries a minimum of the nuclear norm to a minimum
 (`isMinOn_submatrix`). The boundary of the wrap is the pairs with `b + x = p − 1`, the last
@@ -51,7 +51,7 @@ example : IsMinOn nuclearNorm
 
 variable {p : ℕ}
 
-/-- **The wrap is not recovered at its boundary**, `review/flat_spectrum.md`, item CW6: the
+/-- **The wrap is not recovered at its boundary**, `review/diffgpt/steps.md`, item CW6: the
 sign of the step is not a minimum of the nuclear norm among the matrices equal to it on `Ω`
 when `Ω` misses a pair with `b + x = p − 1` or `b + x = p`. -/
 theorem not_isMinOn_wrapKernel {Ω : Set (Fin p × Fin p)} {b x : Fin p}
@@ -72,7 +72,7 @@ example : ¬IsMinOn nuclearNorm
     (wrapKernel 3) :=
   not_isMinOn_wrapKernel (b := 1) (x := 1) (Or.inl rfl) (by simp)
 
-/-- **No minimum keeps the true sign**, `review/flat_spectrum.md`, item CW6: with one pair
+/-- **No minimum keeps the true sign**, `review/diffgpt/steps.md`, item CW6: with one pair
 of the wrap boundary unseen, every minimum of the nuclear norm among the matrices equal to the
 sign of the step at the other pairs differs from it at that pair. -/
 theorem ne_of_isMinOn_wrapKernel {b x : Fin p} (h : (b : ℕ) + x + 1 = p ∨ (b : ℕ) + x = p)
@@ -87,7 +87,7 @@ theorem ne_of_isMinOn_wrapKernel {b x : Fin p} (h : (b : ℕ) + x + 1 = p ∨ (b
   rw [hXW] at hmin
   exact not_isMinOn_wrapKernel h (by simp) hmin
 
-/-- **The flipped pair is a minimum**, `review/flat_spectrum.md`, item CW6: with the pair
+/-- **The flipped pair is a minimum**, `review/diffgpt/steps.md`, item CW6: with the pair
 `(b, x)`, `b + x = p − 1`, `0 < b < p − 1`, unseen, the sign of the step with `−1` at that
 pair, a wrap that does not happen, has the least nuclear norm among the matrices equal to the
 sign of the step at the other pairs. -/
@@ -111,7 +111,7 @@ theorem isMinOn_wrapKernel_flip {b₀ b b₁ x : Fin p} (h₀ : (b₀ : ℕ) + 1
   rw [Set.mem_singleton_iff] at hkl' ⊢
   simp [hkl', hrev]
 
-/-- **The flipped pair is a minimum**, `review/flat_spectrum.md`, item CW6: with the pair
+/-- **The flipped pair is a minimum**, `review/diffgpt/steps.md`, item CW6: with the pair
 `(b, x)`, `b + x = p`, unseen, the sign of the step with `1` at that pair, a wrap left out,
 has the least nuclear norm among the matrices equal to the sign of the step at the other
 pairs. -/

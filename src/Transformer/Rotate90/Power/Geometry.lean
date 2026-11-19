@@ -5,7 +5,8 @@ public import Transformer.Rotate90.Power.Defs
 /-!
 # Exact geometry of the powered-division weights
 
-Source: `review/flat_spectrum.md`, *Actual network expressivity for every exponent*,
+Source: `review/actual_network/sequence_models.md`,
+*Actual network expressivity for every exponent*,
 construction and norm balance. C(a) is the faithful three-coordinate answer code,
 including its zero flag. The tied embedding holds (1,C(a),C(a^k)) in its even slots.
 Its squared length is three even for a=0 or k=0; both operands' raw sum has length
