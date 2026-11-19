@@ -3901,6 +3901,17 @@ misses by more than any given `ε < 3/2`. So `s₁ > 1` is not needed at layer 1
 copy keeps half its lead, and `s₂ > 2` recalls. But `s₁ ≥ 1` is needed: below it the copy loses
 its lead, and no `s₂` recalls. At `s₁ = 1`, `s₂ < 2` fades, and above it `s₂ < 1` does.
 
+With a causal mask the token at the position `p` reads the `p + 1` positions up to it, at the
+scale `s log (p + 1)`. Over `b` tokens without a key (a beginning-of-sequence token when `b = 1`)
+and then `k₀ v₀ k₁ v₁ …`, layer 1 copies the key `c` to its value token with the weight
+`L^{s₁} / (L^{s₁} + L − 1)`, where `L = b + 2c + 2` is the length of its prefix: the copy of the
+cyclic head over `L` tokens. So the copy of a key is set by its position, not by the length of the
+context, and over the keys it tends to `0`, `1/2` or `1` as `s₁` is below, at or above `1`.
+Above `s₁ = 1` the late keys copy almost perfectly and the first only at
+`(b + 2)^{s₁} / ((b + 2)^{s₁} + b + 1)`. The key token of `c` copies itself with
+`1 / (K^{s₁} + K − 1)` over its `K = b + 2c + 1` positions, the tokens after the value token copy
+it with `1 / ((p + 1)^{s₁} + p)`, and the tokens before the key token do not see it.
+
 ### SA6. Scope
 
 Proved: SA1 to SA5 as stated.
@@ -3908,9 +3919,9 @@ Proved: SA1 to SA5 as stated.
 Not covered:
 
 - SA2 places a binding in one token; SA5 gives two layers for a binding split over two tokens,
-  with the context read cyclically and no causal mask. Causal attention, whose scale at a token
-  is `s log` of the length of its prefix, is not treated, nor is the boundary `s₂ a = 1`
-  between recall and fading of the two layers.
+  with the context read cyclically and no causal mask. With a causal mask only the copy of layer 1
+  is computed, not the recall of layer 2 from it. The boundary `s₂ a = 1` between recall and
+  fading of the two layers is not treated.
 - SA3 takes the value of a token to be the readout of its bound value, and its score to be a
   function of the query and of that token. Scores that an earlier layer computes from several
   tokens are not bounded.
@@ -3924,8 +3935,8 @@ Not covered:
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Softmax`, `SoftmaxRecall`,
 `SoftmaxScale`, `Fading`, `QueryFree`, `LogScale`, `Threshold`, `RawGap`, `Induction`,
-`InductionExact` and `InductionPhases`, namespace `Transformer.Grokking.FlatSpectrum.Recall`,
-proved without `sorry`.
+`InductionExact`, `InductionPhases` and `CausalCopy`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -3933,7 +3944,7 @@ proved without `sorry`.
 | SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign`, `exists_softmaxAttention_not_hasCutWidth` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
 | SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error`, `one_sub_softmaxAttention_indicator`, `two_mul_le_one_sub_softmaxAttention_indicator`, `sub_one_mul_two_sub_le_of_softmaxAttention_recall`, `sub_one_lt_exp_of_softmaxAttention_sign`, `exists_lt_softmaxAttention_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. The worst dictionary is `π k = decide (k = q)`. The statement for growing `m` takes `m + 1` keys, `Fin (m + 1)`, and scores `s m q k b` with one bound `B` for every `m`. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
-| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold`, `convex_inner_lt`, `affineIndependent_of_inner_gap`, `card_le_finrank_add_one_of_inner_gap`, `card_le_of_rawScore_gap`, `rotateHead_one`, `abs_logScaleAttention_comp_sub_le`, `prevToken`, `prevToken_eq_iff`, `keyChannel`, `prevTokenHead`, `inductionHead`, `abs_inductionHead_sub_le`, `exists_forall_inductionHead_recall`, `logScaleAttention_ite`, `card_keyValueTokens`, `prevTokenHead_eq`, `copyLead`, `inductionHead_eq_logScaleAttention`, `sub_inductionHead_eq`, `abs_sub_inductionHead_le`, `isGreatest_inductionHead_error`, `tendsto_two_mul_add_two`, `copyLead_eq`, `tendsto_copyLead_of_tendsto`, `tendsto_copyLead_of_lt`, `tendsto_copyLead_one`, `tendsto_copyLead_of_gt`, `exists_forall_inductionHead_recall_of_tendsto`, `exists_lt_inductionHead_error_of_tendsto`, `exists_forall_inductionHead_one_recall`, `exists_lt_inductionHead_error_of_lt_one` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. The gap statements take queries and keys in any real inner product space, finite-dimensional for the count. The diff-gpt statement takes the rotary phases of every query and every key as given, with `d > 0` and `eps > 0`; its example has the head width `1`, where the rotary map is the identity. The two-layer statement takes any finite tokens, a partner of every token, and the leads `g₁` and `g₂`; the induction head takes the tokens `Fin (m + 1) × Bool`, a key token and a value token for every key, read cyclically, with one-hot key channels. Its closed form holds at every real `s₁` and `s₂`, with `n = 2m + 2` written out. The phase statements take the limit `a` of the lead as the hypothesis `Tendsto (copyLead s₁) atTop (𝓝 a)` and need no sign of `s₁` or `s₂`; the fading statements take values `±1`. |
+| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold`, `convex_inner_lt`, `affineIndependent_of_inner_gap`, `card_le_finrank_add_one_of_inner_gap`, `card_le_of_rawScore_gap`, `rotateHead_one`, `abs_logScaleAttention_comp_sub_le`, `prevToken`, `prevToken_eq_iff`, `keyChannel`, `prevTokenHead`, `inductionHead`, `abs_inductionHead_sub_le`, `exists_forall_inductionHead_recall`, `logScaleAttention_ite`, `card_keyValueTokens`, `prevTokenHead_eq`, `copyLead`, `inductionHead_eq_logScaleAttention`, `sub_inductionHead_eq`, `abs_sub_inductionHead_le`, `isGreatest_inductionHead_error`, `tendsto_two_mul_add_two`, `copyLead_eq`, `tendsto_copyLead_of_tendsto`, `tendsto_copyLead_of_lt`, `tendsto_copyLead_one`, `tendsto_copyLead_of_gt`, `exists_forall_inductionHead_recall_of_tendsto`, `exists_lt_inductionHead_error_of_tendsto`, `exists_forall_inductionHead_one_recall`, `exists_lt_inductionHead_error_of_lt_one`, `causalCopy`, `causalCopy_eq`, `copyWeight`, `prevTokenHead_value`, `causalCopy_value`, `causalCopy_value_eq_prevTokenHead`, `causalCopy_key`, `causalCopy_of_lt`, `causalCopy_of_gt`, `causalCopy_nonneg`, `copyWeight_eq`, `tendsto_copyWeight_of_tendsto`, `tendsto_valuePrefix`, `tendsto_causalCopy_value_of_lt`, `tendsto_causalCopy_value_one`, `tendsto_causalCopy_value_of_gt` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. The gap statements take queries and keys in any real inner product space, finite-dimensional for the count. The diff-gpt statement takes the rotary phases of every query and every key as given, with `d > 0` and `eps > 0`; its example has the head width `1`, where the rotary map is the identity. The two-layer statement takes any finite tokens, a partner of every token, and the leads `g₁` and `g₂`; the induction head takes the tokens `Fin (m + 1) × Bool`, a key token and a value token for every key, read cyclically, with one-hot key channels. Its closed form holds at every real `s₁` and `s₂`, with `n = 2m + 2` written out. The phase statements take the limit `a` of the lead as the hypothesis `Tendsto (copyLead s₁) atTop (𝓝 a)` and need no sign of `s₁` or `s₂`; the fading statements take values `±1`. The causal copy takes positions and keys in `ℕ`; the copy weight `copyWeight s x` takes a real number `x` of tokens. |
 
 ## The block languages across a cut (added)
 
