@@ -11,10 +11,10 @@ recurrence forced by normalized gradients (F1–F4). The Lean is in
 These labels are this file's, not the S1–S2, T1–T4 and F1–F6 of
 [`../actual_network/sequence_models.md`](../actual_network/sequence_models.md) or the M1–M5 of
 [`../actual_network/execution.md`](../actual_network/execution.md).
-[`../flat_spectrum.md`](../flat_spectrum.md) holds Theorem A and *Actual network expressivity
-for every exponent*, the result these sections start from. *General positional models* in
-[`../actual_network/sequence_models.md`](../actual_network/sequence_models.md) identifies the
-Schedule-Free recurrence with the run of F1–F4.
+Theorem A is in [`../flat_spectrum.md`](../flat_spectrum.md). *Actual network expressivity for
+every exponent*, the result these sections start from, and *General positional models*, which
+identifies the Schedule-Free recurrence with the run of F1–F4, are in
+[`../actual_network/sequence_models.md`](../actual_network/sequence_models.md).
 
 ## Alias symmetry and training
 
