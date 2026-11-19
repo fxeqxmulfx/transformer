@@ -27,6 +27,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.CausalPhases
 public import Transformer.Grokking.FlatSpectrum.Recall.PositionBias
 public import Transformer.Grokking.FlatSpectrum.Recall.ALiBiWindow
 public import Transformer.Grokking.FlatSpectrum.Recall.NearerTokens
+public import Transformer.Grokking.FlatSpectrum.Recall.FittedSlope
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -109,6 +110,9 @@ leaves a window of radius `(2sB/m) log n`: the keys inside it are recalled, at a
 distance at every positive lead, and the keys outside it are lost (`ALiBiWindow`). A bias that
 does not increase with the distance makes the `R` nearer tokens rivals of the key at the distance
 `R`, so the keys beyond `n^ρ` are lost below `2 s B = ρ`, at every ALiBi slope (`NearerTokens`).
+The slope `log(1 + 1/D)` fitted to a span `D ≤ n^ρ` reaches that threshold: it recalls every key
+of the span when `s g > ρ`, and loses the keys beyond `κ (D + 1) log n`, `κ > 2 s B`
+(`FittedSlope`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

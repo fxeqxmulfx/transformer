@@ -4069,22 +4069,46 @@ distance `n^ρ` below the threshold `2 s B = ρ`: a decreasing bias can at best 
 `2 s B = 1` of SA5 to the exponent `ρ` of the distance. It cannot lower it for the keys at a
 distance proportional to `n`, which lie beyond `n^ρ` for every `ρ < 1` from some length on.
 
+### PB4. The slope fitted to a span reaches the threshold
+
+ALiBi's bias `−m r` is the logarithm of the geometric prior `(1 − e^{−m}) e^{−mr}` of the
+distance (BAM §2.2, Lemma 2), whose mean is `D` at `m = log(1 + 1/D)`: the slope fitted to the
+span `D`. At it `e^m = 1 + 1/D` and `1 − e^{−m} = 1/(D + 1)`, so by PB2 a key at a distance
+`R ≤ D` with the lead `g` is answered within
+
+```
+2C n^{−sg} e^{mR} / (1 − e^{−m}) = 2C n^{−sg} (1 + 1/D)^R (D + 1) ≤ 2C e (D + 1) n^{−sg}.
+```
+
+For a span `D ≤ n^ρ` this tends to `0` when `s g > ρ`, uniformly in the span and in the key
+within it. For one-hot raw scores `±B` the lead is `g = 2B`, so with PB3 the threshold
+`2 s B = ρ` is sharp, and the fitted slope reaches it for the whole span.
+
+A slope fitted to a span `D` below the distance `R` of the key is too steep. Since
+`log(1 + 1/D) ≥ 1/(D + 1)`, the key misses by at least `2 / (1 + n^{2sB} e^{−R/(D+1)})`, and the
+keys beyond `κ (D + 1) log n` are lost for every `κ > 2 s B`: the loss grows exponentially in
+`R / D`. A fixed slope is the case of a fixed `D`, the window of PB2. A slope fitted to a span
+`D` above `R` is too gentle: PB4 bounds the rivals of the key by `e (D + 1)`, against the `R` of
+PB3.
+
 ### Scope
 
-Proved: PB1 to PB3. Not covered: a decreasing bias that reaches the threshold `2 s B = ρ` of PB3,
-as a slope fitted to the distance of the keys or a bias of another shape, such as
-`−α log(1 + r)`.
+Proved: PB1 to PB4. Not covered: a lower bound of order `D` on the rivals of a key well inside
+the span `D` of a fitted slope, and one bias that reaches the threshold `2 s B = ρ` of PB3 at
+every distance at once, such as `−log(1 + r)`.
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias`, `ALiBiWindow` and
-`NearerTokens`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias`, `ALiBiWindow`,
+`NearerTokens` and `FittedSlope`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved
+without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | PB1 | `biasedLogScaleAttention`, `biasedLogScaleAttention_zero`, `one_sub_softmaxAttention_indicator_le_add`, `exists_le_oneHot_biasedLogScaleAttention_error`, `oneHot_logScaleAttention_error_le_biased` | The bias is any real function of the tokens, not only of the distance to the query. The first statement takes any finite type of tokens, the others the `m + 1` keys `Fin (m + 1)` with one-hot raw scores. "No bias lowers the worst error" is: for every bias, every key and every dictionary, the error without the bias is at most the error with it at some key and some dictionary. |
 | PB2 | `abs_sub_biasedLogScaleAttention_le`, `le_one_sub_biasedLogScaleAttention`, `sum_exp_neg_mul_le`, `abs_sub_alibi_le`, `le_one_sub_alibi`, `exists_forall_alibi_recall`, `exists_lt_alibi_error` | The two general bounds take any finite type of tokens and any real bias. For ALiBi the tokens are `Fin n`, the token `r` at the distance `r` from the query, with the bias `fun r => -(m * r)`; the slope of `le_one_sub_alibi` may be any real. The recall statement takes the keys within `D + ρ log n` for any real `D`, so that `ρ = 0` gives the keys at a bounded distance; the fading statement takes the indicator dictionary of values `±1`. "Eventually lost at a distance proportional to `n`" is not stated apart from the fading statement. |
 | PB3 | `le_one_sub_biasedLogScaleAttention_of_subset`, `le_one_sub_biasedLogScaleAttention_of_nearer`, `exists_lt_error_of_nearer`, `exists_lt_alibi_error_of_rpow_le` | The bias need only be at the distance `R` at most its value at every nearer distance, not decreasing everywhere. The fading statements take the indicator dictionary of values `±1` and the keys at the distances `R ≥ n^ρ`; at `ρ ≥ 1` they are vacuous, so the keys at a distance proportional to `n` are reached through a `ρ` between `2 s B` and `1`. |
+| PB4 | `abs_sub_fittedSlope_le`, `exists_forall_fittedSlope_recall`, `le_one_sub_fittedSlope`, `exists_lt_fittedSlope_error` | The span is a natural number `D ≥ 1` and the slope `Real.log (1 + 1 / D)`; the recall statement takes the spans `D ≤ n^ρ` and the keys at the distances `R ≤ D`, the fading statement every span `D ≥ 1`. The sharp threshold for one-hot raw scores is this item with PB3, not one statement. |
 
 ## The block languages across a cut (added)
 
