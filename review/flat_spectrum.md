@@ -4049,20 +4049,42 @@ Without a bias the other tokens weigh `n − 1` against `n^{sg}`; with the slope
 `e^{mR} / (1 − e^{−m})`, a constant. At a fixed scale the window is bounded instead
 (`Transformer.BAM.alibi_local`). The scale `s log n` widens it only logarithmically.
 
+### PB3. The nearer tokens bound every decreasing bias
+
+Let the raw scores be bounded by `B`, and let `S` be a set of `k` tokens other than `j₀`, each
+of bias at least `b_{j₀}`. The weight of `j₀` is at most `n^{sB} e^{b_{j₀}}` and the weights of
+`S` sum to at least `k n^{−sB} e^{b_{j₀}}`, so in `1 − att = 2X / (A + X)` (PB1)
+
+```
+1 − att ≥ 2k / (k + n^{2sB}).
+```
+
+A bias that does not increase with the distance, as ALiBi's `−m r` at every `m ≥ 0` or
+`−α log(1 + r)` at every `α ≥ 0`, gives the key at the distance `R` its `R` nearer tokens as
+such a set. The key misses by at least `2R / (R + n^{2sB})`, the worst error of SA5 with `R`
+keys in place of the `n − 1` other tokens. At `R ≥ n^ρ` this is at least
+`2 / (1 + n^{2sB − ρ})`, which tends to `2` when `2 s B < ρ`, uniformly in the bias, which may
+change with the length. So no slope, fixed or chosen with the length, recalls a key at the
+distance `n^ρ` below the threshold `2 s B = ρ`: a decreasing bias can at best lower the threshold
+`2 s B = 1` of SA5 to the exponent `ρ` of the distance. It cannot lower it for the keys at a
+distance proportional to `n`, which lie beyond `n^ρ` for every `ρ < 1` from some length on.
+
 ### Scope
 
-Proved: PB1 and PB2. Not covered: the slope that fits the distances of the keys, a slope that
-changes with the length, and biases of other shapes, such as `−α log(1 + r)`.
+Proved: PB1 to PB3. Not covered: a decreasing bias that reaches the threshold `2 s B = ρ` of PB3,
+as a slope fitted to the distance of the keys or a bias of another shape, such as
+`−α log(1 + r)`.
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias` and `ALiBiWindow`,
-namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias`, `ALiBiWindow` and
+`NearerTokens`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | PB1 | `biasedLogScaleAttention`, `biasedLogScaleAttention_zero`, `one_sub_softmaxAttention_indicator_le_add`, `exists_le_oneHot_biasedLogScaleAttention_error`, `oneHot_logScaleAttention_error_le_biased` | The bias is any real function of the tokens, not only of the distance to the query. The first statement takes any finite type of tokens, the others the `m + 1` keys `Fin (m + 1)` with one-hot raw scores. "No bias lowers the worst error" is: for every bias, every key and every dictionary, the error without the bias is at most the error with it at some key and some dictionary. |
 | PB2 | `abs_sub_biasedLogScaleAttention_le`, `le_one_sub_biasedLogScaleAttention`, `sum_exp_neg_mul_le`, `abs_sub_alibi_le`, `le_one_sub_alibi`, `exists_forall_alibi_recall`, `exists_lt_alibi_error` | The two general bounds take any finite type of tokens and any real bias. For ALiBi the tokens are `Fin n`, the token `r` at the distance `r` from the query, with the bias `fun r => -(m * r)`; the slope of `le_one_sub_alibi` may be any real. The recall statement takes the keys within `D + ρ log n` for any real `D`, so that `ρ = 0` gives the keys at a bounded distance; the fading statement takes the indicator dictionary of values `±1`. "Eventually lost at a distance proportional to `n`" is not stated apart from the fading statement. |
+| PB3 | `le_one_sub_biasedLogScaleAttention_of_subset`, `le_one_sub_biasedLogScaleAttention_of_nearer`, `exists_lt_error_of_nearer`, `exists_lt_alibi_error_of_rpow_le` | The bias need only be at the distance `R` at most its value at every nearer distance, not decreasing everywhere. The fading statements take the indicator dictionary of values `±1` and the keys at the distances `R ≥ n^ρ`; at `ρ ≥ 1` they are vacuous, so the keys at a distance proportional to `n` are reached through a `ρ` between `2 s B` and `1`. |
 
 ## The block languages across a cut (added)
 
