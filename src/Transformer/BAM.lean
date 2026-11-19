@@ -9,6 +9,7 @@ public import Transformer.BAM.Section2_IgnoresLocal
 public import Transformer.BAM.Section2_LongContext
 public import Transformer.BAM.Section2_Intuition
 public import Transformer.BAM.SectionC_Parametrization
+public import Transformer.BAM.SectionK_Partition
 
 /-!
 # Bayesian Attention Mechanism
@@ -43,4 +44,7 @@ weight `0`.
 * `SectionC_Parametrization`: Appendix C, the learnable parameters `θ_μ`, `θ_α`, `θ_β`: with
   `ε = 0` the bias is GGD-BAM's, for every `α > 0` and `β ≠ 0`; `ε > 0` keeps it finite, and as
   `ε → 0` it tends to GGD-BAM's.
+* `SectionK_Partition`: Appendix K.1–K.2, `Z = Z_cont Z_pos / Z_joint` restores the factorization
+  and is `1 / ⟨p_cont, p_pos⟩`, not `⟨p_cont, p_pos⟩`; the overlap lies in `[0, 1]`, vanishes
+  exactly on disjoint supports, is not maximal on equal ones, and is `< 1` on two keys or more.
 -/
