@@ -44,6 +44,7 @@ public import Transformer.CRASP.FiniteAlphabet
 public import Transformer.CRASP.Parity
 public import Transformer.CRASP.ParityTwoSided
 public import Transformer.CRASP.SecondLast
+public import Transformer.CRASP.SecondLastMod
 public import Transformer.CRASP.AlignedRecall
 public import Transformer.CRASP.QueryFree
 public import Transformer.CRASP.QueryFreeRecall
@@ -159,6 +160,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Parity` | PARITY is not in `TL[◁#]` at any depth, so no rounded transformer recognizes it |
 | `CRASP.ParityTwoSided` | PARITY is in `TL[◁#, ▷#]` at depth `2` |
 | `CRASP.SecondLast` | `Σ*bΣ`, the previous symbol, is in `TL[◁#]` at no depth, with `Y` at depth `0`, and in `TL[◁#, ▷#]` at depth `2` |
+| `CRASP.SecondLastMod` | `Σ*bΣ` is in `TL[◁#, MOD]` at no depth, so no RoPE or sinusoidal transformer at rational angles recognizes it |
 | `CRASP.AlignedRecall` | aligned MQAR over `c` tokens is in `TL[◁#]_1`, counting `c²` pairs |
 | `CRASP.QueryFree` | attention that ignores the query reads the past through `2d + 1` sums a layer |
 | `CRASP.QueryFreeRecall` | such a transformer recalls over `c` tokens only if `2^{c-1} ≤ (2^p (n + 1) + 1)^{k (2d + 1)}` |
@@ -231,7 +233,7 @@ either: it is a statement about circuits, which this development does not
 model. One remark the source leaves in a comment, after
 `thm:transformer_equivalence`, is formalized all the same: PARITY is in
 `TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
-Five results are in no paper: Zoology's recall, once each value sits beside
+Six results are in no paper: Zoology's recall, once each value sits beside
 its key, is counting at depth `1` over a finite vocabulary
 (`CRASP.AlignedRecall`); a transformer whose attention ignores the query, as
 that one's does, needs a width growing with the vocabulary to recall over as
@@ -243,8 +245,13 @@ recalls with a constant factor fewer bits a position (`CRASP.MatchingRecall`,
 `CRASP.MatchingRecallSums`, `CRASP.MatchingRecallAnswers`,
 `CRASP.RecallSeparation`); without positions no depth reads the previous
 symbol, so that no transformer recalls the latest value of a rebound key
-(`CRASP.SecondLast`, `CRASP.LatestRecall`); and closing every string by a fixed
-word costs no depth (`CRASP.Suffix`).
+(`CRASP.SecondLast`, `CRASP.LatestRecall`); closing every string by a fixed
+word costs no depth (`CRASP.Suffix`); and on blocks of one period a formula
+of `TL[◁#, MOD]` is one of `TL[◁#]`, so that positions read modulo a fixed
+number do not read the previous symbol either, which `Y` does: `TL[◁#, Y]`
+is not contained in `TL[◁#, MOD]`, and no transformer with RoPE or sinusoidal
+encodings at rational angles recognizes `Σ*bΣ` (`CRASP.ModBlocks`,
+`CRASP.SecondLastMod`).
 -/
 
 @[expose] public section
