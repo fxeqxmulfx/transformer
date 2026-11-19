@@ -84,7 +84,8 @@ theorem card_answered_mul_le (msg : (K → V) → M) (ans : M → K → V) {x y 
     rw [show Fintype.card K - a = j + #{q | ¬g q = D q} by omega, pow_add, pow_add, mul_assoc]
     exact Nat.mul_le_mul_left _ (Nat.mul_le_mul_right _ (Nat.pow_le_pow_left hyx j))
   calc #{D | a ≤ #{q | ans (msg D) q = D q}} * (x ^ a * y ^ (Fintype.card K - a))
-      ≤ (∑ m : M, #{D : K → V | a ≤ #{q | ans m q = D q}}) * (x ^ a * y ^ (Fintype.card K - a)) := by
+      ≤ (∑ m : M, #{D : K → V | a ≤ #{q | ans m q = D q}}) *
+          (x ^ a * y ^ (Fintype.card K - a)) := by
         refine Nat.mul_le_mul_right _ (le_trans (card_le_card fun D hD => ?_) card_biUnion_le)
         exact mem_biUnion.mpr ⟨msg D, mem_univ _, mem_filter.mpr ⟨mem_univ _, (mem_filter.mp hD).2⟩⟩
     _ ≤ ∑ _m : M, (x + (Fintype.card V - 1) * y) ^ Fintype.card K := by
