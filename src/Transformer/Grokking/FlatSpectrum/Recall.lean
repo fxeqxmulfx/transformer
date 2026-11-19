@@ -66,7 +66,7 @@ that ignore the query, as in the transformers that paper builds from formulas, a
 read by its sign recalls at most `d + 1` bindings (`QueryFree`). The scale `s log n` over `n`
 tokens, which long-context systems take (*The Mean-Field Dynamics of Transformers*, §6), grows
 by itself: raw scores that lead by a fixed `g` with `s g > 1` recall at every large number of
-keys (`LogScale`).
+keys, and raw scores bounded by `B` with `2 s B < 1` fade (`LogScale`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

@@ -3830,6 +3830,19 @@ that put the queried key ahead of every other key by `g` recall values bounded b
 accuracy from some `m` on, with one `s` and one `g` at every length. The growth of the scale
 that SA3 asks for comes from `log n`; the raw scores need only a fixed gap.
 
+Below the threshold the scale does not suffice. Raw scores bounded by `B` give scores bounded
+by `s B log n`, so the worst dictionary of SA3 has an error of at least
+
+```
+2 (n − 1) / (n^{2 s B} + n − 1),
+```
+
+which tends to `2` when `2 s B < 1`: for every `ε < 2`, from some `m` on, every query has a
+dictionary answered with an error above `ε`. One-hot raw scores, `B` at the queried key and
+`−B` elsewhere, lead by `g = 2B`. They fade for `2 s B < 1` and recall for `2 s B > 1`. This is
+the threshold `s g = 1` of the equiangular model of that section, whose gap is `1 − ρ` and whose
+threshold is `γ (1 − ρ) = 1`.
+
 ### SA6. Scope
 
 Proved: SA1 to SA5 as stated.
@@ -3843,6 +3856,8 @@ Not covered:
   tokens are not bounded.
 - SA4 is for a linear readout of one layer, read by its sign. A regression bound for it and a
   nonlinear readout after it are not proved.
+- SA5 takes the raw scores as given: that a trained model keeps a fixed gap as the length grows
+  is not treated, and neither is the threshold `2 s B = 1` itself.
 
 ### Lean
 
@@ -3856,7 +3871,7 @@ Not covered:
 | SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign`, `exists_softmaxAttention_not_hasCutWidth` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
 | SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error`, `one_sub_softmaxAttention_indicator`, `two_mul_le_one_sub_softmaxAttention_indicator`, `sub_one_mul_two_sub_le_of_softmaxAttention_recall`, `sub_one_lt_exp_of_softmaxAttention_sign`, `exists_lt_softmaxAttention_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. The worst dictionary is `π k = decide (k = q)`. The statement for growing `m` takes `m + 1` keys, `Fin (m + 1)`, and scores `s m q k b` with one bound `B` for every `m`. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
-| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. |
+| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. |
 
 ## The block languages across a cut (added)
 
