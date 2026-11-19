@@ -11,6 +11,7 @@ public import Transformer.KERPLE.Section4_BiasKernel
 public import Transformer.KERPLE.Section4_T5
 public import Transformer.KERPLE.SectionA_ShiftLemma
 public import Transformer.KERPLE.SectionA_PDFunctions
+public import Transformer.KERPLE.SectionA_DistancePowers
 
 /-!
 # KERPLE
@@ -54,4 +55,8 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `SectionA_PDFunctions`: Appendix A.2, Definition 3 (PD functions) and Fact 5: `exp(−a|x|^p)` is a
   PD function on `ℝ` for `0 < p ≤ 2` and is not for `p > 2`; the rescaling of Proposition 2's
   footnote and the range `(0, 1]`.
+* `SectionA_DistancePowers`: Appendix A.2, Fact 6 read as the paper glosses it (`f > 0`) is false
+  (`exp(−x²)`) and holds with `ψ` CPD instead of PD; Proposition 2's first part is false for every
+  `p > 0`: no real `c` makes `c − |x − y|^p` PD on `ℝ` or on `ℕ`, and ALiBi admits no PD kernel
+  `c − |m − n|` (§1). Its second part holds.
 -/
