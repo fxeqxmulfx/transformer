@@ -254,7 +254,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer`
 
-**[Transformer](src/Transformer.lean)** — 288 lines, aggregator
+**[Transformer](src/Transformer.lean)** — 292 lines, aggregator
 
 **[Transformer.Basic](src/Transformer/Basic.lean)** — 186 lines
 

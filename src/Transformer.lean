@@ -229,8 +229,12 @@ probability bounds outside that coverage are not claimed as proved.
 
 49. Bianchessi, Aguirre, Barros, Kupssinskü — arXiv:2505.22842v4, "Bayesian
    Attention Mechanism: A Probabilistic Framework for Positional Encoding and
-   Context Length Extrapolation". Attention as an expectation and its
-   content–position factorization, §2.1.
+   Context Length Extrapolation". The content–position factorization, the
+   uniform, Laplace and GGD priors, locality, the learnable bias and its
+   initializations, and the normalizer `Z`: §2 and Appendices A–C, H.1, K.
+   Lemma 2 needs its normalizer, Lemmas 3–4 bounded content, Theorem 3 `μ = 0`;
+   Theorem 4 fails for bounded content and holds relative to NoPE; Appendix K's
+   `Z` is the reciprocal of the overlap it is equated with.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
