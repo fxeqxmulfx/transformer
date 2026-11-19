@@ -52,6 +52,7 @@ public import Transformer.CRASP.MatchingRecallSums
 public import Transformer.CRASP.MatchingRecallAnswers
 public import Transformer.CRASP.RecallSeparation
 public import Transformer.CRASP.LatestRecall
+public import Transformer.CRASP.Suffix
 public import Transformer.CRASP.FiniteFunction
 public import Transformer.CRASP.ConstantLayer
 public import Transformer.CRASP.Collapse
@@ -162,6 +163,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.MatchingRecallAnswers` | it recalls over `c` tokens at every length at `p = O(log c)` bits, by the sign of a rounded average |
 | `CRASP.RecallSeparation` | at that precision no query-free transformer of a fixed depth and width recalls, and none at all below `p d = log₂ c` |
 | `CRASP.LatestRecall` | no rounded transformer recalls the latest value of a rebound key, which over one key is `Σ*bΣ` |
+| `CRASP.Suffix` | a fixed suffix costs no depth: the right quotient of a language of `TL[◁#]_k` by a word is one |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
@@ -223,7 +225,7 @@ either: it is a statement about circuits, which this development does not
 model. One remark the source leaves in a comment, after
 `thm:transformer_equivalence`, is formalized all the same: PARITY is in
 `TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
-Four results are in no paper: Zoology's recall, once each value sits beside
+Five results are in no paper: Zoology's recall, once each value sits beside
 its key, is counting at depth `1` over a finite vocabulary
 (`CRASP.AlignedRecall`); a transformer whose attention ignores the query, as
 that one's does, needs a width growing with the vocabulary to recall over as
@@ -233,9 +235,10 @@ the query with each key recalls at logarithmic precision, so that at every
 depth and width the two kinds of attention separate, and no transformer
 recalls with a constant factor fewer bits a position (`CRASP.MatchingRecall`,
 `CRASP.MatchingRecallSums`, `CRASP.MatchingRecallAnswers`,
-`CRASP.RecallSeparation`); and without positions no depth reads the previous
+`CRASP.RecallSeparation`); without positions no depth reads the previous
 symbol, so that no transformer recalls the latest value of a rebound key
-(`CRASP.SecondLast`, `CRASP.LatestRecall`).
+(`CRASP.SecondLast`, `CRASP.LatestRecall`); and closing every string by a fixed
+word costs no depth (`CRASP.Suffix`).
 -/
 
 @[expose] public section
