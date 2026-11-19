@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Q
 /-!
 # Actual feasible class-bias CE queries in the learned rotary family
 
-Source: `review/flat_spectrum.md`, CM98. Zero-frequency identity components
+Source: `review/convex/moments.md`, CM98. Zero-frequency identity components
 remain ordinary parameter points in this family. They supply finite loss
 queries at the same capacity-reserving centre, for every original class.
 -/

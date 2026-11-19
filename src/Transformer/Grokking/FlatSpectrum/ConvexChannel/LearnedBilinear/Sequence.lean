@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # A learned complex sequence predicts the next original object
 
-Source: `review/flat_spectrum.md`, CM86. Both numerical encoders and the
+Source: `review/convex/moments.md`, CM86. Both numerical encoders and the
 readout are recovered from the jointly trained rectangular matrices. Inference
 performs raw learned lookups, a complex interaction and the learned readout;
 only then are real logits and ordinary original-object probabilities formed.

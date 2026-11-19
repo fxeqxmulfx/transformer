@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FlatCapacity
 /-!
 # Flat-spectrum width bounds for the actual recovered bilinear interaction
 
-Source: `review/flat_spectrum.md`, CM86 and R3. Complete complex basis probes
+Source: `review/convex/moments.md`, CM86 and R3. Complete complex basis probes
 identify the joint matrix of the actual learned computation. Thus a physical
 pair of encoders reproducing a flat matrix needs at least its full flat rank;
 insufficient width has the usual squared Frobenius error floor. These bounds

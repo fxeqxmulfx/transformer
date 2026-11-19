@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Minibatch.Gradient
 /-!
 # Exact singleton oracles can remain at fifty percent accuracy
 
-Source: `review/flat_spectrum.md`, *Repairing minibatch and full-batch failures*,
+Source: `review/convex/channels.md`, *Repairing minibatch and full-batch failures*,
 MF1. The run starts just after the native algorithm's first step of size one.
 At every later step it selects the first tied key, with arbitrary retained
 decoder history and any feasible convex step size. Every such oracle is exact

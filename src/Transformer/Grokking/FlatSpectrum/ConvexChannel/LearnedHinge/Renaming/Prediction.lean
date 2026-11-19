@@ -6,7 +6,7 @@ public import Mathlib.Data.Finset.Max
 /-!
 # Returning an original immutable object from the learned sequence model
 
-Source: `review/flat_spectrum.md`, CM78. Full-vocabulary logits are internal.
+Source: `review/convex/moments.md`, CM78. Full-vocabulary logits are internal.
 The mathematical next-object prediction is a maximizing original object.
 Any tie selection obeys the same low-CE and transfer guarantees. Classical
 choice here states existence; a native implementation must specify its tie

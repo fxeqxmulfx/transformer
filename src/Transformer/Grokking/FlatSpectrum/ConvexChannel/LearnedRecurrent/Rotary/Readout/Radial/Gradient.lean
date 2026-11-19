@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual CE residuals and a nonoptimal fixed radial row update
 
-Source: `review/flat_spectrum.md`, CM101. The explicit complete row contraction
+Source: `review/convex/moments.md`, CM101. The explicit complete row contraction
 is verified against ordinary CE's first-order inequality. Both oppositely
 labeled original records give outward radial displacements at the witness.
 -/

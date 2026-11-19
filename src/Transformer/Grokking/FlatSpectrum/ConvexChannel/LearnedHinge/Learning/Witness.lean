@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Nonzero feasible-query and CE-slope witnesses
 
-Source: `review/flat_spectrum.md`, CM82. A learned complex bias has nonzero
+Source: `review/convex/moments.md`, CM82. A learned complex bias has nonzero
 real and imaginary parts. A two-sided feasible perturbation changes one
 original object's relative logit, with ordinary CE derivative minus one half.
 This is an inhabited proof control, not a trained or task-specific predictor.

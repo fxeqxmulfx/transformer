@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.B
 /-!
 # Complete softmax concentration from learned score gaps
 
-Source: `review/flat_spectrum.md`, CM111. The path guarantee follows from the
+Source: `review/convex/moments.md`, CM111. The path guarantee follows from the
 actual denominators and learned score differences. It assumes neither selected
 attention destinations nor correct predictions.
 -/

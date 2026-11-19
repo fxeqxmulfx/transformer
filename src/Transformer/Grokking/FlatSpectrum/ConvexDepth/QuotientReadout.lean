@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientHead
 /-!
 # Preserve the declared pooled readout with the actual complex logits
 
-Source: `review/flat_spectrum.md`, CM31. Original pooled metrics sum softmax
+Source: `review/convex/moments.md`, CM31. Original pooled metrics sum softmax
 mass over raw classes sharing a readout. The common positive normalizer
 does not affect their ordering. A sufficiently large assigned-class margin
 keeps its readout group strictly ahead despite unequal group sizes. This

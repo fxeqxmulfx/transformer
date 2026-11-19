@@ -29,7 +29,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.CausalPairs
 /-!
 # Convex channels with flat-spectrum capacity bounds
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC1-CC8.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC1-CC8.
 Directly learned joint routing/output weights extend fixed copying while
 keeping the feasible set convex, the forward map linear in all weights,
 and ordinary answer cross-entropy convex. Separating answer examples

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Inhabited enlarged-gap hypotheses with full imaginary readouts
 
-Source: `review/flat_spectrum.md`, CM104. Actual distinct ordered prefixes
+Source: `review/convex/moments.md`, CM104. Actual distinct ordered prefixes
 inhabit the strict-direction premises. Opposite labels on a repeated prefix
 inhabit the zero-gap premises without assuming an optimum or separability.
 The duplicate records are retained and serve only as formal proof witnesses.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Head
 /-!
 # Nonconstant observed rows with opposite unobserved completions
 
-Source: `review/flat_spectrum.md`, CM65. The CM53/64 witness learns a many-to-one
+Source: `review/convex/moments.md`, CM65. The CM53/64 witness learns a many-to-one
 dictionary. Its unknown row remains a variable after the exact reduction, and
 the complete and unweighted reduced Euclidean metrics demonstrably differ.
 -/

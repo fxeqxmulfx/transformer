@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows
 /-!
 # A lossless representation of every unknown decoder row
 
-Source: `review/flat_spectrum.md`, CM70. Encode every unknown row separately,
+Source: `review/convex/moments.md`, CM70. Encode every unknown row separately,
 retaining shared masses and all explicit exceptions. Decoding recovers the
 entire CM65 parameter space and the entire original CM64 feasible domain.
 The nonlinear choice of storage layout is not an optimization parameterization.

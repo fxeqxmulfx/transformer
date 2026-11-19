@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Signed geometric relative-position profiles
 
-Source: `review/flat_spectrum.md`, CM119. Each direction has a trainable
+Source: `review/convex/moments.md`, CM119. Each direction has a trainable
 adjacent level and a trainable nonnegative decay. Odds observed in one
 interior positional row determine the complete relative law at any length.
 -/

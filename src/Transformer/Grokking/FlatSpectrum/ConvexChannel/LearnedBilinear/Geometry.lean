@@ -7,7 +7,7 @@ public import Mathlib.Analysis.Matrix.Order
 /-!
 # The actual recovered representations have trainable internal geometry
 
-Source: `review/flat_spectrum.md`, CM86. The two factors are balanced at every
+Source: `review/convex/moments.md`, CM86. The two factors are balanced at every
 singular direction, not only in total norm. Their row Gram matrices are the
 positive square roots of the two joint Gram matrices. On a positive square
 joint matrix, each normalized representation has covariance M / ‖M‖_S1.

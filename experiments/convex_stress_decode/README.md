@@ -2,7 +2,7 @@
 
 Can a learned many-to-one decoder recover tasks whose output classes do not
 admit an injective phase code? Lean CM15 (`b73b3e3f`,
-[`review/flat_spectrum.md`](../../review/flat_spectrum.md)) comes first: fixed
+[`review/convex/moments.md`](../../review/convex/moments.md)) comes first: fixed
 decoding is linear, preserves probability rows and convex ordinary
 cross-entropy, and the hull over all decoders remains convex. The spectral
 bounds apply to latent moments. They need not hold for decoded output moments.

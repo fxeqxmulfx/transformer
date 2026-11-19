@@ -4,7 +4,7 @@ Question: can a generic count feature repair the full-batch representation
 failures while retaining the previous convex model and ordinary cross-entropy?
 
 Lean comes first at `4b5ec978`: `ConvexChannel/Counts.lean`, CFt1–CFt3 in
-`review/flat_spectrum.md`, embeds every old channel by zeroing the extra keys,
+`review/convex/channels.md`, embeds every old channel by zeroing the extra keys,
 preserves its logits and CE exactly, and proves convexity of the enlarged
 objective. A fixed-query two-slot XOR obstruction and a feasible count-based
 witness show a strict capacity gain. This witness is not a theorem that the

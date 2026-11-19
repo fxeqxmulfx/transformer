@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.
 /-!
 # Unverified self-labeling cannot change the selected model
 
-Source: `review/flat_spectrum.md`, *Inference-time learning*, CI2.
+Source: `review/convex/channels.md`, *Inference-time learning*, CI2.
 Earlier candidates remain eliminated. The selected candidate records only
 its own predictions, so it survives with precisely the same decoder.
 This proves exact model equality after any finite number of inference batches,

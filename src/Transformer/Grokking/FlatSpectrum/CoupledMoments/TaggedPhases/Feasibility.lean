@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.TaggedPhases.Basi
 /-!
 # Convex spectral feasibility and actual CE for tagged phases
 
-Source: `review/flat_spectrum.md`, CM25. The tags change categorical capacity
+Source: `review/convex/moments.md`, CM25. The tags change categorical capacity
 while retaining radius-N latent Fourier bounds and ordinary output-vocabulary
 CE. The declared enlarged prediction hull is convex. All earlier phase
 vertices embed in it; no inclusion of every old fractional latent table is claimed.

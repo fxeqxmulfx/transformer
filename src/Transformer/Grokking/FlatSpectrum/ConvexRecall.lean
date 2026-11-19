@@ -12,7 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexRecall.Convergence
 /-!
 # Convex answer-loss recall
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR1-CR7.
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR1-CR7.
 A directly learned stochastic key-matching matrix with fixed categorical
 value copying has a convex feasible set and jointly linear logits. Its
 ordinary answer cross-entropy is convex. Separating training dictionaries

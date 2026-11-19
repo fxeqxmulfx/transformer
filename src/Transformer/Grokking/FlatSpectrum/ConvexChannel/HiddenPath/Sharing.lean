@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath.Witness
 /-!
 # A shared learned decoder is a further nonconvex constraint
 
-Source: `review/flat_spectrum.md`, CM74. The positive joint repair is exact
+Source: `review/convex/moments.md`, CM74. The positive joint repair is exact
 at one input. With two inputs and one common conditional decoder, a fixed
 hidden state's input/output slice must have rank one. Two strictly positive
 stochastic encoder/decoder models have a joint midpoint with minor 1/16.

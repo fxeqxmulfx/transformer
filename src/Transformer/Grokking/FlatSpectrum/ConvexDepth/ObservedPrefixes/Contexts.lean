@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Bas
 /-!
 # Substitute observed-equivalent subprograms inside nested counts
 
-Source: `review/flat_spectrum.md`, CM58. The context grammar includes Boolean
+Source: `review/convex/moments.md`, CM58. The context grammar includes Boolean
 constants, current symbols, negation, conjunction and count comparisons with
 integer offsets and an optional third count. Simultaneous replacement of
 holes preserves every observed value on a prefix-closed pool. It preserves a

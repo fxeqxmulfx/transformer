@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Learning
 /-!
 # A bound on executed candidate observations
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF5.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF5.
 The instrumented implementation counts one unit for every call to `step`.
 It returns the same answer as the uninstrumented learner and uses at most
 `keys.length * samples.length` candidate observations. This is an abstract

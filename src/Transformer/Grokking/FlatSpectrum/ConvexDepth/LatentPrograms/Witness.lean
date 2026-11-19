@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Trans
 /-!
 # A learned many-to-one decoder and an unresolved latent-state witness
 
-Source: `review/flat_spectrum.md`, CM53. Three observations select a latent
+Source: `review/convex/moments.md`, CM53. Three observations select a latent
 input program and learn a nonconstant decoder. A genuinely new input is
 identified, while an unseen state admits opposite feasible Fourier heads.
 -/

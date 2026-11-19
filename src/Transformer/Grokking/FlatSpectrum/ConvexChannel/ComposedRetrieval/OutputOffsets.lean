@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Bounded class offsets on the complete two-read score
 
-Source: `review/flat_spectrum.md`, CM116. Every original class has a trainable
+Source: `review/convex/moments.md`, CM116. Every original class has a trainable
 offset. The joint score is bounded. With other weights fixed, a labeled row
 gives a cross-entropy derivative and strict classification constrains the
 allowed displacement. Numerical score contrasts identify relative offsets.

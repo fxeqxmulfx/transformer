@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.D
 /-!
 # Convex functional capacity with complete learned retrieval
 
-Source: `review/flat_spectrum.md`, CM111. A previously learned base is retained
+Source: `review/convex/moments.md`, CM111. A previously learned base is retained
 beside every admissible new retrieval head. The convexity concerns the whole
 sequence-score function, not independent embedding or relative-score arrays.
 -/

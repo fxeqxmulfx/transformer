@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Finite capacity pays for a nonzero identification residual
 
-Source: `review/flat_spectrum.md`, CM91. Observed lower margins and a complete
+Source: `review/convex/moments.md`, CM91. Observed lower margins and a complete
 squared coordinate budget yield a sufficient unseen-margin certificate even
 when the query is not a nonnegative combination of observed forms. The budget
 is an additional model constraint, not a consequence of flatness or fitting.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 /-!
 # Raw-label CE and local margin transfer
 
-Source: `review/flat_spectrum.md`, CM42. Jensen bounds ordinary full-vocabulary
+Source: `review/convex/moments.md`, CM42. Jensen bounds ordinary full-vocabulary
 cross-entropy at an interpolated context. Accuracy requires local raw-label
 information, expressed separately from the source spectrum and observed fit.
 The conjugate initializer yields weighted raw-label votes in the actual head.

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Current-content CE and direction bounds for historical caches
 
-Source: `review/flat_spectrum.md`, CM106. The CM105 correction receives both
+Source: `review/convex/moments.md`, CM106. The CM105 correction receives both
 signal error and actual learned-content drift. Conclusions concern actual CE
 at the current content, not finite content-step descent or unseen identification.
 -/

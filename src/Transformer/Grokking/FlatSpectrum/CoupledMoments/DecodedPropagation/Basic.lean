@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Pruning preserves every compatible phase assignment
 
-Source: `review/flat_spectrum.md`, CM19. The invariant concerns every fitting
+Source: `review/convex/moments.md`, CM19. The invariant concerns every fitting
 assignment, including the unknown target. A support witness is its actual
 neighbor phase, so larger or asymmetric decoder fibers require no new axiom.
 -/

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture.Loss
 /-!
 # Original records and convex mixture diagnostics
 
-Source: `review/flat_spectrum.md`, CM45. Ordinary diagnostic CE is convex in
+Source: `review/convex/moments.md`, CM45. Ordinary diagnostic CE is convex in
 the mixture and retains original record multiplicities and tail denominators.
 When every bank row preserves each observation, the actual observed objective
 is constant in the mixture and cannot supply a preference between contexts.

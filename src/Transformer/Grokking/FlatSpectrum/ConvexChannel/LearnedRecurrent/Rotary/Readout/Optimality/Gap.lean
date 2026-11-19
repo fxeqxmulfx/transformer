@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # A training-only conditional ordinary-CE optimality gap
 
-Source: `review/flat_spectrum.md`, CM103. The gap bounds possible mean CE
+Source: `review/convex/moments.md`, CM103. The gap bounds possible mean CE
 improvement over every complete readout table on current learned states. This
 exact real-arithmetic result neither certifies floating-point diagnostics nor
 global factor optimization, raw accuracy or unseen-answer identification.

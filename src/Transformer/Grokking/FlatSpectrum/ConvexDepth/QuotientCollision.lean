@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.JointHead
 /-!
 # Ordinary cross-entropy cannot resolve a shared-feature collision
 
-Source: `review/flat_spectrum.md`, CM31. The quotient head at `49105730`
+Source: `review/convex/moments.md`, CM31. The quotient head at `49105730`
 uses the same logit vector for every input with the same learned code. If
 two observed raw labels in that fiber differ, their mean CE is at least
 log2, regardless of the head budget or optimizer. A decoded quotient answer

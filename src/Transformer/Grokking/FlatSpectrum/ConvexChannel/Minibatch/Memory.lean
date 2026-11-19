@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Minibatch.Failure
 /-!
 # Retaining both gradients removes the singleton obstruction
 
-Source: `review/flat_spectrum.md`, *Repairing minibatch and full-batch failures*,
+Source: `review/convex/channels.md`, *Repairing minibatch and full-batch failures*,
 MF2. The two stored CE gradients may have been computed at different states.
 Their sum has a separating oracle, and every constant-answer vertex has
 strictly larger linear cost. Thus retaining the gradients changes the oracle

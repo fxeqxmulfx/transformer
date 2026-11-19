@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions.Head
 /-!
 # Exterior identification and the limits of candidate closure
 
-Source: `review/flat_spectrum.md`, CM49. Observable conflicts identify two
+Source: `review/convex/moments.md`, CM49. Observable conflicts identify two
 queries outside every observed hull under a closed candidate pool. A new
 convex class breaks identification without closure; an interior gap remains
 ambiguous even with closure. These are target-class hypotheses, not spectral

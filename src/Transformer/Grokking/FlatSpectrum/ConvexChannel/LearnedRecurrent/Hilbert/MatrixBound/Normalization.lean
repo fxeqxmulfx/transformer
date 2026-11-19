@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # A feasible full-matrix normalization retaining every unit point
 
-Source: `review/flat_spectrum.md`, CM108. Scale every real and imaginary entry
+Source: `review/convex/moments.md`, CM108. Scale every real and imaginary entry
 by one common positive denominator. This is radial feasibility, not a claim
 of closest-point projection in the Frobenius metric or optimizer convergence.
 -/

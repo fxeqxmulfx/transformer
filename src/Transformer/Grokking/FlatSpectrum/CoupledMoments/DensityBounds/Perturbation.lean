@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Fou
 /-!
 # Feature error and the observable kernel
 
-Source: `review/flat_spectrum.md`, CM22. The entrywise feature error is an
+Source: `review/convex/moments.md`, CM22. The entrywise feature error is an
 explicit structural hypothesis, not inferred from normalization or flatness.
 The bound retains its dimension factor and applies to arbitrary densities.
 -/

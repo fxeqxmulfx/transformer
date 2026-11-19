@@ -7,7 +7,7 @@ public import Mathlib.Data.Set.Finite.List
 /-!
 # Immutable object sequences and a learned complex next-object model
 
-Source: `review/flat_spectrum.md`, CM75. Input objects have no supplied
+Source: `review/convex/moments.md`, CM75. Input objects have no supplied
 arithmetic features, answer programs, or target-dependent encoding. A
 position/object index addresses a learned complex embedding coordinate;
 one extra coordinate supplies a learned bias. Actual inference sums those

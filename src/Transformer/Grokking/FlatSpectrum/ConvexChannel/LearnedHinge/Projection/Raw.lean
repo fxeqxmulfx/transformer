@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Projection inequalities are the actual raw complex activation constraints
 
-Source: `review/flat_spectrum.md`, CM79. A finite row describes which learned
+Source: `review/convex/moments.md`, CM79. A finite row describes which learned
 bias and position/object coordinates the original raw input reads. It is
 used only to certify that update constraints match that computation; it
 does not replace the model by a readout on supplied task features.

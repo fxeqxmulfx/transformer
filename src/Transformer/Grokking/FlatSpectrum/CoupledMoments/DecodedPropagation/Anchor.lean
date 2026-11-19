@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Anchor-dependent coverage of finite support propagation
 
-Source: `review/flat_spectrum.md`, CM19, anchor coverage. Local support can stall
+Source: `review/convex/moments.md`, CM19, anchor coverage. Local support can stall
 at a genuine fixed point despite a unique decoded completion. Another observed
 anchor recovers the answer without adding observations or selecting a branch.
 These finite examples do not assert completeness of any anchor policy.

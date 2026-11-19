@@ -1,7 +1,7 @@
 # Shared categorical encoders
 
 Can a shared encoder across input positions remove an ambiguity that a
-complete observed kernel retains? CM40 in `review/flat_spectrum.md` proves
+complete observed kernel retains? CM40 in `review/convex/moments.md` proves
 conditional identification after adding actual linear role equations.
 This directory contains a training-only diagnostic. It contains no trained
 new model, original evaluation adapter or new benchmark score.

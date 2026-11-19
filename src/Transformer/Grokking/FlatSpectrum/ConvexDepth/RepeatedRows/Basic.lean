@@ -6,7 +6,7 @@ public import Mathlib.Tactic
 /-!
 # Lossless rows with a shared value and explicit exceptions
 
-Source: `review/flat_spectrum.md`, CM70. Values need only have equality: the
+Source: `review/convex/moments.md`, CM70. Values need only have equality: the
 representation applies equally to real coefficients and their stored bit words.
 Every differing coordinate has its own explicit entry. No arithmetic average,
 uniformity condition, or restriction on admissible rows enters the encoding.

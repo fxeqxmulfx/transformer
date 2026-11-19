@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Feasible forward-only class queries in the bounded learned domain
 
-Source: `review/flat_spectrum.md`, CM92. Shrinking the current joint state by
+Source: `review/convex/moments.md`, CM92. Shrinking the current joint state by
 1-eta leaves room for either signed class-bias atom. The two actual bounded
 parameter queries are exactly finite CE logit queries of size eta*B around
 the shrunken state. Mini and forward-only Mini must use the same centre.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.SharedRoles.Witne
 /-!
 # A declared answer without an identified raw alias
 
-Source: `review/flat_spectrum.md`, CM40. Two shared-role targets fit the
+Source: `review/convex/moments.md`, CM40. Two shared-role targets fit the
 same diagonal observations and differ at an unseen raw alias. Projection
 onto their code identifies the declared answer. A third, independent-role
 target fits those observations but has a different answer, so the extra

@@ -5,7 +5,7 @@ class extend the three-task success to the original 35 stress tasks? The
 objective remains ordinary cross-entropy, with full-batch, minibatch and
 forward-only training. No task answer rule is supplied to a learned predictor.
 
-Lean comes first at `d7e1e6aa`. CM8 in `review/flat_spectrum.md` and
+Lean comes first at `d7e1e6aa`. CM8 in `review/convex/moments.md` and
 `CoupledMoments/{ScaledLoss,PredictionHull}.lean` proves that a convex hull of
 probability-valued prediction families preserves probability rows and convex
 CE at a shared fixed scale. Fixed causal dictionaries and pair lookups map

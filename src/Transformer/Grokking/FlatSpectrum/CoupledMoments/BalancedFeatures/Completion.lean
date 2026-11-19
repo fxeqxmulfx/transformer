@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ObservedRefinemen
 /-!
 # Explicit completion of zero features and unobserved phase axes
 
-Source: `review/flat_spectrum.md`, CM24. A declared constant feature row makes
+Source: `review/convex/moments.md`, CM24. A declared constant feature row makes
 normalization total. Phase choices outside the observed axes preserve actual
 observed CE and the same latent spectral budgets, without identifying labels.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Complete raw-prefix coverage and convex next-object CE
 
-Source: `review/flat_spectrum.md`, CM75. Use the entire finite bounded-prefix
+Source: `review/convex/moments.md`, CM75. Use the entire finite bounded-prefix
 universe as the activation region. One full-pattern domain then has convex
 ordinary next-object CE at every admitted prefix and contains the exact
 predictions of every original finite-width phased complex ReLU network.

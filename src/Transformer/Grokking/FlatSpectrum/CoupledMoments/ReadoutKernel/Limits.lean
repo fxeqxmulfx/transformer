@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Wit
 /-!
 # Necessary hypotheses for derived readout-fiber constraints
 
-Source: `review/flat_spectrum.md`, CM35. Compatibility alone does not collapse
+Source: `review/convex/moments.md`, CM35. Compatibility alone does not collapse
 readout aliases when the code alphabet is larger. Counting unused declared
 answers also cannot replace readout surjectivity. An unknown code incompatible
 with the readout cannot inherit the factorization conclusion.

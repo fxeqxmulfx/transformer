@@ -8,7 +8,7 @@ tasks, both initializer policies with 105 choices each, all conventional
 transformer endpoints, 336 depth outcomes, and every earlier CE/raw tradeoff.
 The separately reviewed six expanded sequence cases remain unchanged.
 
-Lean comes first. CM51 in `review/flat_spectrum.md` and
+Lean comes first. CM51 in `review/convex/moments.md` and
 `ConvexDepth/SignedContext/{Basic,Witness}` was reread and rechecked before this
 adapter was implemented. Its 22 declarations bound arbitrary fixed signed
 combinations of the actual complex source features. Normalization limits their

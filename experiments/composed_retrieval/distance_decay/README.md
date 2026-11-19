@@ -40,7 +40,7 @@ length, changing the residual by $t|\delta|$ compensates a change $t$ in
 the coefficient. The short-copy observations leave many extrapolations
 compatible with perfect training accuracy. A restricted relative
 potential with shared coefficients across distances can be tested by a
-fresh fit. [Physical bound and identifiability](../../../review/flat_spectrum.md)
+fresh fit. [Physical bound and identifiability](../../../review/convex/moments.md)
 
 ```sh
 base=/run/media/misha/storage/transformer-runs

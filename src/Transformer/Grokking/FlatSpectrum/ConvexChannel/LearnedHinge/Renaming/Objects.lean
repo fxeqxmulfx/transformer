@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # Immutable object witnesses with a fixed control object
 
-Source: `review/flat_spectrum.md`, CM78. `none` is an ordinary control object;
+Source: `review/convex/moments.md`, CM78. `none` is an ordinary control object;
 the two other objects exchange names. The same set supplies inputs and next
 objects. Two observed prefixes have different labels. A third prefix is
 unseen and obtained by the declared renaming. The answer rule is only an

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Defs
 /-!
 # Convex channels generate probability-mass logits
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC1-CC2.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC1-CC2.
 The domain is jointly convex in all routing/output interaction coordinates.
 The output is linear in those coordinates. The fixed unit logit scale is
 retained from ConvexRecall; it bounds confidence, not argmax expressivity.

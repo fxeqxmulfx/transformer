@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.C
 /-!
 # The witness of the discovery, and a training set that has to be refused
 
-Source: `review/flat_spectrum.md`, CM17, *Witness* and *A training set that must be refused*.
+Source: `review/convex/moments.md`, CM17, *Witness* and *A training set that must be refused*.
 
 The witness is the `5 × 5` table `fiveCode⁻¹ (i + j)` of `Basic`, whose coding exchanges the
 class names `0` and `1`, with twelve observed cells.

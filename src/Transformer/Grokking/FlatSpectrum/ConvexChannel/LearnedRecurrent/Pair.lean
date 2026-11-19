@@ -6,6 +6,6 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.P
 /-!
 # Complete two-state complex recurrence and its order-sensitive witness
 
-Source: `review/flat_spectrum.md`, CM97. Full learned matrix/readout coordinates,
+Source: `review/convex/moments.md`, CM97. Full learned matrix/readout coordinates,
 explicit operator capacities and actual noncommuting next-object execution.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # The concrete complete-row formula is a Euclidean closest point
 
-Source: `review/flat_spectrum.md`, CM102. The scalar optimization and complex
+Source: `review/convex/moments.md`, CM102. The scalar optimization and complex
 reverse-triangle bound establish the actual formula's closest-point property.
 All classes/components remain admissible in the original learned model family.
 -/

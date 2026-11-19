@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Ordinary mean CE and complete indexed minibatch updates
 
-Source: `review/flat_spectrum.md`, CM82. A nonempty batch is indexed by
+Source: `review/convex/moments.md`, CM82. A nonempty batch is indexed by
 `Fin (N + 1)`: repeated records and short final batches enter exactly once per
 index. Both analytic work and feasible-query derivatives are those of the
 actual mean CE. These results do not assert optimizer convergence or accuracy.

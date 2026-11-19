@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.Witnes
 /-!
 # Nonconstant construction and different certification passes
 
-Source: `review/flat_spectrum.md`, CM72. Two anchored classes, an unknown row
+Source: `review/convex/moments.md`, CM72. Two anchored classes, an unknown row
 and a repeated operation produce distinct exceptional and shared columns.
 Forward and reverse answers deliberately differ; only equality across the
 certified shared classes is used. A nonuniform unknown row defeats sharing.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Finite certificates for every forced unit-margin consequence
 
-Source: `review/flat_spectrum.md`, CM87. Homogenize the observed inequalities
+Source: `review/convex/moments.md`, CM87. Homogenize the observed inequalities
 with one extra coordinate and extend the forced objective positively. The
 extension's finite coordinate weights are the nonnegative certificate. The
 extra coordinate proves the total-weight lower bound. This supplies both

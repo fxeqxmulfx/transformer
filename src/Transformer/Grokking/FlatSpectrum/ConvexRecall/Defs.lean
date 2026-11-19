@@ -6,7 +6,7 @@ public import Transformer.Landscape.Neural.Loss
 /-!
 # A convex matching model with ordinary answer cross-entropy
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR1. This new
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR1. This new
 construction reads an input dictionary, as in AR1. The learned parameters are
 one stochastic matrix on keys. Values are copied through a fixed categorical
 readout. There are no learned embeddings, factorization, route labels or
@@ -23,7 +23,7 @@ open scoped BigOperators
 variable {κ ν S : Type*} [Fintype κ] [Fintype ν] [Fintype S]
 
 /-- Nonnegative matching weights with one unit of mass in each query row
-(`review/flat_spectrum.md`, CR1). -/
+(`review/convex/channels.md`, CR1). -/
 def IsStochastic (A : Matrix κ κ ℝ) : Prop :=
   (∀ q k, 0 ≤ A q k) ∧ ∀ q, ∑ k, A q k = 1
 
@@ -42,7 +42,7 @@ noncomputable def answerLoss (query : S → κ) (data : S → κ → ν)
 
 /-- Each wrong key is distinguished from a query by at least one training
 dictionary asked at that query. This is a condition on input data, not on
-learned parameters or future predictions (`review/flat_spectrum.md`, CR3). -/
+learned parameters or future predictions (`review/convex/channels.md`, CR3). -/
 def Separates (query : S → κ) (data : S → κ → ν) : Prop :=
   ∀ q k, k ≠ q → ∃ s, query s = q ∧ data s k ≠ data s q
 

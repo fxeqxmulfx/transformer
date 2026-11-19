@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.Basic
 /-!
 # A feasible complete head can have an exact unobserved tie
 
-Source: review/flat_spectrum.md, CM63. Two active input programs agree after
+Source: review/convex/moments.md, CM63. Two active input programs agree after
 decoding on two nonconstant observations and disagree at a third input.
 Improved arithmetic does not identify which one supplies its unknown answer.
 -/

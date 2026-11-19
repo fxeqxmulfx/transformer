@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Feasible endpoints from surviving domains
 
-Source: `review/flat_spectrum.md`, CM19, endpoint construction. A native solver
+Source: `review/convex/moments.md`, CM19, endpoint construction. A native solver
 needs a feasible point that keeps the bank-certified rows. Any choice of one
 phase from each domain of any surviving branch gives such a point, by the
 same Cartesian-product output union used in identification. This choice need

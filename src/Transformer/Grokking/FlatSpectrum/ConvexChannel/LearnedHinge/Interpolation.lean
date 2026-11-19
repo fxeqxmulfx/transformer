@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Inter
 /-!
 # Full-word capacity and exact-compression limits of the current learned family
 
-Source: `review/flat_spectrum.md`, CM84. Actual learned complex neurons give
+Source: `review/convex/moments.md`, CM84. Actual learned complex neurons give
 arbitrary full-word logit tables inside the existing complete convex domain.
 The corresponding full response operator has Gram matrix 10I. Preserving all
 relative logits with an affine real-coordinate readout requires |O|^T real

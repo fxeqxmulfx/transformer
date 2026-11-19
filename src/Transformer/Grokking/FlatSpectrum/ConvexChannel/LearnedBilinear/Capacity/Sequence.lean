@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Up
 /-!
 # Capacity certificates for the actual next-original-object model
 
-Source: `review/flat_spectrum.md`, CM91. Inputs remain sequences of immutable
+Source: `review/convex/moments.md`, CM91. Inputs remain sequences of immutable
 objects and outputs remain original objects. The finite coefficient check
 certifies the actual learned complex forward; it does not replace inference
 with a fixed feature predictor. The extra squared budget must be justified

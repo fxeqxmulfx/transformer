@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Complete-coordinate changes of actual learned logits
 
-Source: `review/flat_spectrum.md`, CM88. Each scalar joint coordinate changes
+Source: `review/convex/moments.md`, CM88. Each scalar joint coordinate changes
 exactly one original-object logit, with an input-only signed multiplicity.
 The expansion is proved from the actual recovered complex path. It supports
 exact reuse of forward loss queries without dropping any trainable coordinate.

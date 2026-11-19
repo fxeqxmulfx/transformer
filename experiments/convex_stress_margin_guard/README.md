@@ -12,7 +12,7 @@ all-query, all-class margin domain, feasibility of the maximizing reference,
 convexity of ordinary CE with a separately fixed diagnostic bank, and preservation
 of strict comparisons and first-index argmax at positive retention. Its nonzero
 Fourier examples retain wrong labels and expose failure at zero retention.
-See `review/flat_spectrum.md`, CM47, and
+See `review/convex/moments.md`, CM47, and
 `Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard`. This numerical
 implementation does not add an unseen-label identification theorem.
 

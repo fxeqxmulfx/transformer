@@ -5,7 +5,7 @@ plain learned matrices? The external contract remains an immutable-object
 sequence to one next original object. Original object IDs only address learned
 parameters. Both variants receive the same original training batches and labels.
 
-CM97/98 (`56ab91ca`, `review/flat_spectrum.md`, and Lean
+CM97/98 (`56ab91ca`, `review/convex/moments.md`, and Lean
 `ConvexChannel/LearnedRecurrent/Pair` and `Rotary`) establish the complete
 complex two-state representation, actual operator/output bounds, the joint
 convex score domain, ordinary CE convexity and feasible finite loss queries.

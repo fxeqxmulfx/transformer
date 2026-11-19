@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Local replacement preserves every original raw-input constraint
 
-Source: `review/flat_spectrum.md`, CM83. The old model satisfies the entire
+Source: `review/convex/moments.md`, CM83. The old model satisfies the entire
 raw-prefix domain. The replacement vector is checked against every original
 oriented row of its chosen slot and component. These two facts establish
 feasibility of the whole new model without rechecking unchanged vectors.

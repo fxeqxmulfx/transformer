@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Complex.Trigonometric
 /-!
 # Learned complex rotary phases and operator transport
 
-Source: `review/flat_spectrum.md`, CM98, derived from the existing GPTMini RoPE
+Source: `review/convex/moments.md`, CM98, derived from the existing GPTMini RoPE
 isometry/relative-position formalization and learned-frequency parametrization.
 Both frequencies are trainable real parameters. Bounds refer to actual
 operators under the product maximum norm, not a token-table Gram spectrum.

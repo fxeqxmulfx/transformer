@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FlatCapacity
 /-!
 # Flat spectrum as a capacity bound on actual channel outputs
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC6;
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC6;
 R3 and AR4 supply the rank/error obstruction. The scalar readout of the
 actual forward map factors through the fixed categorical binding features
 `(key,value)`. This is a necessary capacity bound, not a learning theorem.

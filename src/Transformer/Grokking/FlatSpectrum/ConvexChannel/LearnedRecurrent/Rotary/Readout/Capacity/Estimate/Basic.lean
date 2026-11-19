@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete coefficient-error geometry under shared capacity
 
-Source: `review/flat_spectrum.md`, CM105. Full complex support controls a
+Source: `review/convex/moments.md`, CM105. Full complex support controls a
 coefficient error on every component/class, including zero-weight components.
 This is a bound on the actual discrepancy, not an assumed stochastic certificate.
 -/

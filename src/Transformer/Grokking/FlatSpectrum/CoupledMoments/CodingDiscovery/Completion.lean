@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.G
 /-!
 # Every training-compatible phase completion is the table
 
-Source: `review/flat_spectrum.md`, CM17, *The completion is the table*. CM13 and CM14 stop
+Source: `review/convex/moments.md`, CM17, *The completion is the table*. CM13 and CM14 stop
 before it: "Observed phase consistency alone does not prove that unknown ground truth satisfies
 it" and "It does not prove that unobserved true labels follow the learned phase equations".
 Native reference at 414431c7: `propose` of `experiments/convex_stress_relabel/phase_start`,

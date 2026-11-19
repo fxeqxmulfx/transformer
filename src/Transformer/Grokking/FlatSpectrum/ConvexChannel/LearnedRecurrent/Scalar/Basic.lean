@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.D
 /-!
 # The fully trainable scalar complex recurrence
 
-Source: `review/flat_spectrum.md`, CM95. This is a concrete one-dimensional
+Source: `review/convex/moments.md`, CM95. This is a concrete one-dimensional
 member of the general operator family: every transition, initial state and
 readout is a learned complex scalar. It is commutative; higher-dimensional
 operators are needed for general order-dependent behavior.

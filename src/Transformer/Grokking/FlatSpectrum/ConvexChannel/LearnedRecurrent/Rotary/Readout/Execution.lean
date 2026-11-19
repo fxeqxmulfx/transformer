@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Replacing every readout on the actual learned recurrent execution
 
-Source: `review/flat_spectrum.md`, CM100. Holding already learned content fixed
+Source: `review/convex/moments.md`, CM100. Holding already learned content fixed
 defines a conditional optimization step, not a fixed-feature architecture. All
 class readouts vary, and execution retains every learned frequency and transition.
 -/

@@ -9,7 +9,7 @@ in the older `EXPERIMENT_PLAN.md`, and not a completed all-task replacement.
 Lean came first: `SpectralBall/Basic.lean` proves convexity of the constraints
 and ordinary probe cross-entropy; `SpectralBall/Recovery.lean` proves every
 constrained binary CE minimum recovers XE15's unseen sign. See
-`review/flat_spectrum.md`, SB1–SB2. This repairs that counterexample by changing
+`review/convex/channels.md`, SB1–SB2. This repairs that counterexample by changing
 the constraint, and leaves XE15's claim about nuclear-norm training intact.
 
 The learned coordinates are a complex matrix indexed by the last two tokens.

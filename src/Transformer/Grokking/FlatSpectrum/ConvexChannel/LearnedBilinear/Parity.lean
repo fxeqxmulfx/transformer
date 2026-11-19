@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Se
 /-!
 # A learned pair/query interaction realizes three-object parity
 
-Source: `review/flat_spectrum.md`, CM86. An explicit feasible joint point
+Source: `review/convex/moments.md`, CM86. An explicit feasible joint point
 strictly classifies all eight Boolean triples through the actual raw learned
 encoders. Parity appears only in this witness's chosen weights and correctness
 statement, never in the architecture or reader. This proves representational

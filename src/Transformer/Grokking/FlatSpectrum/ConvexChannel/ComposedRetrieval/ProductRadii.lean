@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Learned radii of the two operands in the product channel
 
-Source: `review/flat_spectrum.md`, CM117. Each opaque object indexes one
+Source: `review/convex/moments.md`, CM117. Each opaque object indexes one
 bounded radius shared by the retrieved value and query rotation. Training
 observations of numerical class contrasts can identify products of radii.
 -/

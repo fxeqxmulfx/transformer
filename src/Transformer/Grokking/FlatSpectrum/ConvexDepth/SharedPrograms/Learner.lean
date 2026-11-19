@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms.Basic
 /-!
 # Executable elimination and consensus for shared input programs
 
-Source: `review/flat_spectrum.md`, CM52. The learner receives the fixed program
+Source: `review/convex/moments.md`, CM52. The learner receives the fixed program
 bank, a candidate order and observed input/label pairs. It never receives the
 unknown target program. Query consensus can determine a raw class absent from
 the observed labels, conditional on target realizability within this bank.

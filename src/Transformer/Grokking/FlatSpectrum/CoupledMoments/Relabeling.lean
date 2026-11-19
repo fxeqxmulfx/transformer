@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.PredictionHull
 /-!
 # Output relabeling and a convex class independent of label order
 
-Source: `review/flat_spectrum.md`, CM12. Ordinary CE is unchanged when both
+Source: `review/convex/moments.md`, CM12. Ordinary CE is unchanged when both
 class coordinates and target labels are renamed. A fixed complex code instead
 changes by composition with that permutation. Take the convex hull of every
 renamed feasible family in direct prediction coordinates. This removes the

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PairedLi
 /-!
 # Signs behind a decoder that merges opposite latent states
 
-Source: `review/flat_spectrum.md`, CM18. The decoders of this directory are fixed, known and
+Source: `review/convex/moments.md`, CM18. The decoders of this directory are fixed, known and
 many-to-one: `d z = d w` exactly when `w = z` or `w = -z`, on the latent states `ZMod q` with
 `q` odd. A decoded label therefore gives a latent state up to its sign, one unknown sign per
 cell. The lemmas below are the whole arithmetic of the identification theorem:

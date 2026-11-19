@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHeadBudget
 /-!
 # A signed unseen-query witness with the complete Fourier head
 
-Source: `review/flat_spectrum.md`, CM51. Four original points omit (1,1).
+Source: `review/convex/moments.md`, CM51. Four original points omit (1,1).
 The fixed row (-1,1,1,0) reconstructs its affine descriptors. A declared affine
 reference supplies a missing raw margin; an alternative target fits every
 observation and disagrees there. The reference assumption is therefore material.

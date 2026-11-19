@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual position-dependent recurrent execution on original objects
 
-Source: `review/flat_spectrum.md`, CM98. Positions are internal counters, not
+Source: `review/convex/moments.md`, CM98. Positions are internal counters, not
 extra input objects. All frequencies, content matrices, initial coordinates
 and readouts remain numerical parameters. Bounds follow from actual rotary
 transport at each occurrence and are independent of sequence length.

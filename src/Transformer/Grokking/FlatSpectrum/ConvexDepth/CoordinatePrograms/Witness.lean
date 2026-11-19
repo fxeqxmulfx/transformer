@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms.I
 /-!
 # Multiple active decoders and an unseen raw answer
 
-Source: `review/flat_spectrum.md`, CM57. Two distinct quantity coordinates have
+Source: `review/convex/moments.md`, CM57. Two distinct quantity coordinates have
 different unknown affine decoders. A third constant program cannot satisfy the
 two distinct observed answers at positive mass. Training has repeated records;
 class 3 and the copy query are absent. All claims use the actual complete head.

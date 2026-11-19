@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Exact finite real coordinates of the actual learned complex margins
 
-Source: `review/flat_spectrum.md`, CM87. Both complex coordinates of every
+Source: `review/convex/moments.md`, CM87. Both complex coordinates of every
 joint matrix are retained. Encoding and decoding are inverse. The fixed raw
 address rows have zero imaginary part, while the complete learned complex
 weights enter the real output through the proved recovered-forward identity.

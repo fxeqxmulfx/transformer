@@ -6,7 +6,7 @@ public import Init.Data.UInt.Lemmas
 /-!
 # Lossless 16-bit storage of bounded observed states
 
-Source: `review/flat_spectrum.md`, CM68. Pack the observed state of every fixed
+Source: `review/convex/moments.md`, CM68. Pack the observed state of every fixed
 program and the original raw class. Explicit range bounds prevent truncation.
 The decoder rejects out-of-domain words rather than applying a remainder.
 -/

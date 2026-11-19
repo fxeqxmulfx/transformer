@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.D
 /-!
 # Complete-score geometry and two-object interaction
 
-Source: `review/flat_spectrum.md`, CM113. The physical score family has a
+Source: `review/convex/moments.md`, CM113. The physical score family has a
 convex functional hull. An admissible point exactly separates every original
 modular-addition answer. A different pair of points gives the same training
 scores and opposite held-out predictions when one query is unobserved.

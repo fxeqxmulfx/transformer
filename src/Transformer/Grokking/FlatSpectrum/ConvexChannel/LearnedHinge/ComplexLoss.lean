@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Compl
 /-!
 # Convex ordinary CE for the actual shared complex ReLU computation
 
-Source: `review/flat_spectrum.md`, CM75. Both real and imaginary activation
+Source: `review/convex/moments.md`, CM75. Both real and imaginary activation
 conditions are kept. Every object sequence uses the same learned complex
 representations and readouts. Convexity applies on this declared domain,
 not on unconstrained complex factor weights or freely changing masks.

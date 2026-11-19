@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RowCE
 /-!
 # Ordinary CE slopes of the actual learned complex sequence path
 
-Source: `review/flat_spectrum.md`, CM82. On the complete activation domain,
+Source: `review/convex/moments.md`, CM82. On the complete activation domain,
 the change of actual recovered complex logits has a derived linear expression.
 The ordinary full-class CE first-order inequality then justifies its slope.
 This training algebra does not replace the actual forward outside the domain.

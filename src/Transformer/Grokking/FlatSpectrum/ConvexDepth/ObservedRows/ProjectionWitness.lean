@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Witness
 /-!
 # An off-domain proposal with different anchor counts and unknown rows
 
-Source: `review/flat_spectrum.md`, CM66. The proposal violates nonnegativity,
+Source: `review/convex/moments.md`, CM66. The proposal violates nonnegativity,
 contains nonzero off-label entries, and has unequal unknown class coordinates.
 The exact reduced target retains all these contributions to the objective.
 -/

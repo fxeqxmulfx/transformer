@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.S
 /-!
 # Exact absent-object response and the scalar order limitation
 
-Source: `review/flat_spectrum.md`, CM96. Every complex linear operator on the
+Source: `review/convex/moments.md`, CM96. Every complex linear operator on the
 scalar state is multiplication by a learned scalar. Skipping proposals for an
 object absent from every input record changes no forward or loss. Parameters
 remain present. Conversely all scalar-domain functions are permutation

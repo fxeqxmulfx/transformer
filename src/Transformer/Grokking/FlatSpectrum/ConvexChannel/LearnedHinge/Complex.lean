@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Model
 /-!
 # Complete complex inference with learned representations and readouts
 
-Source: `review/flat_spectrum.md`, CM75. Each complex preactivation is
+Source: `review/convex/moments.md`, CM75. Each complex preactivation is
 rectified in both real and imaginary components. Its learned readout is
 `amplitude * (1 + i)`, so both components affect the real output logit.
 The phase and class/sign directions are fixed architecture, while every

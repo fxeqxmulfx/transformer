@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture.Batch
 /-!
 # Competing contexts with the same observed complex head
 
-Source: `review/flat_spectrum.md`, CM45. Both banks preserve two observations,
+Source: `review/convex/moments.md`, CM45. Both banks preserve two observations,
 but choose different states elsewhere. Raw labels 0 and 2 share a readout.
 The actual Fourier head has opposite unseen margins under two feasible
 mixtures. Original repeated-record and tail losses stay unchanged.

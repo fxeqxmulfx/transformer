@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.S
 /-!
 # A checkable certificate for decoded answers
 
-Source: `review/flat_spectrum.md`, CM18. The unknown table is `y i j = d (r i + s j)` with a
+Source: `review/convex/moments.md`, CM18. The unknown table is `y i j = d (r i + s j)` with a
 fixed known decoder `d` of the class `PairedDecoder`. A training sample says only that
 `r i + s j` lies in the fiber of its label. A certificate proposes phases and names a rectangle
 of four training cells: two rows `top`, `bot` and two columns `left`, `right`. From the

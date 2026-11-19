@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Finite learned component execution and complete coordinate coverage
 
-Source: `review/flat_spectrum.md`, CM92. A learner stores finite learned
+Source: `review/convex/moments.md`, CM92. A learner stores finite learned
 complex factors and real mixture weights, executes all components and scores
 every original object. These identities permit CM88's complete per-record
 forward-query construction; they do not assert that factor discovery is convex

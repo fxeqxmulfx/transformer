@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Initia
 /-!
 # Complete complex bounds and convex ordinary CE with learned confidence
 
-Source: `review/flat_spectrum.md`, CM64. Reuse CM53's actual complex head with
+Source: `review/convex/moments.md`, CM64. Reuse CM53's actual complex head with
 fixed margin one; confidence is already in the joint coefficients. The total
 mass cap bounds every complete column. Both full and minibatch CE are convex.
 -/

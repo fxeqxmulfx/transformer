@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Representation
 /-!
 # An exact linear oracle for the convex channel domain
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC8.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC8.
 For each query, first minimize each key/value's class cost. Then select
 the key with the least summed value cost. This finite enumeration gives
 a global linear minimizer, usable in Frank-Wolfe with ordinary answer CE.

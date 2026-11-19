@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Basic
 /-!
 # Constant amplitude selects a single Fourier direction
 
-Source: `review/flat_spectrum.md`, CM20, extraction and centering. The theorem
+Source: `review/convex/moments.md`, CM20, extraction and centering. The theorem
 assumes an exact subspace with separated frequency differences, not a discovered
 character. It does not assert that an estimated singular subspace is exact or
 that an iteration reaches constant amplitude.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Inhabited complete-error and current-content premises
 
-Source: `review/flat_spectrum.md`, CM106. Examples include changed nonzero
+Source: `review/convex/moments.md`, CM106. Examples include changed nonzero
 complex states, different learned frequencies, original indexed refreshes,
 and strict corrected descent with a genuinely nonzero signal error.
 -/

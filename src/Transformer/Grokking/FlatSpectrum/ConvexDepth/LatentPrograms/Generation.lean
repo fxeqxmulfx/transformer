@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexCausal.Generation
 /-!
 # Actual generation from accepted latent-program queries
 
-Source: `review/flat_spectrum.md`, CM54. CM53 identifies individual accepted
+Source: `review/convex/moments.md`, CM54. CM53 identifies individual accepted
 queries, while CCa7's global rule recovery is stronger than this learner's
 contract. Only acceptance on the finite target trajectory is required here.
 The actual complete complex head reads its own emitted prefix and includes EOS.

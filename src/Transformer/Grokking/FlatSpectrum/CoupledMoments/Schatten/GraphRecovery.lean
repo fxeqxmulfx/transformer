@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConnectedRecovery
 
 /-!+# Graph coverage turns ideal CE into complete probability recovery
 
-Source: `review/flat_spectrum.md`, CM13, applying its existing Theorem E.
+Source: `review/convex/moments.md`, CM13, applying its existing Theorem E.
 If a full separating code bank makes the target moments unit-phase outer
 products, a connected observation graph containing a perfect matching and
 nuclear budgets of the input dimension identify the entire target table at

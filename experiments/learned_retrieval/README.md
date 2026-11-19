@@ -6,7 +6,7 @@ old-geometry models chose correctly between two distinct stored values on
 49.90% of novel examples. CM111 gives a sufficient margin in terms of learned
 key, relative-position and decoder gaps. This experiment tests whether ordinary
 training produces the required predictions. [Earlier diagnosis](../convex_binding_diagnostic/README.md)
-and [CM111](../../review/flat_spectrum.md#cm111-shared-learned-matching-with-a-learned-relative-position-link).
+and [CM111](../../review/convex/moments.md#cm111-shared-learned-matching-with-a-learned-relative-position-link).
 
 For a prefix ending in object q, use all preceding objects x. Learn two complex
 eight-dimensional vectors per original object. K serves both queries and keys.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Str
 /-!
 # A bounded stream cache must retain cheaper equivalent queries
 
-Source: `review/flat_spectrum.md`, CM62. Complete observed signatures preserve
+Source: `review/convex/moments.md`, CM62. Complete observed signatures preserve
 the indexed count comparisons. A previously tested cheaper syntax also
 preserves the combined size cap. A more expensive cached syntax does not
 justify dropping a cheaper arrival. Evicting a cache entry permits repeated

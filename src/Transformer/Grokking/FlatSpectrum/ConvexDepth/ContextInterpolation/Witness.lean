@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientHead
 /-!
 # Distinguishing raw aliases requires context information
 
-Source: `review/flat_spectrum.md`, CM42. Two observed source states carry
+Source: `review/convex/moments.md`, CM42. Two observed source states carry
 different raw labels with the same declared readout. Fixed context weights
 distinguish two unseen queries in the actual unitary complex head. A second
 target agrees on both observations and all readouts but reverses the unseen

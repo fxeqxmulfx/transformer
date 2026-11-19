@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Two shared learned passes under an involutive object renaming
 
-Source: `review/flat_spectrum.md`, CM78. Both passes use the same complete
+Source: `review/convex/moments.md`, CM78. Both passes use the same complete
 learned representation and readout. The architecture averages whole complex
 outputs after aligning output objects. This imposes an explicit equivariance
 restriction; it does not preserve arbitrary unsymmetrized model predictions.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms.H
 /-!
 # Observed feature-span identification and convex ordinary CE
 
-Source: `review/flat_spectrum.md`, CM57. Observable linear-combination
+Source: `review/convex/moments.md`, CM57. Observable linear-combination
 certificates and a separate semantic prior identify actual query centers.
 The complete affine head retains convex full/minibatch CE on the joint domain.
 -/

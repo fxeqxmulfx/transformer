@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RowCE
 /-!
 # The actual complex-head minibatch derivative
 
-Source: `review/flat_spectrum.md`, CM33. Each observed input has its own
+Source: `review/convex/moments.md`, CM33. Each observed input has its own
 table row and one consistent raw label. Derive the normalized minibatch CE
 direction through the actual complex head, then use that derivative in the
 bounded update. Default rows do not occur in the observed training loss.

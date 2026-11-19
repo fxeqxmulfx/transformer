@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact projection escapes the actual radial CE failure
 
-Source: `review/flat_spectrum.md`, CM102. One positive step computed from the
+Source: `review/convex/moments.md`, CM102. One positive step computed from the
 training CE probability reaches strictly better feasible readouts on both
 oppositely labeled original prefixes of CM101. This is not benchmark credit.
 -/

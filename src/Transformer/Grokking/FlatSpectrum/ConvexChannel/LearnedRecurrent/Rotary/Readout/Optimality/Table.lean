@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact support minimum over every component and original class
 
-Source: `review/flat_spectrum.md`, CM103. The complete product of row budgets
+Source: `review/convex/moments.md`, CM103. The complete product of row budgets
 admits an explicit minimizer. No class, component or complex coordinate is
 discarded in the support sum or in the competitor domain.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes.Ident
 /-!
 # Full-kernel witnesses for basis changes and aliases
 
-Source: `review/flat_spectrum.md`, CM34. The diagonal witness retains both
+Source: `review/convex/moments.md`, CM34. The diagonal witness retains both
 independent directions under a genuine shear. A separate binary-field grid
 has three observed raw labels and a forced alias of two full class vectors.
 Its third class remains distinguishable, so aliasing is not a zero-code artifact.

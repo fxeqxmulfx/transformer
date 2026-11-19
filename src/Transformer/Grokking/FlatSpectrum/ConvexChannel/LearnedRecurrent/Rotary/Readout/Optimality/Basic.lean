@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact linear minimization over a complete complex readout row
 
-Source: `review/flat_spectrum.md`, CM103. Both complex coordinates enter the
+Source: `review/convex/moments.md`, CM103. Both complex coordinates enter the
 coefficient and its norm. The explicit minimizing row handles ties and zeros;
 a zero value does not remove that coordinate from the feasible domain.
 -/

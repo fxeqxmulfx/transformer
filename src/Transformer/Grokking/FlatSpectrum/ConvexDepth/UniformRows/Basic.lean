@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Project
 /-!
 # Exact distance from a class-uniform row
 
-Source: `review/flat_spectrum.md`, CM69. At a fixed actual row mass, subtracting
+Source: `review/convex/moments.md`, CM69. At a fixed actual row mass, subtracting
 its mean splits the distance to any class-uniform proposal into a constant-row
 term and a nonnegative variance. The class type is explicitly nonempty when
 mass is divided by its cardinality to recover a row with that mass.

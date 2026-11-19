@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.Exampl
 /-!
 # Observable features determine unseen predictions
 
-Source: `review/flat_spectrum.md`, *Observable features determine unseen
+Source: `review/convex/channels.md`, *Observable features determine unseen
 predictions*, O1-O4. Realizable answer labels determine the observed logits
 of every global CE optimizer. An input-only linear reconstruction certificate
 then determines unseen logits, with an explicit error amplification bound.

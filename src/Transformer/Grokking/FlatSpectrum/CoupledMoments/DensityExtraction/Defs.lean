@@ -9,7 +9,7 @@ public import Mathlib.LinearAlgebra.Matrix.Trace
 /-!
 # A convex matrix lift of constant amplitude
 
-Source: `review/flat_spectrum.md`, CM21. The variable is a Hermitian positive
+Source: `review/convex/moments.md`, CM21. The variable is a Hermitian positive
 semidefinite matrix of trace one. There is no rank constraint. A supplied
 feature matrix has columns normalized to squared norm `q`, so the affine
 constant-diagonal constraint is one rather than `1/q`.

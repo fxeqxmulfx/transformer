@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Decoded row certificates within a fixed categorical view
 
-Source: `review/flat_spectrum.md`, CM29, fixed categorical views for decoded
+Source: `review/convex/moments.md`, CM29, fixed categorical views for decoded
 consequences. Each interior query uses its actual finite row certificate.
 The full target is represented by the declared maps and constant strips.
 Interior class names map into a separate output type, so the strip constant

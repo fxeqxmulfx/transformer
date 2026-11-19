@@ -7,7 +7,7 @@ public import Mathlib.Data.Matrix.Block
 /-!
 # Exact block Fourier sources for arbitrary finite latent banks
 
-Source: `review/flat_spectrum.md`, CM64, native-code extension. Replicated
+Source: `review/convex/moments.md`, CM64, native-code extension. Replicated
 four-point Fourier blocks supply the actual unitary premise at every padded
 latent size, with entries zero or signed real/imaginary halves.
 -/

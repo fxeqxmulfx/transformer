@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PairedCo
 /-!
 # A constructor obstruction and the remaining identification limit
 
-Source: `review/flat_spectrum.md`, CM16. A complete cyclic column permutation
+Source: `review/convex/moments.md`, CM16. A complete cyclic column permutation
 forces the same class masses in every row, for every decoder. Convex mixtures
 preserve that restriction. The larger symmetric latent family admits a table
 outside it, but still has distinct observed CE minima with different unseen

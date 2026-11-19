@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Combination
 /-!
 # Learned complex factors shared across original output objects
 
-Source: `review/flat_spectrum.md`, CM92. Each component learns an output
+Source: `review/convex/moments.md`, CM92. Each component learns an output
 vector and two input encoders. Their product is a complete joint coefficient
 tensor. The class factor is shared across both input factors, rather than
 recovering independent factors per output class. No task program or semantic

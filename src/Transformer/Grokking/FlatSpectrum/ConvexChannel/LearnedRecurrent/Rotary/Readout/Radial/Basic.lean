@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Logits
 /-!
 # An actual nonconstant bounded recurrent CE witness
 
-Source: `review/flat_spectrum.md`, CM101. Opposite original objects execute to
+Source: `review/convex/moments.md`, CM101. Opposite original objects execute to
 opposite complete states. The displayed parameters are proof witnesses only;
 no task features or answer rule are supplied to benchmark training.
 -/

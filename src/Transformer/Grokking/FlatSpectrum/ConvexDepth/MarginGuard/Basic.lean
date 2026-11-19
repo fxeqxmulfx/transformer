@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext
 /-!
 # Convex raw-margin constraints on actual context logits
 
-Source: `review/flat_spectrum.md`, CM47. The reference scores, selected raw
+Source: `review/convex/moments.md`, CM47. The reference scores, selected raw
 labels and retention fraction are fixed. The candidate keeps a fraction of
 every reference margin. This is a constraint on actual complete-head logits,
 not a declaration that the reference labels are correct.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Witness
 /-!
 # Fixed support routing with a frozen complex parent
 
-Source: `review/flat_spectrum.md`, CM38. Actual gated complex features preserve
+Source: `review/convex/moments.md`, CM38. Actual gated complex features preserve
 the parent outside candidate support, with both coefficient blocks charged.
 The affine parent-frozen domain and ordinary normalized CE are convex. Covered
 observations have exactly the candidate's loss function and derivatives in

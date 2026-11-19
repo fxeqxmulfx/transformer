@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PhaseCan
 /-!
 # Latent phase tables with a fixed output decoder
 
-Source: `review/flat_spectrum.md`, CM15. The latent phase construction survives
+Source: `review/convex/moments.md`, CM15. The latent phase construction survives
 arbitrary fixed categorical output merging. A concrete decoded table lies
 outside the direct binary rank-one budget. Two distinct decoded CE minima
 show why the earlier observed-latent-label recovery theorem cannot be applied

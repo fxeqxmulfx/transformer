@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Se
 /-!
 # Observed margins and finite original-object certificates
 
-Source: `review/flat_spectrum.md`, CM87, initially requested as one open Lean
+Source: `review/convex/moments.md`, CM87, initially requested as one open Lean
 statement on 2026-11-16 and subsequently proved. The bridge is a finite certificate for forced
 class margins in the actual learned model. The certificate uses only observed
 prefixes/labels and the query prefix; it contains no query label, unknown target

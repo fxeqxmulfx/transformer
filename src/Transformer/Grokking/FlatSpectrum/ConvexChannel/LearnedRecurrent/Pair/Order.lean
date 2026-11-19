@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.P
 /-!
 # Noncommuting learned transitions retain sequence order
 
-Source: `review/flat_spectrum.md`, CM97. A nonconstant parameter witness in the
+Source: `review/convex/moments.md`, CM97. A nonconstant parameter witness in the
 full two-state family distinguishes the swapped prefixes forbidden by CM96's
 scalar obstruction. Both transitions preserve the state norm. This is an
 expressivity proof, never a supplied learning rule or trained stress result.

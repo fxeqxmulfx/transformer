@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Initi
 /-!
 # Feasible bounded confidence from observed latent dictionaries
 
-Source: `review/flat_spectrum.md`, CM64. Scale a proved CM53 feasible point to
+Source: `review/convex/moments.md`, CM64. Scale a proved CM53 feasible point to
 construct one joint tensor. This constructor does not parameterize the full
 convex domain by a product of independently learned factors.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Re
 /-!
 # A genuinely held-out face of the actual sequence family
 
-Source: `review/flat_spectrum.md`, CM87. Observe three Boolean prefixes with
+Source: `review/convex/moments.md`, CM87. Observe three Boolean prefixes with
 nonconstant labels and withhold the fourth corner. Its two varying context
 positions are nonadjacent. The exact coefficient relation includes every bias,
 position, adjacent pair, output class and complex coordinate.

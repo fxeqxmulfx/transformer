@@ -10,7 +10,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic.S
 /-!
 # A polynomial-size learned quadratic sequence family with explicit limits
 
-Source: `review/flat_spectrum.md`, CM85. Full complex PSD coordinates recover
+Source: `review/convex/moments.md`, CM85. Full complex PSD coordinates recover
 actual learned representations, squared-magnitude activations, and readouts.
 Ordinary next-original-object CE and all indexed minibatches are jointly
 convex. The immutable sequence interface retains all positions and objects.

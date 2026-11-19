@@ -11,7 +11,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Bounded complex components with a shared learned output factor
 
-Source: `review/flat_spectrum.md`, CM92. The complete joint domain is convex,
+Source: `review/convex/moments.md`, CM92. The complete joint domain is convex,
 has finite executable learned-factor representations, and supports feasible
 forward-only bias queries. Original-object inputs, outputs and ordinary CE
 remain unchanged. Component discovery and generalization are separate open

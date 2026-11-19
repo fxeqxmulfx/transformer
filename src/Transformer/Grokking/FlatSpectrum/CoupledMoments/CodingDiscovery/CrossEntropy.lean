@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.L
 /-!
 # The convex cross-entropy program of the discovered coding has one minimizer: the table
 
-Source: `review/flat_spectrum.md`, CM17, *The bridge to CE*, on CM13 and CM14:
+Source: `review/convex/moments.md`, CM17, *The bridge to CE*, on CM13 and CM14:
 "CM13 further identifies this candidate as the only ideal probability table under the nuclear
 budget. This conclusion concerns the compatible model completion. It does not prove that
 unobserved true labels follow the learned phase equations."

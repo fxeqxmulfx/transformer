@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Fac
 /-!
 # Conditional identification from the restricted complete kernel
 
-Source: `review/flat_spectrum.md`, CM40. The extra observed-code equations
+Source: `review/convex/moments.md`, CM40. The extra observed-code equations
 express a shared encoder across the supplied role alignment. Complete-basis
 matching still has its actual universal meaning. Soundness requires the
 unknown target to belong to this more restrictive family; observed separation

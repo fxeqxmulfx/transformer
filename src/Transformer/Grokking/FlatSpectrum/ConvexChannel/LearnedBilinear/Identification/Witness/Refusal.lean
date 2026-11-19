@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Checked success and refusal on distinct genuinely unseen inputs
 
-Source: `review/flat_spectrum.md`, CM87. The positive certificate is checked
+Source: `review/convex/moments.md`, CM87. The positive certificate is checked
 in exact rational arithmetic. A different unseen sequence admits opposite
 original-object outputs from two models fitting the same observations. Thus
 even adequate representation capacity cannot settle that answer from these

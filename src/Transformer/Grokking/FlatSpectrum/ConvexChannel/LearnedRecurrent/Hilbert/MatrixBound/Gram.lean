@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # Complete complex column Gram energy and its explicit upper bound
 
-Source: `review/flat_spectrum.md`, CM108. Every matrix entry and both state
+Source: `review/convex/moments.md`, CM108. Every matrix entry and both state
 coordinates contribute to the actual complex product. No eigenvector is assumed.
 -/
 

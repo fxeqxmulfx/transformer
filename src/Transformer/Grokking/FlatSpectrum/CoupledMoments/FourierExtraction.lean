@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 /-!
 # Constant-amplitude extraction inside a separated Fourier subspace
 
-Source: `review/flat_spectrum.md`, CM20. Exact amplitude identifies one mode,
+Source: `review/convex/moments.md`, CM20. Exact amplitude identifies one mode,
 centering excludes the constant mode, and amplitude error bounds cross-mode
 products. The subspace must be exact and have separated frequency differences;
 the two-state counterexample shows why amplitude alone is insufficient.

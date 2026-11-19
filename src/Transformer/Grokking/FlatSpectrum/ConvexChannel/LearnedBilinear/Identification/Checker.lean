@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Exact rational checking of finite observed-margin certificates
 
-Source: `review/flat_spectrum.md`, CM87. Raw coefficient rows are rational
+Source: `review/convex/moments.md`, CM87. Raw coefficient rows are rational
 integer counts with signs. This checker accepts rational weights and a rational
 bound, and checks every real/imaginary, class, query and context coordinate.
 Its correctness connects to the actual real-valued learned margins. It checks

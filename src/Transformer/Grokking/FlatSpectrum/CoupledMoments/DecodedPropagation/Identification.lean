@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Sound unseen answers from the union of surviving phase domains
 
-Source: `review/flat_spectrum.md`, CM19. Normalize the unknown target at one
+Source: `review/convex/moments.md`, CM19. Normalize the unknown target at one
 observed row. Its anchor phase is among the enumerated branches and survives
 every sweep. Taking the union over branches and decoder choices is essential:
 the theorem never assumes that a preferred fitted decoder is the true one.

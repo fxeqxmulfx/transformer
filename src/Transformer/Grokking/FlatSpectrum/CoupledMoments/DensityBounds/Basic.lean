@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Matrix.PosDef
 /-!
 # Convex tolerances on actual density readings
 
-Source: `review/flat_spectrum.md`, CM22. Relax the affine unit diagonal by a
+Source: `review/convex/moments.md`, CM22. Relax the affine unit diagonal by a
 declared norm tolerance. Positivity and trace one remain exact mathematical
 constraints; a numerical residual is not an exact certificate of them.
 -/

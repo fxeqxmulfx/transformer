@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Logits
 /-!
 # Actual full-class CE coefficients on indexed learned recurrent states
 
-Source: `review/flat_spectrum.md`, CM103. Coefficients use every original record,
+Source: `review/convex/moments.md`, CM103. Coefficients use every original record,
 class and component. The contraction identity is derived from complete executed
 logits, not introduced as a gradient assumption or an identification oracle.
 -/

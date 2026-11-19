@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Los
 /-!
 # Equal training CE with opposite unseen pooled predictions
 
-Source: `review/flat_spectrum.md`, CM36. The original complete-kernel search
+Source: `review/convex/moments.md`, CM36. The original complete-kernel search
 refuses the missing corner and uses the explicitly declared fallback class1.
 The grouped search accepts answer0. Both actual bounded complex models retain
 the same raw training logits through full, mini and zero-update schedules.

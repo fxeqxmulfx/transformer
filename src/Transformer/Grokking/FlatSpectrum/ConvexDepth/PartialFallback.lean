@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback.Batc
 /-!
 # A saved predecessor with a restricted input domain
 
-Source: `review/flat_spectrum.md`, CM41. Actual zero-extended parent features
+Source: `review/convex/moments.md`, CM41. Actual zero-extended parent features
 are used only where the saved parent is available and the candidate refuses.
 Every other input retains the candidate. Both coefficient blocks remain
 charged, flat complex codes bound the routed features, and ordinary normalized

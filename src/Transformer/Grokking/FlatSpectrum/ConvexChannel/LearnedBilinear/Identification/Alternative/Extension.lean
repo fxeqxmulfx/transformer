@@ -6,7 +6,7 @@ public import Mathlib.LinearAlgebra.Isomorphisms
 /-!
 # Positive extension of a functional on finitely many observed coordinates
 
-Source: `review/flat_spectrum.md`, CM87. Apply Mathlib's M. Riesz extension
+Source: `review/convex/moments.md`, CM87. Apply Mathlib's M. Riesz extension
 theorem to the range of a linear observation map. A strictly positive range
 vector provides the required cofinality. A kernel argument constructs the
 partial functional, so no well-definedness or identification is assumed.

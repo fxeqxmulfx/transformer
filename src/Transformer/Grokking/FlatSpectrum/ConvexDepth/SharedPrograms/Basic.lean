@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FourierCode
 /-!
 # Shared categorical programs with a complete complex copy head
 
-Source: `review/flat_spectrum.md`, CM52. Each fixed program reads an input and
+Source: `review/convex/moments.md`, CM52. Each fixed program reads an input and
 returns a vocabulary symbol. The shared identity decoder is an explicit copy
 prior, not a consequence of flatness. Only mixture coefficients are learned;
 the feature bank and the full conjugate Fourier head stay fixed.

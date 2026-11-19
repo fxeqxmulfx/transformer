@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Constant diagonal forces a diagonal Fourier density
 
-Source: `review/flat_spectrum.md`, CM21. Orthogonality reads the entries of an
+Source: `review/convex/moments.md`, CM21. Orthogonality reads the entries of an
 arbitrary matrix, rather than products from an assumed rank-one factorization.
 -/
 

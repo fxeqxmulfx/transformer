@@ -16,7 +16,7 @@ the complete saved319 predictor. The gate uses no task name or heldout labels.
 All new scores remain visible even when they regress.
 
 Lean first: `scripts/SharedHeadFallbackAxioms.lean` audits CM38 in
-`review/flat_spectrum.md` and `ConvexDepth/Fallback/{Basic,Domain,Batch}`.
+`review/convex/moments.md` and `ConvexDepth/Fallback/{Basic,Domain,Batch}`.
 The finite disjoint coordinate sum implements the exact selected logits;
 fixing the entire parent block is an affine constraint. Both stored coefficient
 budgets are charged. Ordinary CE is convex in every candidate coefficient.

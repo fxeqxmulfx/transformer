@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedCE
 /-!
 # Full-kernel states in the bounded complex CE model
 
-Source: `review/flat_spectrum.md`, CM34. Instantiate the actual block Fourier
+Source: `review/convex/moments.md`, CM34. Instantiate the actual block Fourier
 head with the finite range of full query vectors. Both the latent defaults
 and the observed-input refinement are charged to the budget. Ordinary CE
 remains convex after freezing the code construction. Unseen decoded

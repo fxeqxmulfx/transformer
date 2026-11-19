@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic.B
 /-!
 # Signed learned quadratic channels and ordinary answer cross-entropy
 
-Source: `review/flat_spectrum.md`, CM85. Every class and both readout signs
+Source: `review/convex/moments.md`, CM85. Every class and both readout signs
 retain a complete complex PSD matrix. Actual inference recovers the full
 factor, learns its balanced representation and readout, and squares the
 magnitudes of its complex responses. The whole-domain loss is jointly convex.

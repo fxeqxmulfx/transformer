@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Ordinary next-object loss in depth log odds
 
-Source: `review/flat_spectrum.md`, CM115. A real training coordinate determines
+Source: `review/convex/moments.md`, CM115. A real training coordinate determines
 the physical depth of CM113 through a sigmoid. The full CE slope in this
 coordinate has the same sign as the physical slope, with a scale bounded by
 one quarter. The CM114 tangent bound transfers with the physical displacement.

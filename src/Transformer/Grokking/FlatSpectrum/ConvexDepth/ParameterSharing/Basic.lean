@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
 /-!
 # Charge every coefficient created by shared parameters
 
-Source: `review/flat_spectrum.md`, CM55. The fixed affine map expands shared
+Source: `review/convex/moments.md`, CM55. The fixed affine map expands shared
 parameters into the actual raw-class coefficient tensor. A weighted absolute
 budget accounts for every occurrence of a parameter, including a nonzero
 fixed offset. Ordinary CE remains convex on this sufficient parameter domain.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Repla
 /-!
 # Certified local replacement inside the complete learned complex model
 
-Source: `review/flat_spectrum.md`, CM83. Rechecking every original row of
+Source: `review/convex/moments.md`, CM83. Rechecking every original row of
 one changed component suffices when the entire old model is feasible.
 Actual inference retains every neuron and substitutes the complete new
 complex neuron in its original summation position. Nonzero examples cover

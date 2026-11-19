@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Embed the reduced family back into the complete original family
 
-Source: `review/flat_spectrum.md`, CM76. A reduced point occupies diagonal
+Source: `review/convex/moments.md`, CM76. A reduced point occupies diagonal
 pattern slots; all other logical coordinates are exactly zero. This reverse
 construction proves that aggregation does not enlarge the prediction family.
 A witness old hidden slot is needed: an empty original model has only zero

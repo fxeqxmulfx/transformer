@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Missing axes cannot be silently pinned for identification
 
-Source: `review/flat_spectrum.md`, CM28. CM27's native constructor explicitly
+Source: `review/convex/moments.md`, CM28. CM27's native constructor explicitly
 chooses zero for missing axes. That is permitted as a proposal, but it cannot
 be used in the observed identification certificate. A missing nonanchor row
 supports an independent kernel vector, so the real joint module is not cyclic

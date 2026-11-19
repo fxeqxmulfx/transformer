@@ -7,7 +7,7 @@ public import Mathlib.Analysis.Real.Sqrt
 /-!
 # Recover learned representation and readout from a joint ReLU coordinate
 
-Source: `review/flat_spectrum.md`, CM75. This construction uses actual ReLU,
+Source: `review/convex/moments.md`, CM75. This construction uses actual ReLU,
 not the fixed random gates in arXiv:2211.11052v1, §3.4. A joint vector `u`
 recovers readout amplitude `sqrt ‖u‖` and representation `u / sqrt ‖u‖`.
 Their actual product through the positively homogeneous activation equals

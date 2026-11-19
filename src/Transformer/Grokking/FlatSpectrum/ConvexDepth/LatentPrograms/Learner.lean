@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Basic
 /-!
 # Discovery and consensus with an unknown shared raw decoder
 
-Source: `review/flat_spectrum.md`, CM53. The target program and its possibly
+Source: `review/convex/moments.md`, CM53. The target program and its possibly
 many-to-one decoder occur only in soundness hypotheses. The executable learner
 receives a fixed input-program bank, its order and observed raw labels.
 -/

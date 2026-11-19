@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ObservedRefinemen
 /-!
 # Decoder count updates and feasible phase refinement
 
-Source: `review/flat_spectrum.md`, CM23. Count-maximizing decoder updates and
+Source: `review/convex/moments.md`, CM23. Count-maximizing decoder updates and
 certified axis assignments decrease actual observed CE. All resulting phase
 tables remain in the same convex decoded spectral hull, including imperfect
 fits. The discrete search itself is not a jointly convex parametrization.

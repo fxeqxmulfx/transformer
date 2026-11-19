@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.C
 /-!
 # Every fitting completion has the certified decoded answers
 
-Source: `review/flat_spectrum.md`, CM18. `accepted_decoding` is the soundness of the
+Source: `review/convex/moments.md`, CM18. `accepted_decoding` is the soundness of the
 certificate: if it is accepted, then every pair of phases that fits the training samples, the
 unknown target's among them, decodes at each reached row and reached column to the label that
 the certificate proposes. The latent states themselves are fixed only up to the sign and the

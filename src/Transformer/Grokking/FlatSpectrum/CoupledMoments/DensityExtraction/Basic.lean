@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Convexity and observable readings
 
-Source: `review/flat_spectrum.md`, CM21, convex lift. Positive semidefiniteness,
+Source: `review/convex/moments.md`, CM21, convex lift. Positive semidefiniteness,
 trace and diagonal readings are checked on the matrix variable itself.
 -/
 

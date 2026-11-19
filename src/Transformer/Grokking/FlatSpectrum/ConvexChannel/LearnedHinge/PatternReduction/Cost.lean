@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Exact parameter-array costs before and after pattern reduction
 
-Source: `review/flat_spectrum.md`, CM76. These counts concern all binary64
+Source: `review/convex/moments.md`, CM76. These counts concern all binary64
 real parameter coordinates, not optimizer buffers, constraints or a native
 run's peak memory. Fifteen region inputs, two classes and seven coordinates
 give a concrete change in admission; exponential growth still remains.

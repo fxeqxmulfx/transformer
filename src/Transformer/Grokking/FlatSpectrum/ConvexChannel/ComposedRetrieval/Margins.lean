@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Sufficient margins for composed learned reads
 
-Source: `review/flat_spectrum.md`, CM113. The four gaps describe actual
+Source: `review/convex/moments.md`, CM113. The four gaps describe actual
 learned scores on an evaluated memory. They are measured outside the forward
 and fitting. The second query is the raw object reached by the first jump.
 -/

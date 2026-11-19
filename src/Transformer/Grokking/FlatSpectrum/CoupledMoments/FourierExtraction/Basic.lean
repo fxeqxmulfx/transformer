@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 /-!
 # Isolating cross terms in the squared amplitude
 
-Source: `review/flat_spectrum.md`, CM20, Fourier coefficient identity. Distinct
+Source: `review/convex/moments.md`, CM20, Fourier coefficient identity. Distinct
 off-diagonal frequency differences isolate each pair of mixture coefficients.
 Constant amplitude annihilates every such nonconstant coefficient.
 -/

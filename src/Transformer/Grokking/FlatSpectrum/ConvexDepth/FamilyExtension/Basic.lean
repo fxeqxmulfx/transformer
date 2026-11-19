@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Comple
 /-!
 # Extending a fixed input-program family without losing old feasible tensors
 
-Source: `review/flat_spectrum.md`, CM67. The additional programs are fixed
+Source: `review/convex/moments.md`, CM67. The additional programs are fixed
 independently of labels. Zero new blocks embed the old full joint domain;
 no surviving candidate is removed and no unknown decoder row is completed.
 -/

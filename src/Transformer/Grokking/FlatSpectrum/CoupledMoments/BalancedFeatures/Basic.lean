@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Bas
 /-!
 # Observable feature balancing and a feasible density
 
-Source: `review/flat_spectrum.md`, CM24. Normalize actual nonzero feature rows,
+Source: `review/convex/moments.md`, CM24. Normalize actual nonzero feature rows,
 not an unknown Fourier reference. The uniform density then has unit readings.
 This establishes feasibility, not purity, centering or hidden-mode recovery.
 -/

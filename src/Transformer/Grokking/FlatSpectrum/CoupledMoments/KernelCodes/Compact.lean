@@ -8,7 +8,7 @@ public import Mathlib.Data.Fintype.Sum
 /-!
 # Finite states from the actual range of full vector codes
 
-Source: `review/flat_spectrum.md`, CM34. Only codes reached by active input
+Source: `review/convex/moments.md`, CM34. Only codes reached by active input
 pairs become states. The number of states is bounded by the number of such
 pairs even when the field or basis is large. A fixed observed-class bank
 provides representatives; its explicit fallback has no correctness promise.

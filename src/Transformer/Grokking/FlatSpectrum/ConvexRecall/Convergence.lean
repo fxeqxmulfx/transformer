@@ -6,7 +6,7 @@ public import Mathlib.Topology.Sequences
 /-!
 # Convergent answer loss forces convergent matching
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR7.
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR7.
 On the compact stochastic domain, continuity of ordinary answer CE and
 uniqueness of its minimizer imply that every feasible sequence whose loss
 approaches the optimum converges to identity matching. This is a stability
@@ -79,7 +79,7 @@ theorem continuous_answerLoss (query : S → κ) (data : S → κ → ν) :
 
 /-- **Loss convergence implies convergence to correct matching.** For
 separating input dictionaries, every feasible minimizing sequence tends
-to the identity matrix (`review/flat_spectrum.md`, CR7). No loss-to-answer
+to the identity matrix (`review/convex/channels.md`, CR7). No loss-to-answer
 or parameter-convergence premise is hidden in the separation condition. -/
 theorem tendsto_one_of_loss_tendsto [Nontrivial ν] (query : S → κ) (data : S → κ → ν)
     (hsep : Separates query data) (A : ℕ → Matrix κ κ ℝ) (hA : ∀ n, IsStochastic (A n))

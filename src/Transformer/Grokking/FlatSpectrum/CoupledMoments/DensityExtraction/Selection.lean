@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Two linear objectives select a simplex vertex
 
-Source: `review/flat_spectrum.md`, CM21. First maximize the real reading, then
+Source: `review/convex/moments.md`, CM21. First maximize the real reading, then
 the imaginary reading on the first optimum face. The policy is specified in
 observable coordinates; an optimizer or a target eigenvector is not assumed.
 -/

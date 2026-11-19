@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Basic
 /-!
 # Convex answer training recovers a flat kernel
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR6;
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR6;
 AR2-AR3 and Theorem A. Applying any fixed scalar readout to the learned
 categorical logits recovers the recall kernel. For a centered readout it
 is flat and has full row rank. With no zero readout values it is still

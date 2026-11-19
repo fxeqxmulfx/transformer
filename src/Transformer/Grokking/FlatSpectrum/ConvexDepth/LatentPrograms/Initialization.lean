@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Compl
 /-!
 # Training-only feasible initialization of joint latent decoders
 
-Source: `review/flat_spectrum.md`, CM53. The initializer chooses the first
+Source: `review/convex/moments.md`, CM53. The initializer chooses the first
 retained candidate itself and completes unknown entries with a declared
 default. Feasibility is proved; no successful optimizer is a hypothesis.
 -/

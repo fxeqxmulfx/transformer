@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext.Bounds
 /-!
 # Ordinary CE in every local context coefficient
 
-Source: `review/flat_spectrum.md`, CM46. Gates, anchor, radius, bank and full
+Source: `review/convex/moments.md`, CM46. Gates, anchor, radius, bank and full
 head are fixed. CE remains convex in the complete collection of local rows.
 The explicit slopes retain the radius, gate and every original raw class.
 -/

@@ -7,7 +7,7 @@ Flat spectrum remains a capacity bound, not an identification assumption.
 The Lean statements were checked first: `ConvexChannel/Minibatch/` proves the
 singleton failure and the two-gradient repair; `ConvexChannel/Shared.lean`
 proves feasibility and convexity of the shared model and fixed-scale CE.
-The accompanying note is `review/flat_spectrum.md`, MF1–MF3.
+The accompanying note is `review/convex/channels.md`, MF1–MF3.
 
 | Arm | Parameters and inputs | Update |
 | --- | --- | --- |

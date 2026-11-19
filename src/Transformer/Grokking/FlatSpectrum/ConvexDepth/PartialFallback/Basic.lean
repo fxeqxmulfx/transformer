@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
 /-!
 # Route only to an available saved predecessor
 
-Source: `review/flat_spectrum.md`, CM41. The parent features are genuinely
+Source: `review/convex/moments.md`, CM41. The parent features are genuinely
 partial: their input type is the subtype accepted by a fixed domain predicate.
 Zero extension and a fixed gate preserve the candidate outside that domain.
 Both actual coefficient blocks remain charged; neither support nor availability

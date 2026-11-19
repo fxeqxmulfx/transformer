@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Predic
 /-!
 # What confidence learning changes in ordinary cross-entropy
 
-Source: `review/flat_spectrum.md`, CM64. Exact observed anchors leave one learned
+Source: `review/convex/moments.md`, CM64. Exact observed anchors leave one learned
 confidence value in the observed CE, rather than CM53's constant fixed margin.
 Increasing that value cannot identify additional latent states or unknown labels.
 -/

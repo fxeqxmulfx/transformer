@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Capacity
 /-!
 # Both labels and value coverage still permit ambiguous shared answers
 
-Source: `review/flat_spectrum.md`, CM73. Two constant dictionaries contain both
+Source: `review/convex/moments.md`, CM73. Two constant dictionaries contain both
 labels and cover both values at every slot. Every selected slot with negation
 is an attained ordinary-CE optimizer in the same label-independent domain.
 Two such optimizers give opposite strict answers on an unobserved dictionary.

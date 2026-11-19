@@ -7,7 +7,7 @@ alone also failed. This experiment keeps the shared Fourier probability model
 and ordinary cross-entropy, and adds a nuclear-norm upper bound. It uses fixed
 vocabulary codes and the last two input tokens, without arithmetic answer rules.
 
-Lean CM5–CM7 at `9d98a603`, in `review/flat_spectrum.md` and
+Lean CM5–CM7 at `9d98a603`, in `review/convex/moments.md` and
 `CoupledMoments/Schatten/` precedes stress training. It proves convexity, uniform
 feasibility, a common-mixture feasibility repair, and the observed CE minimum
 certificate. A concrete 2x2 theorem derives the unseen rank-one answer from

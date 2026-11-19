@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Basic
 /-!
 # Shared learned ReLU coordinates on explicit input activation cones
 
-Source: `review/flat_spectrum.md`, CM75. Sign constraints refer only to
+Source: `review/convex/moments.md`, CM75. Sign constraints refer only to
 inputs and architecture masks, never their next-object labels. The actual
 learned ReLU is affine in a joint coordinate on the declared cone. A mask
 is a constraint, not an assumed prediction on an unobserved prefix.

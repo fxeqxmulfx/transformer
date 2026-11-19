@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Moving a feasible iterate to a point admitting complete tangent queries
 
-Source: `review/flat_spectrum.md`, CM80. A positive mixture with the certified
+Source: `review/convex/moments.md`, CM80. A positive mixture with the certified
 centre opens every non-forced row while preserving all forced equalities.
 The displacement and convex-loss cost are explicit: mixing is not claimed to
 leave the iterate, its objective or the optimizer trajectory unchanged.

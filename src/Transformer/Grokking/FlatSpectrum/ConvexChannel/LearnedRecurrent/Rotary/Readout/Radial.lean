@@ -7,6 +7,6 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Radial feasibility does not imply ordinary-CE optimization
 
-Source: `review/flat_spectrum.md`, CM101. An actual nonconstant bounded recurrent
+Source: `review/convex/moments.md`, CM101. An actual nonconstant bounded recurrent
 example has fixed radial gradient proposals and strictly better feasible CE.
 -/

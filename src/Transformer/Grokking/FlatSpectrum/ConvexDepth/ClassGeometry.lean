@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry.Witnes
 /-!
 # Unseen outputs under an explicit identifying class geometry
 
-Source: `review/flat_spectrum.md`, CM56. Two observed feature anchors identify
+Source: `review/convex/moments.md`, CM56. Two observed feature anchors identify
 an unknown affine decoder in supplied injective class coordinates. Scaled
 slope, intercept and positive shared margin form an affine complete complex
 head with a convex charged domain and ordinary full/minibatch cross-entropy.

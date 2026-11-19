@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.DecodedP
 /-!
 # A convex prediction family covering all fixed output decoders
 
-Source: `review/flat_spectrum.md`, CM15. Decoder discovery is a proposal search,
+Source: `review/convex/moments.md`, CM15. Decoder discovery is a proposal search,
 but its candidate predictions belong to one convex hull in the original output
 coordinates. A feasible exact decoded fit minimizes ordinary CE over that
 entire hull. This certifies a successful candidate, not an efficient oracle or

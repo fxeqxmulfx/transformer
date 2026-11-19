@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Positive input-coordinate geometry for the shared complex factors
 
-Source: `review/flat_spectrum.md`, CM93. The first CM92 experiment concentrates
+Source: `review/convex/moments.md`, CM93. The first CM92 experiment concentrates
 almost all input-factor energy on always-present bias addresses. A separable
 positive coordinate change retains every original object and trainable complex
 direction, but changes the fixed-budget capacity region. No equality between

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # Exact physical coverage and retained cost of the paired architecture
 
-Source: `review/flat_spectrum.md`, CM78. The new function class is the paired
+Source: `review/convex/moments.md`, CM78. The new function class is the paired
 average of the original physical phased family. CM76's exact lift still
 covers that class. This is an explicit restriction to renaming-equivariant
 predictions when the renaming is involutive, not preservation of every old

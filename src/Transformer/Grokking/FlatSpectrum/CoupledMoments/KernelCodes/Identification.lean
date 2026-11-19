@@ -7,7 +7,7 @@ public import Mathlib.LinearAlgebra.Basis.VectorSpace
 /-!
 # Conditional unseen answers from a full-kernel match
 
-Source: `review/flat_spectrum.md`, CM34. Normalize the unknown compatible
+Source: `review/convex/moments.md`, CM34. Normalize the unknown compatible
 target code into the actual observed kernel, then apply the basis comparison
 theorem. Observed class names can embed into a larger raw vocabulary. Unknown
 raw aliases need not have been observed, and matching does not identify their

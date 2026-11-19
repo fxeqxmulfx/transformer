@@ -8,7 +8,7 @@ public import Mathlib.Tactic
 /-!
 # Finite observed pools closed under nonempty prefixes
 
-Source: `review/flat_spectrum.md`, CM58. A truth signature used inside an
+Source: `review/convex/moments.md`, CM58. A truth signature used inside an
 inclusive count must include every nonempty prefix of each observed word.
 Closing a finite input pool needs at most the sum of its word lengths. Equal
 signatures on that closure preserve counts there, without identifying values

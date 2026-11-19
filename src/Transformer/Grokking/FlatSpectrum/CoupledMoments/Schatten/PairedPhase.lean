@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.DecodedH
 /-!
 # Symmetric latent phase witnesses and ordinary cross-entropy
 
-Source: `review/flat_spectrum.md`, CM16. A phase point and its negative have
+Source: `review/convex/moments.md`, CM16. A phase point and its negative have
 the same output under a fixed even decoder. Their average has equal paired
 probabilities and satisfies the original radius-N, nuclear-budget-N bounds.
 Observed fitting certifies ordinary CE optimality, without a recovery claim.

@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Positive complete geometry for shared learned complex factors
 
-Source: `review/flat_spectrum.md`, CM93. A separable coordinate change retains
+Source: `review/convex/moments.md`, CM93. A separable coordinate change retains
 every direction and joint convexity while changing the fixed-budget region.
 Dimension-only bias scaling corrects both full coordinate responses and the
 capacity cost of feasible forward-only CE queries. Generalization and improved

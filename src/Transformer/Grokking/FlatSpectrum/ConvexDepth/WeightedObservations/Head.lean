@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
 /-!
 # Grouping the actual full-vocabulary complex-head CE
 
-Source: `review/flat_spectrum.md`, CM60. Equal complete features and raw labels
+Source: `review/convex/moments.md`, CM60. Equal complete features and raw labels
 permit multiplicity-weighted evaluation of the actual CM57 objective and its
 derivatives. Every coefficient remains learned jointly. This is an exact
 algebraic identity, not a floating-point error bound or a clean-label oracle.

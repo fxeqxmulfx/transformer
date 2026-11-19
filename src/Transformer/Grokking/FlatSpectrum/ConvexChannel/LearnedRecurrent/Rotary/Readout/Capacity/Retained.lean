@@ -11,7 +11,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete retained coefficients with changing learned content
 
-Source: `review/flat_spectrum.md`, CM106. Exact indexed refresh and transport
+Source: `review/convex/moments.md`, CM106. Exact indexed refresh and transport
 identities retain every state and signal contribution. Actual changed initial
 states and transported operators bound state drift; both signal and state error
 enter current-content CE and direction bounds. No unseen-answer claim follows.

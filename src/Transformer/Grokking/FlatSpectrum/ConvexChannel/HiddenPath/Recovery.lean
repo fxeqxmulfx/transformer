@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath.Joint
 /-!
 # Exact recovery of positive encoder and decoder distributions
 
-Source: `review/flat_spectrum.md`, CM74. For a single input, the positive joint
+Source: `review/convex/moments.md`, CM74. For a single input, the positive joint
 simplex represents exactly all positive stochastic encoders and conditional
 decoders. The decoder has an independent row for every hidden state. The
 result does not retain the counterexample's keep/flip parameter tie or impose

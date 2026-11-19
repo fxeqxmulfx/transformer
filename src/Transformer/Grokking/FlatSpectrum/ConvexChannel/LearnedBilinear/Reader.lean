@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Immutable objects address learned query, position and adjacent-pair weights
 
-Source: `review/flat_spectrum.md`, CM86. The last visible object is the query;
+Source: `review/convex/moments.md`, CM86. The last visible object is the query;
 the remaining prefix reads learned position/object weights and learned adjacent
 pair weights shared across positions. All overlapping pairs and repetitions
 contribute. No key/value roles, arithmetic operations or answers are built into

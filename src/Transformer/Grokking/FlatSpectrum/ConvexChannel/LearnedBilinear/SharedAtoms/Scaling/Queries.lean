@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Complete scaled responses and feasible ordinary-CE queries
 
-Source: `review/flat_spectrum.md`, CM93. A scaled bias component changes a raw
+Source: `review/convex/moments.md`, CM93. A scaled bias component changes a raw
 class score by a(none)*b(none). Reserving capacity must account for this factor.
 Every complete coordinate and repeated-record response receives its own positive
 separable scale; no class or imaginary component is dropped.

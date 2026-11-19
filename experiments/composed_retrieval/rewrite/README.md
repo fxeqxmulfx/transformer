@@ -50,7 +50,7 @@ limit, a row is exactly correct in free generation if and only if every
 teacher-forced winner matches. Both paths share the prefix through their
 first error. Later per-object accuracy can differ as soon as the model
 appends an incorrect object. The audit checks the exact counts agree on
-each split. [Flat-spectrum CM116](../../../review/flat_spectrum.md)
+each split. [Flat-spectrum CM116](../../../review/convex/moments.md)
 
 Each independent build fits 42 endpoints at seeds 0, 1 and 2, using
 analytic and forward-only minibatches of 32 original examples. All 84

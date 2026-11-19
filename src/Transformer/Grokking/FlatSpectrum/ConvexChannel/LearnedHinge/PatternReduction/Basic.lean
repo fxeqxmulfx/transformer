@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Compl
 /-!
 # Merge learned neurons with identical activation constraints
 
-Source: `review/flat_spectrum.md`, CM76. On the entire declared input region,
+Source: `review/convex/moments.md`, CM76. On the entire declared input region,
 neurons with the same sign pattern add exactly. Every original vector enters
 the sum. This is a quotient preserving predictions, not recovery of the old
 individual factors or preservation of an arbitrary parameter regularizer.

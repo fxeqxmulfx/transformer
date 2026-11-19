@@ -4,7 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Representation
 
 /-!+# Answer CE identifies the atoms contradicted by training
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC5.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC5.
 A realizable generated-recall rule attains the minimum sample CE. Equality
 of total loss forces target mass one on each training sample, which rules
 out every active parameter atom that would generate a different answer.

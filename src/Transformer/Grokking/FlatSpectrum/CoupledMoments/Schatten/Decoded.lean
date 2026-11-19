@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Basic
 /-!
 # A fixed decoder of spectrally bounded latent probabilities
 
-Source: `review/flat_spectrum.md`, CM15. Sum latent probabilities over a fixed
+Source: `review/convex/moments.md`, CM15. Sum latent probabilities over a fixed
 decoder's fibers. The output domain and original-vocabulary ordinary CE remain
 convex. The spectral constraints remain on the latent moments, not on newly
 decoded moments. A fixed decoder need not be injective or surjective.

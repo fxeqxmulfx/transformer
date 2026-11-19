@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Exa
 /-!
 # Convex density tolerances and conditional stability
 
-Source: `review/flat_spectrum.md`, CM22. Norm-bounded diagonal error preserves
+Source: `review/convex/moments.md`, CM22. Norm-bounded diagonal error preserves
 convexity and is an actual real interval constraint on PSD kernels. Separated
 Fourier differences bound hidden cross terms; explicit feature perturbations
 bound kernel errors. Approximate objective accuracy plus a strict scalar score

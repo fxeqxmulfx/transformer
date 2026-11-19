@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Exact aggregation into one common real and imaginary pattern family
 
-Source: `review/flat_spectrum.md`, CM76. Aggregate each component by its
+Source: `review/convex/moments.md`, CM76. Aggregate each component by its
 own sign pattern, then join the two complete vectors at each scalar pattern.
 Every original hidden slot contributes. The resulting actual complex model
 has one slot per scalar pattern, with both component constraints retained.

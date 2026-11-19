@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.SharedLearning.Ide
 /-!
 # Four observations identify a nonconstant shared rule on new inputs
 
-Source: `review/flat_spectrum.md`, CM73. Three categorical slots and two classes
+Source: `review/convex/moments.md`, CM73. Three categorical slots and two classes
 give twelve shared joint coordinates. Four of eight Boolean dictionaries are
 observed, under only one of two visible queries. The input-only alignment swaps
 the first two slots at the other query. The labels select and negate one slot;

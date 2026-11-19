@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Adaptive
 /-!
 # Causal count features preserve and enlarge the convex channel family
 
-Source: `review/flat_spectrum.md`, CFt1-CFt3. Adding input-only features does
+Source: `review/convex/channels.md`, CFt1-CFt3. Adding input-only features does
 not multiply learned factors: the channel still learns one joint tensor.
 Zero extension embeds every old channel with exactly the same predictions.
 A fixed query with two separate Boolean slots cannot strictly classify XOR;

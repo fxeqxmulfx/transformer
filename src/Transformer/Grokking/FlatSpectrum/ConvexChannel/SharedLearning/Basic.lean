@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Training
 /-!
 # Answer loss eliminates shared routing mass through observed collisions
 
-Source: `review/flat_spectrum.md`, CM73. The domain is the existing
+Source: `review/convex/moments.md`, CM73. The domain is the existing
 label-independent `Feasible` set on the complete tensor `Channel Unit K V C`.
 It has |K||V||C| directly trained coordinates. A fixed input-only alignment
 permutes slots before the linear readout; no observed-label anchor is imposed.

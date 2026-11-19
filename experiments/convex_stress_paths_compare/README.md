@@ -20,7 +20,7 @@ parent's own choices and certificate policy remain preserved. Held-out metrics
 cannot enter the score selector, and the two initializer policies are never
 selected against each other. The other31 tasks keep their earlier choices.
 
-The theory is unchanged: `review/flat_spectrum.md`, CM5–CM8 and CM29, and
+The theory is unchanged: `review/convex/moments.md`, CM5–CM8 and CM29, and
 `review/convex_depth.md`, CD5–CD9, distinguish convex prediction-space CE and
 fixed-feature heads from discrete proposal discovery. Fixed nonlinear paths
 supply inputs to a convex head. This endpoint

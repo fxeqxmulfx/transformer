@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.PredictionHull
 /-!
 # Spectral coordinates on fixed input groups
 
-Source: `review/flat_spectrum.md`, CM10. Learn a spectral probability table on fixed
+Source: `review/convex/moments.md`, CM10. Learn a spectral probability table on fixed
 row and column groups, then look up its entries for original inputs. The fixed map
 is linear in the learned table; probability constraints and CE convexity survive.
 The empirical loss retains the original observation index, including repetitions.

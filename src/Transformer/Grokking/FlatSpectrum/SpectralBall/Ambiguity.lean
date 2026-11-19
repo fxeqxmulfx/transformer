@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.SpectralBall.Recovery
 /-!
 # Tight spectral bounds do not always identify unseen signs
 
-Source: `review/flat_spectrum.md`, SB3. Two `4 × 4` flat sign matrices agree on twelve
+Source: `review/convex/channels.md`, SB3. Two `4 × 4` flat sign matrices agree on twelve
 entries, with every row and column observed, and disagree at `(0,0)`. Both minimize ordinary
 empirical binary CE on the same convex disk-and-spectral-ball domain. This is a separate
 counterexample to extending SB2 to arbitrary observation patterns, not a proof about the

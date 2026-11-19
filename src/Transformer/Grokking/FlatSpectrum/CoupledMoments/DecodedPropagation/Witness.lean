@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # An unseen answer with a three-state fiber and an even latent group
 
-Source: `review/flat_spectrum.md`, CM19. The decoder on `ZMod 4` sends `3` to
+Source: `review/convex/moments.md`, CM19. The decoder on `ZMod 4` sends `3` to
 `true` and `0,1,2` to `false`. Only three cells of a two-by-two table are
 observed: `true,true,false`. The last label is forced to be `false`, but its
 latent state can be any of `0,1,2`. Anchor at the `false` observation and retain

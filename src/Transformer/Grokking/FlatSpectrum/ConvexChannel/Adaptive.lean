@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Shared
 /-!
 # Preserve query-specific capacity while preferring shared oracle solutions
 
-Source: `review/flat_spectrum.md`, MF4. Mandatory sharing can remove a realizable
+Source: `review/convex/channels.md`, MF4. Mandatory sharing can remove a realizable
 task: two Boolean slots have additive logits, so no shared tensor strictly
 classifies XOR on all four inputs. A query-indexed feasible vertex does.
 

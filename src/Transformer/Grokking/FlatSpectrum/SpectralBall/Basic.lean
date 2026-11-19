@@ -8,7 +8,7 @@ public import Transformer.Grokking.FlatSpectrum.ContractionDual
 /-!
 # Convex complex matrices with an upper spectral bound
 
-Source: `review/flat_spectrum.md`, SB1. The parameters are the complex entries themselves,
+Source: `review/convex/channels.md`, SB1. The parameters are the complex entries themselves,
 with unit entry disks and a bound on the Euclidean operator norm. This is an upper bound,
 not an equality of singular values or a product of trained factors. Ordinary cross-entropy
 of fixed real-linear probes is jointly convex in all parameters.

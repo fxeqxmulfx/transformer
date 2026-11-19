@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Initi
 /-!
 # Accepted latent-program predictions identify actual complex logits
 
-Source: `review/flat_spectrum.md`, CM53. Observation constraints force every
+Source: `review/convex/moments.md`, CM53. Observation constraints force every
 active program's known decoder row. Consensus therefore identifies the full
 complex prediction for every feasible joint tensor, not only the initializer.
 -/

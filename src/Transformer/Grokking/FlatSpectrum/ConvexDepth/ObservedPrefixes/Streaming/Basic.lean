@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Tra
 /-!
 # Exact count constraints for a streamed candidate join
 
-Source: `review/flat_spectrum.md`, CM62. A fixed retained anchor bank can be
+Source: `review/convex/moments.md`, CM62. A fixed retained anchor bank can be
 indexed while the other side is streamed. Both index orientations test the
 actual inclusive-count comparison on every known observed prefix. Batching
 does not require retaining the whole query bank, nor make a truncated anchor

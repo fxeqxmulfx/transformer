@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Geometr
 /-!
 # The unchanged complete complex head and ordinary cross-entropy
 
-Source: `review/flat_spectrum.md`, CM65. Exact reconstruction preserves the
+Source: `review/convex/moments.md`, CM65. Exact reconstruction preserves the
 full coefficient tensor and therefore every raw logit and CE value, including
 unseen queries. The unitary capacity bound applies to the reconstructed head.
 -/

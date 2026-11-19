@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Separate components while retaining the whole complex forward
 
-Source: `review/flat_spectrum.md`, CM76. Raw coordinate reads act on real and
+Source: `review/convex/moments.md`, CM76. Raw coordinate reads act on real and
 imaginary weights by the same real linear map. This property, not arbitrary
 real linear complex input maps, permits independent pattern aggregation.
 The final theorem retains both components of every actual complex product.

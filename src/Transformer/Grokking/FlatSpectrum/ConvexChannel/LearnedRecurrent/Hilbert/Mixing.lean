@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # Actual norm-preserving complex mixing
 
-Source: `review/flat_spectrum.md`, CM107. Full complex execution of real mixing
+Source: `review/convex/moments.md`, CM107. Full complex execution of real mixing
 coefficients is an exact isometry when their squared sum is one. This supplies
 an inhabited Hilbert component, not a benchmark answer rule or initialization.
 -/

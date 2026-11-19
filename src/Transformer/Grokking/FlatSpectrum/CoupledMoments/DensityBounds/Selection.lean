@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Per
 /-!
 # Objective accuracy and score separation control mixed mass
 
-Source: `review/flat_spectrum.md`, CM22. A strict scalar score gap gives a
+Source: `review/convex/moments.md`, CM22. A strict scalar score gap gives a
 quantitative concentration bound. Real-score ties require further analysis;
 CM21's exact second-stage result does not justify approximate tie breaking.
 -/

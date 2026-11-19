@@ -7,7 +7,7 @@ public import Transformer.Grokking.NaiveLoss.Section4_LogitScaling
 /-!
 # Ordinary cross-entropy identifies maximal target mass
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR2-CR3;
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR2-CR3;
 XE1 for the usual log-sum-exp cross-entropy. The objective is convex in
 all matching coordinates. Among nonnegative logits bounded by unit target
 mass, the target's one-hot vector minimizes the loss. With at least two
@@ -25,7 +25,7 @@ open Geometry (probability)
 variable {C : Type*} [Fintype C]
 
 /-- The first-order inequality of XE1 implies convexity in the complete
-logit vector (`review/flat_spectrum.md`, CR2). -/
+logit vector (`review/convex/channels.md`, CR2). -/
 theorem convex_crossEntropy (t : C) : ConvexOn ℝ Set.univ (fun z : C → ℝ => crossEntropy z t) := by
   refine ⟨convex_univ, ?_⟩
   intro x _ y _ a b ha hb hab

@@ -12,7 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference
 /-!
 # A finite forward-only learner for realizable generated channels
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF1-CF6.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF1-CF6.
 The executable categorical learner eliminates keys with contradictory
 answers. Realizability guarantees a successful return and a global ordinary
 CE optimum. Collisions at wrong keys and coverage at the true key imply

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Combining complete coordinate directions without dropping records
 
-Source: `review/flat_spectrum.md`, CM82. The full raw-coordinate pairing is a
+Source: `review/convex/moments.md`, CM82. The full raw-coordinate pairing is a
 linear map of the complete gradient array. This supplies exact sums and scaling
 for shared passes and indexed minibatches, including repeated records.
 -/

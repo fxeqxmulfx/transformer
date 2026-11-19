@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Capacity
 /-!
 # Flat capacity does not identify missing answers
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC7.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC7.
 Two full-rank flat Boolean tables agree on the observed row and disagree
 on the held-out row. Both are feasible and both globally minimize the
 same ordinary answer CE. Thus the rank bound is not a completion theorem,

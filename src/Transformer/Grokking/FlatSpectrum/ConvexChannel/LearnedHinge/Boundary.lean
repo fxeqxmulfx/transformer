@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Witne
 /-!
 # Omitting an input from the cone does not prove its answer-loss convexity
 
-Source: `review/flat_spectrum.md`, CM75. Two positive-coordinate points
+Source: `review/convex/moments.md`, CM75. Two positive-coordinate points
 obey both observed input cones. At a different input their learned ReLU
 changes branch, and ordinary answer CE violates the midpoint inequality.
 The exact factor-recovery identity still holds there. This distinguishes

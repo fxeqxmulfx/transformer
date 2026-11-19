@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.
 /-!
 # A conservative guard for inference labels
 
-Source: `review/flat_spectrum.md`, *Inference-time learning*, CI3.
+Source: `review/convex/channels.md`, *Inference-time learning*, CI3.
 An answer is accepted only if every surviving enumerated candidate has an
 observed entry for its input value and all these entries agree. No default
 or confidence score is evidence. Accepted answers are correct for every

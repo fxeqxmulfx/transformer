@@ -4,7 +4,7 @@ Does a fixed decoder that depends on the vocabulary alone, optimized by ordinary
 cross-entropy over a convex set of latent probability tables, complete tasks
 that the bijective class codings and the searched decoders of the preceding
 cohorts did not? Lean CM16 (`3447d663`,
-[`review/flat_spectrum.md`](../../review/flat_spectrum.md)) comes first. A latent
+[`review/convex/moments.md`](../../review/convex/moments.md)) comes first. A latent
 table on the cyclic group with equal probabilities on opposite states is a
 linear restriction of the CM15 domain; for a decoder with `d(-z) = d(z)` it
 loses no prediction (`pairedFeasible_iff`). The symmetric phase table of any

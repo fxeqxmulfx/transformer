@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic.S
 /-!
 # A raw-sequence witness changes representations, readouts and predictions
 
-Source: `review/flat_spectrum.md`, CM85. Two feasible PSD points use nonzero
+Source: `review/convex/moments.md`, CM85. Two feasible PSD points use nonzero
 imaginary learned weights. Their balanced representations and readouts change,
 their original-object predictions reverse, and both desired answer CEs fall.
 These are exact feasible comparisons, not an optimizer trajectory or a scored

@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.SignUnique
 /-!
 # A convex repair of the three-observation counterexample
 
-Source: `review/flat_spectrum.md`, SB2, correcting the unseen sign in XE15 by changing the
+Source: `review/convex/channels.md`, SB2, correcting the unseen sign in XE15 by changing the
 constraint, not the theorem about nuclear-norm training. The bound is `‖X‖op ≤ √2` with unit
 entry disks. Three observed entries of `[[1,1],[-1,1]]` force its fourth entry. The ordinary
 binary CE minimum attains those observations. No arbitrary-sample recovery is asserted.

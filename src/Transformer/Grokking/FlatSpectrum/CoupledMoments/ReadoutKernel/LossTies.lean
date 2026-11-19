@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Cov
 /-!
 # Ordinary training CE cannot distinguish the refined unseen defaults
 
-Source: `review/flat_spectrum.md`, CM36. Derive equality of the actual observed
+Source: `review/convex/moments.md`, CM36. Derive equality of the actual observed
 CE trajectories from CM33's normalized gradient row formula. The two models
 may have different latent types and Fourier blocks. Unitarity transfers the
 identity to actual complex logits; no equality of unseen targets is assumed.

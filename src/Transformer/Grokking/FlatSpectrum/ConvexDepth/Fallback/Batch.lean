@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Const
 /-!
 # Original normalized CE batches under fixed support routing
 
-Source: `review/flat_spectrum.md`, CM38. Batches contain original record IDs,
+Source: `review/convex/moments.md`, CM38. Batches contain original record IDs,
 so distinct IDs retain repeated inputs and label multiplicity. On covered
 training records the actual routed loss is the candidate's loss for every
 coefficient tensor. Derivative equality follows from this function identity;

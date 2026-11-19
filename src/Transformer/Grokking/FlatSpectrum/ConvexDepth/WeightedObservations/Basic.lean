@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Add
 /-!
 # Exact multiplicities of original observations
 
-Source: `review/flat_spectrum.md`, CM60. Grouping equal observations is an
+Source: `review/convex/moments.md`, CM60. Grouping equal observations is an
 exact storage transformation only when every original record contributes its
 multiplicity. A minibatch uses its own counts and its actual size, including
 the final short batch. This does not justify grouping unequal feature/label

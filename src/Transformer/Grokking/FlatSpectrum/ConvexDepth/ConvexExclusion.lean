@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion.Cros
 /-!
 # Conditional raw-label identification by convex exclusion
 
-Source: `review/flat_spectrum.md`, CM49–CM50. Observable augmented-hull conflicts
+Source: `review/convex/moments.md`, CM49–CM50. Observable augmented-hull conflicts
 rule out candidate labels under convex raw-class regions. An explicit pool
 containing the unknown query label then permits unique identification beyond
 observed hull coverage. Positive source mixtures retain actual complex-head

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.Kernels
 /-!
 # Finite Fourier mixtures and their amplitude spectrum
 
-Source: `review/flat_spectrum.md`, CM20. These definitions describe a vector
+Source: `review/convex/moments.md`, CM20. These definitions describe a vector
 inside an exact Fourier subspace. The input indices may later be permuted;
 no arithmetic meaning of an observed input token is assumed.
 -/

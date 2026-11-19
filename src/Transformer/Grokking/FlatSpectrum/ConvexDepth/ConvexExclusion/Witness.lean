@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions.Witness
 /-!
 # Nonzero complete Fourier head for exterior raw-label identification
 
-Source: `review/flat_spectrum.md`, CM49. The four observed rows stay exact;
+Source: `review/convex/moments.md`, CM49. The four observed rows stay exact;
 two queries outside every observed hull use the positive source mixtures of
 CM48 after convex exclusion identifies their classes. The feature weights
 intentionally do not interpolate the query coordinates. The actual Fourier

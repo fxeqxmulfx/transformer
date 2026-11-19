@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.B
 /-!
 # Nonempty learned binding conditions
 
-Source: `review/flat_spectrum.md`, CM111–112. Two distinct imaginary vectors and a
+Source: `review/convex/moments.md`, CM111–112. Two distinct imaginary vectors and a
 nonconstant learned relative potential satisfy the actual content, link and
 decoder conditions. This mathematical witness is not a native initializer.
 -/

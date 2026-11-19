@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # A composite categorical table with repeated axes and held-out cells
 
-Source: `review/flat_spectrum.md`, CM28. Seventeen samples identify a `7 × 7`
+Source: `review/convex/moments.md`, CM28. Seventeen samples identify a `7 × 7`
 table over six latent states. The code swaps the class names zero and one;
 rows zero and six, and columns zero and six, share a phase. Thirty-two cells
 are held out. The observable joint kernel is computed below from the actual

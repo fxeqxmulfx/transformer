@@ -8,7 +8,7 @@ public import Mathlib.Tactic.LinearCombination
 /-!
 # Strictly more unseen-query coverage after derived readout grouping
 
-Source: `review/flat_spectrum.md`, CM35. Three observed corners have three
+Source: `review/convex/moments.md`, CM35. Three observed corners have three
 different raw labels but two declared answers. The ungrouped complete kernel
 refuses the fourth corner. Grouping the known answer fibers forces a match,
 and the original unknown-code premises prove its declared answer. Two raw

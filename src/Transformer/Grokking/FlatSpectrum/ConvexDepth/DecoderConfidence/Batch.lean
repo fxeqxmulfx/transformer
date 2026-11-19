@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence.Ba
 /-!
 # Exact raw CE and declared-label errors on original record batches
 
-Source: `review/flat_spectrum.md`, CM44. The actual complex initializer's
+Source: `review/convex/moments.md`, CM44. The actual complex initializer's
 normalized CE is a correct-margin term plus margin times empirical error.
 Original record IDs retain multiplicity and short-tail normalization. This
 is an identity for arbitrary targets, not an unseen-correctness certificate.

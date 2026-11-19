@@ -1366,7 +1366,7 @@ or its conditional unseen-answer identification hypotheses.
 
 ## Fixed decoding of bounded latent complex states (2026-11-12)
 
-CM15 in `review/flat_spectrum.md` extends the model before native work. A fixed
+CM15 in `review/convex/moments.md` extends the model before native work. A fixed
 many-to-one categorical decoder maps latent probability tables into the full
 original output vocabulary, preserving probability rows and convex ordinary
 CE. The hull over all fixed decoders is also convex; any feasible exact decoded
@@ -7877,7 +7877,9 @@ controls before a separately frozen original-task pilot. Existing comparison
 producers, recorded failures and the historical 77/165 coverage remain intact.
 
 The mathematical starting points are [flat spectrum](review/flat_spectrum.md),
-CR1-CR7, CC1-CC8, MF1-MF5, SB1-SB3 and CM64-CM70. Theorem A concerns
+CR1-CR7, CC1-CC8, MF1-MF5 and SB1-SB3 in
+[convex/channels.md](review/convex/channels.md), and CM64-CM70 in
+[convex/moments.md](review/convex/moments.md). Theorem A concerns
 minimum-nuclear-norm recovery of a specified flat kernel; it does not prohibit
 all convex learning. CC1-CC2 already learn the complete joint tensor
 `W(q,k,v,c)`, with logits `sum_k W(q,k,D(k),c)` and a label-independent convex
@@ -8093,7 +8095,7 @@ joint tables per prefix relax parameter sharing; they do not complete the
 shared learned sequence architecture. Flatness does not remove that constraint.
 
 The new source is `ConvexChannel/HiddenPath`, with direct checks in
-`scripts/HiddenPathAxioms.lean` and source discussion in `review/flat_spectrum.md`
+`scripts/HiddenPathAxioms.lean` and source discussion in `review/convex/moments.md`
 CM74. Task 366 remains open: construct the actual shared causal computation,
 establish its ordinary CE geometry, and connect observed training sequences to
 genuinely unseen prefixes under explicit conditions before native learning.

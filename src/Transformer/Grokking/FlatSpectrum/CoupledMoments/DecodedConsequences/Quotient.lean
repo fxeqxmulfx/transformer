@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequenc
 /-!
 # Observed row certificates with noninjective class codes
 
-Source: `review/flat_spectrum.md`, CM30. Actual observed row consequences still
+Source: `review/convex/moments.md`, CM30. Actual observed row consequences still
 identify a latent class code when distinct raw labels share that code. A declared
 readout constant on code fibers then has a certified answer. Raw-label equality
 does not follow: the finite witness observes every raw class and has two fitting

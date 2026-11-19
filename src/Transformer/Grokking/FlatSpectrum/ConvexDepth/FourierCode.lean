@@ -7,7 +7,7 @@ public import Mathlib.Data.Matrix.Block
 /-!
 # Flat categorical codes for arbitrary state counts and query blocks
 
-Source: `review/flat_spectrum.md`, CFt5. Normalize the existing character
+Source: `review/convex/channels.md`, CFt5. Normalize the existing character
 Fourier matrix, prove both Gram identities and use finite block diagonals for
 the native per-query state dictionaries. Flatness describes this fixed code
 basis. The initialized or trained head and empirical task need not be flat.

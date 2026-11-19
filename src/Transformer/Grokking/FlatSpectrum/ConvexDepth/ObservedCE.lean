@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BatchCE
 /-!
 # Finite full-batch and minibatch CE traces
 
-Source: `review/flat_spectrum.md`, CM33. Any schedule of observed-input
+Source: `review/convex/moments.md`, CM33. Any schedule of observed-input
 minibatches and nonnegative rates preserves the box, defaults and every
 initial observed margin. Actual raw CE cannot increase, including on rows
 not selected by the current batch. This is preservation, not a discovery

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PairedLi
 /-!
 # The spectral domain at the budgets `N`, by rows and nuclear norms alone
 
-Source: `review/flat_spectrum.md`, CM18. A moment of probability rows under a code of modulus
+Source: `review/convex/moments.md`, CM18. A moment of probability rows under a code of modulus
 at most one has entries of modulus at most one (CM1), hence operator norm at most the side `N`
 (`moment_norm_le_card`). The constant moment of the Fourier bank is the all-ones matrix, of
 nuclear norm `N` (CM13). So the domain of CM14 to CM16 with both budgets `N` is the set of

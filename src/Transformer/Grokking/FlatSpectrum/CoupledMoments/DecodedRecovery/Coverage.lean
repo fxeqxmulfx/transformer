@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.R
 /-!
 # Coverage conditions on training labels alone
 
-Source: `review/flat_spectrum.md`, CM18. The conditions of `Accepts` and `Pinned` speak of the
+Source: `review/convex/moments.md`, CM18. The conditions of `Accepts` and `Pinned` speak of the
 proposed phases. For phases that fit the training samples they follow from conditions on the
 training labels alone, which can be checked before any phase is known:
 

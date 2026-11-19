@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Identification
 /-!
 # A direct learner from categorical answer examples
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF1.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF1.
 For a candidate key, remember the first answer seen with each input value.
 A different answer for the same value permanently eliminates that key.
 The scan consumes examples from left to right. The selected decoder uses

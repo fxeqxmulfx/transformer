@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion.Fini
 /-!
 # Planar exclusions missed by an observed-point test
 
-Source: `review/flat_spectrum.md`, CM50. Two vertical observed segments are
+Source: `review/convex/moments.md`, CM50. Two vertical observed segments are
 disjoint. Adding an exterior query to the opposite class makes a triangle
 whose edges cross the other segment while containing neither of its endpoints.
 The exact rational mixtures certify the crossing without a missing answer.

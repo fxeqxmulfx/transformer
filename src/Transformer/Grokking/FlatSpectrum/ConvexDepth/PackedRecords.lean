@@ -8,7 +8,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PackedRecords.Witnes
 /-!
 # Lossless packed observations for the complete convex complex decoder
 
-Source: `review/flat_spectrum.md`, CM68. Bounded UInt16 words preserve every
+Source: `review/convex/moments.md`, CM68. Bounded UInt16 words preserve every
 program state and original raw label. Precomputed observations retain decoder
 lookups, the complete candidate filter, full joint domains, complex products
 and ordinary indexed CE, including duplicates and actual minibatch tails.

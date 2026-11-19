@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Checkable complete representation of feasible query directions
 
-Source: `review/flat_spectrum.md`, CM81. Finite arithmetic certificates prove
+Source: `review/convex/moments.md`, CM81. Finite arithmetic certificates prove
 that a proposed basis represents every direction admitted by the CM80 cone
 geometry, with unique coefficients and no dropped original coordinates.
 Every equality row is retained. This does not prove a native elimination

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Basic
 /-!
 # Freeze the parent in a convex routed-head domain
 
-Source: `review/flat_spectrum.md`, CM38. Affine coordinate constraints freeze
+Source: `review/convex/moments.md`, CM38. Affine coordinate constraints freeze
 the parent while the candidate may change. The actual logit identity gives
 exact parent preservation outside fixed support. Ordinary full-vocabulary CE
 remains convex; this is not a claim that covered unseen inputs are correct.

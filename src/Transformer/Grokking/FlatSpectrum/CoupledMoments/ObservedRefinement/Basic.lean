@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.DecodedH
 /-!
 # Observed errors and ordinary one-hot cross-entropy
 
-Source: `review/flat_spectrum.md`, CM23. The full vocabulary remains in the
+Source: `review/convex/moments.md`, CM23. The full vocabulary remains in the
 softmax. At unit logit scale, each incorrect deterministic prediction adds
 exactly one to the summed ordinary CE. No claim about unseen labels follows.
 -/

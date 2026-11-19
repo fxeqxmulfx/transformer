@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Witness
 /-!
 # Nonconstant uniform projection and the surviving nonuniform domain
 
-Source: `review/flat_spectrum.md`, CM69. The many-to-one observed dictionary has
+Source: `review/convex/moments.md`, CM69. The many-to-one observed dictionary has
 an unknown two-class row. Its mean is a feasible exact self-projection, while
 the two old nonuniform completions still give opposite unseen complex logits.
 No identification of the unseen answer follows from projection symmetry.

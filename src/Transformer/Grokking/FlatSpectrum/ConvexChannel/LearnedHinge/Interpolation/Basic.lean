@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Full-word interpolation inside the actual complete learned complex family
 
-Source: `review/flat_spectrum.md`, CM84. CM77's learned singleton neurons
+Source: `review/convex/moments.md`, CM84. CM77's learned singleton neurons
 can be combined with arbitrary signed class readouts. CM76's exact coverage
 places every such physical model in the same complete reduced convex domain.
 This proves the size of the existing function class; the witness is not a

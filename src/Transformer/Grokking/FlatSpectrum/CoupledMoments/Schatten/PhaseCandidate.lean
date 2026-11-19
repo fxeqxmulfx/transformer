@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.GraphRec
 /-!
 # A training-compatible phase completion gives a feasible CE minimizer
 
-Source: `review/flat_spectrum.md`, CM14. A categorical class bijection and
+Source: `review/convex/moments.md`, CM14. A categorical class bijection and
 training-compatible row/column phases construct a one-hot table in the same
 convex operator/nuclear budget family. The observed equations alone certify
 ordinary CE optimality. They do not certify unseen ground-truth labels or

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Actual complex CE derivatives along certified feasible queries
 
-Source: `review/flat_spectrum.md`, CM82. Two feasible endpoints and the existing
+Source: `review/convex/moments.md`, CM82. Two feasible endpoints and the existing
 convex domain provide an entire neighbourhood, not just two isolated probes.
 The actual recovered complex loss there has the derived ordinary CE derivative.
 Finite differences at a nonzero radius are not asserted to equal that derivative.

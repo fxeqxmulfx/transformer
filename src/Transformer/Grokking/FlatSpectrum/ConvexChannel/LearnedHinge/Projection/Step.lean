@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Certified projected steps and their explicit descent condition
 
-Source: `review/flat_spectrum.md`, CM79. A checked cone projection of a
+Source: `review/convex/moments.md`, CM79. A checked cone projection of a
 gradient proposal gives a quantitative work inequality. If the actual loss
 has the stated quadratic upper bound on that step, a small enough rate
 guarantees descent. The upper bound is an explicit premise, not an asserted

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FlatCapacity
 /-!
 # Comparing the two spectral budgets
 
-Source: `review/flat_spectrum.md`, CM5. An operator bound R implies Frobenius energy at
+Source: `review/convex/moments.md`, CM5. An operator bound R implies Frobenius energy at
 most `card(n) R^2`, by applying the vector-energy bound to each coordinate vector. The
 rank/Frobenius nuclear inequality then gives nuclear norm at most `card(n) R`. Thus the
 large sum budget used by the full-rank control does not shrink the old operator-ball domain.

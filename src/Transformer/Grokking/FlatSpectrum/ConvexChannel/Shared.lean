@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Oracle
 /-!
 # Sharing a joint channel across input-aligned queries
 
-Source: `review/flat_spectrum.md`, *Repairing minibatch and full-batch failures*,
+Source: `review/convex/channels.md`, *Repairing minibatch and full-batch failures*,
 MF3. A fixed, input-only permutation aligns the categorical slots of each query.
 One joint tensor is trained on the aligned dictionaries. Expanding it into the
 old query-indexed tensor is linear and preserves feasibility. Ordinary CE,

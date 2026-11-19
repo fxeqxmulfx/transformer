@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Seque
 /-!
 # Learned complex representations change relative next-object predictions
 
-Source: `review/flat_spectrum.md`, CM75. Two input objects read two learned
+Source: `review/convex/moments.md`, CM75. Two input objects read two learned
 complex representation coordinates. Two feasible points have different
 representation directions, different recovered readouts, and reversed
 relative predictions. Both observed answer losses strictly improve.

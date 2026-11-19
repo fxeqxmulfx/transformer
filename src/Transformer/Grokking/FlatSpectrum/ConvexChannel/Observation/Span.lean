@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.Basic
 /-!
 # Input certificates transfer predictions to unseen dictionaries
 
-Source: `review/flat_spectrum.md`, *Observable features determine unseen
+Source: `review/convex/channels.md`, *Observable features determine unseen
 predictions*, O2-O3. An explicit linear reconstruction of a test feature
 vector from same-query training features is a checkable sufficient
 identification certificate. Coefficients may be negative. No test label,

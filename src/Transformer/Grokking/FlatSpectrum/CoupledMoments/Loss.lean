@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Basic
 /-!
 # Ordinary cross-entropy and a forward-only fitting certificate
 
-Source: `review/flat_spectrum.md`, CM2. The logits are the shared class probabilities.
+Source: `review/convex/moments.md`, CM2. The logits are the shared class probabilities.
 Ordinary log-sum-exp CE is convex in every coordinate. The one-hot target loss is a lower
 bound for every feasible model; any feasible table exactly matching the observed one-hot
 labels is a global CE minimum. This certifies a successful forward-only feasibility solve,

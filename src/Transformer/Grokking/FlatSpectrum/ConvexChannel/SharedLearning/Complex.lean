@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoxHead
 /-!
 # The shared learner's complete complex forward and capacity bounds
 
-Source: `review/flat_spectrum.md`, CM73. A fixed unitary code acts on the value
+Source: `review/convex/moments.md`, CM73. A fixed unitary code acts on the value
 alphabet separately in every categorical slot. Its complete conjugate head is
 linear in the jointly trained routing/output tensor. The actual multiplication
 equals the shared channel's logits, retaining every real and imaginary term.

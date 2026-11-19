@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Ca
 /-!
 # Capacity-constrained identification of an unseen original object
 
-Source: `review/flat_spectrum.md`, CM91. A full squared coordinate budget
+Source: `review/convex/moments.md`, CM91. A full squared coordinate budget
 pays for a nonzero observed-form residual. A genuinely unseen, nonconstant
 object-pair example is forced in the bounded learned family and remains
 ambiguous without the budget. This is a sufficient finite certificate, not

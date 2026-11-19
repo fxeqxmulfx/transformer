@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Up
 /-!
 # Training-input scaling of complete coordinate updates
 
-Source: `review/flat_spectrum.md`, CM89. Rare input responses can make plain
+Source: `review/convex/moments.md`, CM89. Rare input responses can make plain
 coordinate SGD slow. Positive diagonal scaling changes the update geometry,
 not the learned family or its ordinary CE. The scale uses only indexed raw
 training prefixes, with repeated records and squared pair multiplicities.

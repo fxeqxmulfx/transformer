@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Minibatch
 /-!
 # Inference observations and the unchanged decoded table
 
-Source: `review/flat_spectrum.md`, *Inference-time learning*, CI1-CI2.
+Source: `review/convex/channels.md`, *Inference-time learning*, CI1-CI2.
 The candidate state is retained after training. Unverified self-labeling
 really calls the existing update on predictions from the current snapshot;
 it is not defined to preserve the model. The preservation lemmas below

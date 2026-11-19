@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PairedLi
 /-!
 # Symmetric latent tables on three states
 
-Source: `review/flat_spectrum.md`, CM18. On three latent states an even probability row is one
+Source: `review/convex/moments.md`, CM18. On three latent states an even probability row is one
 number, its mass at zero. For the decoder that merges the two nonzero states, the decoded row
 and both nonconstant Fourier moments of such a table are affine images of that number
 (`decode_zeroMass`, `moment_zeroMass`). These are the computations behind the wrong minimum of

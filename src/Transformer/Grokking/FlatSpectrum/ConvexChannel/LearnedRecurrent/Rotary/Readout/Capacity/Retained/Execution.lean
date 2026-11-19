@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual ordered state error after learned content changes
 
-Source: `review/flat_spectrum.md`, CM106. Every transported operator contains
+Source: `review/convex/moments.md`, CM106. Every transported operator contains
 the current learned transition and frequencies. Bounds retain all occurrences
 and positions, and do not use a label or a prescribed state feature.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Exact observed-margin duality for the learned sequence model
 
-Source: `review/flat_spectrum.md`, CM87. The statement is the same user-requested
+Source: `review/convex/moments.md`, CM87. The statement is the same user-requested
 equivalence, proved for its unchanged complete complex parameter family.
 -/
 

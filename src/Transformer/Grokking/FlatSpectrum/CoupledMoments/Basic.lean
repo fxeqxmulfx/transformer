@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.SpectralBall.Basic
 /-!
 # Complex class moments of one shared label distribution
 
-Source: `review/flat_spectrum.md`, CM1. A probability vector is learned at each input cell.
+Source: `review/convex/moments.md`, CM1. A probability vector is learned at each input cell.
 Every complex code matrix is a fixed linear image of these same probabilities, with its own
 operator-norm upper bound. There are no independent, potentially inconsistent moment entries
 and no products of learned factors. The spectral constraints and class probabilities are

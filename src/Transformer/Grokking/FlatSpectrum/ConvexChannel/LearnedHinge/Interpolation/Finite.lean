@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Resources.Parameters
 /-!
 # Stored-bit limits for preserving the complete learned family's predictions
 
-Source: `review/flat_spectrum.md`, CM84, using the existing R1 information
+Source: `review/convex/moments.md`, CM84, using the existing R1 information
 bound. This permits any fixed nonlinear evaluation of a finite parameter
 codebook. Exact coverage of every strict classification in the current
 family needs enough bits for all full-word labels. Below that budget one

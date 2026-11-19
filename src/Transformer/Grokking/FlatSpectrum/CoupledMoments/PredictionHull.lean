@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Oracle
 /-!
 # A common convex class for different causal prediction families
 
-Source: `review/flat_spectrum.md`, CM8. Predictions live in common probability coordinates
+Source: `review/convex/moments.md`, CM8. Predictions live in common probability coordinates
 on the same input domain. The convex hull includes every expert without multiplying free
 parameters. A feasible exact observed fit, or its ideal-loss excess, certifies the common
 scaled CE objective. Neither certificate asserts recovery on unobserved inputs.

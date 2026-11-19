@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Lifti
 /-!
 # A complete activation-pattern expansion and its explicit size
 
-Source: `review/flat_spectrum.md`, CM75. Retaining every Boolean pattern
+Source: `review/convex/moments.md`, CM75. Retaining every Boolean pattern
 gives one label-independent convex domain which contains the exact lift of
 every original finite-width phased complex ReLU network. The embeddings and
 readout amplitudes remain learned. Reconstruction preserves predictions on

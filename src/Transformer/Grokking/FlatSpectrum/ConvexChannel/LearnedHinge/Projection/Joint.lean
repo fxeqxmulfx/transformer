@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Certified projection of every coordinate in the actual complex model
 
-Source: `review/flat_spectrum.md`, CM79. Independent component certificates
+Source: `review/convex/moments.md`, CM79. Independent component certificates
 sum to the strong Euclidean projection inequality for the whole model. The
 metric includes every slot, output object, signed readout and complex component.
 This does not preserve a factor-norm regularizer or supply an efficient

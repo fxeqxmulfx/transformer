@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms.Learn
 /-!
 # Training-compatible convex mixtures and certified unseen complex answers
 
-Source: `review/flat_spectrum.md`, CM52. Observations impose linear zero-weight
+Source: `review/convex/moments.md`, CM52. Observations impose linear zero-weight
 constraints on inconsistent programs. Consensus and structural realizability
 then identify the actual complex prediction. The fixed source code supplies
 capacity bounds only; it supplies neither the copy prior nor realizability.

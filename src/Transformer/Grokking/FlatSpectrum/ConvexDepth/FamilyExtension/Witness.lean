@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Witnes
 /-!
 # A nonconstant complex model survives a strict program-family extension
 
-Source: `review/flat_spectrum.md`, CM67. Two additional nonconstant input
+Source: `review/convex/moments.md`, CM67. Two additional nonconstant input
 programs are present. The old covered logits, imaginary coordinates and
 opposite feasible unobserved answers all survive the same-budget embedding.
 -/

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Representation
 /-!
 # Observed logits at an ordinary answer-CE optimum
 
-Source: `review/flat_spectrum.md`, *Observable features determine unseen
+Source: `review/convex/channels.md`, *Observable features determine unseen
 predictions*, O1. Realizability here means that a feasible reference channel
 gives unit target mass on the observed examples. It imposes no test-output
 condition. Every global optimizer has the same observed logit vectors.

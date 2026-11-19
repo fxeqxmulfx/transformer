@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.C
 /-!
 # The learner: from the training cells and labels to the whole table, or to a refusal
 
-Source: `review/flat_spectrum.md`, CM17, *The learner*. Native reference:
+Source: `review/convex/moments.md`, CM17, *The learner*. Native reference:
 `experiments/convex_stress_relabel/src/coding.rs` at 414431c7, `discover`, with its rejections
 `no_nonconstant_phase_code`, `ambiguous_phase_code`, `nonbijective_phase_code` and
 `inconsistent_observed_cycle`, and `experiments/convex_stress_relabel/phase_start`, with

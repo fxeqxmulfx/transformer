@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.Z
 /-!
 # The spectral relaxation has a wrong minimum at a certified cell
 
-Source: `review/flat_spectrum.md`, CM18. Three latent states, two classes, the decoder that
+Source: `review/convex/moments.md`, CM18. Three latent states, two classes, the decoder that
 merges the two nonzero states; a three by three table whose label says whether the row differs
 from the column, with the cell `(0, 0)` withheld. The certificate of the true phases is
 accepted and covers the withheld cell, so every completion of the training samples has the

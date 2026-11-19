@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Bas
 /-!
 # Quantitative diagonalization in the structural Fourier basis
 
-Source: `review/flat_spectrum.md`, CM22. These estimates hold for arbitrary
+Source: `review/convex/moments.md`, CM22. These estimates hold for arbitrary
 coefficient matrices; PSD enters later to interpret diagonal entries as weights.
 -/
 

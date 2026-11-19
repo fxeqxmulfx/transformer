@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete complex coordinate resizing and Euclidean row distance
 
-Source: `review/flat_spectrum.md`, CM102. Both real and imaginary coordinates
+Source: `review/convex/moments.md`, CM102. Both real and imaginary coordinates
 retain their phase. The Euclidean metric here is distinct from the maximum
 norm on recurrent states; the original row capacity remains the absolute sum.
 -/

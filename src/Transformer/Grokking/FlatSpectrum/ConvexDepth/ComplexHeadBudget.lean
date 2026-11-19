@@ -7,7 +7,7 @@ public import Mathlib.Algebra.Order.Chebyshev
 /-!
 # A sufficient convex budget for the actual complex initializer
 
-Source: `review/flat_spectrum.md`, CFt5. Unitary inversion preserves the
+Source: `review/convex/channels.md`, CFt5. Unitary inversion preserves the
 one-hot margin table's squared energy. Cauchy--Schwarz controls every class's
 real/imaginary L1 column without asserting flatness of the learned head.
 The native margin24 initializer fits radius64 times the total state count.

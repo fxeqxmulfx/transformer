@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual fixed-frequency rotary domains and feasible loss queries
 
-Source: `review/flat_spectrum.md`, CM99. Fix only the positional frequencies;
+Source: `review/convex/moments.md`, CM99. Fix only the positional frequencies;
 all content coordinates remain learned. Identity transport makes the actual
 signed CE query feasible within this restricted family at every input length.
 -/

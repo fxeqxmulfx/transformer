@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ModularCoding.Bas
 /-!
 # Checked recombination of modular categorical constraints
 
-Source: `review/flat_spectrum.md`, CM27. An actual Bezout witness permits
+Source: `review/convex/moments.md`, CM27. An actual Bezout witness permits
 recombining component solutions without assuming a prime latent domain.
 -/
 

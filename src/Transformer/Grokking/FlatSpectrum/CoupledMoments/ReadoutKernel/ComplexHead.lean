@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes.Compl
 /-!
 # Derived readout grouping in the actual raw-vocabulary complex head
 
-Source: `review/flat_spectrum.md`, CM35. Grouping changes the declared feature
+Source: `review/convex/moments.md`, CM35. Grouping changes the declared feature
 construction, while observed-input refinement keeps the original raw labels
 and full-vocabulary CE. A representative of each known answer supplies a
 raw default. Accepted unseen queries have the correct pooled answer after

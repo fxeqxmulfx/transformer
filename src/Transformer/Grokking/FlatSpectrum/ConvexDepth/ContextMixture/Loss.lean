@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture.Basic
 /-!
 # Ordinary cross-entropy in the complete context mixture
 
-Source: `review/flat_spectrum.md`, CM45. With the bank and head frozen, actual
+Source: `review/convex/moments.md`, CM45. With the bank and head frozen, actual
 logits are linear in all mixture coefficients. Ordinary CE is convex and its
 explicit coefficient slopes satisfy the full first-order inequality. The
 target in each comparison is the query's raw label, not a neighbor's label.

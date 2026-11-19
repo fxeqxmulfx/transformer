@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.Blocks
 /-!
 # A nuclear budget recovers a rank-one missing entry
 
-Source: `review/flat_spectrum.md`, CM6. With three observed `+1` entries in a 2x2 matrix,
+Source: `review/convex/moments.md`, CM6. With three observed `+1` entries in a 2x2 matrix,
 the nuclear-norm budget two forces the fourth entry to be `+1`. This complements SB2's
 full-rank example. The proof uses the actual 2x2 nuclear-norm formula, not a rank assumption
 in the feasible set. It is not a theorem for arbitrary partially observed tables.

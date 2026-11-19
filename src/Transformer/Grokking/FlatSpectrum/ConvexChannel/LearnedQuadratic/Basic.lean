@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Matrix.Order
 /-!
 # Learned squared complex responses and their exact joint Gram coordinates
 
-Source: `review/flat_spectrum.md`, CM85. A complete positive semidefinite
+Source: `review/convex/moments.md`, CM85. A complete positive semidefinite
 matrix recovers a square-root factor, learned representations, and a learned
 readout. Inference applies the representations before the squared-modulus
 activation and the readout. The Gram identity is proved, not substituted as

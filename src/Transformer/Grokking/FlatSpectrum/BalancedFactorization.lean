@@ -7,7 +7,7 @@ public import Mathlib.Data.Matrix.ColumnRowPartitioned
 /-!
 # Balanced factors: cost, rank and a flat-target error bound
 
-Source: `review/flat_spectrum.md`, *Balancedness as a capacity certificate*, B1–B2.
+Source: `review/convex/channels.md`, *Balancedness as a capacity certificate*, B1–B2.
 This generalizes the identities in WD14.6: the hypothesis is the Gram equality
 `Uᴴ U = Vᴴ V` itself, without assuming stationarity or a particular loss.
 

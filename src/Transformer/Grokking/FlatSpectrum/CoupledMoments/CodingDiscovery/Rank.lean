@@ -6,7 +6,7 @@ public import Mathlib.LinearAlgebra.Matrix.Rank
 /-!
 # The test of the elimination is `rank + 1 = p`
 
-Source: `review/flat_spectrum.md`, CM17, *The linear system*. Native reference:
+Source: `review/convex/moments.md`, CM17, *The linear system*. Native reference:
 `experiments/convex_stress_relabel/src/coding.rs` at 414431c7: `discover` puts the gauge row
 `z[0] = 0` and the rows `z[a] + z[d] − z[b] − z[c]` of the anchored rectangles into an echelon
 system over the field of `p` elements, and `unique_direction` accepts when `rank + 1 == p`.

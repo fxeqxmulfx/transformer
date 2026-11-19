@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 /-!
 # Bounded signed context features
 
-Source: `review/flat_spectrum.md`, CM51. Fixed signed rows act on the actual
+Source: `review/convex/moments.md`, CM51. Fixed signed rows act on the actual
 complex source features. Their absolute mass measures amplification. Dividing
 by the larger of one and that mass retains the original feature/head bound.
 The finite-product and convex ordinary-CE identities of CM42 allow signed rows;

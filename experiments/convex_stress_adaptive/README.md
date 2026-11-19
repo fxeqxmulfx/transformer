@@ -7,7 +7,7 @@ The earlier repair solved short and long recall, but mandatory sharing removed
 some query-specific rules. Lean was extended first at `69709c89`:
 `ConvexChannel/Adaptive.lean` proves a shared XOR obstruction, a feasible
 query-specific witness, and an exact unrestricted oracle with a sharing
-preference. The source is `review/flat_spectrum.md`, MF4. Flat spectrum remains
+preference. The source is `review/convex/channels.md`, MF4. Flat spectrum remains
 a capacity bound; it supplies neither an algorithm nor arbitrary unseen labels.
 
 | Arm | Domain | Learning |

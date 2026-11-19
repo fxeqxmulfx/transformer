@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
 /-!
 # An identifying prior for previously unseen output classes
 
-Source: `review/flat_spectrum.md`, CM56. Class coordinates are supplied structure,
+Source: `review/convex/moments.md`, CM56. Class coordinates are supplied structure,
 not recovered from flatness. Two distinct observed feature values identify an
 unknown affine decoder in those coordinates. Slope and intercept are scaled
 with a shared margin, so the three actual score parameters enter linearly.

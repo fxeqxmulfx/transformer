@@ -6,7 +6,7 @@ public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 /-!
 # The actual full-word interpolation operator has a flat Gram matrix
 
-Source: `review/flat_spectrum.md`, CM84. Every column is evaluated through
+Source: `review/convex/moments.md`, CM84. Every column is evaluated through
 the learned raw complex neuron. Its complete Gram matrix is 10I and its
 energy is exactly ten times input energy. Flatness does not make the number
 of independent full-word coordinates small. This concerns a specific learned

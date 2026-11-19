@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Zero fixed-weight gap can coexist with strict joint CE improvement
 
-Source: `review/flat_spectrum.md`, CM104. The full actual CE decreases on two
+Source: `review/convex/moments.md`, CM104. The full actual CE decreases on two
 opposite ordered prefixes when capacity moves between retained components.
 This counterexample concerns conditional training optimization. It supplies
 neither unseen answers nor a claim about benchmark accuracy.

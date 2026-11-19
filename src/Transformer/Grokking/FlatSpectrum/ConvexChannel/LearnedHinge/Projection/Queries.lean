@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Feasible two-sided forward queries, including degenerate cones
 
-Source: `review/flat_spectrum.md`, CM80. All original row bounds determine a
+Source: `review/convex/moments.md`, CM80. All original row bounds determine a
 positive query radius. At the certified centre the admissible directions are
 exactly the kernel of the universally forced equalities. This proves domain
 safety, not finite-difference accuracy, a gradient identity or convergence.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.W
 /-!
 # A bounded three-coordinate recurrence outside every plain two-state mixture
 
-Source: `review/flat_spectrum.md`, CM110. Three explicit coordinate transfers
+Source: `review/convex/moments.md`, CM110. Three explicit coordinate transfers
 are linear contractions, with unit initial state and bounded actual readout.
 Their eight-word obstruction is nonzero. This is an expressivity witness,
 not a supplied task program, a native initialization or an MQAR lower bound.

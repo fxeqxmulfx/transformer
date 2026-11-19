@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFeatures
 /-!
 # A categorical tag for constant input strips
 
-Source: `review/flat_spectrum.md`, CM25. Embed a proposed base phase in a
+Source: `review/convex/moments.md`, CM25. Embed a proposed base phase in a
 three-times-larger cyclic domain. One extra residue marks an absorbing input
 category; two such marks do not cancel. No arithmetic meaning of input names
 or discovery of the flags/decoder is assumed.

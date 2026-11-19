@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion.Witn
 /-!
 # Actual complete Fourier head after planar crossing exclusions
 
-Source: `review/flat_spectrum.md`, CM50. Convex target regions and a declared
+Source: `review/convex/moments.md`, CM50. Convex target regions and a declared
 candidate pool identify exterior queries missed by the observed-point test.
 Fixed positive source mixtures then use the unchanged complete Fourier head;
 ordinary raw CE, coefficient/feature bounds and observed derivatives remain.

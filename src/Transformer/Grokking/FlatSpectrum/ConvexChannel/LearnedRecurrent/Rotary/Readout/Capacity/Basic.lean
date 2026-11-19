@@ -6,7 +6,7 @@ public import Mathlib.Data.Finset.Lattice.Fold
 /-!
 # Shared capacity across complete weighted complex readouts
 
-Source: `review/flat_spectrum.md`, CM104. Every original class and component is
+Source: `review/convex/moments.md`, CM104. Every original class and component is
 retained. The maximum across classes is the native mass required by a component;
 the total budget can move between components without changing learned content.
 -/

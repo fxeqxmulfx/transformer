@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Ordinary cross entropy and error-tolerant identification
 
-Source: `review/flat_spectrum.md`, CM87. Ordinary full-vocabulary cross entropy
+Source: `review/convex/moments.md`, CM87. Ordinary full-vocabulary cross entropy
 controls each observed margin. A certificate transfers imperfect margins with
 their explicit weighted error, retaining every record and output class.
 Neither statement assumes training convergence or observed real-valued logits.

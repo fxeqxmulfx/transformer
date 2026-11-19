@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual CE coefficients compared with historical learned execution
 
-Source: `review/flat_spectrum.md`, CM106. Each original occurrence may retain
+Source: `review/convex/moments.md`, CM106. Each original occurrence may retain
 a state from a different learned model. The state error comes from complete
 initial/operator displacements; the full-class CE signal error stays explicit.
 -/

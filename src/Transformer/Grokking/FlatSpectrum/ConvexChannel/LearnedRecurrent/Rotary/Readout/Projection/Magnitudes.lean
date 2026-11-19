@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Explicit optimal two-coordinate magnitude projection
 
-Source: `review/flat_spectrum.md`, CM102. All zero and boundary cases occur in
+Source: `review/convex/moments.md`, CM102. All zero and boundary cases occur in
 this concrete formula. Optimality is derived from nonnegative excess-distance
 expressions, with no optimization hypothesis in the definition.
 -/

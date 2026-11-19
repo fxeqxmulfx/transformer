@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Nonzero content change and a strict inexact-cache witness
 
-Source: `review/flat_spectrum.md`, CM106. Changing the actual learned frequency
+Source: `review/convex/moments.md`, CM106. Changing the actual learned frequency
 changes the ordered state. A separate complete retained-signal example has
 strict corrected descent with nonzero signal error, not a supplied exact gradient.
 -/

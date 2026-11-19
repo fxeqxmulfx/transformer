@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Score-preserving reconstruction in the original learned family
 
-Source: `review/flat_spectrum.md`, CM104. Weighted rows have variable component
+Source: `review/convex/moments.md`, CM104. Weighted rows have variable component
 masses. Normalization restores an actual bounded recurrence mixture, with
 explicit unused capacity and unchanged complete learned state execution.
 -/

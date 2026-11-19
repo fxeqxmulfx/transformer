@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Representation
 /-!
 # Feasible updates for independently visited query blocks
 
-Source: `review/flat_spectrum.md`, *Convex channel minibatch updates*, CM1.
+Source: `review/convex/moments.md`, *Convex channel minibatch updates*, CM1.
 A minibatch may visit only some queries. Each visited query can use its own
 convex step size; unvisited queries use zero. The joint tensor remains in
 the same affine/nonnegative feasible domain. This proves feasibility and

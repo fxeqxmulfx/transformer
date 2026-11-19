@@ -17,7 +17,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # A learned rectangular complex sequence family with exact convex answer loss
 
-Source: `review/flat_spectrum.md`, CM86. Immutable object sequences read learned
+Source: `review/convex/moments.md`, CM86. Immutable object sequences read learned
 query, position and shared adjacent-pair weights; balanced spectral recovery
 supplies both encoders and the learned output magnitude. The actual complex
 interaction returns probabilities over the original objects. Exact physical

@@ -9,7 +9,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete training-only conditional readout optimality
 
-Source: `review/flat_spectrum.md`, CM103. Exact complex linear minimization,
+Source: `review/convex/moments.md`, CM103. Exact complex linear minimization,
 actual full-class indexed CE coefficients and a complete conditional gap.
 The theorem does not certify floating-point execution, factor optimization,
 unseen-answer identification or raw-label accuracy.

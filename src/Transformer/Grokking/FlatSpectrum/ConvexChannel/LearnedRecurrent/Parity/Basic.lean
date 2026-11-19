@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.S
 /-!
 # A nonconstant arbitrary-length parity witness in the learned family
 
-Source: `review/flat_spectrum.md`, CM95. This is an existence witness, never
+Source: `review/convex/moments.md`, CM95. This is an existence witness, never
 a supplied runtime feature or learning algorithm. It removes CM86's degree
 obstruction: one bounded learned recurrence strictly represents parity at
 every length, with nonzero imaginary state/readouts. Neither identification

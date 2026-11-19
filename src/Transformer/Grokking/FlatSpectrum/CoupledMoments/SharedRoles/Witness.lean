@@ -6,7 +6,7 @@ public import Mathlib.Tactic.LinearCombination
 /-!
 # Strict coverage from an actual shared-role kernel
 
-Source: `review/flat_spectrum.md`, CM40. Two observed diagonal cells have
+Source: `review/convex/moments.md`, CM40. Two observed diagonal cells have
 one observed class. The independent-role kernel permits a nonzero cross
 query. Sharing forces that query to match when two is nonzero in a domain.
 This is an algebraic condition on the actual matrix, not a pinned answer.

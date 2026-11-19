@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms.H
 /-!
 # Exact complete products before input normalization
 
-Source: review/flat_spectrum.md, CM63. These are real-arithmetic identities
+Source: review/convex/moments.md, CM63. These are real-arithmetic identities
 for every saved coefficient, including coefficients perturbed by numerical
 construction. A native implementation still has to certify its arithmetic.
 -/

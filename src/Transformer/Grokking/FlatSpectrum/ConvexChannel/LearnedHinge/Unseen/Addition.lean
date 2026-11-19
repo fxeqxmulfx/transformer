@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Additive learned directions inside the complete activation cones
 
-Source: `review/flat_spectrum.md`, CM77. The actual domain is a cone, not
+Source: `review/convex/moments.md`, CM77. The actual domain is a cone, not
 only a convex set. Feasible parameter vectors add, and actual inference adds
 on every constrained input. This lets a singleton-prefix direction perturb
 an arbitrary already fitted point without changing observed predictions.

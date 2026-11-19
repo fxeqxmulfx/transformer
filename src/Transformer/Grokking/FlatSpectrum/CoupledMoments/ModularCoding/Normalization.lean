@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ModularCoding.Rec
 /-!
 # Unit gauges in composite categorical phase domains
 
-Source: `review/flat_spectrum.md`, CM27. Unit scaling and two shifts preserve
+Source: `review/convex/moments.md`, CM27. Unit scaling and two shifts preserve
 observed categorical equations and every decoded prediction. No prime-domain
 or one-dimensional-kernel assumption appears here.
 -/

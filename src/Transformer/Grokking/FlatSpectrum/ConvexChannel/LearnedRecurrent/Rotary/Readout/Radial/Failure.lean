@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Strictly better feasible CE at a fixed radial update
 
-Source: `review/flat_spectrum.md`, CM101. All original logits and labels enter
+Source: `review/convex/moments.md`, CM101. All original logits and labels enter
 ordinary CE. The example disproves an optimizer implication; it does not claim
 that the native recall endpoints equal this witness or identify unseen answers.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHeadBudget
 /-!
 # A flat complex extension changes only one of three unseen inputs
 
-Source: `review/flat_spectrum.md`, CM39. Two observed inputs determine the
+Source: `review/convex/moments.md`, CM39. Two observed inputs determine the
 support tests of two distinct state maps. The supplemental head disagrees
 with the prior on all three unseen inputs, but the extension changes only
 the newly covered one. Both stored complex blocks use the flat Fourier code.

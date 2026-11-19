@@ -7,7 +7,7 @@ entries have output marginals independent of input value and total routing mass
 one. The forward is `z(c)=sum_k W[q,k,D(k),c]`. No separately multiplied learned
 matrices, arithmetic operations or task rules appear in the forward.
 
-`review/flat_spectrum.md`, CC1–CC8, proves joint convexity, expressivity beyond
+`review/convex/channels.md`, CC1–CC8, proves joint convexity, expressivity beyond
 copying, identification from separating answer examples, an exact linear
 optimization oracle and the applicable flat-spectrum capacity bound. It also
 proves that two flat full-rank targets can remain indistinguishable on a partial

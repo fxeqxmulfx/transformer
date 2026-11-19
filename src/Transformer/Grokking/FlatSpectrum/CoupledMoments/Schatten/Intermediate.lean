@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.PartialIsometry
 /-!
 # The two endpoint budgets miss an intermediate spectral shape
 
-Source: `review/flat_spectrum.md`, CM9. A duplicated 2-by-2 sign matrix has size four,
+Source: `review/convex/moments.md`, CM9. A duplicated 2-by-2 sign matrix has size four,
 rank two, operator norm `sqrt 8`, and nuclear norm `2 sqrt 8`. It is an actual moment
 of a one-hot probability table. Neither old endpoint budget admits it, while a fixed
 intermediate budget does. This is a capacity witness, not a missing-label theorem or

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Witne
 /-!
 # Nonconstant confidence improvement with a genuinely unresolved state
 
-Source: `review/flat_spectrum.md`, CM64. CM53's training-learned many-to-one
+Source: `review/convex/moments.md`, CM64. CM53's training-learned many-to-one
 dictionary has covered and uncovered query states. Bounded confidence lowers
 ordinary CE while the uncovered state's opposite feasible answers remain.
 -/

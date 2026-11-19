@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Complete raw-coordinate ordinary CE update direction
 
-Source: `review/flat_spectrum.md`, CM82. The full-class CE residual multiplies
+Source: `review/convex/moments.md`, CM82. The full-class CE residual multiplies
 the original input row, readout sign, component sign and activation branch.
 Every slot/class/sign/component/coordinate is present. Its complete pairing
 is proved equal to the actual complex loss slope on the declared domain.

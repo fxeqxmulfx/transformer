@@ -5,7 +5,7 @@ bilinear reader failed? The input is a sequence of immutable objects and the
 output is one next original object. Object IDs only address parameters. The
 model receives no task name, arithmetic operation, bit role or answer rule.
 
-CM95 in `review/flat_spectrum.md` and
+CM95 in `review/convex/moments.md` and
 `Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent` prove the
 length-independent capacity bound, convex function domain, finite executed
 mixtures, ordinary CE convexity and feasible signed class queries. CM96, committed

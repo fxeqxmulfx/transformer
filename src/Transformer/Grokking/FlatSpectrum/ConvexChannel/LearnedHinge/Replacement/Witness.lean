@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Nonzero replacements with both component and readout signs
 
-Source: `review/flat_spectrum.md`, CM83. The full raw-input cone admits a
+Source: `review/convex/moments.md`, CM83. The full raw-input cone admits a
 unit bias replacement in either component and either readout sign. The
 actual complex output changes only for the chosen original object. These
 inhabited controls establish no trained accuracy or floating error bound.

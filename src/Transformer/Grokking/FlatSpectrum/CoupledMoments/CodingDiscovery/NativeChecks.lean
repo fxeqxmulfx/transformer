@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.W
 /-!
 # The native checks beside the learner
 
-Source: `review/flat_spectrum.md`, CM17, *The native checks*. Native reference at 414431c7:
+Source: `review/convex/moments.md`, CM17, *The native checks*. Native reference at 414431c7:
 `discover` in `experiments/convex_stress_relabel/src/coding.rs`, `propose` in
 `experiments/convex_stress_relabel/phase_start/src/lib.rs` and `analyze` in
 `experiments/convex_stress_relabel/graph_audit/src/graph.rs`.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexRecall.Loss
 /-!
 # Answer-only training determines the matching matrix
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR3.
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR3.
 Every stochastic matching matrix has at least the identity's ordinary
 answer CE, sample by sample. If the training dictionaries separate each
 queried key from every other key, equality of total losses forces the
@@ -53,7 +53,7 @@ theorem isMinOn_answerLoss_one (query : S → κ) (data : S → κ → ν) :
   exact answerLoss_one_le query data hA
 
 /-- Attaining the global minimum forces unit mass on the correct value
-at every observed sample (`review/flat_spectrum.md`, CR3). -/
+at every observed sample (`review/convex/channels.md`, CR3). -/
 theorem sample_target_mass_one [Nontrivial ν] (query : S → κ) (data : S → κ → ν)
     {A : Matrix κ κ ℝ} (hA : IsStochastic A)
     (hmin : answerLoss query data A ≤ answerLoss query data 1) (s : S) :
@@ -71,7 +71,7 @@ theorem sample_target_mass_one [Nontrivial ν] (query : S → κ) (data : S → 
 
 /-- **Ordinary answer CE identifies the matching matrix.** If training
 dictionaries distinguish each query from every wrong key, every feasible
-matrix attaining the minimum is the identity (`review/flat_spectrum.md`, CR3).
+matrix attaining the minimum is the identity (`review/convex/channels.md`, CR3).
 Separation concerns only the input dictionaries; no learned correctness
 condition or matching labels occur in its premise. -/
 theorem eq_one_of_answerLoss_le [Nontrivial ν] (query : S → κ) (data : S → κ → ν)
@@ -104,7 +104,7 @@ theorem trained_logits [Nontrivial ν] (query : S → κ) (data : S → κ → �
   exact logits_one q D c
 
 /-- The true answer is the unique largest logit on every test dictionary,
-so any argmax decoder returns it (`review/flat_spectrum.md`, CR3). -/
+so any argmax decoder returns it (`review/convex/channels.md`, CR3). -/
 theorem trained_strict_argmax [Nontrivial ν] (query : S → κ) (data : S → κ → ν)
     (hsep : Separates query data) {A : Matrix κ κ ℝ} (hA : IsStochastic A)
     (hmin : IsMinOn (answerLoss query data) {B | IsStochastic B} A)

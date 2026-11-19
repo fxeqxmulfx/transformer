@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact contraction induced by the old row geometry
 
-Source: `review/flat_spectrum.md`, CM107. The correct CM102 projection of a
+Source: `review/convex/moments.md`, CM107. The correct CM102 projection of a
 Hilbert isometry need not remain an isometry. This is a geometry witness,
 not a diagnosis of the native task's failure or a claim that CM102 is wrong.
 -/

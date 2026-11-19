@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexRecall.Training
 /-!
 # Separating data and a failure without it
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR4.
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR4.
 Injective codes give ordinary training dictionaries that separate keys:
 each code coordinate is one dictionary, queried at every key. The model
 does not receive the codes. Conversely, constant training dictionaries

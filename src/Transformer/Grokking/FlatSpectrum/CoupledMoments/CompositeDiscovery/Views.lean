@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # The precise scope of a certified categorical strip view
 
-Source: `review/flat_spectrum.md`, CM28, fixed categorical views. A native
+Source: `review/convex/moments.md`, CM28, fixed categorical views. A native
 CM25 view may remove constant rows or columns and map the remaining names to
 an interior. Its certificate identifies that interior under the cyclic model.
 Lifting identifies a full target represented by the same view, with the stated

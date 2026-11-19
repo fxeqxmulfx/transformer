@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath.Recover
 /-!
 # Both stages can change while ordinary answer CE improves
 
-Source: `review/flat_spectrum.md`, CM74. Two literal positive joint points
+Source: `review/convex/moments.md`, CM74. Two literal positive joint points
 have different encoder marginals and different conditional decoder rows.
 The actual answer-only CE is smaller at the second point. These are feasible
 comparison points, not a claim that a native optimizer reaches them or that

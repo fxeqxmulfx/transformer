@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientReadout
 /-!
 # Feasible block updates for the refined quotient model
 
-Source: `review/flat_spectrum.md`, CM32. The actual model uses only the
+Source: `review/convex/moments.md`, CM32. The actual model uses only the
 latent-fiber Fourier blocks, projects proposed observed logits to[-32,32],
 and fixes default rows at margin24. Every proposal produces a bounded complex
 head with the same unseen logits. CE is convex in feasible table coordinates;

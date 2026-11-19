@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing.Bas
 /-!
 # Nonzero shared coefficients with exact expansion costs
 
-Source: `review/flat_spectrum.md`, CM55. Both parameters occur in both head
+Source: `review/convex/moments.md`, CM55. Both parameters occur in both head
 coordinates and both raw classes. The nonzero offset and a nonzero parameter
 point attain the charged budget. Repeated records and a one-record tail are
 concrete instances of the normalized CE result.

@@ -6,7 +6,7 @@ public import Transformer.Landscape.Neural.Loss
 /-!
 # Complete path likelihood and ordinary next-object likelihood differ
 
-Source: `review/flat_spectrum.md`, CM74. At one fixed input, a learned
+Source: `review/convex/moments.md`, CM74. At one fixed input, a learned
 Bernoulli encoder chooses a hidden bit. A learned decoder keeps or flips it.
 The actual four path probabilities are normalized. Their complete negative
 log likelihoods are convex in both raw parameters, without a frozen encoder.

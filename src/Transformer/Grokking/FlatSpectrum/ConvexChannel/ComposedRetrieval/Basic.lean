@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.B
 /-!
 # Two content-dependent reads and a learned complex phase interaction
 
-Source: `review/flat_spectrum.md`, CM113. Each object indexes three learned
+Source: `review/convex/moments.md`, CM113. Each object indexes three learned
 phase vectors. Cosine differences are the real inner products of unit complex
 coordinates. Destination scores depend on observed content, its predecessor
 and learned relative potentials. Every position and output class participates.

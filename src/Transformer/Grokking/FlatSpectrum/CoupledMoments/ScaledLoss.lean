@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Loss
 /-!
 # One fixed logit scale for probability-valued experts
 
-Source: `review/flat_spectrum.md`, CM8. Scaling all experts by the same fixed nonnegative
+Source: `review/convex/moments.md`, CM8. Scaling all experts by the same fixed nonnegative
 number preserves ordinary CE convexity and the one-hot lower bound. The scale is not a
 trained parameter. This permits causal and spectral predictions to share one objective.
 -/

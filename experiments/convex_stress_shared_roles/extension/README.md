@@ -13,7 +13,7 @@ with the CM40 certificate from `convex_stress_shared_roles` at `5d4eee84` and
 retains explicit original record IDs. The complete augmented matrix is checked;
 a restricted code is never presented as the complete unrestricted kernel.
 
-The mathematical sources are CM39 in `review/flat_spectrum.md`, proved in
+The mathematical sources are CM39 in `review/convex/moments.md`, proved in
 `ConvexDepth/CoverageExtension/Basic.lean` at `2ca6d2cf`, and CM40's
 `CoupledMoments/SharedRoles/Identification.lean` at `ec5f839d`. The former proves
 exact logit, batch-loss and derivative preservation by this gate. The latter

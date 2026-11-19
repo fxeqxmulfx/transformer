@@ -10,7 +10,7 @@ Lean came first: `0807609b` proves sound identification across a declared decode
 bank and the convex restriction; `7d299b04` proves a feasible endpoint from any
 live branch, including partial coverage. `aef9d966` proves that anchor choice
 can change coverage even after propagation has reached a fixed point.
-The source is `review/flat_spectrum.md`, CM19. The numerical iteration extends
+The source is `review/convex/moments.md`, CM19. The numerical iteration extends
 the CM18 solver present at `6f2efed1`. FFTW, LAPACK, simplex and singular-value
 budget machinery come from the moment/Schatten experiments at `7d299b04`.
 This Rust code is not extracted from Lean or proved to converge.

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # A feasible minibatch improvement can worsen the complete training mean
 
-Source: `review/flat_spectrum.md`, CM105. The same full learned ordered family,
+Source: `review/convex/moments.md`, CM105. The same full learned ordered family,
 two distinct prefixes and capacity sixteen remain. A halfway step retains
 imaginary coordinates, lowers actual CE on training index zero and raises the
 actual complete mean. The conclusion is an optimizer inference counterexample.

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Feasible minibatch CE improvement can harm the combined training loss
 
-Source: `review/flat_spectrum.md`, CM99. Distinct original prefixes have opposite
+Source: `review/convex/moments.md`, CM99. Distinct original prefixes have opposite
 labels. A concrete admissible constant-class recurrence improves one CE loss
 but worsens their mean. The full rotary family also contains a strict separator.
 This is an implication counterexample, not a convergence claim about a schedule.

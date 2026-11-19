@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Se
 /-!
 # The pair/query model still loses four-object parity
 
-Source: `review/flat_spectrum.md`, CM86. At a fixed final object, the context
+Source: `review/convex/moments.md`, CM86. At a fixed final object, the context
 reader has only singleton and adjacent-pair dependencies. Its third mixed
 difference is zero. The identity holds for the actual learned logits, so even
 the eight four-object prefixes with fixed final false cannot all be strictly

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Transport
 /-!
 # Actual complex categorical heads and conjugate initialization
 
-Source: `review/flat_spectrum.md`, CFt5. Native causal pairs at `7ce28651`
+Source: `review/convex/channels.md`, CFt5. Native causal pairs at `7ce28651`
 use both complex coordinates in prediction. The label assignment here is a
 recorded dictionary (including its explicit default), not an unseen target.
 The feature code is fixed; CD8 applies to all real coefficient coordinates.

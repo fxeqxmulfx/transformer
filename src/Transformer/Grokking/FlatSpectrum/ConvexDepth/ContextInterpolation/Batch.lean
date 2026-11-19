@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 /-!
 # The original CE batches under fixed context interpolation
 
-Source: `review/flat_spectrum.md`, CM42. Exact source-state rows on observed
+Source: `review/convex/moments.md`, CM42. Exact source-state rows on observed
 inputs preserve the ordinary raw-label objective for all parameters. Original
 record IDs retain repeated examples and the denominator of every minibatch.
 The same identity applies before any optimizer step, including forward-only.

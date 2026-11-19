@@ -5,6 +5,6 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing.Wit
 /-!
 # Convex sharing with complete coefficient accounting
 
-Source: `review/flat_spectrum.md`, CM55. Fixed affine sharing, a sufficient
+Source: `review/convex/moments.md`, CM55. Fixed affine sharing, a sufficient
 weighted budget, actual bounded logits, and ordinary full/minibatch CE.
 -/

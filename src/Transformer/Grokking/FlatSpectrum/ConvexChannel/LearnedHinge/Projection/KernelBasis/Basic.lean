@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Finite certificates for a complete basis of feasible query directions
 
-Source: `review/flat_spectrum.md`, CM81. Kernel membership, free-coordinate
+Source: `review/convex/moments.md`, CM81. Kernel membership, free-coordinate
 identity and coordinate reconstruction from all original equality rows are
 finite arithmetic checks. Completeness is a theorem, not a certificate field.
 -/

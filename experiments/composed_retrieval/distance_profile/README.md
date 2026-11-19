@@ -23,7 +23,7 @@ The analytic gradient sums each position's contribution to its direction's
 level and decay. The forward-only optimizer makes two feasible loss queries
 for every independent coordinate on every minibatch. The test computes both
 updates against a separate implementation of the full class logits and
-includes slopes at zero. [Flat-spectrum CM119](../../../review/flat_spectrum.md)
+includes slopes at zero. [Flat-spectrum CM119](../../../review/convex/moments.md)
 
 The ten original cases are repeated- and distinct-symbol copy, reverse and
 sort, novel key/value binding, two-hop lookup, multi-query recall and

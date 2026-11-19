@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Joint
 /-!
 # Bounded joint latent decoder masses
 
-Source: `review/flat_spectrum.md`, CM64. Extend CM53's explicit joint
+Source: `review/convex/moments.md`, CM64. Extend CM53's explicit joint
 tensor constraints by a bounded total mass, allowing CE to learn confidence.
 The program bank is fixed; eliminating inconsistent programs preserves exactly
 the same convex feasible set, including every unknown decoder row.

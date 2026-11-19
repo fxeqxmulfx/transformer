@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.Basic
 /-!
 # Ordered head construction and independent certification passes
 
-Source: `review/flat_spectrum.md`, CM72. Conditional equality of unknown-row
+Source: `review/convex/moments.md`, CM72. Conditional equality of unknown-row
 words permits sharing a head-construction accumulator outside actual anchor
 labels. This is a property of a current tensor, not a restriction on the model.
 Every payload word and state occurrence remains in its original order.

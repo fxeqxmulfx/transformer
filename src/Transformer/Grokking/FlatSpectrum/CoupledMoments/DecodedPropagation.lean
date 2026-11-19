@@ -12,7 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Finite propagation for arbitrary fixed latent decoders
 
-Source: `review/flat_spectrum.md`, CM19. An arbitrary categorical decoder on a
+Source: `review/convex/moments.md`, CM19. An arbitrary categorical decoder on a
 nonzero finite cyclic group replaces the opposite-pair restriction of CM18.
 Gauge-fix an observed row, enumerate all phases of its anchor label, and prune
 unsupported row/column values for any finite number of sweeps. Every fitting

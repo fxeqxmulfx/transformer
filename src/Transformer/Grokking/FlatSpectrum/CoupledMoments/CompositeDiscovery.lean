@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Observed identification over composite cyclic domains
 
-Source: `review/flat_spectrum.md`, CM28. The joint observed module identifies
+Source: `review/convex/moments.md`, CM28. The joint observed module identifies
 the full table under unknown bijective-code realizability and an observable
 cyclicity condition. Repeated phases are allowed. A six-state witness has
 thirty-two held-out cells; a missing-row counterexample forces refusal.

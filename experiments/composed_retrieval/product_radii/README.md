@@ -6,7 +6,7 @@ interval. The retrieved values are scaled before the normalized first read
 and the query scales its rotation. The existing representation, two unrotated
 reads and output offsets still participate in the complete score. Setting
 every radius to one reproduces the CM116 logits.
-[Physical operator and identifiability](../../../review/flat_spectrum.md)
+[Physical operator and identifiability](../../../review/convex/moments.md)
 
 ## Training-only intervention on all 48 original arithmetic cases
 

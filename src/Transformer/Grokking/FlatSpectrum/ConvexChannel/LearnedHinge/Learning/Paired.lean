@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learn
 /-!
 # Actual CE work through both shared complex passes
 
-Source: `review/flat_spectrum.md`, CM82. Each pass uses the same full learned
+Source: `review/convex/moments.md`, CM82. Each pass uses the same full learned
 array. The residual of the averaged logits is pulled through both passes,
 with the inverse object permutation aligning the second residual. This is
 the derivative of the actual averaged prediction, not two separate CE losses.

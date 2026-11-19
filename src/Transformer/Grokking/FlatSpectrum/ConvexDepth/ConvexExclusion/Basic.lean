@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions.Basic
 /-!
 # Excluding raw labels by observable convex hull conflicts
 
-Source: `review/flat_spectrum.md`, CM49. A candidate assignment is impossible
+Source: `review/convex/moments.md`, CM49. A candidate assignment is impossible
 when its augmented hull intersects a differently labelled observed hull.
 An explicit candidate-pool or decoder-correctness hypothesis is required to
 turn these exclusions into a unique missing answer. Flatness does not supply it.

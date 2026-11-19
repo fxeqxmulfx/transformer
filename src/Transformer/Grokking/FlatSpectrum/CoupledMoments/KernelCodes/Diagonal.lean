@@ -7,7 +7,7 @@ public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 /-!
 # A genuinely two-dimensional observed kernel
 
-Source: `review/flat_spectrum.md`, CM34. Two diagonal observations and the
+Source: `review/convex/moments.md`, CM34. Two diagonal observations and the
 two declared gauges leave two independent coefficients. The equivalence
 below proves that these parameters exhaust the actual observed kernel.
 Its standard and sheared bases give different vectors but the same decisions.

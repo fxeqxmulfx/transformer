@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.I
 /-!
 # Two rows that share `p − 1` labels leave only the affine gauges of the coding
 
-Source: `review/flat_spectrum.md`, CM17, *An observable sufficient coverage*. Native reference:
+Source: `review/convex/moments.md`, CM17, *An observable sufficient coverage*. Native reference:
 `experiments/convex_stress_relabel/src/coding.rs` at 414431c7, `unique_direction`
 (`rank + 1 == p`).
 

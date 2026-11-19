@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Nonconstant observed answers can be fitted without identifying a missing one
 
-Source: `review/flat_spectrum.md`, CM77. Two raw prefixes have different
+Source: `review/convex/moments.md`, CM77. Two raw prefixes have different
 observed next objects. An inhabited feasible model fits both with an arbitrary
 positive margin. Its observed CE is below log 2, yet feasible changes preserve
 that exact fit and give opposite strict answers at the omitted prefix.

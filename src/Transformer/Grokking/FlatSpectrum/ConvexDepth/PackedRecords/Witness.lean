@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PackedRecords.Comple
 /-!
 # Nonconstant packed-state and complete complex witnesses
 
-Source: `review/flat_spectrum.md`, CM68. Five record IDs include duplicates,
+Source: `review/convex/moments.md`, CM68. Five record IDs include duplicates,
 nonconstant labels and a singleton tail. A different witness reaches the native
 state boundary and maximal 16-bit label. Invalid stored states are rejected.
 -/

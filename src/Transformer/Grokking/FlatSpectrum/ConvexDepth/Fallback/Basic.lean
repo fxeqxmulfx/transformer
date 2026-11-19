@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHead
 /-!
 # Actual bounded heads with a fixed input fallback
 
-Source: `review/flat_spectrum.md`, CM38. A fixed support predicate selects
+Source: `review/convex/moments.md`, CM38. A fixed support predicate selects
 candidate features on supported inputs and parent features elsewhere. The
 actual combined coefficient tensor stays linear and independently represents
 both complex coordinates. Flat component codes supply a feature bound, not

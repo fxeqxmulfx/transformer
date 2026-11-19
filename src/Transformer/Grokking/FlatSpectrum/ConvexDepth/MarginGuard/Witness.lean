@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard.Stabilit
 /-!
 # A nonzero Fourier witness for margin constraints
 
-Source: `review/flat_spectrum.md`, CM47. Use CM46's actual complete Fourier
+Source: `review/convex/moments.md`, CM47. Use CM46's actual complete Fourier
 head, two fixed gates and two context maps. Halving local preferences changes
 unseen logits from (15,9) to (13.5,10.5), retaining half the raw margin. A wrong
 reference prediction remains wrong. Zero retention can instead create a tie

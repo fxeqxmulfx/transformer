@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.D
 /-!
 # Feasible finite cross-entropy queries for learned recurrent mixtures
 
-Source: `review/flat_spectrum.md`, CM95. A unit initial state and a unit
+Source: `review/convex/moments.md`, CM95. A unit initial state and a unit
 readout taking it to one supply an actual constant class-bias component on the
 same state space. The scalar complex space provides an explicit inhabited
 example. No assumption that a zero-dimensional state admits this bias is made.

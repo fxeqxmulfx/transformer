@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Com
 /-!
 # Declared grouping preserves full-kernel match coverage
 
-Source: `review/flat_spectrum.md`, CM36. Pull grouped coefficient vectors back
+Source: `review/convex/moments.md`, CM36. Pull grouped coefficient vectors back
 through the recorded-name readout. The actual observed equations and both
 corresponding gauges are preserved. Completeness then transfers every raw
 query match, without an unseen-target or unknown-code premise. Native resource

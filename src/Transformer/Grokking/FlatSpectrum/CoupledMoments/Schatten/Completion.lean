@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Sharing
 /-!
 # An exact CE optimum can leave missing answers uniform
 
-Source: `review/flat_spectrum.md`, CM10. Retain columns zero and two of the CM9
+Source: `review/convex/moments.md`, CM10. Retain columns zero and two of the CM9
 one-hot table and put uniform probabilities in columns one and three. The resulting
 moment has smaller operator and nuclear norms, yet fits all eight observations.
 It globally minimizes ordinary CE while missing target mass remains one half.

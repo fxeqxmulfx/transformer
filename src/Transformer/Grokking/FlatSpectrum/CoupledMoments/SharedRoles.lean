@@ -8,7 +8,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.SharedRoles.Alias
 /-!
 # Shared categorical encoders and conditional unseen-query identification
 
-Source: `review/flat_spectrum.md`, CM40. Gauge-invariant linear role equations
+Source: `review/convex/moments.md`, CM40. Gauge-invariant linear role equations
 restrict the complete observed coefficient kernel. Full-code matches identify
 declared answers under explicit global shared-role and readout assumptions.
 Concrete matrix witnesses show strict extra coverage, remaining raw aliases,

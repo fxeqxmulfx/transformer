@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # The explicit complete matrix bound is sharp
 
-Source: `review/flat_spectrum.md`, CM108. Construct the nonzero attaining state
+Source: `review/convex/moments.md`, CM108. Construct the nonzero attaining state
 from the actual Gram entries, covering the zero-gap case separately. No
 external eigenvector, singular-value routine or optimizer hypothesis is used.
 -/

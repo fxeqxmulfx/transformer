@@ -9,7 +9,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath.Sharing
 /-!
 # Learned hidden paths and the ordinary answer-loss boundary
 
-Source: `review/flat_spectrum.md`, CM74. These finite controls distinguish
+Source: `review/convex/moments.md`, CM74. These finite controls distinguish
 complete-path likelihood from the required ordinary next-object objective.
 They do not establish a complete learned sequence architecture.
 -/

@@ -7,7 +7,7 @@ public import Transformer.Rotate90.Learning.Basic
 /-!
 # Conditional identification at genuinely renamed unseen prefixes
 
-Source: `review/flat_spectrum.md`, CM78. The architecture imposes equality
+Source: `review/convex/moments.md`, CM78. The architecture imposes equality
 of aligned logits within each renaming pair. Observed CE below log 2 then
 identifies a unique renamed next object. Correctness for an actual task needs
 that task's answer rule to respect the same renaming. Empty or fixed inputs

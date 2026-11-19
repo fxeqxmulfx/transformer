@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Dimension-based bias scaling retains every learned coordinate
 
-Source: `review/flat_spectrum.md`, CM93. Scale only each always-present bias
+Source: `review/convex/moments.md`, CM93. Scale only each always-present bias
 address by 1/sqrt(V), leaving every original object, position and pair address
 at scale one. This changes the capacity geometry without deleting directions.
 The raw class-bias response is then 1/V, which the query reservation must use.

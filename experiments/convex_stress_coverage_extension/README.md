@@ -1,7 +1,7 @@
 # Conservative coverage extension of complex heads
 
 Can a declared-readout decoder extend a raw decoder without overwriting any
-of its supported predictions? CM39 in `review/flat_spectrum.md`, proved at
+of its supported predictions? CM39 in `review/convex/moments.md`, proved at
 `2ca6d2cf`, supplies the exact gate and CE identities. This Rust component uses
 the actual saved CM34 and CM35 Fourier heads. Original evaluation requires a
 separate complete-comparison adapter; no original benchmark score is produced here.

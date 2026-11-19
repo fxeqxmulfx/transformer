@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Extraction through observable linear objectives in the supplied basis
 
-Source: `review/flat_spectrum.md`, CM21. Unitary coordinate changes preserve
+Source: `review/convex/moments.md`, CM21. Unitary coordinate changes preserve
 the entire optimization problem. Exact subspace geometry gives a pure
 optimizer and, for nonzero prime frequencies, distinct phases at every row.
 -/

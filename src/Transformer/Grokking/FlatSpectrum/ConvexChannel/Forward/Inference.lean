@@ -9,7 +9,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.
 /-!
 # Learning from observations during inference
 
-Source: `review/flat_spectrum.md`, *Inference-time learning*, CI1-CI4.
+Source: `review/convex/channels.md`, *Inference-time learning*, CI1-CI4.
 Retained candidate state can learn from new observed answers. Unverified
 self-labeling leaves the prediction function fixed and can contaminate
 the records used for future feedback. An agreement certificate accepts

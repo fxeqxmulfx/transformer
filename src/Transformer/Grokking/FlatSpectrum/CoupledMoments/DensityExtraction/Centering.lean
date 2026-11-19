@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Observable centering excludes the constant mode
 
-Source: `review/flat_spectrum.md`, CM21. Centering is checked on the supplied
+Source: `review/convex/moments.md`, CM21. Centering is checked on the supplied
 feature columns, not on a latent frequency selected by the proof.
 -/
 

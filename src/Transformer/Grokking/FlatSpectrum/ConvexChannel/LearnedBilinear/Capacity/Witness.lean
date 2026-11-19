@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Up
 /-!
 # A bounded complete model identifies a previously ambiguous missing pair
 
-Source: `review/flat_spectrum.md`, CM91. Observe 00→false, 01→false and
+Source: `review/convex/moments.md`, CM91. Observe 00→false, 01→false and
 10→true; withhold 11. These are immutable Boolean object names, not numbers
 passed to arithmetic. All complete real/imaginary coordinates remain learned.
 The budget 13/48 is feasible, and a finite residual certificate forces margin

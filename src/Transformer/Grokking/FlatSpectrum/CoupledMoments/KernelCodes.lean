@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes.Compl
 /-!
 # Complete observed kernels and finite convex complex heads
 
-Source: `review/flat_spectrum.md`, CM34. Normalize every compatible target
+Source: `review/convex/moments.md`, CM34. Normalize every compatible target
 coefficient vector using only two harmless shifts. Read the actual complete
 observed kernel in every basis direction; query matches and class aliases
 are basis independent. A match identifies a target code under explicit

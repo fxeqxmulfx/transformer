@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Cone.Extension
 /-!
 # Homogeneous consequences of consistent observed unit margins
 
-Source: `review/flat_spectrum.md`, CM87. A lower bound on a nonempty unit-margin
+Source: `review/convex/moments.md`, CM87. A lower bound on a nonempty unit-margin
 polyhedron is nonnegative on its recession directions. Homogenization then
 preserves nonnegativity, including the zero scaling boundary. No unproved
 identification result or attained optimizer is used.

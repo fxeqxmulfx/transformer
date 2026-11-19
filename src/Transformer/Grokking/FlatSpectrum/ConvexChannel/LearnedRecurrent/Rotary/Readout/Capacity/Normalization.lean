@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact normalization of every complete weighted readout block
 
-Source: `review/flat_spectrum.md`, CM104. Zero blocks and coordinates remain
+Source: `review/convex/moments.md`, CM104. Zero blocks and coordinates remain
 stored. Normalization reconstructs the original complete rows and does not
 divide by a small-value threshold or remove a low-weight component.
 -/

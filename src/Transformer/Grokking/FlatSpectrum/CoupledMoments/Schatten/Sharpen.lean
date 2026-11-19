@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Basic
 /-!
 # Feasible sharpening of decoded predictions
 
-Source: `review/flat_spectrum.md`, CM11. Make decoded active rows one-hot, keep
+Source: `review/convex/moments.md`, CM11. Make decoded active rows one-hot, keep
 inactive padding uniform, then apply one common positive uniform mixture.
 The decoded classes remain strict maxima. Measured scaled operator/nuclear
 bounds certify feasibility. If observed decoded labels are correct, convexity

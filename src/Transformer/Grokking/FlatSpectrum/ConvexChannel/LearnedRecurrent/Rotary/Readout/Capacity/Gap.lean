@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # A complete training CE gap allowing mixture-capacity redistribution
 
-Source: `review/flat_spectrum.md`, CM104. The gap bounds all feasible weighted
+Source: `review/convex/moments.md`, CM104. The gap bounds all feasible weighted
 readout changes on current learned content. Neither current mixture weights
 nor their zero pattern restrict competitors. Exact-real conditional statements
 do not supply a floating certificate, raw accuracy or unseen answers.

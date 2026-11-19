@@ -12,7 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete readout refitting on already learned recurrent states
 
-Source: `review/flat_spectrum.md`, CM100. Actual complex readout coordinates,
+Source: `review/convex/moments.md`, CM100. Actual complex readout coordinates,
 radial row feasibility, unchanged learned state execution, a joint conditional
 convex ordinary-CE subproblem and feasible full-family finite queries. No
 fitting, optimizer-convergence or unseen-answer guarantee is assumed.

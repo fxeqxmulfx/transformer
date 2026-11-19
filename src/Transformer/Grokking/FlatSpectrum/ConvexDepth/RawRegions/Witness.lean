@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 /-!
 # Nonzero Fourier realization of hull-certified raw labels
 
-Source: `review/flat_spectrum.md`, CM48. Four observed points supply two
+Source: `review/convex/moments.md`, CM48. Four observed points supply two
 different raw labels with the same declared readout. Two genuinely unseen
 points have same-label barycentric certificates. The complete four-state
 Fourier head realizes their raw margins without using either unseen label.

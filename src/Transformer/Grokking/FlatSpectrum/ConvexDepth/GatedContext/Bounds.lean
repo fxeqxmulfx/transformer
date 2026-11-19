@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext.Basic
 /-!
 # Complete products and bounds for anchored local contexts
 
-Source: `review/flat_spectrum.md`, CM46. Actual logits use every original
+Source: `review/convex/moments.md`, CM46. Actual logits use every original
 real/imaginary coefficient. Fixed gates and a radius in [0,1] retain the
 source feature bound; coefficient changes have an explicit local bound.
 -/

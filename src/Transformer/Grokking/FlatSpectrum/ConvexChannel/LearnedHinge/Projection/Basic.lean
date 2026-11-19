@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # Finite exact certificates for projection onto the learned activation cones
 
-Source: `review/flat_spectrum.md`, CM79. Feasibility, nonnegative multipliers,
+Source: `review/convex/moments.md`, CM79. Feasibility, nonnegative multipliers,
 complementarity and stationarity certify a Euclidean projection. These are
 finite arithmetic checks suitable for an exact rational native checker. No
 optimizer oracle, omitted inequality or approximately feasible point is assumed.

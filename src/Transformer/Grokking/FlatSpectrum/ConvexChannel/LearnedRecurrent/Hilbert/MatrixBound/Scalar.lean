@@ -6,7 +6,7 @@ public import Mathlib.Tactic
 /-!
 # Explicit two-coordinate quadratic bound
 
-Source: `review/flat_spectrum.md`, CM108. The scalar formula is proved before
+Source: `review/convex/moments.md`, CM108. The scalar formula is proved before
 applying it to the actual complete complex column Gram matrix.
 -/
 

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.SharedLearning.Com
 /-!
 # Shared categorical learning from ordinary complex answer cross-entropy
 
-Source: `review/flat_spectrum.md`, CM73. The label-independent joint domain and
+Source: `review/convex/moments.md`, CM73. The label-independent joint domain and
 fixed input alignment support learned routing and output interactions. Empirical
 optimality identifies a shared nonconstant rule under explicit observed collision
 and value-coverage conditions. The actual complete complex head realizes the

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Exact row-program certificates over composite rings
 
-Source: `review/flat_spectrum.md`, CM28, the elimination certificate. A finite
+Source: `review/convex/moments.md`, CM28, the elimination certificate. A finite
 record of actual swaps, scalings and row additions is replayed on the original
 matrix. If the final matrix contains every coordinate row, its original
 kernel is zero. This only uses preservation of homogeneous equations and does

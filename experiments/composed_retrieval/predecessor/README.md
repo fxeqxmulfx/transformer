@@ -20,7 +20,7 @@ the four predecessor similarities have a nonzero contrast. Observing
 every final class score on prefixes of length at most two still leaves
 opposite winning predictions possible on a length-three prefix. The
 full logit bound holds for every prefix length, and CE is convex in the
-class offsets when the other parameters are fixed. [Flat-spectrum CM120](../../../review/flat_spectrum.md)
+class offsets when the other parameters are fixed. [Flat-spectrum CM120](../../../review/convex/moments.md)
 
 ## Training results
 

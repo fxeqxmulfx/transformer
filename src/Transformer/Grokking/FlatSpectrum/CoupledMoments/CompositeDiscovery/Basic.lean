@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ModularCoding.Nor
 /-!
 # The observed joint module over a composite domain
 
-Source: `review/flat_spectrum.md`, CM28. Rows, columns and classes remain
+Source: `review/convex/moments.md`, CM28. Rows, columns and classes remain
 categorical names. The joint module contains the actual observed additive
 equations and two shift gauges. It never pins an unobserved axis arbitrarily.
 

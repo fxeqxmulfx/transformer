@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Observed ordinary CE cannot identify an omitted full-prefix answer
 
-Source: `review/flat_spectrum.md`, CM77. The perturbation applies to any
+Source: `review/convex/moments.md`, CM77. The perturbation applies to any
 feasible starting model, including a fitted point. Every original observed
 logit and every indexed CE term is unchanged. For binary objects, two such
 points can prefer opposite next objects at the omitted prefix. This is an

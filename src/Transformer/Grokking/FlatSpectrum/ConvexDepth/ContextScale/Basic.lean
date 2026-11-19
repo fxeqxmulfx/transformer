@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextInterpolation
 /-!
 # Fixed confidence scales on actual context features
 
-Source: `review/flat_spectrum.md`, CM43. A fixed input-dependent scale acts
+Source: `review/convex/moments.md`, CM43. A fixed input-dependent scale acts
 before the complete complex head. A scale in [0,1] preserves the coordinate
 bound; a positive scale preserves raw-class comparisons. These statements
 do not preserve comparisons between sums of class probabilities.

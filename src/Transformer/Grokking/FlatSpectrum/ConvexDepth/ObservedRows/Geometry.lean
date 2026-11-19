@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Domain
 /-!
 # The complete Euclidean geometry in reduced coordinates
 
-Source: `review/flat_spectrum.md`, CM65. Removing an anchored row eliminates
+Source: `review/convex/moments.md`, CM65. Removing an anchored row eliminates
 one affine copy of its program mass, not its contribution to distance. Exact
 equivalence of feasible predictions does not justify changing optimizer geometry.
 -/

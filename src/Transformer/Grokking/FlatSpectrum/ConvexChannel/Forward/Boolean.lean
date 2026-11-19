@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Capacity
 /-!
 # Nonempty witnesses and held-out generated answers
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF4-CF5.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF4-CF5.
 For each Boolean query, two of the four dictionaries identify negation.
 The other key is constant in the observations, so its conflicting answers
 eliminate it. The all-false dictionary is held out and the computed learner

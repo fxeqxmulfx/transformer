@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Sh
 /-!
 # Exact zero rows in complete complex component contractions
 
-Source: `review/flat_spectrum.md`, CM94. The native complete gradient has one
+Source: `review/convex/moments.md`, CM94. The native complete gradient has one
 real entry for every original output/query/context coordinate and the exact
 imaginary partner from CM88. A row whose entries are all exactly zero makes
 no contribution to any complex component contraction. All factors and gradient

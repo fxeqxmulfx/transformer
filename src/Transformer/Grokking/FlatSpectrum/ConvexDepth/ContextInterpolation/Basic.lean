@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Jensen
 /-!
 # Fixed context interpolation of actual complex features
 
-Source: `review/flat_spectrum.md`, CM42. A fixed stochastic row combines
+Source: `review/convex/moments.md`, CM42. A fixed stochastic row combines
 features at source states, using the same complete real/imaginary coefficient
 tensor. Flatness bounds those source features; the interpolated query matrix
 need not be unitary. No statement infers an unseen raw label from flatness.

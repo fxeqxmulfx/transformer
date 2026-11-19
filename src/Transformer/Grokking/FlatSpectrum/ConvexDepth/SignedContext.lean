@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext.Witnes
 /-!
 # Signed context features with bounded amplification
 
-Source: `review/flat_spectrum.md`, CM51. Fixed signed source combinations retain
+Source: `review/convex/moments.md`, CM51. Fixed signed source combinations retain
 the complete complex head. Absolute-mass normalization preserves its feature
 bound and convex ordinary CE. Conditional score residuals imply raw margins;
 a nonzero Fourier witness and compatible alternative target separate this

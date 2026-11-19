@@ -1,7 +1,7 @@
 # Bounded complex refinement of a learned quotient
 
 Can a fixed complex head fit observed raw aliases while preserving the learned
-quotient's default answers? CM31 and CM32 in `review/flat_spectrum.md`, proved
+quotient's default answers? CM31 and CM32 in `review/convex/moments.md`, proved
 at `fbbe4617` and `b52ba949`, establish the representation, convex domain and
 feasible updates before this native implementation. Fourteen native checks pass.
 The original training-only follow-up now completes all 23 pair cases; held-out

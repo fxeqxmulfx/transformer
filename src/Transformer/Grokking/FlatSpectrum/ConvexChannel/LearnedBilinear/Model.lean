@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexRecall.Loss
 /-!
 # Ordinary next-object cross-entropy through both recovered encoders
 
-Source: `review/flat_spectrum.md`, CM86. One full rectangular complex matrix
+Source: `review/convex/moments.md`, CM86. One full rectangular complex matrix
 per output object is jointly learned. Actual forward computation recovers both
 representations and the readout. Its identity with the joint reading proves
 ordinary full-vocabulary CE convexity on the entire coordinate space. There

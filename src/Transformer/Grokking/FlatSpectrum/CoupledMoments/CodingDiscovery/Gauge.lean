@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.T
 /-!
 # A nonzero coding of the training rectangles is the coding of the table up to its gauge
 
-Source: `review/flat_spectrum.md`, CM17, *What the test gives*. Native
+Source: `review/convex/moments.md`, CM17, *What the test gives*. Native
 reference: `experiments/convex_stress_relabel/src/coding.rs` at 414431c7: `unique_direction`
 accepts when `rank + 1 == p`, then `validate` checks that the direction is a bijection and
 `consistent_edges` that it has phase potentials on the observed cells.

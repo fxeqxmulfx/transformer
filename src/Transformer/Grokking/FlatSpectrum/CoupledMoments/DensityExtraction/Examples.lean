@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Inhabited instances of every conditional extraction theorem
 
-Source: `review/flat_spectrum.md`, CM21. The examples use the separated
+Source: `review/convex/moments.md`, CM21. The examples use the separated
 three-mode subspace, a mixed density, and a rotation that mixes two modes.
 -/
 

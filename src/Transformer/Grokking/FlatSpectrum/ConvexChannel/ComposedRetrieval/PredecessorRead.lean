@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Full causal prediction with predecessor-dependent content rows
 
-Source: `review/flat_spectrum.md`, CM120. The two reads, rotated product
+Source: `review/convex/moments.md`, CM120. The two reads, rotated product
 and every class use the actual normalized contextual routing. Short
 observations can leave a strict winning class at the next length free.
 -/

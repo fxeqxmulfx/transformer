@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.Basic
 /-!
 # Fixed sharing constraints preserve convexity and transport observed answers
 
-Source: `review/flat_spectrum.md`, CM10. A fixed representative map imposes linear
+Source: `review/convex/moments.md`, CM10. A fixed representative map imposes linear
 equalities between probability rows. Ordinary CE still has its observed lower bound.
 An observed representative determines its shared rows at that bound. The map is a
 hypothesis of this model, not a conclusion inferred from coincident observed labels.

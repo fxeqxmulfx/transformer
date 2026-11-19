@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.Learn
 /-!
 # Joint convex program and decoder coefficients
 
-Source: `review/flat_spectrum.md`, CM53. Each joint nonnegative row has the
+Source: `review/convex/moments.md`, CM53. Each joint nonnegative row has the
 program's shared mass. Observations impose affine raw-label constraints.
 Independent learned routing and decoder factors are never multiplied.
 -/

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Separate signal and state error in complete retained coefficients
 
-Source: `review/flat_spectrum.md`, CM106. The complete peak includes every
+Source: `review/convex/moments.md`, CM106. The complete peak includes every
 class and component. Historical signals need not be current CE residuals;
 their discrepancy and changed-state contribution both remain explicit.
 -/

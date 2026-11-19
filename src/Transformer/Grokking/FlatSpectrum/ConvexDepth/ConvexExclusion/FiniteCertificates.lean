@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ConvexExclusion.Basi
 /-!
 # Finite certificates for convex hull intersections
 
-Source: `review/flat_spectrum.md`, CM50. Two nonnegative finite mixtures of
+Source: `review/convex/moments.md`, CM50. Two nonnegative finite mixtures of
 original coordinates certify the common point. The candidate mixture contains
 the explicitly tagged query with positive weight. The other mixture contains
 only observations of a different raw label. No unknown answer is an input.

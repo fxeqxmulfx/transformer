@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Feasibility and a forced unseen original-object answer
 
-Source: `review/flat_spectrum.md`, CM87. Explicit parameters prove that the
+Source: `review/convex/moments.md`, CM87. Explicit parameters prove that the
 observations are feasible, with two distinct observed labels. Identification
 then holds for every fitting parameter, not just this chosen example. The
 free middle-position coefficient is retained for the ambiguity control.

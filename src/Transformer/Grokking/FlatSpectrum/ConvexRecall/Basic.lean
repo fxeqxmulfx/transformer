@@ -7,7 +7,7 @@ public import Mathlib.Tactic
 /-!
 # Convex parameter domain and linear dictionary readout
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR1-CR2.
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR1-CR2.
 The complete matching matrix is learned directly. Its row-simplex domain
 is convex, its output logits are jointly linear in every parameter, and
 its identity setting copies every dictionary exactly. This retains a
@@ -94,7 +94,7 @@ lemma logits_le_one {A : Matrix κ κ ℝ} (hA : IsStochastic A)
   · exact hA.1 q k
 
 /-- A target with all the row's mass leaves zero weight on every key whose
-value differs from the target (`review/flat_spectrum.md`, CR3). -/
+value differs from the target (`review/convex/channels.md`, CR3). -/
 lemma weight_eq_zero_of_target_mass {A : Matrix κ κ ℝ} (hA : IsStochastic A)
     (q : κ) (D : κ → ν) (hmass : logits A q D (D q) = 1)
     (k : κ) (hk : D k ≠ D q) : A q k = 0 := by

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # Observable two-stage selection exposes a pure Fourier mode
 
-Source: `review/flat_spectrum.md`, CM21. Select any two distinct categorical
+Source: `review/convex/moments.md`, CM21. Select any two distinct categorical
 rows, maximize the real kernel reading, and then its imaginary part within
 the first optimum face. No latent ordering is an input to these objectives.
 -/

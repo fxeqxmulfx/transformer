@@ -3,7 +3,7 @@ import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 
 /-!
 Prospective task335 audit, before fitting. CM55 and CM51 in
-`review/flat_spectrum.md`: replace independent block offsets by a fixed linear
+`review/convex/moments.md`: replace independent block offsets by a fixed linear
 map of input-only block descriptors. All real and imaginary coefficients and
 fixed categorical offsets are charged. Feature normalization is a bound;
 neither input descriptors nor convexity identify missing raw labels.

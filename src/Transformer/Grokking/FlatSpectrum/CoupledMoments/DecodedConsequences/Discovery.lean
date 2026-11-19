@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequenc
 /-!
 # A finite observed-only row-consequence certifier
 
-Source: `review/flat_spectrum.md`, CM29. A candidate contains only a proposed
+Source: `review/convex/moments.md`, CM29. A candidate contains only a proposed
 class, an actual finite row program and a row position. The certifier compares
 every replayed coefficient with the proposed query row. It receives no true
 class code, target table, solver rank or cyclicity assumption.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Nonconstant complex reduction with distinct component activation patterns
 
-Source: `review/flat_spectrum.md`, CM76. Both original neurons have active
+Source: `review/convex/moments.md`, CM76. Both original neurons have active
 real parts at the true input. Their imaginary parts have different patterns.
 All negative coordinates are retained. The reduced full complex predictions
 are (-7+7i, 4+10i), so the preferred output object depends on the input.

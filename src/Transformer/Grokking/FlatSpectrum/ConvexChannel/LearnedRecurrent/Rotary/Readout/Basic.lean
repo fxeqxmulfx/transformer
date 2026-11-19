@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Normed.Module.RCLike.Real
 /-!
 # Complete complex readout coordinates and radial updates
 
-Source: `review/flat_spectrum.md`, CM100. The two complex coefficients of every
+Source: `review/convex/moments.md`, CM100. The two complex coefficients of every
 class/component remain coordinates. The actual radial rule used by the native
 row budget preserves feasibility; no Euclidean-projection or descent claim is made.
 -/

@@ -14,7 +14,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery.N
 /-!
 # The class coding of a categorical table is found from its training rectangles
 
-Source: `review/flat_spectrum.md`, CM17. A square table has the labels `e⁻¹ (r i + s j)` for a
+Source: `review/convex/moments.md`, CM17. A square table has the labels `e⁻¹ (r i + s j)` for a
 bijection `e` of its classes onto `ZMod p`, `p` prime, and phases `r`, `s`; a learner is given
 training cells with their labels, and none of `e`, `r`, `s`. The training rectangles give a
 linear system over `ZMod p` for a coding of the classes. If its pinned solutions have dimension

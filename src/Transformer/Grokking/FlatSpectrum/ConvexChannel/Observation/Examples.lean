@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Observation.Span
 /-!
 # Three observed Boolean dictionaries determine a fourth
 
-Source: `review/flat_spectrum.md`, *Observable features determine unseen
+Source: `review/convex/channels.md`, *Observable features determine unseen
 predictions*, O4. The observed dictionaries are 00, 01 and 10; 11 is absent.
 Its categorical features are reconstructed with coefficients -1, 1, 1.
 These are witnesses for all conditional results of O1-O3, including an

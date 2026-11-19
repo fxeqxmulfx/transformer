@@ -5,7 +5,7 @@ with ordinary cross-entropy, using Mini and forward-only Mini updates? This
 experiment implements the family proved in
 `Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear`, including
 CM87 identification and CM88 update identities. The manuscripts are CM86–88
-in `review/flat_spectrum.md`; the proof commits are `ed9d359d`, `e9ac5beb` and
+in `review/convex/moments.md`; the proof commits are `ed9d359d`, `e9ac5beb` and
 `e50d3691`. The older `convex_learned_sequence` experiment uses another family.
 The seed-1 pilot is complete: both required modes pass two of the five original
 primary tests. The additional scaled addition run fits every training answer

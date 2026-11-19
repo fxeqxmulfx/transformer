@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact full linear minimization with shared component capacity
 
-Source: `review/flat_spectrum.md`, CM104. Finite maximum attainment supplies
+Source: `review/convex/moments.md`, CM104. Finite maximum attainment supplies
 the selected component. All original classes and both complex coordinates
 contribute; zeros in a minimizing value never shrink the feasible family.
 -/

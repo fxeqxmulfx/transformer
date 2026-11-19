@@ -11,7 +11,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # Add norm-preserving learned mixing while retaining the old family
 
-Source: `review/flat_spectrum.md`, CM107–109. Complete complex Hilbert coordinates,
+Source: `review/convex/moments.md`, CM107–109. Complete complex Hilbert coordinates,
 an exact isometric mixing witness and contraction under the old row projection,
 plus an enlarged bounded functional convex domain containing both complete
 learned branches. An explicit attained matrix norm gives a feasible numerical

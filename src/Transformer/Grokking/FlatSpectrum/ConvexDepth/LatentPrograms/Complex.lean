@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoxHead
 /-!
 # Complete complex realization of joint latent decoder coefficients
 
-Source: `review/flat_spectrum.md`, CM53. Every input-program block retains the
+Source: `review/convex/moments.md`, CM53. Every input-program block retains the
 full complex code and raw head. Joint masses become actual conjugate-head
 coefficients linearly; all real and imaginary coordinates are charged.
 -/

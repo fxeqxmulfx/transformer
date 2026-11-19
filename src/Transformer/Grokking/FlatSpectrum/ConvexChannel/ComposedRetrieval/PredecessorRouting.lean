@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Content matching conditioned on the preceding object
 
-Source: `review/flat_spectrum.md`, CM120. Both normalized content reads
+Source: `review/convex/moments.md`, CM120. Both normalized content reads
 use the same learned phase table for current and preceding objects.
 A four-weight identity describes which occurrence of a repeated symbol
 can be selected as a function of the query's predecessor.

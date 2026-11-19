@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # A centre with slack on every non-forced activation constraint
 
-Source: `review/flat_spectrum.md`, CM80. Sum the certified projections of all
+Source: `review/convex/moments.md`, CM80. Sum the certified projections of all
 original normals. Its zero-slack rows are exactly the universally forced
 equalities. This supplies geometry for feasible forward-only queries without
 discarding degenerate patterns or replacing the actual model forward.

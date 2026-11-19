@@ -2,7 +2,7 @@
 
 Does retaining candidate records across minibatches compute exactly the same
 model as the complete-data learner, and how much does batch size affect cost?
-The source is `review/flat_spectrum.md`, CF6, formalized in
+The source is `review/convex/channels.md`, CF6, formalized in
 `ConvexChannel.Forward.Minibatch` at `e9b0260c`. Its exact equality theorem includes failure,
 partial coverage, empty batches and defaults. It assumes the same ordered data.
 

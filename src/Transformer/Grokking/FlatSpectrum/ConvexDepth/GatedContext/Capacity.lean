@@ -4,7 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext.Witness
 
 /-!+# The local Fourier model satisfies the full bound and batch hypotheses
 
-Source: `review/flat_spectrum.md`, CM46. These concrete instances use a
+Source: `review/convex/moments.md`, CM46. These concrete instances use a
 nonzero complete Fourier tensor, a nonzero radius, two groups and two context
 maps. They instantiate every conditional generic result, including observed
 rows, repeated-record batches and tail derivatives.

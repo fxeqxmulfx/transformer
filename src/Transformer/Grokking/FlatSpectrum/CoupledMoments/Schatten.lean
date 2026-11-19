@@ -22,7 +22,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PairedLi
 /-!
 # Shared complex moments with singular-value budgets
 
-Source: `review/flat_spectrum.md`, CM5–CM7, CM9–CM11 and CM13–CM16. Convex bounds on the largest
+Source: `review/convex/moments.md`, CM5–CM7, CM9–CM11 and CM13–CM16. Convex bounds on the largest
 singular value
 and their sum accommodate different spectral shapes. A concrete rank-one recovery proof
 starts with ordinary empirical CE and does not assume correct missing labels or a trained

@@ -52,7 +52,7 @@ An extended learned output tensor uses those full path features under convex
 absolute-sum budgets, without a product of separately learned routers and decoders.
 Retaining features from every shorter path embeds each shallower head at the
 same budget, while making the geometric storage cost explicit.
-CFt5 in `review/flat_spectrum.md` binds actual complex categorical features to
+CFt5 in `review/convex/channels.md` binds actual complex categorical features to
 this convex head, proves the conjugate initializer's exact logits and budget,
 and supplies flat Fourier query blocks for arbitrary nonzero state counts.
 CM31 refines observed inputs to fit raw aliases of a learned quotient, proves

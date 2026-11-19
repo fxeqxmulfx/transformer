@@ -124,7 +124,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-Source: [`review/flat_spectrum.md`, CM27](../../review/flat_spectrum.md#cm27-composite-categorical-codes-require-checked-modular-lifts).
+Source: [`review/convex/moments.md`, CM27](../../review/convex/moments.md#cm27-composite-categorical-codes-require-checked-modular-lifts).
 Prime-field row operations reuse the checked finite-system core at `05b89afc`;
 integer residual lifting, original-system checks and CRT witnesses are new.
 All35 short/long tasks, full batch, minibatch, forward-only, retained stronger

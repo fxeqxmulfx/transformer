@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoxHead
 /-!
 # Feasible table updates with fixed latent-default rows
 
-Source: `review/flat_spectrum.md`, CM32. Real table coordinates provide a
+Source: `review/convex/moments.md`, CM32. Real table coordinates provide a
 convex parameterization of the actual complex readout. Clip observed rows
 into a fixed box and assign each default its declared row. Every proposal,
 including full-batch and minibatch directions, then yields a feasible head.

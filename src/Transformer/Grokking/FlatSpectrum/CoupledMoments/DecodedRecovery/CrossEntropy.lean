@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.P
 /-!
 # The certificate inside the spectral cross-entropy program
 
-Source: `review/flat_spectrum.md`, CM18. The declared convex program is ordinary
+Source: `review/convex/moments.md`, CM18. The declared convex program is ordinary
 original-vocabulary cross-entropy over the tables `decode d P` with `P` in the spectral domain
 of CM15 at the budgets `N`; CM16 adds the linear equalities of an even latent table.
 

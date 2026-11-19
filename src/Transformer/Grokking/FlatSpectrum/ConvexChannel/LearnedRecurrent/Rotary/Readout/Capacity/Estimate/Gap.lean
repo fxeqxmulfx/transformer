@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual training guarantees with a complete estimated coefficient
 
-Source: `review/flat_spectrum.md`, CM105. The estimated gap receives an explicit
+Source: `review/convex/moments.md`, CM105. The estimated gap receives an explicit
 correction for its actual full-table discrepancy. No minibatch, retained or
 finite-query estimate is silently identified with the complete training gradient.
 -/

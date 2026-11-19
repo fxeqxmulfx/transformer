@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.C
 /-!
 # A recovered unseen cell behind a many-to-one decoder, and the refusals
 
-Source: `review/flat_spectrum.md`, CM18.
+Source: `review/convex/moments.md`, CM18.
 
 `held_recovery`: the folded table of CM16 (three rows, five latent states, three classes) with
 the cell `(2, 1)` withheld. The training labels meet the label conditions; the procedure

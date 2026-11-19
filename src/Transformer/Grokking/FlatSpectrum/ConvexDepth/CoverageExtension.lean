@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoverageExtension.Wi
 /-!
 # Conservative coverage extension of bounded complex heads
 
-Source: `review/flat_spectrum.md`, CM39. The supplemental head is used only
+Source: `review/convex/moments.md`, CM39. The supplemental head is used only
 where it accepts and the prior refuses. Every other input retains exact prior
 logits. Original prior-covered batches retain their ordinary CE and derivatives.
 The CM38 convex domain and flat-feature bounds still charge both complex blocks.

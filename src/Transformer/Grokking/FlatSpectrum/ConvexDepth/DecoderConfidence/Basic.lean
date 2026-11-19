@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHeadBudget
 /-!
 # Bounded complex realization of a declared categorical decoder
 
-Source: `review/flat_spectrum.md`, CM44. A fixed input-state map may repeat
+Source: `review/convex/moments.md`, CM44. A fixed input-state map may repeat
 states and its declared raw decoder may be many-to-one. The actual conjugate
 head realizes a chosen margin, with every complex coefficient charged. This
 does not identify unknown targets or make the input-query matrix unitary.

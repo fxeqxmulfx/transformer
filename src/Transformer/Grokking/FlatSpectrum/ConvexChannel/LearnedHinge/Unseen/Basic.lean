@@ -6,7 +6,7 @@ public import Mathlib.Data.List.OfFn
 /-!
 # A learned raw-prefix neuron can isolate one unobserved full prefix
 
-Source: `review/flat_spectrum.md`, CM77. The representation is a permissible
+Source: `review/convex/moments.md`, CM77. The representation is a permissible
 learned bias and position/object weight vector. Its ReLU activates only on
 one full-length object prefix, and is zero on every other admitted prefix,
 including shorter prefixes. This is a parameter witness, not a task program

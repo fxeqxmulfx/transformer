@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.SharedLearning.Bas
 /-!
 # Shared routing and output identification from answer CE
 
-Source: `review/flat_spectrum.md`, CM73. Wrong slots must have observed
+Source: `review/convex/moments.md`, CM73. Wrong slots must have observed
 same-value/different-label collisions; the target slot must cover its value
 alphabet. These predicates concern the actual observations, not the optimizer's
 parameters or its unknown predictions. Under realizability they identify the

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Inhabited estimated-gap hypotheses with actual nonzero error
 
-Source: `review/flat_spectrum.md`, CM105. All estimated-gap premises are
+Source: `review/convex/moments.md`, CM105. All estimated-gap premises are
 instantiated at the nonzero complex ordered witness. Its estimated gap is
 twelve and its actual coefficient-error correction is eight, rather than zero.
 -/

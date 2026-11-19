@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PartialFallback.Basi
 /-!
 # Ordinary CE batches with a partial saved predecessor
 
-Source: `review/flat_spectrum.md`, CM41. Original record IDs, repeated examples
+Source: `review/convex/moments.md`, CM41. Original record IDs, repeated examples
 and final minibatch denominators are retained. Availability is a fixed input
 predicate. Supported training records use the candidate objective for every
 coefficient tensor, so its actual derivatives transfer without new optimization.

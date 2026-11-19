@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FamilyExtension.Basi
 /-!
 # Complete complex outputs and ordinary CE under fixed-family extension
 
-Source: `review/flat_spectrum.md`, CM67. The embedding preserves every actual
+Source: `review/convex/moments.md`, CM67. The embedding preserves every actual
 complex logit and each original indexed batch loss. It embeds an old feasible
 model at the same capacity bound, without identifying any new target labels.
 -/

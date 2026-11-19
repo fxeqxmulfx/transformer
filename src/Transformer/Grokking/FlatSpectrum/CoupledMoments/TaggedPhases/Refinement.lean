@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.TaggedPhases.Feas
 /-!
 # Observed-CE updates without permutation restrictions
 
-Source: `review/flat_spectrum.md`, CM25, categorical capacity extension. Input
+Source: `review/convex/moments.md`, CM25, categorical capacity extension. Input
 categories may share phases, and the input and latent cardinalities may differ.
 Actual grouped mismatch counts certify each finite independent axis update.
 -/

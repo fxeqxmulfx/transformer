@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Explicit ambiguous and inconsistent training sets
 
-Source: `review/flat_spectrum.md`, CM19. The same three-state-fiber decoder has
+Source: `review/convex/moments.md`, CM19. The same three-state-fiber decoder has
 two compatible completions of three `false` labels with opposite answers at
 the unseen cell. Every iteration budget refuses a singleton there. Distinct
 decoders in a bank can also disagree. Contradictory labels on the same cell

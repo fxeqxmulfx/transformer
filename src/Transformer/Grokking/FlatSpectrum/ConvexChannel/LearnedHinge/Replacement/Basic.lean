@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Replace one learned component and retain the complete complex forward
 
-Source: `review/flat_spectrum.md`, CM83. A query replaces one complete real
+Source: `review/convex/moments.md`, CM83. A query replaces one complete real
 or imaginary vector in one slot, class and sign. The other component is
 retained. The entire changed complex neuron is recovered again, including
 its representation and readout. The equality below keeps the original

@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms.Trans
 /-!
 # Shared input programs and identified complex copy predictions
 
-Source: `review/flat_spectrum.md`, CM52. A fixed canonical copy head and a
+Source: `review/convex/moments.md`, CM52. A fixed canonical copy head and a
 finite input-program bank have a convex ordinary-CE mixture domain. An
 executable training-only filter and input-only consensus identify accepted
 raw answers under explicit bank realizability, including symbols absent from

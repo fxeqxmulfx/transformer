@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Learning
 /-!
 # Input-only paired features and the forward selection boundary
 
-Source: `review/flat_spectrum.md`, CFt4. An ordered pair of visible categorical
+Source: `review/convex/channels.md`, CFt4. An ordered pair of visible categorical
 slots is another fixed categorical feature. A single forward decoder of this
 feature can express rules that no individual-slot decoder can fit. This keeps
 the joint channel domain and ordinary CE convex; the discrete candidate search

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Sel
 /-!
 # Mixed and genuinely perturbed witnesses
 
-Source: `review/flat_spectrum.md`, CM22. The examples distinguish a positive
+Source: `review/convex/moments.md`, CM22. The examples distinguish a positive
 feature error from a bookkeeping tolerance, and a positive objective gap from
 a real-score tie. Mixtures remain feasible even at zero tolerance.
 -/

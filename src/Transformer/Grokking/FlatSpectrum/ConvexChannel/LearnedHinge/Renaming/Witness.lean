@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # A nonconstant fitted paired network and a genuinely unseen next object
 
-Source: `review/flat_spectrum.md`, CM78. Two observed prefixes have different
+Source: `review/convex/moments.md`, CM78. Two observed prefixes have different
 object labels and ordinary CE below log 2. Shared learned complex passes then
 return the third object at a distinct unseen prefix. These are inhabited
 feasible points and a conditional identification theorem, not an optimizer

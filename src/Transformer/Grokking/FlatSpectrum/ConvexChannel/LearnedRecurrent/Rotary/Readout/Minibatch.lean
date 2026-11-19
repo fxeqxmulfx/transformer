@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete indexed minibatches for conditional readout refitting
 
-Source: `review/flat_spectrum.md`, CM100. Every observation has its own index;
+Source: `review/convex/moments.md`, CM100. Every observation has its own index;
 duplicate prefixes and labels keep their multiplicity. A nonempty short tail is
 another indexed batch. Convexity and feasible projected steps imply no
 generalization guarantee or descent on a different batch.

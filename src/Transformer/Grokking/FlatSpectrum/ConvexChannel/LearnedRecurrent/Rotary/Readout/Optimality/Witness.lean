@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Nonzero complex examples of conditional CE certificates
 
-Source: `review/flat_spectrum.md`, CM103. The existing nonconstant ordered
+Source: `review/convex/moments.md`, CM103. The existing nonconstant ordered
 content, capacity sixteen and nonzero imaginary readouts inhabit the gap
 hypotheses. Opposite labels on a repeated prefix give a zero gap; a single
 label gives a positive gap. These are proof witnesses, never benchmark inputs.

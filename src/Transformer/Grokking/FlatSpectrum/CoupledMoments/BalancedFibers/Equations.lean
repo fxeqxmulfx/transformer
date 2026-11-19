@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFibers.Ba
 /-!
 # Actual phase-sum equations from complete decoder fibers
 
-Source: `review/flat_spectrum.md`, CM26. Complete categorical fibers yield
+Source: `review/convex/moments.md`, CM26. Complete categorical fibers yield
 linear equations in additive phase coordinates. The decoder need not be
 injective. Fiber cardinality and mass are explicit assumptions about the
 actual decoder; solving guessed equations alone does not identify labels.

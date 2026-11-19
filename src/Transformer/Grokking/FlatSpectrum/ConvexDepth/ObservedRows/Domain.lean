@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Basic
 /-!
 # A bijective coordinate reduction of the original bounded domain
 
-Source: `review/flat_spectrum.md`, CM65. Use only CM53's actual training
+Source: `review/convex/moments.md`, CM65. Use only CM53's actual training
 dictionary and exact inconsistent-candidate filter. The full CM64 domain,
 including every admissible unknown completion, is preserved in both directions.
 -/

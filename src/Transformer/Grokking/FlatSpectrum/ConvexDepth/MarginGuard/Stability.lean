@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard.Basic
 /-!
 # Raw decision stability, including deterministic ties
 
-Source: `review/flat_spectrum.md`, CM47. Positive margin retention preserves
+Source: `review/convex/moments.md`, CM47. Positive margin retention preserves
 all strict reference comparisons as well as non-strict ones. Consequently
 the least maximizing class is unchanged. The reference can still be wrong.
 -/

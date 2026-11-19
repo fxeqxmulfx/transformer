@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
 /-!
 # Joint program masses and scaled coordinate decoders
 
-Source: `review/flat_spectrum.md`, CM57. Five fixed input features may carry a
+Source: `review/convex/moments.md`, CM57. Five fixed input features may carry a
 quantity, its indicator, two structural roles and a supplied copy coordinate.
 The first five learned coordinates are already scaled decoder coefficients;
 the sixth is the program mass. No two learned factors are multiplied. Training

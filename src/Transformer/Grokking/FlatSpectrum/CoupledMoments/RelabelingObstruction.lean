@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Transport
 
 /-!+# A fixed complex code can exclude an output relabeling
 
-Source: `review/flat_spectrum.md`, CM12. A four-class point-mass table has a
+Source: `review/convex/moments.md`, CM12. A four-class point-mass table has a
 perfectly flat moment of operator norm two. Swapping two class names preserves
 the probability rows and every renamed-target CE, but increases that same
 code's operator norm. The invariant convex hull retains the renamed predictor.

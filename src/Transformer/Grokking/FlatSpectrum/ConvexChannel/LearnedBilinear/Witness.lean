@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Ge
 /-!
 # Both learned encoders change their observable object geometry
 
-Source: `review/flat_spectrum.md`, CM86. Two positive 2-by-2 matrices give
+Source: `review/convex/moments.md`, CM86. Two positive 2-by-2 matrices give
 different covariances in both actual recovered encoders, with readout 5 and 10.
 A separate exact comparison shows that the imaginary learned weights affect
 the real output. These are feasible parameter comparisons, not training runs.

@@ -70,7 +70,7 @@ and exact observed inputs. An unseen raw alias can remain ambiguous despite a
 correct pooled answer. Unknown axes and unmatched active vectors have separate
 counts. Low training CE does not prove unknown-target compatibility.
 
-CM35 in `review/flat_spectrum.md` and
+CM35 in `review/convex/moments.md` and
 `Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel` derives the
 factorization under a surjective declared readout, equal code/answer cardinality,
 unknown-code compatibility and additive realizability. The executable checks

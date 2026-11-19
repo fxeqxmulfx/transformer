@@ -207,10 +207,11 @@ subset**: 25 short and 10 long tasks, judged by their original held-out metrics.
 ### Ready
 
 - **Convex models with ordinary answer cross-entropy are proved.**
-  [Flat spectrum](review/flat_spectrum.md) develops categorical routing and
+  [Convex channels](review/convex/channels.md) and
+  [coupled moments](review/convex/moments.md) develop categorical routing and
   generated-output channels, coupled complex moments with spectral bounds,
-  and recovery under explicit structure and observation conditions. It also
-  proves examples where a global training optimum gives a wrong unseen answer.
+  and recovery under explicit structure and observation conditions. They also
+  prove examples where a global training optimum gives a wrong unseen answer.
 - **The spectral recovery theorems are already reused.** CM13 directly applies
   Theorem E: when the true table has the specified separating rank-one code
   bank, a connected observation graph with a perfect matching and nuclear

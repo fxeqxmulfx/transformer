@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHeadBudget
 /-!
 # A bounded complex fallback preserves one input and fails on another
 
-Source: `review/flat_spectrum.md`, CM38. The candidate maps two distinct inputs
+Source: `review/convex/moments.md`, CM38. The candidate maps two distinct inputs
 to an observed state. The second input therefore has support but can still
 have the wrong answer. A third input is unsupported and retains the parent's
 actual logits. Both blocks use the proved flat Fourier code and margin24.

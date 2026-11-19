@@ -6,7 +6,7 @@ public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 /-!
 # Rotary positions distinguish order even with commuting content operators
 
-Source: `review/flat_spectrum.md`, CM98. An actual common parameter point
+Source: `review/convex/moments.md`, CM98. An actual common parameter point
 predicts different original objects on reversed prefixes. Removing its learned
 frequency loses that distinction. The witness is not supplied to training.
 -/

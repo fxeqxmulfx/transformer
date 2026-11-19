@@ -2,7 +2,7 @@
 
 Can retaining every compatible coefficient direction remove the older model's
 one-direction restriction without losing convex complex cross-entropy training?
-CM34 in `review/flat_spectrum.md`, proved at `285dcdb6`, establishes the exact
+CM34 in `review/convex/moments.md`, proved at `285dcdb6`, establishes the exact
 mathematical construction first. This Rust component implements and checks it.
 All 20 component tests pass. Original benchmark evaluation is a separate step;
 these fixtures do not change any benchmark score.

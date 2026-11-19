@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FlatCapacity
 /-!
 # Flat-spectrum bounds for the actual complex quadratic sequence output
 
-Source: `review/flat_spectrum.md`, CM85 and R3. A proof-only expansion through
+Source: `review/convex/moments.md`, CM85 and R3. A proof-only expansion through
 all ordered address pairs certifies the actual recovered complex output's
 width. Inference is still the learned representation/activation/readout path.
 Flatness is a necessary rank/error bound, never a missing-label oracle or a

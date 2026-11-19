@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Adaptive
 /-!
 # Complete unobserved decoder rows without changing the linear objective
 
-Source: `review/flat_spectrum.md`, MF5. Replacing a decoder on zero-gradient
+Source: `review/convex/channels.md`, MF5. Replacing a decoder on zero-gradient
 rows preserves every vertex's linear cost, hence preserves the exact oracle.
 The replacement may use pooled training information. Its correctness on unseen
 inputs is a separate assumption, not a consequence of the zero-gradient fact.

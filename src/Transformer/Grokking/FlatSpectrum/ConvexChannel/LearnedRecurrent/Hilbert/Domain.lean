@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Preserve the complete old family while adding Hilbert-state recurrences
 
-Source: `review/flat_spectrum.md`, CM107. Each finite component retains its
+Source: `review/convex/moments.md`, CM107. Each finite component retains its
 actual learned branch. Convexity is functional; all original objects and
 complex coordinates remain, with no assumed factor-discovery oracle.
 -/

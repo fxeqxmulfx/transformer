@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes.Basic
 /-!
 # Actual shared-role equations, independent of gauge
 
-Source: `review/flat_spectrum.md`, CM40. An alignment lists occurrences of
+Source: `review/convex/moments.md`, CM40. An alignment lists occurrences of
 the same categorical token in the two position dictionaries. Row-minus-column
 differences agree across alignments; their common offset remains free. These
 homogeneous linear equations intersect the actual observed kernel. They are

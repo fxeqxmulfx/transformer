@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Combination
 /-!
 # Raw labels identified by observed convex hulls
 
-Source: `review/flat_spectrum.md`, CM48. Convexity of each unknown raw-class
+Source: `review/convex/moments.md`, CM48. Convexity of each unknown raw-class
 region is an additional structural hypothesis, independent of flat spectrum.
 The hull certificate uses only observed coordinates and their raw labels.
 The statements can be applied separately inside each fixed latent block.

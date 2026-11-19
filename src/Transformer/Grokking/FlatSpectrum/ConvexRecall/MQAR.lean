@@ -5,7 +5,7 @@ public import Transformer.Zoology.Section4_PairedRecall
 
 /-!+# Learned matching solves causal MQAR
 
-Source: `review/flat_spectrum.md`, *Convex answer-loss recall*, CR5;
+Source: `review/convex/channels.md`, *Convex answer-loss recall*, CR5;
 Arora et al., arXiv:2312.04927v1, §4 and Appendix, paired recall after
 the local key/value shift. A directly learned matching matrix is applied
 to each prior key and copies its associated value. The map is linear in
@@ -51,7 +51,7 @@ variable {S ν : Type*} [Fintype S] [Fintype ν] [DecidableEq ν] [Nontrivial ν
 Training values may even use a different alphabet from stream values:
 the learned matrix acts on keys; categorical copying has no parameters.
 All training hypotheses concern the ordinary dictionary-answer objective
-and explicit input separation (`review/flat_spectrum.md`, CR5). -/
+and explicit input separation (`review/convex/channels.md`, CR5). -/
 theorem trained_solves_mqar {n c : ℕ} (query : S → Fin c) (data : S → Fin c → ν)
     (hsep : Separates query data) {A : Matrix (Fin c) (Fin c) ℝ}
     (hA : IsStochastic A)

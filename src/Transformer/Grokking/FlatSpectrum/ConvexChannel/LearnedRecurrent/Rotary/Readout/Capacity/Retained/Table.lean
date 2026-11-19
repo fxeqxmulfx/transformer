@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Complete indexed retained coefficients and exact refresh identities
 
-Source: `review/flat_spectrum.md`, CM106. A cache stores every original class
+Source: `review/convex/moments.md`, CM106. A cache stores every original class
 signal for every indexed occurrence. Historical states and signals may both
 differ from current values. Identities do not call a stored signal a gradient.
 -/

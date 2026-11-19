@@ -6,7 +6,7 @@ public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 /-!
 # A flat observed operator from actual learned complex neurons still has a blind direction
 
-Source: `review/flat_spectrum.md`, CM77. Three original raw prefixes select
+Source: `review/convex/moments.md`, CM77. Three original raw prefixes select
 three actual complex neurons. The first two observed rows have Gram matrix
 10I and a sharp energy bound. The retained third coordinate is invisible to
 those rows but changes the missing-prefix response. Thus this actual flat

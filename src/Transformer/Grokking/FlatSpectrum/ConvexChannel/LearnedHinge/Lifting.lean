@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Compl
 /-!
 # Exact prediction inclusion for independently specified neuron factors
 
-Source: `review/flat_spectrum.md`, CM75. A complex representation per hidden
+Source: `review/convex/moments.md`, CM75. A complex representation per hidden
 unit and arbitrary signed real amplitudes per output class have an exact
 lift on every input. Recovery uses two class-specific neurons per original
 unit/class pair. Thus the recovered class is wider, and does not impose the

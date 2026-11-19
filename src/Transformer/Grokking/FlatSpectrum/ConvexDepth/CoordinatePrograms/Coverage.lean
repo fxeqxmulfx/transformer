@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms.W
 /-!
 # Uncovered directions and inhabited complete-head guarantees
 
-Source: `review/flat_spectrum.md`, CM57. Omitting role observations permits
+Source: `review/convex/moments.md`, CM57. Omitting role observations permits
 opposite feasible raw winners. Nonzero examples instantiate the identification,
 complete budget and ordinary full/minibatch results, with repeated record IDs.
 -/

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextMixture
 /-!
 # Anchored context mixtures with fixed gates
 
-Source: `review/flat_spectrum.md`, CM46. Each local coefficient row is a
+Source: `review/convex/moments.md`, CM46. Each local coefficient row is a
 simplex. The input gates, anchor mixture and complete head remain fixed.
 The interpolation radius restricts local changes without learning a gate.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.
 /-!
 # Real feedback corrects a default that self-labeling can poison
 
-Source: `review/flat_spectrum.md`, *Inference-time learning*, CI4.
+Source: `review/convex/channels.md`, *Inference-time learning*, CI4.
 The same actual candidate updater is used in every example. The initial
 history observes only value false with label false. Its default prediction
 at true is wrong when the target is the identity. Genuine feedback corrects

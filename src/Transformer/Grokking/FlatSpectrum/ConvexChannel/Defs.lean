@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexRecall.Loss
 /-!
 # Jointly learned routing and output channels
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC1.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC1.
 All entries of `W(q,k,v,c)` are directly learned. They give the joint mass
 of selecting input key `k` and generating output class `c` when that key
 contains value `v`. Summing over output classes gives a routing mass that

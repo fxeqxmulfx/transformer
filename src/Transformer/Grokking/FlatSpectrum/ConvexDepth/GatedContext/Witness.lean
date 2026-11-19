@@ -4,7 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext.Batch
 
 /-!+# Local mixtures add actual complex-head capacity
 
-Source: `review/flat_spectrum.md`, CM46. CM45's bank gives identical logits
+Source: `review/convex/moments.md`, CM46. CM45's bank gives identical logits
 at two unseen queries under every shared mixture. Fixed input gates and
 anchored local mixtures give opposite strict raw margins while preserving
 the same observed fit. This is capacity, not unseen-target identification.

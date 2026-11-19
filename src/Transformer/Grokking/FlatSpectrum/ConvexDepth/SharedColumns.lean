@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.Constr
 /-!
 # Exact sharing of complete ordered class computations
 
-Source: `review/flat_spectrum.md`, CM71. Equal event sequences produce equal
+Source: `review/convex/moments.md`, CM71. Equal event sequences produce equal
 accumulator words for arbitrary deterministic arithmetic. A conservative union
 of coefficient exceptions and known-only supports certifies sharing while
 preserving every class, inactive skip and operation order. The original complete

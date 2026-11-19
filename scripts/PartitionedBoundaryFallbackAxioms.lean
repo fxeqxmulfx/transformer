@@ -3,7 +3,7 @@ import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext.Basic
 import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
 
 /-!
-Task336 before original heldout evaluation. Source: `review/flat_spectrum.md`
+Task336 before original heldout evaluation. Source: `review/convex/moments.md`
 CM38/CM55, and the fixed partition expansion audit at47ba037f. This instantiates
 the fallback composition with52 shared coordinates, the maximum in the native
 partitioned library. Coverage and the learned descriptor tree are fixed during

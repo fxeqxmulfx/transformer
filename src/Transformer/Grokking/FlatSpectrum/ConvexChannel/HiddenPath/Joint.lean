@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 /-!
 # Joint coordinates train both conditional stages at one fixed input
 
-Source: `review/flat_spectrum.md`, CM74. Learn a strictly positive normalized
+Source: `review/convex/moments.md`, CM74. Learn a strictly positive normalized
 hidden-state/output table. Its row sums give a learned encoder; conditional
 rows give a learned decoder. Their actual products recover the joint entries.
 Answer-only CE on the resulting marginal is convex in all joint coordinates.

@@ -8,6 +8,6 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Exact Euclidean projection of complete learned complex readouts
 
-Source: `review/flat_spectrum.md`, CM102. An explicit closest-point formula and
+Source: `review/convex/moments.md`, CM102. An explicit closest-point formula and
 an actual feasible ordinary-CE step escaping CM101's radial normalization failure.
 -/

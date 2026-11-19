@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Arbitrary unseen-logit shifts inside the actual complete learned model
 
-Source: `review/flat_spectrum.md`, CM77. A feasible complex singleton-prefix
+Source: `review/convex/moments.md`, CM77. A feasible complex singleton-prefix
 direction can be added to any feasible model. The ordinary raw forward stays
 unchanged at every other prefix. At the selected full prefix, one selected
 class logit changes by any prescribed real amount; other logits stay fixed.

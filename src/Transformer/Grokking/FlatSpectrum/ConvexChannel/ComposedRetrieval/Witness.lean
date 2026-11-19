@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # An inhabited two-hop margin with a repeated intermediate object
 
-Source: `review/flat_spectrum.md`, CM113. The example chooses values of
+Source: `review/convex/moments.md`, CM113. The example chooses values of
 the learned parameters for a proof. Original training always starts from
 the prospectively specified random initialization.
 -/

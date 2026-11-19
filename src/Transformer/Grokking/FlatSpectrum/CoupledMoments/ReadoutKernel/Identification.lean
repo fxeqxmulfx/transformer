@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes.Ident
 /-!
 # Complete-kernel matching after derived readout grouping
 
-Source: `review/flat_spectrum.md`, CM35. Apply the declared readout to the
+Source: `review/convex/moments.md`, CM35. Apply the declared readout to the
 actual observed raw labels, and keep the complete coefficient kernel of those
 grouped equations. The unknown compatible code factors through this grouping
 by cardinality, so a checked match identifies the original answer. Neither

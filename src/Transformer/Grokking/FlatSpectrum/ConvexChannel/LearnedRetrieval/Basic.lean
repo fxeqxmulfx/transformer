@@ -6,7 +6,7 @@ public import Mathlib.Analysis.InnerProductSpace.Basic
 /-!
 # Actual shared learned content and relative-position retrieval
 
-Source: `review/flat_spectrum.md`, CM111–112. Query/key embeddings and value/class
+Source: `review/convex/moments.md`, CM111–112. Query/key embeddings and value/class
 embeddings are shared learned maps. All positions and original classes occur
 in the forward. Norm restrictions bound capacity; they do not specify labels.
 -/

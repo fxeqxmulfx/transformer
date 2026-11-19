@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # The lifted feasible set is the hull of pure Fourier projectors
 
-Source: `review/flat_spectrum.md`, CM21. Mixed matrices are feasible; purity will
+Source: `review/convex/moments.md`, CM21. Mixed matrices are feasible; purity will
 be a consequence of linear optimization, not a nonconvex domain constraint.
 -/
 

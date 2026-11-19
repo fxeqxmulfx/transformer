@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.WeightedObservations
 /-!
 # Select identifying anchors without deleting noisy CE observations
 
-Source: `review/flat_spectrum.md`, CM61. Exact anchors are additional model
+Source: `review/convex/moments.md`, CM61. Exact anchors are additional model
 constraints, distinct from the original empirical CE records. Conflicting
 labels at identical complete features force program mass to zero. Keeping
 only explicitly selected anchors can restore a nonempty convex domain; the

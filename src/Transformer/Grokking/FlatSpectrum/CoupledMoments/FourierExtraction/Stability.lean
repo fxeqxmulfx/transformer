@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 /-!
 # Amplitude error bounds the remaining coefficient products
 
-Source: `review/flat_spectrum.md`, CM20, quantitative bound. This concerns an
+Source: `review/convex/moments.md`, CM20, quantitative bound. This concerns an
 exact separated Fourier subspace. Error in estimating that subspace and the
 convergence of a numerical extraction algorithm are separate questions.
 -/

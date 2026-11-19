@@ -118,7 +118,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-Source: [`review/flat_spectrum.md`, CM25](../../review/flat_spectrum.md#cm25-categorical-constant-strips-in-an-enlarged-latent-domain).
+Source: [`review/convex/moments.md`, CM25](../../review/convex/moments.md#cm25-categorical-constant-strips-in-an-enlarged-latent-domain).
 The model/audit layout and bounded refinement scaffolding are adapted from
 `convex_stress_decode` and `convex_stress_density` at `4510ee7d`; the changed
 cardinality, noninjective choices and explicit tag lift are described above.

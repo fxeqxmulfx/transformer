@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Two actual learned components and a complete capacity reallocation
 
-Source: `review/flat_spectrum.md`, CM104. A constant-state component and the
+Source: `review/convex/moments.md`, CM104. A constant-state component and the
 ordered CM98 witness both remain in the model. Nonzero imaginary rows first
 place all capacity on the former, then move it to the latter. These are proof
 witnesses, not benchmark initialization or prescribed training features.

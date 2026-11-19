@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
 /-!
 # Preserve the prior head except on newly covered inputs
 
-Source: `review/flat_spectrum.md`, CM39. Both support predicates are fixed
+Source: `review/convex/moments.md`, CM39. Both support predicates are fixed
 input functions. The prior block remains active on its own support and where
 the supplemental decoder also refuses. Only newly covered inputs use the
 supplemental block. These are exact logit identities, without target premises.

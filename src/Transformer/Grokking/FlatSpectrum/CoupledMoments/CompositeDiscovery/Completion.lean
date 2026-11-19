@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Identification from the observed joint module
 
-Source: `review/flat_spectrum.md`, CM28. The latent cyclic domain may be
+Source: `review/convex/moments.md`, CM28. The latent cyclic domain may be
 composite and input phases may repeat. The unknown target has a bijective class
 code; neither it nor any unseen label is an argument of the learner.
 

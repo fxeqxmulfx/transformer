@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientDomain
 /-!
 # Four observed raw classes, a repaired collision and ambiguous unseen aliases
 
-Source: `review/flat_spectrum.md`, CM31. Inputs are three Booleans. The first
+Source: `review/convex/moments.md`, CM31. Inputs are three Booleans. The first
 selects observed versus held-out inputs; the second is the latent code and
 the third an alias. All four raw classes occur among four observations.
 Two targets agree there and have the same quotient everywhere, but disagree

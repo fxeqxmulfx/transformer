@@ -79,7 +79,7 @@ do not establish floating-point refinement or feature-family identification.
 Lean first: `b5f1c9d70eb3db33861e28cae6d1512f84c0fedf`,
 `ConvexDepth/ClassGeometry/{Basic,Head,Witness}.lean`,
 `scripts/UnseenClassGeometryAxioms.lean`, and CM56 in
-`review/flat_spectrum.md`. Two distinct observed feature anchors identify an
+`review/convex/moments.md`. Two distinct observed feature anchors identify an
 unknown affine decoder in supplied injective class coordinates. The actual
 four-point complex head has eight realified coordinates per raw output class,
 with shared scaled slope, intercept and margin. Its complete sufficient costs

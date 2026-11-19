@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.KernelCodes.Defs
 /-!
 # Basis-independent full-kernel code comparisons
 
-Source: `review/flat_spectrum.md`, CM34. Read every coefficient direction in
+Source: `review/convex/moments.md`, CM34. Read every coefficient direction in
 a complete basis of the actual compatible space. Equality of the resulting
 vectors is equivalent to agreement of every compatible coefficient vector.
 The comparison therefore does not depend on a particular basis. Searching

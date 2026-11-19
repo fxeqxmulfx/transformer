@@ -5,7 +5,7 @@ At initialization, every relative-position score is zero. CM114 proves
 that both reads then yield the same value average and that the ordinary
 cross-entropy derivative in depth and content-routing directions is zero.
 Once relative scores differ, the label and the full predicted distribution
-determine the sign of the depth derivative. [Flat-spectrum derivation](../../../review/flat_spectrum.md#cm114-what-the-two-hop-gate-can-learn-from-ordinary-cross-entropy)
+determine the sign of the depth derivative. [Flat-spectrum derivation](../../../review/convex/moments.md#cm114-what-the-two-hop-gate-can-learn-from-ordinary-cross-entropy)
 
 A read-only observer replays the 1,024 original minibatches per fit with
 both training modes and seeds 0, 1 and 2. At each update it records the

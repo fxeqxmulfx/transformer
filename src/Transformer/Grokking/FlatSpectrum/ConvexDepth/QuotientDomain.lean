@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientReadout
 /-!
 # Convex training constraints that retain the latent defaults
 
-Source: `review/flat_spectrum.md`, CM31. Ordinary CE on observed inputs
+Source: `review/convex/moments.md`, CM31. Ordinary CE on observed inputs
 does not constrain unobserved-state logits. Keep those declared logits by
 affine equalities in the actual complex head coordinates. The domain stays
 convex, contains the explicit initializer and preserves the decoded default

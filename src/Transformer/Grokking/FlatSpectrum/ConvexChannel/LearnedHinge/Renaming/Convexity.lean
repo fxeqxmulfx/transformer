@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # Convex ordinary answer CE for two shared learned complex passes
 
-Source: `review/flat_spectrum.md`, CM78. The original input-only domain covers
+Source: `review/convex/moments.md`, CM78. The original input-only domain covers
 all admitted raw prefixes, including each renamed prefix. The same joint
 parameter point supplies both actual forwards. Indexed minibatch sums keep
 all original records and short tails; no inner likelihood is substituted.

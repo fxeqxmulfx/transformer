@@ -9,7 +9,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.NormComp
 /-!
 # Convex budgets for the largest and total singular values
 
-Source: `review/flat_spectrum.md`, CM5. Add a nuclear-norm upper bound to each shared
+Source: `review/convex/moments.md`, CM5. Add a nuclear-norm upper bound to each shared
 complex moment. The largest-singular-value and sum-of-singular-values bounds are both
 convex. Uniform feasibility, the observed CE certificate and common-mixture repair survive.
 The budgets are fixed parameters, not functions of the unobserved answers.

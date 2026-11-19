@@ -7,7 +7,7 @@ public import Mathlib.LinearAlgebra.Dimension.StrongRankCondition
 /-!
 # A dimension lower bound for exact affine compression of the whole family
 
-Source: `review/flat_spectrum.md`, CM84. An affine margin readout that covers
+Source: `review/convex/moments.md`, CM84. An affine margin readout that covers
 every feasible model must cover every real full-word table. Its linear part
 is therefore surjective and needs at least as many real coordinates as full
 words. The encoder into those coordinates may be arbitrary and nonlinear.

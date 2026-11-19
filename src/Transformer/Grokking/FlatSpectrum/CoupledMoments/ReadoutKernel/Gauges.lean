@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Cov
 /-!
 # Grouped coverage with independently chosen gauge anchors
 
-Source: `review/flat_spectrum.md`, CM37. Raw and grouped complete kernels
+Source: `review/convex/moments.md`, CM37. Raw and grouped complete kernels
 need not choose corresponding gauge anchors. Normalize the actual coefficient
 pullback with CM34's two harmless shifts. Every query action is unchanged, so
 coverage inclusion survives unrelated row and class anchors. This does not

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ContextScale.Basic
 /-!
 # Original training batches under fixed confidence scaling
 
-Source: `review/flat_spectrum.md`, CM43. Scale one on observed inputs preserves
+Source: `review/convex/moments.md`, CM43. Scale one on observed inputs preserves
 the original normalized CE and all coefficient derivatives. Record IDs keep
 repeated observations and the actual denominator of a short minibatch tail.
 The same feature transformation applies to zero-update forward-only heads.

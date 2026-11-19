@@ -6,7 +6,7 @@ public import Mathlib.LinearAlgebra.Basis.Defs
 /-!
 # The complete observed coefficient kernel
 
-Source: `review/flat_spectrum.md`, CM34. Row names, column names and observed
+Source: `review/convex/moments.md`, CM34. Row names, column names and observed
 class names have separate types, as in native categorical compaction. The
 kernel contains the actual observed equations and exactly two shift gauges.
 No missing input coordinate or unseen answer is pinned. Normalization retains

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.C
 /-!
 # Finite phase domains for an arbitrary fixed categorical decoder
 
-Source: `review/flat_spectrum.md`, CM19. Instead of the two-element fibers of CM18,
+Source: `review/convex/moments.md`, CM19. Instead of the two-element fibers of CM18,
 retain sets of possible phases and prune unsupported values using observed labels.
 The definitions use only finite data and decidable comparisons. A fixed number
 of sweeps is an explicit finite computation; no completeness of pruning is assumed.

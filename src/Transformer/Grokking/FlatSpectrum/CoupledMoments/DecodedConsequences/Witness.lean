@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequenc
 /-!
 # Decoded identification with a genuinely noncyclic joint module
 
-Source: `review/flat_spectrum.md`, CM29. Fifteen cells of a four-state table
+Source: `review/convex/moments.md`, CM29. Fifteen cells of a four-state table
 are observed, and every class appears. The lower-right answer follows from
 two actual row additions. All decoded cells are certified although the gauged
 observed joint module has a nonzero direction fixing a unit class coordinate.

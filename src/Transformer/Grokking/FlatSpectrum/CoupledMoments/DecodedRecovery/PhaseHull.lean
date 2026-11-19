@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.R
 /-!
 # Cross-entropy minimizers over the hull of decoded phase tables
 
-Source: `review/flat_spectrum.md`, CM18. The spectral relaxation of CM15 and CM16 contains
+Source: `review/convex/moments.md`, CM18. The spectral relaxation of CM15 and CM16 contains
 every decoded phase table and is convex, so it contains their convex hull `phaseHull`. The
 hull is a smaller convex family that depends on the decoder and the side alone. On it the
 certificate bounds the error at a covered cell by the misfit at the training cells

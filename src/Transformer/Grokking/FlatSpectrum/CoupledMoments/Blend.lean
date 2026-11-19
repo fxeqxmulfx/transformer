@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Basic
 /-!
 # Feasibility repair without changing predictions
 
-Source: `review/flat_spectrum.md`, CM4. Mixing a probability table with the uniform table
+Source: `review/convex/moments.md`, CM4. Mixing a probability table with the uniform table
 scales every centered complex moment. A single positive mixing coefficient can enforce
 all spectral bounds while preserving strict class comparisons. This is an algebraic
 certificate conditional on the norm bounds, not a certificate for floating-point SVD.

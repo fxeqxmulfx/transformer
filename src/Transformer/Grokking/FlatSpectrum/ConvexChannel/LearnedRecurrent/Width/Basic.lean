@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.P
 /-!
 # A polynomial obstruction shared by every plain two-state block
 
-Source: `review/flat_spectrum.md`, CM110. The squared commutator of two full
+Source: `review/convex/moments.md`, CM110. The squared commutator of two full
 complex two-by-two matrices is scalar. The resulting eight-word identity
 survives every finite mixture, regardless of learned values or norm budgets.
 It applies to shared plain transitions, not position-dependent rotary factors.

@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Normed.Operator.Prod
 /-!
 # Complete learned two-state complex operators
 
-Source: `review/flat_spectrum.md`, CM97. All four transition entries, both
+Source: `review/convex/moments.md`, CM97. All four transition entries, both
 readout coefficients and both initial coordinates are parameters. The product
 maximum norm and explicit row-sum constraints imply CM95's operator bounds.
 The basis identities are complete coordinate representations, not task features.

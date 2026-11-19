@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # A checked basis covers every feasible forward-query direction
 
-Source: `review/flat_spectrum.md`, CM81. All universally forced rows are
+Source: `review/convex/moments.md`, CM81. All universally forced rows are
 retained in the equality matrix. A finite basis certificate then represents
 exactly the directions admitted by CM80, including degenerate patterns.
 -/

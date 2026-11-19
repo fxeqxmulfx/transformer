@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Complex.Basic
 /-!
 # Learned complex recurrence on opaque object sequences
 
-Source: `review/flat_spectrum.md`, CM95. Each original object indexes a learned
+Source: `review/convex/moments.md`, CM95. Each original object indexes a learned
 complex linear transition. Initial state and every original-object readout are
 learned too. The transitions execute in sequence order at arbitrary length.
 The norm bound is a capacity restriction, not an answer program or a claim of

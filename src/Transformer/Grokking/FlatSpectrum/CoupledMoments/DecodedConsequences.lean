@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequenc
 /-!
 # Decoded identification through actual observed row consequences
 
-Source: `review/flat_spectrum.md`, CM29–CM30. Finite row-program replay certifies
+Source: `review/convex/moments.md`, CM29–CM30. Finite row-program replay certifies
 answers under an unknown injective class code and additive phase structure.
 The observed-only certifier needs no cyclicity or unique latent coordinates.
 A composite witness observes every class, identifies its genuinely missing

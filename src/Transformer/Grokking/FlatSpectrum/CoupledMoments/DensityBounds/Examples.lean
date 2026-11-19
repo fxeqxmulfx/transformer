@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds.Wit
 /-!
 # Closed instances of every conditional error-bound theorem
 
-Source: `review/flat_spectrum.md`, CM22. Positive tolerances, actual feature
+Source: `review/convex/moments.md`, CM22. Positive tolerances, actual feature
 perturbations, and a mixed approximate optimizer with a positive gap appear
 separately, so exact geometry is not silently equated with estimated geometry.
 -/

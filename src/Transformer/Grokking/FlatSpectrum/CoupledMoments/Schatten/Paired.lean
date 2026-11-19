@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.DecodedP
 /-!
 # Reflection and equal probabilities on paired latent states
 
-Source: `review/flat_spectrum.md`, CM16. Reflect the latent vocabulary by
+Source: `review/convex/moments.md`, CM16. Reflect the latent vocabulary by
 negation, then average the two probability tables. Constant Fourier operator
 and nuclear budgets survive this operation. An even decoder gives precisely
 the same original-vocabulary predictions before and after averaging.

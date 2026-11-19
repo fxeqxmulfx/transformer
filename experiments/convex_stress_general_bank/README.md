@@ -8,7 +8,7 @@ original-data cohort now completes all 27 task/mode cases and all 108 decoder
 slots. Absolute difference and its long blind variant pass in every mode;
 the other seven tasks refute this particular declared decoder family.
 
-The mathematical source is `review/flat_spectrum.md`, CM19. Soundness uses its
+The mathematical source is `review/convex/moments.md`, CM19. Soundness uses its
 theorem for any observed anchor and any finite budget. Choosing one certificate
 by its coverage does not need a new preservation theorem. Combining equalities
 from different anchors would require an endpoint satisfying their intersection;

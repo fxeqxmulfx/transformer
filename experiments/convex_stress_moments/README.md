@@ -7,7 +7,7 @@ compact GPT architecture or the best completed 35-task count-channel baseline
 (10/35), and its pair adapter ignores earlier context.
 
 Lean came first at `14fd2932`. The CM1–CM4 derivation in
-`review/flat_spectrum.md` and `CoupledMoments/` proves convexity of the joint
+`review/convex/moments.md` and `CoupledMoments/` proves convexity of the joint
 constraints and ordinary CE, full class information in the Fourier coordinates,
 inconsistency of some independent moment assignments, the ideal observed CE
 bound and exact-fit minimum certificate, and uniform-mixture feasibility.

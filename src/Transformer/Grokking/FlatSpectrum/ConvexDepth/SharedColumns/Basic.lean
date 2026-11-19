@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows.Complex
 /-!
 # Sharing complete columns without changing their ordered operations
 
-Source: `review/flat_spectrum.md`, CM71. Each event contains the entire input
+Source: `review/convex/moments.md`, CM71. Each event contains the entire input
 to one deterministic accumulator update, or is absent when the original loop
 skips that class. The value type may be exact machine words. No associativity,
 commutativity, real arithmetic or floating-point refinement is assumed.

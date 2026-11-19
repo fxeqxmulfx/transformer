@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Unobserved coordinates can change unseen answers without changing training
 
-Source: `review/flat_spectrum.md`, CM90. A raw coordinate silent on every
+Source: `review/convex/moments.md`, CM90. A raw coordinate silent on every
 training prefix can freely change a responding query margin. In particular,
 each unseen ordered two-object input has such a coordinate in the complete
 CM86 family. This is nonidentification from labels, not a claim that no

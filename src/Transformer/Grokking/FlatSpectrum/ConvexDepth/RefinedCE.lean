@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RefinedBox
 /-!
 # Observed-label preservation in the actual refined complex model
 
-Source: `review/flat_spectrum.md`, CM33. Start from the recorded margin24
+Source: `review/convex/moments.md`, CM33. Start from the recorded margin24
 table and execute normalized full/minibatch ordinary-CE steps. Every finite
 iterate fits the64N complex budget, preserves every observed raw winner and
 retains the declared unseen logits. Unknown target identification and finite

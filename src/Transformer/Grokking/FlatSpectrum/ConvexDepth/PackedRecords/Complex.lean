@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PackedRecords.Observ
 /-!
 # Complete complex readouts and indexed CE from packed observations
 
-Source: `review/flat_spectrum.md`, CM68. Integer packing changes only stored
+Source: `review/convex/moments.md`, CM68. Integer packing changes only stored
 observations. Every joint coefficient and every real/imaginary head coordinate
 is retained. The statements concern actual complete products, without replacing
 them by an arithmetic target or a task-specific decoder.

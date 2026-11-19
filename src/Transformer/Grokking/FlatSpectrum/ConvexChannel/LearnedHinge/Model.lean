@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Cone
 /-!
 # Ordinary next-object CE through the shared learned ReLU network
 
-Source: `review/flat_spectrum.md`, CM75. Each signed neuron has a recovered
+Source: `review/convex/moments.md`, CM75. Each signed neuron has a recovered
 learned representation and readout amplitude. The class directions and sign
 slots are fixed architecture; amplitudes and representation vectors train
 together through their joint coordinates. Every sequence uses the same

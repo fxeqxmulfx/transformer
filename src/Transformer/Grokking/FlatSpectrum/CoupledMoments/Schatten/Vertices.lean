@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Convex.Extreme
 /-!
 # Convexification cannot create a missing deterministic table
 
-Source: `review/flat_spectrum.md`, CM9. A one-hot table is an extreme point of the
+Source: `review/convex/moments.md`, CM9. A one-hot table is an extreme point of the
 product of probability simplexes. If every member of a family is probability-valued,
 its convex hull contains that table exactly when the original family does. This
 separates adding genuinely new spectral budgets from only mixing old candidates.

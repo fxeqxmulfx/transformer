@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFeatures.
 /-!
 # A capacity obstruction of surjective phase assignments
 
-Source: `review/flat_spectrum.md`, CM24. If one axis covers the entire latent
+Source: `review/convex/moments.md`, CM24. If one axis covers the entire latent
 group, a constant opposite row forces the decoder and the whole table to be
 constant. This restriction belongs to the native permutation proposal family;
 CM15's broader convex hull does not impose surjective phase assignments.

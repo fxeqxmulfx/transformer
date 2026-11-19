@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Basic
 /-!
 # A single convex class admitting multiple spectral budgets
 
-Source: `review/flat_spectrum.md`, CM7. Take the convex hull of a fixed collection of
+Source: `review/convex/moments.md`, CM7. Take the convex hull of a fixed collection of
 budget-constrained tables. All coordinates are still probabilities and ordinary CE stays
 convex. If any candidate budget yields a feasible exact observed fit, that table is also a
 global CE minimum over the whole hull. This justifies a training-only certificate search;

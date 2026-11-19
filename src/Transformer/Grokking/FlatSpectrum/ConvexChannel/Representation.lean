@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Basic
 /-!
 # The channel family strictly extends copying
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC3-CC4.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC3-CC4.
 The old matching model embeds affinely. New parameters may generate a class
 absent from the input. With one categorical context slot, the family can
 represent any finite two-input classification table. This is an expressivity

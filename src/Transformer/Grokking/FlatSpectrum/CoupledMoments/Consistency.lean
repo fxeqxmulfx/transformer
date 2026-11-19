@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.AddReadoutSpectrum
 /-!
 # Shared complex codes carry consistent class information
 
-Source: `review/flat_spectrum.md`, CM3. An orthogonal complete code determines the shared
+Source: `review/convex/moments.md`, CM3. An orthogonal complete code determines the shared
 probabilities uniquely; the Fourier code on any nonzero finite cyclic group is one such
 code. A four-class witness shows that independent unit disks admit moment values no common
 distribution can produce. This is a strict restriction, not an unseen-label theorem.

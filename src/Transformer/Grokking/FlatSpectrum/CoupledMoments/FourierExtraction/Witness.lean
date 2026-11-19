@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 /-!
 # A separated three-mode witness and a collision counterexample
 
-Source: `review/flat_spectrum.md`, CM20, examples. Frequencies 1, 3 and 9 modulo
+Source: `review/convex/moments.md`, CM20, examples. Frequencies 1, 3 and 9 modulo
 13 have unique ordered differences. In contrast, the two differences modulo 2
 collide, and a genuine two-mode mixture has unit amplitude at every state.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.Projecti
 /-!
 # Complete complex coefficients, products and storage bounds
 
-Source: `review/flat_spectrum.md`, CM70. The same row representation stores
+Source: `review/convex/moments.md`, CM70. The same row representation stores
 every real and imaginary head coefficient. A sparse source column permits
 shared class values outside its actual exceptional classes. The capacity
 budget still charges the complete logical head, irrespective of stored size.

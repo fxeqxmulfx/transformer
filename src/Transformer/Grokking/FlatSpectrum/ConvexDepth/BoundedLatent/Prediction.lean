@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent.Comple
 /-!
 # Accepted latent states retain their actual full complex predictions
 
-Source: `review/flat_spectrum.md`, CM64. Learned confidence changes the margin,
+Source: `review/convex/moments.md`, CM64. Learned confidence changes the margin,
 while observed latent coverage and agreement identify the raw class only under
 CM53's separately stated unknown-program realizability premise.
 -/

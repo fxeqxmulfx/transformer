@@ -28,7 +28,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.SharedRoles
 /-!
 # Shared class distributions and complex spectral bounds
 
-Source: `review/flat_spectrum.md`, CM1–CM40. Multiple fixed complex code readings share the
+Source: `review/convex/moments.md`, CM1–CM40. Multiple fixed complex code readings share the
 same learned class probabilities. The domain and ordinary CE are convex, Fourier coordinates
 preserve the full distribution, and a feasible exact observed fit certifies a CE minimum.
 No universal identification of unseen labels follows; SB3 remains a counterexample.

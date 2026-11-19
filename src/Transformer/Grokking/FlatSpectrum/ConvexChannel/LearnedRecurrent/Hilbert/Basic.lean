@@ -6,7 +6,7 @@ public import Mathlib.Analysis.InnerProductSpace.ProdL2
 /-!
 # Complete learned complex coordinates with a Hilbert state norm
 
-Source: `review/flat_spectrum.md`, CM107. The numerical coordinates remain
+Source: `review/convex/moments.md`, CM107. The numerical coordinates remain
 complete; changing the norm changes their capacity geometry, not their meaning.
 -/
 

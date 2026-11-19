@@ -4,7 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Optimality
 
 /-!+# Learning generated recall from ordinary answer labels
 
-Source: `review/flat_spectrum.md`, *Convex channels and capacity*, CC5.
+Source: `review/convex/channels.md`, *Convex channels and capacity*, CC5.
 Every wrong routing/output atom must encounter an answer that contradicts
 it while its input value is present. This is an explicit finite-data
 condition. Under realizability and this separation, every global CE

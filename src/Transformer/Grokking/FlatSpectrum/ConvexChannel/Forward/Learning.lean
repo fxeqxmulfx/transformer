@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Basic
 /-!
 # Selection, explicit failure and identification
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF2-CF4.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF2-CF4.
 One consistent candidate suffices for successful learning. To identify the
 true key, each wrong candidate needs just one conflicting pair. Coverage
 of the true key's values then identifies its complete decoder. The algorithm

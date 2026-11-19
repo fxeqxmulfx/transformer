@@ -9,7 +9,7 @@ can use observations across blocks to constrain their uncertain boundaries.
 This is a hypothesis to test, not an identification or accuracy guarantee.
 
 Lean first: `scripts/SharedGeometryAxioms.lean` audits CD8/CFt5/CM38 in
-`review/flat_spectrum.md`, `ConvexDepth/{JointHead,ComplexHead,Fallback/Batch}`
+`review/convex_depth.md` and `review/convex/`, `ConvexDepth/{JointHead,ComplexHead,Fallback/Batch}`
 and Mathlib's `ConvexOn.comp_affineMap`. For a fixed affine map from compact
 parameters to every real/imaginary raw-class coefficient, ordinary CE remains
 convex on the preimage of the complete coefficient budget. Original records

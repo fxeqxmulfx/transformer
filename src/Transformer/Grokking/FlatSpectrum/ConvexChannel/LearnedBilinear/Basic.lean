@@ -8,7 +8,7 @@ public import Mathlib.Analysis.Matrix.Normed
 /-!
 # Exact learned rectangular factors and their complete complex interaction
 
-Source: `review/flat_spectrum.md`, CM86, using Lemma 1 of the same manuscript.
+Source: `review/convex/moments.md`, CM86, using Lemma 1 of the same manuscript.
 A rectangular joint matrix recovers two learned representations by a balanced
 spectral factorization through its row dimension. The learned nuclear-norm
 readout multiplies their actual complex interaction. The joint bilinear identity

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.DecoderConfidence.Ba
 /-!
 # Convex mixtures of fixed context feature maps
 
-Source: `review/flat_spectrum.md`, CM45. The finite bank and complete complex
+Source: `review/convex/moments.md`, CM45. The finite bank and complete complex
 head are fixed while the mixture is learned. The source spectrum bounds the
 bank; it does not choose a neighborhood or identify a missing raw target.
 -/

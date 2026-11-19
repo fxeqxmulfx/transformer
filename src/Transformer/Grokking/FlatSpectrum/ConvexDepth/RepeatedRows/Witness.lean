@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows
 /-!
 # Complete nonconstant and bit-word witnesses
 
-Source: `review/flat_spectrum.md`, CM70. Uniform rows need one stored value;
+Source: `review/convex/moments.md`, CM70. Uniform rows need one stored value;
 nonuniform rows retain all exceptions and opposite unseen answers. Actual
 Fourier coefficients include a nonzero imaginary entry. The generic codec
 also keeps the distinct words used for signed zero and the smallest subnormal.

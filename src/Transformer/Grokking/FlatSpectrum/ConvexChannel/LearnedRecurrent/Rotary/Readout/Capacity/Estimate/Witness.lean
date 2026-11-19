@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # A strict actual descent condition with nonzero coefficient error
 
-Source: `review/flat_spectrum.md`, CM105. The actual ordered CM98 execution and
+Source: `review/convex/moments.md`, CM105. The actual ordered CM98 execution and
 CM103 imaginary readouts give A, while H=3A/4 has nonzero discrepancy. The
 estimated gap twelve exceeds correction eight at the original budget sixteen.
 -/

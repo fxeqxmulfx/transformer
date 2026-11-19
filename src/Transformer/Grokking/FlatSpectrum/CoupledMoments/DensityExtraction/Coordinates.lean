@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 /-!
 # A supplied subspace basis may be arbitrarily rotated
 
-Source: `review/flat_spectrum.md`, CM21. The exact-subspace assumption is a
+Source: `review/convex/moments.md`, CM21. The exact-subspace assumption is a
 unitary change of coordinates from permuted Fourier features. The unitary
 matrix and permutation are witnesses in the proof, not algorithm inputs.
 -/

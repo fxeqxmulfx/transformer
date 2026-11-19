@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.PackedRecords.Basic
 /-!
 # Original observation order and constraints under packed states
 
-Source: `review/flat_spectrum.md`, CM68. Precompute every fixed program's
+Source: `review/convex/moments.md`, CM68. Precompute every fixed program's
 state, then pack the resulting observations. Record IDs and multiplicity are
 unchanged, including duplicates and every actual short minibatch.
 -/

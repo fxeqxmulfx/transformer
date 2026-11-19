@@ -5,7 +5,7 @@ public import Mathlib.Data.Fintype.EquivFin
 /-!
 # Compatible finite codes have exactly the declared readout fibers
 
-Source: `review/flat_spectrum.md`, CM35. If a surjective declared readout has
+Source: `review/convex/moments.md`, CM35. If a surjective declared readout has
 the same finite cardinality as the unknown code alphabet, CM34's compatibility
 premise forces a bijective factorization of that unknown code through the
 readout. Factorization is a conclusion, not a definition or added hypothesis.

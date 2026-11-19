@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.C
 /-!
 # A training-only procedure with explicit refusals
 
-Source: `review/flat_spectrum.md`, CM18. `recover` reads the decoder, the training cells and
+Source: `review/convex/moments.md`, CM18. `recover` reads the decoder, the training cells and
 their labels, and answers for one cell. It refuses a decoder outside the class
 (`unsupported`), training samples that no phases fit (`inconsistent`), and a cell that no
 accepted certificate covers (`uncertified`); otherwise it returns the label that a covering

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel.Gau
 /-!
 # Finite readout constraints for complete observed kernels
 
-Source: `review/flat_spectrum.md`, CM35--CM37. Equal code/answer cardinalities
+Source: `review/convex/moments.md`, CM35--CM37. Equal code/answer cardinalities
 derive the declared readout's fiber equalities from compatible unknown codes.
 Complete grouped-kernel matches therefore identify original answers under the
 existing target-family assumptions. A strict unseen-corner witness gains

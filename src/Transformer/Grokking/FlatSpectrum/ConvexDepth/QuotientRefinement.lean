@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientCollision
 /-!
 # Refine observed inputs without changing their learned quotient
 
-Source: `review/flat_spectrum.md`, CM31. Observed input identities are extra
+Source: `review/convex/moments.md`, CM31. Observed input identities are extra
 fixed categorical states. Their labels are readout assignments, never feature
 inputs. Unobserved inputs retain the learned latent state and its declared
 representative. The hypotheses certify compatibility of that representation;

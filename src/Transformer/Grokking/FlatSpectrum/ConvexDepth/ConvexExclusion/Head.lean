@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHeadBudget
 /-!
 # Actual complex-head guarantees after candidate exclusion
 
-Source: `review/flat_spectrum.md`, CM49. Geometry first identifies a query's
+Source: `review/convex/moments.md`, CM49. Geometry first identifies a query's
 raw label. A fixed positive mixture of observed sources bearing that label
 then transfers actual margins and ordinary full-vocabulary CE. Its input
 barycenter need not be the query: the identifying and prediction certificates

@@ -10,7 +10,7 @@ CM100 at `16276e1c` proves 22 statements before this implementation: complete
 complex row-domain convexity, actual state preservation, linear complete logits,
 ordinary full-class and indexed minibatch CE convexity, concrete radial row
 feasibility, accepted interpolation and full-family signed CE-query feasibility.
-The source is `review/flat_spectrum.md`, CM100 and Lean
+The source is `review/convex/moments.md`, CM100 and Lean
 `LearnedRecurrent/Rotary/Readout`. It supplies no fit or generalization guarantee.
 
 | Variant | Starting model | Added training |

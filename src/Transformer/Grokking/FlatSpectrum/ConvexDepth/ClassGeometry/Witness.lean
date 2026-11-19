@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry.Head
 /-!
 # A nonconstant unseen-class witness and the role of its prior
 
-Source: `review/flat_spectrum.md`, CM56. Training observes raw labels 1 and 2;
+Source: `review/convex/moments.md`, CM56. Training observes raw labels 1 and 2;
 the heldout input requires label 3. Two distinct feasible margins share that
 prediction through the actual complete complex head. Removing the affine
 decoder prior admits a target agreeing at both anchors but requiring label 4.

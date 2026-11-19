@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent
 /-!
 # Exact coordinates after eliminating observed decoder rows
 
-Source: `review/flat_spectrum.md`, CM65. A fixed partial dictionary identifies
+Source: `review/convex/moments.md`, CM65. A fixed partial dictionary identifies
 which rows are already affine copies of a program mass. Only the other rows
 remain coordinates. Reconstruction preserves all of those unknown entries.
 -/

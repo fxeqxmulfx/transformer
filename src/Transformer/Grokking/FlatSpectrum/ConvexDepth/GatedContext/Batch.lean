@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.GatedContext.Loss
 /-!
 # Original batches for anchored local contexts
 
-Source: `review/flat_spectrum.md`, CM46. Original record multiplicities and
+Source: `review/convex/moments.md`, CM46. Original record multiplicities and
 tail denominators remain explicit. Fixed gates permit a convex diagnostic;
 observed-row preservation still leaves the original observed loss unchanged.
 -/

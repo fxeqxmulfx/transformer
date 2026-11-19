@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Logits
 /-!
 # When ordinary CE can train the second read
 
-Source: `review/flat_spectrum.md`, CM114. Uniform relative scores erase
+Source: `review/convex/moments.md`, CM114. Uniform relative scores erase
 the effect of content routing and the depth gate. Away from uniform routing
 an observed class contrast can distinguish depths when the other weights
 are fixed. The CE derivative uses all original classes and the true label.

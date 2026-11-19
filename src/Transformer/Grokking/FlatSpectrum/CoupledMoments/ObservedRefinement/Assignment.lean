@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ObservedRefinemen
 /-!
 # A checkable certificate for one assignment update
 
-Source: `review/flat_spectrum.md`, CM23. Feasible dual row/column potentials
+Source: `review/convex/moments.md`, CM23. Feasible dual row/column potentials
 and equality on a permutation certify its minimum assignment cost. This is
 one coordinate update, not a global oracle for phase and decoder discovery.
 -/

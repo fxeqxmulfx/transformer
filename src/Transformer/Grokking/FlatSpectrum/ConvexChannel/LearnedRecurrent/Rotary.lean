@@ -12,7 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Learned rotary positions in the bounded next-object recurrence
 
-Source: `review/flat_spectrum.md`, CM98–100. Actual position-dependent matrix
+Source: `review/convex/moments.md`, CM98–100. Actual position-dependent matrix
 execution, unchanged operator capacities, a joint convex score domain, feasible
 finite CE queries and an order-sensitive witness. No unseen-label or optimal
 component-discovery guarantee is inferred from norm preservation.

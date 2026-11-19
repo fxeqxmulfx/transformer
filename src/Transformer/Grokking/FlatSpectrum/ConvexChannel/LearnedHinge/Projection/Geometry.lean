@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Proje
 /-!
 # Certified detection of universally forced activation equalities
 
-Source: `review/flat_spectrum.md`, CM80. Project each original constraint normal
+Source: `review/convex/moments.md`, CM80. Project each original constraint normal
 onto the complete cone. A zero result certifies that its row vanishes at every
 feasible point; a nonzero result supplies positive slack. All conclusions use
 the finite CM79 certificate, with no assumed projection oracle or row deletion.

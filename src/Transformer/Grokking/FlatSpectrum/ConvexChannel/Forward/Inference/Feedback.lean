@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference.
 /-!
 # Continuing with observed answers after main training
 
-Source: `review/flat_spectrum.md`, *Inference-time learning*, CI1.
+Source: `review/convex/channels.md`, *Inference-time learning*, CI1.
 These are actual labels supplied by feedback or an observable target in
 the incoming stream. Their truth is not inferred from the model's prediction.
 Continuing the retained state equals scanning the combined history exactly.

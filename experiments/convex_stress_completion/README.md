@@ -4,7 +4,7 @@ Question: can the unrestricted fallback transfer a learned value to a missing
 query/value row without changing its training objective or losing capacity?
 
 Lean comes first: `ConvexChannel/Completion.lean` proves MF5 in
-`review/flat_spectrum.md`. A retained sample-gradient sum is zero on a row absent
+`review/convex/channels.md`. A retained sample-gradient sum is zero on a row absent
 from all consumed inputs. Replacing decoder choices only on those rows leaves
 the linear cost unchanged and preserves exact-oracle optimality and feasibility.
 This says nothing by itself about the correctness of arbitrary unseen labels.

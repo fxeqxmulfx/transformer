@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Learning
 /-!
 # Direct construction of a global ordinary-CE optimizer
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF3-CF4.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF3-CF4.
 The input examples are grouped by query. If each row has a consistent key,
 the actual finite learner returns unit target logits on every observed
 sample, attaining the global minimum over the entire convex channel domain.

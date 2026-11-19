@@ -35,7 +35,7 @@ diagnostics. This protocol has no adaptive choice of seed, fit or stopping
 point. The frozen settings are in [protocol.json](protocol.json).
 
 The learned geometry, margin assumptions and indistinguishable training
-completions are stated in [CM113](../../review/flat_spectrum.md#cm113-composed-learned-retrieval-and-a-two-operand-phase-interaction).
+completions are stated in [CM113](../../review/convex/moments.md#cm113-composed-learned-retrieval-and-a-two-operand-phase-interaction).
 
 ## Native reproduction
 

@@ -45,7 +45,7 @@ Can the convex lift proved in CM21 separate Fourier modes when a supplied
 singular subspace is an unknown rotation of the true mode basis?
 
 Lean source: `DensityExtraction` at `1885957b`; manuscript
-[`review/flat_spectrum.md`, CM21](../../review/flat_spectrum.md#cm21-convex-density-extraction-in-a-supplied-fourier-subspace).
+[`review/convex/moments.md`, CM21](../../review/convex/moments.md#cm21-convex-density-extraction-in-a-supplied-fourier-subspace).
 The numerical input is a centered complex feature matrix `B` with `B*B=n I`
 and two categorical row indices. No latent permutation, frequency, mode label
 or held-out answer is passed to the extractor.

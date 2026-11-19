@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.Basic
 /-!
 # Nonconstant ordered sharing and necessary conditions
 
-Source: `review/flat_spectrum.md`, CM71. A four-class example retains one
+Source: `review/convex/moments.md`, CM71. A four-class example retains one
 exceptional column, three shared columns, a known-only block, distinct payloads
 and a repeated operation. Separate examples show that deleting an exceptional
 class, ignoring active support, reordering or deduplicating updates can fail.

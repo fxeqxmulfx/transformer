@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientHead
 /-!
 # Bounded state-logit tables in actual complex coordinates
 
-Source: `review/flat_spectrum.md`, CM32. Extend CFt5's one-hot initializer
+Source: `review/convex/moments.md`, CM32. Extend CFt5's one-hot initializer
 bound to every real table in a coordinate box. Unitary inversion realizes
 the table exactly and bounds both learned complex coordinates by `2 A N`.
 This permits explicit feasible updates without a dense global projection.

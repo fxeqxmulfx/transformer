@@ -7,7 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renam
 /-!
 # Immutable sequences read learned complex quadratic representations
 
-Source: `review/flat_spectrum.md`, CM85. Objects only address learned bias
+Source: `review/convex/moments.md`, CM85. Objects only address learned bias
 and position/object weights. Inference sums those learned values in each
 hidden row, squares both complex components, and multiplies a learned
 complex readout. The original object is the only supervised target.

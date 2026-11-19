@@ -7,7 +7,7 @@ the original 95% success flags remain separate measurements. This Rust
 experiment adds the two original typed-bracket cases prepared in task325,
 plus the four unchanged cases from task324 as controls.
 
-CM53 in `review/flat_spectrum.md`, formalized at `8c7b8933`, already quantifies
+CM53 in `review/convex/moments.md`, formalized at `8c7b8933`, already quantifies
 over arbitrary fixed input programs. Its joint-domain convexity and complete
 complex-head results therefore cover this new finite program bank without a
 new Lean statement. The contract and all 55 declaration axioms were rechecked

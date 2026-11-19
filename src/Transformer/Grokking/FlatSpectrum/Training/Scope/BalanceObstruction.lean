@@ -7,7 +7,7 @@ public import Mathlib.Analysis.Convex.Basic
 /-!
 # Balance does not make factor training convex or certify optimality
 
-Source: `review/flat_spectrum.md`, *Balancedness as a capacity certificate*, B3.
+Source: `review/convex/channels.md`, *Balancedness as a capacity certificate*, B3.
 The real scalar balance constraint `u² = v²` fails at the midpoint of `(1,1)`
 and `(1,-1)`. Imposing balance is therefore not a convex parameter constraint.
 

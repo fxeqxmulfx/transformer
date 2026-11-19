@@ -15,7 +15,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery.W
 /-!
 # Unseen decoded answers behind a many-to-one decoder, from training samples alone
 
-Source: `review/flat_spectrum.md`, CM18. A square table has the labels `d (r i + s j)` for a
+Source: `review/convex/moments.md`, CM18. A square table has the labels `d (r i + s j)` for a
 fixed known decoder `d` of an odd cyclic group that merges exactly the opposite latent states,
 and unknown phases `r`, `s`. A training sample gives its latent state up to a sign, one
 unknown sign per cell. A certificate proposes phases and a rectangle of training cells and

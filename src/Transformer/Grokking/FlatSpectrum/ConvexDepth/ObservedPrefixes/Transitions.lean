@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Con
 /-!
 # Necessary latent bits at observed threshold crossings
 
-Source: `review/flat_spectrum.md`, CM59. One new symbol changes a difference
+Source: `review/convex/moments.md`, CM59. One new symbol changes a difference
 of inclusive Boolean counts by a-b-e. A crossing from below an integer
 threshold to at least that threshold forces (a,b,e)=(true,false,false).
 A downward crossing with e=false forces (a,b)=(false,true). With e=true,

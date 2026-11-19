@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Actual full-class mean CE with variable component capacity
 
-Source: `review/flat_spectrum.md`, CM104. Scores use weighted rows, so capacity
+Source: `review/convex/moments.md`, CM104. Scores use weighted rows, so capacity
 and native weights must not multiply their coefficients again. The full indexed
 first-order contraction is the proved CM103 identity in these coordinates.
 -/

@@ -6,6 +6,6 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval.D
 /-!
 # Shared learned complex retrieval
 
-Source: `review/flat_spectrum.md`, CM111–112. Normalized retrieval, its
+Source: `review/convex/moments.md`, CM111–112. Normalized retrieval, its
 conditional binding guarantees, and its restriction on two-object prefixes.
 -/

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms.B
 /-!
 # Complete complex products for a finite program bank
 
-Source: `review/flat_spectrum.md`, CM57. Each fixed input-only program has two
+Source: `review/convex/moments.md`, CM57. Each fixed input-only program has two
 complete Fourier blocks. One signed normalization covers the entire bank;
 every real and imaginary coefficient enters the exact product and budget.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 /-!
 # Complete bounded complex realization of the identifying decoder
 
-Source: `review/flat_spectrum.md`, CM56. A fixed four-point unitary code carries
+Source: `review/convex/moments.md`, CM56. A fixed four-point unitary code carries
 the scalar feature and a constant through signed normalized contexts. Every
 real and imaginary coefficient, for every output class, is charged. The three
 shared coordinates enter affinely; ordinary full and minibatch CE are convex.

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Pa
 /-!
 # Exact reuse of complete forward-only minibatch queries
 
-Source: `review/flat_spectrum.md`, CM88. Central differences of actual ordinary
+Source: `review/convex/moments.md`, CM88. Central differences of actual ordinary
 CE at every complete coordinate can reuse two class-bias queries per record.
 A coordinate with response s uses step h/s; zero-response coordinates have
 zero loss difference. This is an exact finite-query identity, not a claim that

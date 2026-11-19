@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Observed directions, capacity, and unobservable parameter changes
 
-Source: `review/flat_spectrum.md`, CM87. The evaluation operator maps complete
+Source: `review/convex/moments.md`, CM87. The evaluation operator maps complete
 real parameter coordinates to observed correct-versus-competitor margins.
 Labels impose inequalities on this operator; they do not reveal its output
 values. Its rank bounds the independent observed directions. A certificate

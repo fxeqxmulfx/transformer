@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # From the original categorical matrix to the identification theorem
 
-Source: `review/flat_spectrum.md`, CM28, the observed matrix certificate.
+Source: `review/convex/moments.md`, CM28, the observed matrix certificate.
 The matrix below contains every original observation, the two shift gauges,
 and one class-coordinate row. Replaying row operations to coordinate rows
 proves that its kernel is zero. A checked normalized joint vector then proves

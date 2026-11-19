@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.ObservedRefinemen
 /-!
 # Completeness of observed categorical fibers
 
-Source: `review/flat_spectrum.md`, CM26. Same-label observations give a subset
+Source: `review/convex/moments.md`, CM26. Same-label observations give a subset
 of an actual decoder fiber. Injective phase coordinates and the fiber's actual
 cardinality certify completeness. An observed multiplicity alone does not.
 -/

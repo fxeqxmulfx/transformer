@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.HiddenPath.Basic
 /-!
 # Answer-only CE is nonconvex for the two learned hidden stages
 
-Source: `review/flat_spectrum.md`, CM74. At parameters ±(log 3, log 3), the
+Source: `review/convex/moments.md`, CM74. At parameters ±(log 3, log 3), the
 true next-object probability is 5/8. At their midpoint it is 1/2. Ordinary
 answer CE is strictly larger at the midpoint, although every complete-path
 likelihood is convex. No observed internal state is available to the answer

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Patte
 /-!
 # Exact pattern reduction for every bounded raw object prefix
 
-Source: `review/flat_spectrum.md`, CM76. Position/object reads satisfy the
+Source: `review/convex/moments.md`, CM76. Position/object reads satisfy the
 component-separation hypothesis. Applying the reduction to the whole finite
 prefix universe preserves the entire admitted sequence function, ordinary
 CE and probabilities. The reverse embedding uses any nonempty old slot

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # Reuse the complete softmax partition for finite single-class output queries
 
-Source: `review/flat_spectrum.md`, CM109. Changing one complete output row
+Source: `review/convex/moments.md`, CM109. Changing one complete output row
 changes just its class logit. The original full-vocabulary cross-entropy has
 an exact cached evaluation; no derivative or reduced label set is substituted.
 The two actual changes may be asymmetric after feasible parameter projection.

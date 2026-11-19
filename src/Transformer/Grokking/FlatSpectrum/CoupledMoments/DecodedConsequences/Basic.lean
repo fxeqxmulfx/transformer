@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Actual observed row consequences identify decoded answers
 
-Source: `review/flat_spectrum.md`, CM29. The original matrix has only observed
+Source: `review/convex/moments.md`, CM29. The original matrix has only observed
 cell/class equations, without gauges or extra anchors. A finite row program
 certifies a query by producing its actual coefficient row. Unknown structural
 realizability and class-code injectivity then identify the decoded answer.

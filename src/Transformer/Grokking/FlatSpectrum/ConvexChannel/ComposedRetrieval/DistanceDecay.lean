@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval.
 /-!
 # Distance decay and observable offsets in the complete successor
 
-Source: `review/flat_spectrum.md`, CM118. Both normalized reads use the
+Source: `review/convex/moments.md`, CM118. Both normalized reads use the
 same signed residual and learned distance coefficient. Short training
 prefixes observe only the effective offsets occurring between their positions.
 -/

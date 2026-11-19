@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PairedPh
 /-!
 # A vocabulary-only paired decoder
 
-Source: `review/flat_spectrum.md`, CM16. For C = k+1 original classes, use
+Source: `review/convex/moments.md`, CM16. For C = k+1 original classes, use
 q = 2k+1 latent states and merge the pair z,-z. Every original class has a
 preimage. These are categorical output coordinates, not input arithmetic
 features. The three-class example separates this construction from the

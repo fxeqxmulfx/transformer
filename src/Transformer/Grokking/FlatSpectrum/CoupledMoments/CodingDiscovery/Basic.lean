@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.PhaseCan
 /-!
 # The codings that the training rectangles of a categorical table allow
 
-Source: `review/flat_spectrum.md`, CM17, which continues CM14: "Discovery of a coding remains a
+Source: `review/convex/moments.md`, CM17, which continues CM14: "Discovery of a coding remains a
 discrete proposal step". Native reference: `experiments/convex_stress_relabel/src/coding.rs` at
 414431c7, `discover`: "Stream rectangle constraints z[a]+z[d]-z[b]-z[c]=0 over class phases.
 With prime vocabulary V, fix z[0]=0 and require exactly one remaining direction, a bijection,

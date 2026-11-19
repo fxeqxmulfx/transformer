@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Id
 /-!
 # Complete margin forms and observed comparison indices
 
-Source: `review/flat_spectrum.md`, CM87. Finite linear forms read every real
+Source: `review/convex/moments.md`, CM87. Finite linear forms read every real
 coordinate of the learned complex state. Observed indices retain every record
 and every competing original object. Self-comparisons have coefficient zero;
 extending comparison weights by zero preserves the full double sums.

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 /-!
 # Mixed densities, a genuine basis rotation, and a collision limitation
 
-Source: `review/flat_spectrum.md`, CM21, examples. The modulo-13 feasible set
+Source: `review/convex/moments.md`, CM21, examples. The modulo-13 feasible set
 contains mixed matrices. The modulo-2 collision permits an off-diagonal
 density, refuting the diagonal conclusion without separated differences.
 -/

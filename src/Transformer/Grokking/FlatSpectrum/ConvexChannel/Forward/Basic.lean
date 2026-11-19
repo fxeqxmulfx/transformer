@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Defs
 /-!
 # Exact information retained by the forward scan
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF1-CF2.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF1-CF2.
 The invariant describes precisely all decoders consistent with the observed
 answers. Consequently a realizable candidate survives, every returned table
 fits the observations, and an observed contradiction eliminates the key.

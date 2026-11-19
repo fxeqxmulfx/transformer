@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unsee
 /-!
 # Actual learned complex weights realizing a singleton-prefix response
 
-Source: `review/flat_spectrum.md`, CM77. A learned bias 1-T and one learned
+Source: `review/convex/moments.md`, CM77. A learned bias 1-T and one learned
 unit weight per matching position/object pair produce the exact preactivation
 count. Complex weights multiply these values by 2+i, retaining nonzero real
 and imaginary components; the actual readout phase yields the gain 1+3i.

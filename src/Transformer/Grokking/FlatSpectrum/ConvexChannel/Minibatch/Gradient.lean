@@ -7,7 +7,7 @@ public import Transformer.Grokking.Geometry.ProbabilityLoss
 /-!
 # A singleton CE oracle cannot distinguish keys
 
-Source: `review/flat_spectrum.md`, *Repairing minibatch and full-batch failures*,
+Source: `review/convex/channels.md`, *Repairing minibatch and full-batch failures*,
 MF1. The Boolean input with label `b` has a constant first slot and a separating
 second slot. The tensor below is the actual ordinary-CE gradient on that input:
 the residual `softmax - oneHot` is placed at each slot's observed value.

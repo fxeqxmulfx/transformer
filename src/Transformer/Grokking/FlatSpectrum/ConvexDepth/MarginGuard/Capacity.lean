@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard.Witness
 /-!
 # Inhabited constrained complex models
 
-Source: `review/flat_spectrum.md`, CM47. Every conditional margin theorem is
+Source: `review/convex/moments.md`, CM47. Every conditional margin theorem is
 instantiated on the nonzero Fourier source, with retention one half, radius
 one half and all raw classes. The constrained tensor remains inside CM46's
 original feature/head bounds and preserves repeated-record batch derivatives.

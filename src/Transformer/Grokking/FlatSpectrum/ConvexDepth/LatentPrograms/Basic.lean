@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms.Learn
 /-!
 # Executable dictionaries for shared latent input programs
 
-Source: `review/flat_spectrum.md`, CM53. The program bank supplies input states,
+Source: `review/convex/moments.md`, CM53. The program bank supplies input states,
 not raw labels. Decoder entries come only from observed state/label pairs.
 Conflicting labels eliminate a program; an unseen state remains unidentified.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Up
 /-!
 # Nonconstant complex shared-factor execution controls
 
-Source: `review/flat_spectrum.md`, CM92. Both object names and every output
+Source: `review/convex/moments.md`, CM92. Both object names and every output
 remain present. A nonzero unit component changes predictions with its learned
 query/context entries. Its imaginary entries affect real scores. These are
 representation controls, not supplied features or stress-test accuracy credit.

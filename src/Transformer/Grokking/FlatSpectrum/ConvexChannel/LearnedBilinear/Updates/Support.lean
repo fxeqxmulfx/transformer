@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.Up
 /-!
 # Exact zero-support storage for complete learned parameters
 
-Source: `review/flat_spectrum.md`, CM88. A missing storage entry denotes an
+Source: `review/convex/moments.md`, CM88. A missing storage entry denotes an
 exact zero in the unchanged complete parameter domain. Zero context columns
 contribute nothing to the query Gram matrix and have zero recovered context
 rows. No small nonzero singular value or learned coefficient is discarded.

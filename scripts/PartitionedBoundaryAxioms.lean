@@ -3,7 +3,7 @@ import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
 
 /-!
 Prospective task335 revision audit, before fitting a partitioned constructor.
-CM55 and CM51 in `review/flat_spectrum.md`: a fixed input-descriptor partition
+CM55 and CM51 in `review/convex/moments.md`: a fixed input-descriptor partition
 gates shared boundary parameters. Learning a partition precedes convex CE;
 the partition is fixed during CE. Each leaf still shares parameters across
 multiple blocks. All expanded coefficients and categorical offsets are charged.

@@ -97,7 +97,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 cargo clippy --locked --all-targets -- -D warnings
 ```
 
-The source is [`review/flat_spectrum.md`, CM26](../../review/flat_spectrum.md#cm26-complete-categorical-fibers-give-phase-sum-constraints).
+The source is [`review/convex/moments.md`, CM26](../../review/convex/moments.md#cm26-complete-categorical-fibers-give-phase-sum-constraints).
 Prime-field normalization builds on the native coding learner at `4510ee7d`;
 general affine systems, row-operation certificates, arbitrary variable counts
 and explicit nullspace bounds are new. Final spectral/CE audits reuse the

@@ -6,8 +6,8 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.FourierCode
 /-!
 # The refined quotient is an actual bounded complex CE head
 
-Source: `review/flat_spectrum.md`, CM31 and CFt5. Reindex the normalized
-Fourier basis by categorical state names, then apply the actual conjugate
+Source: `review/convex/moments.md`, CM31, and `review/convex/channels.md`, CFt5. Reindex
+the normalized Fourier basis by categorical state names, then apply the actual conjugate
 initializer to observed raw labels and declared latent representatives.
 No input arithmetic, held-out labels or separately learned factors occur
 in this fixed-feature convex head. Its size includes every observed state.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedRows.Geometr
 /-!
 # Exact reduced projection for an arbitrary full proposal
 
-Source: `review/flat_spectrum.md`, CM66. An unconstrained gradient proposal
+Source: `review/convex/moments.md`, CM66. An unconstrained gradient proposal
 need not satisfy the observed anchors. Completing its known-row squares gives
 a weighted reduced target plus a constant independent of the optimized point.
 -/

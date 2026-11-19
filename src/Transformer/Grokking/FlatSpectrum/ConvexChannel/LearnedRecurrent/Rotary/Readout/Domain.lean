@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.R
 /-!
 # Joint conditional readout optimization and actual feasible queries
 
-Source: `review/flat_spectrum.md`, CM100. This subproblem varies every readout
+Source: `review/convex/moments.md`, CM100. This subproblem varies every readout
 on already learned states. It neither freezes the full architecture permanently
 nor asserts convexity in independent transition factors. Every finite query is
 an actual point of CM98's original learned model family.

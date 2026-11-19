@@ -8,7 +8,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # An exact full complex Hilbert operator norm and feasible numerical normalization
 
-Source: `review/flat_spectrum.md`, CM108. Explicit Gram energy, an attained
+Source: `review/convex/moments.md`, CM108. Explicit Gram energy, an attained
 sharp operator bound and a radial normalization that preserves every already
 feasible matrix. No singular direction is truncated; no closest-point,
 floating-point rounding or learning guarantee is assumed.

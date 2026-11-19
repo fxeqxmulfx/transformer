@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten.Recovery
 /-!
 # From ordinary empirical CE to missing-entry recovery
 
-Source: `review/flat_spectrum.md`, CM6. Because every observed CE term is at least its
+Source: `review/convex/moments.md`, CM6. Because every observed CE term is at least its
 one-hot value, attaining the summed lower bound forces each target coordinate to one.
 In the three-observation rank-one example, the nuclear budget then determines the missing
 label. Correct observed answers are conclusions of the CE inequality, not hypotheses.

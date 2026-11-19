@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.H
 /-!
 # Finite original-class queries from mixtures of both learned branches
 
-Source: `review/flat_spectrum.md`, CM107. CM98's actual nonzero bias components
+Source: `review/convex/moments.md`, CM107. CM98's actual nonzero bias components
 remain available even when the current model contains Hilbert components.
 The exact full-class logits and finite CE identity are still CM98's formulas.
 -/

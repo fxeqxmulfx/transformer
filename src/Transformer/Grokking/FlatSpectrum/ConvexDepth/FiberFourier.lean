@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.QuotientHead
 /-!
 # Fourier blocks indexed by latent fibers of the refined input states
 
-Source: `review/flat_spectrum.md`, CM32. Group categorical states by a fixed
+Source: `review/convex/moments.md`, CM32. Group categorical states by a fixed
 latent map and construct one normalized Fourier block in each nonempty fiber.
 Reindex the direct sum back to the original state names. The actual matrix
 is unitary with zero entries between fibers. Native storage needs the sum

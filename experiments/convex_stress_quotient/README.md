@@ -1,7 +1,7 @@
 # Categorical discovery with colliding class codes
 
 Can observations discover an additive latent code when several raw output
-names share a latent state? CM30 in `review/flat_spectrum.md` and Lean commit
+names share a latent state? CM30 in `review/convex/moments.md` and Lean commit
 `e02b7c49` prove that original row certificates can identify codes and compatible
 quotient answers. They also show that a certified code need not identify a
 unique raw answer, even when every raw label occurred in training.

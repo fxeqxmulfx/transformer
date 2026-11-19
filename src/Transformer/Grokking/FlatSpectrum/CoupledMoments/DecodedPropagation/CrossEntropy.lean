@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagatio
 /-!
 # Training-derived equalities inside the convex spectral decoder hull
 
-Source: `review/flat_spectrum.md`, CM19. The domain of CM15 contains the true
+Source: `review/convex/moments.md`, CM19. The domain of CM15 contains the true
 phase table for any fixed categorical decoder. Intersect it with the linear
 one-hot equalities certified by propagation over a declared finite decoder
 bank. If the target belongs to that bank, the intersection retains its table

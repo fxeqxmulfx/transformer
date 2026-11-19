@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.CompositeDiscover
 /-!
 # Uniqueness of actual modular constraint systems
 
-Source: `review/flat_spectrum.md`, CM28, component and digit uniqueness.
+Source: `review/convex/moments.md`, CM28, component and digit uniqueness.
 CM27 supplies exact residual lifting, not uniqueness. Here a trivial kernel
 modulo a base modulus implies a trivial kernel at all its powers, by dividing
 the actual integer representatives and using the exact residual identity.

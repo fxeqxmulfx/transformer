@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.UniformRows.Basic
 /-!
 # Uniform proposals and the complete decoder projection
 
-Source: `review/flat_spectrum.md`, CM69. Every unknown coordinate remains in
+Source: `review/convex/moments.md`, CM69. Every unknown coordinate remains in
 CM65/66's original domain. Replacing an unknown row by its mean is a feasible
 comparison point; it improves distance to a uniform proposal by exactly that
 row's variance. Hence every exact minimizer has uniform unknown rows under

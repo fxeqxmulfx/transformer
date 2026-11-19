@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexDepth.RawRegions.Basic
 /-!
 # Geometry certificates in the actual complex head
 
-Source: `review/flat_spectrum.md`, CM48. Observed raw labels and an input
+Source: `review/convex/moments.md`, CM48. Observed raw labels and an input
 barycentric certificate replace CM42's assumption about an unknown query
 label. Convex target regions remain a separate structural hypothesis. The
 interpolation weights stay fixed during ordinary complete-head CE training.

@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.Training.Margin
 /-!
 # Actual output margins from shared learned retrieval
 
-Source: `review/flat_spectrum.md`, CM111. A good path contributes the learned
+Source: `review/convex/moments.md`, CM111. A good path contributes the learned
 decoder separation. All other paths remain in the calculation and have margin
 at least minus two. The identified object is the object at the linked position;
 no theorem asserts that every task's correct next object has this relation.

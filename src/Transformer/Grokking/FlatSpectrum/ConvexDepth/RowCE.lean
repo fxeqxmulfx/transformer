@@ -6,7 +6,7 @@ public import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 /-!
 # Ordinary cross-entropy directions and margin order
 
-Source: `review/flat_spectrum.md`, CM33. Derive the full-vocabulary CE
+Source: `review/convex/moments.md`, CM33. Derive the full-vocabulary CE
 direction from its exponential partition, then compare actual losses when
 every target-versus-rival gap increases. Monotone clipping preserves target
 and rival score order under any nonnegative CE step from a feasible row.

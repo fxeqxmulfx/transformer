@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic.S
 /-!
 # The polynomial-cost quadratic family loses higher-order interactions
 
-Source: `review/flat_spectrum.md`, CM85. Every quadratic reading has zero
+Source: `review/convex/moments.md`, CM85. Every quadratic reading has zero
 third mixed difference. This applies to the actual recovered raw-sequence
 logits, not just an auxiliary feature head. Therefore no point in this family
 strictly classifies three-bit parity on all eight original Boolean prefixes.

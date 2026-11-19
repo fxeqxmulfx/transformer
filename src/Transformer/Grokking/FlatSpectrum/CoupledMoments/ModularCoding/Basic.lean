@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.CoupledMoments.BalancedFibers
 /-!
 # Exact residuals for lifting categorical phase equations
 
-Source: `review/flat_spectrum.md`, CM27. Integer representatives of observed
+Source: `review/convex/moments.md`, CM27. Integer representatives of observed
 categorical equations are lifted by solving the actual residual system.
 Primality is unnecessary for the equivalence, and solvability is not assumed.
 -/

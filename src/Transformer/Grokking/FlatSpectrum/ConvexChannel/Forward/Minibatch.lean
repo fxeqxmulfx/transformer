@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Training
 /-!
 # Persistent minibatches compute exactly the same channel
 
-Source: `review/flat_spectrum.md`, *Forward-only channel learning*, CF6.
+Source: `review/convex/channels.md`, *Forward-only channel learning*, CF6.
 Every candidate retains its partial record and elimination state. Batches
 advance these records; selecting a prediction does not change them. Flattening
 the batches gives exactly the original learner, including its failure result,

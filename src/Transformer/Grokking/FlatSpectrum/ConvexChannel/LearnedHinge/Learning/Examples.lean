@@ -6,7 +6,7 @@ public import Mathlib.Logic.Equiv.Bool
 /-!
 # Inhabited full-domain learning premises
 
-Source: `review/flat_spectrum.md`, CM82. Every conditional learning theorem
+Source: `review/convex/moments.md`, CM82. Every conditional learning theorem
 is exercised at the concrete nonzero complex point. Queries perturb a real
 learned coordinate while retaining the imaginary computation. The three-record
 batch repeats one record, and the one-record batch supplies a short-tail case.
