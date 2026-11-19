@@ -12,6 +12,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Softmax
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxRecall
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxScale
 public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
+public import Transformer.Grokking.FlatSpectrum.Recall.LogScale
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -58,7 +59,10 @@ dimension two, so it has no cut width below the number of keys (`SoftmaxRecall`)
 pays in the scale of its scores: bounded by `B`, they leave a squared error of at least the
 fraction `((m − 1) / (e^{2B} + m − 1))²` of the variance of `φ` (`SoftmaxScale`). With scores
 that ignore the query, as in the transformers that paper builds from formulas, a linear readout
-read by its sign recalls at most `d + 1` bindings (`QueryFree`).
+read by its sign recalls at most `d + 1` bindings (`QueryFree`). The scale `s log n` over `n`
+tokens, which long-context systems take (*The Mean-Field Dynamics of Transformers*, §6), grows
+by itself: raw scores that lead by a fixed `g` with `s g > 1` recall at every large number of
+keys (`LogScale`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least
