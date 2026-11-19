@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations; other angles and ALiBi open) |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two; other angles and an ALiBi transformer open) |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -110,7 +110,7 @@ whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, an
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
-## Asks in words (proved, rounded transformers without positions or with RoPE at rational angles, also templated)
+## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`)
 
 MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
 above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
@@ -157,14 +157,25 @@ formula is), and closes by the topic `t₀`, an answer `v`, the ask "`f₀` abou
 last block is of `b`, answered by `v`, and the one in the close otherwise, answered by `v'`
 (`phraseAnswer_closing_iff`).
 
+`TL[◁#, Y]`, into which ALiBi rounds, answers the query at depth two
+(`Transformer.MRCR.PhraseKeyPrev`, `PhraseKeyPrevCorrect`, `definableY_phraseAnswer`), on every
+string. `Y² Q_f ∧ Y Q_about ∧ Q_t` marks the end of an ask (`askEnd`), and its count up to a
+position `j` is the number of asks that start before the index `j − 2` (`val_countL_askEnd`).
+`Y³ Q_f ∧ Y² Q_about ∧ Y Q_t ∧ Q_v` marks the answer `v` after an ask (`answerHere`); there the
+count of `askEnd` is `r + 1` iff `r` such asks stand before that one, since `about` follows the
+format word (`count_add_two_of_askAt`, `needle`). At the end, the query for "`f` about `t`" with
+`r` asks before it and a count of the needle of at least `1` (`queryForm`), over all queries,
+accept exactly the conversations that `v` answers (`models_phraseAnswerForm`).
+
 Not proved:
 
 - RoPE at other angles. The rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`; the usual frequencies
   `10000^{−2c/d}` are not of this form, and for them no logic and no lower bound is in Lean.
-- ALiBi. It rounds to `TL[◁#, Y]` (`Transformer.CRASP.exists_mem_TLClY_of_alibi`), where
-  `Y Y Q_f ∧ Y Q_about ∧ Q_t` marks the end of an ask; neither that the task is definable there
-  nor that such a formula compiles to an ALiBi transformer is proved. Of the encodings that
-  arXiv:2506.16055v3 rounds, it is the only one that the argument above does not exclude.
+- An ALiBi transformer. ALiBi rounds to `TL[◁#, Y]` (`Transformer.CRASP.exists_mem_TLClY_of_alibi`),
+  where the task is definable at depth two (above); that some ALiBi transformer answers it is not
+  proved: arXiv:2506.16055v3 compiles only `TL[◁#]`, into transformers without positions
+  (`thm:TLCl_to_rtfr`, `Transformer.CRASP.exists_rtfr_of_mem_TLCl`). Of the encodings that
+  arXiv:2506.16055v3 rounds, ALiBi is the only one that the argument above does not exclude.
 
 ## Copy by position (proved, RoPE)
 

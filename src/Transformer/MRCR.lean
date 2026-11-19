@@ -9,6 +9,8 @@ public import Transformer.MRCR.NearMissThreshold
 public import Transformer.MRCR.Ordinal
 public import Transformer.MRCR.PartScore
 public import Transformer.MRCR.PhraseKey
+public import Transformer.MRCR.PhraseKeyPrev
+public import Transformer.MRCR.PhraseKeyPrevCorrect
 public import Transformer.MRCR.PhraseKeyRope
 public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
@@ -53,8 +55,10 @@ modulo a fixed number do not help (`Transformer.CRASP.SecondLastMod`).
 `Transformer.MRCR.PhraseKeyTemplated` and `Transformer.MRCR.PhraseKeyTemplatedLimits` extend
 both to templated conversations, turns of an ask and its answer closed by an answered query: in
 blocks that start at a topic the key of an ask straddles two blocks, and the opening ask moves
-into the formula (`Transformer.CRASP.LeftQuotient`). ALiBi, whose logic `TL[◁#, Y]` reads the
-previous token, is left open.
+into the formula (`Transformer.CRASP.LeftQuotient`). ALiBi rounds to `TL[◁#, Y]`, whose `Y` reads
+the previous token, and there a formula of depth two answers the query
+(`Transformer.MRCR.PhraseKeyPrev`, `Transformer.MRCR.PhraseKeyPrevCorrect`); that an ALiBi
+transformer does is left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so

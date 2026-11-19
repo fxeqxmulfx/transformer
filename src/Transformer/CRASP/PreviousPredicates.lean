@@ -8,7 +8,9 @@ public import Transformer.CRASP.PositionalSubstitution
 
 arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`.
 Repeated `Y` reads the finitely many recent source states without adding
-counting depth and detects whether the ordinary prefix is long enough.
+counting depth and detects whether the ordinary prefix is long enough;
+`FormP.sat_shift_sym` reads a letter a fixed number of places back, and
+`TermP.val_countL_succ` adds one position to a past count.
 -/
 
 @[expose] public section
@@ -135,6 +137,24 @@ theorem sat_shift (n : ℕ) (φ : FormP σ) (w : List σ) (i : ℕ) (hi : 0 < i)
       · have hn : ¬ n + 1 < i := by omega
         simp only [h, hn, decide_false, Bool.false_and]
 
+/-- At a positive position, `Y^n Q_a` holds iff `a` stands `n` places back. -/
+theorem sat_shift_sym (n : ℕ) (a : σ) (w : List σ) {i : ℕ} (hi : 0 < i) :
+    (shift n (.sym a)).sat w i = true ↔ n < i ∧ w[i - n - 1]? = some a := by
+  rw [sat_shift n _ w i hi]
+  simp [FormP.sat]
+
+/-- The hypothesis of `sat_shift_sym` holds at the second position of `[true, false]`, whose
+first letter `Y Q_true` reads. -/
+example := sat_shift_sym 1 true [true, false] (i := 2) (by norm_num)
+
 end FormP
+
+/-- One more position adds its truth value to a past count. -/
+theorem TermP.val_countL_succ [DecidableEq σ] (w : List σ) (i : ℕ) (φ : FormP σ) :
+    (TermP.countL φ).val w (i + 1) =
+      (TermP.countL φ).val w i + if φ.sat w (i + 1) = true then 1 else 0 := by
+  rw [TermP.val, TermP.val, List.range'_concat, List.filter_append, List.length_append,
+    show 1 + 1 * i = i + 1 by omega]
+  by_cases h : φ.sat w (i + 1) = true <;> simp [h]
 
 end Transformer.CRASP
