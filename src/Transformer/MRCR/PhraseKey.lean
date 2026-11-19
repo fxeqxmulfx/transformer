@@ -32,8 +32,8 @@ bits (`CRASP.RTfr.comap`), give a formula of `TL[◁#]` over the bits that tells
 
 The conversations that defeat it are not templated: the text before the ask is a run of format
 words and `about`, where MRCR alternates templated asks with answers. That templated conversations
-defeat it as well is not proved here, nor that RoPE at rational angles, which rounds to
-`TL[◁#, MOD]` (`CRASP.exists_mem_TLClMod_of_rope`), fails too.
+defeat it as well is not proved here. That RoPE and sinusoidal encodings at rational angles, which
+round to `TL[◁#, MOD]`, fail too is `Transformer.MRCR.PhraseKeyRope`.
 -/
 
 @[expose] public section

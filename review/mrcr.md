@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey` (no rounded transformer without positions; templated asks, RoPE and ALiBi open) |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles; templated asks, other angles and ALiBi open) |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -110,7 +110,7 @@ whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, an
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
-## Asks in words (proved, rounded transformers without positions)
+## Asks in words (proved, rounded transformers without positions or with RoPE at rational angles)
 
 MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
 above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
@@ -127,18 +127,30 @@ the words are read through the bits (`Transformer.CRASP.RTfr.comap`), and the re
 of `TL[◁#]` over the bits would tell `u·aba` from `u·baa` for every `u`, which none does
 (`Transformer.CRASP.exists_models_iff_secondLast`).
 
+`Transformer.MRCR.PhraseKeyRope` does the same for RoPE and sinusoidal encodings at angles that
+are rational multiples of `π`, which round to `TL[◁#, MOD]`
+(`Transformer.CRASP.exists_mem_TLClMod_of_rope`, `exists_mem_TLClMod_of_sinusoidal`): no such
+transformer accepts exactly the conversations that `v` answers (`not_phraseAnswers_rope`,
+`not_phraseAnswers_sinusoidal`). Write each bit as a block of `M` words, `M` a multiple of the
+moduli of the formula: `MOD` is then constant on a block, `MOD_0^r` tests the number of the
+block, and the formula becomes one of `TL[◁#]` over the bits, one level deeper
+(`Transformer.CRASP.ModBlocks`, `ModBlocksCorrect`). The last block, which an ask shares with
+the close, is replaced by the close and read at a dummy last bit, so that the ask is spelled iff
+the bit before the dummy is `b`. Hence `Σ*bΣ` is in `TL[◁#, MOD]` at no depth
+(`Transformer.CRASP.not_definableMod_secondLast`), while it is in `TL[◁#, Y]` at depth `0`:
+`TL[◁#, Y] ⊄ TL[◁#, MOD]` (`exists_definableY_not_definableMod`), which arXiv:2506.16055v3 does
+not state.
+
 Not proved:
 
 - Templated conversations. The text that defeats the transformer is a run of format words and
   `about` before the ask; MRCR alternates templated asks with answers.
-- RoPE. At rational angles it rounds to `TL[◁#, MOD]`
-  (`Transformer.CRASP.exists_mem_TLClMod_of_rope`), and no lower bound of that logic against
-  `Σ*ba` is in Lean. The reduction above does not carry over: blocks of one period per bit make
-  `MOD` constant, but the three adjacent words of an ask then lie in the last block and the
-  suffix, and depend on the last bit alone.
+- RoPE at other angles. The rounding to `TL[◁#, MOD]` needs `θ_c ∈ π ℚ`; the usual frequencies
+  `10000^{−2c/d}` are not of this form, and for them no logic and no lower bound is in Lean.
 - ALiBi. It rounds to `TL[◁#, Y]` (`Transformer.CRASP.exists_mem_TLClY_of_alibi`), where
   `Y Y Q_f ∧ Y Q_about ∧ Q_t` marks the end of an ask; neither that the task is definable there
-  nor that such a formula compiles to an ALiBi transformer is proved.
+  nor that such a formula compiles to an ALiBi transformer is proved. Of the encodings that
+  arXiv:2506.16055v3 rounds, it is the only one that the argument above does not exclude.
 
 ## Copy by position (proved, RoPE)
 

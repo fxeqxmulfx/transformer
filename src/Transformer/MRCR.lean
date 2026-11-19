@@ -9,6 +9,7 @@ public import Transformer.MRCR.NearMissThreshold
 public import Transformer.MRCR.Ordinal
 public import Transformer.MRCR.PartScore
 public import Transformer.MRCR.PhraseKey
+public import Transformer.MRCR.PhraseKeyRope
 public import Transformer.MRCR.Returns
 public import Transformer.MRCR.RotaryCopy
 public import Transformer.MRCR.Ties
@@ -44,6 +45,10 @@ count with the ordinal of the query and returns the needle at every length.
 positional encoding no rounded transformer answers the query at every length: over the words of
 a string of bits it would have to accept the conversations whose bits end in `ba`, and no formula
 of `TL[◁#]` tells `u·aba` from `u·baa` for every `u` (`Transformer.CRASP.SecondLast`).
+`Transformer.MRCR.PhraseKeyRope` does the same for RoPE and sinusoidal encodings at rational
+angles: on blocks of one period a formula of `TL[◁#, MOD]` is one of `TL[◁#]`, so positions read
+modulo a fixed number do not help (`Transformer.CRASP.SecondLastMod`). ALiBi, whose logic
+`TL[◁#, Y]` reads the previous token, is left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so
