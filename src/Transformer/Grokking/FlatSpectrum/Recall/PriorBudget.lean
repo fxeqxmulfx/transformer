@@ -27,9 +27,10 @@ namespace Transformer.Grokking.FlatSpectrum.Recall
 open Finset Filter Topology
 
 /-- **A recalled key needs the prior `n^{−2sB}`** (`review/flat_spectrum.md`, PB7): with raw
-scores bounded by `B`, if attention at the scale `s log n`, `s ≥ 0`, with the bias `b` answers the
-indicator dictionary of `j₀` within `ε`, then `(2 − ε) ∑_j e^{b_j} ≤ (2 − ε + ε n^{2sB}) e^{b_{j₀}}`:
-for `ε < 2` the prior of `j₀` is at least `(2 − ε) / (2 − ε + ε n^{2sB})`. -/
+scores bounded by `B`, if attention at the scale `s log n`, `s ≥ 0`, with the bias `b` answers
+the indicator dictionary of `j₀` within `ε`, then
+`(2 − ε) ∑_j e^{b_j} ≤ (2 − ε + ε n^{2sB}) e^{b_{j₀}}`: for `ε < 2` the prior of `j₀` is at least
+`(2 − ε) / (2 − ε + ε n^{2sB})`. -/
 theorem mul_sum_exp_le_of_one_sub_le {ι : Type*} [Fintype ι] [DecidableEq ι] {s B ε : ℝ}
     (hs : 0 ≤ s) {b z : ι → ℝ} (hz : ∀ j, |z j| ≤ B) {j₀ : ι}
     (h : 1 - biasedLogScaleAttention s b z (fun j => if j = j₀ then 1 else -1) ≤ ε) :
@@ -82,7 +83,8 @@ theorem card_le_of_one_sub_le {ι : Type*} [Fintype ι] [DecidableEq ι] {s B ε
     nlinarith
   have hP : 0 < ∑ j, Real.exp (b j) := sum_pos (fun j _ => Real.exp_pos (b j)) ⟨j₁, mem_univ _⟩
   have h1 := card_nsmul_le_sum T (fun j₀ => (2 - ε + ε * K) * Real.exp (b j₀))
-    ((2 - ε) * ∑ j, Real.exp (b j)) fun j₀ hj₀ => mul_sum_exp_le_of_one_sub_le hs (hz j₀) (hT j₀ hj₀)
+    ((2 - ε) * ∑ j, Real.exp (b j)) fun j₀ hj₀ =>
+      mul_sum_exp_le_of_one_sub_le hs (hz j₀) (hT j₀ hj₀)
   rw [nsmul_eq_mul, ← mul_sum] at h1
   have h3 : ∑ j₀ ∈ T, Real.exp (b j₀) ≤ ∑ j, Real.exp (b j) :=
     sum_le_sum_of_subset_of_nonneg (subset_univ T) fun j _ _ => (Real.exp_pos (b j)).le

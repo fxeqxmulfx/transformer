@@ -4193,16 +4193,95 @@ Conversely, a key whose rivals outweigh it in the prior is lost. If
 `2 / (1 + n^{2sB − γ} / w)`, which tends to `2` when `2 s B < γ`. PB3 is the case `w = 1`,
 `γ = ρ`.
 
+### PB8. The bias of GGD-BAM
+
+GGD-BAM learns at each head the bias
+
+```
+b_ij = −e^{θ_α} (|(j − i) − (e^{θ_μ} − e^{−θ_μ})| + ε)^{θ_β},   ε = 10^{−5}
+```
+
+(BAM, Appendix C; `Transformer.BAM.implBias`), the logarithm of a generalized Gaussian prior of
+scale `α = e^{−θ_α/θ_β}` and shape `β = θ_β` (`Transformer.BAM.implParams_iff`). Its experiments
+train only `θ_α` and `θ_β`, with `θ_μ = 0` (§3), so at the distance `r = i − j` the bias is
+`−e^{θ_α} (r + ε)^{θ_β}`. BAM does not say whether SSMax scales the bias with the scores (§2.5,
+*Scalable Softmax*); here it is added after the scale, as in PB1 to PB7.
+
+*Local heads, `θ_β > 0`.* The prior has a mass bounded at every length: for `K θ_β ≥ 2`,
+`y^K / K! ≤ e^y` puts the weight of every distance `r ≥ 1` below `4 K! e^{−K θ_α} (1 + r)^{−2}`,
+so the weights sum to at most a constant `M`. By PB2 a key at the distance `R` with the lead `g`
+and `e^{θ_α} (R + ε)^{θ_β} ≤ κ log n` is answered within `2C M n^{κ − sg}`: it is recalled when
+`κ < s g`. With raw scores bounded by `B`, a key with `e^{θ_α} (R + ε)^{θ_β} ≥ κ log n` has
+`e^{b_R} ≤ n^{−κ}`, against a rival at the distance `0` or `1` of weight at least `e^{−D}`,
+`D = e^{θ_α} max(ε^{θ_β}, (1 + ε)^{θ_β})`, so by PB7 it is lost when `κ > 2 s B`; this direction
+holds at every `θ_β`. The head has a window whose radius lies between `α (s g log n)^{1/θ_β}` and
+`α (2 s B log n)^{1/θ_β}`, up to `ε`: polylogarithmic in the length. At `θ_β = 1` the bias is
+ALiBi's with the slope `e^{θ_α}` (`Transformer.BAM.implBias_alibi`), and the window is PB2's. A
+key at a distance `R ≥ n^ρ`, `ρ > 0`, is lost at every scale, since `log n = o(n^{ρ θ_β})`.
+
+*Global heads, `θ_β ≤ 0`.* At every distance `r ≥ 1` the bias lies in `[−e^{θ_α}, 0]`: the prior
+is flat up to the factor `e^{e^{θ_α}}`. The query's own token has the bias `−e^{θ_α} ε^{θ_β}`, far
+below the others for `θ_β < 0` but fixed in `n`. So every key with the lead `g` is answered within
+`2C e^{D'} n^{1 − sg}`, `D' = e^{θ_α} max(1, ε^{θ_β})`, and is recalled once `s g > 1`. With raw
+scores bounded by `B`, the `n − 2` tokens at the distances `r ≥ 1` other than the key outweigh it
+by `(n − 2) e^{−e^{θ_α}} ≥ n e^{−e^{θ_α}} / 3`, so by PB7 every key is lost once `2 s B < 1`.
+This is the threshold of SA5, NoPE's, at every distance.
+
+*Far keys.* With raw scores bounded by `B` and `2 s B < 1`, every head of GGD-BAM, whatever
+`θ_α`, `θ_β` and `ε ≥ 0`, loses every key at a distance `R ≥ n^ρ`, `ρ > 0`, from some length on.
+The bias `−log(1 + r)` of PB5 recalls the keys with `R + 1 ≤ n^ρ` once `s g > ρ`. For one-hot
+raw scores `±B`, `g = 2B`, both hold at every `ρ < 2 s B < 1`: at the distances from `n^{ρ'}` to
+`n^ρ − 1`, `0 < ρ' < ρ`, the bias `−log(1 + r)` recalls what every head of GGD-BAM loses.
+
+The family reaches the logarithmic biases only in a limit. As `θ_β → 0` with `e^{θ_α} θ_β → c`,
+`(r + ε)^{θ_β} = 1 + θ_β log(r + ε) + O(θ_β²)` makes the bias `−e^{θ_α} − c log(r + ε) + o(1)`:
+up to the constant, which softmax ignores, the power prior `(r + ε)^{−c}`. The coefficient
+`c = 1` of PB5 needs `θ_α → ∞`. At a head with `θ_β ≠ 0` the approximation holds at the distances
+with `|θ_β| log r ≪ 1`; beyond them the head is one of the two cases above. This limit is a
+computation, not in Lean.
+
+*The trained heads.* BAM's Fig. 6 and 7 (§3.3) plot `θ_α` against `θ_β` for every head of models
+of 120M to 1.1B parameters trained on 512 to 2048 tokens. Read from the plots, not measured:
+
+- `θ_β > 0`, the largest cluster: `θ_β` from about `0.05` to `3.3`, `θ_α` from about `−2.3` to
+  `0.6`. These are local heads with windows of polylogarithmic radius.
+- `−0.6 < θ_β < 0`: `θ_α` from about `−3.4` to `0.1`, so `e^{θ_α} ≤ 1.1`. At every distance
+  `r ≥ 1` the prior is flat within the factor `e^{1.1} ≈ 3`, and the query's own token weighs
+  less. These heads are NoPE up to that factor, with the threshold `s g > 1`.
+- `θ_β < −0.6`: `θ_α` up to about `3.9`. The bias `−e^{θ_α} r^{θ_β}` falls off fast with `r`: it can
+  mask the nearest distances, and it is flat beyond them. NoPE's threshold again, with a larger
+  constant.
+- Near `θ_β = 0` the heads have `|θ_β| ≲ 0.1` and `θ_α ≲ 0.5`, so `c = e^{θ_α} |θ_β| ≲ 0.2`.
+  The curve `e^{θ_α} θ_β = 1`, which passes through `(0.1, 2.3)`, carries no head at small
+  `θ_β`.
+
+So within GGD-BAM's family training does not approach the bias `−log(1 + r)`: it splits the heads
+into local windows and flat heads, and BAM's retrieval of far keys runs at NoPE's threshold
+`s g > 1` under SSMax. The constant `e^{e^{θ_α}}` of the flat heads is at most about `3` in the
+middle cluster, so there the threshold already describes moderate lengths. Nothing follows for a
+family that contains `−log(1 + r)`. KERPLE's logarithmic variant `c − r₁ log(1 + r₂ |m − n|)`
+(arXiv:2205.09921v2, §4) contains it at `r₁ = √d`, `r₂ = 1`, since the bias is divided by `√d`
+with the scores. KERPLE reports that the learned logarithmic kernels include "several flat
+kernels" (§5.4) but gives no parameter values, and it trains without the scale `s log n`.
+
 ### Scope
 
-Proved: PB1 to PB7. Not covered: a lower bound of order `D` on the rivals of a key well inside
-the span `D` of a fitted slope, and whether training finds such a bias or its coefficient.
+Proved: PB1 to PB8. Not covered:
+
+- a lower bound of order `D` on the rivals of a key well inside the span `D` of a fitted slope;
+- the bias scaled with the scores, which BAM leaves open. Then the window of a head with
+  `θ_β > 0` is bounded instead of polylogarithmic, and the far keys are still lost below
+  `2 s B = 1`. This is argued, not proved.
+- whether training finds the bias `−log(1 + r)` or its coefficient in a family that contains it,
+  such as KERPLE's logarithmic variant. This is an experiment. GGD-BAM's family contains the bias
+  only as a limit, and its trained heads lie far from it (PB8).
 
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias`, `ALiBiWindow`,
-`NearerTokens`, `FittedSlope`, `LogBias`, `PowerBias`, `PowerThreshold` and `PriorBudget`,
-namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+`NearerTokens`, `FittedSlope`, `LogBias`, `PowerBias`, `PowerThreshold`, `PriorBudget`, `GGDWindow`,
+`GGDThreshold` and `GGDFarKeys`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved
+without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -4213,6 +4292,7 @@ namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 | PB5 | `exists_mul_harmonic_le_sum_exp`, `sum_exp_logBias`, `sum_one_div_succ_le`, `abs_sub_logBias_le`, `exists_forall_logBias_recall`, `exists_lt_logBias_error` | `H_n` is the sum `∑ r : Fin n, 1 / ((r : ℝ) + 1)`, bounded through Mathlib's `harmonic_le_one_add_log`; the bias is `fun r : Fin n => -Real.log ((r : ℝ) + 1)`. The recall statement takes the keys with `R + 1 ≤ n^ρ`, the fading statement those with `R ≥ n^ρ`. The least `max_R W_R / (R + 1)` is the pair of the first two statements, not one statement. |
 | PB6 | `le_one_sub_biasedLogScaleAttention_of_weight`, `mul_rpow_neg_le_sub_of_lt_one`, `mul_rpow_neg_le_sub_of_one_lt`, `sum_rpow_neg_le_of_lt_one`, `sum_rpow_neg_le_of_one_lt`, `one_le_sum_erase_rpow_neg`, `rpow_one_sub_le_two_mul_sum_erase`, `abs_sub_powerBias_le`, `exists_forall_powerBias_recall_of_sum_le`, `exists_forall_powerBias_recall`, `exists_lt_powerBias_error_of_le_sum`, `exists_lt_powerBias_error` | The bias is `fun r : Fin n => -(α * Real.log ((r : ℝ) + 1))` with `α ≥ 0`, and `max 0 (1 - α)` is the threshold's second term. The weighted bound takes any finite type of tokens and any real bias; PB3's `le_one_sub_biasedLogScaleAttention_of_subset` is proved from it. The recall statement takes the keys with `R + 1 ≤ n^ρ` and is PB5's at `α = 1`; the fading statement takes the keys with `R ≥ n^ρ` and the indicator dictionary of values `±1`. The two helper statements take any power of `n` bounding the prior's mass or the rivals' weight. The costs `(α − 1) ρ` and `(1 − α)(1 − ρ)`, the scale they cost, and the comparison with ALiBi are read off these statements and those of PB2 and PB4, not stated. |
 | PB7 | `mul_sum_exp_le_of_one_sub_le`, `one_sub_biasedLogScaleAttention_le_two`, `card_le_of_one_sub_le`, `exists_card_filter_le_mul`, `exists_lt_one_sub_of_le_sum_erase` | The first three statements take any finite type of tokens and any real bias; the raw scores of `card_le_of_one_sub_le` are a family `z j₀` indexed by the token of the key, the bias is one function. The asymptotic statements take the tokens `Fin n`, with a bias and raw scores chosen at each length. The identity `∑_R 1/W_R = 1` enters as `∑_{j₀ ∈ T} e^{b_{j₀}} ≤ ∑_j e^{b_j}`. The limit `2` of the average miss is read off `exists_card_filter_le_mul` and `one_sub_biasedLogScaleAttention_le_two`, not stated. |
+| PB8 | `implBias_zero_neg`, `exists_sum_exp_implBias_le`, `exists_forall_implBias_recall`, `exists_lt_implBias_error_of_log_le`, `neg_exp_le_implBias`, `implBias_neg_nonpos`, `exists_forall_implBias_recall_of_nonpos`, `exists_lt_implBias_error_of_nonpos`, `exists_lt_implBias_error_of_pos`, `exists_lt_implBias_error`, `exists_logBias_recall_and_implBias_error` | The bias is `fun r : Fin n => BAM.implBias 0 θα θβ ε (-(r : ℝ))`, BAM's own definition at `θ_μ = 0`, added after the scale. The window is the pair of `exists_forall_implBias_recall` and `exists_lt_implBias_error_of_log_le`, stated by the conditions `e^{θ_α} (R + ε)^{θ_β} ≤ κ log n` and `≥ κ log n`, not by a radius; the fading statement holds at every `θ_α`, `θ_β` and `ε`. The recall statement for `θ_β ≤ 0` covers every key, the query's own token included, with the constant `e^{θ_α} max(1, ε^{θ_β})` in the exponent. The fading statements take the indicator dictionary of values `±1`; the last statement takes the same raw scores under both biases. The limit `θ_β → 0`, the reading of BAM's Fig. 6 and 7, and the scaled bias are not stated. |
 
 ## The block languages across a cut (added)
 

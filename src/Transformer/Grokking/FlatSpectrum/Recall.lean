@@ -32,6 +32,9 @@ public import Transformer.Grokking.FlatSpectrum.Recall.LogBias
 public import Transformer.Grokking.FlatSpectrum.Recall.PowerBias
 public import Transformer.Grokking.FlatSpectrum.Recall.PowerThreshold
 public import Transformer.Grokking.FlatSpectrum.Recall.PriorBudget
+public import Transformer.Grokking.FlatSpectrum.Recall.GGDWindow
+public import Transformer.Grokking.FlatSpectrum.Recall.GGDThreshold
+public import Transformer.Grokking.FlatSpectrum.Recall.GGDFarKeys
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -127,7 +130,11 @@ it and by `(1 − α)(1 − ρ)` below it. The prior is a budget: a key answered
 prior at least `(2 − ε) / (2 − ε + ε n^{2sB})`, so under every bias at most
 `1 + ε n^{2sB} / (2 − ε)` tokens are answered within `ε`, and below `2 s B = 1` a vanishing
 fraction of the distances; a key whose rivals outweigh it by `w n^γ` is lost below `2 s B = γ`
-(`PriorBudget`).
+(`PriorBudget`). The bias `−e^{θ_α} (r + ε)^{θ_β}` that GGD-BAM learns (arXiv:2505.22842v4,
+Appendix C, at `θ_μ = 0`) leaves for `θ_β > 0` a window whose radius grows as `(log n)^{1/θ_β}`
+(`GGDWindow`), and for `θ_β ≤ 0` the threshold of NoPE at every distance (`GGDThreshold`): below
+`2 s B = 1` every head of GGD-BAM loses the keys beyond `n^ρ`, which the bias `−log(1 + r)`
+recalls once `s g > ρ` (`GGDFarKeys`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least
