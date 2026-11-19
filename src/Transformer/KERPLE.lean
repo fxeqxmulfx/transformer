@@ -8,6 +8,7 @@ public import Transformer.KERPLE.Section3_Integral
 public import Transformer.KERPLE.Section3_Powers
 public import Transformer.KERPLE.Section4_Attention
 public import Transformer.KERPLE.Section4_BiasKernel
+public import Transformer.KERPLE.Section4_T5
 public import Transformer.KERPLE.SectionA_ShiftLemma
 
 /-!
@@ -42,6 +43,9 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
   Lemma 1" is false for both variants: no real `c` makes either PD on the positions `ℕ`, a PD bias
   kernel on `0, …, L` needs `c ≥ r₁ L^{r₂}/2` (respectively `r₁ log(1 + r₂ L)/2`), and at `r₂ = 2`
   three positions already defeat every `c`.
+* `Section4_T5`: T5's buckets as §4 prints them, with the factor `16 / log 8 ∈ (7.69, 7.7)`; the
+  printed formula sends the distance `16` to the bucket of `0` and is not monotone, and with the
+  offset of the 16 exact buckets it is.
 * `SectionA_ShiftLemma`: Lemma 1 (the CPD shift lemma, Appendix A.1) is false: `x + y` is CPD on
   `ℝ` and `c + x + y` is PD for no real `c`, nor is `c − (x − y)²`; step (iii) of its proof fails
   at `diag(1, −1)`. Its steps (iv)–(vi) prove the corrected lemma: on a finite set, a strictly CPD
