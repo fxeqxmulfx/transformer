@@ -9,6 +9,7 @@ public import Transformer.KERPLE.Section3_Powers
 public import Transformer.KERPLE.Section4_Attention
 public import Transformer.KERPLE.Section4_BiasKernel
 public import Transformer.KERPLE.Section4_T5
+public import Transformer.KERPLE.Section5_ComplicatedKernels
 public import Transformer.KERPLE.SectionA_ShiftLemma
 public import Transformer.KERPLE.SectionA_PDFunctions
 public import Transformer.KERPLE.SectionA_DistancePowers
@@ -48,6 +49,9 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `Section4_T5`: T5's buckets as §4 prints them, with the factor `16 / log 8 ∈ (7.69, 7.7)`; the
   printed formula sends the distance `16` to the bucket of `0` and is not monotone, and with the
   offset of the 16 exact buckets it is.
+* `Section5_ComplicatedKernels`: §5.3, the tensor product property of PD kernels; (bias+wht) is CPD
+  with a PD weight but is PD for no `c`; (3-para-log) is CPD and is the logarithmic variant at
+  `r₃ = 1`, and its bias kernel is PD for no `c`.
 * `SectionA_ShiftLemma`: Lemma 1 (the CPD shift lemma, Appendix A.1) is false: `x + y` is CPD on
   `ℝ` and `c + x + y` is PD for no real `c`, nor is `c − (x − y)²`; step (iii) of its proof fails
   at `diag(1, −1)`. Its steps (iv)–(vi) prove the corrected lemma: on a finite set, a strictly CPD
