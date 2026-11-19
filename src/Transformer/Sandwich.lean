@@ -2,6 +2,7 @@ module
 
 public import Transformer.Sandwich.Section3_Transformer
 public import Transformer.Sandwich.Section3_Biases
+public import Transformer.Sandwich.Section4_ALiBiWindow
 public import Transformer.Sandwich.Section5_Locality
 public import Transformer.Sandwich.Section5_Causal
 public import Transformer.Sandwich.Section5_WindowLayer
@@ -27,6 +28,9 @@ scheme is a bias of the distance added to the scaled logit, `−∞` masking the
 * `Section3_Transformer`: §3.1, Eq. (1) and the model of Eq. (3): heads, `W_o`, LayerNorm, layers
   and the readout; the weights are the Softmax over the keys `n ≤ m`.
 * `Section3_Biases`: §3.2–3.3, ALiBi's bias of Eq. (2) and its slopes, and windowed attention.
+* `Section4_ALiBiWindow`: §4.2, with the logits bounded by `C` ALiBi's weight at the distance `t` is
+  at most `exp(2C − s t)`, so the keys at the distances `≥ w` get at most
+  `exp(2C) e^{−s w}/(1 − e^{−s})`, which vanishes as the slope grows: large slopes act as a window.
 * `Section5_Locality`, `Section5_Causal`: the window bookkeeping of sequence maps; windows compose
   to `w + w' − 1`; the model is causal for every bias.
 * `Section5_WindowLayer`: a model with windowed attention of size `w` and `R` layers reads the
