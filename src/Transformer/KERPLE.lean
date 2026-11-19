@@ -6,6 +6,7 @@ public import Transformer.KERPLE.Section3_Facts
 public import Transformer.KERPLE.Section3_Schoenberg
 public import Transformer.KERPLE.Section3_Integral
 public import Transformer.KERPLE.Section3_Powers
+public import Transformer.KERPLE.Section4_Attention
 public import Transformer.KERPLE.SectionA_ShiftLemma
 
 /-!
@@ -32,6 +33,10 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `Section3_Powers`: Fact 3 (`−(−k̃)^α` for `0 < α < 1` and `−log(1 − k̃)` are CPD when `k̃ ≤ 0` is)
   and Corollary 1 (`−a ‖x − x'‖^p` and `−b log(1 + a ‖x − x'‖^p)` are CPD for `0 < p ≤ 2`), with
   the iterations the paper mentions after it.
+* `Section4_Attention`: §4, Eqs. 1–4 (the attention, the bias kernel `c + k̃` and the composite
+  kernel), the shift invariance (*) of the Softmax that removes `c`, the composite kernel PD exactly
+  when the bias kernel is, the power and logarithmic variants CPD, and ALiBi as the power variant
+  at `r₂ = 1`.
 * `SectionA_ShiftLemma`: Lemma 1 (the CPD shift lemma, Appendix A.1) is false: `x + y` is CPD on
   `ℝ` and `c + x + y` is PD for no real `c`, nor is `c − (x − y)²`; step (iii) of its proof fails
   at `diag(1, −1)`. Its steps (iv)–(vi) prove the corrected lemma: on a finite set, a strictly CPD
