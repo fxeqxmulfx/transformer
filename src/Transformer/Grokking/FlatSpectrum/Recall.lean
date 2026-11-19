@@ -17,6 +17,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.LogScale
 public import Transformer.Grokking.FlatSpectrum.Recall.Threshold
 public import Transformer.Grokking.FlatSpectrum.Recall.RawGap
 public import Transformer.Grokking.FlatSpectrum.Recall.Induction
+public import Transformer.Grokking.FlatSpectrum.Recall.InductionExact
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -78,7 +79,9 @@ dimension `d`; the diff-gpt model needs a raw lead above `1` and has it for at m
 of head width `d` (`RawGap`). A binding split into a key token and a value token is recalled by
 two layers, as by an induction head: layer 1 copies the key to the value token, layer 2 recalls
 from the copy, and with both scales above `1` they recall at every large number of keys
-(`Induction`).
+(`Induction`). Computed exactly, the induction head is one-hot attention at the scale
+`s₂ a`, where `a = (n^{s₁} − 1) / (n^{s₁} + n − 1)` is the lead of the copy, and its worst error
+over the dictionaries of values `±1` is `(3m + 1) / (n^{s₂ a} + 2m + 1)` (`InductionExact`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

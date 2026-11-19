@@ -3882,6 +3882,17 @@ most `2 C (n − 1) n^{−s₂ (g₂ − 2δ)}`. One-hot keys and positions give
 `s₁ > 1` and `s₂ > 1` two layers recall at every large number of keys. The context is read
 cyclically, and attention is not masked.
 
+Layer 1 has one-hot positional raw scores and copies one-hot key channels, so both layers can be
+computed exactly. Raw scores `a` at one token and `b` at the other `n − 1` give that token the
+weight `n^{s (a − b)}` against `1` for each other token. Layer 1 copies the key `q` to its value
+token with the weight `n^{s₁} / (n^{s₁} + n − 1)` and to every other token with
+`1 / (n^{s₁} + n − 1)`. So the raw scores of layer 2 lead by `a = (n^{s₁} − 1) / (n^{s₁} + n − 1)`,
+and the induction head is one-hot attention at the scale `s₂ a`. Its error is
+`(n φ(π q) − Σ_i φ(π i)) / (n^{s₂ a} + n − 1)`, at most `(3m + 1) C / (n^{s₂ a} + 2m + 1)` for
+values bounded by `C`, and with `C = 1` that bound is the worst error over the dictionaries of
+values `±1`, attained by the indicator dictionary. The key tokens carry the value `0`, so the
+bound tends to `3/2`, not `2`, when `n^{s₂ a}` grows slower than `n`.
+
 ### SA6. Scope
 
 Proved: SA1 to SA5 as stated.
@@ -3903,8 +3914,8 @@ Not covered:
 ### Lean
 
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `Softmax`, `SoftmaxRecall`,
-`SoftmaxScale`, `Fading`, `QueryFree`, `LogScale`, `Threshold`, `RawGap` and `Induction`, namespace
-`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+`SoftmaxScale`, `Fading`, `QueryFree`, `LogScale`, `Threshold`, `RawGap`, `Induction` and
+`InductionExact`, namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -3912,7 +3923,7 @@ Not covered:
 | SA2 | `queryProj`, `keyProj`, `selfProj`, `sum_queryProj_mul_keyProj`, `sum_queryProj_mul_keyProj_add_le`, `softmaxAttention_recall_error`, `softmaxAttention_self_recall_error`, `exists_softmaxAttention_recall`, `exists_softmaxAttention_recall_sign`, `exists_softmaxAttention_not_hasCutWidth` | The keys are `Fin m` and the token `j` carries the key `j`. The existence statements take `B = Σ_v |φ(v)|` and `β = 4 B m / ε + 2`, from `e^{−x} ≤ 1/x`; they do not claim a logarithmic scale. The query's own token is `none : Option (Fin m)`. |
 | SA3 | `mul_sum_exp_le_sum_erase`, `mul_abs_sub_le_abs_sub_softmaxAttention`, `sum_sum_update`, `exists_forall_mul_abs_sub_le_softmaxAttention`, `mul_le_sum_softmaxAttention_sq`, `sub_one_mul_le_of_softmaxAttention_recall`, `softmaxAttention_oneHot_recall_error`, `one_sub_softmaxAttention_indicator`, `two_mul_le_one_sub_softmaxAttention_indicator`, `sub_one_mul_two_sub_le_of_softmaxAttention_recall`, `sub_one_lt_exp_of_softmaxAttention_sign`, `exists_lt_softmaxAttention_recall_error` | The average `a` of the other tokens is a quotient of sums over `univ.erase j₀`. Changing `π q` is `Function.update π q v`. The mean `μ` is any number with `Σ_v (φ v − μ) = 0`. The bound for accuracy `ε` is for values `Bool` read as `±1` and at least one key. The worst dictionary is `π k = decide (k = q)`. The statement for growing `m` takes `m + 1` keys, `Fin (m + 1)`, and scores `s m q k b` with one bound `B` for every `m`. |
 | SA4 | `card_le_of_normalized_sign`, `softmaxAttention_option`, `card_le_of_queryFreeAttention_sign` | The context is a dictionary with values in `Bool`; its tokens are any finite type, with scores `s π j` and values `v π j r` that are any functions of the dictionary. The query's own token is `none`, with the score `σ q` and the values `u q r`. |
-| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold`, `convex_inner_lt`, `affineIndependent_of_inner_gap`, `card_le_finrank_add_one_of_inner_gap`, `card_le_of_rawScore_gap`, `rotateHead_one`, `abs_logScaleAttention_comp_sub_le`, `prevToken`, `prevToken_eq_iff`, `keyChannel`, `prevTokenHead`, `inductionHead`, `abs_inductionHead_sub_le`, `exists_forall_inductionHead_recall` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. The gap statements take queries and keys in any real inner product space, finite-dimensional for the count. The diff-gpt statement takes the rotary phases of every query and every key as given, with `d > 0` and `eps > 0`; its example has the head width `1`, where the rotary map is the identity. The two-layer statement takes any finite tokens, a partner of every token, and the leads `g₁` and `g₂`; the induction head takes the tokens `Fin (m + 1) × Bool`, a key token and a value token for every key, read cyclically, with one-hot key channels. |
+| SA5 | `logScaleAttention`, `logScaleAttention_eq_rpow`, `abs_logScaleAttention_sub_le`, `exists_forall_logScaleAttention_recall`, `exists_lt_logScaleAttention_recall_error`, `oneHot_logScaleAttention_threshold`, `abs_sub_softmaxAttention_le`, `oneHot_erase_div_sum`, `isGreatest_oneHot_logScaleAttention_error`, `oneHot_logScaleAttention_at_threshold`, `convex_inner_lt`, `affineIndependent_of_inner_gap`, `card_le_finrank_add_one_of_inner_gap`, `card_le_of_rawScore_gap`, `rotateHead_one`, `abs_logScaleAttention_comp_sub_le`, `prevToken`, `prevToken_eq_iff`, `keyChannel`, `prevTokenHead`, `inductionHead`, `abs_inductionHead_sub_le`, `exists_forall_inductionHead_recall`, `logScaleAttention_ite`, `card_keyValueTokens`, `prevTokenHead_eq`, `copyLead`, `inductionHead_eq_logScaleAttention`, `sub_inductionHead_eq`, `abs_sub_inductionHead_le`, `isGreatest_inductionHead_error` | `n` is the number of tokens, `Fintype.card`, and `s ≥ 0`. The recall statement takes `m + 1` keys, `Fin (m + 1)`, raw scores `z m q k` of the length, the query and the key, and values `φ (π k)` with `|φ| ≤ C`. The fading statement takes raw scores `z m q k b` that may depend on the value `b` of the key, bounded by one `B`, and values `±1`. The one-hot statement takes `B ≥ 0`. The worst one-hot error is `IsGreatest` of the range of the errors over `π`, at every real `s` and `B`; the statement at the threshold takes `2 * s * B = 1` and no sign condition. The gap statements take queries and keys in any real inner product space, finite-dimensional for the count. The diff-gpt statement takes the rotary phases of every query and every key as given, with `d > 0` and `eps > 0`; its example has the head width `1`, where the rotary map is the identity. The two-layer statement takes any finite tokens, a partner of every token, and the leads `g₁` and `g₂`; the induction head takes the tokens `Fin (m + 1) × Bool`, a key token and a value token for every key, read cyclically, with one-hot key channels. Its closed form holds at every real `s₁` and `s₂`, with `n = 2m + 2` written out. |
 
 ## The block languages across a cut (added)
 
