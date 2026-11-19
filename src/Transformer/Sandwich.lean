@@ -13,6 +13,7 @@ public import Transformer.Sandwich.Section5_Gradient
 public import Transformer.Sandwich.Section5_Sinusoidal
 public import Transformer.Sandwich.Section6_Sandwich
 public import Transformer.Sandwich.Section6_KERPLE
+public import Transformer.Sandwich.SectionLimitations_Parity
 public import Transformer.Sandwich.SectionB_EfficientInference
 public import Transformer.Sandwich.SectionE_Implementation
 
@@ -52,6 +53,9 @@ scheme is a bias of the distance added to the scaled logit, `−∞` masking the
 * `Section6_KERPLE`: §6.2–6.3, the smoothed Sandwich is KERPLE's logarithmic bias kernel, and its
   attention is KERPLE's with `r₁ = 0.825 √k` since Sandwich adds its bias after the scaling; the
   exact Sandwich is no logarithmic bias; the plateau; T5's distinct and shared buckets.
+* `SectionLimitations_Parity`: Limitations, every bit of the prefix contributes to its parity, so a
+  model with windowed attention predicts the parity at no position past its TRF, whatever the
+  encoding of the bits and the decoding of its output.
 * `SectionB_EfficientInference`: Appendix B, a cache window of `w̄` tokens masks the distances
   `≥ w̄`, so `L` queries attend to at most `w̄ L` keys instead of `L(L + 1)/2`; an APE model that
   re-encodes the window costs between `(L − w̄) w̄(w̄ + 1)/2` and `L w̄(w̄ + 1)/2` pairs, since
