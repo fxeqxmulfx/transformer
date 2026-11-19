@@ -4015,19 +4015,54 @@ the key and the dictionaries no bias lowers the worst error, and the bias `0` at
 key that may sit at any position the best slope is `0`, at every scale, and at the scale
 `s log n` the threshold `2 s B = 1` stays.
 
+### PB2. A fixed slope leaves a window of radius `(2sB/m) log n`
+
+Two bounds hold for any bias `b` at the scale `s log n`, `s ≥ 0`. If the raw score of `j₀` leads
+every other by `g` and `|v_j| ≤ C`, then
+
+```
+|v_{j₀} − att| ≤ 2C n^{−sg} Σ_{j ≠ j₀} e^{b_j − b_{j₀}},
+```
+
+since the weight of `j` against that of `j₀` is `n^{s(z_j − z_{j₀})} e^{b_j − b_{j₀}}` (SA5). If
+the raw scores are bounded by `B`, the value `1` at `j₀` and `−1` elsewhere miss by at least
+`2 / (1 + n^{2sB} e^{b_{j₀} − b_{j₁}})` for every other token `j₁`, since `X ≥ e^{t_{j₁}}` in
+`2X / (A + X)` (PB1).
+
+Index the `n` tokens that the query reads by their distance `r = 0, …, n − 1` from it, with the
+ALiBi bias `−m r`, `m > 0`. The prior weights sum to `Σ_r e^{−mr} ≤ 1 / (1 − e^{−m})` at every
+length. So a key at the distance `R` with the lead `g` is answered within
+`2C n^{−sg} e^{mR} / (1 − e^{−m})`, and with raw scores bounded by `B` a key at a distance
+`R ≥ 1` misses by at least `2 / (1 + n^{2sB} e^{−mR})`, against the query's own token at `r = 0`.
+At `R ≤ D + ρ log n` the first bound is at most `2C e^{mD} n^{−(sg − mρ)} / (1 − e^{−m})`, and
+at `R ≥ ρ log n` the second is at least `2 / (1 + n^{−(mρ − 2sB)})`. So
+
+- keys within `D + ρ log n` of the query with `m ρ < s g` are recalled from some length on;
+- keys beyond `ρ log n` with `m ρ > 2 s B` miss by an error that tends to `2`, the opposite
+  value.
+
+For one-hot raw scores `±B` the lead is `g = 2B` and the two radii meet: the slope `m` leaves a
+window of radius `(2sB/m) log n`, a vanishing fraction of the context, and every key at a
+distance proportional to `n` is eventually lost. Inside the window the threshold `2 s B = 1` of
+SA5 is gone: at `ρ = 0` a key at a bounded distance is recalled at every lead with `s g > 0`.
+Without a bias the other tokens weigh `n − 1` against `n^{sg}`; with the slope they weigh at most
+`e^{mR} / (1 − e^{−m})`, a constant. At a fixed scale the window is bounded instead
+(`Transformer.BAM.alibi_local`). The scale `s log n` widens it only logarithmically.
+
 ### Scope
 
-Proved: PB1. Not covered: a key at a known distance, for which a slope helps, and the window
-that a fixed slope leaves at the scale `s log n`.
+Proved: PB1 and PB2. Not covered: the slope that fits the distances of the keys, a slope that
+changes with the length, and biases of other shapes, such as `−α log(1 + r)`.
 
 ### Lean
 
-`src/Transformer/Grokking/FlatSpectrum/Recall/`, module `PositionBias`, namespace
-`Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, modules `PositionBias` and `ALiBiWindow`,
+namespace `Transformer.Grokking.FlatSpectrum.Recall`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | PB1 | `biasedLogScaleAttention`, `biasedLogScaleAttention_zero`, `one_sub_softmaxAttention_indicator_le_add`, `exists_le_oneHot_biasedLogScaleAttention_error`, `oneHot_logScaleAttention_error_le_biased` | The bias is any real function of the tokens, not only of the distance to the query. The first statement takes any finite type of tokens, the others the `m + 1` keys `Fin (m + 1)` with one-hot raw scores. "No bias lowers the worst error" is: for every bias, every key and every dictionary, the error without the bias is at most the error with it at some key and some dictionary. |
+| PB2 | `abs_sub_biasedLogScaleAttention_le`, `le_one_sub_biasedLogScaleAttention`, `sum_exp_neg_mul_le`, `abs_sub_alibi_le`, `le_one_sub_alibi`, `exists_forall_alibi_recall`, `exists_lt_alibi_error` | The two general bounds take any finite type of tokens and any real bias. For ALiBi the tokens are `Fin n`, the token `r` at the distance `r` from the query, with the bias `fun r => -(m * r)`; the slope of `le_one_sub_alibi` may be any real. The recall statement takes the keys within `D + ρ log n` for any real `D`, so that `ρ = 0` gives the keys at a bounded distance; the fading statement takes the indicator dictionary of values `±1`. "Eventually lost at a distance proportional to `n`" is not stated apart from the fading statement. |
 
 ## The block languages across a cut (added)
 

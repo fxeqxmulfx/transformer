@@ -25,6 +25,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.CausalRecall
 public import Transformer.Grokking.FlatSpectrum.Recall.CausalKeyToken
 public import Transformer.Grokking.FlatSpectrum.Recall.CausalPhases
 public import Transformer.Grokking.FlatSpectrum.Recall.PositionBias
+public import Transformer.Grokking.FlatSpectrum.Recall.ALiBiWindow
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -102,7 +103,9 @@ below `s₂ = 1` every key fades, `s₁ = 1` with `s₂ ≥ 2` recalls every key
 such a token, and above `s₁ = 1` and `s₂ = 1` the late keys are recalled (`CausalPhases`).
 A bias of the positions, as ALiBi adds `−m r` at the distance `r`, only adds to the miss at a
 token of least bias, so no bias lowers the worst error over the positions of a key
-(`PositionBias`).
+(`PositionBias`). For one-hot raw scores `±B` a fixed ALiBi slope `m` at the scale `s log n`
+leaves a window of radius `(2sB/m) log n`: the keys inside it are recalled, at a bounded
+distance at every positive lead, and the keys outside it are lost (`ALiBiWindow`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

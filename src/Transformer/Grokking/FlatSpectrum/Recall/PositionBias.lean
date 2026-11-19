@@ -5,8 +5,8 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Threshold
 /-!
 # No positional bias helps the worst position
 
-Source: `review/flat_spectrum.md`, *A positional bias at the scale `s log n`* (added), item PB1,
-for the bias `−m |j − i|` that ALiBi adds to the scores (arXiv:2505.22842v4, §2.2, Lemma 2,
+Source: `review/flat_spectrum.md`, *A positional bias at the scale `s log n`* (added), items PB1 and
+PB2, for the bias `−m |j − i|` that ALiBi adds to the scores (arXiv:2505.22842v4, §2.2, Lemma 2,
 `Transformer.BAM.alibi`) and the scale `s log n` of SSMax (arXiv:2501.19399v1, §2).
 
 A bias `b` of the positions adds `b j` to the score of the token `j`, so that the weights at the
@@ -20,6 +20,11 @@ worst error without a bias at every position (`isGreatest_oneHot_logScaleAttenti
 over the positions of the key and the dictionaries no bias lowers the worst error, and the bias
 `0` attains it (`oneHot_logScaleAttention_error_le_biased`): for a key at any position the best
 ALiBi slope is `0`, at every scale, and at the scale `s log n` the threshold `2 s B = 1` stays.
+
+A key that leads by `g` is answered within `2 C n^{−sg}` times the sum of `e^{b_j − b_{j₀}}` over
+the other tokens (`abs_sub_biasedLogScaleAttention_le`), and with raw scores bounded by `B` any
+other token `j₁` leaves an error of at least `2 / (1 + n^{2sB} e^{b_{j₀} − b_{j₁}})`
+(`le_one_sub_biasedLogScaleAttention`); `Recall.ALiBiWindow` applies both to ALiBi.
 -/
 
 @[expose] public section
@@ -109,5 +114,81 @@ theorem oneHot_logScaleAttention_error_le_biased (s B : ℝ) {m : ℕ} (b : Fin 
 /-- ALiBi with the slope `1/2` over four keys, against the first key without a bias. -/
 example := oneHot_logScaleAttention_error_le_biased 1 1 (m := 3) (fun r => -(r : ℝ) / 2) 0
   fun _ => true
+
+/-- **The bias against the lead** (`review/flat_spectrum.md`, PB2): if the raw score of `j₀` leads
+every other by `g` and the values are bounded by `C`, attention at the scale `s log n`, `s ≥ 0`,
+with the bias `b` answers the value of `j₀` within `2 C n^{−sg}` times the sum of `e^{b_j − b_{j₀}}`
+over the other tokens. -/
+theorem abs_sub_biasedLogScaleAttention_le {ι : Type*} [Fintype ι] [DecidableEq ι] {s g C : ℝ}
+    (hs : 0 ≤ s) (b : ι → ℝ) {z v : ι → ℝ} {j₀ : ι} (hz : ∀ j, j ≠ j₀ → z j + g ≤ z j₀)
+    (hv : ∀ j, |v j| ≤ C) :
+    |v j₀ - biasedLogScaleAttention s b z v| ≤
+      2 * C * ((Fintype.card ι : ℝ) ^ (-(s * g)) *
+        ∑ j ∈ univ.erase j₀, Real.exp (b j - b j₀)) := by
+  have hn : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩
+  have hC : 0 ≤ C := (abs_nonneg _).trans (hv j₀)
+  have hlog : 0 ≤ s * Real.log (Fintype.card ι) :=
+    mul_nonneg hs (Real.log_nonneg (by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩))
+  have hng : (Fintype.card ι : ℝ) ^ (-(s * g)) =
+      Real.exp (-(s * Real.log (Fintype.card ι) * g)) := by
+    rw [Real.rpow_def_of_pos hn]
+    ring_nf
+  rw [biasedLogScaleAttention]
+  refine (abs_sub_softmaxAttention_le hv j₀).trans (mul_le_mul_of_nonneg_left ?_ (by linarith))
+  set c := s * Real.log (Fintype.card ι) with hc
+  have hZ : Real.exp (c * z j₀ + b j₀) ≤ ∑ j, Real.exp (c * z j + b j) :=
+    single_le_sum (f := fun j => Real.exp (c * z j + b j)) (fun j _ => (Real.exp_pos _).le)
+      (mem_univ j₀)
+  rw [div_le_iff₀ ((Real.exp_pos _).trans_le hZ)]
+  refine le_trans ?_ (mul_le_mul_of_nonneg_left hZ (by positivity))
+  rw [mul_sum, sum_mul]
+  refine sum_le_sum fun j hj => ?_
+  rw [hng, ← Real.exp_add, ← Real.exp_add]
+  refine Real.exp_le_exp.2 ?_
+  have h := mul_le_mul_of_nonneg_left (hz j (ne_of_mem_erase hj)) hlog
+  rw [mul_add] at h
+  linarith
+
+/-- Two tokens, the first leading by `1` and of the greater bias. -/
+example := abs_sub_biasedLogScaleAttention_le (s := 1) (g := 1) (C := 1) zero_le_one ![0, -1]
+  (z := ![1, 0]) (v := ![1, -1]) (j₀ := 0) (fun j hj => by fin_cases j <;> simp_all)
+  fun j => by fin_cases j <;> simp
+
+/-- **One other token bounds the miss from below** (`review/flat_spectrum.md`, PB2): with raw
+scores bounded by `B`, attention at the scale `s log n`, `s ≥ 0`, with the bias `b` answers the
+value `1` at `j₀` and `−1` elsewhere with an error of at least
+`2 / (1 + n^{2sB} e^{b_{j₀} − b_{j₁}})`, for every other token `j₁`. -/
+theorem le_one_sub_biasedLogScaleAttention {ι : Type*} [Fintype ι] [DecidableEq ι] {s B : ℝ}
+    (hs : 0 ≤ s) (b : ι → ℝ) {z : ι → ℝ} (hz : ∀ j, |z j| ≤ B) {j₀ j₁ : ι} (hj : j₁ ≠ j₀) :
+    2 / (1 + (Fintype.card ι : ℝ) ^ (2 * s * B) * Real.exp (b j₀ - b j₁)) ≤
+      1 - biasedLogScaleAttention s b z (fun j => if j = j₀ then 1 else -1) := by
+  have hn : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩
+  have hlog : 0 ≤ s * Real.log (Fintype.card ι) :=
+    mul_nonneg hs (Real.log_nonneg (by exact_mod_cast Fintype.card_pos_iff.2 ⟨j₀⟩))
+  have hng : (Fintype.card ι : ℝ) ^ (2 * s * B) =
+      Real.exp (2 * (s * Real.log (Fintype.card ι)) * B) := by
+    rw [Real.rpow_def_of_pos hn]
+    ring_nf
+  rw [biasedLogScaleAttention, one_sub_softmaxAttention_indicator,
+    ← add_sum_erase _ _ (mem_univ j₀), hng]
+  set c := s * Real.log (Fintype.card ι) with hc
+  have hX : Real.exp (c * z j₁ + b j₁) ≤ ∑ j ∈ univ.erase j₀, Real.exp (c * z j + b j) :=
+    single_le_sum (f := fun j => Real.exp (c * z j + b j)) (fun j _ => (Real.exp_pos _).le)
+      (mem_erase.2 ⟨hj, mem_univ _⟩)
+  have hA : Real.exp (c * z j₀ + b j₀) ≤
+      Real.exp (2 * c * B) * Real.exp (b j₀ - b j₁) * Real.exp (c * z j₁ + b j₁) := by
+    rw [← Real.exp_add, ← Real.exp_add]
+    refine Real.exp_le_exp.2 ?_
+    have h1 := mul_le_mul_of_nonneg_left (le_of_abs_le (hz j₀)) hlog
+    have h2 := mul_le_mul_of_nonneg_left (neg_le_of_abs_le (hz j₁)) hlog
+    linarith
+  have hK : 0 ≤ Real.exp (2 * c * B) * Real.exp (b j₀ - b j₁) := by positivity
+  have hX0 := (Real.exp_pos (c * z j₁ + b j₁)).trans_le hX
+  rw [div_le_div_iff₀ (by positivity) (by positivity)]
+  nlinarith [mul_le_mul_of_nonneg_left hX hK]
+
+/-- Two tokens with raw scores `1` and `0`, the first of the greater bias. -/
+example := le_one_sub_biasedLogScaleAttention (s := 1) (B := 1) zero_le_one ![0, -1]
+  (z := ![1, 0]) (fun j => by fin_cases j <;> simp) (j₀ := 0) (j₁ := 1) (by decide)
 
 end Transformer.Grokking.FlatSpectrum.Recall
