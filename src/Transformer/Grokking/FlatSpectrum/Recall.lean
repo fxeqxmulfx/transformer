@@ -18,6 +18,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Threshold
 public import Transformer.Grokking.FlatSpectrum.Recall.RawGap
 public import Transformer.Grokking.FlatSpectrum.Recall.Induction
 public import Transformer.Grokking.FlatSpectrum.Recall.InductionExact
+public import Transformer.Grokking.FlatSpectrum.Recall.InductionPhases
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -82,6 +83,9 @@ from the copy, and with both scales above `1` they recall at every large number 
 (`Induction`). Computed exactly, the induction head is one-hot attention at the scale
 `s₂ a`, where `a = (n^{s₁} − 1) / (n^{s₁} + n − 1)` is the lead of the copy, and its worst error
 over the dictionaries of values `±1` is `(3m + 1) / (n^{s₂ a} + 2m + 1)` (`InductionExact`).
+The lead tends to `0`, `1/2` or `1` as `s₁` is below, at or above `1`, and the head recalls when
+`s₂` times that limit exceeds `1` and fades when it is below: `s₁ = 1` with `s₂ > 2` recalls, and
+`s₁ < 1` fades at every `s₂` (`InductionPhases`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least

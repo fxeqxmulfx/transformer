@@ -28,8 +28,9 @@ within `2 C (n − 1) n^{−s₂ (g₂ − 2δ)}` of the value of the target. Th
 multiplies the error `δ` of the copy, and `δ` falls like `n^{1 − s₁ g₁}`. The induction head
 has `g₁ = g₂ = H = 1` (`abs_inductionHead_sub_le`), so with `s₁ > 1` and `s₂ > 1` it recalls at
 every large number of keys to every accuracy (`exists_forall_inductionHead_recall`): a binding
-split over two tokens is recalled under the condition `s g > 1` of SA5, at both layers. That
-the condition is needed at layer 1 is not proved here.
+split over two tokens is recalled under the condition `s g > 1` of SA5, at both layers. At layer 1
+the condition is not needed: `Recall.InductionPhases` shows that `s₁ = 1` with `s₂ > 2` recalls,
+and that `s₁ < 1` fades at every `s₂`.
 
 The proof of arXiv:2312.04927v1, Appendix, *The Multiple-Query Associative Recall Problem*,
 `prop: app-attention`, uses two layers of attention without softmax and moves the value to the
