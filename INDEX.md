@@ -56178,7 +56178,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.RoPE.NTKAware`
 
-**[Transformer.RoPE.NTKAware.Section1_Post](src/Transformer/RoPE/NTKAware/Section1_Post.lean)** — 146 lines
+**[Transformer.RoPE.NTKAware.Section1_Post](src/Transformer/RoPE/NTKAware/Section1_Post.lean)** — 147 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -56188,21 +56188,21 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`adjustedFrequencies`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L92) | def |  |
 | [`adjustedFrequencies_zero`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L96) | theorem | proved |
 | [`adjusted_displacement_ge`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L102) | theorem | proved |
-| [`eq_of_rotary_eq`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L119) | theorem | proved |
-| [`adjusted_rotary_injective`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L139) | theorem | proved |
+| [`eq_of_rotary_eq`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L120) | theorem | proved |
+| [`adjusted_rotary_injective`](src/Transformer/RoPE/NTKAware/Section1_Post.lean#L140) | theorem | proved |
 
-**[Transformer.RoPE.NTKAware.Section2_Comments](src/Transformer/RoPE/NTKAware/Section2_Comments.lean)** — 123 lines
+**[Transformer.RoPE.NTKAware.Section2_Comments](src/Transformer/RoPE/NTKAware/Section2_Comments.lean)** — 124 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`last_frequency_adjusted`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L35) | theorem | proved |
-| [`scaled_base_slow_phase`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L50) | theorem | proved |
-| [`scaled_base_slow_phase_gt`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L69) | theorem | proved |
-| [`clockReading`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L81) | def |  |
-| [`clockReading_injOn`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L85) | theorem | proved |
-| [`clockReading_add`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L93) | theorem | proved |
-| [`wallClock_measures`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L105) | theorem | proved |
-| [`slowedClock_measures`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L115) | theorem | proved |
+| [`last_frequency_adjusted`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L36) | theorem | proved |
+| [`scaled_base_slow_phase`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L51) | theorem | proved |
+| [`scaled_base_slow_phase_gt`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L70) | theorem | proved |
+| [`clockReading`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L82) | def |  |
+| [`clockReading_injOn`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L86) | theorem | proved |
+| [`clockReading_add`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L94) | theorem | proved |
+| [`wallClock_measures`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L106) | theorem | proved |
+| [`slowedClock_measures`](src/Transformer/RoPE/NTKAware/Section2_Comments.lean#L116) | theorem | proved |
 
 ### `Transformer.RoPE.ReRoPE`
 

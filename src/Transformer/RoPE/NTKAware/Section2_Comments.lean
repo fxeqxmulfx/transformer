@@ -21,9 +21,10 @@ The thread under bloc97's post r/LocalLLaMA 14lz7j5 (2023-06-29).
   minutes in a hour") and the hours by `2` against the new minutes ("and fit `24` hours in half a
   day") gives the periods `60`, `90·60` and `24·90·60 = 3·43200`: "a clock that can measure `129.6k`
   seconds instead of `43.2k` seconds". Slowed by `2` against the seconds, the hours would give
-  `86.4k`. The factors `1.5` and `2` illustrate ("let's say"): the NTK-aware base with `α = 3` and
-  `d = 6` slows three hands by `1`, `√3` and `3` (`YaRN.coordinate_frequency_adjusted`). The clock is "a RoPE … with a
-  base of `60`" only up to the hour hand, which turns once per `12` turns of the minute hand.
+  `86.4k`. The factors `1.5` and `2` illustrate ("let's say"): the NTK-aware base with `α = 3`
+  and `d = 6` slows three hands by `1`, `√3` and `3` (`YaRN.coordinate_frequency_adjusted`). The
+  clock is "a RoPE … with a base of `60`" only up to the hour hand, which turns once per `12`
+  turns of the minute hand.
 -/
 
 @[expose] public section

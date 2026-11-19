@@ -107,7 +107,8 @@ theorem adjusted_displacement_ge (base α : ℝ) (x : Fin 2 × Fin (p + 1) → �
           rotary (adjustedFrequencies base α (p + 1)) m *ᵥ x) := by
   rw [displacement_eq]
   have hle := Finset.single_le_sum
-    (f := fun l => contrast (adjustedFrequencies base α (p + 1) l) 1 * (x (0, l) ^ 2 + x (1, l) ^ 2))
+    (f := fun l =>
+      contrast (adjustedFrequencies base α (p + 1) l) 1 * (x (0, l) ^ 2 + x (1, l) ^ 2))
     (fun l _ => mul_nonneg (contrast_bounds _ _).1 (by positivity)) (Finset.mem_univ 0)
   simp only [adjustedFrequencies_zero] at hle
   rw [contrast, mul_one] at hle
