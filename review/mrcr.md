@@ -26,7 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Ties | eight asks with the same key | open |
+| Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | open |
 | Count then look up | both at the scale `s log n` | open |
 | Copy | return the whole answer, token by token | open |
@@ -49,3 +49,22 @@ keys that differ everywhere by `d w`. Without near misses `s d w > 1` suffices
 `s w = 1` (`partScore_recall`, `partScore_nearMiss_error`). At depth 3 that is three times the
 scale. Whether the near misses of MRCR-V2 grow linearly with the length depends on how its
 distractors are drawn, which the report does not say.
+
+## Ties (proved)
+
+The asks of one key are the same text. A head that scores them by content alone ties them: if
+the needles `T` share the largest raw score and the other tokens trail by `g`, attention at the
+scale `s log n` is within `2 C (n − |T|) n^{−s g} / |T|` of the average of their values
+(`abs_logScaleAttention_sub_average_le`).
+
+Position does not rescue an inner needle. Give a needle at the distance `d` the raw score
+`c + h d`, any `h`, and place `k` needles equally spaced by `G` with the last at the distance
+`D` (`spaced`). For a needle with a needle on each side, the placements with the last needle at
+`D` and at `D + G` do not both favour it: one gives a neighbour a raw score at least its own
+(`exists_spaced_le_of_inner`), and there the indicator dictionary of the needle is answered with
+a value at most `0`, whatever the other tokens (`exists_spaced_logScaleAttention_indicator_nonpos`).
+This holds for every `h`, so for RoPE, ALiBi and no position alike, at every spacing and distance.
+The last needle is different: the ALiBi bias `−b d` returns it within
+`2 C (k n^{−s b} + (n − 1) n^{−s g})` (`abs_logScaleAttention_sub_last_le`). The first needle is
+not covered either way. One layer does not return the `i`-th of eight identical asks,
+`1 < i < 8`, at every placement; the count of earlier asks must come from an earlier layer, which is the next row.

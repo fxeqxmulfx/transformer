@@ -1,8 +1,10 @@
 module
 
+public import Transformer.MRCR.InnerNeedle
 public import Transformer.MRCR.NearMiss
 public import Transformer.MRCR.NearMissThreshold
 public import Transformer.MRCR.PartScore
+public import Transformer.MRCR.Ties
 
 /-!
 # MRCR-V2 taken apart
@@ -16,8 +18,12 @@ stated for the attention at the scale `s log n` of SSMax, arXiv:2501.19399v1, §
 rounded transformers of arXiv:2506.16055v3, and `review/mrcr.md` lists what each one covers.
 
 `Transformer.MRCR.NearMiss` and `Transformer.MRCR.NearMissThreshold` give each key its own gap:
-near misses, keys that share part of the queried key, are harmless at every length exactly when
-`s g₁` exceeds the growth exponent of their number. `Transformer.MRCR.PartScore` applies it to
-additive scores over the parts of a key: at depth three a linear number of near misses triples
-the scale that recall needs.
+near misses, keys that share part of the queried key, are harmless at every length when `s g₁`
+exceeds the growth exponent of their number, and spoil recall when it falls below.
+`Transformer.MRCR.PartScore` applies it to additive scores over the parts of a key: at depth
+three a linear number of near misses triples the scale that recall needs.
+
+`Transformer.MRCR.Ties` and `Transformer.MRCR.InnerNeedle` treat the asks of one key, which are
+the same text: attention averages tied needles, a bias that falls with the distance returns the
+last of them, and no raw score of the distance returns a needle with a needle on each side.
 -/
