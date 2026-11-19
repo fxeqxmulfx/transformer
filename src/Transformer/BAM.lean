@@ -3,6 +3,7 @@ module
 public import Transformer.BAM.Section2_BayesianAttention
 public import Transformer.BAM.SectionA_Notation
 public import Transformer.BAM.Section2_Priors
+public import Transformer.BAM.Section2_GeneralizedGaussian
 
 /-!
 # Bayesian Attention Mechanism
@@ -21,4 +22,7 @@ weight `0`.
   smaller `β` has the heavier tail.
 * `Section2_Priors`: §2.2, Lemma 1 (the causal mask is the uniform prior) and Lemma 2 (ALiBi is
   the prior `Uniform · Laplace`, up to the normalizer its proof drops; false without it).
+* `Section2_GeneralizedGaussian`: §2.3, the GGD-BAM bias and prior, ALiBi as its case `β = 1`,
+  and Theorem 2 (for `0 < β < 1` the GGD penalty is below ALiBi's; the proof's witness fails at
+  distance `1`, another works).
 -/
