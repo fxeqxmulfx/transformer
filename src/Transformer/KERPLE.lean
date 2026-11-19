@@ -5,6 +5,7 @@ public import Transformer.KERPLE.Section3_Facts
 public import Transformer.KERPLE.Section3_Schoenberg
 public import Transformer.KERPLE.Section3_Integral
 public import Transformer.KERPLE.Section3_Powers
+public import Transformer.KERPLE.SectionA_ShiftLemma
 
 /-!
 # KERPLE
@@ -27,4 +28,8 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
 * `Section3_Powers`: Fact 3 (`−(−k̃)^α` for `0 < α < 1` and `−log(1 − k̃)` are CPD when `k̃ ≤ 0` is)
   and Corollary 1 (`−a ‖x − x'‖^p` and `−b log(1 + a ‖x − x'‖^p)` are CPD for `0 < p ≤ 2`), with
   the iterations the paper mentions after it.
+* `SectionA_ShiftLemma`: Lemma 1 (the CPD shift lemma, Appendix A.1) is false: `x + y` is CPD on
+  `ℝ` and `c + x + y` is PD for no real `c`, nor is `c − (x − y)²`; step (iii) of its proof fails
+  at `diag(1, −1)`. Its steps (iv)–(vi) prove the corrected lemma: on a finite set, a strictly CPD
+  kernel plus a large enough constant is PD.
 -/
