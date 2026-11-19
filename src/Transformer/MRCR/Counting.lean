@@ -45,18 +45,13 @@ theorem holdsIn_mem {σ : Type*} (L : List σ) (p : σ → Bool) : holdsIn L p �
     obtain ⟨a, -, rfl⟩ := List.mem_map.mp hφ
     exact ⟨rfl, rfl, le_rfl⟩
 
-theorem pnpFree_ofPos {σ : Type*} (n : ℕ) : (Term.ofPos n : Term σ).pnpFree = true := by
-  induction n with
-  | zero => rfl
-  | succ n ih => rw [Term.ofPos, Term.pnpFree, ih]; rfl
-
 /-- `#ψ = r + 1` has depth one for a test `ψ` of depth zero. -/
 theorem eq_countL_ofPos_mem {σ : Type*} {ψ : Form σ} (hψ : ψ ∈ TLCl σ 0) (r : ℕ) :
     Form.eq (.countL ψ) (Term.ofPos r) ∈ TLCl σ 1 := by
   obtain ⟨h1, h2, h3⟩ := hψ
   refine ⟨?_, ?_, ?_⟩
   · simp [Form.eq, Form.past, Term.past, h1, Term.past_ofPos]
-  · simp [Form.eq, Form.pnpFree, Term.pnpFree, h2, pnpFree_ofPos]
+  · simp [Form.eq, Form.pnpFree, Term.pnpFree, h2, Term.pnpFree_ofPos]
   · rw [Form.depth_eq, Term.depth_ofPos, Term.depth]
     omega
 

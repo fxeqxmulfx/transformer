@@ -67,3 +67,13 @@ variable [DecidableEq σ]
   cases b <;> simp [truth, Form.sat, Term.val]
 
 end Transformer.CRASP.Form
+
+namespace Transformer.CRASP.Term
+
+/-- A constant `1 + ⋯ + 1` has no Parikh numerical predicate (Definition `def:PNP`). -/
+theorem pnpFree_ofPos {σ : Type*} (n : ℕ) : (ofPos n : Term σ).pnpFree = true := by
+  induction n with
+  | zero => rfl
+  | succ n ih => rw [ofPos, Term.pnpFree, ih]; rfl
+
+end Transformer.CRASP.Term

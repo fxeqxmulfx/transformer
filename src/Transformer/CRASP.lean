@@ -52,6 +52,10 @@ public import Transformer.CRASP.MatchingRecallSums
 public import Transformer.CRASP.MatchingRecallAnswers
 public import Transformer.CRASP.RecallSeparation
 public import Transformer.CRASP.LatestRecall
+public import Transformer.CRASP.ModBlocks
+public import Transformer.CRASP.ModBlocksDepth
+public import Transformer.CRASP.ModBlocksCount
+public import Transformer.CRASP.ModBlocksCorrect
 public import Transformer.CRASP.Suffix
 public import Transformer.CRASP.FiniteFunction
 public import Transformer.CRASP.ConstantLayer
@@ -164,6 +168,8 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.RecallSeparation` | at that precision no query-free transformer of a fixed depth and width recalls, and none at all below `p d = log₂ c` |
 | `CRASP.LatestRecall` | no rounded transformer recalls the latest value of a rebound key, which over one key is `Σ*bΣ` |
 | `CRASP.Suffix` | a fixed suffix costs no depth: the right quotient of a language of `TL[◁#]_k` by a word is one |
+| `CRASP.ModBlocks`, `CRASP.ModBlocksDepth` | on blocks of one period a formula of `TL[◁#, MOD]` is one of `TL[◁#]` over the bits, one level deeper |
+| `CRASP.ModBlocksCount`, `CRASP.ModBlocksCorrect` | the translation simulates the formula, also with a fixed string in place of the last block |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
