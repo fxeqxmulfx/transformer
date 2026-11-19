@@ -10,6 +10,7 @@ public import Transformer.KERPLE.Section4_Attention
 public import Transformer.KERPLE.Section4_BiasKernel
 public import Transformer.KERPLE.Section4_T5
 public import Transformer.KERPLE.SectionA_ShiftLemma
+public import Transformer.KERPLE.SectionA_PDFunctions
 
 /-!
 # KERPLE
@@ -50,4 +51,7 @@ A kernel on `X` is a function `X → X → ℝ`; PD and CPD kernels are Definiti
   `ℝ` and `c + x + y` is PD for no real `c`, nor is `c − (x − y)²`; step (iii) of its proof fails
   at `diag(1, −1)`. Its steps (iv)–(vi) prove the corrected lemma: on a finite set, a strictly CPD
   kernel plus a large enough constant is PD.
+* `SectionA_PDFunctions`: Appendix A.2, Definition 3 (PD functions) and Fact 5: `exp(−a|x|^p)` is a
+  PD function on `ℝ` for `0 < p ≤ 2` and is not for `p > 2`; the rescaling of Proposition 2's
+  footnote and the range `(0, 1]`.
 -/
