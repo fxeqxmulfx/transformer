@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.FeatureMetricMomentum
 /-!
 # Query-weighted CE control with arbitrary saved momentum
 
-Source: `review/flat_spectrum.md`, *Query-weighted feature covariance*, QG2/QG4.
+Source: `review/actual_network/dynamics.md`, *Query-weighted feature covariance*, QG2/QG4.
 The reference is actual partial CE with common clipping, a fixed feature metric
 and a fixed scalar step. Its batch type may change at every step; this includes
 the original source's shorter final batch. Full AdamW errors remain separate.

@@ -6,7 +6,7 @@ public import Transformer.Rotate90.ComplexProduct.Basic
 /-!
 # Motion through the source quarter-turn and complex product
 
-Source: `review/flat_spectrum.md`, *Full encoder motion*, EM1 and EM3.
+Source: `review/actual_network/dynamics.md`, *Full encoder motion*, EM1 and EM3.
 The hidden product has both scalar cross terms and its sqrt(2) divisor.
 The preceding and following matrices need not be complex-linear.
 -/

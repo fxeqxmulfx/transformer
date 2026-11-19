@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Stability.Certificate
 /-!
 # Nonzero operation-error witnesses
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C8.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C8.
 The final dot products receive a nonzero common offset. This is a synthetic
 trace satisfying the operation contracts, not a claim that a CUDA kernel
 generates this offset. The classifier is nonconstant on three-letter words.

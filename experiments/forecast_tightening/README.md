@@ -41,7 +41,7 @@ interval width. The final mean margin interval is 13.96 times narrower than
 legacy; the CE interval is 33.40 times narrower. These ratios describe this
 cohort's intervals, not runtime speedups.
 
-The [FT1–FT3 derivations](../../review/flat_spectrum.md#forecast-tightening)
+The [FT1–FT3 derivations](../../review/actual_network/transport.md#forecast-tightening)
 have 18 Lean theorems with explicit witnesses: the regularized secant identity,
 finite rectangular Gram/operator bounds, signed positive-denominator quotients,
 and interval intersection/class ordering. They prove real-arithmetic bounds.

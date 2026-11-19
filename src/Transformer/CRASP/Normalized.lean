@@ -6,7 +6,7 @@ public import Transformer.CRASP.Normalized.Input
 # Normalized multihead source models and counting logic
 
 Extension of arXiv:2506.16055v3, Appendix B.2/F, to the architecture documented
-in `review/flat_spectrum.md`, *Depth, width and precision*, R3--R5.
+in `review/actual_network/sequence_models.md`, *Depth, width and precision*, R3--R5.
 Finite stored activations, parallel heads, arbitrary rotary tables, RMSNorm,
 XSA, SwiGLU and tied readout compile into counting logic at the stack's depth.
 The end-to-end statement keeps the original input vocabulary at fixed context.

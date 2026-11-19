@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Transfer.Step
 /-!
 # The actual Transformer's cross-Jacobian learning operator
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, T2--T3.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, T2--T3.
 The finite logit table includes independent example IDs and every class.
 Its Jacobian differentiates all embeddings and matrices. The outer loss
 is ordinary sampled softmax cross-entropy, not a squared-loss surrogate.

@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Decisions
 /-!
 # One fixed RoPE counting family agrees with all certified class decisions
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J7. Formulae are chosen before the input word and reproduce the rounded
 source model on every length. On the finite task domain with a proved source
 margin, numerical certificates imply their full class-decision agreement

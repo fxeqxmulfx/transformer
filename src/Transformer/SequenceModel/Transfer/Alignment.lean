@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Transfer.Basic
 /-!
 # Identical self spectra do not determine cross-split transfer
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, T4.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, T4.
 Negating an evaluation Jacobian preserves its complete self Gram operator,
 not merely its eigenvalues. It reverses cross-split transfer. Singular
 values alone therefore discard information needed to predict learning on

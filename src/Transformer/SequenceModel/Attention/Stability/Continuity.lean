@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Stability.Softmax
 /-!
 # Continuity with varying source phases and residuals
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A3;
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A3;
 `diff_gpt/domain/model/{rope,mha}.py` at `b98c665b`. Positive normalizer
 epsilons give continuity even on XSA's clipping sphere. The earlier analytic
 theory excluded that sphere; this approximation argument does not need to.

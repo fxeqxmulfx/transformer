@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.FeatureMetricCE
 /-!
 # Momentum control with a fixed positive diagonal
 
-Source: `review/flat_spectrum.md`, *Checkpoint-fixed feature metrics*, FM2–FM3.
+Source: `review/actual_network/dynamics.md`, *Checkpoint-fixed feature metrics*, FM2–FM3.
 The metric is fixed, not recomputed from a future gradient. In the actual-CE
 application its entries are shared by unused classes at each feature.
 -/

@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Stationary
 /-!
 # Exact finite-task classification by the complete tied Transformer
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E8.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E8.
 One active attention block computes an arbitrary binary task. Additional
 source blocks have zero output projections, hence identity residuals.
 Embedding, final RMSNorm and tied readout give a strictly positive margin.

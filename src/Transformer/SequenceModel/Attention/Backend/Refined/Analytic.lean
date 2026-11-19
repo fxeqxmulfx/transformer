@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Refined.Basic
 /-!
 # Sharper certificates for the frozen CUDA trace
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M3.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M3.
 Residual checks remain at each operation's own recorded inputs. Squared
 scale residuals and polynomial remainders are independently checked in Lean.
 -/

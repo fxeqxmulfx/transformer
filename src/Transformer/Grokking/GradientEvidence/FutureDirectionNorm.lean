@@ -7,7 +7,7 @@ public import Mathlib.Analysis.InnerProductSpace.PiL2
 /-!
 # Future whole-block direction bounds
 
-Source: `review/flat_spectrum.md`, *Future forcing from checkpoint moments*,
+Source: `review/actual_network/dynamics.md`, *Future forcing from checkpoint moments*,
 FF2–FF3. Summing coordinate cones controls a whole readout block without future
 gradient observations. Centering within the active classes cannot increase
 this budget. These are upper bounds, not statements of favorable alignment.

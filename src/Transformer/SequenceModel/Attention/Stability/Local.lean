@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Stability.Averages
 /-!
 # Sensitivity of the complete normalized source block
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B4;
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B4;
 diff_gpt `b98c665b`, `block.py`, `mha.py`, `feed_forward.py`. Both residuals,
 all four branch normalizers, moving XSA directions and actual SwiGLU are
 retained. Constants are sufficient bounds, independent of context length.

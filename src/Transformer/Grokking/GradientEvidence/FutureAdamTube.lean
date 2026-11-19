@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.DampedPersistence
 /-!
 # A future AdamW tube without future forcing observations
 
-Source: `review/flat_spectrum.md`, *Future forcing from checkpoint moments*,
+Source: `review/actual_network/dynamics.md`, *Future forcing from checkpoint moments*,
 FF4. The path uses the actual .9/.95 buffered direction. Its radius uses only
 checkpoint cones and the known schedule. This theorem is exact-real; the
 experiment's FP32 allowances are checked separately, not silently assumed

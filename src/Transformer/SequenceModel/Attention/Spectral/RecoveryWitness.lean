@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Existence
 /-!
 # Concrete faithful-bank witnesses for the composed certificate
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J3--J7. A faithful character over F_3 gives nonconstant fifth-power division
 and the true kernel satisfies the stated fitting and minimization premises.
 Zero-numerator and exponent-zero examples are included in the lower modules.

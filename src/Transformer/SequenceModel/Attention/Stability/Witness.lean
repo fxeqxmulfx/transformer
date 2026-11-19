@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Stability.Stack
 /-!
 # Concrete nonempty witnesses for the stack certificate
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B9.
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B9.
 This synthetic source-shaped model has three distinct unit embeddings and
 two identity residual blocks. RMS epsilon 3/4 is chosen to make its input
 normalization exact; this example does not use the float32 dtype epsilon.

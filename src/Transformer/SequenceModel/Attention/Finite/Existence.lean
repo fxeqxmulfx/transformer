@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Attention.Finite.Model
 /-!
 # Arbitrary finite arity needs neither infinite width nor infinite depth
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F6.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F6.
 One source-shaped family has W=2(p+1)^2+6p^N+2 padding and
 H=floor((8W+1)/3), with one head and any positive finite depth. The input
 protocol appends one fixed vocabulary token for readout. The rotary phase

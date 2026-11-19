@@ -2300,7 +2300,7 @@ outputs remain local, and the existing Lean statements and INDEX.md are unchange
 
 Task #185 adds 23 proved theorems linking actual buffered Adam updates to
 explicit diagonal mixing, saved-moment discrepancy and moving interaction
-budgets. The [derivation](review/flat_spectrum.md#adaptive-interaction-control)
+budgets. The [derivation](review/actual_network/transport.md#adaptive-interaction-control)
 retains distinct preconditioners for competitor and target class rows.
 Sufficient contraction is proved from explicit forcing/drift control, not
 assumed from CE descent. No new `sorry` is introduced.
@@ -2325,7 +2325,7 @@ Generated reports remain local; INDEX.md retains its committed exception.
 
 Task #184 derives the actual fixed-feature readout CE gradient, a loss-controlled
 projected-gradient energy bound, and a sufficient Euclidean descent/decay
-mechanism. The [Lean extension](review/flat_spectrum.md#residual-learning-dynamics)
+mechanism. The [Lean extension](review/actual_network/transport.md#residual-learning-dynamics)
 adds 23 proved theorems, including a changing-subspace identity and an actual
 Adam first-step counterexample: CE falls while a training-nullspace residual
 appears. No residual contraction is assumed, and no new `sorry` is introduced.
@@ -2349,7 +2349,7 @@ generated-and-committed exception.
 
 Task #183 preserves signed training-score reconstruction and bounds only the
 remaining interaction between query-state and readout residuals. The
-[Lean derivation](review/flat_spectrum.md#signed-directional-transport) retains
+[Lean derivation](review/actual_network/transport.md#signed-directional-transport) retains
 an explicit orthogonality defect and the actual normalized source execution
 allowance. It also proves the zero-residual re-expression limit and a nonzero
 extrapolation witness. Sixteen new theorems are proved, with no new `sorry`.
@@ -2375,7 +2375,7 @@ independent statistical test or optimizer-discovery claim was introduced.
 
 Task #182 extends the theory from training probability control to conditional
 query probability floors and loss ceilings. The
-[Lean derivation](review/flat_spectrum.md#probability-transfer) uses training
+[Lean derivation](review/actual_network/transport.md#probability-transfer) uses training
 log odds and unlabeled query-state distances, retains each actual final RMS
 denominator, and carries an explicit numerical execution allowance. It adds
 20 proved theorems and concrete witnesses, with no new `sorry`.
@@ -2397,7 +2397,7 @@ architecture change was made; complex multiplication remains unchanged.
 ## Geometry controlled by the objective (2026-11-08)
 
 Task #181 asks which part of the required geometry follows from training loss.
-The [Lean extension](review/flat_spectrum.md#loss-controlled-geometry) proves
+The [Lean extension](review/actual_network/transport.md#loss-controlled-geometry) proves
 that mean within-answer probability scatter is at most twice mean CE on the
 same rows. It also gives an actual shared-scalar gradient-descent counterexample:
 CE decreases while raw contrast scatter increases. No unconditional raw-state
@@ -2421,7 +2421,7 @@ No model training, checkpoint changes or architecture changes were made.
 
 Task #180 extends the theory to actual class contrasts using training states,
 query states and an explicit reconstruction residual. The
-[Lean derivation](review/flat_spectrum.md#training-state-transport) proves the
+[Lean derivation](review/actual_network/transport.md#training-state-transport) proves the
 Euclidean baseline, weighted transport bound, valid per-competitor choice,
 actual plain-product source bridge and cubic routes for transferring observed
 training labels. It includes a counterexample to omitting the residual and a

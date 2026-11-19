@@ -6,7 +6,7 @@ public import Transformer.Rotate90.FeatureMotion.Source
 /-!
 # Gram bounds for the source matrix maps
 
-Source: `review/flat_spectrum.md`, *Pairwise encoder amplification*, PA2.
+Source: `review/actual_network/dynamics.md`, *Pairwise encoder amplification*, PA2.
 Apply the established FT2 bounds to the same real matrix maps as EM4.
 The final theorem exposes the native Gram-energy upper-bound obligation.
 -/

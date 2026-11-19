@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
 /-!
 # Training-state transport through the actual tied source readout
 
-Source: `review/flat_spectrum.md`, *Training-state transport*, TT3–TT5.
+Source: `review/actual_network/transport.md`, *Training-state transport*, TT3–TT5.
 Training contrast variation and an explicit query-state reconstruction control
 the actual raw source gap. There is no fitted decoder or source-alignment term.
 Each competitor may choose its own valid transport and nonzero scale. The

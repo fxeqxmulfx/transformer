@@ -7,7 +7,7 @@ public import Transformer.CRASP.FixedSign
 # Counting logic with position-dependent integer coefficients
 
 Extension of arXiv:2506.16055v3, Appendix B.2/F, specified in
-`review/flat_spectrum.md`, *Uniform nonperiodic RoPE*, U1.
+`review/actual_network/sequence_models.md`, *Uniform nonperiodic RoPE*, U1.
 A kernel is fixed independently of the input word and gives a coefficient
 for each query/source position pair. Counts bind the source position; nested
 counts use their own query position. No transformer forward or word predicate

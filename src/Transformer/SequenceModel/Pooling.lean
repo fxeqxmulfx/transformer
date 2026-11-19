@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Rotary
 /-!
 # Arbitrary positional mixing and finite multivariable rotary pooling
 
-Source: `review/flat_spectrum.md`, *General positional models*, G2--G3.
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G2--G3.
 Position transforms may be rotations, other linear maps, or nonlinear maps.
 The pooled predictor retains the actual normalized SwiGLU residual stack.
 Only the repeated quarter-turn special case has the five-position collision

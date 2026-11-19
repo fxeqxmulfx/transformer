@@ -6,7 +6,7 @@ public import Mathlib.Analysis.InnerProductSpace.Basic
 /-!
 # Margins and loss from a feature forecast ball
 
-Source: `review/flat_spectrum.md`, *Feature forecasts*, FF3. The proposed
+Source: `review/actual_network/transport.md`, *Feature forecasts*, FF3. The proposed
 rounded readout is known. A feature ball and a separately declared execution
 allowance yield all-class gap intervals, margins and actual CE bounds.
 These statements do not certify the CUDA arithmetic allowance itself.

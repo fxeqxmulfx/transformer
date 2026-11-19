@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Concentration
 /-!
 # Local analyticity through normalized rotary attention and XSA
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, R1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, R1.
 All coordinates vary. The causal softmax denominator is proved positive;
 XSA requires only that the selected own value avoid its clipping sphere.
 -/

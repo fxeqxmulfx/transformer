@@ -1,7 +1,7 @@
 # Query-weighted CE covariance
 
 This library evaluates QG1–QG3 in
-[`review/flat_spectrum.md`](../../../review/flat_spectrum.md#query-weighted-feature-covariance).
+[`review/actual_network/dynamics.md`](../../../review/actual_network/dynamics.md#query-weighted-feature-covariance).
 The Lean modules `GradientEvidence/CEGram` prove the actual unused-class partial
 CE coefficient, its finite-motion transport and the varying-batch momentum
 condition. This changes the coefficient used for analysis; it does not change

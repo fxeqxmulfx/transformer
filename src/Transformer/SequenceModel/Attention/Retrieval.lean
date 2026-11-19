@@ -6,7 +6,7 @@ public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 /-!
 # Useful attention mass and local retrieval error
 
-Source: `review/flat_spectrum.md`, *Local attention routing*, LR1--LR4.
+Source: `review/actual_network/sequence_models.md`, *Local attention routing*, LR1--LR4.
 Each position has its own state. Width is not the number of complete input
 tables a model can store. These statements measure one causal attention row:
 error of its weighted values, mass reaching a useful set, and a necessary

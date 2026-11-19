@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.MomentumPotential
 /-!
 # Apply the momentum potential to the actual unused-class CE derivative
 
-Source: `review/flat_spectrum.md`, *Loss-specific momentum control*, CL1–CL3.
+Source: `review/actual_network/dynamics.md`, *Loss-specific momentum control*, CL1–CL3.
 The derivative and class means are computed. There is no hypothesis that
 saved momentum agrees with the present gradient. The partial dynamics can
 use changing features and minibatches; full AdamW perturbations remain CL3.

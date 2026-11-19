@@ -8,7 +8,7 @@ public import Transformer.SequenceModel.Attention.Backend.Refined.NormOutputs
 /-!
 # Local bounds through SDPA, XSA and the first residual
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M4.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M4.
 The first attention output is structurally zero. Its small RMS denominator
 therefore cannot amplify an error in another position or operation.
 -/

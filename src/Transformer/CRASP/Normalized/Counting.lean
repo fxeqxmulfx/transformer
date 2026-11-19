@@ -6,7 +6,7 @@ public import Transformer.CRASP.PositionalStateCounts
 # Counting layers with arbitrary local normalization and multiple heads
 
 Extension of arXiv:2506.16055v3, Appendix B.2 and Appendix F, to the source
-architecture in `review/flat_spectrum.md`, *Depth, width and precision*, R3.
+architecture in `review/actual_network/sequence_models.md`, *Depth, width and precision*, R3.
 All heads and value coordinates are counted in parallel. The local map may
 include RMSNorm, XSA, SwiGLU, residual additions and projection. It is a function
 on finite states, not an additional counting operation. A zero denominator

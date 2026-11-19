@@ -6,7 +6,7 @@ public import Transformer.Grokking.Geometry.ProbabilityTransfer
 /-!
 # Training-anchor odds from actual linear-readout geometry
 
-Source: `review/flat_spectrum.md`, *Probability transfer*, PT3.
+Source: `review/actual_network/transport.md`, *Probability transfer*, PT3.
 The query state and training states use the same actual final normalization.
 Cauchy–Schwarz bounds each change of class contrast. Training confidence and
 the state distance then give a probability/loss bound through PT2. Anchor

@@ -7,7 +7,7 @@ public import Mathlib.Analysis.Calculus.MeanValue
 /-!
 # Source SwiGLU sensitivity on the normalized input ball
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B2;
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B2;
 diff_gpt `b98c665b`, `feed_forward.py` and `block.py`. The gate and value
 matrices are independent and the activation is the actual SiLU product.
 Constants are explicit sufficient bounds, not sharp estimates.

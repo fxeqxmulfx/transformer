@@ -6,7 +6,8 @@ public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 /-!
 # Active rotary phases realize bounded positional scores
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F5.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F5.
 One actual half-split rotary pair carries nonzero normalized queries/keys.
 The constructed phase table is fixed by position. This is an existence
 result for arbitrary rotary phase tables, not the fixed integer-position

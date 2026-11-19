@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Residues
 /-!
 # Recovered character scores on the original residue vocabulary
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J4. Unit inputs use the recovered feature bank and its fixed linear readout.
 The zero numerator uses its elementary boundary rule. Denominator-zero rows
 have arbitrary totalized scores and are excluded from classification claims.

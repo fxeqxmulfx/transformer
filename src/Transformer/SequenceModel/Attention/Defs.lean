@@ -7,7 +7,7 @@ public import Transformer.GPTMini.QKNorm
 /-!
 # Complete scalar coordinates of the supplied Peri-RMSNorm transformer
 
-Source: `review/flat_spectrum.md`, *General positional models*, G4; the user's
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G4; the user's
 `diff_gpt/domain/model` at commit `b98c665bd8faa30729fd368d257a13b6d58712a1`.
 All embedding, fused-QKV, attention-output, SwiGLU gate/value/output weights
 vary independently. There are no biases, learned normalization gains or

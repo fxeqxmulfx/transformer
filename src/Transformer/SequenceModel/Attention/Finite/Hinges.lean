@@ -6,7 +6,8 @@ public import Mathlib.Topology.Instances.Matrix
 /-!
 # Finite genuine SiLU gates approach separating triangular features
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F2.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F2.
 The limit is used only to prove existence of a finite invertible evaluation
 matrix. The deployed activation remains SiLU; it is never replaced by ReLU.
 -/

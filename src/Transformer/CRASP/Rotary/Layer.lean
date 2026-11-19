@@ -6,7 +6,7 @@ public import Transformer.CRASP.Rotary.Cells
 # Position-sensitive finite-state attention without a position code
 
 Extension of arXiv:2506.16055v3, Appendix B.2/F;
-`review/flat_spectrum.md`, *Uniform nonperiodic RoPE*, U2.
+`review/actual_network/sequence_models.md`, *Uniform nonperiodic RoPE*, U2.
 The same tables apply at all natural query/source positions. Their values
 are fixed-point coefficients, but their dependence on positions need not be
 periodic. Prefix sums use unbounded integers as in the paper's `sumdiv`.

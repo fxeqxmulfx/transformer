@@ -6,7 +6,7 @@ public import Transformer.Rotate90.FeatureMotion.Encoder
 /-!
 # Pair-amplitude propagation through the complete source encoder
 
-Source: `review/flat_spectrum.md`, *Pairwise encoder amplification*, PA1.
+Source: `review/actual_network/dynamics.md`, *Pairwise encoder amplification*, PA1.
 Only the old product amplification changes. All parameter motion, mixed
 terms, normalizations and the original conservative comparison are retained.
 -/

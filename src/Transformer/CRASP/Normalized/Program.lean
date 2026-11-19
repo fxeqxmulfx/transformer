@@ -9,7 +9,7 @@ public import Transformer.SequenceModel.Attention.Grid.Separation
 # Depth of a stack of normalized counting layers
 
 Extension of arXiv:2506.16055v3, Appendix B.2/F, `eq:phi_h`;
-`review/flat_spectrum.md`, *Depth, width and precision*, R3.
+`review/actual_network/sequence_models.md`, *Depth, width and precision*, R3.
 The theorem is uniform over prefixes and layer count for a fixed finite state
 space. Width changes the state space and formula size, not counting depth.
 R5 proves the scope boundary: Appendix F assumes periodic angles, whereas

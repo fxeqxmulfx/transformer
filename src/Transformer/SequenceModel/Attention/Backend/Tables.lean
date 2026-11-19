@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Complex.Trigonometric
 /-!
 # Independent analytic checks of stored RoPE coefficients
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K5;
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K5;
 diff_gpt b98c665b, `rope.py`. The complex exponential series supplies real
 and imaginary polynomial references with a rigorous remainder. Stored
 cosines and sines are checked independently, without a unit-circle premise

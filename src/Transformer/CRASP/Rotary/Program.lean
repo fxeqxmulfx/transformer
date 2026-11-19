@@ -6,7 +6,7 @@ public import Transformer.CRASP.Rotary.Layer
 # A single classifier formula for all finite token words
 
 Extension of arXiv:2506.16055v3, Appendix B.2/F;
-`review/flat_spectrum.md`, *Uniform nonperiodic RoPE*, U2.
+`review/actual_network/sequence_models.md`, *Uniform nonperiodic RoPE*, U2.
 Only a first-position bit is stored alongside the finite residual. No position
 number, periodic approximation, or length-dependent token alphabet is used.
 -/

@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Backend.Refined.Activations
 /-!
 # Completing the local source trace bound through SwiGLU
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M4.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M4.
 The independent gate/value maps, SiLU, product, output map, peri-RMS and
 second residual are all retained. The bounds depend on the stored weights.
 -/

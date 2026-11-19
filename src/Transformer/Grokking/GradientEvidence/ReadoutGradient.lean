@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.BinaryObjectives
 /-!
 # Actual cross-entropy gradient of a frozen-feature readout
 
-Source: `review/flat_spectrum.md`, *Residual learning dynamics*, RD1.
+Source: `review/actual_network/transport.md`, *Residual learning dynamics*, RD1.
 The line-derivative calculation follows `Imbalance.hasDerivAt_crossEntropy_line`
 (arXiv:2402.19449v2, §3.2) for the project's own finite-class CE definition.
 Features are frozen here. This partial gradient omits the shared embedding's

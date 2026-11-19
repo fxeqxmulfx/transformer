@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Causal
 /-!
 # Scalar activation and two-token SDPA boxes for the captured backend
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K6;
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K6;
 `review/backend_contract_arithmetic.py`. The common rational witness is
 the degree-eleven polynomial at -1/2. The SDPA fixture has actual scaled
 scores [0,1/2], two distinct value vectors, and the original causal mask.

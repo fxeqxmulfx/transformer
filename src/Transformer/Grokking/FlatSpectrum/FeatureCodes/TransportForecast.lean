@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability
 /-!
 # Signed training transport across a forecast step
 
-Source: `review/flat_spectrum.md`, *Training-to-forecast bridge*, TF1–TF2.
+Source: `review/actual_network/transport.md`, *Training-to-forecast bridge*, TF1–TF2.
 Keep the old training reconstruction fixed, retain the signed readout and
 feature changes including their mixed term, and bound only the forecast
 remainder. The radius can be supplied by FT1/FT2; an independently valid

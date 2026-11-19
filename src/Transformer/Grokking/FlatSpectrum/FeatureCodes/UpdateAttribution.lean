@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecast
 /-!
 # Signed attribution of a finite proposed update
 
-Source: `review/flat_spectrum.md`, *Observable spectral geometry*, OG5.
+Source: `review/actual_network/dynamics.md`, *Observable spectral geometry*, OG5.
 Decompose the actual readout increment and old feature tangent into signed
 components. The full forecast change retains the mixed readout/feature term,
 and the future score also retains its nonlinear remainder. These identities

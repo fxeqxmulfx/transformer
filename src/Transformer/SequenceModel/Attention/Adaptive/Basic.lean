@@ -4,7 +4,7 @@ public import Transformer.SequenceModel.Attention.Adaptive.Norms
 
 /-!+# Algebraic checks for operation-dependent propagation
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M2.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M2.
 Squared norm and matrix checks use exact stored coordinates. Every operation
 keeps its own residual; no late residual is charged at an earlier operation.
 -/

@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Dimensions
 /-!
 # One actual normalized attention block computes any binary finite task
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E7.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E7.
 The attention branch supplies a lossless ordered-pair code. Fixed SwiGLU
 matrices interpolate the inverse-normalized displacement to the requested
 answer vector. The target table enters fixed output weights only.

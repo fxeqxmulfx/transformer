@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Counting
 /-!
 # Counting transfer with independently certified class radii
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M5.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M5.
 The spectral construction supplies a source margin. An operation-dependent
 execution proof can supply class radii without satisfying the old uniform
 ModelAccurate recurrence. The independent fixed-point conditions remain.

@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Normalization
 /-!
 # Attention concentration with many variables under actual Q/K RMSNorm
 
-Source: `review/flat_spectrum.md`, *General positional models*, G5. With N
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G5. With N
 unmasked inputs and head width d, every source attention weight is at most
 exp(2*sqrt(d))/N. This upper bound may exceed one and is not an impossibility
 of multi-layer computation; it isolates a limitation of one normalized row.

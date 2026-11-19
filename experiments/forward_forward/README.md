@@ -7,7 +7,7 @@ train the entire model with Forward–Forward or measure an efficiency gain.
 The follow-up [complete training pilot](../forward_training/README.md)
 adds explicit objectives for every block and compares four update rules.
 
-The [derivation](../../review/flat_spectrum.md#forwardforward-reformulation)
+The [derivation](../../review/actual_network/dynamics.md#forwardforward-reformulation)
 and [frozen protocol](PROTOCOL.md) distinguish this variant from Hinton,
 [arXiv:2212.13345](https://arxiv.org/abs/2212.13345), §§2–3.3. Original paper
 copies are kept in the ignored `papers/arXiv-2212.13345/` directory.

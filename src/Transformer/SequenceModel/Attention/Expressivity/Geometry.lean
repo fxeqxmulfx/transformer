@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Normalization
 /-!
 # Ordered pair codes retained by XSA and a residual
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E3.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E3.
 Two disjoint coordinate banks store the current token and the earlier token.
 Equal tokens have no context component; the residual identifies that case.
 All codes and requested residual displacements have fixed small norms.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.InteractionDrift
 /-!
 # A sufficient interaction-control condition for moving adaptive updates
 
-Source: `review/flat_spectrum.md`, *Adaptive interaction control*, AI5.
+Source: `review/actual_network/transport.md`, *Adaptive interaction control*, AI5.
 The update direction can be the exact buffered Adam direction from AI1.
 Both the new residual map and new feature displacement remain explicit.
 -/

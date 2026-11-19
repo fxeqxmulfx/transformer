@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Budget
 /-!
 # Source attention scores from recorded operations
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C4;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C4;
 diff_gpt `b98c665b`, `mha.py` and `rope.py`. Input RMS, fused QKV, head RMS,
 stored tables, table application and scaled dot products are all included.
 The cross term from perturbing both query and key is retained.

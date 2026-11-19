@@ -6,7 +6,7 @@ public import Transformer.Rotate90.FeatureMotion.Probability
 /-!
 # Probability control with pair-amplitude encoder radii
 
-Source: `review/flat_spectrum.md`, *Pairwise encoder amplification*, PA1.
+Source: `review/actual_network/dynamics.md`, *Pairwise encoder amplification*, PA1.
 The sharper complete-encoder bound enters the existing executed-contrast
 and all-rival probability results. Execution error remains explicit.
 -/

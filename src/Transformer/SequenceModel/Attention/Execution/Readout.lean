@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Model
 /-!
 # Execution certificates through the tied readout
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C7.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C7.
 The final normalizer, shared embedding table and dot-product execution all
 contribute. Strict margins certify the recorded logits themselves.
 -/

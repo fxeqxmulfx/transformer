@@ -34,7 +34,7 @@ active-row direction budgets; decay accumulates separately from forcing.
 The resulting radius needs no observed future direction or update norm.
 The formal continuation agrees with the original AdamW parameter history.
 
-See [FF1–FF4](../../review/flat_spectrum.md#future-forcing-from-checkpoint-moments)
+See [FF1–FF4](../../review/actual_network/dynamics.md#future-forcing-from-checkpoint-moments)
 and the modules
 [`FutureMomentCone`](../../src/Transformer/Grokking/GradientEvidence/FutureMomentCone.lean),
 [`FutureDirectionNorm`](../../src/Transformer/Grokking/GradientEvidence/FutureDirectionNorm.lean),

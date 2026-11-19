@@ -7,7 +7,8 @@ public import Mathlib.Topology.Baire.Lemmas
 /-!
 # Finite codes admit bounded separating linear measurements
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F1.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F1.
 The coefficients can be chosen inside any nonempty open ball. This matters
 for normalized Q/K attention: positional scores have a bounded range, so a
 construction must not assume arbitrarily concentrated attention weights.

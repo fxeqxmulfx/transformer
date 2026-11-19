@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Grid.Model
 /-!
 # Classification certificates for source RoPE approximations
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A4--A5.
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A4--A5.
 The finite-context theorem preserves strict decisions of the complete
 normalized source, with the same weights and depth. The quantitative readout
 bound also applies when a separate numerical analysis supplies a hidden-state

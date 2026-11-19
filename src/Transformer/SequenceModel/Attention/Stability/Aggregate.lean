@@ -6,7 +6,7 @@ public import Transformer.CRASP.Rotary.Model
 /-!
 # Vector error at the actual rounded attention averages
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B5.
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B5.
 Natural one-based counting prefixes are first identified with the source's
 finite causal tensor. Range premises inspect coefficient and quotient
 rounding sites themselves; they assume neither hidden-state error nor classification.

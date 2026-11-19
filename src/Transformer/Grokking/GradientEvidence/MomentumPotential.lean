@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.CECocoercivity
 /-!
 # A momentum potential for a dissipative CE component
 
-Source: `review/flat_spectrum.md`, *Loss-specific momentum control*, CL2–CL3.
+Source: `review/actual_network/dynamics.md`, *Loss-specific momentum control*, CL2–CL3.
 The .9 EMA coefficient is the main model's. The scalar step is fixed in a
 multi-step use. This reference dynamics omits adaptive diagonal differences,
 decoupled weight decay, and the tied encoder; CL3 keeps those as perturbations.

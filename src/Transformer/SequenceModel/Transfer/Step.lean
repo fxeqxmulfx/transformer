@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Transfer.Basic
 /-!
 # Finite source updates and a certified nonlinear remainder
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, T3.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, T3.
 The actual Schedule-Free update includes averaging drift and query decay.
 The cross-Jacobian term is exact at first order. A bound on derivative
 variation along the actual step certifies the finite prediction error.

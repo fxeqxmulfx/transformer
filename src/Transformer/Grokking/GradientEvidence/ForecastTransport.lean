@@ -7,7 +7,7 @@ public import Mathlib.Analysis.SpecialFunctions.Sigmoid
 /-!
 # Propagating a forecast without observing future features
 
-Source: `review/flat_spectrum.md`, *Feature forecasts*, FF1–FF2, and the
+Source: `review/actual_network/transport.md`, *Feature forecasts*, FF1–FF2, and the
 frozen `experiments/single_update/FORECAST_PROTOCOL.md`. A nominal nonlinear
 defect is evaluated only at the old value plus its known tangent. Error from
 the previous layer is transported by an anchored Lipschitz bound.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.MainAdamMoments
 /-!
 # Future moment cones from a checkpoint
 
-Source: `review/flat_spectrum.md`, *Future forcing from checkpoint moments*,
+Source: `review/actual_network/dynamics.md`, *Future forcing from checkpoint moments*,
 FF1–FF2. The betas are the main model's .9 and .95. The next gradient is arbitrary;
 no bound measured from a future trajectory is a premise. Sharpness concerns
 one scalar step with unrestricted gradients, not discovery by the tied model.

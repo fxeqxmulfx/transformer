@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.XSA
 /-!
 # The construction uses the actual fused-QKV and head layouts
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E5.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E5.
 A one-head model has an isometric reshape between its head and residual
 coordinates. Packing values in the fused QKV matrix leaves Q/K identically
 zero and preserves the complete value map. No forward operator is changed.

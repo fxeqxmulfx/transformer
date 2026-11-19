@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.ForecastTransport
 /-!
 # Preserve a discovered margin and combine independent certificates
 
-Source: `review/flat_spectrum.md`, *Main-model AdamW motion*, AD4–AD5.
+Source: `review/actual_network/dynamics.md`, *Main-model AdamW motion*, AD4–AD5.
 Parameter-motion bounds still need feature-motion control and a positive
 starting margin. Both are explicit here. The certificate envelope combines
 valid lower bounds for the same target; it pays for all constituent bases.

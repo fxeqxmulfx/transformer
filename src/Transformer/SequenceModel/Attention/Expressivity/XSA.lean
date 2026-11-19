@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Geometry
 /-!
 # Exact two-token contextual separation by the supplied XSA head
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E3.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E3.
 Zero query/key matrices make the causal weights uniform at any supplied
 RoPE angles. Unit values remain active: XSA deletes the current value's
 component and retains an orthogonal earlier value with coefficient 1/2.

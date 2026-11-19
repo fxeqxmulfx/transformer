@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Geometry
 /-!
 # Finite interpolation on the actual normalized ordered-pair codes
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E4.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E4.
 Squares identify diagonal pairs; context/current cross-products identify
 unequal pairs and cancel the square contribution. Positive RMS epsilon
 only changes two nonzero scales, which fixed output weights compensate.

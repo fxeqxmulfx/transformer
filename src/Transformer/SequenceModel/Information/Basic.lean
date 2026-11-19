@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Basic
 /-!
 # What sampled training can distinguish
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, N1.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, N1.
 The actual CE function, its full gradient and all Schedule-Free AdamW state
 are identical when two tasks agree on every label sampled so far. This is
 independent of architecture, initialization, width and depth. It does not

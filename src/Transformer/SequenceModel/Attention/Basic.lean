@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Defs
 /-!
 # The normalized attention model loses no trainable coordinates
 
-Source: `review/flat_spectrum.md`, *General positional models*, G4. Encoding
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G4. Encoding
 and decoding are inverse for every matrix entry. The optimizer bridge thus
 does not freeze attention, tie independent matrices, or hide a rank limit.
 -/

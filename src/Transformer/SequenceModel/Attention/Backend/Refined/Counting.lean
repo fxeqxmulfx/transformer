@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Spectral.LocalCounting
 /-!
 # The captured execution satisfies the new counting bridge's execution side
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M5.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M5.
 The source margin and hardware logit radii are proved, not assumed. Fixed-point
 range and rounding conditions concern a different execution and remain explicit.
 -/

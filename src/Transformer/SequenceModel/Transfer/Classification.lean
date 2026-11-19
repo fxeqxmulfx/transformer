@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Transfer.Step
 /-!
 # From a certified finite prediction to classification
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, T3.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, T3.
 The margin is checked on the derived first-order prediction. The error
 radius comes from the derivative-variation bound, rather than a hypothesis
 that the final nonlinear network already predicts the desired labels.

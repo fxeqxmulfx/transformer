@@ -6,7 +6,7 @@ public import Transformer.GPTMini.ReshapeDist
 /-!
 # Vector and projection bounds for source error propagation
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B1;
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B1;
 diff_gpt `b98c665b`, `mha.py` and `block.py`. Pre-normalization bounds the
 actual fused-QKV outputs independently of residual size. Fixed-point vector
 rounding still requires a separate range check in each coordinate.

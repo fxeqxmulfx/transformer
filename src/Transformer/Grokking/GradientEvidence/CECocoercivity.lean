@@ -7,7 +7,7 @@ public import Transformer.Grokking.Geometry.ProbabilityLoss
 /-!
 # Quantitative CE damping for unused pairs
 
-Source: `review/flat_spectrum.md`, *Loss-specific momentum control*, CL1.
+Source: `review/actual_network/dynamics.md`, *Loss-specific momentum control*, CL1.
 The gradient is the actual partial derivative. Probability bounds and the
 feature energy give a finite-step coefficient, without assuming fixed
 features across training. The tied encoder path is not this derivative.

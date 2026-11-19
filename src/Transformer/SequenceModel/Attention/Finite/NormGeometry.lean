@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Attention.Finite.Compiler
 /-!
 # Positive-epsilon normalization retains finite context information
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F3.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F3.
 Unlike zero-epsilon normalization, the source RMSNorm is injective. A fixed
 positive output scale can make every context in a finite table small enough
 for the next normalized residual branch to reach its answer code.

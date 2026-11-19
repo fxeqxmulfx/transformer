@@ -6,7 +6,8 @@ public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 /-!
 # A finite invertible genuine-gate evaluation matrix
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F2.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F2.
 Distinct projective coordinates give an invertible matrix at some positive
 finite gain. The determinant limit supplies existence, not an infinite-width
 model or an activation substituted into the actual forward.

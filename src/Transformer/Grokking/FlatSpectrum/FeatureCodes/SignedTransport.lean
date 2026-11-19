@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
 /-!
 # Signed training reconstruction and directional residuals
 
-Source: `review/flat_spectrum.md`, *Signed directional transport*, ST1–ST3.
+Source: `review/actual_network/transport.md`, *Signed directional transport*, ST1–ST3.
 Retain the signed training contribution and bound only the unreconstructed
 state. A second decomposition removes readout directions represented in a
 training basis. Its orthogonality defect remains explicit, so no numerical

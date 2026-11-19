@@ -5,7 +5,7 @@ public import Transformer.Rotate90.Forcing.Actual
 /-!
 # Sampled learning for arbitrary finite parameterized predictors
 
-Source: `review/flat_spectrum.md`, *General positional models*, G1. The input
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G1. The input
 type may be a tuple of any finite arity, or a variable-length token sequence.
 The forward function retains the complete architecture. No factorization,
 fixed rotation, linearized score, or claim of convergence is imposed.

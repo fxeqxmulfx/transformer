@@ -7,8 +7,9 @@ public import Transformer.SequenceModel.Attention.Stability.Certificate
 /-!
 # Source RoPE approximation and rounding certificates
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A1--A6,
-and *Full-stack rounding certificates*, B1--B9.
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*,
+A1--A6, and `review/actual_network/execution.md`, *Full-stack rounding certificates*,
+B1--B9.
 Phase errors propagate through RMS Q/K, causal softmax and XSA. Joint
 continuity through the full source stack proves that a strict classifier on
 a fixed finite context survives sufficiently accurate periodic frequency

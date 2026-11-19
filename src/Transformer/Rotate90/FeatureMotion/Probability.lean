@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.ProbabilityMotion
 /-!
 # Probability ceilings from the complete moving encoder
 
-Source: `review/flat_spectrum.md`, *Full encoder motion*, EM4–EM5 and PM3.
+Source: `review/actual_network/dynamics.md`, *Full encoder motion*, EM4–EM5 and PM3.
 Feature motion is derived from parameter caps through the actual graph;
 it is no longer a separate hypothesis. Execution-contrast change stays explicit.
 -/

@@ -12,7 +12,7 @@ public import Transformer.SequenceModel.Attention.Execution.Readout
 /-!
 # A complete source execution with every local premise discharged
 
-Source: `review/flat_spectrum.md`, *Complete captured execution*, L3--L4.
+Source: `review/actual_network/execution.md`, *Complete captured execution*, L3--L4.
 The captured invocation uses the real source GPT.forward, one active block,
 two tokens, exact source epsilons and stored geometric RoPE. The resulting
 ModelAccurate proof is assembled from independently checked primitive sites.

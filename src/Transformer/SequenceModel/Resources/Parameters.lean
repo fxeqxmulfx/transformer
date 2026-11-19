@@ -6,7 +6,7 @@ public import Mathlib.Data.Fintype.BigOperators
 /-!
 # Depth, width and stored precision in the complete normalized Transformer
 
-Source: `review/flat_spectrum.md`, *Depth, width and precision*, R1--R2.
+Source: `review/actual_network/sequence_models.md`, *Depth, width and precision*, R1--R2.
 The information bound uses every real source parameter coordinate, including
 both branches and the single tied embedding. A fixed b-bit value alphabet
 may be IEEE values, fixed point or another codebook. The theorem even allows

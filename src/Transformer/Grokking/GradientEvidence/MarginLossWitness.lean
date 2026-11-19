@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.JointLoss
 /-!
 # Increasing mean margin can worsen actual mean cross-entropy
 
-Source: `review/flat_spectrum.md`, *Joint difficult-query control*, JC4.
+Source: `review/actual_network/transport.md`, *Joint difficult-query control*, JC4.
 The old binary margins are log 8 on both queries. New margins are log 256
 and log 2. Both predictions remain strictly correct, the mean margin grows,
 and the actual mean CE grows because the difficult query deteriorates.

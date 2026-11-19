@@ -7,7 +7,7 @@ public import Transformer.ScheduleFree.AdamW.Invariants
 /-!
 # The actual preconditioned prediction-transfer operator
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, T1--T2.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, T1--T2.
 The operator is J_eval P J_train^T at the actual evaluation/query weights.
 It need not be symmetric across splits. Only the same-Jacobian operator is
 automatically positive. No fixed task readout or nuclear-norm objective is

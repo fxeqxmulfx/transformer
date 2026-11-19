@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Rounding
 /-!
 # Check normalizer outputs by algebraic residuals
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K1--K2;
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K1--K2;
 diff_gpt b98c665b, `gpt.py`, `block.py`, `mha.py`. A recorded output is
 compared with a chosen nonnegative scale times its own input. A squared
 residual certifies that scale without assuming a hardware sqrt/rsqrt error.

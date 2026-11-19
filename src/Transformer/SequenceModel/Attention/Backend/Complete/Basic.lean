@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Regularity.Head
 /-!
 # Rational certificates for complete captured executions
 
-Source: `review/flat_spectrum.md`, *Complete captured execution*, L2.
+Source: `review/actual_network/execution.md`, *Complete captured execution*, L2.
 The uniform local allowance is 1e-4; primitive certificates below are tighter.
 All checks concern the actual stored inputs and outputs. They do not assume
 an error for a whole block or a whole model.

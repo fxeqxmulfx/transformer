@@ -20,7 +20,7 @@ bound allows arbitrary gradient histories and changing features. Preserving
 a prediction still requires a positive starting margin and feature-motion
 control; discovery and global convergence remain unproved.
 
-The [derivation](../../review/flat_spectrum.md#main-model-adamw-motion)
+The [derivation](../../review/actual_network/dynamics.md#main-model-adamw-motion)
 states every obligation. The full Lean build and axiom audit pass with no
 new `sorry` or extra axioms. All numerical audits are complete. The general
 motion bound is too loose to certify the observed persistence. Certificates

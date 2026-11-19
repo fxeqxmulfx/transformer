@@ -7,7 +7,7 @@ public import Transformer.Grokking.AdamW.FirstStep
 /-!
 # An actual Adam first step can create a training-nullspace residual
 
-Source: `review/flat_spectrum.md`, *Residual learning dynamics*, RD5.
+Source: `review/actual_network/transport.md`, *Residual learning dynamics*, RD5.
 One fixed feature is `(1,2)`, with binary logits `(u+2v,0)` and the first
 class as target. The actual CE gradient at zero is `(-1/2,-1)`. Ordinary
 gradient descent stays in the feature span. The existing bias-corrected Adam

@@ -6,7 +6,7 @@ public import Transformer.GPTMini.RoPE
 /-!
 # Arbitrary channel-pair rotations and positional phases
 
-Source: `review/flat_spectrum.md`, *General positional models*, G2;
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G2;
 `python/src/lab/infrastructure/nn/positions.py`, `rotate`. Angles are arbitrary
 real functions of channel pair. RoPE chooses angle `position * frequency`;
 no particular frequency grid or quarter-turn is built into the theory.

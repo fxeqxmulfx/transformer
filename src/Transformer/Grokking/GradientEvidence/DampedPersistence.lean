@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Normed.Module.Basic
 /-!
 # Finite-window persistence from realized optimizer forcing
 
-Source: `review/flat_spectrum.md`, *Observed finite-window persistence*, DP1.
+Source: `review/actual_network/dynamics.md`, *Observed finite-window persistence*, DP1.
 Common weight decay stays in the anchor scale. The radius accumulates the
 norm of actual forcing, including moment history and rounding; it does not
 replace that forcing by a partial cross-entropy gradient. Any window can be

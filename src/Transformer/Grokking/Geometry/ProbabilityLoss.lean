@@ -6,7 +6,7 @@ public import Transformer.Landscape.Neural.Loss
 /-!
 # The within-answer geometry controlled by actual cross-entropy
 
-Source: `review/flat_spectrum.md`, *Loss-controlled geometry*, LG1–LG3.
+Source: `review/actual_network/transport.md`, *Loss-controlled geometry*, LG1–LG3.
 Small mean CE bounds squared probability error and within-answer probability
 scatter. These are objective consequences for arbitrary finite logits,
 including the actual normalized tied models, not assumed feature contraction.

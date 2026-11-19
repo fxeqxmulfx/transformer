@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.ContrastInteraction
 /-!
 # Joint parameter and feature movement of an actual linear score
 
-Source: `review/flat_spectrum.md`, *Joint difficult-query control*, JC1.
+Source: `review/actual_network/transport.md`, *Joint difficult-query control*, JC1.
 Features include final normalization. The increment p is the intended update;
 rho retains floating-point parameter rounding. Signed first-order terms stay
 together, and only their mixed term, rounding and execution change are bounded.

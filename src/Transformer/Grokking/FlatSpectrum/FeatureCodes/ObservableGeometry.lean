@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
 /-!
 # Geometry visible to the class readout
 
-Source: `review/flat_spectrum.md`, *Observable spectral geometry*, OG1–OG3.
+Source: `review/actual_network/dynamics.md`, *Observable spectral geometry*, OG1–OG3.
 Center readout rows across classes. Their Gram form measures only feature
 directions visible in score differences, rather than every hidden direction.
 The finite contrast bound retains the complete observable error energy.

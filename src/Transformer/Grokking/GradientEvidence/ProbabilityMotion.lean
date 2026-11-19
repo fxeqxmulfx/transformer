@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.InteractionDrift
 /-!
 # Readout and feature motion give prospective probability ceilings
 
-Source: `review/flat_spectrum.md`, *Prospective probability control*, PM3.
+Source: `review/actual_network/dynamics.md`, *Prospective probability control*, PM3.
 The old vectors and explicit displacement radii bound the finite bilinear
 change, including the mixed term. Executed-score residuals remain explicit.
 Feature radii must cover the moving tied encoder and final normalization.

@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Defs
 /-!
 # Source response without an architectural restriction
 
-Source: `review/flat_spectrum.md`, *General positional models*, G1. The
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G1. The
 finite response applies to arbitrary inputs, positional maps and attention.
 It controls parameter movement, not logit rank or learning success. The
 nonlinear forward remains outside the parameter-space decomposition.

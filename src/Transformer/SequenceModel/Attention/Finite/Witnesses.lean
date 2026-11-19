@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Attention.Finite.Existence
 /-!
 # Concrete witnesses for the full finite-sequence construction
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F1--F6.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F1--F6.
 These instances use the source epsilons, nonzero Q/K, a positive context
 scale, an actual disjoint-bank layout and a nontrivial operand. The direct
 FFN witness uses distinct input rows and a reachable unit answer.

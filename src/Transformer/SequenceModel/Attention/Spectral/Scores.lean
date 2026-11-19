@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Geometry
 /-!
 # Exact feature-score realization and its source margin
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J2--J3. The weights are constructed from the complete real score table,
 without knowing or assuming its winning labels. Every tied source logit is
 the requested score times one positive row scale. Thus spectral score

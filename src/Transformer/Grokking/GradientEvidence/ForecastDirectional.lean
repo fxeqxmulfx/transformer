@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.ForecastGram
 /-!
 # Signed class contrasts before final normalization
 
-Source: `review/flat_spectrum.md`, *Forecast tightening*, FT3. Final RMS has
+Source: `review/actual_network/transport.md`, *Forecast tightening*, FT3. Final RMS has
 a common positive denominator. Preserve signed numerator intervals, bound
 that denominator, and intersect with the independent final-feature interval.
 These statements do not use the unknown future feature to choose a bound.

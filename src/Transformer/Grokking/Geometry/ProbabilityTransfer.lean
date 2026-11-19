@@ -5,7 +5,7 @@ public import Transformer.Grokking.Geometry.ProbabilityLoss
 /-!
 # Transfer target probability through competitor odds bounds
 
-Source: `review/flat_spectrum.md`, *Probability transfer*, PT1–PT2.
+Source: `review/actual_network/transport.md`, *Probability transfer*, PT1–PT2.
 Training probabilities supply competitor odds. Valid bounds on changes in
 relative logits multiply those odds by explicit exponential penalties.
 Their sum bounds query loss and target probability. Different competitors

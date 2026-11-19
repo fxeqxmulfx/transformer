@@ -6,7 +6,7 @@ public import Transformer.CRASP.Rotary.Source
 /-!
 # Error certificate for the actual nonperiodic counting head
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A6.
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A6.
 The numerator/denominator tables and final rounding are exactly those of
 `CRASP.Rotary.sourceLayer`. The reference is the real softmax average on
 the same stored residual stream. This is a local error bound; it does not

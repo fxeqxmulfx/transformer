@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Stability.Local
 /-!
 # Independent cosine/sine table errors
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C2;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C2;
 diff_gpt `b98c665b`, `rope.py`. Generated cosine and sine entries can move
 independently and need not lie on the unit circle. This arithmetic map keeps
 the actual half-split layout. A separate execution contract accounts for

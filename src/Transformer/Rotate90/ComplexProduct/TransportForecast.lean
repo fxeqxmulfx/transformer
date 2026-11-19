@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecastOu
 /-!
 # Training-to-forecast bridge for the actual complex-product network
 
-Source: `review/flat_spectrum.md`, *Training-to-forecast bridge*, TF4.
+Source: `review/actual_network/transport.md`, *Training-to-forecast bridge*, TF4.
 Both old and new features are the source's actual four-normalization states.
 The rounded proposed parameters may be an actual AdamW update, but the bound
 does not assume how they were found. FT propagation supplies the feature-ball

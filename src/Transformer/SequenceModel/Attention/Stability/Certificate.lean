@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Stability.Classification
 /-!
 # Classification transfer to the actual nonperiodic counting model
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B8--B9.
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B8--B9.
 The sufficient margin is computed from B7, rather than postulated as a
 hidden-state error. The conclusion concerns the existing rounded execution
 and its single uniform counting formula. A nonconstant three-class witness

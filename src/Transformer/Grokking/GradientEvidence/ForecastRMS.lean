@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.ForecastTransport
 /-!
 # Anchored regularized normalization bounds
 
-Source: `review/flat_spectrum.md`, *Feature forecasts*, FF2. The native RMS
+Source: `review/actual_network/transport.md`, *Feature forecasts*, FF2. The native RMS
 map is `sqrt(width) * softNormalize (width*epsilon)`. The bound is anchored
 at the known nominal input, avoiding a global inverse-sqrt-epsilon factor.
 -/

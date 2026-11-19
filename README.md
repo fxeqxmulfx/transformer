@@ -86,8 +86,9 @@ on the task, split, initialization and optimizer.
   its independent real expansion retain the shared embedding, complex-linear
   projections, calibrated product, residual and all four normalizations.
   Their exact-real logits are proved equal.
-- **Conditional generalization and execution margins are proved.** CP, QR,
-  TT and the later transport results in [flat spectrum](review/flat_spectrum.md#complex-product-rotate90-bridge)
+- **Conditional generalization and execution margins are proved.** CP and QR in
+  [flat spectrum](review/flat_spectrum.md#complex-product-rotate90-bridge), and TT and the later
+  transport results in [actual_network/transport.md](review/actual_network/transport.md),
   turn feature errors or training-state contrast bounds into correct source
   decisions, retaining the final normalization and numerical error budget.
   They allow useful classification without unique recovery of a feature matrix.

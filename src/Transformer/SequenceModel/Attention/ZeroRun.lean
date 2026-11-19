@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Stationary
 /-!
 # Width and depth do not imply learning from every initialization
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, S2.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, S2.
 The actual Schedule-Free AdamW recurrence stays at zero query/base buffers
 when initialized there. This follows from the genuine smooth CE gradient,
 not an assumed zero update oracle. Every logit remains tied forever.

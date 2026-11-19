@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Attention.Finite.Encoder
 /-!
 # One full normalized rotary block computes any finite-arity table
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F6.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F6.
 A fixed appended readout token allows nonzero rotary Q/K to encode operand
 order. The actual finite SwiGLU branch then decodes the context. All matrices
 and phases are shared across the entire input table, with every source

@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Block
 /-!
 # Complete executed residual stack
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C6--C7;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C6--C7;
 diff_gpt `b98c665b`, `gpt.py`. Embedding error, input normalization, all
 independently weighted blocks and both residual additions are included.
 The operation predicates are backend obligations; the resulting state error

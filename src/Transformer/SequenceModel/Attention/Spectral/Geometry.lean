@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Realization
 /-!
 # Embed recovered scores without changing their ordering
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J2. Every real class score is placed in its tied embedding coordinate. One
 fixed positive scale bounds the whole finite table; final RMSNorm supplies
 an additional positive row scale with a uniform lower bound.

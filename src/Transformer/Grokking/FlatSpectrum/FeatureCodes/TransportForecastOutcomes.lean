@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecast
 /-!
 # Executed margins, probabilities and loss across training transport
 
-Source: `review/flat_spectrum.md`, *Training-to-forecast bridge*, TF3.
+Source: `review/actual_network/transport.md`, *Training-to-forecast bridge*, TF3.
 Every competitor retains its own old signed geometry and updated readout.
 Execution contributes both logit errors. A probability or loss guarantee
 uses all competitors, including a future change of the worst competitor.

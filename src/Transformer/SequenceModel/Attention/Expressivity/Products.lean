@@ -6,7 +6,7 @@ public import Transformer.Landscape.Neural.Products
 /-!
 # Exact quadratic compilation into the actual attention block's SwiGLU
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E2.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E2.
 Each product uses two opposed genuine SiLU gates. The matrices are fixed
 linear maps, with arbitrary zero-padded hidden channels. No activation is
 replaced by multiplication in the model definition.

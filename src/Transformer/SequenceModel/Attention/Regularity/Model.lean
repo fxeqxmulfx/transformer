@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Regularity.Block
 /-!
 # Local analyticity of the full supplied Transformer
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, R1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, R1.
 The sole extra activation condition is explicit avoidance of the XSA
 clipping spheres. It is checked on actual hidden states at the base weights.
 Induction proves regularity of the entire varying finite stack; no network

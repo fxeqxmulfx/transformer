@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Refined.Bounds
 /-!
 # Exact source intermediates for the captured invocation
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M4;
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M4;
 diff_gpt b98c665b, gpt.py and block.py. These are exact-real operations with
 the stored checkpoint and exact geometric phases, not floating references.
 -/

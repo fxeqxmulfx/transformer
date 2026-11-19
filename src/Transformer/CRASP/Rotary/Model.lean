@@ -6,7 +6,7 @@ public import Transformer.CRASP.Rotary.Source
 # Uniform counting formulas for the full normalized source architecture
 
 Source: diff_gpt b98c665b, `gpt.py`, `block.py`, `mha.py`, `feed_forward.py`,
-`rope.py`; `review/flat_spectrum.md`, *Uniform nonperiodic RoPE*, U3--U4.
+`rope.py`; `review/actual_network/sequence_models.md`, *Uniform nonperiodic RoPE*, U3--U4.
 One formula handles every finite input word with the exact geometric grid.
 The explicit fixed-point rounding model of `Normalized` is retained. Extending
 the mathematical grid to all naturals does not extend the Python KV cache.

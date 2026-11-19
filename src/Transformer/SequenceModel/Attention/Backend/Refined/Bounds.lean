@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Refined.Weights
 /-!
 # Verified recorded norm bounds and local normalizer gains
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M3.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M3.
 Selectors preserve the source fused layout. The norm inequalities are
 checked from the stored dyadic entries, without a supplied operator norm.
 -/

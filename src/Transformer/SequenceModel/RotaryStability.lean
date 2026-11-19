@@ -6,7 +6,7 @@ public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 /-!
 # Quantitative perturbations of the source RoPE
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A1;
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A1;
 `diff_gpt/domain/model/{rope,mha}.py` at `b98c665b`. These bounds compare
 actual half-split rotations and RMS-normalized logits. They allow arbitrary
 real phases and do not replace them with periodic position tags.

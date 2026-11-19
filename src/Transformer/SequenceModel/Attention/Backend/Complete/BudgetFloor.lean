@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Execution.Readout
 /-!
 # A lower bound on the existing global execution budget
 
-Source: `review/flat_spectrum.md`, *Complete captured execution*, L4.
+Source: `review/actual_network/execution.md`, *Complete captured execution*, L4.
 The global recurrence charges the same operation allowance at embedding and
 every normalization. Positive residual gains cannot undo that initial charge.
 This is a property of the sufficient bound, not a lower bound on model error.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.MainAdamMoments
 /-!
 # Finite-horizon motion for the main model's AdamW
 
-Source: `review/flat_spectrum.md`, *Main-model AdamW motion*, AD3.
+Source: `review/actual_network/dynamics.md`, *Main-model AdamW motion*, AD3.
 The radius is computed from the initial coordinate, schedule and moment
 bound. No sign, independence or loss-decrease property of gradients is used.
 The theorem permits positive learning rates; a long constant-rate interval

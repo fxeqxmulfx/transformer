@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Average
 /-!
 # Connect checked positive masses to the source causal SDPA contract
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K4.
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K4.
 The original causal mask, including the current token, is retained. The
 conclusion is exactly the average field of Execution.AttentionAccurate,
 not a separate softmax model or a presumed complete attention-branch error.

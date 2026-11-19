@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.AdaptiveResidual
 /-!
 # Adaptive forcing includes noncommutation and moment discrepancy
 
-Source: `review/flat_spectrum.md`, *Adaptive interaction control*, AI1–AI2.
+Source: `review/actual_network/transport.md`, *Adaptive interaction control*, AI1–AI2.
 Stored-moment equations follow rotate90_complex's native engine/update and
 product/moment at source hash 14cff3b5 (betas .9/.98, epsilon 1e-8).
 These are exact-real equations, not a floating-point execution theorem.

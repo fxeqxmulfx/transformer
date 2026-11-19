@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Stability.Vector
 /-!
 # Source softmax averages when residual states change
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B3;
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B3;
 diff_gpt `b98c665b`, `mha.py`. Unlike the earlier phase-only estimate, both
 the attention distribution and all projected values vary. The same arbitrary
 exact RoPE phases are used on both sides.

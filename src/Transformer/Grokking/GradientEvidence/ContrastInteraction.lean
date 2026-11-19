@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.MovingInteraction
 /-!
 # Class contrasts retain two different adaptive preconditioners
 
-Source: `review/flat_spectrum.md`, *Adaptive interaction control*, AI5.
+Source: `review/actual_network/transport.md`, *Adaptive interaction control*, AI5.
 A competitor-minus-target contrast is updated by the difference of the two
 actual row directions. It cannot in general use one shared diagonal scale.
 -/

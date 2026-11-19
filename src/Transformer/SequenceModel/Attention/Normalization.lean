@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Model
 /-!
 # What the actual normalizers bound
 
-Source: `review/flat_spectrum.md`, *General positional models*, G5, and the
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G5, and the
 supplied diff_gpt forward at `b98c665b`. Positive numerical epsilon is kept.
 Peri output normalization bounds each residual branch independently of its
 weight norms. Q/K RMSNorm and standard attention scaling bound scores by

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.ReadoutLeakage
 /-!
 # Residual dynamics under actual readout descent and changing subspaces
 
-Source: `review/flat_spectrum.md`, *Residual learning dynamics*, RD3–RD4.
+Source: `review/actual_network/transport.md`, *Residual learning dynamics*, RD3–RD4.
 Euclidean descent with decay contracts directions absent from all fixed
 training features. Outside that case, the objective controls a forcing term.
 Changing the learned basis adds a separate term; it is never assumed fixed

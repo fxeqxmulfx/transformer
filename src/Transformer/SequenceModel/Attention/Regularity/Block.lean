@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Regularity.Head
 /-!
 # Every trainable matrix participates in the regularity proof
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, R1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, R1.
 The source QKV/reshape/XSA/projection path and both Peri-RMSNorm branches
 are differentiated jointly in all scalar parameters and their incoming state.
 -/

@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.FeatureMetricCE
 /-!
 # Probability-weighted feature operators
 
-Source: `review/flat_spectrum.md`, *Query-weighted feature covariance*, QG1.
+Source: `review/actual_network/dynamics.md`, *Query-weighted feature covariance*, QG1.
 The operator retains the probability ceiling of every minibatch row and the
 fixed feature metric. Its squared L2 norm divided by the actual batch size
 will replace the worst-probability times feature-trace coefficient.

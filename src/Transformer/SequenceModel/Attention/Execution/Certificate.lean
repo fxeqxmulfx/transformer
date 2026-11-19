@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Witness
 /-!
 # Executed predictions and one uniform exact-RoPE counting formula
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C7--C8.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C7--C8.
 Both the execution trace and the existing rounded counting model are
 certified against the same exact real source. Agreement is conditional on
 their respective numerical certificates, uniformly in the input length.

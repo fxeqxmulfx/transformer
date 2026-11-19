@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Counting
 /-!
 # Spectral recovery, the normalized source transformer and RoPE counting
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J1--J7. This composes recovery of character scores with actual source weights,
 a strictly positive execution allowance, and a fixed counting-formula family.
 All numerators and natural exponents are included; denominators are nonzero.

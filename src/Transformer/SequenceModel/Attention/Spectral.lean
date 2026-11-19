@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Attention.Spectral.LocalCounting
 /-!
 # From recovered spectral features to normalized RoPE transformer decisions
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J1--J7. A separating powered-division character bank recovered under an ideal
 nuclear-norm objective supplies an actual source score computation. Finite
 SwiGLU interpolation preserves all scores up to positive normalization,

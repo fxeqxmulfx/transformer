@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
 /-!
 # Probability transfer through the normalized source and numerical execution
 
-Source: `review/flat_spectrum.md`, *Probability transfer*, PT4.
+Source: `review/actual_network/transport.md`, *Probability transfer*, PT4.
 Training and query states retain the actual fourth RMS denominator before
 the tied linear readout. Every logit execution error contributes to the
 relative-logit budget. Task-preserving routes transfer observed labels

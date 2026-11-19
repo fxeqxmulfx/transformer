@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableGeometry
 /-!
 # Invisible feature errors and observable margin budgets
 
-Source: `review/flat_spectrum.md`, *Observable spectral geometry*, OG1–OG4.
+Source: `review/actual_network/dynamics.md`, *Observable spectral geometry*, OG1–OG4.
 Zero centered energy is equivalent to a common score shift. Positive margin
 budgets therefore need to control the observable error, rather than recover
 every feature coordinate. The hypotheses are finite and remain explicit.

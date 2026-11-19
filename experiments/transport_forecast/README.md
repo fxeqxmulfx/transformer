@@ -47,7 +47,7 @@ the finite expansion, radius bound, endpoint transport, margins, probability
 and CE bounds, and the actual four-normalization source adapters. Every
 conditional theorem has an explicit example. A separate nonzero witness
 has simultaneous readout motion, feature motion, reconstruction residual
-and forecast remainder. See the [derivation](../../review/flat_spectrum.md#training-to-forecast-bridge).
+and forecast remainder. See the [derivation](../../review/actual_network/transport.md#training-to-forecast-bridge).
 
 ## Fixed comparisons and information boundary
 

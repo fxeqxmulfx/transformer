@@ -7,7 +7,7 @@ public import Mathlib.Analysis.InnerProductSpace.Basic
 /-!
 # Directional goodness for normalized complex blocks
 
-Source: `review/flat_spectrum.md`, *Forward–Forward reformulation*, LF1–LF2.
+Source: `review/actual_network/dynamics.md`, *Forward–Forward reformulation*, LF1–LF2.
 Hinton, arXiv:2212.13345 §§2–3.3 measures squared activities before
 normalization. Our variant uses corrected label distances after normalization.
 The real inner product covers complex vectors through their underlying real

@@ -35,7 +35,7 @@ Full AdamW/encoder perturbations remain separate, and no useful numerical
 horizon or full-hold guarantee follows from this reference theorem. The
 recreated comparison below measures zero useful positive horizons.
 
-The derivation is [PM1–PM4](../../review/flat_spectrum.md#prospective-probability-control).
+The derivation is [PM1–PM4](../../review/actual_network/dynamics.md#prospective-probability-control).
 The native library evaluates the same probability and motion bounds with
 stable log odds. Separate frozen constructors and future-state verifiers
 evaluate those bounds on the recreated training evidence.
@@ -60,7 +60,7 @@ parameter buffer. It takes saved parameters/moments and a known schedule;
 it cannot read future gradients or states. Old execution residuals and
 changes of execution contrasts are separate inputs to the probability bound.
 
-See [EM1–EM5](../../review/flat_spectrum.md#full-encoder-motion),
+See [EM1–EM5](../../review/actual_network/dynamics.md#full-encoder-motion),
 [encoder.rs](encoder.rs), [adam.rs](adam.rs) and
 [the Lean module](../../src/Transformer/Rotate90/FeatureMotion.lean).
 The constructor uses conservative Frobenius operator caps. Its arithmetic is

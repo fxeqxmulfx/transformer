@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Adaptive.Products
 /-!
 # Stored RoPE, scores and causal averages with local bounds
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M2.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M2.
 The exact phases are arbitrary. Captured Q/K and value magnitudes replace
 worst-case normalized-ball bounds, while table error remains explicit.
 -/

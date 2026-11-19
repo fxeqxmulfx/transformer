@@ -6,7 +6,8 @@ public import Transformer.SequenceModel.Attention.Expressivity.Model
 /-!
 # Complete finite-arity classification with tied embeddings and finite depth
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F6.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F6.
 The constructed active block is installed in the actual source residual
 stack. Additional blocks are identity residuals. The actual embedding and
 final normalizers and the tied raw readout yield a positive strict margin.

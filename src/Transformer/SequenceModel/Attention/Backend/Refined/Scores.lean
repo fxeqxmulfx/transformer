@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Attention.Backend.Refined.Scalars
 /-!
 # Propagating the captured input through Q/K/V and exact source RoPE
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M4.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M4.
 Every radius below follows from local operation checks and exact stored
 weights. No whole-state error or final classification margin is assumed.
 -/

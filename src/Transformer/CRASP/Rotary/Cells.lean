@@ -6,7 +6,7 @@ public import Transformer.CRASP.Rotary.Logic
 # Rounding cells expressed by position-weighted integer comparisons
 
 Extension of arXiv:2506.16055v3, Appendix B.1/B.2 rounding cells;
-`review/flat_spectrum.md`, *Uniform nonperiodic RoPE*, U1.
+`review/actual_network/sequence_models.md`, *Uniform nonperiodic RoPE*, U1.
 Division and saturated rounding are eliminated into explicit linear integer
 comparisons. They are not extra primitives of the counting language.
 -/

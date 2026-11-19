@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Normalization
 /-!
 # Normalization certificates for the captured CPU and CUDA fixtures
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K6;
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K6;
 `review/backend_contract_check.py`. The input and epsilons match the capture.
 The output boxes are checked with exact rational arithmetic in Python. Lean
 proves every output in each box satisfies the stated local operation bound.

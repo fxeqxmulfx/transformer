@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Readout
 /-!
 # Normalization sensitivity at a recorded input
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M1.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M1.
 The RMS proof refines `GPTMini.rmsNormEps_lipschitz` by retaining its
 first denominator. The clipped L2 proof likewise retains max(norm(x), eps).
 Both estimates hold for every other input y, including zero and clip crossings.

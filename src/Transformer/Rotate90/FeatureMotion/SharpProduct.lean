@@ -5,7 +5,7 @@ public import Transformer.Rotate90.FeatureMotion.Product
 /-!
 # Checkpoint pair amplitudes in the complex-product bound
 
-Source: `review/flat_spectrum.md`, *Pairwise encoder amplification*, PA1.
+Source: `review/actual_network/dynamics.md`, *Pairwise encoder amplification*, PA1.
 The kernel is pointwise in logical complex pairs. Its old amplification is
 the largest pair amplitude, which can be smaller than the full vector norm.
 The finite mixed term still uses both unrestricted displacement radii.

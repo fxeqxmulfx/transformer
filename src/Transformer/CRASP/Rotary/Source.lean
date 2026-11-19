@@ -7,7 +7,7 @@ public import Transformer.CRASP.Normalized.Input
 # Exact source RoPE coefficients at unbounded natural positions
 
 Source: `diff_gpt/domain/model/{block,mha,feed_forward,rope}.py` at b98c665b;
-`review/flat_spectrum.md`, *Uniform nonperiodic RoPE*, U3.
+`review/actual_network/sequence_models.md`, *Uniform nonperiodic RoPE*, U3.
 The phases are exact reals and need not be periodic. All arithmetic/rounding
 sites are those of `Normalized.sourceLayer`: fixed-point coefficients and
 stored residuals, exact integer sums, real local maps. IEEE rounding remains

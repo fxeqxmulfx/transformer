@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Attention.Model
 # A rounded counting model of the normalized source block
 
 Source: `diff_gpt/domain/model/{block,mha,feed_forward,rope}.py` at `b98c665b`,
-and `review/flat_spectrum.md`, *Depth, width and precision*, R4.
+and `review/actual_network/sequence_models.md`, *Depth, width and precision*, R4.
 This extends arXiv:2506.16055v3, B.2/F to multiple heads, half-split RoPE,
 RMS Q/K, XSA, four branch normalizers and SwiGLU. Deviations are explicit:
 round exponential coefficients and weighted value coordinates before summing,

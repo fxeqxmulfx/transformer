@@ -6,7 +6,7 @@ public import Mathlib.Analysis.CStarAlgebra.Matrix
 /-!
 # Gram-based amplification bounds
 
-Source: `review/flat_spectrum.md`, *Forecast tightening*, FT2. Bound the
+Source: `review/actual_network/transport.md`, *Forecast tightening*, FT2. Bound the
 operator norm by the square root of a Gram Frobenius norm. This uses all
 Gram entries, including correlations, without assuming an estimated leading
 singular vector is exact. Native outward rounding is audited separately.

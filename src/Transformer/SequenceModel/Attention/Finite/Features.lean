@@ -6,7 +6,8 @@ public import Transformer.SequenceModel.Attention.Finite.Evaluation
 /-!
 # Exact finite interpolation with bias-free SwiGLU
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F2.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F2.
 Three hidden channels per input row suffice whenever the input directions
 are distinct and a shared linear channel is positive. All gate, value and
 output maps are fixed before an input is queried. RMSNorm may rescale each

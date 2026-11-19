@@ -7,7 +7,8 @@ public import Transformer.SequenceModel.Attention.Finite.NormGeometry
 /-!
 # A lossless actual normalized Transformer context encoder
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F5.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F5.
 The head result is connected to fused QKV, the attention projection, its
 RMSNorm and the residual. Input code injectivity is proved from matrices and
 phases, with no hypothesis about the final answer or its logits.

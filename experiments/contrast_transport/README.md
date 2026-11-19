@@ -27,7 +27,7 @@ This uses known task symmetry, without assuming model equivariance.
 
 Let `mu` be a group's training mean, `H_i = h_i-mu`, `e = h_query-mu`, and
 `w_v = E_target-E_v`. For arbitrary coefficients `a`, retain the actual residual
-`r = e-H^T a`. The [Lean extension](../../review/flat_spectrum.md#training-state-transport)
+`r = e-H^T a`. The [Lean extension](../../review/actual_network/transport.md#training-state-transport)
 proves the contrast bound
 
 ```

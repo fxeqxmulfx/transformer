@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Attention.Finite.Phases
 /-!
 # The actual normalized rotary XSA head produces the ordered code
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F5.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F5.
 The causal denominator includes the readout token. Its contribution is then
 removed by the source XSA operation, not by an attention mask. All earlier
 tokens, including repeated readout labels, follow the same fixed matrices.

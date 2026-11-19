@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Finite.Head
 /-!
 # Actual causal XSA scores and context on the prescribed source grid
 
-Source: `review/flat_spectrum.md`, *Prescribed RoPE capacity*, P1--P3.
+Source: `review/actual_network/sequence_models.md`, *Prescribed RoPE capacity*, P1--P3.
 Fixed integer positions use the source geometric frequencies. The ordinary
 query matrix gain remains inside the positive-epsilon RMSNorm image. The
 real softmax denominator retains self attention; XSA removes the final

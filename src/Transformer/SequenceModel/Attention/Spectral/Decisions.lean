@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Numerics
 /-!
 # Every class decision follows the transferred source margin
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J6--J7. Strict prediction has a unique winner. This extends positive-target
 certificates to equality of the complete Boolean class-decision vectors.
 The executed source margin is derived from the spectral construction.

@@ -177,9 +177,10 @@ active-basis measurement. Bounds and fitting metadata are saved before query
 outcomes are read for scoring. The second pass checks the emitted files
 against direct FP64 and recorded GPU margins, without calling the basis
 constructor. Its runtime is charged to the same 1800-second postprocessing
-cap. The signed-transport bound and OG3 in
-[`review/flat_spectrum.md`](../../review/flat_spectrum.md) already apply to
-an arbitrary computed basis with its residual and defect terms retained.
+cap. The signed-transport bound in
+[`review/actual_network/transport.md`](../../review/actual_network/transport.md) and OG3 in
+[`review/actual_network/dynamics.md`](../../review/actual_network/dynamics.md) already apply
+to an arbitrary computed basis with its residual and defect terms retained.
 
 To regenerate the complete paired summary and actual-motion diagnostic
 from the preserved measurements:

@@ -18,7 +18,7 @@ Ten Lean theorems formalize the damped forcing radius, projected AdamW
 forcing, norm and energy-share bounds, and finite-window margin transport.
 Their explicit forcing hypotheses describe an observed path; they do not
 establish a favorable future forcing budget from the starting optimizer state.
-The [DP1–DP3 derivation](../../review/flat_spectrum.md#observed-finite-window-persistence)
+The [DP1–DP3 derivation](../../review/actual_network/dynamics.md#observed-finite-window-persistence)
 also explains why readout concentration is insufficient for prediction.
 
 ## Readout geometry throughout the hold

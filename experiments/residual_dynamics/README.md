@@ -6,7 +6,7 @@ Among 12 intervals with falling training CE, rank-32 orbit readout residual
 energy rises in 11; the mean validation residual-norm product rises in 3.
 Complex multiplication and the checkpoints remain unchanged.
 
-The [Lean derivation](../../review/flat_spectrum.md#residual-learning-dynamics)
+The [Lean derivation](../../review/actual_network/transport.md#residual-learning-dynamics)
 adds 23 proved theorems. It derives the actual fixed-feature CE gradient,
 its projected-energy bound and a sufficient Euclidean descent/decay mechanism.
 An actual Adam first-step counterexample lowers CE while creating a residual

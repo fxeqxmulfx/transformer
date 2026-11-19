@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.CEGram.Gram
 /-!
 # Transport a weighted feature operator from a checkpoint
 
-Source: `review/flat_spectrum.md`, *Query-weighted feature covariance*, QG3.
+Source: `review/actual_network/dynamics.md`, *Query-weighted feature covariance*, QG3.
 All input features may move. Every row retains its own probability ceiling
 and feature-motion radius, while the feature metric remains fixed. Numerical
 execution errors must already be included in the supplied feature radii.

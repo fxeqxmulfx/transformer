@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.UpdateAttribution
 /-!
 # Finite and cumulative class-energy attribution
 
-Source: `review/flat_spectrum.md`, *Class-contrast discovery and persistence*,
+Source: `review/actual_network/dynamics.md`, *Class-contrast discovery and persistence*,
 CG4–CG5. Signed component energies telescope over an actual trajectory.
 Relative active-class energy has a different attribution from absolute
 energy: common decay cancels from its radial numerator. All finite quadratic

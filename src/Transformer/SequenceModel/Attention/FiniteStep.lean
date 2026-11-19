@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Transfer.Classification
 /-!
 # Certified finite prediction transfer for the actual normalized Transformer
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, T3.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, T3.
 Query regularity derives the true training gradient. Actual activation
 regularity on the evaluation step segment derives differentiability of
 every held-out logit. A derivative-variation bound then certifies a finite

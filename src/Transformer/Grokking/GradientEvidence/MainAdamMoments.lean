@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.AdaptiveForcing
 /-!
 # A gradient-independent bound for the main model's AdamW moments
 
-Source: `review/flat_spectrum.md`, *Main-model AdamW motion*, AD1–AD2.
+Source: `review/actual_network/dynamics.md`, *Main-model AdamW motion*, AD1–AD2.
 The exact-real recurrences use beta1=.9 and beta2=.95 from the copied
 main-model kernels. Gradients may depend on the full tied model, past
 states, minibatches and clipping. Explicit roundoff is a separate term.

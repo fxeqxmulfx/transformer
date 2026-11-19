@@ -5,7 +5,7 @@ public import Transformer.Precision.Binary32Error
 /-!
 # Product and reduction rounding in an explicit dot-product order
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C1.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C1.
 Products and accumulator additions have separate rounding maps. With nearest
 accumulator rounding, an identity product map models a single correctly rounded
 fused multiply-add per step; two nearest maps model separate multiply/add.

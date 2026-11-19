@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Tables
 /-!
 # Exact geometric phases and stored-table boxes for head width four
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K5--K6;
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K5--K6;
 diff_gpt b98c665b, `rope.py`. At source base 10000 and position one the
 two exact phases are 1 and 1/100. The captured source computes both tables
 in float32; the checks include frequency construction and table rounding.

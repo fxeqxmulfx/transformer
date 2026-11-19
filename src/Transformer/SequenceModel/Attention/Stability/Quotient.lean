@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Stability.Softmax
 /-!
 # Rounding positive weighted averages
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A6;
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A6;
 the coefficient rounding convention in `CRASP.Rotary.Source`, extending
 arXiv:2506.16055v3, Appendix B.1--B.2. Sums here are exact, as in that
 counting model. No IEEE summation or hardware exponential accuracy is assumed.

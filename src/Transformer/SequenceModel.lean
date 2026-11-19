@@ -22,7 +22,7 @@ public import Transformer.SequenceModel.Attention.ConstantPrefixes
 /-!
 # General positional inputs and normalized multi-variable attention
 
-Source: `review/flat_spectrum.md`, *General positional models*, G1--G5,
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G1--G5,
 *Transformer learning bridges*, R1, S1--S2, T1--T4, E1--E8, and
 *Finite sequence capacity and information limits*, F1--F6, N1--N2, and
 *Prescribed RoPE capacity*, P1--P6.

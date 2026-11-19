@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.ReadoutGradient
 /-!
 # Training loss bounds the projected readout gradient
 
-Source: `review/flat_spectrum.md`, *Residual learning dynamics*, RD2.
+Source: `review/actual_network/transport.md`, *Residual learning dynamics*, RD2.
 For any fixed linear map Q, the actual readout gradient obeys
 `||QG||_F^2 <= 2 * training_CE * mean_training ||Qh||^2`.
 The feature factor includes every training row, not only the answer orbit

@@ -6,7 +6,7 @@ public import Mathlib.Analysis.Complex.Exponential
 /-!
 # Polynomial exponential witnesses certify recorded SiLU outputs
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K3.
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K3.
 The certificate compares stored scalars with rational polynomial evaluations,
 then uses a proved analytic remainder. It does not trust another floating-point
 implementation as an exact reference for exp, sigmoid or SiLU.

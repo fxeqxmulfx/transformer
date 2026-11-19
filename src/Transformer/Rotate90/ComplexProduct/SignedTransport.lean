@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability
 /-!
 # Signed directional transport for the executed complex-product source
 
-Source: `review/flat_spectrum.md`, *Signed directional transport*, ST3.
+Source: `review/actual_network/transport.md`, *Signed directional transport*, ST3.
 The exact normalized source readout inherits the signed training bound.
 Execution error stays explicit; neither a floating-point SVD certificate nor
 optimizer discovery is inferred from the algebraic inequality.

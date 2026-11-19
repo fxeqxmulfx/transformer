@@ -7,7 +7,7 @@ public import Transformer.Grokking.Geometry.ProbabilityMotion
 /-!
 # Explicit execution allowances in query-weighted CE control
 
-Source: `review/flat_spectrum.md`, *Query-weighted feature covariance*, QG3.
+Source: `review/actual_network/dynamics.md`, *Query-weighted feature covariance*, QG3.
 GPU logits and ideal real dot products need not coincide. Likewise, an ideal
 feature-motion radius needs both endpoint execution errors before controlling
 executed features. These premises are explicit; finite numerical checks do not

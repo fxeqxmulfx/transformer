@@ -6,7 +6,8 @@ public import Transformer.SequenceModel.Attention.Expressivity.Layout
 /-!
 # Ordered finite-sequence codes after own-value subtraction
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F4.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F4.
 One vocabulary token is a fixed readout token, appended after the operands.
 XSA removes its value coordinate. The remaining weighted token counts still
 recover every operand position when the positional subset sums are distinct.

@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Attention.Finite.Features
 /-!
 # Compile the finite interpolation into the actual Transformer FFN
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F3.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F3.
 The matrices have exactly the source hidden width, with unused channels
 zero-padded. Both feed-forward normalizers and the residual remain in place.
 The hypotheses describe input geometry and branch reachability, not desired

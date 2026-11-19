@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Counting
 /-!
 # Concrete range, rounding and nonzero execution certificates
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J7. These witnesses use the existing three-class source at eps=3/4,
 xeps=1, p=8, s=5 and a nonzero logit error 1/1024. Every numerical
 premise is discharged. They do not certify a concrete GPU implementation.

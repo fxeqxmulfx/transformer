@@ -6,7 +6,7 @@ public import Mathlib.Algebra.Field.ZMod
 /-!
 # Every finite binary task, including powered modular division, is representable
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E8.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E8.
 The theorem concerns the full supplied real-arithmetic forward: tied
 embedding/readout, arbitrary fixed RoPE tables, causal softmax, clipped
 XSA, Peri-RMSNorm and SwiGLU. It is an explicit sufficient finite capacity

@@ -1,7 +1,7 @@
 # Probability transfer from training states
 
 Can training confidence and unlabeled query geometry bound held-out
-probabilities? The [Lean extension](../../review/flat_spectrum.md#probability-transfer)
+probabilities? The [Lean extension](../../review/actual_network/transport.md#probability-transfer)
 proves a conditional probability floor and loss ceiling. On the plain-product
 checkpoints, the Euclidean penalty is too conservative to explain most of the
 observed generalization: the sufficient condition for target probability above

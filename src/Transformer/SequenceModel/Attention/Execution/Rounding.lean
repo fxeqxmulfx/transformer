@@ -6,7 +6,7 @@ public import Transformer.Precision.ArithmeticError
 /-!
 # Scalar execution certificates imply tensor operation bounds
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C1--C3.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C1--C3.
 These adapters discharge vector error contracts from represented scalar
 brackets or explicit sequential product/add rounding. They do not assign
 this reduction order to an unspecified CUDA matrix-multiplication kernel.

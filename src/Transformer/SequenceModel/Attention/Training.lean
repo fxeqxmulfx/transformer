@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Concentration
 /-!
 # Full normalized attention in the architecture-independent learning theory
 
-Source: `review/flat_spectrum.md`, *General positional models*, G4--G5.
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G4--G5.
 Examples carry independent IDs, token arrays and readout positions, so repeated
 token arrays and losses at every position can be represented without losing
 multiplicity. All actual normalized layers and scalar parameters remain.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.CEGram.Basic
 /-!
 # Actual CE damping with a probability-weighted feature operator
 
-Source: `review/flat_spectrum.md`, *Query-weighted feature covariance*, QG2.
+Source: `review/actual_network/dynamics.md`, *Query-weighted feature covariance*, QG2.
 The gradient is still the true partial CE derivative. A different probability
 ceiling may be supplied for every example, without changing labels, unused
 classes, clipping or the fixed feature metric. No encoder term is discarded

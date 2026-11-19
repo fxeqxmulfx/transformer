@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Stability.Continuity
 /-!
 # Continuity of the complete normalized source in RoPE frequencies
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A3;
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A3;
 `diff_gpt/domain/model/{gpt,block,mha,feed_forward}.py` at `b98c665b`.
 All weights are fixed but arbitrary. Phases vary through the entire residual
 stack; Q/K/V in later blocks are not held fixed in this result.

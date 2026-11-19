@@ -120,7 +120,7 @@ terms and retains FP32 rounding explicitly; it changed no Lean statements.
 Task #187 proves 35 additional Lean theorems: the finite joint step, its
 mixed and rounding remainder, all-competitor margins, probability-weighted
 actual CE change, subset loss bounds, and the row-specific Adam connection.
-The [source derivation](../../review/flat_spectrum.md#joint-difficult-query-control)
+The [source derivation](../../review/actual_network/transport.md#joint-difficult-query-control)
 and [Lean entry point](../../src/Transformer/Grokking/GradientEvidence/AdaptiveMargin.lean)
 retain feature motion and execution error explicitly. A separate proved
 counterexample shows that mean margin and mean CE can both increase even
@@ -195,7 +195,7 @@ the original architecture ranking remain unchanged.
 Task #188 adds 22 Lean theorems for finite forecast propagation, anchored
 normalization and sigmoid sensitivity, mixed product terms, and transport
 from a feature ball to actual margin and loss intervals. The
-[derivation](../../review/flat_spectrum.md#feature-forecasts) distinguishes
+[derivation](../../review/actual_network/transport.md#feature-forecasts) distinguishes
 these proofs from verification of the native implementation or CUDA arithmetic.
 
 The forecast uses the old network's value and directional derivative along

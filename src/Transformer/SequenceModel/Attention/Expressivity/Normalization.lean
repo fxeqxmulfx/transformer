@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Model
 /-!
 # Exact inversion of a normalized residual branch
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E1.
 Positive-epsilon RMSNorm maps onto the open ball of radius sqrt(width).
 The explicit inverse below lets a finite interpolation construction retain
 the actual Peri-RMSNorm output, rather than replace normalization by identity.

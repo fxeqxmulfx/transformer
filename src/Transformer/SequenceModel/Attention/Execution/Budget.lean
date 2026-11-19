@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Basic
 /-!
 # Explicit budgets for the recorded source operations
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C4--C6.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C4--C6.
 These are arithmetic expressions in actual learned matrix norms, dimensions,
 positive normalization epsilons, operation error delta and table error tau.
 They contain no assumed attention-output or whole-block error constants.

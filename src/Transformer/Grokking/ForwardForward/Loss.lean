@@ -7,7 +7,7 @@ public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 /-!
 # Pairwise local loss and its actual derivatives
 
-Source: `review/flat_spectrum.md`, *Forward–Forward reformulation*, LF3–LF4.
+Source: `review/actual_network/dynamics.md`, *Forward–Forward reformulation*, LF3–LF4.
 This modifies Hinton's arXiv:2212.13345 §§2–3.3 objective to paired
 directional margins. A local derivative is taken with the previous feature
 held fixed; a concrete two-layer witness distinguishes it from global credit.

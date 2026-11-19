@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.ForecastGram
 /-!
 # Matrix and tied-source correspondence for encoder motion
 
-Source: `review/flat_spectrum.md`, *Full encoder motion*, EM1 and EM4.
+Source: `review/actual_network/dynamics.md`, *Full encoder motion*, EM1 and EM4.
 The real matrix maps used by the bound are ordinary dense layers. The
 existing complex-linear source model embeds into this more general graph
 with identical normalized features and logits. FT2 supplies its Frobenius

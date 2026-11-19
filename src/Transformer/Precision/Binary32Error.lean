@@ -5,7 +5,7 @@ public import Transformer.Precision.Float
 /-!
 # Local error bounds from actual binary32 grid points
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C1;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C1;
 derived from `Precision.ieee` (IEEE 754 binary32 decoding) and `IsNearest`.
 The tie rule is immaterial to the bounds. Nearest finite-grid rounding
 models finite, non-overflowing results; it does not model NaNs, infinity,

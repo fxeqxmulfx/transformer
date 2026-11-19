@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Numerics
 /-!
 # An unavoidable failure of the current global margin certificate
 
-Source: `review/flat_spectrum.md`, *Complete captured execution*, L4--L5.
+Source: `review/actual_network/execution.md`, *Complete captured execution*, L4--L5.
 One actual residual addition has error 2^-24. Every valid uniform allowance
 therefore makes the existing global class radii exceed the largest possible
 source margin. This refutes applicability of that sufficient bound to this

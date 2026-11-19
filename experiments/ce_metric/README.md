@@ -45,7 +45,7 @@ changes since the checkpoint, tied encoder input and execution residuals.
 The signed linear credits add; the quadratic term uses their total and
 preserves cross terms. These identities do not bound unknown remainders.
 
-See the [FM1–FM4 derivation](../../review/flat_spectrum.md#checkpoint-fixed-feature-metrics)
+See the [FM1–FM4 derivation](../../review/actual_network/dynamics.md#checkpoint-fixed-feature-metrics)
 and [`FeatureMetricControl.lean`](../../src/Transformer/Grokking/GradientEvidence/FeatureMetricControl.lean).
 This extends the dynamical partial reference, without assuming or proving
 that training discovers flat spectra or useful feature alignment.

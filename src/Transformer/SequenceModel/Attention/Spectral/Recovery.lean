@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.PoweredDivision
 /-!
 # Recover the score-producing powered-division bank
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J3. Connected observation patterns with a perfect matching recover each
 character kernel under the stated ideal nuclear-norm objective. The recovered
 bank itself, rather than a supplied answer table, yields the score margin.

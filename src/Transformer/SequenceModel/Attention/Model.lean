@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Basic
 /-!
 # The supplied diff_gpt forward, with normalization kept in its actual places
 
-Source: `review/flat_spectrum.md`, *General positional models*, G4, and
+Source: `review/actual_network/sequence_models.md`, *General positional models*, G4, and
 `diff_gpt/domain/model/{gpt,block,mha,feed_forward,rope}.py` at `b98c665b`.
 This is the full no-cache training forward in real arithmetic. RMS epsilon
 is the dtype epsilon (2^-23 for float32); XSA's clipped L2 epsilon is separate

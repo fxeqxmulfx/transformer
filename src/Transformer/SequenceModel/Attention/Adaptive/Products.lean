@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Adaptive.Basic
 /-!
 # Dimension-aware activation and product propagation
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M2.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M2.
 Coordinate multipliers are bounded at recorded inputs. Euclidean errors
 are aggregated once, rather than converting every coordinate back to a
 full vector error at every multiplication.

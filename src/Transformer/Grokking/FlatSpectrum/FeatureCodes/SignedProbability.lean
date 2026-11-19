@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedTransport
 /-!
 # Probability and loss from signed directional transport
 
-Source: `review/flat_spectrum.md`, *Signed directional transport*, ST3–ST5.
+Source: `review/actual_network/transport.md`, *Signed directional transport*, ST3–ST5.
 Keep training log-odds combinations signed and bound their remaining error.
 These bounds use actual normalized states; they impose no query target-error
 assumption and do not assert that learning supplies useful low-rank geometry.

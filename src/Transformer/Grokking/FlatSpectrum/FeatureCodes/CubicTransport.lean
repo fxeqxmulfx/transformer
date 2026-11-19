@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicQuotient
 /-!
 # Transfer an observed cubic label along an explicit input route
 
-Source: `review/flat_spectrum.md`, *Training-state transport*, TT4.
+Source: `review/actual_network/transport.md`, *Training-state transport*, TT4.
 Translations `(a,b) -> (a+t,b-t)` preserve the sum. Simultaneous multiplication
 by 1, 35 or 61 preserves its cube modulo 97. Thus a training anchor supplies
 the answer for a query connected by this checked route; no query label is

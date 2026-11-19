@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Finite.Existence
 /-!
 # Finite full-model capacity with prescribed source RoPE and original inputs
 
-Source: `review/flat_spectrum.md`, *Prescribed RoPE capacity*, P5--P6.
+Source: `review/actual_network/sequence_models.md`, *Prescribed RoPE capacity*, P5--P6.
 Fixed integer RoPE encodes the input, and a finite actual SwiGLU branch
 decodes it. The complete normalized model with tied readout strictly
 classifies every finite table at its last original token. Additional

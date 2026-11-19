@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Scores
 /-!
 # Positive execution tolerance for a positive spectral source margin
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J6. The existing operation-error recurrence is a continuous expression that
 vanishes at zero error. Every fixed finite model with a positive margin
 therefore has a strictly positive local arithmetic/table error allowance.

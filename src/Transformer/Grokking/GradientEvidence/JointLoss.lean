@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.RelativeLoss
 /-!
 # Query and fixed-subset cross-entropy bounds from the actual readout step
 
-Source: `review/flat_spectrum.md`, *Joint difficult-query control*, JC3–JC4.
+Source: `review/actual_network/transport.md`, *Joint difficult-query control*, JC3–JC4.
 The signed joint drift and explicit mixed/rounding allowance control actual
 CE, and their ceilings average over any fixed query subset. A bottom decile
 selected by old margins is one such subset, not a new-state selection.

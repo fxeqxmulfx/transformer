@@ -123,7 +123,7 @@ prove the actual derivative sign, finite-step condition, class decomposition,
 explicit generators, cumulative identities and relative-share law, with
 satisfying examples. A separate witness has all centered energy in active
 contrasts yet a strictly wrong prediction. The
-[derivation](../../review/flat_spectrum.md#class-contrast-discovery-and-persistence)
+[derivation](../../review/actual_network/dynamics.md#class-contrast-discovery-and-persistence)
 states the hypotheses and remaining gap: controlling coupled feature learning,
 adaptive scales and moments enough to guarantee query alignment and margins
 over time. That global theorem remains open.

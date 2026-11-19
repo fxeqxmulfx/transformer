@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.AnswerContrast
 /-!
 # Contrast control from training-state transport
 
-Source: `review/flat_spectrum.md`, *Training-state transport*, TT1–TT3.
+Source: `review/actual_network/transport.md`, *Training-state transport*, TT1–TT3.
 A query state is reconstructed from centered training states. Its residual
 is retained explicitly, including directions outside the training span.
 Cauchy–Schwarz on the joint training/residual coordinates bounds each linear

@@ -56306,7 +56306,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.SequenceModel.Attention.Spectral](src/Transformer/SequenceModel/Attention/Spectral.lean)** — 21 lines, aggregator
 
-**[Transformer.SequenceModel.Attention.Stability](src/Transformer/SequenceModel/Attention/Stability.lean)** — 25 lines, aggregator
+**[Transformer.SequenceModel.Attention.Stability](src/Transformer/SequenceModel/Attention/Stability.lean)** — 26 lines, aggregator
 
 **[Transformer.SequenceModel.Attention.Stationary](src/Transformer/SequenceModel/Attention/Stationary.lean)** — 127 lines
 
@@ -57151,183 +57151,183 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.SequenceModel.Attention.Finite`
 
-**[Transformer.SequenceModel.Attention.Finite.Block](src/Transformer/SequenceModel/Attention/Finite/Block.lean)** — 81 lines
+**[Transformer.SequenceModel.Attention.Finite.Block](src/Transformer/SequenceModel/Attention/Finite/Block.lean)** — 82 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`exists_sequence_block`](src/Transformer/SequenceModel/Attention/Finite/Block.lean#L26) | theorem | proved |
+| [`exists_sequence_block`](src/Transformer/SequenceModel/Attention/Finite/Block.lean#L27) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.Codes](src/Transformer/SequenceModel/Attention/Finite/Codes.lean)** — 106 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`contextCode`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L27) | def |  |
-| [`inner_bits`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L32) | theorem | proved |
-| [`context_measure`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L40) | theorem | proved |
-| [`context_orthogonal`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L56) | theorem | proved |
-| [`context_injective`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L66) | theorem | proved |
-| [`exists_bounded_context`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L88) | theorem | proved |
-| [`banks`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L95) | def |  |
-
-**[Transformer.SequenceModel.Attention.Finite.Compiler](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean)** — 112 lines
+**[Transformer.SequenceModel.Attention.Finite.Codes](src/Transformer/SequenceModel/Attention/Finite/Codes.lean)** — 107 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`ridgeMap`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L26) | def |  |
-| [`ridgeOut`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L35) | def |  |
-| [`withRidges`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L44) | def |  |
-| [`feedForward_withRidges`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L49) | theorem | proved |
-| [`rms_projective`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L63) | theorem | proved |
-| [`interpolationLayout`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L77) | def |  |
-| [`exists_normalized_ffn`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L86) | theorem | proved |
+| [`contextCode`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L28) | def |  |
+| [`inner_bits`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L33) | theorem | proved |
+| [`context_measure`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L41) | theorem | proved |
+| [`context_orthogonal`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L57) | theorem | proved |
+| [`context_injective`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L67) | theorem | proved |
+| [`exists_bounded_context`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L89) | theorem | proved |
+| [`banks`](src/Transformer/SequenceModel/Attention/Finite/Codes.lean#L96) | def |  |
 
-**[Transformer.SequenceModel.Attention.Finite.Encoder](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean)** — 83 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`encoder_attention`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L28) | theorem | proved |
-| [`contextState`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L45) | def |  |
-| [`readoutChannel`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L51) | def |  |
-| [`context_common`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L57) | theorem | proved |
-| [`contextState_injective`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L69) | theorem | proved |
-
-**[Transformer.SequenceModel.Attention.Finite.Evaluation](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean)** — 118 lines
+**[Transformer.SequenceModel.Attention.Finite.Compiler](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean)** — 113 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`exists_separation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L27) | theorem | proved |
-| [`evaluation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L45) | def |  |
-| [`tendsto_evaluation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L50) | theorem | proved |
-| [`exists_invertible_evaluation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L69) | theorem | proved |
-| [`interpolationCoefficients`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L86) | def |  |
-| [`interpolate_matrix`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L91) | theorem | proved |
-| [`coords`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L103) | def |  |
-| [`values`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L104) | def |  |
-| [`coords_injective`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L105) | theorem | proved |
+| [`ridgeMap`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L27) | def |  |
+| [`ridgeOut`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L36) | def |  |
+| [`withRidges`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L45) | def |  |
+| [`feedForward_withRidges`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L50) | theorem | proved |
+| [`rms_projective`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L64) | theorem | proved |
+| [`interpolationLayout`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L78) | def |  |
+| [`exists_normalized_ffn`](src/Transformer/SequenceModel/Attention/Finite/Compiler.lean#L87) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.Existence](src/Transformer/SequenceModel/Attention/Finite/Existence.lean)** — 72 lines
+**[Transformer.SequenceModel.Attention.Finite.Encoder](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean)** — 84 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`sequence_room`](src/Transformer/SequenceModel/Attention/Finite/Existence.lean#L23) | theorem | proved |
-| [`sequenceConfig`](src/Transformer/SequenceModel/Attention/Finite/Existence.lean#L35) | abbrev |  |
-| [`exists_finite_sequence_classifier`](src/Transformer/SequenceModel/Attention/Finite/Existence.lean#L44) | theorem | proved |
+| [`encoder_attention`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L29) | theorem | proved |
+| [`contextState`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L46) | def |  |
+| [`readoutChannel`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L52) | def |  |
+| [`context_common`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L58) | theorem | proved |
+| [`contextState_injective`](src/Transformer/SequenceModel/Attention/Finite/Encoder.lean#L70) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.Features](src/Transformer/SequenceModel/Attention/Finite/Features.lean)** — 112 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`tripleGates`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L27) | def |  |
-| [`tripleOut`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L33) | def |  |
-| [`exists_interpolation_of_ratios`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L38) | theorem | proved |
-| [`exists_swiglu_interpolation`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L68) | theorem | proved |
-| [`rows`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L86) | def |  |
-| [`common`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L87) | def |  |
-| [`measure`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L88) | def |  |
-| [`common_rows`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L89) | theorem | proved |
-| [`measure_rows`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L91) | theorem | proved |
-
-**[Transformer.SequenceModel.Attention.Finite.Head](src/Transformer/SequenceModel/Attention/Finite/Head.lean)** — 114 lines
+**[Transformer.SequenceModel.Attention.Finite.Evaluation](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean)** — 119 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`withReadout`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L25) | def |  |
-| [`codeDenominator`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L29) | def |  |
-| [`codeDenominator_pos`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L34) | theorem | proved |
-| [`last_exp_score`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L40) | theorem | proved |
-| [`last_weight`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L52) | theorem | proved |
-| [`removeOwn`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L65) | def |  |
-| [`removeOwn_apply`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L71) | theorem | proved |
-| [`removeOwn_unit`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L77) | theorem | proved |
-| [`shifted_head_code`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L88) | theorem | proved |
+| [`exists_separation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L28) | theorem | proved |
+| [`evaluation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L46) | def |  |
+| [`tendsto_evaluation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L51) | theorem | proved |
+| [`exists_invertible_evaluation`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L70) | theorem | proved |
+| [`interpolationCoefficients`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L87) | def |  |
+| [`interpolate_matrix`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L92) | theorem | proved |
+| [`coords`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L104) | def |  |
+| [`values`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L105) | def |  |
+| [`coords_injective`](src/Transformer/SequenceModel/Attention/Finite/Evaluation.lean#L106) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.Hinges](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean)** — 126 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`softHinge`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L23) | def |  |
-| [`softHinge_silu`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L26) | theorem | proved |
-| [`softHinge_sub_neg`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L33) | theorem | proved |
-| [`tendsto_softHinge_pos`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L42) | theorem | proved |
-| [`tendsto_softHinge`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L55) | theorem | proved |
-| [`softTriangle`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L67) | def |  |
-| [`triangle`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L71) | def |  |
-| [`tendsto_softTriangle`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L74) | theorem | proved |
-| [`triangle_zero`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L80) | theorem | proved |
-| [`triangle_outside`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L85) | theorem | proved |
-| [`hinge_swiglu`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L96) | theorem | proved |
-| [`triangle_swiglu`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L107) | theorem | proved |
-
-**[Transformer.SequenceModel.Attention.Finite.Model](src/Transformer/SequenceModel/Attention/Finite/Model.lean)** — 92 lines
+**[Transformer.SequenceModel.Attention.Finite.Existence](src/Transformer/SequenceModel/Attention/Finite/Existence.lean)** — 73 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`sequenceModel`](src/Transformer/SequenceModel/Attention/Finite/Model.lean#L24) | def |  |
-| [`sequence_hidden`](src/Transformer/SequenceModel/Attention/Finite/Model.lean#L31) | theorem | proved |
-| [`exists_classifier`](src/Transformer/SequenceModel/Attention/Finite/Model.lean#L60) | theorem | proved |
+| [`sequence_room`](src/Transformer/SequenceModel/Attention/Finite/Existence.lean#L24) | theorem | proved |
+| [`sequenceConfig`](src/Transformer/SequenceModel/Attention/Finite/Existence.lean#L36) | abbrev |  |
+| [`exists_finite_sequence_classifier`](src/Transformer/SequenceModel/Attention/Finite/Existence.lean#L45) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.NormGeometry](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean)** — 102 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`rms_norm_sq`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L23) | theorem | proved |
-| [`rms_injective`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L32) | theorem | proved |
-| [`exists_small_normalized_context`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L54) | theorem | proved |
-| [`reachable_unit_answer`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L82) | theorem | proved |
-
-**[Transformer.SequenceModel.Attention.Finite.Packing](src/Transformer/SequenceModel/Attention/Finite/Packing.lean)** — 116 lines
+**[Transformer.SequenceModel.Attention.Finite.Features](src/Transformer/SequenceModel/Attention/Finite/Features.lean)** — 113 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L24) | def |  |
-| [`qkvQ_packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L37) | theorem | proved |
-| [`qkvK_packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L45) | theorem | proved |
-| [`qkvV_packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L53) | theorem | proved |
-| [`tokenSum`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L61) | def |  |
-| [`tokenSum_unit`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L67) | theorem | proved |
-| [`tokenQuery`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L75) | def |  |
-| [`encoderBlock`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L82) | def |  |
-| [`encoder_qkv`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L93) | theorem | proved |
-| [`tokenQuery_unit`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L107) | theorem | proved |
+| [`tripleGates`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L28) | def |  |
+| [`tripleOut`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L34) | def |  |
+| [`exists_interpolation_of_ratios`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L39) | theorem | proved |
+| [`exists_swiglu_interpolation`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L69) | theorem | proved |
+| [`rows`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L87) | def |  |
+| [`common`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L88) | def |  |
+| [`measure`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L89) | def |  |
+| [`common_rows`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L90) | theorem | proved |
+| [`measure_rows`](src/Transformer/SequenceModel/Attention/Finite/Features.lean#L92) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.Phases](src/Transformer/SequenceModel/Attention/Finite/Phases.lean)** — 102 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`rotateHead_zero_angles`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L26) | theorem | proved |
-| [`rotateHead_fst`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L41) | theorem | proved |
-| [`headScore_pair`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L49) | theorem | proved |
-| [`weightPhase`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L71) | def |  |
-| [`exp_headScore_weight`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L75) | theorem | proved |
-| [`codePhases`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L91) | def |  |
-
-**[Transformer.SequenceModel.Attention.Finite.Separation](src/Transformer/SequenceModel/Attention/Finite/Separation.lean)** — 111 lines
+**[Transformer.SequenceModel.Attention.Finite.Head](src/Transformer/SequenceModel/Attention/Finite/Head.lean)** — 115 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`exists_nonzero_forms`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L29) | theorem | proved |
-| [`exists_separating_inner`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L50) | theorem | proved |
-| [`bits`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L71) | def |  |
-| [`bits_injective`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L75) | theorem | proved |
-| [`exists_bounded_subset_weights`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L85) | theorem | proved |
+| [`withReadout`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L26) | def |  |
+| [`codeDenominator`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L30) | def |  |
+| [`codeDenominator_pos`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L35) | theorem | proved |
+| [`last_exp_score`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L41) | theorem | proved |
+| [`last_weight`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L53) | theorem | proved |
+| [`removeOwn`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L66) | def |  |
+| [`removeOwn_apply`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L72) | theorem | proved |
+| [`removeOwn_unit`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L78) | theorem | proved |
+| [`shifted_head_code`](src/Transformer/SequenceModel/Attention/Finite/Head.lean#L89) | theorem | proved |
 
-**[Transformer.SequenceModel.Attention.Finite.Witnesses](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean)** — 106 lines
+**[Transformer.SequenceModel.Attention.Finite.Hinges](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean)** — 127 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`cfg`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L22) | abbrev |  |
-| [`e`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L23) | abbrev |  |
-| [`eps`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L24) | def |  |
-| [`xeps`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L25) | def |  |
-| [`coeff`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L26) | def |  |
-| [`weights`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L27) | def |  |
-| [`keyIndex`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L28) | def |  |
-| [`coeff_bounds`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L30) | theorem | proved |
-| [`weight_bounds`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L38) | theorem | proved |
-| [`weight_injective`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L41) | theorem | proved |
-| [`ffRows`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L82) | def |  |
-| [`ffCommon`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L83) | def |  |
-| [`ffCommon_rows`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L84) | theorem | proved |
+| [`softHinge`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L24) | def |  |
+| [`softHinge_silu`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L27) | theorem | proved |
+| [`softHinge_sub_neg`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L34) | theorem | proved |
+| [`tendsto_softHinge_pos`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L43) | theorem | proved |
+| [`tendsto_softHinge`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L56) | theorem | proved |
+| [`softTriangle`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L68) | def |  |
+| [`triangle`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L72) | def |  |
+| [`tendsto_softTriangle`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L75) | theorem | proved |
+| [`triangle_zero`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L81) | theorem | proved |
+| [`triangle_outside`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L86) | theorem | proved |
+| [`hinge_swiglu`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L97) | theorem | proved |
+| [`triangle_swiglu`](src/Transformer/SequenceModel/Attention/Finite/Hinges.lean#L108) | theorem | proved |
+
+**[Transformer.SequenceModel.Attention.Finite.Model](src/Transformer/SequenceModel/Attention/Finite/Model.lean)** — 93 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`sequenceModel`](src/Transformer/SequenceModel/Attention/Finite/Model.lean#L25) | def |  |
+| [`sequence_hidden`](src/Transformer/SequenceModel/Attention/Finite/Model.lean#L32) | theorem | proved |
+| [`exists_classifier`](src/Transformer/SequenceModel/Attention/Finite/Model.lean#L61) | theorem | proved |
+
+**[Transformer.SequenceModel.Attention.Finite.NormGeometry](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean)** — 103 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`rms_norm_sq`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L24) | theorem | proved |
+| [`rms_injective`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L33) | theorem | proved |
+| [`exists_small_normalized_context`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L55) | theorem | proved |
+| [`reachable_unit_answer`](src/Transformer/SequenceModel/Attention/Finite/NormGeometry.lean#L83) | theorem | proved |
+
+**[Transformer.SequenceModel.Attention.Finite.Packing](src/Transformer/SequenceModel/Attention/Finite/Packing.lean)** — 117 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L25) | def |  |
+| [`qkvQ_packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L38) | theorem | proved |
+| [`qkvK_packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L46) | theorem | proved |
+| [`qkvV_packMaps`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L54) | theorem | proved |
+| [`tokenSum`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L62) | def |  |
+| [`tokenSum_unit`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L68) | theorem | proved |
+| [`tokenQuery`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L76) | def |  |
+| [`encoderBlock`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L83) | def |  |
+| [`encoder_qkv`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L94) | theorem | proved |
+| [`tokenQuery_unit`](src/Transformer/SequenceModel/Attention/Finite/Packing.lean#L108) | theorem | proved |
+
+**[Transformer.SequenceModel.Attention.Finite.Phases](src/Transformer/SequenceModel/Attention/Finite/Phases.lean)** — 103 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`rotateHead_zero_angles`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L27) | theorem | proved |
+| [`rotateHead_fst`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L42) | theorem | proved |
+| [`headScore_pair`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L50) | theorem | proved |
+| [`weightPhase`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L72) | def |  |
+| [`exp_headScore_weight`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L76) | theorem | proved |
+| [`codePhases`](src/Transformer/SequenceModel/Attention/Finite/Phases.lean#L92) | def |  |
+
+**[Transformer.SequenceModel.Attention.Finite.Separation](src/Transformer/SequenceModel/Attention/Finite/Separation.lean)** — 112 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`exists_nonzero_forms`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L30) | theorem | proved |
+| [`exists_separating_inner`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L51) | theorem | proved |
+| [`bits`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L72) | def |  |
+| [`bits_injective`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L76) | theorem | proved |
+| [`exists_bounded_subset_weights`](src/Transformer/SequenceModel/Attention/Finite/Separation.lean#L86) | theorem | proved |
+
+**[Transformer.SequenceModel.Attention.Finite.Witnesses](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean)** — 107 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`cfg`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L23) | abbrev |  |
+| [`e`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L24) | abbrev |  |
+| [`eps`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L25) | def |  |
+| [`xeps`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L26) | def |  |
+| [`coeff`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L27) | def |  |
+| [`weights`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L28) | def |  |
+| [`keyIndex`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L29) | def |  |
+| [`coeff_bounds`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L31) | theorem | proved |
+| [`weight_bounds`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L39) | theorem | proved |
+| [`weight_injective`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L42) | theorem | proved |
+| [`ffRows`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L83) | def |  |
+| [`ffCommon`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L84) | def |  |
+| [`ffCommon_rows`](src/Transformer/SequenceModel/Attention/Finite/Witnesses.lean#L85) | theorem | proved |
 
 ### `Transformer.SequenceModel.Attention.Grid`
 
@@ -57782,33 +57782,33 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.SequenceModel.Information`
 
-**[Transformer.SequenceModel.Information.Basic](src/Transformer/SequenceModel/Information/Basic.lean)** — 121 lines
+**[Transformer.SequenceModel.Information.Basic](src/Transformer/SequenceModel/Information/Basic.lean)** — 122 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`loss_eq_of_labels`](src/Transformer/SequenceModel/Information/Basic.lean#L27) | theorem | proved |
-| [`oracle_eq_of_labels`](src/Transformer/SequenceModel/Information/Basic.lean#L37) | theorem | proved |
-| [`trajectory_eq_of_labels`](src/Transformer/SequenceModel/Information/Basic.lean#L45) | theorem | proved |
-| [`unseen_trajectory_eq`](src/Transformer/SequenceModel/Information/Basic.lean#L60) | theorem | proved |
-| [`unseen_correct_incompatible`](src/Transformer/SequenceModel/Information/Basic.lean#L73) | theorem | proved |
-| [`exists_unseen_failure`](src/Transformer/SequenceModel/Information/Basic.lean#L90) | theorem | proved |
-| [`forward`](src/Transformer/SequenceModel/Information/Basic.lean#L102) | def |  |
-| [`samples`](src/Transformer/SequenceModel/Information/Basic.lean#L104) | def |  |
-| [`p₀`](src/Transformer/SequenceModel/Information/Basic.lean#L105) | def |  |
-| [`initial`](src/Transformer/SequenceModel/Information/Basic.lean#L106) | def |  |
+| [`loss_eq_of_labels`](src/Transformer/SequenceModel/Information/Basic.lean#L28) | theorem | proved |
+| [`oracle_eq_of_labels`](src/Transformer/SequenceModel/Information/Basic.lean#L38) | theorem | proved |
+| [`trajectory_eq_of_labels`](src/Transformer/SequenceModel/Information/Basic.lean#L46) | theorem | proved |
+| [`unseen_trajectory_eq`](src/Transformer/SequenceModel/Information/Basic.lean#L61) | theorem | proved |
+| [`unseen_correct_incompatible`](src/Transformer/SequenceModel/Information/Basic.lean#L74) | theorem | proved |
+| [`exists_unseen_failure`](src/Transformer/SequenceModel/Information/Basic.lean#L91) | theorem | proved |
+| [`forward`](src/Transformer/SequenceModel/Information/Basic.lean#L103) | def |  |
+| [`samples`](src/Transformer/SequenceModel/Information/Basic.lean#L105) | def |  |
+| [`p₀`](src/Transformer/SequenceModel/Information/Basic.lean#L106) | def |  |
+| [`initial`](src/Transformer/SequenceModel/Information/Basic.lean#L107) | def |  |
 
-**[Transformer.SequenceModel.Information.Distribution](src/Transformer/SequenceModel/Information/Distribution.lean)** — 126 lines
+**[Transformer.SequenceModel.Information.Distribution](src/Transformer/SequenceModel/Information/Distribution.lean)** — 127 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`winner_unique`](src/Transformer/SequenceModel/Information/Distribution.lean#L27) | theorem | proved |
-| [`winnerMass`](src/Transformer/SequenceModel/Information/Distribution.lean#L33) | def |  |
-| [`winner_sum_le`](src/Transformer/SequenceModel/Information/Distribution.lean#L37) | theorem | proved |
-| [`sum_winnerMass_le`](src/Transformer/SequenceModel/Information/Distribution.lean#L53) | theorem | proved |
-| [`exists_low_winnerMass`](src/Transformer/SequenceModel/Information/Distribution.lean#L63) | theorem | proved |
-| [`exists_unseen_low_success`](src/Transformer/SequenceModel/Information/Distribution.lean#L84) | theorem | proved |
-| [`coin`](src/Transformer/SequenceModel/Information/Distribution.lean#L101) | def |  |
-| [`scores`](src/Transformer/SequenceModel/Information/Distribution.lean#L102) | def |  |
+| [`winner_unique`](src/Transformer/SequenceModel/Information/Distribution.lean#L28) | theorem | proved |
+| [`winnerMass`](src/Transformer/SequenceModel/Information/Distribution.lean#L34) | def |  |
+| [`winner_sum_le`](src/Transformer/SequenceModel/Information/Distribution.lean#L38) | theorem | proved |
+| [`sum_winnerMass_le`](src/Transformer/SequenceModel/Information/Distribution.lean#L54) | theorem | proved |
+| [`exists_low_winnerMass`](src/Transformer/SequenceModel/Information/Distribution.lean#L64) | theorem | proved |
+| [`exists_unseen_low_success`](src/Transformer/SequenceModel/Information/Distribution.lean#L85) | theorem | proved |
+| [`coin`](src/Transformer/SequenceModel/Information/Distribution.lean#L102) | def |  |
+| [`scores`](src/Transformer/SequenceModel/Information/Distribution.lean#L103) | def |  |
 
 ### `Transformer.SequenceModel.Resources`
 

@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Spectral.PoweredScores
 /-!
 # Powered-division recovery becomes a source transformer score computation
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J5. The transformer weights compile the recovered bank's real score table,
 preserving every class score up to positive normalization. Spectral recovery
 and joint separation supply correctness and a uniform margin, including zero

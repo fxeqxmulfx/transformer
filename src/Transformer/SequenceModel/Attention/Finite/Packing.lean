@@ -6,7 +6,8 @@ public import Transformer.SequenceModel.Attention.Expressivity.Context
 /-!
 # Fixed matrices realize nonzero rotary Q/K and token values
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, F5.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, F5.
 Every token embedding is a unit vector after the actual embedding RMSNorm.
 A fixed sum of token coordinates supplies the same nonzero query and key
 at every position. The fused QKV and single-head reshape use source layouts.

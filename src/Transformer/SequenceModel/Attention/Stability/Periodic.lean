@@ -7,7 +7,7 @@ public import Mathlib.Topology.Algebra.Order.Archimedean
 /-!
 # Periodic approximations on a fixed finite context
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A4;
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A4;
 arXiv:2506.16055v3, Appendix F, `sec:rope_pes`. Rational multiples of pi
 give periodic rotations. The approximating frequencies below are selected
 after the context length and accuracy, unlike a uniform language simulation.

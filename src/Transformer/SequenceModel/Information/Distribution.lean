@@ -5,7 +5,8 @@ public import Transformer.SequenceModel.Information.Basic
 /-!
 # A fixed unseen target for a distribution of starts
 
-Source: `review/flat_spectrum.md`, *Finite sequence capacity and information limits*, N2.
+Source: `review/actual_network/sequence_models.md`,
+*Finite sequence capacity and information limits*, N2.
 The target below is chosen independently of the initialization seed. The
 distribution has arbitrary nonnegative finite support; samples may depend on
 the seed as long as the designated example is never observed. This concerns

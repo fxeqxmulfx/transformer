@@ -6,7 +6,7 @@ public import Transformer.CRASP.Normalized.Source
 # Compile finite-context source inputs without adding input tokens
 
 Extension of arXiv:2506.16055v3, Appendix F, initial letter/residue formulas;
-`review/flat_spectrum.md`, *Depth, width and precision*, R4.
+`review/actual_network/sequence_models.md`, *Depth, width and precision*, R4.
 On words of length at most T, residues modulo T+1 name each positive position
 exactly. Tags exist only in the compiler's hidden states. The input alphabet
 remains the original token vocabulary, and all source phases remain fixed.

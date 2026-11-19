@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Model
 /-!
 # Local regularity of the actual normalizers
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, R1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, R1.
 Positive-epsilon RMSNorm is analytic everywhere. The clipped L2 normalizer
 is analytic on both open sides of its clipping sphere, including zero on
 the clipped side. The boundary is excluded explicitly, not assigned a

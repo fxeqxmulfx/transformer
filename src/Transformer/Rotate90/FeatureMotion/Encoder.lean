@@ -5,7 +5,7 @@ public import Transformer.Rotate90.FeatureMotion.Product
 /-!
 # Propagating parameter balls through the whole Rotate90 encoder
 
-Source: `review/flat_spectrum.md`, *Full encoder motion*, EM4;
+Source: `review/actual_network/dynamics.md`, *Full encoder motion*, EM4;
 `experiments/flat_approx/fixtures/reference.rs`, plain arm, at 62638521.
 Real matrices allow the source's tied complex-linear matrices as a special
 case. Logical hidden pairs replace its split real/imaginary storage only.

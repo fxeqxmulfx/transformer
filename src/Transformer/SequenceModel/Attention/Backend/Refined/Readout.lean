@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Decisions
 /-!
 # Certified agreement between the captured and exact source classifiers
 
-Source: `review/flat_spectrum.md`, *Trace-dependent execution bounds*, M4.
+Source: `review/actual_network/execution.md`, *Trace-dependent execution bounds*, M4.
 The margin is derived from the captured logits and the fully propagated
 error. The earlier uniform-budget impossibility theorem remains intact.
 -/

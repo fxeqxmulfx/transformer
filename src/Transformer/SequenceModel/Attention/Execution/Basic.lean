@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Trace
 /-!
 # Composition of operation errors
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C4.
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C4.
 Each estimate separates movement of the operation's inputs from error in
 evaluating it. In particular, an approximate XSA direction may have norm
 greater than one; the earlier unit-direction bound cannot be reused directly.

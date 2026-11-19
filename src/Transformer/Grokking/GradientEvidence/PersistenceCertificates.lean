@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.DampedPersistence
 /-!
 # Readout energy floors and finite-window prediction transport
 
-Source: `review/flat_spectrum.md`, *Observed finite-window persistence*, DP2–DP3.
+Source: `review/actual_network/dynamics.md`, *Observed finite-window persistence*, DP2–DP3.
 Readout concentration and prediction correctness are separate conclusions.
 The latter needs a future gap enclosure for the whole nonlinear model;
 DP1 alone supplies no feature-alignment theorem.

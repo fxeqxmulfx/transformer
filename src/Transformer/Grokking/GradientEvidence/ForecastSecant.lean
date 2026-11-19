@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.ForecastOutcomes
 /-!
 # Local secant bounds for forecast normalization
 
-Source: `review/flat_spectrum.md`, *Forecast tightening*, FT1, and the frozen
+Source: `review/actual_network/transport.md`, *Forecast tightening*, FT1, and the frozen
 `experiments/forecast_tightening/PROTOCOL.md`. Keep the same nominal tangent
 and nonlinear defect. Only the propagation coefficient changes. The identity
 below retains the radial cancellation discarded by the earlier triangle bound.

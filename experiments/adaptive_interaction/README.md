@@ -6,7 +6,7 @@ but the objective-based bound is very conservative. At the plain-product
 endpoints it exceeds the measured projected direction energy by factors
 between 1.47 million and 7.49 million across the rank-32 orbit bases.
 
-The [Lean extension](../../review/flat_spectrum.md#adaptive-interaction-control)
+The [Lean extension](../../review/actual_network/transport.md#adaptive-interaction-control)
 adds 23 proved theorems: actual buffered Adam equations, separate diagonal
 mixing and moment-discrepancy terms, a loss-controlled contribution, signed
 interaction drift, and sufficient interaction contraction with explicit

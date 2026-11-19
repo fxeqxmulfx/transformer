@@ -7,7 +7,7 @@ public import Transformer.GPTMini.AttentionLipschitz
 /-!
 # Phase errors through causal softmax and XSA
 
-Source: `review/flat_spectrum.md`, *Quantitative RoPE approximation*, A2;
+Source: `review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A2;
 `diff_gpt/domain/model/mha.py` at `b98c665b`. The softmax argument adapts
 `GPTMini.SoftmaxStability` to the source's arbitrary score matrices and mask.
 Unlike that older model, these source logits have RMS Q/K and no temperature.

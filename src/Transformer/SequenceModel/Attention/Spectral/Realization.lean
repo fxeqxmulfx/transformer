@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Grid.Model
 /-!
 # Realize bounded vector tables in the normalized source transformer
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J1. This extends the prescribed-RoPE construction P5 from one-hot answers
 to arbitrary vectors in the unit ball. It retains the actual attention,
 XSA, SwiGLU, normalizers, original input tokens and source phase grid.

@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Budget
 /-!
 # Error through the actual SwiGLU execution branch
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C5;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C5;
 diff_gpt `b98c665b`, `feed_forward.py` and `block.py`. The proof starts from
 each operation's own recorded inputs. Approximate input normalization,
 independent gate/value matrices, SiLU, multiplication, output projection

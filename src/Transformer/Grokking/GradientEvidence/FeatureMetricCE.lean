@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.CEMomentumControl
 /-!
 # Actual CE damping in a shared feature metric
 
-Source: `review/flat_spectrum.md`, *Checkpoint-fixed feature metrics*, FM1.
+Source: `review/actual_network/dynamics.md`, *Checkpoint-fixed feature metrics*, FM1.
 Weights may vary by feature but are shared across unused classes. This is
 essential: it preserves the computed class projection and the CE radial sign.
 -/

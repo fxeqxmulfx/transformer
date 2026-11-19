@@ -7,7 +7,7 @@ public import Mathlib.Analysis.Calculus.Deriv.MeanValue
 /-!
 # Actual cross-entropy descent can increase within-answer contrast variation
 
-Source: `review/flat_spectrum.md`, *Loss-controlled geometry*, LG4.
+Source: `review/actual_network/transport.md`, *Loss-controlled geometry*, LG4.
 Two same-label examples have logits `(theta,0)` and `(2*theta,0)`, with one
 shared trainable scalar. Their actual mean binary softmax CE has negative
 derivative. Every positive gradient step from a nonnegative scalar lowers

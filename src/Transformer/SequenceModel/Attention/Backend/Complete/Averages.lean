@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Complete.Basic
 /-!
 # Polynomial certificates at every activation and causal average
 
-Source: `review/flat_spectrum.md`, *Complete captured execution*, L2.
+Source: `review/actual_network/execution.md`, *Complete captured execution*, L2.
 These adapters retain the two-token causal mask and work with the captured
 score tensor, its own value tensor and independent polynomial witnesses.
 -/

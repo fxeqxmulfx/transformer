@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.FutureAdamTube
 /-!
 # Full-parameter Adam displacement about a saved checkpoint
 
-Source: `review/flat_spectrum.md`, *Full encoder motion*, EM5 and FF4.
+Source: `review/actual_network/dynamics.md`, *Full encoder motion*, EM5 and FF4.
 The warm-moment tube is centered at the damped old parameters. Moving its
 center back to the checkpoint supplies the displacement caps used by EM4.
 The coordinate type may be any complete parameter block, not only a readout.

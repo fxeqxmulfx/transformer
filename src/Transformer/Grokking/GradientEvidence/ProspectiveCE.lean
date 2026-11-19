@@ -6,7 +6,7 @@ public import Transformer.Grokking.GradientEvidence.FeatureMetricControl
 /-!
 # Feed checkpoint probability ceilings into the actual CE step condition
 
-Source: `review/flat_spectrum.md`, *Prospective probability control*, PM4.
+Source: `review/actual_network/dynamics.md`, *Prospective probability control*, PM4.
 Old logits and bounded contrast motion replace the future-probability premise.
 The conclusion controls the partial-CE reference from the future state.
 It does not silently remove the full AdamW/encoder perturbations of FM3.

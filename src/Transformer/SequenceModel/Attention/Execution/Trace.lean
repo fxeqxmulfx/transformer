@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Tables
 /-!
 # Finite tensor traces at the source operations
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C3;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C3;
 diff_gpt `b98c665b`, `mha.py`, `feed_forward.py`, `block.py`.
 Structures contain numerical data only. Accuracy predicates check each
 operation against its own recorded inputs, not against a desired final

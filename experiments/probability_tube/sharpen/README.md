@@ -23,7 +23,7 @@ an all-rival probability ceiling.
 Fourteen Lean theorems in `FeatureMotion/Sharp*.lean` cover pair energies,
 finite product motion, the full encoder, executed contrasts, probabilities
 and source matrix caps. Each theorem with mathematical hypotheses has a
-nonzero example. The [derivation](../../../review/flat_spectrum.md#pairwise-encoder-amplification)
+nonzero example. The [derivation](../../../review/actual_network/dynamics.md#pairwise-encoder-amplification)
 records the assumptions and limits.
 
 Four native tests include the reused independent Gram fixtures, an attained

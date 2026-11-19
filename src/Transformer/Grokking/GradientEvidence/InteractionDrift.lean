@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.AdaptiveEnergy
 /-!
 # Signed interaction changes retain cancellation
 
-Source: `review/flat_spectrum.md`, *Adaptive interaction control*, AI4.
+Source: `review/actual_network/transport.md`, *Adaptive interaction control*, AI4.
 Two separately large residuals need not have a large interaction. Finite
 changes retain readout, feature and mixed terms before bounding their sizes.
 -/

@@ -6,7 +6,7 @@ public import Transformer.CRASP.Fixed
 # Error bounds for the specified fixed-point rounding
 
 Source: arXiv:2506.16055v3, Appendix B.1, `def:fixed_precision`, and
-`review/flat_spectrum.md`, *Quantitative RoPE approximation*, A6. `Fx.round`
+`review/actual_network/sequence_models.md`, *Quantitative RoPE approximation*, A6. `Fx.round`
 floors and saturates; it is not IEEE round-to-nearest. The quantum error
 bound is valid only when its explicit no-saturation condition holds.
 -/

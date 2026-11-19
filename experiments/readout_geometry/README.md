@@ -23,7 +23,7 @@ Every pairwise score error is at most the square root of twice this energy.
 Nineteen new Lean theorems prove the quadratic identity, exact invisible-error
 characterization, sharp contrast/margin bounds, nonzero witnesses, and signed
 finite update attribution including the mixed term and nonlinear remainder.
-See the [derivation](../../review/flat_spectrum.md#observable-spectral-geometry).
+See the [derivation](../../review/actual_network/dynamics.md#observable-spectral-geometry).
 
 | Basis | Construction from the old state | Fixed controls |
 | --- | --- | --- |

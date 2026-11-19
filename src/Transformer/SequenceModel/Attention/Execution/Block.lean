@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Execution.FFN
 /-!
 # Both executed residual branches
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C6;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C6;
 diff_gpt `b98c665b`, `block.py`. The FFN sees the actually recorded first
 residual, not the ideal one. Its movement is propagated with the proved
 source FFN-residual constant, alongside new operation errors.

@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Spectral.Certificate
 /-!
 # Satisfiable spectral premises and genuinely perturbed source executions
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J3--J7. Faithful characters and their true kernels instantiate every spectral
 premise for all primes. The derived source model tolerates a strictly positive
 readout error. This synthetic execution is not attributed to a CUDA kernel.

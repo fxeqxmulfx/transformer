@@ -36,7 +36,7 @@ observed q is not a future guarantee. The theorem removes the memory
 alignment premise for this reference dynamics. It does not prove growth of
 active contrasts, full tied AdamW stability, or discovery from initialization.
 
-The [source derivation](../../review/flat_spectrum.md#loss-specific-momentum-control)
+The [source derivation](../../review/actual_network/dynamics.md#loss-specific-momentum-control)
 gives CL1–CL4. The proof entry point is
 [`CEMomentumControl.lean`](../../src/Transformer/Grokking/GradientEvidence/CEMomentumControl.lean).
 Full-update identities retain decay, coordinate-dependent adaptive scaling,

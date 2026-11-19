@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Rotary
 /-!
 # Position-dependent rotations need not preserve a flat spectrum
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, S1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, S1.
 Two orthogonal unit tokens have Gram eigenvalues 1,1. Applying RoPE at
 positions 0 and 1 with frequency pi/2 makes them opposite: eigenvalues
 2,0. Each token keeps its norm. A common orthogonal change of basis and

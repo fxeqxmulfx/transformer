@@ -6,7 +6,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ClassDecomposition
 /-!
 # Supervised damping of unused class contrasts
 
-Source: `review/flat_spectrum.md`, *Class-contrast discovery and persistence*,
+Source: `review/actual_network/dynamics.md`, *Class-contrast discovery and persistence*,
 CG1–CG2. The actual partial CE derivative damps each pair of unused readout
 rows. Features are fixed while taking a partial derivative, but may change
 between updates. Adaptive scaling, tied encoder motion and memory are not

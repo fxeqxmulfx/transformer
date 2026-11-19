@@ -7,7 +7,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Dimensions
 /-!
 # Fixed source matrices encode every original input tuple injectively
 
-Source: `review/flat_spectrum.md`, *Prescribed RoPE capacity*, P3--P4.
+Source: `review/actual_network/sequence_models.md`, *Prescribed RoPE capacity*, P3--P4.
 The bounded gain is compiled into fused QKV. Every source normalizer stays
 in the forward pass. The residual identifies the last original token and
 the disjoint normalized context identifies its prefix, with a common

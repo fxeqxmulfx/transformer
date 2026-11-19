@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Execution.Scores
 /-!
 # Full attention-branch execution error
 
-Source: `review/flat_spectrum.md`, *Primitive execution certificates*, C4;
+Source: `review/actual_network/execution.md`, *Primitive execution certificates*, C4;
 diff_gpt `b98c665b`, `mha.py` and `block.py`. Changing scores and values,
 the SDPA kernel contract, non-unit computed XSA directions, head merging,
 learned projection and post-normalization are all composed explicitly.

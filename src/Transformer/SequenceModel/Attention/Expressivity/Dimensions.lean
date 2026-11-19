@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Interpolation
 /-!
 # Finite source-shaped widths suffice for every finite vocabulary
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E6.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E6.
 Width 2(p+1)^2 plus arbitrary even padding has room for both token banks
 and all quadratic features using the source's H=(8W+1)//3. Any positive
 finite depth is allowed; later blocks can have zero residual branches.

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.CEGram.Basic
 /-!
 # Computable weighted feature Gram bounds
 
-Source: `review/flat_spectrum.md`, *Query-weighted feature covariance*, QG3.
+Source: `review/actual_network/dynamics.md`, *Query-weighted feature covariance*, QG3.
 The explicit covariance avoids square roots inside its sum. Feature weights
 enter its Gram energy as r_k*r_l, so every correlation remains observable.
 FT2 supplies a certified operator cap; no estimated singular vector is used.

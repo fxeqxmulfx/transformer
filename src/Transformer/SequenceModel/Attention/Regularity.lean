@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Regularity.Model
 /-!
 # Regularity of the actual normalized Transformer
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, R1.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, R1.
 Every score and finite sampled cross-entropy loss is analytic jointly in
 all actual weights wherever the actual XSA values avoid the clipping sphere.
 The proof retains positive RMS epsilon, arbitrary fixed rotary phases,

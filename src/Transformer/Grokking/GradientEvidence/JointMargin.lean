@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.JointScoreStep
 /-!
 # All-competitor margins under joint parameter and feature changes
 
-Source: `review/flat_spectrum.md`, *Joint difficult-query control*, JC2.
+Source: `review/actual_network/transport.md`, *Joint difficult-query control*, JC2.
 Every competitor has its own signed increment and remainder. A bound for
 each competitor controls the worst one even when its identity changes.
 Execution errors and parameter rounding are distinct explicit inputs.

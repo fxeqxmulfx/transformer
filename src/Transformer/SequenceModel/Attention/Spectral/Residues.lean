@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Existence
 /-!
 # Residue inputs, zero numerators and unit character features
 
-Source: `review/flat_spectrum.md`, *Unified spectral transformer certificate*,
+Source: `review/actual_network/execution.md`, *Unified spectral transformer certificate*,
 J4. Character recovery uses the unit group. The source vocabulary is all
 residues, so the zero-numerator boundary is handled explicitly: 0^0=1,
 and 0^k=0 for positive k. Division claims still require a nonzero denominator.

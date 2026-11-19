@@ -5,7 +5,7 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableGeometry
 /-!
 # Supervised class subspaces and their energy
 
-Source: `review/flat_spectrum.md`, *Class-contrast discovery and persistence*,
+Source: `review/actual_network/dynamics.md`, *Class-contrast discovery and persistence*,
 CG3. Centering within observed-answer and unused-class groups gives an exact
 orthogonal energy split. A group of `n+1` readout rows has only `n` independent
 centered directions, with explicit coefficients; energy concentration in

@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.AdaptiveForcing
 /-!
 # Loss controls one part of adaptive forcing
 
-Source: `review/flat_spectrum.md`, *Adaptive interaction control*, AI3.
+Source: `review/actual_network/transport.md`, *Adaptive interaction control*, AI3.
 Combine the actual CE-gradient theorem with an explicit diagonal-scale bound.
 Noncommutation and the discrepancy from the saved first moment remain visible.
 -/

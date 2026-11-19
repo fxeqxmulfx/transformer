@@ -6,7 +6,7 @@ public import Mathlib.Analysis.InnerProductSpace.PiL2
 /-!
 # Checkpoint bounds for moving linear layers and RMSNorm
 
-Source: `review/flat_spectrum.md`, *Full encoder motion*, EM1–EM2.
+Source: `review/actual_network/dynamics.md`, *Full encoder motion*, EM1–EM2.
 Only old inputs, old operator norms and displacement caps occur in the
 computed bounds. RMSNorm retains epsilon and the actual coordinate count.
 -/

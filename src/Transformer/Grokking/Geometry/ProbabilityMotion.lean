@@ -5,7 +5,7 @@ public import Transformer.Grokking.Geometry.ProbabilityTransfer
 /-!
 # Prospective softmax ceilings from contrast motion
 
-Source: `review/flat_spectrum.md`, *Prospective probability control*, PM1–PM2.
+Source: `review/actual_network/dynamics.md`, *Prospective probability control*, PM1–PM2.
 All rivals remain in the denominator. Bounds concern the same input before
 and after motion; a future minibatch needs this premise on every possible
 training input. No future probability is assumed to be small.

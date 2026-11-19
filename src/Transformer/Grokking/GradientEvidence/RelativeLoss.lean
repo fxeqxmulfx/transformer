@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.JointMargin
 /-!
 # Cross-entropy change is a probability-weighted exponential moment
 
-Source: `review/flat_spectrum.md`, *Joint difficult-query control*, JC3.
+Source: `review/actual_network/transport.md`, *Joint difficult-query control*, JC3.
 Old softmax probabilities weight each relative logit change. This exact
 identity preserves signed contributions and does not replace individual
 query losses by an average classification margin.

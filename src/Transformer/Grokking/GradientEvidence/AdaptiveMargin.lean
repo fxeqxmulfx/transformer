@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.JointLoss
 /-!
 # Joint margin control for the actual buffered Adam update
 
-Source: `review/flat_spectrum.md`, *Joint difficult-query control*, JC2–JC3;
+Source: `review/actual_network/transport.md`, *Joint difficult-query control*, JC2–JC3;
 native optimizer source 14cff3b5, engine::update and product::moment.
 Moments are the updated buffers. Each class retains its own preconditioner.
 Parameter rounding and execution discrepancies remain explicit; no stored

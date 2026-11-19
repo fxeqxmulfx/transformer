@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Expressivity.Layout
 /-!
 # Fixed attention weights generate every ordered-pair code
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, E5.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, E5.
 The single head has zero Q/K, identity values after normalization compensation,
 and a context-copy output matrix. The source's XSA and both attention branch
 normalizers are retained exactly, at arbitrary supplied rotary angles.

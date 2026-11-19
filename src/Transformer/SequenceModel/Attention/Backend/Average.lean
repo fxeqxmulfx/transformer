@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Backend.Activation
 /-!
 # Exponential and reduction certificates for attention averages
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K4.
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K4.
 The reference masses are the exact masked exponentials; approximate masses
 can be rational polynomial witnesses. Their normalized rational average is
 checked against the captured SDPA output. This permits fused kernels without

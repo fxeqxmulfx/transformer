@@ -4,7 +4,7 @@ Preserving signed training contributions gives a much tighter conditional
 bound for the plain complex product. At rank 32, the probability-above-half
 condition covers **70.67% / 72.50%** of validation inputs for seeds 7/11; the
 weaker argmax condition covers **96.60% / 97.43%**. Source accuracies remain
-99.66% / 99.68%. The [Lean extension](../../review/flat_spectrum.md#signed-directional-transport)
+99.66% / 99.68%. The [Lean extension](../../review/actual_network/transport.md#signed-directional-transport)
 proves the bound and its source bridge. This explains more saved predictions,
 while the question of how training establishes this geometry remains open.
 

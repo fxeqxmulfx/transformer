@@ -2,7 +2,7 @@
 
 Small training cross-entropy controls probability error and within-answer
 probability scatter. It does not imply contraction of raw class contrasts.
-The [Lean extension](../../review/flat_spectrum.md#loss-controlled-geometry)
+The [Lean extension](../../review/actual_network/transport.md#loss-controlled-geometry)
 proves the objective bound and an actual shared-parameter gradient-descent
 counterexample to raw contraction. The fixed checkpoint diagnostic finds the
 same distinction in two saved training intervals.

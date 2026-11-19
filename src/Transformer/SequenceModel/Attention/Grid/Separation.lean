@@ -10,7 +10,7 @@ public import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 /-!
 # Bounded query gain separates subsets on the fixed integer RoPE grid
 
-Source: `review/flat_spectrum.md`, *Prescribed RoPE capacity*, P1--P2.
+Source: `review/actual_network/sequence_models.md`, *Prescribed RoPE capacity*, P1--P2.
 Irrationality of pi distinguishes integer cosine offsets. Dedekind character
 independence and analytic uniqueness then give a separating query gain in
 any positive open interval. No phase table is chosen or trained.

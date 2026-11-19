@@ -5,7 +5,7 @@ public import Transformer.SequenceModel.Attention.Transfer
 /-!
 # A genuine obstruction to unconditional optimizer convergence
 
-Source: `review/flat_spectrum.md`, *Transformer learning bridges*, S2.
+Source: `review/actual_network/sequence_models.md`, *Transformer learning bridges*, S2.
 At zero weights the tied readout and final hidden state both vanish.
 Every logit derivative is therefore zero although CE is positive for
 multiple classes. This is an actual smooth point of clipped XSA. More

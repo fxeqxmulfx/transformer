@@ -5,7 +5,7 @@ public import Transformer.Grokking.GradientEvidence.FeatureMetricMomentum
 /-!
 # Apply a checkpoint-fixed feature metric to actual partial CE
 
-Source: `review/flat_spectrum.md`, *Checkpoint-fixed feature metrics*, FM1–FM3.
+Source: `review/actual_network/dynamics.md`, *Checkpoint-fixed feature metrics*, FM1–FM3.
 The finite-prefix result permits changing features and batches but keeps the
 metric and scalar step fixed. Full tied AdamW is retained as an explicit error.
 -/

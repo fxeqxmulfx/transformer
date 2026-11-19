@@ -10,7 +10,7 @@ public import Transformer.SequenceModel.Attention.Adaptive
 /-!
 # Concrete backend certificates for normalized source execution
 
-Source: `review/flat_spectrum.md`, *Concrete backend contracts*, K1--K6, and
+Source: `review/actual_network/execution.md`, *Concrete backend contracts*, K1--K6, and
 *Complete captured execution*, L1--L5, and *Trace-dependent execution bounds*, M1--M5.
 Algebraic scale residuals certify RMSNorm and clipped L2; exponential-series
 remainders certify SiLU and normalized attention masses; complex-series

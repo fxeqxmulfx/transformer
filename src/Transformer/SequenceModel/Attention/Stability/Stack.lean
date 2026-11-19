@@ -6,7 +6,7 @@ public import Transformer.SequenceModel.Attention.Stability.Local
 /-!
 # Full residual-stack rounding certificate
 
-Source: `review/flat_spectrum.md`, *Full-stack rounding certificates*, B6--B7;
+Source: `review/actual_network/execution.md`, *Full-stack rounding certificates*, B6--B7;
 diff_gpt `b98c665b`, `gpt.py` and the rounded execution in `CRASP.Rotary`.
 One-step estimates include both coefficient/quotient error and stored
 residual rounding. The stack budget uses each executed block's own matrices.
