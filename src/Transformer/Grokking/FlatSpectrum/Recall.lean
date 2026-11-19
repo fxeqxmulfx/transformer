@@ -16,6 +16,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
 public import Transformer.Grokking.FlatSpectrum.Recall.LogScale
 public import Transformer.Grokking.FlatSpectrum.Recall.Threshold
 public import Transformer.Grokking.FlatSpectrum.Recall.RawGap
+public import Transformer.Grokking.FlatSpectrum.Recall.Induction
 public import Transformer.Grokking.FlatSpectrum.Recall.Subkernel
 public import Transformer.Grokking.FlatSpectrum.Recall.Parity
 public import Transformer.Grokking.FlatSpectrum.Recall.Monomials
@@ -74,7 +75,10 @@ its sign, and the error tends to `1` (`Threshold`). The lead is limited by the g
 raw scores `⟨u_i, v_j⟩`: if every key leads every other by more than `a b` at its own query,
 with `‖u_i‖ ≤ a` and `‖v_j‖ ≤ b`, the keys are affinely independent, at most `d + 1` in
 dimension `d`; the diff-gpt model needs a raw lead above `1` and has it for at most `d + 1` keys
-of head width `d` (`RawGap`).
+of head width `d` (`RawGap`). A binding split into a key token and a value token is recalled by
+two layers, as by an induction head: layer 1 copies the key to the value token, layer 2 recalls
+from the copy, and with both scales above `1` they recall at every large number of keys
+(`Induction`).
 
 The width bound is not special to recall: on any queries and contexts that carry a flat kernel
 with squared singular value `c`, a readout of cut width `d` has squared error at least
