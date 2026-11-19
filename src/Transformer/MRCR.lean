@@ -1,8 +1,10 @@
 module
 
+public import Transformer.MRCR.Counting
 public import Transformer.MRCR.InnerNeedle
 public import Transformer.MRCR.NearMiss
 public import Transformer.MRCR.NearMissThreshold
+public import Transformer.MRCR.Ordinal
 public import Transformer.MRCR.PartScore
 public import Transformer.MRCR.Ties
 
@@ -26,4 +28,7 @@ three a linear number of near misses triples the scale that recall needs.
 `Transformer.MRCR.Ties` and `Transformer.MRCR.InnerNeedle` treat the asks of one key, which are
 the same text: attention averages tied needles, a bias that falls with the distance returns the
 last of them, and no raw score of the distance returns a needle with a needle on each side.
+`Transformer.MRCR.Ordinal` returns the needle with the desired index, counted from the start, by
+a formula of depth two and so by a rounded transformer of two layers
+(`Transformer.MRCR.Counting` relates its counts to cardinalities).
 -/

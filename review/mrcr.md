@@ -27,7 +27,7 @@ what is proved in Lean and what is not.
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
-| Ordinal | the `i`-th of the eight, counted from the start | open |
+| Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | open |
 | Copy | return the whole answer, token by token | open |
 | Training | whether a trained model has the gaps | not attempted (the user, 2026-11-19) |
@@ -67,4 +67,20 @@ This holds for every `h`, so for RoPE, ALiBi and no position alike, at every spa
 The last needle is different: the ALiBi bias `−b d` returns it within
 `2 C (k n^{−s b} + (n − 1) n^{−s g})` (`abs_logScaleAttention_sub_last_le`). The first needle is
 not covered either way. One layer does not return the `i`-th of eight identical asks,
-`1 < i < 8`, at every placement; the count of earlier asks must come from an earlier layer, which is the next row.
+`1 < i < 8`, at every placement; the count of earlier asks must come from an earlier layer.
+
+## Ordinal (proved, rounded transformers)
+
+A row carries a key, a value, a query and an ordinal; an ask and its answer share one token, as
+in `Transformer.CRASP.exists_rtfr_answers`. `v` answers the row `i` (`NthAnswer`) when an earlier
+row has the key of its query, the value `v` and exactly `o i` rows of that key before it. The
+formula
+
+    ⋁_{q, r} (query = q ∧ ordinal = r ∧ ∃ j < i [key = q ∧ value = v ∧ #(key = q) = r + 1])
+
+has depth two (`nthAnswers_mem`) and holds exactly when `v` answers (`sat_nthAnswers`), so a
+rounded transformer of two layers whose attention ignores the query recognizes the task at every
+length (`exists_rtfr_nthAnswers`). The first layer counts, the second compares the count with
+the ordinal. Counted from the end the task is out of reach already at the last needle: no rounded
+transformer recognizes the latest binding at every length (`Transformer.CRASP.not_recallsLatest`). The real softmax at
+the scale `s log n` doing the same two steps is the next row.
