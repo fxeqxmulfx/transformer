@@ -8,6 +8,8 @@ public import Transformer.MRCR.NearMiss
 public import Transformer.MRCR.NearMissThreshold
 public import Transformer.MRCR.Ordinal
 public import Transformer.MRCR.PartScore
+public import Transformer.MRCR.Returns
+public import Transformer.MRCR.RotaryCopy
 public import Transformer.MRCR.Ties
 
 /-!
@@ -36,4 +38,8 @@ a formula of depth two and so by a rounded transformer of two layers
 `Transformer.MRCR.CountHead` and `Transformer.MRCR.CountLookup` do the same with the real softmax
 at the scale `s log n`: one head counts the earlier needles of each key, a second compares the
 count with the ordinal of the query and returns the needle at every length.
+
+`Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
+position: a RoPE score of the distance comes back near its value at linearly many distances, so
+a RoPE head that scores by the distance only loses every position at long range, at every scale.
 -/

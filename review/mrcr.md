@@ -29,7 +29,7 @@ what is proved in Lean and what is not.
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
-| Copy | return the whole answer, token by token | open |
+| Copy | return the whole answer, token by token | `Transformer.MRCR.Returns`, `RotaryCopy` (copy by position; copy by content open) |
 | Training | whether a trained model has the gaps | not attempted (the user, 2026-11-19) |
 
 ## Near misses (proved)
@@ -108,3 +108,31 @@ so `2 K_R 2^{1 − s₁}` must stay below `1`: the proof takes `2^{s₁ − 1} >
 whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, and the weight `K_r` of
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
+
+## Copy by position (proved, RoPE)
+
+MRCR scores the reproduction of an answer of up to 512 tokens written after a random string
+(arXiv:2409.12640v2, `eval_framework.tex`, line 52). Written token by token, the copy can follow
+the answer by its position: the source of each written token lies at the same distance from the
+writing token throughout. A head that copies so scores the visible tokens by their distance, and
+SA5 returns the token at that distance at every length if the score has a gap there at every
+length.
+
+A positional RoPE head scores the distance `t` by `∑_i (a_i cos θ_i t + b_i sin θ_i t)`
+(`ropeScore`; `re_sum_rotary_eq_ropeScore` derives it from the rotation of arXiv:2309.00071v3,
+§2.1, Eq. (5)). Such a score has no gap at long range. Cut the torus of the phases into
+`(N + 1)^K` boxes; by the pigeonhole principle at least `H / (N + 1)^K − 1` of the distances below
+`H` bring every phase within `2π / (N + 1)` of a multiple of `2π` (`exists_returns`), and each
+moves the score by at most `2π ∑_i (|a_i| + |b_i|) / (N + 1)` (`abs_ropeScore_add_sub_le`). So
+every position has linearly many near misses (`le_card_nearReturns`), and the near-miss theorem
+with the exponent `1` gives: for all frequencies, coefficients and scales `s`, from some length
+on, the indicator dictionary of every position is answered with an error above every `ε < 2`
+(`exists_lt_logScaleAttention_ropeScore_error`). This covers the previous-token head at the
+distance `1`. The proof needs `4 (N + 1)^K` tokens with `N + 1 > 2π s ∑_i (|a_i| + |b_i|)`,
+far beyond 1M for `K = 64`, so it says what fails at every length, not at the lengths of MRCR-V2.
+
+Open: copying by content. An induction head finds the source by the token before it
+(`Transformer.Grokking.FlatSpectrum.Recall.Induction`); in natural text that token recurs, the
+matches tie and attention averages them (`abs_logScaleAttention_sub_average_le`). What a head
+needs to copy 512 tokens of one of eight similar answers, and how errors of the copy compound
+under sampling, is not proved.
