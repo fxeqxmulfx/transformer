@@ -12,6 +12,7 @@ public import Transformer.Sandwich.Section5_Gradient
 public import Transformer.Sandwich.Section5_Sinusoidal
 public import Transformer.Sandwich.Section6_Sandwich
 public import Transformer.Sandwich.Section6_KERPLE
+public import Transformer.Sandwich.SectionE_Implementation
 
 /-!
 # Sandwich: length extrapolation through receptive fields
@@ -46,4 +47,8 @@ scheme is a bias of the distance added to the scaled logit, `−∞` masking the
 * `Section6_KERPLE`: §6.2–6.3, the smoothed Sandwich is KERPLE's logarithmic bias kernel, and its
   attention is KERPLE's with `r₁ = 0.825 √k` since Sandwich adds its bias after the scaling; the
   exact Sandwich is no logarithmic bias; the plateau; T5's distinct and shared buckets.
+* `SectionE_Implementation`: Appendix E, the reference code is `p_m^⊤ p_n / h` with Sinusoidal's
+  frequencies `1/10000^{2i/d̄}`, `i = 0, …, d̄/2 − 1`. Omitting `−d̄/2` does not change the
+  attention, but the frequency `1` in place of `1/10000` adds `(d̄/2 + cos t − cos(t/10000))/h`,
+  which does.
 -/
