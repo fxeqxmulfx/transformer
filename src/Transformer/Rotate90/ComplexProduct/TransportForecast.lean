@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Rotate90.ComplexProduct.SignedTransport
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecastOutcomes
+public import Transformer.Grokking.GradientEvidence.TransportForecastOutcomes
 
 /-!
 # Training-to-forecast bridge for the actual complex-product network
@@ -17,7 +17,7 @@ premise and FT3 supplies the alternative endpoint. Backend errors stay explicit.
 noncomputable section
 namespace Transformer.Rotate90.ComplexProduct
 
-open Landscape.Neural Grokking.FlatSpectrum.FeatureCodes
+open Landscape.Neural Grokking.GradientEvidence
 open scoped BigOperators
 variable {I J V K H : Type*} [Fintype I] [Fintype J] [Fintype K] [Fintype H]
 

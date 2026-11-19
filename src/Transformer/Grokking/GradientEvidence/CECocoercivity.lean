@@ -17,7 +17,7 @@ features across training. The tied encoder path is not this derivative.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes Landscape.Neural
+open Finset Geometry Landscape.Neural
 variable {I C K : Type*} [Fintype I] [Fintype C] [Fintype K]
 
 /-- CL1: the exponential tangent bounds a signed difference at either endpoint. -/

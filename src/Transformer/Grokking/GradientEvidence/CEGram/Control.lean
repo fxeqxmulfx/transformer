@@ -16,7 +16,7 @@ the original source's shorter final batch. Full AdamW errors remain separate.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence.CEGram
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 variable {C K U : Type*} [Fintype C] [Fintype K] [Fintype U] [Nonempty U]
   [DecidableEq C] [DecidableEq K]
 

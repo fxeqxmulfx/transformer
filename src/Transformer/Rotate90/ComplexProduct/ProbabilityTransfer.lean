@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Rotate90.ComplexProduct.TrainingTransport
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
+public import Transformer.Grokking.GradientEvidence.ProbabilityTransfer
 
 /-!
 # Probability transfer through the normalized source and numerical execution
@@ -18,7 +18,7 @@ noncomputable section
 
 namespace Transformer.Rotate90.ComplexProduct
 
-open Landscape.Neural Grokking.Geometry Grokking.FlatSpectrum.FeatureCodes
+open Landscape.Neural Grokking.Geometry Grokking.GradientEvidence
 open scoped BigOperators
 
 variable {I V K H : Type*} [Fintype K] [Fintype H]

@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecast
+public import Transformer.Grokking.GradientEvidence.TransportForecast
 
 /-!
 # Executed margins, probabilities and loss across training transport
@@ -13,7 +13,7 @@ uses all competitors, including a future change of the worst competitor.
 
 @[expose] public section
 noncomputable section
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset Geometry Landscape.Neural
 variable {I J K C : Type*} [Fintype I] [Fintype J] [Fintype K]
@@ -134,4 +134,4 @@ example := crossEntropy_le_transportForecast oldCode nextCode
   futureScores (r := 1 / 2) (η := 0) true (by norm_num) (by norm_num)
   (by intro c; cases c <;> norm_num [futureScores, nextCode, linearScore])
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

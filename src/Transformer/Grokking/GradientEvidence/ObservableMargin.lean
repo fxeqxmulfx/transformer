@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableGeometry
+public import Transformer.Grokking.GradientEvidence.ObservableGeometry
 
 /-!
 # Invisible feature errors and observable margin budgets
@@ -14,7 +14,7 @@ every feature coordinate. The hypotheses are finite and remain explicit.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 variable {C K : Type*} [Fintype C] [Fintype K]
@@ -121,4 +121,4 @@ example :
   intro c hc
   cases c <;> norm_num [observableEnergy, centeredReadout, readoutMean, linearScore] at *
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

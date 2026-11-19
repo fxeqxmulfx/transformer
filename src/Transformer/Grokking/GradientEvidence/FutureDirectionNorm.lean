@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Grokking.GradientEvidence.FutureMomentCone
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ClassDecomposition
+public import Transformer.Grokking.GradientEvidence.ClassDecomposition
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 
 /-!
@@ -131,10 +131,10 @@ theorem warm_directions_norm (m v r : K → ℝ) (g : K → ℕ → ℝ) (eps : 
 /-- FF3: subtracting a group's computed mean does not increase its energy.
 Thus the active-row block bound also bounds active class contrasts. -/
 theorem class_center_energy_le {C : Type*} [Fintype C] [Nonempty C] (x : C → ℝ) :
-    (∑ c, (x c - FlatSpectrum.FeatureCodes.classMean x)^2) ≤ ∑ c, (x c)^2 := by
-  have he := FlatSpectrum.FeatureCodes.class_translation_energy x 0
+    (∑ c, (x c - classMean x)^2) ≤ ∑ c, (x c)^2 := by
+  have he := class_translation_energy x 0
   have hp : 0 ≤ (Fintype.card C : ℝ) *
-      (FlatSpectrum.FeatureCodes.classMean x)^2 := by positivity
+      (classMean x)^2 := by positivity
   simp only [sub_zero] at he
   linarith
 

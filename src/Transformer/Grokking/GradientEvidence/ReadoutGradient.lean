@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedTransport
+public import Transformer.Grokking.GradientEvidence.SignedTransport
 public import Transformer.Grokking.GradientEvidence.BinaryObjectives
 
 /-!
@@ -18,7 +18,7 @@ noncomputable section
 
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes Landscape.Neural
+open Finset Geometry Landscape.Neural
 
 variable {I C K : Type*}
 

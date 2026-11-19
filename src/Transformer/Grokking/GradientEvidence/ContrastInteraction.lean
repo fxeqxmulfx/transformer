@@ -15,8 +15,6 @@ noncomputable section
 
 namespace Transformer.Grokking.GradientEvidence
 
-open FlatSpectrum.FeatureCodes
-
 variable {C K : Type*}
 
 /-- Difference of the actual buffered class-row directions, AI5. Each row

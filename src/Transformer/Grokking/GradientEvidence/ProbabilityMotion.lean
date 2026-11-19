@@ -16,7 +16,7 @@ Feature radii must cover the moving tied encoder and final normalization.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 variable {C K : Type*} [Fintype K]
 
 /-- PM3: squared-energy caps give a norm-product allowance. -/

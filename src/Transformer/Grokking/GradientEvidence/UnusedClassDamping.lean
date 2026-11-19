@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Grokking.GradientEvidence.ReadoutGradient
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ClassDecomposition
+public import Transformer.Grokking.GradientEvidence.ClassDecomposition
 
 /-!
 # Supervised damping of unused class contrasts
@@ -17,7 +17,7 @@ identified with this isotropic contribution.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes Landscape.Neural
+open Finset Geometry Landscape.Neural
 
 variable {I C K : Type*} [Fintype I] [Fintype C] [Fintype K]
   [DecidableEq C] [DecidableEq K]

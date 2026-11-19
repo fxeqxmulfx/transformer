@@ -13,11 +13,11 @@ import Transformer
 #print axioms Transformer.Grokking.Geometry.strict_winner_of_negative_contrast_bounds
 #print axioms Transformer.Grokking.Geometry.strict_winner_of_odds_envelope
 #print axioms Transformer.Grokking.Geometry.nonzero_probability_transfer_witness
-#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.linearScore_mean
-#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.relative_logit_le_anchor
-#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.probability_ge_anchor_bound
-#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.crossEntropy_le_anchor_bound
-#print axioms Transformer.Grokking.FlatSpectrum.FeatureCodes.nonzero_anchor_geometry_witness
+#print axioms Transformer.Grokking.GradientEvidence.linearScore_mean
+#print axioms Transformer.Grokking.GradientEvidence.relative_logit_le_anchor
+#print axioms Transformer.Grokking.GradientEvidence.probability_ge_anchor_bound
+#print axioms Transformer.Grokking.GradientEvidence.crossEntropy_le_anchor_bound
+#print axioms Transformer.Grokking.GradientEvidence.nonzero_anchor_geometry_witness
 #print axioms Transformer.Rotate90.ComplexProduct.readoutState_logit
 #print axioms Transformer.Rotate90.ComplexProduct.executed_relative_le_anchor
 #print axioms Transformer.Rotate90.ComplexProduct.executed_probability_ge_anchor

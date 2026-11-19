@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Rotate90.ComplexProduct.ProbabilityTransfer
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability
+public import Transformer.Grokking.GradientEvidence.SignedProbability
 
 /-!
 # Signed directional transport for the executed complex-product source
@@ -17,7 +17,7 @@ noncomputable section
 
 namespace Transformer.Rotate90.ComplexProduct
 
-open Landscape.Neural Grokking.Geometry Grokking.FlatSpectrum.FeatureCodes
+open Landscape.Neural Grokking.Geometry Grokking.GradientEvidence
 
 variable {I J V K H : Type*} [Fintype I] [Fintype J] [Fintype K] [Fintype H]
 

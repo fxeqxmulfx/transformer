@@ -116,7 +116,7 @@ interactions remain in the quadratic term. Positive readout contributions
 explain the measured direction, but do not bound future encoder/memory opposition.
 
 Twenty new Lean theorems in
-[ClassDecomposition](../../src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean),
+[ClassDecomposition](../../src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean),
 [UnusedClassDamping](../../src/Transformer/Grokking/GradientEvidence/UnusedClassDamping.lean)
 and [ClassTrajectory](../../src/Transformer/Grokking/GradientEvidence/ClassTrajectory.lean)
 prove the actual derivative sign, finite-step condition, class decomposition,

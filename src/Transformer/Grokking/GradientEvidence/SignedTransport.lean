@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
+public import Transformer.Grokking.GradientEvidence.ProbabilityTransfer
 
 /-!
 # Signed training reconstruction and directional residuals
@@ -15,7 +15,7 @@ orthogonality or successful optimizer discovery is assumed.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 
@@ -146,4 +146,4 @@ example := orthogonal_residual_abs_le (fun (_ : Fin 1) (k : Bool) => if k then (
   (by intro j; norm_num [linearScore])
 example := orthogonality_defect_necessary
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

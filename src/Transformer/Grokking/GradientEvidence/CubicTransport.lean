@@ -14,7 +14,7 @@ needed to construct the route. This is task symmetry, not model equivariance.
 
 @[expose] public section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 /-- Translation followed by an allowed multiplier preserves the cubic task,
 TT4. The parameters describe an exact route between raw operand pairs. -/
@@ -47,4 +47,4 @@ example := cubic97_transfer_label 1 2 42 63 35 27
 example := cubic97_transfer_label 1 96 7 90 1 0
   (Or.inl rfl) (by decide) (by decide)
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

@@ -18,7 +18,7 @@ establish a universal rounding theorem.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence.CEGram
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 
 /-- QG3: a per-logit execution error contributes twice its allowance to a
 class contrast. Transport the GPU ceiling to the real-CE score table. -/

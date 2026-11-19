@@ -16,8 +16,6 @@ noncomputable section
 
 namespace Transformer.Grokking.GradientEvidence
 
-open FlatSpectrum.FeatureCodes
-
 variable {C K : Type*} [Fintype K]
 
 /-- Executed readout scores with an explicit numerical discrepancy, JC2. -/

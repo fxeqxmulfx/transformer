@@ -17,7 +17,7 @@ readout reference only.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence.CEGram
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 variable {I C K U : Type*} [Fintype I] [Fintype C] [Fintype K]
   [DecidableEq I] [DecidableEq C] [DecidableEq K]
 

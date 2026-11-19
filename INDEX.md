@@ -150,13 +150,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`Transformer.Grokking.EffectiveTheory`](#transformergrokkingeffectivetheory) | arXiv:2205.10343 | 8 | 57 | 0 | 0 | 0 |
 | [`Transformer.Grokking.FlatSpectrum`](#transformergrokkingflatspectrum) | — | 126 | 801 | 0 | 0 | 0 |
 | [`Transformer.Grokking.FlatSpectrum.BlockCut`](#transformergrokkingflatspectrumblockcut) | arXiv:2506.16055 | 4 | 26 | 0 | 0 | 0 |
-| [`Transformer.Grokking.FlatSpectrum.FeatureCodes`](#transformergrokkingflatspectrumfeaturecodes) | — | 24 | 135 | 0 | 0 | 0 |
+| [`Transformer.Grokking.FlatSpectrum.FeatureCodes`](#transformergrokkingflatspectrumfeaturecodes) | — | 13 | 70 | 0 | 0 | 0 |
 | [`Transformer.Grokking.FlatSpectrum.Recall`](#transformergrokkingflatspectrumrecall) | arXiv:2312.04927 | 24 | 143 | 0 | 0 | 0 |
 | [`Transformer.Grokking.FlatSpectrum.Training`](#transformergrokkingflatspectrumtraining) | — | 68 | 484 | 0 | 0 | 0 |
 | [`Transformer.Grokking.FlatSpectrum.Training.Scope`](#transformergrokkingflatspectrumtrainingscope) | — | 43 | 268 | 0 | 0 | 0 |
 | [`Transformer.Grokking.ForwardForward`](#transformergrokkingforwardforward) | arXiv:2212.13345 | 2 | 19 | 0 | 0 | 0 |
 | [`Transformer.Grokking.Geometry`](#transformergrokkinggeometry) | arXiv:2301.05217 | 11 | 84 | 0 | 0 | 0 |
-| [`Transformer.Grokking.GradientEvidence`](#transformergrokkinggradientevidence) | arXiv:2402.19449 | 46 | 286 | 0 | 0 | 0 |
+| [`Transformer.Grokking.GradientEvidence`](#transformergrokkinggradientevidence) | arXiv:2402.19449 | 57 | 351 | 0 | 0 | 0 |
 | [`Transformer.Grokking.GradientEvidence.CEGram`](#transformergrokkinggradientevidencecegram) | — | 6 | 27 | 0 | 0 | 0 |
 | [`Transformer.Grokking.NaiveLoss`](#transformergrokkingnaiveloss) | arXiv:2501.04697 | 1 | 6 | 0 | 0 | 0 |
 | [`Transformer.Grokking.Operational`](#transformergrokkingoperational) | arXiv:2201.02177 | 5 | 27 | 0 | 0 | 0 |
@@ -17772,7 +17772,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.Grokking.Geometry](src/Transformer/Grokking/Geometry.lean)** — 18 lines, aggregator
 
-**[Transformer.Grokking.GradientEvidence](src/Transformer/Grokking/GradientEvidence.lean)** — 29 lines, aggregator
+**[Transformer.Grokking.GradientEvidence](src/Transformer/Grokking/GradientEvidence.lean)** — 44 lines, aggregator
 
 **[Transformer.Grokking.NaiveLoss](src/Transformer/Grokking/NaiveLoss.lean)** — 8 lines, aggregator
 
@@ -28199,7 +28199,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_nuclearNorm_eq_of_not_perm`](src/Transformer/Grokking/FlatSpectrum/FailureMargin.lean#L127) | theorem | proved |
 | [`exists_nuclearNorm_le_sqrt_of_not_perm`](src/Transformer/Grokking/FlatSpectrum/FailureMargin.lean#L139) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes](src/Transformer/Grokking/FlatSpectrum/FeatureCodes.lean)** — 60 lines, aggregator
+**[Transformer.Grokking.FlatSpectrum.FeatureCodes](src/Transformer/Grokking/FlatSpectrum/FeatureCodes.lean)** — 48 lines, aggregator
 
 **[Transformer.Grokking.FlatSpectrum.FewestCells](src/Transformer/Grokking/FlatSpectrum/FewestCells.lean)** — 121 lines
 
@@ -29397,19 +29397,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`binaryCode_injective`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/Basic.lean#L128) | theorem | proved |
 | [`binaryCode_coordinate_not_injective`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/Basic.lean#L136) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.ClassDecomposition](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean)** — 144 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`classMean`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L23) | def |  |
-| [`class_center_sum_zero`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L28) | theorem | proved |
-| [`class_translation_energy`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L37) | theorem | proved |
-| [`class_split_energy`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L53) | theorem | proved |
-| [`zero_sum_pair_product`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L66) | theorem | proved |
-| [`centered_pair_product`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L88) | theorem | proved |
-| [`centered_rows_from_anchor`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L102) | theorem | proved |
-| [`active_concentration_insufficient_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ClassDecomposition.lean#L135) | theorem | proved |
-
 **[Transformer.Grokking.FlatSpectrum.FeatureCodes.Conditioning](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/Conditioning.lean)** — 118 lines
 
 | declaration | kind | status |
@@ -29430,14 +29417,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`cubicFourier97`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicQuotient.lean#L64) | def |  |
 | [`cubicFourier97_isometry`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicQuotient.lean#L68) | theorem | proved |
 | [`cubic97_fourier_features_same_readouts`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicQuotient.lean#L84) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicTransport](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicTransport.lean)** — 50 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`cubic97_route`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicTransport.lean#L21) | theorem | proved |
-| [`cubic97_route_of_sum`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicTransport.lean#L28) | theorem | proved |
-| [`cubic97_transfer_label`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/CubicTransport.lean#L37) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.FeatureCodes.FiberCodes](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/FiberCodes.lean)** — 122 lines
 
@@ -29486,34 +29465,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`ambiguous_all_minima_classify`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/NonuniqueWitness.lean#L97) | theorem | proved |
 | [`nonunique_recovery_correct_classification`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/NonuniqueWitness.lean#L118) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableGeometry](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean)** — 120 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`readoutMean`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L25) | def |  |
-| [`centeredReadout`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L29) | def |  |
-| [`observableGram`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L34) | def |  |
-| [`observableEnergy`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L38) | def |  |
-| [`centeredReadout_contrast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L42) | theorem | proved |
-| [`observableEnergy_eq_gram`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L50) | theorem | proved |
-| [`observableEnergy_nonneg`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L74) | theorem | proved |
-| [`observable_contrast_sq_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L80) | theorem | proved |
-| [`observable_contrast_abs_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L96) | theorem | proved |
-| [`observableEnergy_eq_zero_iff_centered`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableGeometry.lean#L103) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableMargin](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean)** — 124 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`linearScore_readoutMean`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L23) | theorem | proved |
-| [`observableEnergy_eq_zero_iff_contrasts`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L30) | theorem | proved |
-| [`common_readout_shift_preserves_contrast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L54) | theorem | proved |
-| [`invisible_error_preserves_contrast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L62) | theorem | proved |
-| [`observable_margin_lower`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L72) | theorem | proved |
-| [`strict_winner_of_observable_error`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L82) | theorem | proved |
-| [`nonzero_invisible_error_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L94) | theorem | proved |
-| [`observable_contrast_sharp_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ObservableMargin.lean#L101) | theorem | proved |
-
 **[Transformer.Grokking.FlatSpectrum.FeatureCodes.PoweredDivision](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean)** — 183 lines
 
 | declaration | kind | status |
@@ -29527,17 +29478,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`powerKernel_minimum_iff`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean#L79) | theorem | proved |
 | [`power_classification_of_minimum`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean#L96) | theorem | proved |
 | [`exists_power_division_margin`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean#L118) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean)** — 92 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`linearScore_mean`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean#L27) | theorem | proved |
-| [`anchorLogOddsBound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean#L39) | def |  |
-| [`relative_logit_le_anchor`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean#L46) | theorem | proved |
-| [`probability_ge_anchor_bound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean#L57) | theorem | proved |
-| [`crossEntropy_le_anchor_bound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean#L66) | theorem | proved |
-| [`nonzero_anchor_geometry_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/ProbabilityTransfer.lean#L75) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.FeatureCodes.RankSeparation](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/RankSeparation.lean)** — 151 lines
 
@@ -29560,88 +29500,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`classification_of_bank_minimum`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/Recovery.lean#L63) | theorem | proved |
 | [`bank_minimum_iff_of_certificates`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/Recovery.lean#L83) | theorem | proved |
 | [`full_observation_minimum_iff`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/Recovery.lean#L104) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedProbability.lean)** — 85 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`signedLogOddsBound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedProbability.lean#L24) | def |  |
-| [`relative_logit_le_signed`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedProbability.lean#L31) | theorem | proved |
-| [`probability_ge_signed_bound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedProbability.lean#L39) | theorem | proved |
-| [`crossEntropy_le_signed_bound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedProbability.lean#L49) | theorem | proved |
-| [`signed_transport_nonzero_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedProbability.lean#L61) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedTransport](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean)** — 149 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`transportPrediction`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L25) | def |  |
-| [`readoutResidual`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L29) | def |  |
-| [`directionalResidualBound`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L34) | def |  |
-| [`linearScore_signed_residual`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L40) | theorem | proved |
-| [`signed_transport_norm_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L52) | theorem | proved |
-| [`linearScore_readout_residual`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L64) | theorem | proved |
-| [`directional_residual_abs_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L81) | theorem | proved |
-| [`signed_transport_abs_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L94) | theorem | proved |
-| [`signed_transport_upper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L105) | theorem | proved |
-| [`exact_transport_of_zero_residual`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L115) | theorem | proved |
-| [`orthogonal_residual_abs_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L124) | theorem | proved |
-| [`orthogonality_defect_necessary`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/SignedTransport.lean#L133) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean)** — 152 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`linearScore`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L26) | def |  |
-| [`transportResidual`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L30) | def |  |
-| [`transportEnergy`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L34) | def |  |
-| [`trainingContrastEnergy`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L39) | def |  |
-| [`center_contrast_error_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L45) | theorem | proved |
-| [`linearScore_transport`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L53) | theorem | proved |
-| [`weighted_transport_sq_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L77) | theorem | proved |
-| [`training_transport_error_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L92) | theorem | proved |
-| [`residual_penalty_necessary`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L124) | theorem | proved |
-| [`training_transport_nonzero_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TrainingTransport.lean#L136) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecast](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean)** — 166 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`forecastScoreChange`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L23) | def |  |
-| [`linearScore_forecast_identity`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L28) | theorem | proved |
-| [`linearScore_forecast_error_le`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L37) | theorem | proved |
-| [`transportForecastUpper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L52) | def |  |
-| [`signed_transport_forecast_upper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L59) | theorem | proved |
-| [`transportEndpointUpper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L72) | def |  |
-| [`signed_transport_forecast_execution_upper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L81) | theorem | proved |
-| [`signed_transport_endpoint_upper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L104) | theorem | proved |
-| [`endpoint_le_transportEndpointUpper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L114) | theorem | proved |
-| [`transport_forecast_nonzero_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecast.lean#L123) | theorem | proved |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecastOutcomes](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean)** — 137 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`transportForecastGapUpper`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L22) | def |  |
-| [`executed_gap_le_transportForecast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L29) | theorem | proved |
-| [`margin_of_transportForecast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L45) | theorem | proved |
-| [`strict_winner_of_transportForecast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L59) | theorem | proved |
-| [`probability_ge_transportForecast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L75) | theorem | proved |
-| [`crossEntropy_le_transportForecast`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L88) | theorem | proved |
-| [`oldCode`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L101) | def |  |
-| [`nextCode`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L102) | def |  |
-| [`futureScores`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/TransportForecastOutcomes.lean#L103) | def |  |
-
-**[Transformer.Grokking.FlatSpectrum.FeatureCodes.UpdateAttribution](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean)** — 101 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`componentScoreChange`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean#L26) | def |  |
-| [`linearScore_sum_readout`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean#L30) | theorem | proved |
-| [`linearScore_sum_feature`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean#L36) | theorem | proved |
-| [`forecast_component_identity`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean#L43) | theorem | proved |
-| [`finite_update_component_identity`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean#L67) | theorem | proved |
-| [`positive_component_negative_update_witness`](src/Transformer/Grokking/FlatSpectrum/FeatureCodes/UpdateAttribution.lean#L80) | theorem | proved |
 
 ### `Transformer.Grokking.FlatSpectrum.Recall`
 
@@ -31584,6 +31442,19 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`main_adam_reference_error`](src/Transformer/Grokking/GradientEvidence/CEMomentumControl.lean#L109) | theorem | proved |
 | [`momentum_perturbation_can_reverse`](src/Transformer/Grokking/GradientEvidence/CEMomentumControl.lean#L142) | theorem | proved |
 
+**[Transformer.Grokking.GradientEvidence.ClassDecomposition](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean)** — 144 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`classMean`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L23) | def |  |
+| [`class_center_sum_zero`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L28) | theorem | proved |
+| [`class_translation_energy`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L37) | theorem | proved |
+| [`class_split_energy`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L53) | theorem | proved |
+| [`zero_sum_pair_product`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L66) | theorem | proved |
+| [`centered_pair_product`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L88) | theorem | proved |
+| [`centered_rows_from_anchor`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L102) | theorem | proved |
+| [`active_concentration_insufficient_witness`](src/Transformer/Grokking/GradientEvidence/ClassDecomposition.lean#L135) | theorem | proved |
+
 **[Transformer.Grokking.GradientEvidence.ClassTrajectory](src/Transformer/Grokking/GradientEvidence/ClassTrajectory.lean)** — 113 lines
 
 | declaration | kind | status |
@@ -31608,13 +31479,21 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sharedContrast_scatter`](src/Transformer/Grokking/GradientEvidence/ContrastExpansion.lean#L60) | theorem | proved |
 | [`descent_increases_contrast_scatter`](src/Transformer/Grokking/GradientEvidence/ContrastExpansion.lean#L67) | theorem | proved |
 
-**[Transformer.Grokking.GradientEvidence.ContrastInteraction](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean)** — 64 lines
+**[Transformer.Grokking.GradientEvidence.ContrastInteraction](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean)** — 62 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`bufferedContrastDirection`](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean#L24) | def |  |
-| [`buffered_contrast_eq_directionStep`](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean#L31) | theorem | proved |
-| [`buffered_contrast_interaction_le`](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean#L45) | theorem | proved |
+| [`bufferedContrastDirection`](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean#L22) | def |  |
+| [`buffered_contrast_eq_directionStep`](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean#L29) | theorem | proved |
+| [`buffered_contrast_interaction_le`](src/Transformer/Grokking/GradientEvidence/ContrastInteraction.lean#L43) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.CubicTransport](src/Transformer/Grokking/GradientEvidence/CubicTransport.lean)** — 50 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`cubic97_route`](src/Transformer/Grokking/GradientEvidence/CubicTransport.lean#L21) | theorem | proved |
+| [`cubic97_route_of_sum`](src/Transformer/Grokking/GradientEvidence/CubicTransport.lean#L28) | theorem | proved |
+| [`cubic97_transfer_label`](src/Transformer/Grokking/GradientEvidence/CubicTransport.lean#L37) | theorem | proved |
 
 **[Transformer.Grokking.GradientEvidence.DampedPersistence](src/Transformer/Grokking/GradientEvidence/DampedPersistence.lean)** — 118 lines
 
@@ -31814,23 +31693,23 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`crossEntropy_ge_joint_step`](src/Transformer/Grokking/GradientEvidence/JointLoss.lean#L64) | theorem | proved |
 | [`meanCrossEntropy_le_joint_step`](src/Transformer/Grokking/GradientEvidence/JointLoss.lean#L82) | theorem | proved |
 
-**[Transformer.Grokking.GradientEvidence.JointMargin](src/Transformer/Grokking/GradientEvidence/JointMargin.lean)** — 142 lines
+**[Transformer.Grokking.GradientEvidence.JointMargin](src/Transformer/Grokking/GradientEvidence/JointMargin.lean)** — 140 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`readoutLogits`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L24) | def |  |
-| [`classContrast`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L28) | def |  |
-| [`readout_gap`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L31) | theorem | proved |
-| [`classContrast_step`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L40) | theorem | proved |
-| [`jointGapDrift`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L48) | def |  |
-| [`gapStepRadius`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L52) | def |  |
-| [`jointGapUpper`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L57) | def |  |
-| [`jointGapLower`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L63) | def |  |
-| [`gap_step_error_bound`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L70) | theorem | proved |
-| [`new_gap_le_joint_upper`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L82) | theorem | proved |
-| [`joint_lower_le_new_gap`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L93) | theorem | proved |
-| [`all_competitor_margin`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L104) | theorem | proved |
-| [`strict_winner_of_joint_step`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L117) | theorem | proved |
+| [`readoutLogits`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L22) | def |  |
+| [`classContrast`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L26) | def |  |
+| [`readout_gap`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L29) | theorem | proved |
+| [`classContrast_step`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L38) | theorem | proved |
+| [`jointGapDrift`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L46) | def |  |
+| [`gapStepRadius`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L50) | def |  |
+| [`jointGapUpper`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L55) | def |  |
+| [`jointGapLower`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L61) | def |  |
+| [`gap_step_error_bound`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L68) | theorem | proved |
+| [`new_gap_le_joint_upper`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L80) | theorem | proved |
+| [`joint_lower_le_new_gap`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L91) | theorem | proved |
+| [`all_competitor_margin`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L102) | theorem | proved |
+| [`strict_winner_of_joint_step`](src/Transformer/Grokking/GradientEvidence/JointMargin.lean#L115) | theorem | proved |
 
 **[Transformer.Grokking.GradientEvidence.JointScoreStep](src/Transformer/Grokking/GradientEvidence/JointScoreStep.lean)** — 119 lines
 
@@ -31927,6 +31806,34 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`buffered_step_eq_directionStep`](src/Transformer/Grokking/GradientEvidence/MovingInteraction.lean#L118) | theorem | proved |
 | [`buffered_interaction_le`](src/Transformer/Grokking/GradientEvidence/MovingInteraction.lean#L130) | theorem | proved |
 
+**[Transformer.Grokking.GradientEvidence.ObservableGeometry](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean)** — 120 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`readoutMean`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L25) | def |  |
+| [`centeredReadout`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L29) | def |  |
+| [`observableGram`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L34) | def |  |
+| [`observableEnergy`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L38) | def |  |
+| [`centeredReadout_contrast`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L42) | theorem | proved |
+| [`observableEnergy_eq_gram`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L50) | theorem | proved |
+| [`observableEnergy_nonneg`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L74) | theorem | proved |
+| [`observable_contrast_sq_le`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L80) | theorem | proved |
+| [`observable_contrast_abs_le`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L96) | theorem | proved |
+| [`observableEnergy_eq_zero_iff_centered`](src/Transformer/Grokking/GradientEvidence/ObservableGeometry.lean#L103) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.ObservableMargin](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean)** — 124 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`linearScore_readoutMean`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L23) | theorem | proved |
+| [`observableEnergy_eq_zero_iff_contrasts`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L30) | theorem | proved |
+| [`common_readout_shift_preserves_contrast`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L54) | theorem | proved |
+| [`invisible_error_preserves_contrast`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L62) | theorem | proved |
+| [`observable_margin_lower`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L72) | theorem | proved |
+| [`strict_winner_of_observable_error`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L82) | theorem | proved |
+| [`nonzero_invisible_error_witness`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L94) | theorem | proved |
+| [`observable_contrast_sharp_witness`](src/Transformer/Grokking/GradientEvidence/ObservableMargin.lean#L101) | theorem | proved |
+
 **[Transformer.Grokking.GradientEvidence.PersistenceCertificates](src/Transformer/Grokking/GradientEvidence/PersistenceCertificates.lean)** — 84 lines
 
 | declaration | kind | status |
@@ -31945,6 +31852,17 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`linear_score_contrast`](src/Transformer/Grokking/GradientEvidence/ProbabilityMotion.lean#L49) | theorem | proved |
 | [`executed_contrast_motion_le`](src/Transformer/Grokking/GradientEvidence/ProbabilityMotion.lean#L56) | theorem | proved |
 | [`probability_le_parameter_feature_motion`](src/Transformer/Grokking/GradientEvidence/ProbabilityMotion.lean#L79) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.ProbabilityTransfer](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean)** — 92 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`linearScore_mean`](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean#L27) | theorem | proved |
+| [`anchorLogOddsBound`](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean#L39) | def |  |
+| [`relative_logit_le_anchor`](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean#L46) | theorem | proved |
+| [`probability_ge_anchor_bound`](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean#L57) | theorem | proved |
+| [`crossEntropy_le_anchor_bound`](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean#L66) | theorem | proved |
+| [`nonzero_anchor_geometry_witness`](src/Transformer/Grokking/GradientEvidence/ProbabilityTransfer.lean#L75) | theorem | proved |
 
 **[Transformer.Grokking.GradientEvidence.ProspectiveCE](src/Transformer/Grokking/GradientEvidence/ProspectiveCE.lean)** — 81 lines
 
@@ -32068,6 +31986,77 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`arbitrarily_high_alignment_with_opposed_answers`](src/Transformer/Grokking/GradientEvidence/SharedTarget.lean#L133) | theorem | proved |
 | [`high_alignment_at_the_same_loss`](src/Transformer/Grokking/GradientEvidence/SharedTarget.lean#L147) | theorem | proved |
 
+**[Transformer.Grokking.GradientEvidence.SignedProbability](src/Transformer/Grokking/GradientEvidence/SignedProbability.lean)** — 85 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`signedLogOddsBound`](src/Transformer/Grokking/GradientEvidence/SignedProbability.lean#L24) | def |  |
+| [`relative_logit_le_signed`](src/Transformer/Grokking/GradientEvidence/SignedProbability.lean#L31) | theorem | proved |
+| [`probability_ge_signed_bound`](src/Transformer/Grokking/GradientEvidence/SignedProbability.lean#L39) | theorem | proved |
+| [`crossEntropy_le_signed_bound`](src/Transformer/Grokking/GradientEvidence/SignedProbability.lean#L49) | theorem | proved |
+| [`signed_transport_nonzero_witness`](src/Transformer/Grokking/GradientEvidence/SignedProbability.lean#L61) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.SignedTransport](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean)** — 149 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`transportPrediction`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L25) | def |  |
+| [`readoutResidual`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L29) | def |  |
+| [`directionalResidualBound`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L34) | def |  |
+| [`linearScore_signed_residual`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L40) | theorem | proved |
+| [`signed_transport_norm_le`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L52) | theorem | proved |
+| [`linearScore_readout_residual`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L64) | theorem | proved |
+| [`directional_residual_abs_le`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L81) | theorem | proved |
+| [`signed_transport_abs_le`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L94) | theorem | proved |
+| [`signed_transport_upper`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L105) | theorem | proved |
+| [`exact_transport_of_zero_residual`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L115) | theorem | proved |
+| [`orthogonal_residual_abs_le`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L124) | theorem | proved |
+| [`orthogonality_defect_necessary`](src/Transformer/Grokking/GradientEvidence/SignedTransport.lean#L133) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.TrainingTransport](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean)** — 152 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`linearScore`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L26) | def |  |
+| [`transportResidual`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L30) | def |  |
+| [`transportEnergy`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L34) | def |  |
+| [`trainingContrastEnergy`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L39) | def |  |
+| [`center_contrast_error_le`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L45) | theorem | proved |
+| [`linearScore_transport`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L53) | theorem | proved |
+| [`weighted_transport_sq_le`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L77) | theorem | proved |
+| [`training_transport_error_le`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L92) | theorem | proved |
+| [`residual_penalty_necessary`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L124) | theorem | proved |
+| [`training_transport_nonzero_witness`](src/Transformer/Grokking/GradientEvidence/TrainingTransport.lean#L136) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.TransportForecast](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean)** — 166 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`forecastScoreChange`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L23) | def |  |
+| [`linearScore_forecast_identity`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L28) | theorem | proved |
+| [`linearScore_forecast_error_le`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L37) | theorem | proved |
+| [`transportForecastUpper`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L52) | def |  |
+| [`signed_transport_forecast_upper`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L59) | theorem | proved |
+| [`transportEndpointUpper`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L72) | def |  |
+| [`signed_transport_forecast_execution_upper`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L81) | theorem | proved |
+| [`signed_transport_endpoint_upper`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L104) | theorem | proved |
+| [`endpoint_le_transportEndpointUpper`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L114) | theorem | proved |
+| [`transport_forecast_nonzero_witness`](src/Transformer/Grokking/GradientEvidence/TransportForecast.lean#L123) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.TransportForecastOutcomes](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean)** — 137 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`transportForecastGapUpper`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L22) | def |  |
+| [`executed_gap_le_transportForecast`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L29) | theorem | proved |
+| [`margin_of_transportForecast`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L45) | theorem | proved |
+| [`strict_winner_of_transportForecast`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L59) | theorem | proved |
+| [`probability_ge_transportForecast`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L75) | theorem | proved |
+| [`crossEntropy_le_transportForecast`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L88) | theorem | proved |
+| [`oldCode`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L101) | def |  |
+| [`nextCode`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L102) | def |  |
+| [`futureScores`](src/Transformer/Grokking/GradientEvidence/TransportForecastOutcomes.lean#L103) | def |  |
+
 **[Transformer.Grokking.GradientEvidence.UnusedClassDamping](src/Transformer/Grokking/GradientEvidence/UnusedClassDamping.lean)** — 159 lines
 
 | declaration | kind | status |
@@ -32079,6 +32068,17 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`isotropic_pair_energy_nonincrease`](src/Transformer/Grokking/GradientEvidence/UnusedClassDamping.lean#L90) | theorem | proved |
 | [`unused_group_gradient_damping`](src/Transformer/Grokking/GradientEvidence/UnusedClassDamping.lean#L113) | theorem | proved |
 | [`cumulative_unused_readout_credit_nonpos`](src/Transformer/Grokking/GradientEvidence/UnusedClassDamping.lean#L134) | theorem | proved |
+
+**[Transformer.Grokking.GradientEvidence.UpdateAttribution](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean)** — 101 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`componentScoreChange`](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean#L26) | def |  |
+| [`linearScore_sum_readout`](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean#L30) | theorem | proved |
+| [`linearScore_sum_feature`](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean#L36) | theorem | proved |
+| [`forecast_component_identity`](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean#L43) | theorem | proved |
+| [`finite_update_component_identity`](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean#L67) | theorem | proved |
+| [`positive_component_negative_update_witness`](src/Transformer/Grokking/GradientEvidence/UpdateAttribution.lean#L80) | theorem | proved |
 
 ### `Transformer.Grokking.GradientEvidence.CEGram`
 

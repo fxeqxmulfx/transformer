@@ -16,7 +16,7 @@ valid lower bounds for the same target; it pays for all constituent bases.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset FlatSpectrum.FeatureCodes
+open Finset
 variable {K C : Type*} [Fintype K]
 
 /-- AD4: coordinate budgets for a moving readout and feature retain the

@@ -5,14 +5,6 @@ public import Transformer.Grokking.FlatSpectrum.FeatureCodes.NonuniqueWitness
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ApproximateRecovery
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicQuotient
 public import Transformer.Grokking.FlatSpectrum.FeatureCodes.AnswerContrast
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.CubicTransport
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ProbabilityTransfer
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecastOutcomes
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableMargin
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.UpdateAttribution
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ClassDecomposition
 
 /-!
 # Joint feature recovery and robust classification
@@ -53,8 +45,4 @@ for sums 1 and 35 give identical complete cubic score vectors.
 For arbitrary learned answer decoders, pooling contracts absolute error and
 commutes with linear prediction. Unit mass allows contrast coefficients to be
 centered; half their range bounds the combined error with a sharp constant.
-
-Training-state transport bounds each contrast from observed training variation
-and a query-state reconstruction, retaining its residual outside the training
-span. Exact cubic input routes transfer observed labels to same-answer queries.
 -/

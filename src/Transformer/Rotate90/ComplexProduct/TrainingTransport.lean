@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Rotate90.ComplexProduct.SourceWitness
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
+public import Transformer.Grokking.GradientEvidence.TrainingTransport
 
 /-!
 # Training-state transport through the actual tied source readout
@@ -19,7 +19,7 @@ noncomputable section
 
 namespace Transformer.Rotate90.ComplexProduct
 
-open Landscape.Neural Grokking.FlatSpectrum.FeatureCodes
+open Landscape.Neural Grokking.GradientEvidence
 open scoped BigOperators
 
 variable {V K H I J : Type*}

@@ -17,7 +17,7 @@ noncomputable section
 
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset FlatSpectrum.FeatureCodes
+open Finset
 
 variable {I C K : Type*} [Fintype I] [Fintype C] [Fintype K]
   [DecidableEq C] [DecidableEq K]

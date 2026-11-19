@@ -5,9 +5,9 @@ Moved unchanged from [`../flat_spectrum.md`](../flat_spectrum.md) on 2026-11-19:
 readout on unseen queries from observed training states and the trained weights: transport of
 query displacements (TT, ST), what a small loss controls (LG, PT), residual and adaptive
 dynamics (RD, AI), single-update evidence and difficult queries (JC), and forecasts of the
-features (FF1–FF3, FT, TF). The Lean is mostly in `Transformer.Grokking.GradientEvidence`, with
-transport modules in `Transformer.Grokking.Geometry`, `FlatSpectrum.FeatureCodes` and
-`Transformer.Rotate90.ComplexProduct`.
+features (FF1–FF3, FT, TF). The Lean is mostly in `Transformer.Grokking.GradientEvidence`, where
+its modules from `FlatSpectrum.FeatureCodes` moved the same day, with transport modules in
+`Transformer.Grokking.Geometry` and `Transformer.Rotate90.ComplexProduct`.
 
 These labels are this file's; its FF1–FF3 are not the FF1–FF4 of [`dynamics.md`](dynamics.md).
 AC, CP and the other earlier labels are in [`../flat_spectrum.md`](../flat_spectrum.md).
@@ -128,11 +128,11 @@ complex product; the generic linear-readout inequalities apply to all four arms.
 
 | Claim | Lean declaration |
 | --- | --- |
-| Center-displacement baseline | `FeatureCodes.center_contrast_error_le` |
-| Exact training/residual decomposition | `FeatureCodes.linearScore_transport` |
-| Weighted Cauchy–Schwarz and query error | `FeatureCodes.weighted_transport_sq_le`, `training_transport_error_le` |
-| Necessary residual and nonzero positive witness | `FeatureCodes.residual_penalty_necessary`, `training_transport_nonzero_witness` |
-| Exact cubic route and observed-label transfer | `FeatureCodes.cubic97_route`, `cubic97_route_of_sum`, `cubic97_transfer_label` |
+| Center-displacement baseline | `GradientEvidence.center_contrast_error_le` |
+| Exact training/residual decomposition | `GradientEvidence.linearScore_transport` |
+| Weighted Cauchy–Schwarz and query error | `GradientEvidence.weighted_transport_sq_le`, `training_transport_error_le` |
+| Necessary residual and nonzero positive witness | `GradientEvidence.residual_penalty_necessary`, `training_transport_nonzero_witness` |
+| Exact cubic route and observed-label transfer | `GradientEvidence.cubic97_route`, `cubic97_route_of_sum`, `cubic97_transfer_label` |
 | Actual source contrast identity | `ComplexProduct.linearScore_contrastRow` |
 | Source decision from valid bound choices | `ComplexProduct.executed_correct_of_center_bounds` |
 | Euclidean and training-transport source budgets | `ComplexProduct.executed_correct_of_euclidean_center`, `executed_correct_of_training_transport` |
@@ -389,9 +389,9 @@ coverage, or a priori generalization without running the query model.
 | Mean query loss ceiling | `Geometry.meanCrossEntropy_le_of_contrast_bounds` |
 | Stronger probability and weaker argmax conditions | `Geometry.strict_winner_of_odds_envelope`, `strict_winner_of_negative_contrast_bounds` |
 | Nonzero odds witness | `Geometry.nonzero_probability_transfer_witness` |
-| Training-center linearity and geometric bound | `FeatureCodes.linearScore_mean`, `relative_logit_le_anchor` |
-| Probability and loss from training-state geometry | `FeatureCodes.probability_ge_anchor_bound`, `crossEntropy_le_anchor_bound` |
-| Nonzero geometric witness | `FeatureCodes.nonzero_anchor_geometry_witness` |
+| Training-center linearity and geometric bound | `GradientEvidence.linearScore_mean`, `relative_logit_le_anchor` |
+| Probability and loss from training-state geometry | `GradientEvidence.probability_ge_anchor_bound`, `crossEntropy_le_anchor_bound` |
+| Nonzero geometric witness | `GradientEvidence.nonzero_anchor_geometry_witness` |
 | Exact normalized source readout | `ComplexProduct.readoutState_logit` |
 | Execution allowance and source bounds | `ComplexProduct.executed_relative_le_anchor`, `executed_probability_ge_anchor`, `executed_crossEntropy_le_anchor` |
 
@@ -511,13 +511,13 @@ arm; the formal source bridge is specific to the plain complex product.
 
 | Claim | Lean declaration |
 | --- | --- |
-| Exact signed reconstruction and baseline error | `FeatureCodes.linearScore_signed_residual`, `signed_transport_norm_le` |
-| Readout residual identity and directional bound | `FeatureCodes.linearScore_readout_residual`, `directional_residual_abs_le` |
-| Signed transport error and upper bound | `FeatureCodes.signed_transport_abs_le`, `signed_transport_upper` |
-| Zero-residual re-expression limit | `FeatureCodes.exact_transport_of_zero_residual` |
-| Orthogonal specialization and necessary defect | `FeatureCodes.orthogonal_residual_abs_le`, `orthogonality_defect_necessary` |
-| Relative logit, probability and loss transfer | `FeatureCodes.relative_logit_le_signed`, `probability_ge_signed_bound`, `crossEntropy_le_signed_bound` |
-| Nonzero extrapolation witness | `FeatureCodes.signed_transport_nonzero_witness` |
+| Exact signed reconstruction and baseline error | `GradientEvidence.linearScore_signed_residual`, `signed_transport_norm_le` |
+| Readout residual identity and directional bound | `GradientEvidence.linearScore_readout_residual`, `directional_residual_abs_le` |
+| Signed transport error and upper bound | `GradientEvidence.signed_transport_abs_le`, `signed_transport_upper` |
+| Zero-residual re-expression limit | `GradientEvidence.exact_transport_of_zero_residual` |
+| Orthogonal specialization and necessary defect | `GradientEvidence.orthogonal_residual_abs_le`, `orthogonality_defect_necessary` |
+| Relative logit, probability and loss transfer | `GradientEvidence.relative_logit_le_signed`, `probability_ge_signed_bound`, `crossEntropy_le_signed_bound` |
+| Nonzero extrapolation witness | `GradientEvidence.signed_transport_nonzero_witness` |
 | Actual source with execution allowance | `ComplexProduct.executed_relative_le_signed`, `executed_probability_ge_signed`, `executed_crossEntropy_le_signed` |
 
 ## Residual learning dynamics
@@ -1323,11 +1323,11 @@ claim. The original flat-spectrum learning obstruction remains open.
 
 | Claim | Lean declaration |
 | --- | --- |
-| Signed finite update with mixed term | `FeatureCodes.linearScore_forecast_identity` |
-| Euclidean remainder and training composition | `FeatureCodes.linearScore_forecast_error_le`, `signed_transport_forecast_upper` |
-| Directional endpoint and unavoidable old slack | `FeatureCodes.signed_transport_endpoint_upper`, `endpoint_le_transportEndpointUpper` |
-| Nonzero update/residual witness | `FeatureCodes.transport_forecast_nonzero_witness` |
-| Executed gap, margin and strict winner | `FeatureCodes.executed_gap_le_transportForecast`, `margin_of_transportForecast`, `strict_winner_of_transportForecast` |
-| Actual probability and CE | `FeatureCodes.probability_ge_transportForecast`, `crossEntropy_le_transportForecast` |
+| Signed finite update with mixed term | `GradientEvidence.linearScore_forecast_identity` |
+| Euclidean remainder and training composition | `GradientEvidence.linearScore_forecast_error_le`, `signed_transport_forecast_upper` |
+| Directional endpoint and unavoidable old slack | `GradientEvidence.signed_transport_endpoint_upper`, `endpoint_le_transportEndpointUpper` |
+| Nonzero update/residual witness | `GradientEvidence.transport_forecast_nonzero_witness` |
+| Executed gap, margin and strict winner | `GradientEvidence.executed_gap_le_transportForecast`, `margin_of_transportForecast`, `strict_winner_of_transportForecast` |
+| Actual probability and CE | `GradientEvidence.probability_ge_transportForecast`, `crossEntropy_le_transportForecast` |
 | Complete source adapters | `ComplexProduct.executed_gap_le_transport_forecast`, `executed_gap_le_transport_endpoint` |
-| Separate feature and arithmetic execution errors | `FeatureCodes.signed_transport_forecast_execution_upper`, `ComplexProduct.executed_gap_le_transport_forecast_with_feature_error` |
+| Separate feature and arithmetic execution errors | `GradientEvidence.signed_transport_forecast_execution_upper`, `ComplexProduct.executed_gap_le_transport_forecast_with_feature_error` |

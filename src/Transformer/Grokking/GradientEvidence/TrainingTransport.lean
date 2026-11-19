@@ -16,7 +16,7 @@ No query target error or query contrast appears on the bound's right side.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 
@@ -149,4 +149,4 @@ theorem training_transport_nonzero_witness :
 
 example := training_transport_nonzero_witness
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

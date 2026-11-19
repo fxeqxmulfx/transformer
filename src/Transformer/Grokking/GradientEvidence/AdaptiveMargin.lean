@@ -86,6 +86,6 @@ example := adam_margin_of_joint_condition 0 0 1 (1 / 10) 1 1
   (fun _ _ => 0) (fun _ => 2) (fun _ => 1) (fun _ => 0) (fun _ => 0) true 2
   (by intro c hc; cases c <;> simp_all [jointGapUpper, jointGapDrift, gapStepRadius,
     scoreStepRadius, jointScoreDrift, readoutLogits, classContrast, adamReadoutIncrement,
-    FlatSpectrum.FeatureCodes.linearScore, pairBudget, adamDiagonal, correctedMoment]; norm_num)
+    linearScore, pairBudget, adamDiagonal, correctedMoment]; norm_num)
 
 end Transformer.Grokking.GradientEvidence

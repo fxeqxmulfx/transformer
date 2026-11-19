@@ -5,9 +5,10 @@ Moved unchanged from [`../flat_spectrum.md`](../flat_spectrum.md) on 2026-11-19:
 directions that change class comparisons during training (OG, CG), a modified Forward–Forward
 loss (LF), the motion of the main-model AdamW (AD, DP, FF1–FF4), control of the cross-entropy
 through momentum, feature metrics and probabilities (CL, FM, PM), and the motion of the full
-encoder (EM, PA, QG). The Lean is mostly in `Transformer.Grokking.GradientEvidence`, with
-modules in `FlatSpectrum.FeatureCodes`, `Transformer.Grokking.Geometry`,
-`Transformer.Grokking.ForwardForward` and `Transformer.Rotate90.FeatureMotion`.
+encoder (EM, PA, QG). The Lean is mostly in `Transformer.Grokking.GradientEvidence`, where
+its modules from `FlatSpectrum.FeatureCodes` moved the same day, with modules in
+`Transformer.Grokking.Geometry`, `Transformer.Grokking.ForwardForward` and
+`Transformer.Rotate90.FeatureMotion`.
 
 These labels are this file's; its FF1–FF4 are not the FF1–FF3 of [`transport.md`](transport.md),
 where FT1–FT3 are. The earlier labels are in [`../flat_spectrum.md`](../flat_spectrum.md).
@@ -141,14 +142,14 @@ and convergence question.
 
 | Claim | Lean declaration |
 | --- | --- |
-| Class-centering and common shifts | `FeatureCodes.centeredReadout_contrast`, `common_readout_shift_preserves_contrast` |
-| Observable quadratic form and nonnegativity | `FeatureCodes.observableEnergy_eq_gram`, `observableEnergy_nonneg` |
-| Exact invisible-error characterization | `FeatureCodes.observableEnergy_eq_zero_iff_centered`, `observableEnergy_eq_zero_iff_contrasts` |
-| Sharp contrast and finite margin bounds | `FeatureCodes.observable_contrast_sq_le`, `observable_contrast_abs_le`, `observable_margin_lower` |
-| Invisible errors and strict winners | `FeatureCodes.invisible_error_preserves_contrast`, `strict_winner_of_observable_error` |
-| Nonzero and sharp witnesses | `FeatureCodes.nonzero_invisible_error_witness`, `observable_contrast_sharp_witness` |
-| Signed component and remainder identities | `FeatureCodes.forecast_component_identity`, `finite_update_component_identity` |
-| Positive component, negative total | `FeatureCodes.positive_component_negative_update_witness` |
+| Class-centering and common shifts | `GradientEvidence.centeredReadout_contrast`, `common_readout_shift_preserves_contrast` |
+| Observable quadratic form and nonnegativity | `GradientEvidence.observableEnergy_eq_gram`, `observableEnergy_nonneg` |
+| Exact invisible-error characterization | `GradientEvidence.observableEnergy_eq_zero_iff_centered`, `observableEnergy_eq_zero_iff_contrasts` |
+| Sharp contrast and finite margin bounds | `GradientEvidence.observable_contrast_sq_le`, `observable_contrast_abs_le`, `observable_margin_lower` |
+| Invisible errors and strict winners | `GradientEvidence.invisible_error_preserves_contrast`, `strict_winner_of_observable_error` |
+| Nonzero and sharp witnesses | `GradientEvidence.nonzero_invisible_error_witness`, `observable_contrast_sharp_witness` |
+| Signed component and remainder identities | `GradientEvidence.forecast_component_identity`, `finite_update_component_identity` |
+| Positive component, negative total | `GradientEvidence.positive_component_negative_update_witness` |
 
 ## Class-contrast discovery and persistence
 
@@ -325,13 +326,13 @@ not prove that theorem or universal optimizer discovery.
 | Actual CE pair identity and sign | `GradientEvidence.unused_pair_gradient_identity`, `unused_pair_gradient_damping`, `logit_probability_difference_nonneg` |
 | Whole-group and cumulative damping | `GradientEvidence.unused_group_gradient_damping`, `cumulative_unused_readout_credit_nonpos` |
 | Finite isotropic identity and condition | `GradientEvidence.isotropic_pair_energy_identity`, `isotropic_pair_energy_nonincrease` |
-| Computed class means and energy split | `FeatureCodes.class_center_sum_zero`, `class_translation_energy`, `class_split_energy` |
-| Pairwise-to-centered product identities | `FeatureCodes.zero_sum_pair_product`, `centered_pair_product` |
-| Explicit centered-row generators | `FeatureCodes.centered_rows_from_anchor` |
+| Computed class means and energy split | `GradientEvidence.class_center_sum_zero`, `class_translation_energy`, `class_split_energy` |
+| Pairwise-to-centered product identities | `GradientEvidence.zero_sum_pair_product`, `centered_pair_product` |
+| Explicit centered-row generators | `GradientEvidence.centered_rows_from_anchor` |
 | Finite and cumulative component identity | `GradientEvidence.component_energy_identity`, `trajectory_component_energy_identity` |
 | Relative share identity and improvement | `GradientEvidence.class_share_change`, `class_share_component_identity`, `class_share_nondecrease` |
 | Common scaling preserves share | `GradientEvidence.common_scaling_preserves_class_share` |
-| Full concentration with a wrong prediction | `FeatureCodes.active_concentration_insufficient_witness` |
+| Full concentration with a wrong prediction | `GradientEvidence.active_concentration_insufficient_witness` |
 
 ## Forward–Forward reformulation
 

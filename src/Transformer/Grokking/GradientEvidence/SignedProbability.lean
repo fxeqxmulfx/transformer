@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedTransport
+public import Transformer.Grokking.GradientEvidence.SignedTransport
 
 /-!
 # Probability and loss from signed directional transport
@@ -14,7 +14,7 @@ assumption and do not assert that learning supplies useful low-rank geometry.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset Geometry Landscape.Neural
 
@@ -82,4 +82,4 @@ example := crossEntropy_le_signed_bound (fun (c : Bool) (_ : Fin 1) => if c then
   (fun _ => 2) (fun _ => 5 / 2) (fun i => if i then 1 / 4 else -1 / 4)
   (fun (_ : Fin 1) (_ : Fin 1) => 1) (fun c _ => if c then 0 else -2) true
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

@@ -24,4 +24,6 @@ R1–R4 of *Flat kernels of any shape* stay in `flat_spectrum.md`.
 Their Lean left `Transformer.Grokking.FlatSpectrum` the same day. The DiffGPT modules are
 in `Transformer.Grokking.DiffGPT`. The convex ones are in `Transformer.Grokking.Convex`,
 with those of [`convex_depth.md`](convex_depth.md) and [`convex_causal.md`](convex_causal.md);
-only B1–B3 of `convex/channels.md` stay in `Transformer.Grokking.FlatSpectrum`.
+only B1–B3 of `convex/channels.md` stay in `Transformer.Grokking.FlatSpectrum`. The eleven
+`FeatureCodes` modules of `actual_network/transport.md` and `actual_network/dynamics.md` are in
+`Transformer.Grokking.GradientEvidence`.

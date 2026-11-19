@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.SignedProbability
+public import Transformer.Grokking.GradientEvidence.SignedProbability
 
 /-!
 # Signed training transport across a forecast step
@@ -14,7 +14,7 @@ FT3 endpoint gives a second bridge. No optimizer discovery is assumed.
 
 @[expose] public section
 noncomputable section
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 variable {I J K : Type*} [Fintype I] [Fintype J] [Fintype K]
@@ -163,4 +163,4 @@ example := endpoint_le_transportEndpointUpper (fun (_ : Fin 1) (_ : Fin 1) => (1
   (fun (_ : Fin 1) _ => 1) (fun _ => -2) (-6)
 example := transport_forecast_nonzero_witness
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

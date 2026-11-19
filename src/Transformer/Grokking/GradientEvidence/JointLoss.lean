@@ -16,7 +16,7 @@ noncomputable section
 
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes Landscape.Neural
+open Finset Geometry Landscape.Neural
 
 variable {C K : Type*} [Fintype C] [Fintype K]
 

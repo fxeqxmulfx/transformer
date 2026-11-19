@@ -15,7 +15,7 @@ it is no longer a separate hypothesis. Execution-contrast change stays explicit.
 noncomputable section
 namespace Transformer.Rotate90.FeatureMotion
 
-open Grokking.GradientEvidence Grokking.Geometry Grokking.FlatSpectrum.FeatureCodes
+open Grokking.GradientEvidence Grokking.Geometry
 open Landscape.Neural Finset
 open scoped BigOperators
 variable {V K H : Type*} [Fintype K] [Fintype H] [Nonempty K]

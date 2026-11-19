@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
+public import Transformer.Grokking.GradientEvidence.TrainingTransport
 
 /-!
 # Geometry visible to the class readout
@@ -15,7 +15,7 @@ No assertion about optimizer convergence or a flat learned spectrum is made.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 
@@ -117,4 +117,4 @@ example := observable_contrast_abs_le (C := Bool) (K := Bool)
   (fun c k => if k then 3 else if c then 1 else -1) (fun k => if k then 7 else 0)
   true false
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

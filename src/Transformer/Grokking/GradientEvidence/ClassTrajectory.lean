@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Grokking.GradientEvidence.UnusedClassDamping
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.UpdateAttribution
+public import Transformer.Grokking.GradientEvidence.UpdateAttribution
 
 /-!
 # Finite and cumulative class-energy attribution
@@ -18,7 +18,7 @@ an unconditional optimizer-discovery theorem.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset FlatSpectrum.FeatureCodes
+open Finset
 variable {I K : Type*} [Fintype I] [Fintype K]
 
 /-- The exact energy change retains the square of the total increment,

@@ -14,7 +14,7 @@ metric and scalar step fixed. Full tied AdamW is retained as an explicit error.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 variable {I C K U : Type*} [Fintype I] [Fintype C] [Fintype K]
   [Fintype U] [Nonempty U] [DecidableEq C] [DecidableEq K]
 

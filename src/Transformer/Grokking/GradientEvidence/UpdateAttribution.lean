@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TransportForecast
+public import Transformer.Grokking.GradientEvidence.TransportForecast
 
 /-!
 # Signed attribution of a finite proposed update
@@ -16,7 +16,7 @@ discovery or that positive readout credit implies a positive complete change.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 variable {I K : Type*} [Fintype I] [Fintype K]
@@ -98,4 +98,4 @@ example := finite_update_component_identity (I := Bool) (K := Fin 1)
   (fun i _ => if i then 2 else -1) (fun i _ => if i then 1 / 2 else 1 / 4)
   (by intro k; norm_num) (by intro k; norm_num)
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

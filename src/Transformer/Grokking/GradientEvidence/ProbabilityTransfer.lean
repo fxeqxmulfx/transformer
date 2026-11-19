@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.TrainingTransport
+public import Transformer.Grokking.GradientEvidence.TrainingTransport
 public import Transformer.Grokking.Geometry.ProbabilityTransfer
 
 /-!
@@ -16,7 +16,7 @@ selection can depend on the unlabeled query state and differ by competitor.
 @[expose] public section
 noncomputable section
 
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset Geometry Landscape.Neural
 
@@ -89,4 +89,4 @@ example := crossEntropy_le_anchor_bound (fun (c : Bool) (_ : Fin 1) => if c then
 example := linearScore_mean (fun _ : Fin 1 => (3 : ℝ))
   (fun (i : Bool) (_ : Fin 1) => if i then (2 : ℝ) else 1)
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence

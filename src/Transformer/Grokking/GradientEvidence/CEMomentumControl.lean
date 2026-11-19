@@ -15,7 +15,7 @@ use changing features and minibatches; full AdamW perturbations remain CL3.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 variable {I C K U : Type*} [Fintype I] [Fintype C] [Fintype K]
   [Fintype U] [Nonempty U] [DecidableEq C] [DecidableEq K]
 

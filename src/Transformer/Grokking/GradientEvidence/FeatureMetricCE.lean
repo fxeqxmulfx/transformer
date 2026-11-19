@@ -14,7 +14,7 @@ essential: it preserves the computed class projection and the CE radial sign.
 noncomputable section
 namespace Transformer.Grokking.GradientEvidence
 
-open Finset Geometry FlatSpectrum.FeatureCodes
+open Finset Geometry
 variable {I C K U : Type*} [Fintype I] [Fintype C] [Fintype K] [Fintype U]
 
 /-- FM1: the actual feature table's energy in the declared metric. -/

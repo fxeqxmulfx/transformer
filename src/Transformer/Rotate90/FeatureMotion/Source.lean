@@ -68,7 +68,7 @@ theorem feature_eq_source (eps : ℝ) (w : ComplexProduct.Weights V K H) (a b : 
 theorem logit_eq_source (eps : ℝ) (w : ComplexProduct.Weights V K H) (a b c : V) :
     logit eps (ofComplexWeights w) a b c = ComplexProduct.realLogit eps w a b c := by
   rw [logit, feature_eq_source]
-  unfold Grokking.FlatSpectrum.FeatureCodes.linearScore ComplexProduct.realLogit tiedReadout
+  unfold Grokking.GradientEvidence.linearScore ComplexProduct.realLogit tiedReadout
   apply Finset.sum_congr rfl
   intro i hi
   exact mul_comm _ _

@@ -1,6 +1,6 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.FeatureCodes.ObservableGeometry
+public import Transformer.Grokking.GradientEvidence.ObservableGeometry
 
 /-!
 # Supervised class subspaces and their energy
@@ -14,7 +14,7 @@ those directions is a separate empirical and dynamical question.
 
 @[expose] public section
 noncomputable section
-namespace Transformer.Grokking.FlatSpectrum.FeatureCodes
+namespace Transformer.Grokking.GradientEvidence
 
 open Finset
 variable {C D K : Type*} [Fintype C] [Fintype D] [Fintype K]
@@ -141,4 +141,4 @@ theorem active_concentration_insufficient_witness :
       linearScore (E (.inl true)) x < linearScore (E (.inl false)) x := by
   norm_num [classMean, centeredReadout, readoutMean, linearScore, Fintype.sum_sum_type]
 
-end Transformer.Grokking.FlatSpectrum.FeatureCodes
+end Transformer.Grokking.GradientEvidence
