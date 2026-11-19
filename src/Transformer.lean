@@ -239,7 +239,14 @@ probability bounds outside that coverage are not claimed as proved.
 
 50. Chi, Fan, Ramadge, Rudnicky — arXiv:2205.09921v2, "KERPLE: Kernelized
    Relative Positional Embedding for Length Extrapolation". PD and CPD kernels
-   and the facts that build CPD kernels: §3.
+   and the facts that build CPD kernels, the attention and its composite kernel,
+   T5's buckets, the complicated kernels, PD functions, the Gaussian-like kernels
+   and the effective lengths: §3, §4, §5.3 and Appendices A.1–A.3, A.5.
+   Lemma 1 (the CPD shift lemma) is false and holds on finite sets for strictly
+   CPD kernels; no bias kernel `c + k̃` of §4, §5.3 or of ALiBi is PD; T5's
+   printed buckets are not monotone; Fact 6 needs `ψ` CPD, not PD; Proposition
+   2's first part is false; A.3's power constraint is not needed on integer
+   positions; A.5's attenuation `exp(−2)` is `exp(−1/4)` under Eq. 1 at `d = 64`.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
