@@ -26,8 +26,9 @@ every frequency, coefficient, divisor, temperature `g > 0` and dot product
 (`not_readsPrev_ropeLogit`, `not_readsPrev_yarn`, `not_readsPrev_lerope`), and the five layers
 of `Transformer.MRCR.PhraseKeyLogits` have no RoPE, YaRN or LeRoPE version. Clamping the
 distance at a window makes the score constant from the window on, and then a head reads the
-token before (`Transformer.MRCR.PhraseKeyReRope`). Whether RoPE reads it by other means, such
-as a head whose rounded weights vanish without a margin, is not settled here.
+token before (`Transformer.MRCR.PhraseKeyReRope`). Nor do rounded weights that vanish without a
+margin rescue RoPE when every plane rotates: keys arbitrarily far keep a weight at least `1`
+(`Transformer.MRCR.RotaryPrevHead`).
 -/
 
 @[expose] public section
