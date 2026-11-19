@@ -26,6 +26,7 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey` (no rounded transformer without positions; templated asks, RoPE and ALiBi open) |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
@@ -108,6 +109,36 @@ so `2 K_R 2^{1 − s₁}` must stay below `1`: the proof takes `2^{s₁ − 1} >
 whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, and the weight `K_r` of
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
+
+## Asks in words (proved, rounded transformers without positions)
+
+MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
+above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
+"`f` about `t`" in three tokens, lets the token after it answer it, and closes the conversation
+with a query for the format, the topic and the number of such asks before the one wanted
+(`PhraseAnswer`). No future-masked rounded transformer accepts exactly the conversations that
+`v` answers, at every length, whatever its depth, width and precision (`not_phraseAnswers`).
+
+The proof reads a string of bits as words, `b` the format and `a` the word `about`, and closes
+it with the topic, the answer and the query (`bitInstance`). An ask can only end at the topic,
+so the conversation spells it iff the bits end in `ba` (`phraseAnswer_bitInstance_iff`). The
+fixed suffix moves into the formula at no cost in depth (`Transformer.CRASP.DefinableL.append`),
+the words are read through the bits (`Transformer.CRASP.RTfr.comap`), and the resulting formula
+of `TL[◁#]` over the bits would tell `u·aba` from `u·baa` for every `u`, which none does
+(`Transformer.CRASP.exists_models_iff_secondLast`).
+
+Not proved:
+
+- Templated conversations. The text that defeats the transformer is a run of format words and
+  `about` before the ask; MRCR alternates templated asks with answers.
+- RoPE. At rational angles it rounds to `TL[◁#, MOD]`
+  (`Transformer.CRASP.exists_mem_TLClMod_of_rope`), and no lower bound of that logic against
+  `Σ*ba` is in Lean. The reduction above does not carry over: blocks of one period per bit make
+  `MOD` constant, but the three adjacent words of an ask then lie in the last block and the
+  suffix, and depend on the last bit alone.
+- ALiBi. It rounds to `TL[◁#, Y]` (`Transformer.CRASP.exists_mem_TLClY_of_alibi`), where
+  `Y Y Q_f ∧ Y Q_about ∧ Q_t` marks the end of an ask; neither that the task is definable there
+  nor that such a formula compiles to an ALiBi transformer is proved.
 
 ## Copy by position (proved, RoPE)
 
