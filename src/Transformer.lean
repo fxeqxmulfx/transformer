@@ -61,6 +61,7 @@ public import Transformer.DeepSeekV41
 public import Transformer.RoPE
 public import Transformer.BAM
 public import Transformer.KERPLE
+public import Transformer.Sandwich
 public import Transformer.Weil
 public import Transformer.Rotate90
 public import Transformer.SequenceModel
@@ -247,6 +248,16 @@ probability bounds outside that coverage are not claimed as proved.
    printed buckets are not monotone; Fact 6 needs `ψ` CPD, not PD; Proposition
    2's first part is false; A.3's power constraint is not needed on integer
    positions; A.5's attenuation `exp(−2)` is `exp(−1/4)` under Eq. 1 at `d = 64`.
+
+51. Chi, Fan, Rudnicky, Ramadge — arXiv:2212.10356v2, "Dissecting Transformer
+   Length Extrapolation via the Lens of Receptive Field Analysis". The causal
+   transformer with positional biases, ALiBi and windowed attention, receptive
+   fields and extrapolation, the cumulative normalized gradient, Sinusoidal and
+   Rotary, Sandwich and its connection to KERPLE and T5: §3, §5, §6.1–6.3.
+   The theoretical receptive field is `R(w − 1) + 1`, not `wR`; `w = 100` gives
+   `1189`; the printed `ERF = min {m | c_m > 0.99}` is always the first
+   position; the smoothed Sandwich is KERPLE with `r₁ = 0.825 √k`, not `0.825`,
+   and the exact Sandwich is bounded, so no logarithmic KERPLE bias.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
