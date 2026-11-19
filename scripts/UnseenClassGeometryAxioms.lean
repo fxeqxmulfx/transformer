@@ -1,11 +1,11 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
+import Transformer.Grokking.Convex.ConvexDepth.ClassGeometry
 
 /-! Direct CM56 audit: identification from observed anchors, actual complete
 complex products, full/minibatch CE, and a nonconstant unseen-class witness.
 Run with `LAKE_ARTIFACT_CACHE=false lake env lean scripts/UnseenClassGeometryAxioms.lean`.
 -/
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth.ClassGeometry
+open Transformer.Grokking.Convex.ConvexDepth.ClassGeometry
 
 #print axioms fitted_anchors
 #print axioms anchors_identify

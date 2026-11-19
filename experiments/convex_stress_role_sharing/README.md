@@ -58,7 +58,7 @@ prlimit --as=68719476736:68719476736 -- \
   jq -e -f experiments/convex_stress_role_sharing/diagnose.jq "$stage" \
   > "$out/diagnostic.json"
 LAKE_ARTIFACT_CACHE=false prlimit --as=68719476736:68719476736 -- \
-  lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.SharedRoles
+  lake build Transformer.Grokking.Convex.CoupledMoments.SharedRoles
 ```
 
 The script deliberately caps its field at 997 and each dictionary at 10,000

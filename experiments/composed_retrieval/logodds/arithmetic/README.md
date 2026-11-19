@@ -6,7 +6,7 @@ CM113's `score_pair` theorem shows that the real-valued logits depend on
 the learned value and rotation tables and the product gate. Both reads
 retrieve the same value at any depth. Floating-point evaluation and
 optimization can still give different endpoints, so this study refits the
-entire family. [Pair score](../../../../src/Transformer/Grokking/FlatSpectrum/ConvexChannel/ComposedRetrieval/Geometry.lean)
+entire family. [Pair score](../../../../src/Transformer/Grokking/Convex/ConvexChannel/ComposedRetrieval/Geometry.lean)
 
 Both standard minibatch training and forward-only minibatch training use
 the original 1,024 updates, seeds 0, 1 and 2, and initial log odds of

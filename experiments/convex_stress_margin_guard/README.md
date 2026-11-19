@@ -13,7 +13,7 @@ convexity of ordinary CE with a separately fixed diagnostic bank, and preservati
 of strict comparisons and first-index argmax at positive retention. Its nonzero
 Fourier examples retain wrong labels and expose failure at zero retention.
 See `review/convex/moments.md`, CM47, and
-`Transformer.Grokking.FlatSpectrum.ConvexDepth.MarginGuard`. This numerical
+`Transformer.Grokking.Convex.ConvexDepth.MarginGuard`. This numerical
 implementation does not add an unseen-label identification theorem.
 
 On eligible inputs, the fixed bank contains 93 maps: the exact reference, a

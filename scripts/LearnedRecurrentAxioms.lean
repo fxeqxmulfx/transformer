@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel
+open Transformer.Grokking.Convex.ConvexChannel
 
 #print axioms LearnedRecurrent.zero_unit
 #print axioms LearnedRecurrent.runFrom_append

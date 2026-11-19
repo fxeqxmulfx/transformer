@@ -1,5 +1,5 @@
 //! CM1–CM4: common probability coordinates, complex Fourier moments and ordinary CE.
-//! Lean: Transformer.Grokking.FlatSpectrum.CoupledMoments. Numerical iterations are
+//! Lean: Transformer.Grokking.Convex.CoupledMoments. Numerical iterations are
 //! not covered by a finite-step convergence theorem. This is a pair-table pilot.
 pub use convex_stress_spectral::{C, Result, data, hash, linalg, metrics, random};
 pub mod fft;

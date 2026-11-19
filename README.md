@@ -217,18 +217,18 @@ subset**: 25 short and 10 long tasks, judged by their original held-out metrics.
   Theorem E: when the true table has the specified separating rank-one code
   bank, a connected observation graph with a perfect matching and nuclear
   budgets identify the complete probability table at ideal observed CE. The
-  [Lean proof](src/Transformer/Grokking/FlatSpectrum/CoupledMoments/Schatten/GraphRecovery.lean)
+  [Lean proof](src/Transformer/Grokking/Convex/CoupledMoments/Schatten/GraphRecovery.lean)
   explicitly invokes the existing recovery theorem. CM18 adds conditional
   certificates for decoded answers; their linear answer constraints preserve
   convexity even when the spectral relaxation alone admits a wrong optimum.
 - **An unknown class coding can be identified under explicit structure.**
-  [CM17](src/Transformer/Grokking/FlatSpectrum/CoupledMoments/CodingDiscovery/Learner.lean)
+  [CM17](src/Transformer/Grokking/Convex/CoupledMoments/CodingDiscovery/Learner.lean)
   proves full-table recovery for an unknown bijective prime-phase coding when
   the pinned training-rectangle system has dimension one and the observation
   graph is connected. The learner receives training cells and labels, not the
   target coding or its phases. This closes a discovery step for that family.
 - **General decoder fibers have a finite identification procedure.**
-  [CM19](src/Transformer/Grokking/FlatSpectrum/CoupledMoments/DecodedPropagation.lean)
+  [CM19](src/Transformer/Grokking/Convex/CoupledMoments/DecodedPropagation.lean)
   proves sound support pruning for arbitrary fixed decoders, even cyclic groups
   and declared finite decoder banks. Every compatible assignment survives;
   only agreement across all surviving branches and decoders certifies a label.
@@ -313,7 +313,7 @@ quality; this goal adds requirements on the training method and its cost.
 ### Ready
 
 - **An exact finite learner is proved.**
-  [Forward-only channel learning](src/Transformer/Grokking/FlatSpectrum/ConvexChannel/Forward.lean)
+  [Forward-only channel learning](src/Transformer/Grokking/Convex/ConvexChannel/Forward.lean)
   constructs a global ordinary answer-CE minimum for realizable single-key
   channels. Coverage of the true key's values and conflicting observations at
   every wrong key imply recovery on all inputs. Its candidate-observation
@@ -324,7 +324,7 @@ quality; this goal adds requirements on the training method and its cost.
   [native minibatch experiment](experiments/convex_channel_minibatch/README.md)
   passes all 42 task/seed/batch-size comparisons and 2,316 prefix checks.
 - **Finite identification extends beyond single-key recall.** CM19's
-  [decoder propagation](src/Transformer/Grokking/FlatSpectrum/CoupledMoments/DecodedPropagation.lean)
+  [decoder propagation](src/Transformer/Grokking/Convex/CoupledMoments/DecodedPropagation.lean)
   uses categorical support checks without gradients and proves the soundness
   of any singleton answer across its full decoder bank. Its certified
   constraints retain the global ordinary-CE optimum under realizability.

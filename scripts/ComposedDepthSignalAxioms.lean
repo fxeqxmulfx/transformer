@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval
+import Transformer.Grokking.Convex.ConvexChannel.ComposedRetrieval
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval
+open Transformer.Grokking.Convex.ConvexChannel.ComposedRetrieval
 
 #print axioms jump_uniform
 #print axioms readOne_uniform

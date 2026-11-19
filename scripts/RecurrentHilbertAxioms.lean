@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert
 
 #print axioms operator_apply
 #print axioms row_apply

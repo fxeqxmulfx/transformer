@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic
+import Transformer.Grokking.Convex.ConvexChannel.LearnedQuadratic
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedQuadratic
+open Transformer.Grokking.Convex.ConvexChannel.LearnedQuadratic
 
 #print axioms energy_gram
 #print axioms energy_smul

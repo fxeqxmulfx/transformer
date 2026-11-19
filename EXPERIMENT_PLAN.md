@@ -5918,7 +5918,7 @@ No endpoint was extended or selected by test results. Generated evidence is
 preserved in the root experiment's ignored runs directory.
 
 This tests the narrower fixed-copy architecture proved in
-`Grokking.FlatSpectrum.ConvexRecall`. Its explicit copy adaptation and a
+`Grokking.Convex.ConvexRecall`. Its explicit copy adaptation and a
 separate convex table control expose why bare arithmetic is different from
 supplied-dictionary recall. It does not resolve the earlier compact joint
 embedding/attention replacement requirement or claim that its hypotheses are
@@ -7883,14 +7883,14 @@ CR1-CR7, CC1-CC8, MF1-MF5 and SB1-SB3 in
 minimum-nuclear-norm recovery of a specified flat kernel; it does not prohibit
 all convex learning. CC1-CC2 already learn the complete joint tensor
 `W(q,k,v,c)`, with logits `sum_k W(q,k,D(k),c)` and a label-independent convex
-domain. [CC5](src/Transformer/Grokking/FlatSpectrum/ConvexChannel/Identification.lean)
+domain. [CC5](src/Transformer/Grokking/Convex/ConvexChannel/Identification.lean)
 identifies routing and generation under explicit realizability and separation
 conditions. Those hypotheses and the supplied input representation must remain
 visible. Flatness and sufficient rank alone do not identify unseen answers.
 
 The current CM64 model imposes
 `gamma[j,p_j(x_i),c] = w[j] * 1[c=y_i]` before CE optimization. Its theorem
-[`observed_batch_ce`](src/Transformer/Grokking/FlatSpectrum/ConvexDepth/BoundedLatent/Confidence.lean)
+[`observed_batch_ce`](src/Transformer/Grokking/Convex/ConvexDepth/BoundedLatent/Confidence.lean)
 therefore makes every nonempty observed batch loss exactly
 `log(1 + (V - 1) * exp(-sum_j w[j]))`. The loss distinguishes total confidence,
 but neither compatible programs nor unknown decoder completions at equal

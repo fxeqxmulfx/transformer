@@ -1,8 +1,8 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext.Basic
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
+import Transformer.Grokking.Convex.ConvexDepth.Fallback.Batch
+import Transformer.Grokking.Convex.ConvexDepth.SignedContext.Basic
+import Transformer.Grokking.Convex.ConvexDepth.ParameterSharing
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 
 #print axioms Fallback.logits
 #print axioms Fallback.coefficients_mem

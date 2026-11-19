@@ -60,7 +60,7 @@ allocation. An 8 GiB OS address-space limit must also cover data, libraries,
 temporary buffers and serialization. Hash collisions remain part of the model.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexDepth
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexDepth
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexDepthAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_depth/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_depth/Cargo.toml --check

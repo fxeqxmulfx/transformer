@@ -51,7 +51,7 @@ processes each use eight frequency workers and one BLAS thread. No Python,
 cloud job or extra agent is needed. Generated outputs remain ignored.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments.Schatten
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_budgets/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_budgets/Cargo.toml --check

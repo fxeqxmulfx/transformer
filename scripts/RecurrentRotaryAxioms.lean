@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Rotary
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Rotary
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Rotary
 
 #print axioms phase_norm
 #print axioms phase_zero

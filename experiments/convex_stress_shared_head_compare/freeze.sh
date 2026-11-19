@@ -20,7 +20,7 @@ while IFS= read -r package; do git ls-files -- "${package#"$work/"}"; done \
 git ls-files -- experiments/convex_stress experiments/convex_stress_catalog \
     AGENTS.md EXPERIMENT_PLAN.md experiments/README.md review/flat_spectrum.md \
     scripts/SharedHeadAxioms.lean scripts/SharedHeadFallbackAxioms.lean \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth \
+    src/Transformer/Grokking/Convex/ConvexDepth \
     >> "$freeze/source-paths.unsorted"
 # Cargo's dependency file additionally covers the exact compiled include graph.
 test -f "$binary.d"

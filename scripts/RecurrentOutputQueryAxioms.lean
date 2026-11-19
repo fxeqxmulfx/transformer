@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.OutputQueries
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert.OutputQueries
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.OutputQueries
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert.OutputQueries
 
 #print axioms partition_pos
 #print axioms shift_eq_update

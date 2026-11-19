@@ -1,10 +1,6 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.Defs
-public import Transformer.Grokking.FlatSpectrum.SpectralBall
-public import Transformer.Grokking.FlatSpectrum.CoupledMoments
-public import Transformer.Grokking.FlatSpectrum.ConvexDepth
-public import Transformer.Grokking.FlatSpectrum.ConvexCausal
 public import Transformer.Grokking.FlatSpectrum.Basic
 public import Transformer.Grokking.FlatSpectrum.Factorization
 public import Transformer.Grokking.FlatSpectrum.Roots
@@ -129,8 +125,6 @@ public import Transformer.Grokking.FlatSpectrum.OneCellPhase
 public import Transformer.Grokking.FlatSpectrum.OneCellMin
 public import Transformer.Grokking.FlatSpectrum.OneCellFlat
 public import Transformer.Grokking.FlatSpectrum.Recall
-public import Transformer.Grokking.FlatSpectrum.ConvexRecall
-public import Transformer.Grokking.FlatSpectrum.ConvexChannel
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex

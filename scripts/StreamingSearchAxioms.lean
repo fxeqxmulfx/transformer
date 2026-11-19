@@ -1,19 +1,19 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming
+import Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming
 
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.count_threshold_clamp
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.prefix_threshold_clamp
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.comparison_left_threshold
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.comparison_right_threshold
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.countFit_left_bounds
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.countFit_right_bounds
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.stream_left_candidates
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.stream_right_candidates
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.countFit_congr
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.cheaper_pair_preserves_fit
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.cached_refusal_preserved
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.toy_fit
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.toy_false_refused
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.truncated_bank_misses_fit
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.toy_nonconstant_targets
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.double_negated_observed
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ObservedPrefixes.Streaming.size_cache_counterexample
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.count_threshold_clamp
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.prefix_threshold_clamp
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.comparison_left_threshold
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.comparison_right_threshold
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.countFit_left_bounds
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.countFit_right_bounds
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.stream_left_candidates
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.stream_right_candidates
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.countFit_congr
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.cheaper_pair_preserves_fit
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.cached_refusal_preserved
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.toy_fit
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.toy_false_refused
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.truncated_bank_misses_fit
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.toy_nonconstant_targets
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.double_negated_observed
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes.Streaming.size_cache_counterexample

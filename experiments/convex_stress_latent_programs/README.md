@@ -2,7 +2,7 @@
 
 Can training-learned raw decoders extend shared copying to noncopy sequence
 labels? This Rust experiment implements CM53 in `review/convex/moments.md` and
-`Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms`, reviewed at
+`Transformer.Grokking.Convex.ConvexDepth.LatentPrograms`, reviewed at
 `8c7b8933aaf53d85a0688a1bee848878a6285617` (task323). The goal is at least99%
 raw-token and99% exact-sequence accuracy **per task**, with ordinary full-vocabulary
 cross-entropy and original95% success reported separately.

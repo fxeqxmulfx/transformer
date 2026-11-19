@@ -28,13 +28,13 @@ done < "$freeze/package-paths.txt" > "$freeze/source-paths.unsorted"
 git ls-files -- experiments/convex_stress experiments/convex_stress_catalog \
     AGENTS.md EXPERIMENT_PLAN.md experiments/README.md review/flat_spectrum.md \
     >> "$freeze/source-paths.unsorted"
-git ls-files -- src/Transformer/Grokking/FlatSpectrum/ConvexDepth/ContextInterpolation \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/SignedContext \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/ParameterSharing \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/ParameterSharing.lean \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/Fallback \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/ComplexHead.lean \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/JointHead.lean \
+git ls-files -- src/Transformer/Grokking/Convex/ConvexDepth/ContextInterpolation \
+    src/Transformer/Grokking/Convex/ConvexDepth/SignedContext \
+    src/Transformer/Grokking/Convex/ConvexDepth/ParameterSharing \
+    src/Transformer/Grokking/Convex/ConvexDepth/ParameterSharing.lean \
+    src/Transformer/Grokking/Convex/ConvexDepth/Fallback \
+    src/Transformer/Grokking/Convex/ConvexDepth/ComplexHead.lean \
+    src/Transformer/Grokking/Convex/ConvexDepth/JointHead.lean \
     scripts/BoundarySharingAxioms.lean >> "$freeze/source-paths.unsorted"
 # Cargo's dependency file additionally covers the exact compiled include graph.
 test -f "$binary.d"

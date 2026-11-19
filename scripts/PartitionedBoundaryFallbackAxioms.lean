@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext.Basic
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
+import Transformer.Grokking.Convex.ConvexDepth.Fallback.Batch
+import Transformer.Grokking.Convex.ConvexDepth.SignedContext.Basic
+import Transformer.Grokking.Convex.ConvexDepth.ParameterSharing
 
 /-!
 Task336 before original heldout evaluation. Source: `review/convex/moments.md`
@@ -14,7 +14,7 @@ checked on every expanded native state. No convexity of discovery, floating-poin
 refinement, or unseen-label correctness is inferred.
 -/
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 
 #print axioms Fallback.logits
 #print axioms Fallback.coefficients_mem

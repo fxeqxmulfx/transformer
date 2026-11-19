@@ -69,7 +69,7 @@ git -C "$workspace" archive -o "$output/source.tar" "$producer" -- "$experiment"
   experiments/{learned_retrieval,learned_retrieval_transfer,convex_bilinear_sequence,convex_stress_minibatch,convex_stress} \
   experiments/convex_stress_catalog experiments/convex_stress_arithmetic_data experiments/convex_binding_diagnostic/src/counts.rs \
   experiments/convex_stress_{sequences,typed_data,remaining_synthetic_data,generative_data,frequency_data,parity_data,calibrated,causal_pairs,counts,repair,tagged,adaptive,density,decode,relabel,budgets,schatten,moments,spectral,hull} \
-  src/Transformer/Grokking/FlatSpectrum/ConvexChannel/ComposedRetrieval{,.lean} review/flat_spectrum.md
+  src/Transformer/Grokking/Convex/ConvexChannel/ComposedRetrieval{,.lean} review/flat_spectrum.md
 printf '%s\n' "$producer" > "$output/producer.commit"
 rustc -Vv > "$output/rustc.txt"
 cargo -V > "$output/cargo.txt"

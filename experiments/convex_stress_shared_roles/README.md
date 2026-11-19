@@ -90,7 +90,7 @@ prlimit --as=68719476736:68719476736 -- cargo test --offline --locked \
 prlimit --as=68719476736:68719476736 -- cargo clippy --offline --locked \
   --manifest-path "$manifest" --all-targets -- -D warnings
 LAKE_ARTIFACT_CACHE=false prlimit --as=68719476736:68719476736 -- \
-  lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.SharedRoles
+  lake build Transformer.Grokking.Convex.CoupledMoments.SharedRoles
 ```
 
 After committing and passing checks, freeze the component into a fresh path:

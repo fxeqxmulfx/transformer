@@ -23,7 +23,7 @@ git ls-files -- experiments/convex_stress experiments/convex_stress_catalog \
     scripts/SharedGeometryAxioms.lean scripts/SharedGeometryFallbackAxioms.lean \
     scripts/BoundarySharingAxioms.lean scripts/PartitionedBoundaryAxioms.lean \
     scripts/PartitionedBoundaryFallbackAxioms.lean \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth \
+    src/Transformer/Grokking/Convex/ConvexDepth \
     >> "$freeze/source-paths.unsorted"
 # Cargo's dependency file additionally covers the exact compiled include graph.
 test -f "$binary.d"

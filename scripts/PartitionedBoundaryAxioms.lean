@@ -1,5 +1,5 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
+import Transformer.Grokking.Convex.ConvexDepth.ParameterSharing
+import Transformer.Grokking.Convex.ConvexDepth.SignedContext
 
 /-!
 Prospective task335 revision audit, before fitting a partitioned constructor.
@@ -9,7 +9,7 @@ the partition is fixed during CE. Each leaf still shares parameters across
 multiple blocks. All expanded coefficients and categorical offsets are charged.
 No unseen-label identification or floating-point refinement is inferred.
 -/
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 open scoped BigOperators
 
 namespace PartitionedBoundaryAudit

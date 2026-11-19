@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learning
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Learning
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Learning
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Learning
 
 #print axioms logitDirection_combination
 #print axioms logits_on_domain

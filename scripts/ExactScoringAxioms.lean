@@ -1,20 +1,20 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring
+import Transformer.Grokking.Convex.ConvexDepth.ExactScoring
 
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.numerator_source
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.normalized_head
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.normalized_lt_iff
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.normalized_eq_iff
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.complex_numerator
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.gauge_logits
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.gauge_crossEntropy
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.enclosure_winner
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_feasible
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_observed_nonconstant
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_unobserved
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_distinct_programs
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_target_anchors
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_target_realizable
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_two_targets
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.tie_complete_budget
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.complex_witness_numerators
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.ExactScoring.small_residual_opposite_winners
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.numerator_source
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.normalized_head
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.normalized_lt_iff
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.normalized_eq_iff
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.complex_numerator
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.gauge_logits
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.gauge_crossEntropy
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.enclosure_winner
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_feasible
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_observed_nonconstant
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_unobserved
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_distinct_programs
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_target_anchors
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_target_realizable
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_two_targets
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.tie_complete_budget
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.complex_witness_numerators
+#print axioms Transformer.Grokking.Convex.ConvexDepth.ExactScoring.small_residual_opposite_winners

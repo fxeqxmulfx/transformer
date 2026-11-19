@@ -51,7 +51,7 @@ Tight empirical loss or gap is not an unseen-answer certificate.
 ## Reproduction and checks
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexCausal
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexCausal
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexCausalAxioms.lean
 cargo test --offline --locked --release --manifest-path experiments/convex_stress_calibrated/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_calibrated/Cargo.toml --check

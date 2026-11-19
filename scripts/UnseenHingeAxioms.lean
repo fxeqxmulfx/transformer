@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unseen
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Unseen
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Unseen
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Unseen
 
 #print axioms matchCount_le
 #print axioms matchCount_eq_iff

@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound
 
 #print axioms discriminant_nonneg
 #print axioms top_ge_left
@@ -26,7 +26,7 @@ open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.Ma
 #print axioms operator_smul
 #print axioms normalized_norm
 #print axioms normalized_bound
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound.normalize_eq
+#print axioms Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound.normalize_eq
 #print axioms normalized_boundary
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound.normalize_zero
+#print axioms Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Hilbert.MatrixBound.normalize_zero
 #print axioms normalize_mixing

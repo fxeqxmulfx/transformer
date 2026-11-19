@@ -12,7 +12,7 @@ output=$(realpath -m "$4")
 base=experiments/learned_retrieval
 inputs=("$base" experiments/convex_bilinear_sequence experiments/convex_stress_minibatch
   experiments/convex_stress experiments/convex_binding_diagnostic/src/counts.rs
-  review/flat_spectrum.md src/Transformer/Grokking/FlatSpectrum/ConvexChannel/LearnedRetrieval)
+  review/flat_spectrum.md src/Transformer/Grokking/Convex/ConvexChannel/LearnedRetrieval)
 case "${5:-binding}" in
   binding) experiment=$base; binary=learned-retrieval ;;
   transfer)

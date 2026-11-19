@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Replacement
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Replacement
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Replacement
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Replacement
 
 #print axioms component_project
 #print axioms replace_project

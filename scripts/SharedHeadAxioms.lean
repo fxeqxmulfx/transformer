@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext.Basic
+import Transformer.Grokking.Convex.ConvexDepth.SignedContext.Basic
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 open scoped BigOperators
 
 #print axioms headBudget_convex

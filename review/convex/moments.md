@@ -75,7 +75,7 @@ numerical error and the actual mixture coefficient; this is not a verification
 of floating-point norm estimates or of optimizer convergence.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/CoupledMomentsAxioms.lean
 ```
 
@@ -141,7 +141,7 @@ prove that the full hull problem has been solved. Nor does an exact fit select
 unseen answers uniquely; all previous ambiguity qualifications still apply.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments.Schatten
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
 ```
 

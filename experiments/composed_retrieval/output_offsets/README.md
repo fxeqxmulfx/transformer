@@ -24,7 +24,7 @@ for a one-class change at fixed base scores. The derivative is predicted
 class probability minus the observed indicator. Each forward-only query
 computes the full partition after moving a feasible coordinate. A common
 shift is invisible to observed class contrasts. The coverage and loss
-claims for the fitted joint model are empirical. [Flat-spectrum notes](../../../review/convex/moments.md) · [Lean statements](../../../src/Transformer/Grokking/FlatSpectrum/ConvexChannel/ComposedRetrieval/OutputOffsets.lean)
+claims for the fitted joint model are empirical. [Flat-spectrum notes](../../../review/convex/moments.md) · [Lean statements](../../../src/Transformer/Grokking/Convex/ConvexChannel/ComposedRetrieval/OutputOffsets.lean)
 
 One cohort contains the three retrieval controls and the 48 available
 original arithmetic tasks, including the shared addition control once.

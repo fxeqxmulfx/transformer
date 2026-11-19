@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renaming
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Renaming
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Renaming
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Renaming
 
 #print axioms renamed_involutive
 #print axioms renamed_identity

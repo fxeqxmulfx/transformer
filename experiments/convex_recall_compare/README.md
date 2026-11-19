@@ -108,7 +108,7 @@ budget are **not a replication of the paper's width-128 million-update run**.
 
 ## Architectural scope
 
-`matching` implements `FlatSpectrum.ConvexRecall` exactly, with the input
+`matching` implements `Convex.ConvexRecall` exactly, with the input
 key/value pairing supplied. The transformer must learn the local pairing
 from positions and tokens. This is an architectural-prior comparison, not a
 parameter-matched ablation or a drop-in embedding/attention replacement.

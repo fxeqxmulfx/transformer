@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge
 
 #print axioms amplitude_nonneg
 #print axioms amplitude_pos

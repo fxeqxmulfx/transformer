@@ -1,6 +1,6 @@
 //! Ordinary answer cross-entropy with directly trained convex parameters.
 //!
-//! Matching is exactly the forward/domain of FlatSpectrum.ConvexRecall (0fcc0d1b).
+//! Matching is exactly the forward/domain of Convex.ConvexRecall (0fcc0d1b).
 //! Copy adapts its fixed value-copying mechanism to two arithmetic input tokens;
 //! Table is a separate saturated linear control, not the proved recall model.
 

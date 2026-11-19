@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval
+import Transformer.Grokking.Convex.ConvexChannel.ComposedRetrieval
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.ComposedRetrieval
+open Transformer.Grokking.Convex.ConvexChannel.ComposedRetrieval
 
 #print axioms logOdds_interior
 #print axioms logOdds_initial

@@ -1,41 +1,41 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth
+import Transformer.Grokking.Convex.ConvexDepth
 
 open Lean Elab Command
 
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.run_affine
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.budget_loss_convex
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.run_norm_le
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.run_difference_le
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.fourier4_unitary
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.unitary_singularValues
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.fourier_phase_transport_norm
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.twoBlockCE_not_convex
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.fourMixer_two_steps
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.pathRun_residual
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.pathLoss_convex
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.productWeights_mem
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.path_card
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.fourier_path_bound
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.residual_path_bound
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.correlatedWeights_not_product
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.correlated_logits
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.residual_interaction_margin
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.no_affine_interaction
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.headLoss_convex
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.headLogits_bound
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.liftHead_logits
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.liftHead_budget
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.fixed_margin_ce
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.retained_loss_image
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.prefix_head_extension
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.prefix_feature_card
+#print axioms Transformer.Grokking.Convex.ConvexDepth.run_affine
+#print axioms Transformer.Grokking.Convex.ConvexDepth.budget_loss_convex
+#print axioms Transformer.Grokking.Convex.ConvexDepth.run_norm_le
+#print axioms Transformer.Grokking.Convex.ConvexDepth.run_difference_le
+#print axioms Transformer.Grokking.Convex.ConvexDepth.fourier4_unitary
+#print axioms Transformer.Grokking.Convex.ConvexDepth.unitary_singularValues
+#print axioms Transformer.Grokking.Convex.ConvexDepth.fourier_phase_transport_norm
+#print axioms Transformer.Grokking.Convex.ConvexDepth.twoBlockCE_not_convex
+#print axioms Transformer.Grokking.Convex.ConvexDepth.fourMixer_two_steps
+#print axioms Transformer.Grokking.Convex.ConvexDepth.pathRun_residual
+#print axioms Transformer.Grokking.Convex.ConvexDepth.pathLoss_convex
+#print axioms Transformer.Grokking.Convex.ConvexDepth.productWeights_mem
+#print axioms Transformer.Grokking.Convex.ConvexDepth.path_card
+#print axioms Transformer.Grokking.Convex.ConvexDepth.fourier_path_bound
+#print axioms Transformer.Grokking.Convex.ConvexDepth.residual_path_bound
+#print axioms Transformer.Grokking.Convex.ConvexDepth.correlatedWeights_not_product
+#print axioms Transformer.Grokking.Convex.ConvexDepth.correlated_logits
+#print axioms Transformer.Grokking.Convex.ConvexDepth.residual_interaction_margin
+#print axioms Transformer.Grokking.Convex.ConvexDepth.no_affine_interaction
+#print axioms Transformer.Grokking.Convex.ConvexDepth.headLoss_convex
+#print axioms Transformer.Grokking.Convex.ConvexDepth.headLogits_bound
+#print axioms Transformer.Grokking.Convex.ConvexDepth.liftHead_logits
+#print axioms Transformer.Grokking.Convex.ConvexDepth.liftHead_budget
+#print axioms Transformer.Grokking.Convex.ConvexDepth.fixed_margin_ce
+#print axioms Transformer.Grokking.Convex.ConvexDepth.retained_loss_image
+#print axioms Transformer.Grokking.Convex.ConvexDepth.prefix_head_extension
+#print axioms Transformer.Grokking.Convex.ConvexDepth.prefix_feature_card
 
 run_cmd do
   let env ← getEnv
   let standard := [``propext, ``Classical.choice, ``Quot.sound]
   let mut count : Nat := 0
   for (name, _) in env.constants.toList do
-    unless (`Transformer.Grokking.FlatSpectrum.ConvexDepth).isPrefixOf name &&
+    unless (`Transformer.Grokking.Convex.ConvexDepth).isPrefixOf name &&
         !name.isInternal do continue
     count := count + 1
     for axiomName in ← liftCoreM (collectAxioms name) do

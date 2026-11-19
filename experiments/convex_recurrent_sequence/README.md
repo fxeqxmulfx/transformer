@@ -6,7 +6,7 @@ output is one next original object. Object IDs only address parameters. The
 model receives no task name, arithmetic operation, bit role or answer rule.
 
 CM95 in `review/convex/moments.md` and
-`Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent` prove the
+`Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent` prove the
 length-independent capacity bound, convex function domain, finite executed
 mixtures, ordinary CE convexity and feasible signed class queries. CM96, committed
 as `680dffb0`, proves that scalar parameters represent the complete complex

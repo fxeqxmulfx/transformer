@@ -71,7 +71,7 @@ correct pooled answer. Unknown axes and unmatched active vectors have separate
 counts. Low training CE does not prove unknown-target compatibility.
 
 CM35 in `review/convex/moments.md` and
-`Transformer.Grokking.FlatSpectrum.CoupledMoments.ReadoutKernel` derives the
+`Transformer.Grokking.Convex.CoupledMoments.ReadoutKernel` derives the
 factorization under a surjective declared readout, equal code/answer cardinality,
 unknown-code compatibility and additive realizability. The executable checks
 the observed construction and preserves the unproved target premises. It does

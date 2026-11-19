@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Width
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Width
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent
 
 #print axioms Width.multiply_apply
 #print axioms Width.commutator_trace

@@ -1,0 +1,13 @@
+module
+
+public import Transformer.Grokking.Convex.CoupledMoments.ObservedRefinement.Decoded
+
+/-!
+# Observed-CE refinement of decoded spectral vertices
+
+Source: `review/convex/moments.md`, CM23. Checkable assignment duals and observed
+decoder counts give local CE descent while preserving the convex decoded
+spectral family. No global discovery or unseen-label guarantee is asserted.
+-/
+
+@[expose] public section

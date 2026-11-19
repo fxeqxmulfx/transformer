@@ -76,7 +76,7 @@ dump. Generated evidence stays local under ignored `runs/`; the worktree
 links that directory to the root checkout. No Python or additional agents run.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.PredictionHull
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments.PredictionHull
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/PredictionHullAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_hull/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_hull/Cargo.toml --check

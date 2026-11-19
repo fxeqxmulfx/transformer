@@ -69,7 +69,7 @@ to two independent numerical processes, each with eight frequency workers.
 Generated outputs stay ignored; worktree run directories link to the root.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments.Schatten
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_sharing/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_sharing/Cargo.toml --check

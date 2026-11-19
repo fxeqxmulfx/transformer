@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRetrieval
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRetrieval
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRetrieval
 
 #print axioms readout_state
 #print axioms kernel_bound

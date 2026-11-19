@@ -53,7 +53,7 @@ pub(super) fn scope(view: &views::View, base: &learner::Candidate, full: &Model)
         );
     }
     let mut out = Scope {
-        theorem: "Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedConsequences.chooseView_sound".into(),
+        theorem: "Transformer.Grokking.Convex.CoupledMoments.DecodedConsequences.chooseView_sound".into(),
         target_family: "Unknown target uses these fixed maps and strip constant; interior labels lie in class_to_output and have an unknown injective code into the stated residue ring, with additive row/column phases fitting the interior observations.".into(),
         modulus: base.model.q,
         class_to_output: cert.classes.clone(),

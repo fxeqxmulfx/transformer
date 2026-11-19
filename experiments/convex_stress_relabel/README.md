@@ -58,7 +58,7 @@ failed replay or exhausted 16 GiB disk reserve. It neither restarts failed jobs
 nor overwrites existing outputs.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/CoupledMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_relabel/Cargo.toml -- --test-threads=1
 cargo fmt --manifest-path experiments/convex_stress_relabel/Cargo.toml --check

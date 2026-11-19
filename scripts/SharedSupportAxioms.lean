@@ -1,5 +1,5 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.SharedAtoms.Support
+import Transformer.Grokking.Convex.ConvexChannel.LearnedBilinear.SharedAtoms.Support
 
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.SharedAtoms.Support.complex_sum
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.SharedAtoms.Support.component_value
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear.SharedAtoms.Support.nonzero_control
+#print axioms Transformer.Grokking.Convex.ConvexChannel.LearnedBilinear.SharedAtoms.Support.complex_sum
+#print axioms Transformer.Grokking.Convex.ConvexChannel.LearnedBilinear.SharedAtoms.Support.component_value
+#print axioms Transformer.Grokking.Convex.ConvexChannel.LearnedBilinear.SharedAtoms.Support.nonzero_control

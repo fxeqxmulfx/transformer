@@ -70,7 +70,7 @@ BLAS thread handle the small complex SVDs on CPU; three independent experiment
 processes run at once. No Python is used. Generated outputs stay ignored.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments.Schatten
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_schatten/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_schatten/Cargo.toml --check

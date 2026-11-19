@@ -1,11 +1,11 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms
+import Transformer.Grokking.Convex.ConvexDepth.LatentPrograms
 
 /-! Task334, before native fitting. CM53 covers a fixed count-state program
 and a categorical decoder learned from observations; CM54 transfers accepted
 logits through the actual growing output prefix. The native bank must retain
 its realizability and coverage limits. Source flatness supplies bounds only. -/
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 open Transformer.Landscape.Neural (crossEntropy)
 namespace PrefixCountingAudit
 open LatentPrograms
@@ -60,10 +60,10 @@ example : ConvexOn ℝ (domain program [false, true] samples)
 
 end PrefixCountingAudit
 
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.initialize_mem
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.initialize_exists
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.head_budget
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.ce_convex
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.accepted_logits
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.accepted_generation
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.LatentPrograms.initialized_generation
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.initialize_mem
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.initialize_exists
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.head_budget
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.ce_convex
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.accepted_logits
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.accepted_generation
+#print axioms Transformer.Grokking.Convex.ConvexDepth.LatentPrograms.initialized_generation

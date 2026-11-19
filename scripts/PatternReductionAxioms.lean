@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.PatternReduction
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.PatternReduction
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.PatternReduction
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.PatternReduction
 
 #print axioms orient_sum
 #print axioms gated_sum

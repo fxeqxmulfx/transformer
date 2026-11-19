@@ -4,7 +4,7 @@ Can native updates retain the entire CM75–CM78 complex sequence family while
 satisfying the activation domain required by its ordinary cross-entropy proof?
 The first component implements the exact projection certificate proved in
 CM79, commit `945603c5`, under
-`src/Transformer/Grokking/FlatSpectrum/ConvexChannel/LearnedHinge/Projection`.
+`src/Transformer/Grokking/Convex/ConvexChannel/LearnedHinge/Projection`.
 
 The native model now executes the full learned complex forward and projects
 the whole parameter array with retained component certificates. Complete cone
@@ -483,7 +483,7 @@ cmp <(sed '/^  "training_seal_sha": "/d' "$task_old/score.json") \
 ## Proved quadratic alternative; no new native run
 
 CM85 specifies a separate learned complex quadratic family in
-`src/Transformer/Grokking/FlatSpectrum/ConvexChannel/LearnedQuadratic`.
+`src/Transformer/Grokking/Convex/ConvexChannel/LearnedQuadratic`.
 The input remains an immutable object sequence and the output an original
 object. Each class retains positive and negative full PSD matrices. Their
 matrix square roots recover learned object representations and readouts;

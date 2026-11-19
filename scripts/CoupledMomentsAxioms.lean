@@ -1,19 +1,19 @@
-import Transformer.Grokking.FlatSpectrum.CoupledMoments
+import Transformer.Grokking.Convex.CoupledMoments
 
 open Lean Elab Command
 
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.feasible_convex
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.fit_minimum
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.nonzero_fourier_moments_injective
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.independent_readings_not_joint
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.feasible_blend
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.relabelHull_invariant
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.crossEntropy_relabel
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.swappedWitness_not_feasible
-#print axioms Transformer.Grokking.FlatSpectrum.CoupledMoments.relabelHull_strict_witness
+#print axioms Transformer.Grokking.Convex.CoupledMoments.feasible_convex
+#print axioms Transformer.Grokking.Convex.CoupledMoments.fit_minimum
+#print axioms Transformer.Grokking.Convex.CoupledMoments.nonzero_fourier_moments_injective
+#print axioms Transformer.Grokking.Convex.CoupledMoments.independent_readings_not_joint
+#print axioms Transformer.Grokking.Convex.CoupledMoments.feasible_blend
+#print axioms Transformer.Grokking.Convex.CoupledMoments.relabelHull_invariant
+#print axioms Transformer.Grokking.Convex.CoupledMoments.crossEntropy_relabel
+#print axioms Transformer.Grokking.Convex.CoupledMoments.swappedWitness_not_feasible
+#print axioms Transformer.Grokking.Convex.CoupledMoments.relabelHull_strict_witness
 
 section CodingDiscovery
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery
+open Transformer.Grokking.Convex.CoupledMoments.CodingDiscovery
 
 #print axioms rectangleCodes_congr
 #print axioms rectangleCodes_comp_surjective
@@ -48,7 +48,7 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.CodingDiscovery
 end CodingDiscovery
 
 section Paired
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+open Transformer.Grokking.Convex.CoupledMoments.Schatten
 
 #print axioms budget_pairLatent
 #print axioms pairedFeasible_convex
@@ -65,7 +65,7 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
 end Paired
 
 section DecodedRecovery
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery
+open Transformer.Grokking.Convex.CoupledMoments.DecodedRecovery
 
 #print axioms pairedDecoder_fold
 #print axioms step_unique
@@ -105,7 +105,7 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedRecovery
 end DecodedRecovery
 
 section DecodedPropagation
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
+open Transformer.Grokking.Convex.CoupledMoments.DecodedPropagation
 
 #print axioms step_preserves
 #print axioms step_subset
@@ -164,7 +164,7 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DecodedPropagation
 end DecodedPropagation
 
 section FourierExtraction
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
+open Transformer.Grokking.Convex.CoupledMoments.FourierExtraction
 
 #print axioms wave_power
 #print axioms powerCoefficient_eq
@@ -195,7 +195,7 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.FourierExtraction
 end FourierExtraction
 
 section DensityExtraction
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
+open Transformer.Grokking.Convex.CoupledMoments.DensityExtraction
 
 #print axioms reading_mix
 #print axioms density_convex
@@ -248,7 +248,7 @@ open Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityExtraction
 end DensityExtraction
 
 section DensityBounds
-open Transformer.Grokking.FlatSpectrum.CoupledMoments.DensityBounds
+open Transformer.Grokking.Convex.CoupledMoments.DensityBounds
 
 #print axioms reading_diagonal_real
 #print axioms relaxed_interval
@@ -288,7 +288,7 @@ run_cmd do
   let standard := [``propext, ``Classical.choice, ``Quot.sound]
   let mut count : Nat := 0
   for (name, _) in env.constants.toList do
-    unless (`Transformer.Grokking.FlatSpectrum.CoupledMoments).isPrefixOf name && !name.isInternal do
+    unless (`Transformer.Grokking.Convex.CoupledMoments).isPrefixOf name && !name.isInternal do
       continue
     count := count + 1
     for axiomName in ← liftCoreM (collectAxioms name) do

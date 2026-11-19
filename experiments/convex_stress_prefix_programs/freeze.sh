@@ -28,9 +28,9 @@ done < "$freeze/package-paths.txt" > "$freeze/source-paths.unsorted"
 git ls-files -- experiments/convex_stress experiments/convex_stress_catalog \
     AGENTS.md EXPERIMENT_PLAN.md experiments/README.md review/flat_spectrum.md \
     >> "$freeze/source-paths.unsorted"
-git ls-files -- src/Transformer/Grokking/FlatSpectrum/ConvexDepth/LatentPrograms \
-    src/Transformer/Grokking/FlatSpectrum/ConvexDepth/LatentPrograms.lean \
-    src/Transformer/Grokking/FlatSpectrum/ConvexCausal/Generation.lean \
+git ls-files -- src/Transformer/Grokking/Convex/ConvexDepth/LatentPrograms \
+    src/Transformer/Grokking/Convex/ConvexDepth/LatentPrograms.lean \
+    src/Transformer/Grokking/Convex/ConvexCausal/Generation.lean \
     scripts/LatentGenerationAxioms.lean scripts/PrefixCountingGenerationAxioms.lean >> "$freeze/source-paths.unsorted"
 # Cargo's dependency file additionally covers the exact compiled include graph.
 test -f "$binary.d"

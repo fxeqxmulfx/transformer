@@ -1,5 +1,5 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.SignedContext
+import Transformer.Grokking.Convex.ConvexDepth.ParameterSharing
+import Transformer.Grokking.Convex.ConvexDepth.SignedContext
 
 /-!
 Prospective task335 audit, before fitting. CM55 and CM51 in
@@ -8,7 +8,7 @@ map of input-only block descriptors. All real and imaginary coefficients and
 fixed categorical offsets are charged. Feature normalization is a bound;
 neither input descriptors nor convexity identify missing raw labels.
 -/
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 open scoped BigOperators
 
 namespace BoundarySharingAudit

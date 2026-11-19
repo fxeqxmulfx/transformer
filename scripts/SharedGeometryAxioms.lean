@@ -1,8 +1,8 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.Fallback.Batch
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ComplexHead
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.ParameterSharing
+import Transformer.Grokking.Convex.ConvexDepth.Fallback.Batch
+import Transformer.Grokking.Convex.ConvexDepth.ComplexHead
+import Transformer.Grokking.Convex.ConvexDepth.ParameterSharing
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth
+open Transformer.Grokking.Convex.ConvexDepth
 open scoped BigOperators
 
 #print axioms ConvexOn.comp_affineMap

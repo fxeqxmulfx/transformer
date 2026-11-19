@@ -46,7 +46,7 @@ ignored under root-linked `runs/`. The parent cohort must be the frozen sharing
 pilot from producer `ddf9aa4a`, with its exact fingerprint in `protocol.json`.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments.Schatten
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments.Schatten
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SchattenMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_sharpen/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_sharpen/Cargo.toml --check

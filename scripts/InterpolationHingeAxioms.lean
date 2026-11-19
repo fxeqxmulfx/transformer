@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Interpolation
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Interpolation
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Interpolation
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Interpolation
 
 #print axioms neuron_entry
 #print axioms physical_table

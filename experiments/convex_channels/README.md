@@ -85,7 +85,7 @@ its CE directly with an unbounded-logit transformer's confidence is misleading.
 No Python is used. From the repository root:
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexChannel
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 cargo test --offline --manifest-path experiments/convex_channels/Cargo.toml
 cargo fmt --manifest-path experiments/convex_channels/Cargo.toml -- --check

@@ -20,3 +20,8 @@ Some letters name items in more than one file: B, F, M, S and T in `actual_netwo
 `schedule_free/` and `convex/`, CC in `diffgpt/` and `convex/`, and FF in *Feature forecasts*
 and in *Future forcing from checkpoint moments*. The section a citation names decides. The
 R1–R4 of *Flat kernels of any shape* stay in `flat_spectrum.md`.
+
+Their Lean left `Transformer.Grokking.FlatSpectrum` the same day. The DiffGPT modules are
+in `Transformer.Grokking.DiffGPT`. The convex ones are in `Transformer.Grokking.Convex`,
+with those of [`convex_depth.md`](convex_depth.md) and [`convex_causal.md`](convex_causal.md);
+only B1–B3 of `convex/channels.md` stay in `Transformer.Grokking.FlatSpectrum`.

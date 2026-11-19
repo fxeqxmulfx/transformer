@@ -159,7 +159,7 @@ remains separate; no optimizer run or empirical result is reported here.
 
 ### Lean
 
-The modules under `src/Transformer/Grokking/FlatSpectrum/ConvexRecall/` prove
+The modules under `src/Transformer/Grokking/Convex/ConvexRecall/` prove
 these statements with ordinary `Landscape.Neural.crossEntropy`:
 
 | Item | Principal declarations |
@@ -174,7 +174,7 @@ these statements with ordinary `Landscape.Neural.crossEntropy`:
 Reproduce with native Lean tooling:
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexRecall
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexRecall
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexRecallAxioms.lean
 ```
 
@@ -325,14 +325,14 @@ rate for that implementation is asserted by the Lean result.
 
 ### Lean
 
-The eight modules under `Grokking/FlatSpectrum/ConvexChannel/` prove CC1–CC8.
+The eight modules under `Grokking/Convex/ConvexChannel/` prove CC1–CC8.
 Principal results are `convex_feasible`, `answerLoss_convex`,
 `generates_absent_value`, `eq_generator_of_answerLoss_le`, `trained_logits`,
 `flat_error_bound`, `flat_width_necessary`, `flat_capacity_does_not_identify`
 and `linear_oracle`. Every theorem with premises has a satisfying example.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexChannel
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
 
@@ -405,10 +405,12 @@ and the hypotheses of a factorized optimizer. The minibatch oracle bias,
 query-specific missing records and fixed logit scale discussed in the
 experiment README need their own remedies and proofs.
 
-Lean: `BalancedFactorization.lean` proves B1–B2, including the stack-rank
-identity and full-row-rank obstruction. `Training/Scope/BalanceObstruction.lean`
-proves B3 and checks the numerical matrix witness, its actual rank, flat target,
-stationarity, both losses and the resulting failure of `IsDecayedMin`.
+Lean, in `src/Transformer/Grokking/FlatSpectrum/` rather than with the other
+modules of this file in `Grokking/Convex/`: `BalancedFactorization.lean` proves
+B1–B2, including the stack-rank identity and full-row-rank obstruction.
+`Training/Scope/BalanceObstruction.lean` proves B3 and checks the numerical
+matrix witness, its actual rank, flat target, stationarity, both losses and the
+resulting failure of `IsDecayedMin`.
 
 ## Repairing minibatch and full-batch failures (added)
 
@@ -779,7 +781,7 @@ held-out Boolean witness and operation count. No claim is made here about
 the proposed soft multiplicative update for inconsistent data.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexChannel.Forward
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
 
@@ -1047,7 +1049,7 @@ existing categorical update and the new conservative guard; no neural teacher,
 noisy-label optimizer or Rust deployment of the guard is asserted here.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.ConvexChannel.Forward.Inference
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.ConvexChannel.Forward.Inference
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/ConvexChannelAxioms.lean
 ```
 

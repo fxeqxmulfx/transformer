@@ -1,11 +1,11 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns
+import Transformer.Grokking.Convex.ConvexDepth.SharedColumns
 
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.decoderWord_eq_outside
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.construction_shared_eq
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.recoded_shared_eq
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.reverse_recoded_shared_eq
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.joint_readout_eq
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.witness_constructed_columns
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.witness_shared_construction
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.witness_distinct_passes
-#print axioms Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedColumns.witness_nonuniform_construction_refusal
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.decoderWord_eq_outside
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.construction_shared_eq
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.recoded_shared_eq
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.reverse_recoded_shared_eq
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.joint_readout_eq
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.witness_constructed_columns
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.witness_shared_construction
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.witness_distinct_passes
+#print axioms Transformer.Grokking.Convex.ConvexDepth.SharedColumns.witness_nonuniform_construction_refusal

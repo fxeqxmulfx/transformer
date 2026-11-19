@@ -1,4 +1,4 @@
-import Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms
+import Transformer.Grokking.Convex.ConvexDepth.CoordinatePrograms
 
 /-! Direct CM57 audit. Run with
 `LAKE_ARTIFACT_CACHE=false lake env lean -j 2 scripts/CoordinateProgramAxioms.lean`.
@@ -6,7 +6,7 @@ Checks the joint domain, actual complex products, full budgets, ordinary CE,
 conditional identification and active/inactive/uncovered witnesses.
 -/
 
-open Transformer.Grokking.FlatSpectrum.ConvexDepth.CoordinatePrograms
+open Transformer.Grokking.Convex.ConvexDepth.CoordinatePrograms
 
 #print axioms costs_pos
 #print axioms center_combination

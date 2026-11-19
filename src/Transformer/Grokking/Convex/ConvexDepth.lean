@@ -1,0 +1,167 @@
+module
+
+public import Transformer.Grokking.Convex.ConvexDepth.Transport
+public import Transformer.Grokking.Convex.ConvexDepth.Obstruction
+public import Transformer.Grokking.Convex.ConvexDepth.PathBounds
+public import Transformer.Grokking.Convex.ConvexDepth.Interaction
+public import Transformer.Grokking.Convex.ConvexDepth.JointHead
+public import Transformer.Grokking.Convex.ConvexDepth.PrefixFeatures
+public import Transformer.Grokking.Convex.ConvexDepth.FourierCode
+public import Transformer.Grokking.Convex.ConvexDepth.QuotientWitness
+public import Transformer.Grokking.Convex.ConvexDepth.RefinedBox
+public import Transformer.Grokking.Convex.ConvexDepth.RefinedCE
+public import Transformer.Grokking.Convex.ConvexDepth.Fallback
+public import Transformer.Grokking.Convex.ConvexDepth.CoverageExtension
+public import Transformer.Grokking.Convex.ConvexDepth.PartialFallback
+public import Transformer.Grokking.Convex.ConvexDepth.ContextInterpolation
+public import Transformer.Grokking.Convex.ConvexDepth.ContextScale
+public import Transformer.Grokking.Convex.ConvexDepth.DecoderConfidence
+public import Transformer.Grokking.Convex.ConvexDepth.ContextMixture
+public import Transformer.Grokking.Convex.ConvexDepth.GatedContext
+public import Transformer.Grokking.Convex.ConvexDepth.MarginGuard
+public import Transformer.Grokking.Convex.ConvexDepth.RawRegions
+public import Transformer.Grokking.Convex.ConvexDepth.ConvexExclusion
+public import Transformer.Grokking.Convex.ConvexDepth.SignedContext
+public import Transformer.Grokking.Convex.ConvexDepth.SharedPrograms
+public import Transformer.Grokking.Convex.ConvexDepth.LatentPrograms
+public import Transformer.Grokking.Convex.ConvexDepth.ParameterSharing
+public import Transformer.Grokking.Convex.ConvexDepth.ClassGeometry
+public import Transformer.Grokking.Convex.ConvexDepth.CoordinatePrograms
+public import Transformer.Grokking.Convex.ConvexDepth.ObservedPrefixes
+public import Transformer.Grokking.Convex.ConvexDepth.WeightedObservations
+public import Transformer.Grokking.Convex.ConvexDepth.SelectedAnchors
+public import Transformer.Grokking.Convex.ConvexDepth.ExactScoring
+public import Transformer.Grokking.Convex.ConvexDepth.BoundedLatent
+public import Transformer.Grokking.Convex.ConvexDepth.ObservedRows
+public import Transformer.Grokking.Convex.ConvexDepth.FamilyExtension
+public import Transformer.Grokking.Convex.ConvexDepth.PackedRecords
+public import Transformer.Grokking.Convex.ConvexDepth.UniformRows
+public import Transformer.Grokking.Convex.ConvexDepth.RepeatedRows
+public import Transformer.Grokking.Convex.ConvexDepth.SharedColumns
+
+/-!
+# Nonlinear residual depth with convex joint path training
+
+Source: `review/convex_depth.md`, CD1–CD9. Joint weights over complete nonlinear
+paths retain interactions through ordinary residual or phase-Fourier blocks, while
+ordinary CE is convex in those weights. A parity witness separates correlated and
+independent routing with identical marginals. The finite block library is fixed;
+CD5 also fixes the decoder, and dense coordinates grow exponentially. A concrete Fourier skip has unit
+singular values and supplies additive bounds for bounded nonlinear branches.
+An extended learned output tensor uses those full path features under convex
+absolute-sum budgets, without a product of separately learned routers and decoders.
+Retaining features from every shorter path embeds each shallower head at the
+same budget, while making the geometric storage cost explicit.
+CFt5 in `review/convex/channels.md` binds actual complex categorical features to
+this convex head, proves the conjugate initializer's exact logits and budget,
+and supplies flat Fourier query blocks for arbitrary nonzero state counts.
+CM31 refines observed inputs to fit raw aliases of a learned quotient, proves
+the actual complex-head loss and budget, and gives convex affine constraints
+that retain declared defaults at unseen inputs. Its four-class witness keeps
+the distinction between decoded correctness and unidentified raw aliases.
+CM32 realizes the same states with latent-fiber Fourier blocks and proves
+feasibility of clipped table updates, including exact retention of defaults.
+The arbitrary-table coefficient bound covers every resulting iterate.
+CM33 derives ordinary CE through the actual complex head and proves that
+projected nonnegative full/minibatch steps preserve observed margins and
+cannot increase observed row CE while retaining the same budget and defaults.
+CM38 freezes a parent head outside a candidate's fixed support, deriving actual
+complex logits, charged budgets, convex ordinary CE and equality of covered
+batch derivatives. A supported unseen alias can still regress despite flat
+component codes; support is not an unknown-target correctness certificate.
+CM39 conservatively extends coverage: a supplemental complex head acts only
+where the prior refuses and the supplement accepts. All other prior logits
+and original covered-batch CE derivatives are preserved exactly.
+CM41 treats a saved predecessor with a restricted input domain: zero-extended
+parent features are used only where the parent is available and the candidate
+refuses. The candidate remains elsewhere, with the same convex CE and charged
+budgets and exact supported-batch objective and derivative identities.
+CM42 uses fixed stochastic context weights to interpolate actual complex
+source features. It preserves observed batches, convex raw-label CE and the
+coefficient bound, while local raw-label information remains an explicit
+premise distinct from flatness and decoded correctness.
+CM43 permits fixed confidence shrinking on context features. It preserves
+the feature bound and raw rankings, and leaves original batch objectives and
+derivatives intact when observed scales equal one. Convexity in a fixed
+head's scalar confidence is separate from convexity in a scaled fixed-feature head.
+CM44 realizes a fixed input-state map and many-to-one declared raw decoder
+with a complete bounded complex tensor. Its exact batch CE separates the
+correct-margin loss from margin times empirical raw error; no unknown target
+is inferred by increasing confidence.
+CM45 learns simplex mixtures of fixed context maps with the complete head
+frozen. Actual products retain the feature and coefficient bounds, with convex
+ordinary diagnostic CE and explicit first-order and quadratic controls. When
+all maps preserve observed rows, the original CE cannot select a mixture.
+CM46 uses fixed input gates and an anchor to learn local simplex mixtures.
+Their actual products keep the source bound and convex ordinary CE in all
+local coefficients, with explicit slopes and original-batch identities.
+A nonzero Fourier example separates local from shared-mixture capacity;
+the fixed gates still do not certify any unseen raw target.
+CM47 adds fixed raw-margin halfspaces to the actual CM46 coefficient domain.
+It preserves convex ordinary CE, admits a maximizing reference and retains
+the first maximizing class under positive margin retention. Confidence may
+change, but a wrong reference label remains wrong; zero retention can flip
+a deterministic decision through a tie.
+CM48 adds an explicit convex raw-class region hypothesis and observable
+same-label input-hull certificates. They identify covered missing raw labels
+and transfer actual complex-head margins and ordinary CE. The original feature
+and coefficient bounds remain; uncovered queries can still be ambiguous.
+CM49 excludes candidate raw labels using conflicts between augmented and
+observed class hulls. With a separate candidate-pool or correct decoder-fiber
+premise, this identifies some exterior queries. Positive source mixtures
+retain complete-head margins, ordinary CE and bounds; counterexamples retain
+the limits of pool closure and ambiguous gaps.
+CM51 permits fixed signed contexts, with absolute-mass normalization preserving
+the source bound and complete-head convex CE. Query error and strict margins
+require separate reference-score residual bounds; an explicit alternative
+target agrees on observations and decoded answers while disagreeing raw.
+CM52 ties a complete complex head to an explicit shared copy decoder over
+fixed input programs. Training-only elimination and input-only consensus
+identify accepted unseen raw symbols under bank realizability. Compatible
+simplex mixtures retain convex ordinary CE and the actual identified logits;
+nonseparating observations still admit opposite predictions with the same code.
+CM53 learns raw dictionaries over fixed latent input programs. Joint decoder
+coefficients and shared program masses form an affine convex domain, with no
+independent learned factors multiplied together. Executable initialization is
+feasible, and known unanimous latent-state outputs identify actual bounded
+complex logits under unknown-program realizability. A many-to-one witness
+identifies a new input while opposite feasible defaults expose an unknown state.
+CM55 charges every expanded coefficient of a fixed affine shared-parameter map.
+Its sufficient weighted absolute budget is convex, includes the fixed offset,
+and transfers the existing actual-logit bound and ordinary full/minibatch CE.
+It does not identify a geometry, decoder or unknown target from flatness.
+CM56 supplies a separate identifying class geometry. Two observed scalar
+anchors identify an unknown affine decoder under realizability. Scaled slope,
+intercept and positive margin enter a complete complex head affinely, with
+charged budgets and convex ordinary full/minibatch CE. Transported coordinates
+preserve categorical relabeling; removing the prior restores ambiguity.
+CM57 learns program masses and scaled coordinate decoders jointly in one
+affine complete head. Perspective budgets eliminate zero-mass contributions.
+Observed feature spans plus explicit class/copy priors identify covered queries;
+two feasible completions retain ambiguity in an uncovered structural role.
+CM58 closes finite observed words under nonempty prefixes before replacing
+nested-count subprograms by equal truth signatures. This preserves observed
+counts and decoded training fits; unseen words remain uncertified.
+CM59 uses observed threshold crossings to constrain candidate inner predicates;
+an extra count weakens downward identification to a necessary disjunction.
+CM60 preserves complete-head ordinary CE and its derivatives under exact
+multiplicity grouping, using each batch's own counts and actual denominator.
+It retains convexity on the joint domain and exposes unweighted deduplication
+as a changed objective; contradictory noisy anchors remain a separate problem.
+CM61 separates selected exact anchors from all observed CE records. Identical
+features with conflicting anchors force zero masses; a concrete selection
+restores a nonempty convex domain while retaining noisy labels in ordinary CE.
+CM63 contracts every saved real/imaginary coefficient before common positive
+normalization. Independent exact products, raw ordering and common-shift CE
+agree; valid numerator enclosures can certify a strict winner. A feasible
+two-program witness retains an exact unseen tie and opposite realizable targets.
+The additive-injection baseline and a strict residual/mHC nonconvexity obstruction
+record why this lifting is needed. No convexity of raw transformer parameters is claimed.
+CM70 stores repeated decoder and complete head values with explicit exceptions,
+preserving every logical coordinate, the full feasible set and original CE.
+Uniform unknown rows permit a conditional head-storage bound without restricting
+arbitrary nonuniform completions or reducing the charged logical head budget.
+CM71 shares computations only for complete columns with equal ordered active
+events. Expanding representatives preserves every output word, skipped update
+and class. A conservative exception union supports arbitrary nonuniform fallback.
+-/

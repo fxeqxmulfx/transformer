@@ -72,7 +72,7 @@ timing, without stress labels, took 2.27 seconds for ten moment projections.
 No Python is used.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.CoupledMoments
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.CoupledMoments
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/CoupledMomentsAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_moments/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_moments/Cargo.toml --check

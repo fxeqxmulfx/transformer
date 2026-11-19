@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Scalar
+import Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Scalar
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedRecurrent.Scalar
+open Transformer.Grokking.Convex.ConvexChannel.LearnedRecurrent.Scalar
 
 #print axioms operator_value
 #print axioms reconstruction

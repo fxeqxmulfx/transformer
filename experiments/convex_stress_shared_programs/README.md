@@ -3,7 +3,7 @@
 Can a shared input program repair retrieval on new symbols without a task
 answer function? This native Rust experiment implements CM52 in
 `review/convex/moments.md` and
-`Transformer.Grokking.FlatSpectrum.ConvexDepth.SharedPrograms`, reviewed at
+`Transformer.Grokking.Convex.ConvexDepth.SharedPrograms`, reviewed at
 `62b675fc789469d6457dd7d0f41d68c7ee80abea` (task321). It preserves the failed
 task320 four-case baseline, historical GPT references and the separate original35
 ensemble. The user's target is at least99% **per task**, for both raw tokens and

@@ -3,7 +3,7 @@
 Can the CM86 complete complex sequence model learn original GPT stress tasks
 with ordinary cross-entropy, using Mini and forward-only Mini updates? This
 experiment implements the family proved in
-`Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedBilinear`, including
+`Transformer.Grokking.Convex.ConvexChannel.LearnedBilinear`, including
 CM87 identification and CM88 update identities. The manuscripts are CM86–88
 in `review/convex/moments.md`; the proof commits are `ed9d359d`, `e9ac5beb` and
 `e50d3691`. The older `convex_learned_sequence` experiment uses another family.

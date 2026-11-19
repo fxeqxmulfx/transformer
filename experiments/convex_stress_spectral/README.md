@@ -62,7 +62,7 @@ three independent experiment processes. The implementation uses no Python.
 From the repository root, with Rust and a system OpenBLAS containing LAPACK:
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.FlatSpectrum.SpectralBall
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Grokking.Convex.SpectralBall
 LAKE_ARTIFACT_CACHE=false lake env lean scripts/SpectralBallAxioms.lean
 OPENBLAS_NUM_THREADS=1 cargo test --offline --release --manifest-path experiments/convex_stress_spectral/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_spectral/Cargo.toml --check

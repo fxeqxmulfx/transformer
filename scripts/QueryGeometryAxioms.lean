@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Projection
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Projection
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Projection
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Projection
 
 #print axioms squareDistance_zero_iff
 #print axioms certificate_orthogonal

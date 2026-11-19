@@ -52,7 +52,7 @@ coverage diagnostic cannot replace the model output.
 ## Lean contract checked before implementation
 
 At `2e9c1bb9`, the current manuscript remained at CM70. The following declarations
-in `Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent` were reread
+in `Transformer.Grokking.Convex.ConvexDepth.BoundedLatent` were reread
 beside the manuscript and their module and axiom checks passed before native
 implementation:
 
@@ -105,7 +105,7 @@ cargo test --offline --locked --manifest-path experiments/convex_stress_probe_mo
 cargo test --offline --locked --release --manifest-path experiments/convex_stress_probe_model/Cargo.toml
 cargo fmt --manifest-path experiments/convex_stress_probe_model/Cargo.toml --check
 cargo clippy --offline --locked --all-targets --manifest-path experiments/convex_stress_probe_model/Cargo.toml -- -D warnings
-LAKE_ARTIFACT_CACHE=false LEAN_NUM_THREADS=2 lake build Transformer.Grokking.FlatSpectrum.ConvexDepth.BoundedLatent Transformer.Grokking.FlatSpectrum.ConvexDepth.RepeatedRows
+LAKE_ARTIFACT_CACHE=false LEAN_NUM_THREADS=2 lake build Transformer.Grokking.Convex.ConvexDepth.BoundedLatent Transformer.Grokking.Convex.ConvexDepth.RepeatedRows
 LAKE_ARTIFACT_CACHE=false lake env lean -j2 -M40960 scripts/BoundedLatentAxioms.lean
 LAKE_ARTIFACT_CACHE=false lake env lean -j2 -M40960 scripts/RepeatedRowAxioms.lean
 ```

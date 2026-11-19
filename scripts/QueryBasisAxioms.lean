@@ -1,6 +1,6 @@
-import Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Projection
+import Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Projection
 
-open Transformer.Grokking.FlatSpectrum.ConvexChannel.LearnedHinge.Projection.KernelBasis
+open Transformer.Grokking.Convex.ConvexChannel.LearnedHinge.Projection.KernelBasis
 
 #print axioms dot_swap
 #print axioms coordinate_dot
