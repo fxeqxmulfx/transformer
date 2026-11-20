@@ -67,6 +67,7 @@ public import Transformer.Rotate90
 public import Transformer.ComplexFFN
 public import Transformer.ComplexProjection
 public import Transformer.ReRoPEBlock
+public import Transformer.LeRoPEBlock
 public import Transformer.SequenceModel
 
 /-!
@@ -406,6 +407,9 @@ whatever its per-position maps, heads and frequencies, is unchanged when the far
 permuted, so it misses LeRoPE's π head, which sees their order, by at least
 `(1 − N^{−2κ}) / (2N)` times the distance of two values, `N = w + 2`. Leaky ReRoPE forgets
 nothing: with free scores its blocks are LeRoPE's, and ReRoPE misses its `kπ` head likewise.
+`Transformer.LeRoPEBlock` compares that block with LeRoPE against the same block with other
+positional schemes, independently of ReRoPE. A block with no positional encoding does not see
+the order of its keys, whatever its per-position maps, heads and projections.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
