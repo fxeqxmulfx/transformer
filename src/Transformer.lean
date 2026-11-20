@@ -412,7 +412,8 @@ positional schemes, independently of ReRoPE. A block with no positional encoding
 the order of its keys, whatever its per-position maps, heads and projections, while LeRoPE's π
 head, one head of the main model with one channel of frequency `π`, does: every block with no
 positional encoding misses it by at least `(1 − N^{−2κ}) / (2N)` times the distance of two
-values, `N` keys.
+values, `N` keys. Conversely every such block is within any `ε` of a LeRoPE block with the same
+projections on every finite set of sequences, the frequencies tending to zero.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has

@@ -14,7 +14,8 @@ main model, with one channel of frequency `π`, does (`norm_piHead_sub_swap`).
   sequence `x` and its copy with the first two tokens swapped, by
   `δ ≥ (1 − N^{−2κ}) / (2N) ‖u_a − u_b‖`, `N = n + 3`, `κ = qᵀq/d`. The π head is a head of
   the main model, so LeRoPE has a block that no block with no positional encoding approximates
-  within that bound.
+  within that bound. The converse containment holds up to closure
+  (`Transformer.LeRoPEBlock.Limit`).
 
 The bound is small, about `0.004 ‖u_a − u_b‖` at `κ = 1` and `N = 128`, because the π head spreads
 its weight over half of the keys: it is a proof that the order is seen, not that it is seen
