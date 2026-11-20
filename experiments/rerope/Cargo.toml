@@ -1,0 +1,47 @@
+[package]
+name = "rerope"
+version = "0.1.0"
+edition = "2024"
+publish = false
+build = "build.rs"
+
+[workspace]
+
+# The control's PTX names its kernels in this namespace; keeping it keeps
+# the unchanged modules' PTX byte-identical to the control cohort's.
+[workspace.metadata.kernite]
+name = "wsd_native"
+
+# The control cohort was built with tf32-backward, fused-attention and
+# tiled-transpose; both binaries default to exactly that precision.
+[features]
+default = ["tf32-backward", "fused-attention", "tiled-transpose"]
+bf16-forward = []
+tf32-backward = []
+fused-attention = []
+tiled-transpose = []
+fp32-affine-reference = []
+
+# The experiment: the control architecture with LeRoPE's position map
+# replaced by ReRoPE's or Leaky ReRoPE's, every parameter kept.
+[[bin]]
+name = "rerope"
+path = "src/main.rs"
+
+# The control's own trainer, unchanged, at the pinned revision. Kernite
+# mangles each kernel under its crate's name, so the bin keeps the control
+# package's name to keep its PTX byte-identical to the cohort's.
+[[bin]]
+name = "main-phase-score-native"
+path = "../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/main.rs"
+test = false
+
+[dependencies]
+kernite-cuda = { path = "../../.lake/reproduction/kgen/crates/cuda" }
+kernite-macros = { path = "../../.lake/reproduction/kgen/crates/macros" }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
