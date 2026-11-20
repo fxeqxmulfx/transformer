@@ -83,6 +83,21 @@ Implementation:
 Inside the window every operation is the control's, in its order. A batch
 with no sequence longer than w runs the control's kernels.
 
+What the learned frequencies see changes with the map. In LeRoPE's logit
+model, a band's frequency gradient under a position map ψ is LeRoPE's
+Eq. (6) with ψ(s − t) in place of the offset s − t
+(`Transformer.RoPE.LeReRoPE.hasDerivAt_positioned_loss`):
+
+- **ReRoPE.** Under the clamp, the far pairs reach the frequency only
+  through their summed phasor, at the single offset w
+  (`positionedSurrogate_rectified`).
+- **Leaky ReRoPE.** It keeps every far offset, at the phase
+  (w + (δ − w)/k)θ.
+
+That model omits the control's squared-imaginary term and its gain. The
+kernels here differentiate through both rotations instead, and the
+validation checks them against central differences.
+
 ## Build and commands
 
 The build reads two pinned clones in the root checkout's `.lake/reproduction`.
@@ -138,7 +153,70 @@ refuses to train.
 
 ## Validation
 
-Pending.
+Both validations passed before the first cell. Each wrote a
+`validation.json` in `runs/`, which git ignores, and the numbers below come
+from them. `cargo test --offline --release -- --include-ignored` passed its 8
+tests. Among them:
+- a checkpoint resumes both arms with identical updates, at a window of one
+  token, so that every batch has far pairs;
+- the archive refuses a changed source;
+- the largest suite shapes fit both arms and have finite gradients.
+
+`validation-1` ran the production build, on the frozen binaries in
+`runs/cohort-1-bin`.
+
+- **Kernels within the window.** With a window as long as the sequence, the
+  routed forward and backward equal the control's bit for bit at D = 16, 32
+  and 128. This covers:
+  - the output, probabilities and imaginary parts;
+  - the adjoints of q, k and v, the score adjoint, intermediate sums and
+    score parts.
+
+  The far adjoint, filled with NaN before, is zero after.
+- **The attention block beyond the window.** The first layer's block runs at
+  length 40, where 300 of each sequence's 820 causal pairs are far, at D =
+  16, 32 and 128. Against an f64 oracle that rotates each pair by its
+  relative position alone:
+  - the outputs are within a relative 3.8e-7;
+  - the adjoints of q, k and v, of the learned frequencies and of the score
+    coordinates are within 1.0e-6 of the oracle's central differences;
+  - a random directional derivative is within 1.4e-5.
+
+  The control passes the same check with its own map, within 3.8e-7,
+  2.4e-6 and 5.8e-5, which checks the oracle.
+- **Initialization.** In six cases, both arms and the control arm write the
+  recorded cell's `initial.f32` byte for byte.
+- **Control binary.** Its PTX (`17c689bd…`), suite and plan hashes are the
+  cohort's. Of the 104 source files it archives, 103 equal the cohort's byte
+  for byte. The other is `research/main_model/model.json`, which the cohort
+  archived from gpt's working tree. No code reads it (see
+  [`alibi_kerple`](../alibi_kerple/README.md#validation)).
+- **Replays.** This binary's runner reproduces recorded control cells bit
+  for bit: every observation, the endpoint, the final splits and the initial
+  parameters.
+  - The control arm, four cells: 18, 48, 8 and 1219 observations, 99% at the
+    cohort's epochs 17, 47, 1.4 and 1218.
+  - Both arms, the three cells whose sequences all fit in the window:
+    `arithmetic-add` (48 observations, 99% at epoch 47),
+    `associative-divisor-n2-l1-w0` (33, at 32) and
+    `gpt-probe-key-value-binding` (8, at 7).
+
+`validation-fp32-1` ran gpt's `fp32-affine-reference` build. Kernels, blocks
+and initialization give the same numbers there. It also checks the learned
+frequencies' gradient in the whole model against central differences of the
+loss. The step is 1e-2, on the first batch of seed 0, in a two-layer case at
+length 19 and a six-layer case at length 64, for the control and both arms.
+- The directional derivative is within 0.25% of the backward's (limit 2%).
+- The worst error of a coordinate at least 5% of the largest is 1.35% for the
+  arms and 3.3% for the control (limit 5%).
+
+In the production build the same check gives directional ratios 0.993–1.28
+(the control's: 0.995 and 1.13) and coordinate errors up to 470%. That is
+the rounding of the FP16 forward GEMMs. In the two-layer case, the measured
+loss differences are off by 1.3–2.1e-5 for all three, against 1.1–2.4e-7 in
+the reference build. The arms' gradients there are the smallest (norms
+0.0037 and 0.0041, against the control's 0.0080), so their ratios move most.
+The production build reports the check but does not gate on it.
 
 ## Findings
 
