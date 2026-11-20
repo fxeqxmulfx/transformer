@@ -66,6 +66,7 @@ public import Transformer.Weil
 public import Transformer.Rotate90
 public import Transformer.ComplexFFN
 public import Transformer.ComplexProjection
+public import Transformer.ReRoPEBlock
 public import Transformer.SequenceModel
 
 /-!
@@ -399,6 +400,11 @@ map commuting with the complex structure errs on a real projection by at least i
 conjugate-linear part, which the complex part attains; after the RMS it still misses a
 normalized conjugate-linear target by its full norm.
 At equal parameters the two classes are incomparable.
+`Transformer.ReRoPEBlock` compares a block of that model's main arm with LeRoPE against the same
+block with ReRoPE. Inside the window they are one function. Beyond it every ReRoPE block,
+whatever its per-position maps, heads and frequencies, is unchanged when the far keys are
+permuted, so it misses LeRoPE's π head, which sees their order, by at least
+`(1 − N^{−2κ}) / (2N)` times the distance of two values, `N = w + 2`.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
