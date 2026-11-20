@@ -6127,8 +6127,9 @@ The theorems above are stated for a table of two variables, or for kernels of an
 function `f(x₁, …, x_n)` over `ℤ/p` becomes a kernel once its variables are cut into two
 groups: a group `u` of `k` variables indexes the rows, a group `v` of `l = n − k` variables the
 columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across such a cut,
-prices reading its `n` operands from a context, and (NV6) prices what the labels show of one
-interaction among `k`. Every item gives a lower and an upper bound, exact where it can.
+prices reading its `n` operands from a context, (NV6) prices what the labels show of one
+interaction among `k`, and (NV7) prices products of products across the cut. Every item gives a
+lower and an upper bound, exact where it can.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6417,11 +6418,72 @@ split draws without replacement; that multiplies the variance of each conditiona
 And the bias `p/N` of a fitted readout is the usual χ² estimate, which assumes every
 `|E[h | f = t]|` small, as here.
 
+### NV7. What depth buys: products of products
+
+NV2 prices a model whose interaction across the cut is one product through width `d`: on the
+flat table of `k` copies of `x³ + x y`, exactness costs `d = p^k`. The FFN of the main model
+multiplies differently. Each hidden unit multiplies two linear readings of the state,
+`(W_g z)_j (W_u z)_j`, and the next layer multiplies such products again.
+
+*Rank multiplies at most.* Each coordinate of the state is a function of `(u, v)`, so a matrix
+across the cut, and a hidden unit is the entrywise product of two such matrices. The columns of
+`A ⊙ B` are entrywise products of a column of `A` and a column of `B`, so they lie in the span of
+the products of a basis of each column space:
+
+```
+rank(A ⊙ B) ≤ rank A · rank B.
+```
+
+For `k` copies, `ψ(f) = Πᵢ ψ(xᵢ³) ψ(xᵢ yᵢ)`. Across the cut between the `x`s and the `y`s,
+`ψ(xᵢ³)` has rank one and `ψ(xᵢ yᵢ)` rank `p`, so the bound allows `p^k` for the product, and
+by NV1 the product has exactly that rank. Products of products reach the flat price from `2k`
+factors of small rank. A single layer cannot: by hand, a linear reading of features of `u` and
+of `v` is `a(u) + b(v)`, so a hidden unit is `(a(u) + b(v))(c(u) + d(v))`. Its terms `a(u) c(u)`
+and `b(v) d(v)` lie on one side of the cut, and the rest, `a(u) d(v) + b(v) c(u)`, has rank at
+most `2`. With the residual, the one-sided terms add up to `A(u) + B(v)`, of rank at most `2`,
+so a coordinate written by `m` hidden units of one layer has rank at most `2m + 2`, and holding
+`ψ(f)` exactly takes `m ≥ (p^k − 2)/2`.
+
+*The product `x y` through characters.* A multiplicative character `χ` of `ℤ/p`, a homomorphism
+of the nonzero residues into `ℂ^×` with `χ(0) = 0`, turns the product into a product,
+`χ(x y) = χ(x) χ(y)`. A product layer computes it with one hidden unit from one-hot features of
+`x` and `y`, reading `χ(x)` through `W_g` and `χ(y)` through `W_u`. There are `p − 1` of them,
+orthogonal both ways:
+
+```
+Σ_χ χ(a) = (p − 1) [a = 1],    Σ_y χ(y) conj χ'(y) = (p − 1) [χ = χ'].
+```
+
+So every function on `ℤ/p` that vanishes at `0` is a combination of characters. `ψ_r(t) − 1`
+vanishes at `0`, and
+
+```
+ψ_r(x y) = 1 + Σ_χ c_r(χ) χ(x) χ(y),    c_r(χ) = (p − 1)⁻¹ Σ_s (ψ_r(s) − 1) conj χ(s),
+```
+
+for all `x` and `y`, the zeros included: at `x y = 0` every `χ(x) χ(y)` vanishes and
+`ψ_r(0) = 1`. For `r ≠ 0` the coefficients are Gauss sums over `p − 1`:
+
+```
+c_r(1) = −p/(p − 1),    |c_r(χ)| = √p/(p − 1) for χ ≠ 1,
+```
+
+since `Σ_{s ≠ 0} ψ_r(s) = −1` and the Gauss sum of a nontrivial character has modulus `√p`.
+None is zero, and the expansion is unique: if `ψ_r(x y) = a + Σ_χ d(χ) χ(x) χ(y)` for all `x`
+and `y`, then `a = 1` (put `x = 0`) and `d = c_r` (put `x = 1` and use the orthogonality over
+`y`). So this route to `ψ_r(x y)` needs all `p − 1` characters, one hidden unit each. The
+additive characters are spread evenly over the multiplicative ones: every nontrivial coefficient
+has the same modulus, as for two mutually unbiased bases. One pair is within a factor of two of
+the bound above, `p − 1` units against `(p − 2)/2`.
+
+*The readout.* `Re(ψ(f) conj ψ(c)) = cos(2π (f − c)/p)` is `1` at `c = f` and less than `1` at
+every other `c`, so a coordinate that holds `ψ(f)` exactly answers `f` by its largest logit.
+
 ### Lean
 
-`BilinearKernel`, `CutRange`, `CutRank` and, for NV6, `CopiesCovariance`, `CopiesInvisible`,
-`CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize` and `CopiesBestReadout` of
-`src/Transformer/Grokking/FlatSpectrum/`, namespace
+`BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
+`CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize` and `CopiesBestReadout`; for NV7,
+`ProductCharacters` and `ProductRank` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6438,3 +6500,5 @@ And the bias `p/N` of a fitted readout is the usual χ² estimate, which assumes
 | NV6, constants | `var`, `meanSq_sub_eq_var_add`, `var_le_meanSq_sub`, `meanSq_comp_of_mean_stdAddChar`, `mean_stdAddChar_add`, `norm_cov_cube_add_mul_le`, `var_cube_add_mul_le_two_mul_var_copies`, `norm_cov_copies_cube_add_mul_le` | Theorem B for one pair is the root's `norm_mean_star_mul_cube_add_mul_le` applied to the centered readout. The `k` pairs are the first pair and `τ → ZMod p × ZMod p`, `k = 1 + \|τ\|`, and the intermediate is the first pair's. The variances are compared in one direction, `Var g(q) ≤ 2 Var g(f)`. The numbers at `p = 97` are by hand. |
 | NV6, sample size | `empiricalMean`, `mean_empiricalMean`, `meanSq_sum_pi_of_mean_eq_zero`, `meanSq_empiricalMean_sub`, `centeredProduct`, `mean_centeredProduct`, `meanSq_centeredProduct_ge`, `meanSq_centeredProduct_le`, `le_mul_meanSq_empiricalMean_sub`, `sq_norm_cov_mul_le`, `sq_le_of_meanSq_empiricalMean_le`, `copiesLabel`, `firstIntermediate`, `sq_norm_cov_mul_le_copies` | The `N` samples are `Fin N → α`, independent and uniform, and the mean square error is `meanSq` over them. The bounds on `Var X` are stated for `E \|X\|²`; `Var X = E \|X\|² − \|Cov\|²` is `meanSq_sub_eq_var_add`. For `k` copies, `k = 1 + \|τ\|`, the statement is `\|Cov\|² ((1 − 1/p)² − c) ≤ c N · MSE`; the threshold on `N` is the general `sq_le_of_meanSq_empiricalMean_le` with this `c`, and its instance and numbers at `p = 97` are by hand. |
 | NV6, the best readout | `condEnergy`, `law_bounds`, `mean_stdAddChar_copiesLabel`, `meanSq_ite_pair`, `meanSq_ite_copiesLabel`, `cov_ite_copiesLabel`, `condEnergy_copies` | `condEnergy` is defined as `Σ_t \|Cov(1{f = t}, h)\|² / P(f = t)`, with `P(f = t)` the mean square of the indicator; the scaling holds for any `P` with `P(0) = 0` and any `h` of the first pair. That it is the largest `\|Cov\|² / Var` over readouts, the bias `p/N` of a fitted readout, the factor of drawing without replacement and the ratio `2.1` are by hand; `0.044` is the root's measurement. |
+| NV7, rank and readout | `rank_hadamard_le`, `re_stdAddChar_mul_star_self`, `re_stdAddChar_mul_star_lt` | The rank bound is for matrices over any field with finite index types. The ranks `p` and `p^k` across the cut are NV5's and NV1's; the bound `2m + 2` for one layer and `(p^k − 2)/2` are by hand. |
+| NV7, characters | `card_mulChar`, `sum_mulChar_apply`, `sum_star_mulChar_mul`, `sum_mulChar_mul_star`, `mulCoeff`, `stdAddChar_eq_one_add_sum`, `stdAddChar_mul_eq`, `mulCoeff_eq`, `mulCoeff_one`, `norm_mulCoeff`, `mulCoeff_ne_zero`, `eq_mulCoeff_of_forall` | The characters are `MulChar (ZMod p) ℂ`, which send `0` to `0`, and `c_r(χ)` is `mulCoeff r χ`; the Gauss sums are `gaussSum χ (ZMod.stdAddChar.mulShift (−r))`. The uniqueness is stated for a constant `a` and coefficients `d` on all characters; that it costs one hidden unit per character is by hand. |
