@@ -85,17 +85,19 @@ the product takes every value of modulus one (`swigluUnit_gap_product`), as on t
 torus of `ℂ²`, where both units have ten real parameters and the zero map errs by `1`
 (`swigluUnit_gap_plainUnit_torus`).
 
-FFN7, after the branch RMS (`RMSGap`, `RMSTwoGate`, `RMSIncomparable`). With RMS
-`eps = 0`, `R_D` erases the evenness witness of FFN4 and the parallelogram witnesses of
-FFN6 (by hand). One SwiGLU unit after it has the sign of `(a z)(b z)` and is even. A
-positive gate is a positive scalar, so one radial or diagonal unit after it is its
-ungated product, a SwiGLU block by FFN3. The other one-unit witnesses survive (by hand):
-plain and radial FFNs with complex-linear projections stay `J`-anti after `R_D` and miss
-the `J`-invariant target `R_D(|φ z|² w)` by its norm, and one SwiGLU unit after `R_D`
-points along `w`, so it misses one plain unit `z₁ z₂` after `R_D` on the torus as much
-as the zero map does. `R_D` multiplies by a nonnegative
+FFN7, after the branch RMS (`RMSGap`, `RMSTwoGate`, `RMSIncomparable`, `RMSSurviving`).
+With RMS `eps = 0`, `R_D` erases the evenness witness of FFN4 and the parallelogram
+witnesses of FFN6 (by hand). One SwiGLU unit after it has the sign of `(a z)(b z)` and
+is even. A positive gate is a positive scalar, so one radial or diagonal unit after it
+is its ungated product, a SwiGLU block by FFN3. The other witnesses survive. Plain and
+radial FFNs with complex-linear projections stay `J`-anti after `R_D`, so at any width
+they miss the `J`-invariant four-unit block `R_D(|φ z|² w)` by its norm, as the zero
+map does (`plainFFN_rms_gap_normSq`, `radialFFN_rms_gap_normSq`); with `eps = 0` that
+norm is `√d` (`norm_rmsNormEps_zero`). One SwiGLU unit after `R_D` points along `w`, so
+it misses one plain unit `z₁ z₂` after `R_D` on the torus as much as the zero map does
+(by hand). For the erased witnesses, signs suffice: `R_D` multiplies by a nonnegative
 scalar, so it keeps the sign of every linear functional
-(`pos_inner_of_pos_inner_rmsNormEps`), and two units on each side suffice.
+(`pos_inner_of_pos_inner_rmsNormEps`), and two units on each side separate again.
 
 - Signs constrain the even part. If `R_D ∘ S` is within `δ` of an even target `w` with
   `δ ‖ℓ‖ < ⟪ℓ, w z⟫`, the product network `P z = S z + S(-z)` has `⟪ℓ, P z⟫ > 0`
@@ -132,9 +134,10 @@ is `2.69`, `4.75`, `6.85`, `7.85` for `t = 1/2, 1, 2, 4`, from 24% to 69%.
 Refuted for the selected plain product: as a class of functions on the RMS sphere it
 lies strictly inside the bias-free SwiGLU class. It equals SwiGLU blocks of six
 times its width and misses SwiGLU blocks of width one. After the branch RMS the
-inclusion persists and stays strict, with a witness of width two (FFN7). With
-complex-linear `W_F` as
-well, a plain FFN is a holomorphic quadratic map, `f(λ z) = λ² f(z)` for complex `λ`
+inclusion persists and stays strict (FFN7): every plain FFN misses two SwiGLU units,
+and with complex-linear projections it does no better than the zero map on the
+four-unit block `R_D(|φ z|² w)`. With complex-linear `W_F` as well, a plain FFN is a
+holomorphic quadratic map, `f(λ z) = λ² f(z)` for complex `λ`
 (not formalized; the theorems use only `λ = -1` and `λ = i`).
 
 Radial and diagonal products: incomparable with SwiGLU. Each misses one unit of the

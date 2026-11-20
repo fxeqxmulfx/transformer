@@ -9,6 +9,7 @@ public import Transformer.ComplexFFN.Incomparable
 public import Transformer.ComplexFFN.RMSGap
 public import Transformer.ComplexFFN.RMSTwoGate
 public import Transformer.ComplexFFN.RMSIncomparable
+public import Transformer.ComplexFFN.RMSSurviving
 
 /-!
 # Complex-product FFNs against the bias-free SwiGLU FFN
@@ -40,12 +41,14 @@ the zero map (`swigluUnit_gap_plainUnit_torus`).
 
 These are statements about one block before its branch RMS, on a set of inputs closed
 under the symmetry, such as the RMS sphere that feeds it. The branch RMS is odd
-(`rmsNormEps_neg`), so the symmetries survive it, but with RMS `eps = 0` it erases the
-one-unit witnesses of evenness and of the parallelogram law: one SwiGLU unit after it is
-even, and a positive gate is a positive scalar, so one radial or diagonal unit after it
-is its ungated product, a SwiGLU block (by hand). It keeps the sign of every linear
-functional, and through signs the even part of SwiGLU still obeys a four-point identity
-(`swigluFFN_rms_gap`). Two units on each side restore both separations after the RMS
+(`rmsNormEps_neg`), so the symmetries survive it: after it, plain and radial FFNs with
+complex-linear projections still miss the four-unit block `|φ z|² w` by as much as the
+zero map (`plainFFN_rms_gap_normSq`, `radialFFN_rms_gap_normSq`). But with RMS
+`eps = 0` it erases the one-unit witnesses of evenness and of the parallelogram law: one
+SwiGLU unit after it is even, and a positive gate is a positive scalar, so one radial or
+diagonal unit after it is its ungated product, a SwiGLU block (by hand). It keeps the
+sign of every linear functional, and through signs the even part of SwiGLU still obeys
+a four-point identity (`swigluFFN_rms_gap`). Two units on each side restore both separations after the RMS
 (`RMSIncomparable`): no SwiGLU FFN approximates two radial or diagonal units that share
 one product under two gates (`swigluFFN_rms_gap_radial`, `swigluFFN_rms_gap_diagonal`),
 and no even map approximates two SwiGLU units whose coefficients swap under `z ↦ -z`
