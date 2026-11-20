@@ -43,8 +43,10 @@ and head, after LeRoPE's frequencies:
 - the slope s = 1 / (1 + 15 e^(−σ)), between 0 and 1.
 
 ω and σ start at 0, so every head starts as Leaky ReRoPE with w = 16 and
-k = 16, the fixed arm's values. They join LeRoPE's frequencies in their
-optimizer group: AdamW without weight decay, with its own clip at 1.
+k = 16, the fixed arm's values. Its far rotations are formed on the GPU from
+w and s, so they agree with the fixed arm's to rounding, not bit for bit.
+ω and σ join LeRoPE's frequencies in their optimizer group: AdamW without
+weight decay, with its own clip at 1.
 
 Each score is computed once. A key with t − j < w is scored from the query
 rotated by t and the key by j, as in the control. A key beyond the window is
@@ -59,8 +61,9 @@ The gradients of w and s are read off the far rotations, as Lean states them
 - ∂L/∂s = Σ_bands θ̂ (Σ_t (t − w) τ(far query t) + Σ_j j τ(far key j));
 - ∂L/∂w = (1 − s) Σ_bands θ̂ Σ_t τ(far query t).
 
-∂L/∂w does not exist when a pair sits at r = w. The kernel's test t − j < w
-then takes the derivative from below.
+∂L/∂w does not exist when a pair sits at r = w. The kernels' test
+t − j < ⌈w⌉, the same as t − j < w for integer distances, then takes the
+derivative from below.
 
 A task whose sequences never exceed 16 tokens has no far pair at w = 16. Its
 windows and slopes get no gradient and do not move, so it runs the

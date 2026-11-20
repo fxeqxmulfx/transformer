@@ -38,22 +38,32 @@ beyond the window (see [`rerope`](../rerope/README.md#runs)).
 ## Design
 
 The crate starts as a copy of [`rerope`](../rerope), whose source stays
-frozen while its cohort runs. The plan, in small steps:
+frozen while its cohort runs. The fixed arms and their host far tables are
+gone from it.
 
-- **Parameters.** `layout.rs` and `optimizer.rs` become local copies. ω and σ
+- **Parameters.** `layout.rs` and `optimizer.rs` are local copies. ω and σ
   per layer and head follow LeRoPE's frequencies, in their optimizer group.
-- **Tables.** Before each forward, a kernel computes w and s per layer and
-  head, and the far rotations' tables. The far query of row t sits at
-  min(t, w) + s · max(t − w, 0), the far key of row j at s·j. Rows t < w
-  have no far pair, so their far query is never read.
-- **Attention.** The routed kernels read each head's window, as the integer
+- **Tables.** Before each forward, `window_rotary::state` forms w, s and ⌈w⌉
+  per layer and head, and `window_rotary::table` every layer's far
+  rotations. The far query of row t sits at min(t, w) + s · max(t − w, 0),
+  the far key of row j at s·j. Rows t < w have no far pair, so their far
+  query is never read. The angles are formed on the GPU, so the initial far
+  rotations agree with the fixed Leaky arm's to rounding, not bit for bit.
+- **Routing.** A cell whose sequences can be longer than 16 tokens routes
+  every batch through the routed kernels, whatever its length: a window may
+  narrow below it. A cell within 16 tokens routes none. It has no far pair
+  at w = 16, so its windows never move.
+- **Attention.** The routed kernels read each head's window as the integer
   ⌈w⌉: t − j < w holds exactly when t − j < ⌈w⌉.
-- **Gradients.** One kernel sums each head and band's torques. A second gives
+- **Gradients.** `torques` sums each head and band's torques. `finish` gives
   the window's, the slope's and the far part of the frequencies' gradients
   (`hasDerivAt_window_chunk_slope`, `hasDerivAt_window_chunk_window`).
-- **Validation.** f64 oracles for the tables and gradients, and central
-  differences of the loss in the `fp32-affine-reference` build. The 25 tasks
-  within the window replay the control's cells bit for bit.
+- **Validation.** f64 oracles for the attention block and its gradients,
+  central differences of the loss in the `fp32-affine-reference` build, and
+  replays of the control's cells on the 25 tasks within the window. A CPU
+  test assembles the experiment's kernels with `ptxas` for sm_86. Still to
+  come: windows and slopes that differ per head, and their gradients against
+  central differences.
 
 GPU work waits until the `rerope` cohort finishes.
 

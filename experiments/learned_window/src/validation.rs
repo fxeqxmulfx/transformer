@@ -3,25 +3,26 @@
 //! `runs/main-model-phase-score-01/phase-score-lerope`; OUT is a new directory
 //! that receives `validation.json` and the replayed cells.
 //!
-//! 1. Kernels. With a window no shorter than the sequence, every routed
-//!    kernel equals the control's bit for bit at D = 16, 32 and 128, whatever
-//!    the far operands hold: the forward's output, probabilities and
-//!    imaginary parts, and the backward's adjoint of the rotated q, k and v,
-//!    its score adjoint, intermediate sums and score parts. The far adjoint
-//!    of q and k, filled with NaN before, is zero after.
+//! 1. Kernels. With each head's window no shorter than the sequence, every
+//!    routed kernel equals the control's bit for bit at D = 16, 32 and 128,
+//!    whatever the far operands hold: the forward's output, probabilities
+//!    and imaginary parts, and the backward's adjoint of the rotated q, k and
+//!    v, its score adjoint, intermediate sums and score parts. The far
+//!    adjoint of q and k, filled with NaN before, is zero after.
 //! 2. The engine's attention block beyond the window. The first layer's block
 //!    at length 40, from random q, k and v, learned frequencies and score
 //!    coordinates, against an f64 oracle that rotates each pair by its
-//!    relative position alone: `t - key` within the window, `w` (ReRoPE) or
-//!    `w + (t - key - w)/k` (Leaky ReRoPE) beyond it. The output, and the
-//!    adjoints of q, k and v, of the learned frequencies and of the score
-//!    coordinates against f64 central differences of `⟨G, out⟩`, at D = 16,
-//!    32 and 128. The control runs the same check with `t - key` everywhere,
-//!    which checks the oracle.
-//! 3. Initialization. Every arm's parameters are the recorded control cell's
-//!    `initial.f32` bytes: the arms change the position map alone.
+//!    relative position alone: `t - key` within the window and
+//!    `w + (t - key - w)/k` beyond it, at the learned arm's initial window
+//!    and slope. The output, and the adjoints of q, k and v, of the learned
+//!    frequencies and of the score coordinates against f64 central
+//!    differences of `⟨G, out⟩`, at D = 16, 32 and 128. The control runs the
+//!    same check with `t - key` everywhere, which checks the oracle.
+//! 3. Initialization. The arm's parameters are the recorded control cell's
+//!    `initial.f32` bytes, then its windows' and slopes' ω and σ at zero: the
+//!    arm changes the position map alone.
 //! 4. The learned frequencies' gradient in the whole model against central
-//!    differences of the loss, for the control and both arms. Rounding in the
+//!    differences of the loss, for the control and the arm. Rounding in the
 //!    FP16 forward GEMMs moves central differences by percents, so this check
 //!    gates only in the `fp32-affine-reference` build; the production build
 //!    reports it.
@@ -30,9 +31,10 @@
 //!    source file it archives is the cohort's, byte for byte, except
 //!    `UNCOMMITTED_MANIFEST`.
 //! 6. Replays. The control arm, run by this binary's runner, reproduces
-//!    recorded control cells, and each arm reproduces the recorded control
-//!    cells whose sequences all fit in the window: every observation, the end
-//!    and the final splits.
+//!    recorded control cells, and the arm reproduces the recorded control
+//!    cells whose sequences all fit in the initial window, where it runs the
+//!    control's kernels and its ω and σ get no gradient: every observation,
+//!    the end and the final splits.
 //!
 //! Items 5 and 6 run in the production build only: the reference build
 //! trains nothing.
@@ -498,14 +500,15 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
     )
 }
 
-/// The relative position the arm's map gives the query `t` and the key `key`.
+/// The relative position the arm's map gives the query `t` and the key `key`:
+/// the learned arm's at its initial window w and slope 1/k,
+/// `min(t - key, w) + max(t - key - w, 0)/k`.
 fn relative(position: Position, t: usize, key: usize) -> f64 {
     let distance = t - key;
     match position {
-        Position::Leaky { window, slope } if distance >= window => {
+        Position::Learned { window, slope } if distance >= window => {
             window as f64 + (distance - window) as f64 / slope as f64
         }
-        Position::ReRope { window } if distance >= window => window as f64,
         _ => distance as f64,
     }
 }
@@ -667,9 +670,9 @@ fn block(control: &Path, case: &str, extend: bool, arm: &str) -> Result<Value> {
         relative_error(&x_backward, &x_difference),
         ((directional - directional_difference) / directional_difference).abs(),
     ];
-    let far_pairs: usize = match position.window() {
-        Some((window, _)) => (window..length).map(|t| t + 1 - window).sum(),
-        None => 0,
+    let far_pairs: usize = match position {
+        Position::Learned { window, .. } => (window..length).map(|t| t + 1 - window).sum(),
+        Position::Rope => 0,
     };
     Ok(
         json!({"case": case, "arm": arm, "d": d, "heads": heads, "batch": batch,
@@ -704,6 +707,14 @@ fn recorded(control: &Path, case: &str) -> Result<(Value, u32, Vec<u8>)> {
 fn bytes(p: &[f32]) -> Vec<u8> {
     p.iter().flat_map(|v| v.to_le_bytes()).collect()
 }
+/// Whether the initial parameters `ours` are the recorded ones, `theirs`, then
+/// zeros: the learned arm appends its windows' and slopes' ω and σ
+/// (`layout::window_offset`).
+fn recorded_then_zeros(ours: &[u8], theirs: &[u8]) -> bool {
+    ours.len() >= theirs.len()
+        && ours[..theirs.len()] == *theirs
+        && ours[theirs.len()..].iter().all(|&b| b == 0)
+}
 
 fn initialization(control: &Path) -> Result<Value> {
     let cases: BTreeSet<&str> = REPLAYS.iter().chain(&NEAR_REPLAYS).copied().collect();
@@ -716,7 +727,7 @@ fn initialization(control: &Path) -> Result<Value> {
             let cfg = runner::config(&row, &task, arm)?;
             identical.insert(
                 arm.into(),
-                (bytes(&layout::initialize_model(&cfg, seed)) == initial).into(),
+                recorded_then_zeros(&bytes(&layout::initialize_model(&cfg, seed)), &initial).into(),
             );
         }
         let pass = identical.values().all(|v| *v == Value::Bool(true));
@@ -876,7 +887,8 @@ pub(crate) const RESULT_KEYS: [&str; 7] = [
     "final_splits",
 ];
 /// Whether the cells `ours` and `theirs` trained alike: the same observations
-/// but for their clocks, the same result keys, end and initial parameters.
+/// but for their clocks, the same result keys and end, and the same initial
+/// parameters but for the learned arm's ω and σ, zeros at their end.
 pub(crate) fn same_cell(ours: &Path, theirs: &Path) -> Result<Value> {
     let (a, b) = (history(ours)?, history(theirs)?);
     let first_difference = a.iter().zip(&b).position(|(x, y)| x != y);
@@ -887,7 +899,10 @@ pub(crate) fn same_cell(ours: &Path, theirs: &Path) -> Result<Value> {
     let differing: Vec<&str> = RESULT_KEYS.into_iter().filter(|k| ra[k] != rb[k]).collect();
     let endpoint =
         without_seconds(ra["endpoint"].clone()) == without_seconds(rb["endpoint"].clone());
-    let initial = fs::read(ours.join("initial.f32"))? == fs::read(theirs.join("initial.f32"))?;
+    let initial = recorded_then_zeros(
+        &fs::read(ours.join("initial.f32"))?,
+        &fs::read(theirs.join("initial.f32"))?,
+    );
     Ok(
         json!({"observations": a.len(), "recorded_observations": b.len(),
         "first_differing_observation": first_difference, "differing_result_keys": differing,

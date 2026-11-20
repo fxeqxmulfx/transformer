@@ -37,10 +37,6 @@ pub const FILES: &[(&str, &str)] = &[
         include_str!("optimizer.rs"),
     ),
     (
-        "experiments/learned_window/src/far_rotary.rs",
-        include_str!("far_rotary.rs"),
-    ),
-    (
         "experiments/learned_window/src/rerope_backward.rs",
         include_str!("rerope_backward.rs"),
     ),

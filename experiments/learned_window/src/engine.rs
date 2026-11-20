@@ -2,12 +2,14 @@
 //! model-side per-update allocation, or host readback in a training update.
 //!
 //! Experiment copy of gpt 5a37c51 `phase_score_native/src/engine.rs`. One
-//! change: `Config::position` may replace LeRoPE's position map by ReRoPE's
-//! or Leaky ReRoPE's. Every parameter stays the control's, and so does every
-//! kernel launch of a sequence no longer than the window. A longer one runs
-//! the routed kernels (`rerope_forward`, `rerope_backward`) on the near
-//! rotations `qkr` and the far rotations `far` (`far_rotary`), whose tables
-//! the control's `rotary::table` makes from the learned frequencies.
+//! change: `Config::position` may replace LeRoPE's position map by a window
+//! and a slope that each head of each layer learns (`Position::Learned`).
+//! Every parameter before theirs is the control's (`layout::window_offset`).
+//! A cell whose sequences all fit in the initial window runs every kernel
+//! launch of the control. Any other runs every batch through the routed
+//! kernels (`rerope_forward`, `rerope_backward`) on the near rotations `qkr`
+//! and the far rotations `far`, whose tables `window_rotary` makes per head
+//! from the learned windows, slopes and frequencies.
 
 use crate::{attention, base_ops as ops, complex, gemm, layout, sequence_ops};
 use kernite_cuda::{Buffer, Cuda, Grid, Ptr};
@@ -37,60 +39,51 @@ pub struct Config {
 }
 
 /// The position map of the rotation. `Rope` is LeRoPE's, the control's: the
-/// pair of the query `t` and the key `key` is rotated by `t - key`. ReRoPE
-/// rotates it by `min(t - key, w)`, Leaky ReRoPE by `w + (t - key - w)/k`
-/// beyond the window (Su, kexue.fm/archives/9708; the window `w`, the slope
-/// `k`). `Learned` lets each head of each layer learn its window `w` and
-/// slope `s`: `min(t - key, w) + s·max(t - key - w, 0)`
+/// pair of the query `t` and the key `key` is rotated by `t - key`. `Learned`
+/// lets each head of each layer learn its window `w` and slope `s`:
+/// `min(t - key, w) + s·max(t - key - w, 0)`
 /// (`Transformer.RoPE.LeReRoPE.windowPosition`), with `w = window·e^ω` and
 /// `s = 1/(1 + (slope - 1)e^(-σ))`, so that it starts as Leaky ReRoPE's
-/// `window` and `slope` (`layout::window_count`). All keep LeRoPE's learned
-/// frequencies.
+/// `window` and `slope` (Su, kexue.fm/archives/9708; `layout::window_count`).
+/// Both keep LeRoPE's learned frequencies.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Position {
     Rope,
-    ReRope { window: usize },
-    Leaky { window: usize, slope: usize },
     Learned { window: usize, slope: usize },
 }
 
-impl Position {
-    /// The window and the slope (`None`: ReRoPE), or `None` for RoPE.
-    pub fn window(self) -> Option<(usize, Option<usize>)> {
-        match self {
-            Position::Rope => None,
-            Position::ReRope { window } => Some((window, None)),
-            Position::Leaky { window, slope } => Some((window, Some(slope))),
-            // Not routed yet: `Engine::new` refuses it.
-            Position::Learned { window, slope } => Some((window, Some(slope))),
-        }
-    }
-}
-
-/// ReRoPE's kernels and far tables: the far query rotated by `w + (t - w)/k`
-/// (ReRoPE: `w`), the far key by `key/k` (ReRoPE: `0`), with the learned
-/// frequencies. `dfar` holds the far adjoint of one layer at a time.
-struct Rerope {
+/// The learned windows' kernels and state. A cell whose sequences can reach
+/// beyond the initial window is `routed`: every batch runs the routed
+/// kernels, whatever its length, since a window may narrow. Any other runs
+/// none, and its windows and slopes get no gradient. Per forward, `state`
+/// forms each head's w, s and 1 − s (`shape`) and ⌈w⌉ (`windows`), and
+/// `table` every layer's far rotations (`table`). `sums` holds one layer's
+/// torque sums and `dfar` its far adjoint, one layer at a time.
+struct Windows {
     window: usize,
-    slope: Option<usize>,
+    slope: usize,
+    routed: bool,
     forward: crate::rerope_forward::kernels::Kernels,
     backward: crate::rerope_backward::kernels::Kernels,
-    /// Each head's window: the arm's, the same for every head and layer.
+    rotary: crate::window_rotary::kernels::Kernels,
+    frequencies: F,
     windows: Buffer<u32>,
-    rotary: crate::far_rotary::kernels::Kernels,
-    query_base: F,
-    query_base_rope: F,
-    query_rope: F,
-    query_theta: F,
-    key_base: F,
-    key_base_rope: F,
-    key_rope: F,
-    key_theta: F,
+    shape: F,
+    table: F,
+    sums: F,
     dfar: F,
+}
+
+impl Windows {
+    /// The far rotations of the layer `index` for sequences of `length`.
+    fn table(&self, index: usize, heads: usize, length: usize, bands: usize) -> P {
+        self.table.at(index * 4 * heads * length * bands)
+    }
 }
 
 struct Layer {
     routing: Option<[Router; 2]>,
+    index: usize,
     offset: usize,
     score_offset: usize,
     score_table: F,
@@ -148,6 +141,7 @@ impl Layer {
             } else {
                 None
             },
+            index,
             offset,
             score_offset: layout::score_offset(cfg) + index * cfg.heads,
             score_table: cuda.alloc(if layout::phase_score(cfg) {
@@ -243,7 +237,7 @@ pub struct Engine {
     rotary_base: F,
     rotary_base_rope: F,
     rotary_theta: F,
-    rerope: Option<Rerope>,
+    windows: Option<Windows>,
     tokens: Buffer<u32>,
     labels: Buffer<u32>,
     flags: Buffer<u32>,
@@ -282,9 +276,6 @@ impl Engine {
         Ok(values)
     }
     pub fn new(config: Config, parameters: &[f32]) -> Result<Self> {
-        if let Position::Learned { .. } = config.position {
-            return Err("the learned window's kernels are not wired yet".into());
-        }
         let w = config.width;
         if ![64, 128, 256].contains(&w)
             || config.layers == 0
@@ -406,7 +397,13 @@ impl Engine {
             },
             owner_count,
             parameters: cuda.upload(parameters)?,
-            gradients: cuda.alloc(parameters.len())?,
+            // Zeroed once: a cell that never routes leaves its windows' and
+            // slopes' entries unwritten (`Windows::routed`).
+            gradients: {
+                let mut gradients = cuda.alloc(parameters.len())?;
+                gradients.zero()?;
+                gradients
+            },
             first_moment: cuda.alloc(parameters.len())?,
             second_moment: cuda.alloc(parameters.len())?,
             rope: cuda.alloc(config.max_length * (w / config.heads))?,
@@ -421,38 +418,39 @@ impl Engine {
                 .alloc((2 * config.max_length * layout::frequency_count(&config)).max(1))?,
             rotary_theta: cuda
                 .alloc((config.max_length * layout::frequency_count(&config)).max(1))?,
-            rerope: match config.position.window() {
-                None => None,
-                Some((window, slope)) => {
+            windows: match config.position {
+                Position::Rope => None,
+                Position::Learned { window, slope } => {
                     // The routed kernels cover the control's attention only:
                     // LeRoPE's learned frequencies, the phase score, ordinary
-                    // values.
+                    // values. A slope of one keeps s = 1: RoPE.
                     if window == 0
-                        || slope == Some(0)
+                        || slope == 0
                         || !layout::learned_rotary(&config)
                         || layout::log_positions(&config)
                         || !layout::phase_score(&config)
                     {
-                        return Err(
-                            "ReRoPE needs a window, a slope and the LeRoPE phase score".into()
-                        );
+                        return Err("the learned windows need a window, a slope and the \
+                            LeRoPE phase score"
+                            .into());
                     }
-                    let table = config.max_length * layout::frequency_count(&config);
-                    Some(Rerope {
+                    let (n, bands) = (
+                        config.layers * config.heads,
+                        layout::frequency_count(&config),
+                    );
+                    Some(Windows {
                         window,
                         slope,
+                        routed: config.max_length > window,
                         forward: crate::rerope_forward::kernels::Kernels::load(&cuda)?,
                         backward: crate::rerope_backward::kernels::Kernels::load(&cuda)?,
-                        windows: cuda.upload(&vec![window as u32; config.heads])?,
-                        rotary: crate::far_rotary::kernels::Kernels::load(&cuda)?,
-                        query_base: cuda.alloc(table)?,
-                        query_base_rope: cuda.alloc(2 * table)?,
-                        query_rope: cuda.alloc(2 * table)?,
-                        query_theta: cuda.alloc(table)?,
-                        key_base: cuda.alloc(table)?,
-                        key_base_rope: cuda.alloc(2 * table)?,
-                        key_rope: cuda.alloc(2 * table)?,
-                        key_theta: cuda.alloc(table)?,
+                        rotary: crate::window_rotary::kernels::Kernels::load(&cuda)?,
+                        frequencies: cuda
+                            .upload(&crate::window_rotary::frequencies(w / config.heads))?,
+                        windows: cuda.alloc(n)?,
+                        shape: cuda.alloc(3 * n)?,
+                        table: cuda.alloc(4 * n * config.max_length * bands)?,
+                        sums: cuda.alloc(3 * config.heads * bands)?,
                         dfar: cuda.alloc(r * 3 * w)?,
                     })
                 }
@@ -613,17 +611,17 @@ impl Engine {
             1.0
         }
     }
-    /// ReRoPE's kernels when the sequence reaches beyond the window; a shorter
-    /// one has no far pair and runs the control's kernels.
-    fn far(&self, length: usize) -> Result<Option<&Rerope>> {
-        let far = self.rerope.as_ref().filter(|e| length > e.window);
+    /// The learned windows' kernels in a routed cell (`Windows::routed`); a
+    /// cell whose sequences all fit in the initial window runs the control's.
+    fn far(&self) -> Result<Option<&Windows>> {
+        let far = self.windows.as_ref().filter(|e| e.routed);
         if far.is_some()
             && (self.score_kernels.is_none()
                 || self.ordinary_attention.is_none()
                 || self.centered_attention.is_some()
                 || self.rotary.is_none())
         {
-            return Err("ReRoPE routes the ordinary phase-score attention only".into());
+            return Err("the learned windows route the ordinary phase-score attention only".into());
         }
         Ok(far)
     }
@@ -631,7 +629,7 @@ impl Engine {
         let w = self.config.width;
         let h = self.config.heads;
         let r = batch * length;
-        let far = self.far(length)?;
+        let far = self.far()?;
         macro_rules! dispatch {
             ($d:literal) => {
                 // SAFETY: layer buffers cover the maximum batch/length; all launches
@@ -658,13 +656,12 @@ impl Engine {
                         length as u32,
                         (r * 3 * w) as u32,
                     )?;
-                    if let Some(rerope) = far {
-                        rerope.rotary.rotate::<false>(
+                    if let Some(windows) = far {
+                        windows.rotary.rotate::<false>(
                             grid(r * 3 * w),
                             layer.far.ptr(),
                             layer.qnorm.ptr(),
-                            rerope.query_rope.ptr(),
-                            rerope.key_rope.ptr(),
+                            windows.table(layer.index, h, length, $d / 2),
                             $d,
                             h as u32,
                             length as u32,
@@ -678,8 +675,8 @@ impl Engine {
                             self.parameters.at(layer.score_offset),
                             h as u32,
                         )?;
-                        if let Some(rerope) = far {
-                            rerope.forward.forward::<$d>(
+                        if let Some(windows) = far {
+                            windows.forward.forward::<$d>(
                                 Grid::new(
                                     ((r * h) / if $d == 16 { 2 } else { 1 }).div_ceil(4) as u32,
                                     128,
@@ -693,7 +690,7 @@ impl Engine {
                                 h as u32,
                                 length as u32,
                                 (r * h) as u32,
-                                rerope.windows.ptr(),
+                                windows.windows.at(layer.index * h),
                             )?;
                         } else {
                             forward.forward::<$d>(
@@ -779,7 +776,7 @@ impl Engine {
         let w = self.config.width;
         let h = self.config.heads;
         let r = batch * length;
-        let far = self.far(length)?;
+        let far = self.far()?;
         macro_rules! dispatch {
             ($d:literal) => {
                 // SAFETY: every head owns its gradient rows; kernels perform complete
@@ -803,14 +800,14 @@ impl Engine {
                             )?;
                         };
                     }
-                    if let Some(rerope) = far {
-                        rerope.backward.query_backward::<$d>(
+                    if let Some(windows) = far {
+                        windows.backward.query_backward::<$d>(
                             Grid::new(
                                 ((r * h) / if $d == 16 { 2 } else { 1 }).div_ceil(4) as u32,
                                 128,
                             ),
                             layer.dqkr.ptr(),
-                            rerope.dfar.ptr(),
+                            windows.dfar.ptr(),
                             layer.ds.ptr(),
                             layer.gd.ptr(),
                             layer.dv.ptr(),
@@ -821,7 +818,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.windows.ptr(),
+                            windows.windows.at(layer.index * h),
                         )?;
                     } else if let Some(ordinary) = &self.ordinary_attention {
                         ordinary.query_backward::<$d>(
@@ -871,15 +868,15 @@ impl Engine {
                             h as u32,
                             length as u32,
                         )?;
-                    } else if let Some(rerope) = far {
-                        rerope.backward.key_backward::<$d>(
+                    } else if let Some(windows) = far {
+                        windows.backward.key_backward::<$d>(
                             Grid::new(
                                 ((r * h) / (if $d == 16 { 2usize } else { 1usize })).div_ceil(4)
                                     as u32,
                                 128,
                             ),
                             layer.dqkr.ptr(),
-                            rerope.dfar.ptr(),
+                            windows.dfar.ptr(),
                             layer.ds.ptr(),
                             layer.gd.ptr(),
                             layer.dv.ptr(),
@@ -889,7 +886,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.windows.ptr(),
+                            windows.windows.at(layer.index * h),
                         )?;
                     } else {
                         self.att.key_backward::<$d>(
@@ -909,11 +906,11 @@ impl Engine {
                             (r * h) as u32,
                         )?;
                     }
-                    if let (Some((score, _)), Some(rerope)) = (&self.score_kernels, far) {
-                        rerope.backward.query_correction::<$d>(
+                    if let (Some((score, _)), Some(windows)) = (&self.score_kernels, far) {
+                        windows.backward.query_correction::<$d>(
                             rows_grid(r * h),
                             layer.dqkr.ptr(),
-                            rerope.dfar.ptr(),
+                            windows.dfar.ptr(),
                             layer.score_parts.ptr(),
                             layer.ds.ptr(),
                             layer.score_imaginary.ptr(),
@@ -923,12 +920,12 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.windows.ptr(),
+                            windows.windows.at(layer.index * h),
                         )?;
-                        rerope.backward.key_correction::<$d>(
+                        windows.backward.key_correction::<$d>(
                             rows_grid(r * h),
                             layer.dqkr.ptr(),
-                            rerope.dfar.ptr(),
+                            windows.dfar.ptr(),
                             layer.ds.ptr(),
                             layer.score_imaginary.ptr(),
                             layer.qkr.ptr(),
@@ -937,7 +934,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.windows.ptr(),
+                            windows.windows.at(layer.index * h),
                         )?;
                         score.coordinate_gradient(
                             grid(h),
@@ -991,18 +988,34 @@ impl Engine {
                             r as u32,
                             u32::from(layer.offset == self.layers.last().unwrap().offset),
                         )?;
-                        if let Some(rerope) = far {
-                            rerope.rotary.frequency_backward(
-                                Grid::new(($d / 2) as u32, 32),
-                                self.gradients.at(layout::frequency_offset(&self.config)),
+                        // The far part: the torques of the far rotations, then
+                        // the frequencies' far gradient (added after the near
+                        // one) and this layer's ω and σ gradients (stored).
+                        if let Some(windows) = far {
+                            let (bands, shape) = ($d / 2, windows.shape.at(layer.index * h));
+                            windows.rotary.torques(
+                                Grid::new((h * bands) as u32, 32),
+                                windows.sums.ptr(),
                                 layer.far.ptr(),
-                                rerope.dfar.ptr(),
-                                rerope.query_theta.ptr(),
-                                rerope.key_theta.ptr(),
-                                $d / 2,
+                                windows.dfar.ptr(),
+                                shape,
+                                bands as u32,
                                 h as u32,
                                 length as u32,
                                 r as u32,
+                            )?;
+                            windows.rotary.finish(
+                                Grid::new(1, bands.max(h).next_multiple_of(32) as u32),
+                                self.gradients.at(layout::frequency_offset(&self.config)),
+                                self.gradients
+                                    .at(layout::window_offset(&self.config) + layer.index * h),
+                                windows.sums.ptr(),
+                                shape,
+                                windows.frequencies.ptr(),
+                                self.parameters.at(layout::frequency_offset(&self.config)),
+                                bands as u32,
+                                h as u32,
+                                (self.config.layers * h) as u32,
                             )?;
                         }
                     }
@@ -1016,13 +1029,12 @@ impl Engine {
                         length as u32,
                         (r * 3 * w) as u32,
                     )?;
-                    if let Some(rerope) = far {
-                        rerope.rotary.rotate::<true>(
+                    if let Some(windows) = far {
+                        windows.rotary.rotate::<true>(
                             grid(r * 3 * w),
                             layer.dqnorm.ptr(),
-                            rerope.dfar.ptr(),
-                            rerope.query_rope.ptr(),
-                            rerope.key_rope.ptr(),
+                            windows.dfar.ptr(),
+                            windows.table(layer.index, h, length, $d / 2),
                             $d,
                             h as u32,
                             length as u32,
@@ -1140,20 +1152,6 @@ impl Engine {
                 }
                 self.rope.write(&self.host_rope)?;
             }
-            if let Some(rerope) = &mut self.rerope {
-                let d = w / self.config.heads;
-                let [query, key] =
-                    crate::far_rotary::far_tables(length, d, rerope.window, rerope.slope);
-                for ((mut angles, mut rope), (base, base_rope)) in [
-                    (query, (&mut rerope.query_base, &mut rerope.query_base_rope)),
-                    (key, (&mut rerope.key_base, &mut rerope.key_base_rope)),
-                ] {
-                    angles.resize(base.len(), 0.);
-                    rope.resize(base_rope.len(), 0.);
-                    base.write(&angles)?;
-                    base_rope.write(&rope)?;
-                }
-            }
             self.rope_length = length;
         }
         if let Some(rotary) = &self.rotary {
@@ -1171,33 +1169,32 @@ impl Engine {
                     bands as u32,
                     (length * bands) as u32,
                 )?;
-                // The far rotations, with the same learned frequencies.
-                if let Some(rerope) = self.rerope.as_ref().filter(|e| length > e.window) {
-                    for (rope, theta, base, base_rope) in [
-                        (
-                            &rerope.query_rope,
-                            &rerope.query_theta,
-                            &rerope.query_base,
-                            &rerope.query_base_rope,
-                        ),
-                        (
-                            &rerope.key_rope,
-                            &rerope.key_theta,
-                            &rerope.key_base,
-                            &rerope.key_base_rope,
-                        ),
-                    ] {
-                        rotary.table(
-                            grid(length * bands),
-                            rope.ptr(),
-                            theta.ptr(),
-                            base.ptr(),
-                            base_rope.ptr(),
-                            self.parameters.at(layout::frequency_offset(&self.config)),
-                            bands as u32,
-                            (length * bands) as u32,
-                        )?;
-                    }
+                // Each head's window and slope from ω and σ, then every
+                // layer's far rotations with the same learned frequencies.
+                if let Some(windows) = self.windows.as_ref().filter(|e| e.routed) {
+                    let n = self.config.layers * self.config.heads;
+                    windows.rotary.state(
+                        grid(n),
+                        windows.windows.ptr(),
+                        windows.shape.ptr(),
+                        self.parameters.at(layout::window_offset(&self.config)),
+                        windows.window as f32,
+                        (windows.slope - 1) as f32,
+                        n as u32,
+                    )?;
+                    let count = 2 * n * length * bands;
+                    windows.rotary.table(
+                        grid(count),
+                        windows.table.ptr(),
+                        windows.shape.ptr(),
+                        windows.frequencies.ptr(),
+                        self.parameters.at(layout::frequency_offset(&self.config)),
+                        self.config.heads as u32,
+                        length as u32,
+                        bands as u32,
+                        n as u32,
+                        count as u32,
+                    )?;
                 }
             }
         }

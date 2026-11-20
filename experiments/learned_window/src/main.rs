@@ -26,7 +26,6 @@ mod data;
 mod embedding_backward;
 #[allow(dead_code)]
 mod engine;
-mod far_rotary;
 #[path = "../../../.lake/reproduction/gpt/research/complex_geometry_suite/native/src/gemm.rs"]
 mod gemm;
 mod layout;
@@ -93,7 +92,6 @@ mod tensor;
 #[path = "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/tiled_transpose.rs"]
 mod tiled_transpose;
 mod validation;
-#[allow(dead_code)]
 mod window_rotary;
 use engine::{Config, Result};
 use sha2::{Digest, Sha256};

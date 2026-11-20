@@ -24,16 +24,18 @@ const SUITE: &str =
     include_str!("../../../.lake/reproduction/gpt/research/complex_geometry_suite/suite.json");
 const PLAN: &str = include_str!("../PROTOCOL.md");
 const FLUSH_EPOCHS: usize = 500;
-pub const ARMS: [&str; 2] = ["rerope", "leaky-rerope"];
+pub const ARMS: [&str; 1] = ["learned-window"];
 /// The control cohort's arm, `complex-phase-score-lerope` with LeRoPE's
 /// position map. No suite runs it; `validate` replays recorded control cells
 /// with it.
 pub const CONTROL: &str = "lerope";
-/// The window: a quarter of the training length 64 of the depth and recall
-/// tasks. Su finds the best window between 1/4 and 1/2 of the training length.
+/// The initial window: the ReRoPE cohort's, a quarter of the training length
+/// 64 of the depth and recall tasks. Su finds the best window between 1/4 and
+/// 1/2 of the training length.
 pub const WINDOW: usize = 16;
-/// Leaky ReRoPE's slope k: Su's best for a window at a quarter of the
-/// training length (Leaky ReRoPE-w128-k16 at length 512).
+/// The initial slope 1/16: the ReRoPE cohort's Leaky ReRoPE, Su's best for a
+/// window at a quarter of the training length (Leaky ReRoPE-w128-k16 at
+/// length 512).
 pub const SLOPE: usize = 16;
 /// Every arm keeps the control's architecture, parameters and optimizer.
 fn architecture(_arm: &str) -> String {
@@ -41,8 +43,7 @@ fn architecture(_arm: &str) -> String {
 }
 pub(crate) fn position(arm: &str) -> Position {
     match arm {
-        "rerope" => Position::ReRope { window: WINDOW },
-        "leaky-rerope" => Position::Leaky {
+        "learned-window" => Position::Learned {
             window: WINDOW,
             slope: SLOPE,
         },
@@ -51,29 +52,23 @@ pub(crate) fn position(arm: &str) -> Position {
 }
 /// The arm's position encoding, as each cell's protocol records it.
 fn position_encoding(cfg: &Config) -> Value {
-    let common = json!({"frequencies":"LeRoPE: 10000^(-2l/D) e^alpha_l, alpha shared by heads and layers",
-        "score":"ln(N)/d*(Re(Z)+beta*Im(Z)^2/d), Z = sum(conj(R q)*(R k)) with the rotations of the pair's region",
-        "merge":"one pass: each key scored once, near or far (Transformer.RoPE.ReRoPE.rerope_phase_attend_eq_onlineMerge, leaky_phase_attend_eq_onlineMerge)",
-        "near":"t-key < w: R^t q, R^key k"});
-    let mut row = match cfg.position {
-        Position::Rope => return json!("LeRoPE"),
-        Position::ReRope { window } => json!({"kind":"ReRoPE","window":window,
-            "relative":"min(t-key, w)","far":"R^w q, k"}),
-        Position::Leaky { window, slope } => {
-            json!({"kind":"Leaky ReRoPE","window":window,"slope":slope,
-            "relative":"t-key < w ? t-key : w + (t-key-w)/k","far":"R^(w+(t-w)/k) q, R^(key/k) k"})
-        }
+    match cfg.position {
+        Position::Rope => json!("LeRoPE"),
         Position::Learned { window, slope } => {
             json!({"kind":"learned window and slope per layer and head","window":window,"slope":slope,
             "relative":"min(t-key, w) + s*max(t-key-w, 0) (Transformer.RoPE.LeReRoPE.windowPosition)",
             "parameters":"w = window*e^omega, s = 1/(1 + (slope-1)*e^(-sigma)), omega = sigma = 0 at the start",
-            "far":"R^(w+s(t-w)) q, R^(s*key) k"})
+            "parameter_offset":layout::window_offset(cfg),"parameter_count":layout::window_count(cfg),
+            "parameter_layout":"omega of layer l, head h at offset + l*H + h; sigma at offset + (L + l)*H + h",
+            "optimizer":"the frequencies' group: AdamW, no weight decay, its own L2 clip 1",
+            "routing":format!("every batch through the routed kernels iff max_length > {window}"),
+            "near":"t-key < ceil(w): R^t q, R^key k","far":"R^(w+s(t-w)) q, R^(s*key) k",
+            "frequencies":"LeRoPE: 10000^(-2l/D) e^alpha_l, alpha shared by heads and layers",
+            "score":"ln(N)/d*(Re(Z)+beta*Im(Z)^2/d), Z = sum(conj(R q)*(R k)) with the rotations of the pair's region",
+            "merge":"one pass: each key scored once, near or far (Transformer.RoPE.ReRoPE.rerope_phase_attend_eq_onlineMerge, leaky_phase_attend_eq_onlineMerge)",
+            "gradients":"Transformer.RoPE.LeReRoPE.hasDerivAt_window_chunk_window, hasDerivAt_window_chunk_slope; at t-key = w, the one from below"})
         }
-    };
-    if let (Value::Object(row), Value::Object(common)) = (&mut row, common) {
-        row.extend(common);
     }
-    row
 }
 
 pub fn source_hash() -> String {
@@ -94,7 +89,7 @@ pub fn ptx_hash() -> String {
             crate::phase_score_forward::kernels::PTX,
             crate::rerope_forward::kernels::PTX,
             crate::rerope_backward::kernels::PTX,
-            crate::far_rotary::kernels::PTX,
+            crate::window_rotary::kernels::PTX,
             crate::rotary::kernels::PTX,
             crate::base_ops::kernels::PTX,
             crate::sequence_ops::kernels::PTX,
@@ -328,7 +323,7 @@ pub(crate) fn run_cell(root: &Path, row: &Value, seed: u32, arm: &str, resume: b
         "checkpoint_epochs":FLUSH_EPOCHS,"matrix_constraints":if layout::is_complex(&cfg.architecture){"complex-linear: [[A,-B],[B,A]]"}else{"none"},"hermitian_xsa":false,"ordinary_attention":true,"plain_complex_product":true,"mhc":layout::is_mhc(&cfg),"streams":if layout::is_mhc(&cfg){4}else{1},"sinkhorn_cycles":if layout::is_mhc(&cfg){20}else{0},"base_initial_sha256":hash(&initial[..4*layout::base_count(&cfg)]),
         "position_encoding":position_encoding(&cfg),
         "frequency_parameters":layout::frequency_count(&cfg),"frequency_offset":layout::frequency_offset(&cfg),
-        "frequency_initial_values":parameters[layout::frequency_offset(&cfg)..],
+        "frequency_initial_values":parameters[layout::frequency_offset(&cfg)..layout::window_offset(&cfg)],
         "common_initial_sha256":hash(&initial[..4*layout::phase_offset(&cfg)]),
         "shared_full_initial_sha256":hash(&[&initial[..4*if layout::phase_score(&cfg) { layout::score_offset(&cfg) } else { layout::phase_offset(&cfg) }], &initial[4*layout::frequency_offset(&cfg)..]].concat()),
         "phase_routing":layout::phase_routing(&cfg),
@@ -640,10 +635,11 @@ fn checkpoint_resumes_identical_updates_and_rejects_unclean_windows() -> Result<
             warmup: 2000,
             architecture: crate::runner::architecture(architecture),
             phase_optimizer: false,
-            // A window of one: the two- and three-token batches have far pairs.
-            position: match crate::runner::position(architecture) {
-                Position::Leaky { slope, .. } => Position::Leaky { window: 1, slope },
-                _ => Position::ReRope { window: 1 },
+            // A window of one: the cell routes, and the two- and three-token
+            // batches have far pairs.
+            position: Position::Learned {
+                window: 1,
+                slope: SLOPE,
             },
         };
         let initial = layout::initialize_model(&cfg, 2);
