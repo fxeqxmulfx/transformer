@@ -14,7 +14,8 @@ ready-made flash attention; in decoding "the cache of the Key sequence can only 
 before RoPE, and at each decoding step the corresponding RoPE is applied to the whole Key
 sequence".
 
-One pass of RoPE does not give the merged matrix (`Section3_SinglePass`). But each of the two
+One pass of RoPE does not give the merged matrix (`Section3_SinglePass`), nor, on long sequences,
+one pass of any fixed dimension (`Section3_Rank`, `Section3_RankLeaky`). But each of the two
 matrices is needed only on its own region, and softmax over two disjoint sets of keys is the
 online merge of their statistics, as between the tiles of FlashAttention (Dao et al.,
 arXiv:2205.14135, §3.1, Tiling; `AttentionResiduals.onlineMerge_eq_attend`):

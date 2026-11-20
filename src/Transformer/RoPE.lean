@@ -19,6 +19,8 @@ public import Transformer.RoPE.BaseBounds.Section4_BaseBound
 public import Transformer.RoPE.RoFormer.Section3_Derivation
 public import Transformer.RoPE.RoFormer.Section3_Properties
 public import Transformer.RoPE.ReRoPE.Section3_Merge
+public import Transformer.RoPE.ReRoPE.Section3_Rank
+public import Transformer.RoPE.ReRoPE.Section3_RankLeaky
 public import Transformer.RoPE.ReRoPE.Section3_SinglePass
 public import Transformer.RoPE.ReRoPE.Section4_Experiments
 public import Transformer.RoPE.ReRoPE2D
