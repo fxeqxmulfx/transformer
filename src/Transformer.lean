@@ -395,6 +395,7 @@ conjugate-linear part, the block storage `[[A,-B],[B,A]]` holds exactly the firs
 map commuting with the complex structure errs on a real projection by at least its
 conjugate-linear part, which the complex part attains; after the RMS it still misses a
 normalized conjugate-linear target by its full norm.
+At equal parameters the two classes are incomparable.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
