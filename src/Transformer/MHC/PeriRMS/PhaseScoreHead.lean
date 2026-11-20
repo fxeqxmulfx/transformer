@@ -22,8 +22,9 @@ coordinate `c` is `x_c + i x_{c + d/2}` (`headPairs`). This module reads one as 
   unchanged, the score is not odd in the key for `β ≠ 0`, and its first variation in the complex
   input is exact. None of these is a Jacobian of the full model.
 
-Source: DiffGPT (`~/python_projects/gpt`, `fe1d528`), `research/main_model/proofs/ComplexPhaseScore.lean`
-and `research/main_model/README.txt`, *Architecture*. Exact real arithmetic.
+Source: DiffGPT (`~/python_projects/gpt`, `fe1d528`),
+`research/main_model/proofs/ComplexPhaseScore.lean` and `research/main_model/README.txt`,
+*Architecture*. Exact real arithmetic.
 -/
 
 @[expose] public section
@@ -71,6 +72,13 @@ theorem pairEnergy_toComplex {p : ℕ} (x : Fin 2 × Fin p → ℝ) :
     pairEnergy (toComplex x) = x ⬝ᵥ x := by
   simp only [pairEnergy, toComplex, Complex.sq_norm, Complex.normSq_mk, dotProduct,
     Fintype.sum_prod_type, Fin.sum_univ_two, Finset.sum_add_distrib]
+
+/-- The squared length of the pair layout of a half-split head vector is at most `‖x‖²`: it drops
+an unpaired last coordinate and no other. -/
+theorem pairLayout_dotProduct_le (d : ℕ) (x : EucSpace d) :
+    pairLayout d x ⬝ᵥ pairLayout d x ≤ ‖x‖ ^ 2 := by
+  rw [← pairEnergy_toComplex, toComplex_pairLayout]
+  exact pairEnergy_headPairs_le d x
 
 /-- **The phase score of a pair layout is at most `(5/4) ln N`**: the gain `ln N / D` of `N ≥ 1`
 visible keys, real width `D`, vectors of squared length at most `D`, and any `|β| ≤ 1`. -/

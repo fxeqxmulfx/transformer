@@ -38,7 +38,8 @@ the main model. A positional scheme is a choice of the scores `F`:
 * `plainLogit`: the same head without rotation, the head of a block with no positional encoding.
 
 Every statement of `Transformer.LeRoPEBlock` leaves `Φ`, the scores' parameters and the values
-arbitrary, so it covers the main model's `Φ`.
+arbitrary, so it covers the main model's `Φ`. `block_congr_of_le` is causality: the block at the
+query `i` reads only the tokens `j ≤ i`.
 -/
 
 @[expose] public section
@@ -57,6 +58,28 @@ noncomputable def block (Φ : X → (Fin H → E) → Y) (F : Fin H → ℕ → 
     (v : Fin H → X → E) (x : ℕ → X) (i : ℕ) : Y :=
   Φ (x i) fun h =>
     attend (fun j : Fin (i + 1) => F h i (x i) (x j) (i - j)) fun j => v h (x j)
+
+/-- **The block at the query `i` reads only the tokens `j ≤ i`**: sequences that agree up to `i`
+give one output, whatever `Φ`, the scores and the values. -/
+theorem block_congr_of_le (Φ : X → (Fin H → E) → Y) (F : Fin H → ℕ → X → X → ℕ → ℝ)
+    (v : Fin H → X → E) {x x' : ℕ → X} (i : ℕ) (hx : ∀ j ≤ i, x j = x' j) :
+    block Φ F v x i = block Φ F v x' i := by
+  unfold block
+  rw [hx i le_rfl]
+  congr 1
+  funext h
+  congr 1
+  · funext j
+    rw [hx j (Nat.lt_succ_iff.mp j.2)]
+  · funext j
+    rw [hx j (Nat.lt_succ_iff.mp j.2)]
+
+/-- One head; the tokens `0, 1, 2, 3` agree, the later ones do not: the block at `3` is the same. -/
+example : block (H := 1) (fun _ u => u 0) (fun _ _ _ _ _ => (0 : ℝ)) (fun _ y => y)
+      (fun j : ℕ => (j : ℝ)) 3 =
+    block (H := 1) (fun _ u => u 0) (fun _ _ _ _ _ => (0 : ℝ)) (fun _ y => y)
+      (fun j : ℕ => if j ≤ 3 then (j : ℝ) else 0) 3 :=
+  block_congr_of_le _ _ _ 3 (fun j hj => by simp [hj])
 
 /-- **The logit of a complex head**: the gain `g` times `Re Z + β (Im Z)² / d`, where
 `Re Z = qᵀk` and `(Im Z)² = (qᵀ J k)²` for the pairs `q_l = q(0,l) + i q(1,l)` and `k_l` of the

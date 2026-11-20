@@ -22,6 +22,8 @@ logits for the gates, skip logits for the finite Sinkhorn map and the angles `ar
   is `arctan b_{s+1}`; `routing_rot_succ` shows `e^{i arctan b} = (1 + i b)/√(1 + b²)`
   (`MHC.unitPhase`). All phases are zero when the `b_s` are, as at initialization.
 * `flatRMS_energy_le`: the router input has mean square at most `1`.
+* `Router.read`: what the sublayer reads, `R_D(∑_s σ(read_s) x_s)`; `Router.step_apply` shows that
+  `step` hands exactly this to the raw branch.
 
 The three scales start at `0.01`, the biases at `0` for read and write and `2 I` for skip
 (`Router.initial`), the projections random; exact real arithmetic, no FP16 operands.
@@ -102,6 +104,23 @@ theorem flatRMS_energy_le (eps : ℝ) (heps : 0 < eps) (hD : 0 < D) (x : State D
     simp only [flatRMS, Pi.smul_apply, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs, hc]
   rw [hsum, div_mul_eq_mul_div, div_le_iff₀ hden]
   nlinarith [mul_pos hD' heps]
+
+/-- **What the sublayer reads**: `R_D(∑_s σ(read_s) x_s)`, the parameter-free RMS of the sum of the
+streams weighted by the sigmoid read gates of the router. -/
+noncomputable def Router.read (R : Router D) (eps : ℝ) (x : State D) : EucSpace D :=
+  GPTMini.rmsNormEps eps (Residual.weightedSum (fun j => gate ((R.routing eps x).read j)) x)
+
+/-- **The branch of a sublayer with this router receives `Router.read`**: stream `i` of the block is
+the phase-conjugated skip of the streams plus the twice-sigmoid write gate times the depth scale
+times the output RMS of the raw branch applied to the state and to what the router reads. -/
+theorem Router.step_apply (R : Router D) (eps scale : ℝ)
+    (raw : State D → EucSpace D → EucSpace D) (x : State D) (i : Fin 4) :
+    step eps scale ⟨R.routing eps, raw⟩ x i =
+      phaseMix (headPhaseAction D) (finiteSinkhorn (R.routing eps x).skip 20)
+          (R.routing eps x).phase x i +
+        writeGate ((R.routing eps x).write i) •
+          (scale • GPTMini.rmsNormEps eps (raw x (R.read eps x))) :=
+  rfl
 
 /-- The model's initialization with given projections: scales `0.01`, read and write biases `0`,
 skip bias `2 I`, phase coordinates `0` (`mhc.json`, `initialization`). -/

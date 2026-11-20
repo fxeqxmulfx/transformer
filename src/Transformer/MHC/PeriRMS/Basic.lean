@@ -19,7 +19,10 @@ The skip map of each block is conjugated by one phase per stream, `D P D*` (`pha
 DiffGPT's main model (`fe1d528`, `research/main_model/`): `Routing.phase` holds the angles, each
 stream is read as `d/2` complex coordinates by the half-split pairing of `headPhase`, and zero
 angles, the default, are the paper's block (`step_of_phase_zero`). The bounds do not depend on
-the angles, nor on how the streams are paired into complex coordinates.
+the angles, nor on how the streams are paired into complex coordinates. The model pairs the
+coordinates inside each head block of a stream (`phase_score_native/src/layout.rs`): the same
+pairing after a fixed permutation of the coordinates, which the arbitrary real-linear projections
+of `Transformer.Phasor` absorb.
 
 Routing is input-dependent. Raw branch closures may contain the token's
 causal context. This is an exact-real forward bound, not a translation of
@@ -38,8 +41,8 @@ open scoped BigOperators
 /-- Four residual streams; feature width is the current task's model width. -/
 abbrev State (d : ℕ) := Fin 4 → EucSpace d
 
-/-- The phases `e^{iφ}` of a stream of width `d`, read as `d/2` complex coordinates by the half-split
-pairing: `headPhase`, isometries that compose by adding angles. -/
+/-- The phases `e^{iφ}` of a stream of width `d`, read as `d/2` complex coordinates by the
+half-split pairing: `headPhase`, isometries that compose by adding angles. -/
 noncomputable def headPhaseAction (d : ℕ) : PhaseAction (EucSpace d) where
   rot := SequenceModel.headPhase d
   rot_zero := SequenceModel.headPhase_zero d
@@ -144,7 +147,7 @@ example : ‖step (1 / 8388608) (1 / 2) witnessBranch (fun _ => witness) 0‖ �
       (by norm_num) witnessBranch (fun _ => witness) 1
       (by intro i; simp [witness, PiLp.norm_single]) 0
 
-/-- A width-two branch, one complex coordinate per stream, with a different phase on every stream. -/
+/-- A width-two branch, one complex coordinate per stream, a different phase on every stream. -/
 noncomputable def phasedBranch : Sublayer 2 where
   routing x := {
     read := fun i => ‖x i‖ - 1
