@@ -16,6 +16,11 @@ enter the attention as a set.
   its FFN, normalizations and mHC routing act per position;
 * `norm_sub_le_of_noPos`: hence a block with no positional encoding that is within `δ` of any
   target `T` on a set holding a sequence and its permuted copy has `‖T x − T x'‖ ≤ 2δ`.
+
+The proofs are copied under new names, so that this development imports no other block:
+`permute` and `permute_apply` from `Transformer.ReRoPEBlock.Basic` (`4647ed60`), `attend_equiv`
+from `Transformer.ReRoPEBlock.attend_comp_equiv` (`3ce4adcb`), and `norm_sub_le_of_eq` from the
+proof of `Transformer.ComplexFFN.gap_of_invariant` (`b1c70518`), for two inputs with one image.
 -/
 
 @[expose] public section

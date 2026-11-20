@@ -2,6 +2,9 @@ module
 
 public import Transformer.LeRoPEBlock.Defs
 public import Transformer.LeRoPEBlock.Basic
+public import Transformer.LeRoPEBlock.PiHead
+public import Transformer.LeRoPEBlock.PiSwap
+public import Transformer.LeRoPEBlock.NoPE
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -19,5 +22,8 @@ model's own.
 * **No positional encoding.** A block whose scores ignore the distance does not see the order of
   its keys: permuting the keys `j < i` leaves it unchanged (`block_noPos_perm`), so it misses
   every target that sees that order by half of what the permutation changes
-  (`norm_sub_le_of_noPos`).
+  (`norm_sub_le_of_noPos`). LeRoPE's π head, one head of the main model with one channel of
+  frequency `π`, sees the order of the first two keys: swapping them changes its output by at
+  least `(1 − N^{−2κ}) / N` times `‖u_a − u_b‖` (`norm_piHead_sub_swap`), so every block with no
+  positional encoding misses it by at least half of that (`gap_noPos_piHead`).
 -/
