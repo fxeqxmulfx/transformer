@@ -307,6 +307,14 @@ probability bounds outside that coverage are not claimed as proved.
    range `β^{d/2}`, `λ = k^{2/(d−2)}` and the NTK-aware base, and the limits
    `λ → 1` and `k^{2/(d−2)}/k^{2/d} → 1`. The highest-frequency term is
    `n/β^0`, not `n/β`.
+56. Ding et al. — arXiv:2402.13753v1, "LongRoPE: Extending LLM Context Window
+   Beyond 2 Million Tokens". PI, NTK and YaRN as the rescale factors of Eq. (2)
+   (§2.1); Eq. (3)'s threshold `n̂`, the count of the search space and the
+   monotone constraint (§§3.1–3.2); the ratios of the progressive extension and
+   PI's crowding at `512×` (§3.3); the arithmetic of Tables 8 and 10 (§4). §2.1
+   prints NTK's factor as `λ = s^i`, the base `θ·s^{d/2}`, not `s^{2i/(d−2)}`;
+   the thresholds `n̂ = 0` and `n̂ = 1` give the same RoPE; the search space and
+   the attention cost grow polynomially, not exponentially.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report

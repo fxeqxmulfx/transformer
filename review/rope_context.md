@@ -18,6 +18,7 @@ The ICLR proceedings PDF is pinned by its proceedings identifier and hash.
 | Liu et al., *Scaling Laws of RoPE-based Extrapolation* | [arXiv:2310.05209v2](https://arxiv.org/abs/2310.05209v2) | `papers/arXiv-2310.05209v2/paper.pdf` |
 | Peng et al., *YaRN* | [arXiv:2309.00071v3](https://arxiv.org/abs/2309.00071v3) | `papers/arXiv-2309.00071v3/paper.pdf` |
 | Men et al., *Base of RoPE Bounds Context Length* | [arXiv:2405.14591v1](https://arxiv.org/abs/2405.14591v1) | `papers/arXiv-2405.14591v1/paper.pdf` |
+| Ding et al., *LongRoPE* | [arXiv:2402.13753v1](https://arxiv.org/abs/2402.13753v1) | `papers/arXiv-2402.13753v1/main.tex` and the section files it inputs (TeX source) |
 | Shang et al., *LongRoPE2* | [arXiv:2502.20082v1](https://arxiv.org/abs/2502.20082v1) | `papers/arXiv-2502.20082v1/paper.pdf` |
 | Oka et al., *Frequency Bands in RoPE* | [ICLR 2026, PR1PPxvG9Q](https://proceedings.iclr.cc/paper_files/paper/2026/hash/993dbaec0418a6449090f1debbcb8844-Abstract-Conference.html) | `papers/iclr-2026-frequency-bands-rope/paper.pdf` |
 | Wu, Liu and Jadbabaie, *How Data Shapes RoPE Frequency Usage* | [arXiv:2607.07678v1](https://arxiv.org/abs/2607.07678v1) | `papers/arXiv-2607.07678v1/paper.pdf` |
@@ -45,6 +46,13 @@ TeX source SHA-256:
 
 ```text
 2104.09864v5 roformer_arxiv.tex f296bf76e65f308d07af20823375f42eb7806352cd5647d140e55c274c0302cc
+2402.13753v1 main.tex 575b65578b57dd52b0cd55c1beb6a78eadfc194ef915a6e5538e237ded1787d9
+2402.13753v1 abstract.tex a00216e8c116ee1783feaef2e0f2a913d93a8f7dc7bcae5a079e55e9d923fcf4
+2402.13753v1 intro.tex 0b46e3ef04b0b3a8b3c73b12753a1d925223b004f4c22e963dc297f47a70c3d1
+2402.13753v1 analysis.tex 259cbe4513e930a0f9fb3c437ff01cacd4aa6ebb9018182d3693d32011b9ec8e
+2402.13753v1 method.tex b3d461e6b4124e5ad85281907ed1e7aa1c7f3b82c86167da81e5cd3df66be526
+2402.13753v1 eval.tex 05ae587078c26549c30f55a0613b26ad1a70952a7748e499508960eb0a9caa30
+2402.13753v1 appendix.tex 79708aaeb077da0572c36b74f0443d3103ba8c093de984877b1709a7a8c963cc
 ```
 
 Post and code SHA-256:
@@ -91,6 +99,9 @@ witness examples beside them.
 | NTK-aware post, comment thread | `NTKAware/Section2_Comments.lean` | The last pair's frequency divided by `α` exactly; with the base `base·α` the slowest phase over `αT` is `α^{2/d}` times the trained one, beyond it for `α > 1`; the clock readings tell apart exactly the times below the slowest period, `43.2k` and `129.6k` seconds. |
 | β-base post, 进制表示 to 进制转换 | `BetaBase/Section1_Representation.lean` | Below `β^L` the digits determine the number; smaller bases need more digits; a reserved digit is 0 exactly below `β^L`; after division by `k ≥ 1` the higher digits step by 0 or 1; the highest differing digit decides the order in every base; `L` digits in base `b` cover `N` numbers iff `b ≥ ⌈N^{1/L}⌉`, and `⌈∛2000⌉ = 13` is the least base. |
 | β-base post, 位置编码 and 追根溯源, Eqs. (1)–(3) | `BetaBase/Section5_Encoding.lean` | Eq. (1) as a floor; the digit is periodic in the quotient; RoPE's angle is `n/β^i`; `d/2` digits reach `k` times as far iff `β' ≥ β k^{2/d}`, and the base `base·k` reaches exactly `k` times; Eq. (3) iff `λ = k^{2/(d−2)}`, whose base is the NTK-aware `base·k^{d/(d−2)}`; `λ → 1` and `k^{2/(d−2)}/k^{2/d} → 1`. |
+| LongRoPE §2.1, Eqs. (1)–(2) | `LongRoPE/Section2_Unified.lean` | `β^i = 1/θ_i`, so Eq. (2) is Eq. (1) with `θ_i/λ_i`; PI as the position `n/s`; the NTK-aware base as `λ_i = s^{2i/(d−2)}`; the printed `λ = s^i` as the base `θ·s^{d/2}`, above `s^{2i/(d−2)}` for `d > 4` and `i ≥ 1`, where the NTK-aware factor of the last pair is `s`; YaRN's frequencies as `λ_i = 1/((1−γ_i)/s + γ_i)`, 1 where `γ_i = 1`, `s` where `γ_i = 0`, in `[1, s]` and growing with `i`. |
+| LongRoPE §§3.1–3.2, Eq. (3) and Table 4 | `LongRoPE/Section3_Search.lean` | Eq. (3) as RoPE below `n̂` and Eq. (2) from it on; `n̂ = 0` as PI and NTK; the factor idle at exactly the `n̂` positions `0, …, n̂−1`; the thresholds 0 and 1 give the same angles; `400^{64}·14` between `4.76·10^{167}` and `4.77·10^{167}`, and 401 grid values; the count `o(c^s)` for every `c > 1`; the PI, NTK and YaRN factors admissible under the monotone constraint; the printed `s^i` inadmissible for `s ≥ 2`; `4^{1/63}` strictly between the grid values 1.02 and 1.03. |
+| LongRoPE §1, §3.3, §§4.2–4.3 and Appendix A | `LongRoPE/Section3_Progressive.lean`, `LongRoPE/Section4_Experiments.lean` | More than 99.5% new positions beyond `10^6`; the ratios `32×`, `64×`, `8×`, `16×` and `512× = 64·8`; `2048k > 2·10^6`; PI at `512×` keeps the original window's angles below `8θ_i`; causal attention's `n(n+1)/2` scores are `o(c^n)`; TruthfulQA's `+0.5` points and Table 10's averages 52.9 and 50.8 as means of Table 8. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
@@ -239,6 +250,28 @@ retrieval, perplexity, and positional-resolution metrics.
    under that `|D| = 64`, 88.6 may be a typo for 86.6. Table 9 gives Together's
    32k PI model the scale 4; Table 4's `4k × 8` and Eq. (20) give 8. The
    perplexities, passkey accuracies, benchmark scores and training times are
+   measurements and are not formalized.
+12. **LongRoPE: §2.1's NTK factor, Eq. (3)'s thresholds and the growth
+   claims.** §2.1 gives NTK's rescale factor as `λ = s^i`. The NTK-aware base
+   `θ·s^{d/(d−2)}` gives `λ_i = s^{2i/(d−2)}`, from 1 to `s`; `s^i` is the
+   base `θ·s^{d/2}`, which divides the last pair's frequency by `s^{d/2−1}`
+   and leaves Table 4's range `[1, 1.25s]` from `i = 2` on for `s ≥ 2`, so
+   it cannot be the NTK individual of the initial population. §2.1 says
+   YaRN's middle band "employs the NTK"; YaRN blends the PI and the native
+   frequencies there. §3.1's "initial `n̂-1` token positions" names the last
+   of the `n̂` positions `0, …, n̂−1` that keep RoPE, which §2.2 and §3.2
+   count as `n̂`. Position 0 has the angle 0 under every factor, so Table 4's
+   thresholds 0 and 1 give the same RoPE. Eq. (3)'s argmin is written over
+   the documents `x ∈ X`; what the search minimizes over is the rescale
+   factors and `n̂`. §3.2's `400^{128/2}×14` is `4.76…·10^{167}`, printed
+   `4×10^{167}`, and the grid `(1.0, 5.0, 0.01)` has 401 values, which give
+   more than `5.5·10^{167}` choices. The count is a polynomial of degree
+   `d/2` in `s` and `o(c^s)` for every `c > 1`, not exponential in the
+   extension ratio as §1 and §3.2 say; the `n(n+1)/2` scores of causal
+   attention are likewise `o(c^n)`, against Appendix A.1's "GPU memory and
+   computation time increase exponentially with the sequence length". The
+   NTK-aware factors are off the 0.01 grid: `4^{1/63}` lies between 1.02 and
+   1.03. The perplexities, passkey accuracies, benchmark scores and costs are
    measurements and are not formalized.
 
 ## Arbitrary coefficients and learned weights
