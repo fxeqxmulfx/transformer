@@ -759,3 +759,34 @@ fn maximum_suite_shapes_fit_and_have_finite_gradients() -> Result<()> {
     }
     Ok(())
 }
+
+/// The experiment's own kernels assemble for the laptop's GPU, sm_86, without
+/// using it: the CUDA toolkit's `ptxas` (`$CUDA_HOME/bin`, by default
+/// `/usr/local/cuda/bin`) checks every instruction and operand offline.
+#[test]
+fn own_kernels_assemble_for_the_laptop_gpu() -> Result<()> {
+    let home = std::env::var("CUDA_HOME").unwrap_or_else(|_| "/usr/local/cuda".into());
+    let ptxas = std::path::Path::new(&home).join("bin/ptxas");
+    let dir = std::env::temp_dir().join(format!("learned-window-ptxas-{}", std::process::id()));
+    std::fs::create_dir_all(&dir)?;
+    for (name, ptx) in [
+        ("rerope_forward", crate::rerope_forward::kernels::PTX),
+        ("rerope_backward", crate::rerope_backward::kernels::PTX),
+        ("window_rotary", crate::window_rotary::kernels::PTX),
+    ] {
+        let source = dir.join(format!("{name}.ptx"));
+        std::fs::write(&source, ptx)?;
+        let out = std::process::Command::new(&ptxas)
+            .arg("-arch=sm_86")
+            .arg("-o")
+            .arg(dir.join(format!("{name}.cubin")))
+            .arg(&source)
+            .output()
+            .map_err(|e| format!("{}: {e}", ptxas.display()))?;
+        if !out.status.success() {
+            return Err(format!("{name}: {}", String::from_utf8_lossy(&out.stderr)).into());
+        }
+    }
+    std::fs::remove_dir_all(&dir)?;
+    Ok(())
+}

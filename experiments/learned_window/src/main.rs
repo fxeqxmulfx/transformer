@@ -93,6 +93,8 @@ mod tensor;
 #[path = "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/tiled_transpose.rs"]
 mod tiled_transpose;
 mod validation;
+#[allow(dead_code)]
+mod window_rotary;
 use engine::{Config, Result};
 use sha2::{Digest, Sha256};
 fn hash(bytes: &[u8]) -> String {

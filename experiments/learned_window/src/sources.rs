@@ -49,6 +49,10 @@ pub const FILES: &[(&str, &str)] = &[
         include_str!("rerope_forward.rs"),
     ),
     (
+        "experiments/learned_window/src/window_rotary.rs",
+        include_str!("window_rotary.rs"),
+    ),
+    (
         "experiments/learned_window/src/runner.rs",
         include_str!("runner.rs"),
     ),
