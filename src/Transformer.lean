@@ -342,6 +342,16 @@ probability bounds outside that coverage are not claimed as proved.
    Experiments and Summary. At `w = N/2` no finite `k` meets the Review's rule,
    the runs' inference positions break it, and "below ReRoPE/Leaky ReRoPE"
    holds like for like only.
+58. Su — kexue.fm/archives/9731 (2023), "The road to upgrading the
+   Transformer, 14: when HWFA meets ReRoPE", with HWFA's definition from
+   kexue.fm/archives/9603. RoPE window heads are local and shift-invariant, and
+   `L` stacked window layers see `(w̃ − 1)L + 1` tokens; HWFA's constraint
+   `(w̃ − 1)(L − 1) + 1 = αN`; ReRoPE in the full layers keeps every inference
+   position below `N`; the cost in scores against ReRoPE and against full RoPE
+   layers; the comparisons of the table. At `L = 24` and `N = 512` the
+   constraint allows only `w̃ ≤ 23`; the author's "even faster" needs
+   `11w̃ < 5(n + 1)`; the bold `49.50` is the largest of the runs, not of the
+   table.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
