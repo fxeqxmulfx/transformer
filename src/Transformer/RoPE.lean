@@ -11,7 +11,7 @@ public import Transformer.RoPE.YaRN.Section3_Dynamic
 public import Transformer.RoPE.YaRN.Section4_Experiments
 public import Transformer.RoPE.LeRoPE.Section3_LearnedFrequencies
 public import Transformer.RoPE.LongRoPE.Section4_Experiments
-public import Transformer.RoPE.LongRoPE2.Section2_Prior
+public import Transformer.RoPE.LongRoPE2.Section3_Mixed
 public import Transformer.RoPE.BaseBounds.Section2_OOD
 public import Transformer.RoPE.BaseBounds.Section4_ExpectedScores
 public import Transformer.RoPE.BaseBounds.Section4_LongTermDecay

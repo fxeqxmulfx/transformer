@@ -105,6 +105,10 @@ witness examples beside them.
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
 | LongRoPE2 §§2.1–2.2, Eqs. (5)–(7) and Fig. 2(a) | `LongRoPE2/Section2_Critical.lean` | Eq. (7) counts real coordinates, twice the pair index of the first incomplete period; for Phi3-mini it gives 62, the periods below 2048 are those of the pairs `i < 31`, `51861 < T_47 < 51862` and `24 < T_7 < 25`, with 85 full periods of `T_7` in 2048 tokens; when `L·θ ≤ π` the cosines beyond `L_train` lie below every cosine of the window, as for the 40th dimension at 4096. |
 | LongRoPE2 §§2.3–2.4 | `LongRoPE2/Section2_Prior.lean` | Every base at least Liu's `θ^{log_{L_train/2π}(L/2π)}` meets Eq. (10) at every incomplete period; the NTK-aware factor `s^{2i/(d−2)}` misses it below the last pair; YaRN's factor is `s` exactly at the incomplete periods, `64` from `i = 31` on for Phi3-mini from 2k to 128k, and below the linear blend of 1 and `s` in the middle band. |
+| LongRoPE2 §3.1, Hypothesis | `LongRoPE2/Section3_Hypothesis.lean` | A trained range of `ρ·L_train`, `ρ < 1`, asks for `λ ≥ L/(ρ·L_train)`, above Eq. (10); empirical periods at least the theoretical ones reach `L_train` from a pair at most `d_tcd`. |
+| LongRoPE2 §3.2, Algorithm 1 and Fig. 4 | `LongRoPE2/Section3_Candidates.lean` | Line 2's `d10_tcd` is a pair index: more than ten periods fit into `L_train` exactly below it; Phi3-mini has `d10_tcd = 19` and `d_tcd = 31`, 13 candidates containing 25; LLaMA3-8B, with Men et al.'s base `500000`, window `8192` and `d = 128`, has 24 and 35, containing 30. |
+| LongRoPE2 §3.2, Algorithms 1–2 | `LongRoPE2/Section3_Search.lean` | The base derived from `d_rcd` gives the lower group `s^{i/d_rcd}`; with a non-decreasing upper group the vector is non-decreasing, and with `d_rcd ≤ d_tcd` and upper factors at least `L/L_train` it meets Eq. (10) at every incomplete period; Algorithm 1's printed anchor at `d10_tcd` gives the pair `d10_tcd + 1` a factor above that of `d_rcd`. |
+| LongRoPE2 §3.3, Fig. 5, Fig. 10 and Appendix B | `LongRoPE2/Section3_Mixed.lean` | Masked short documents keep every phase below `L_train·θ`; long segments exceed it under the original RoPE and stay below it with `λ ≥ L/L_train`; the switch happens once and moves cached keys; Fig. 10's `base^{−j}` lies below `θ_j`; causal attention scores `n(n+1)/2` pairs, `o(c^n)`. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
 | Wu/Liu/Jadbabaie §4, Theorem 2 and Corollary 1 | `FrequencyMatching/Section4_Dilation.lean` | Exact pushforward-measure utility invariance and maximizer transport; a counterexample when frequencies are scaled without dilating the task; no positive frequency covers unbounded widths. |
@@ -275,7 +279,8 @@ retrieval, perplexity, and positional-resolution metrics.
    NTK-aware factors are off the 0.01 grid: `4^{1/63}` lies between 1.02 and
    1.03. The perplexities, passkey accuracies, benchmark scores and costs are
    measurements and are not formalized.
-13. **LongRoPE2: Eq. (7)'s index and the prior methods.** Eq. (7) prints
+13. **LongRoPE2: Eq. (7)'s index, the prior methods, the search and the
+   appendices.** Eq. (7) prints
    `d_tcd = 2⌈(d/2)·log_θbase(L_train/2π)⌉`, which counts real coordinates:
    62 for Phi3-mini, the "31st cosine dimension". The split "`T_i < L_train`,
    `i < d_tcd`" of §2.2 and §2.4's "`d_tcd = 31`" use the pair index, half
@@ -284,8 +289,30 @@ retrieval, perplexity, and positional-resolution metrics.
    times" does not count full periods. §2.3's YaRN uses "a linearly
    increasing scale factor" in the middle band; its ramp is linear in the
    blend of the frequencies, and the factor `1/((1−γ)/s + γ)` lies strictly
-   below the linear blend of 1 and `s`. The perplexities and benchmark
-   scores are measurements and are not formalized.
+   below the linear blend of 1 and `s`. §3.1's hypothesis is empirical; its
+   two consequences hold: a trained range `ρ·L_train`, `ρ < 1`, asks for
+   `λ ≥ L/(ρ·L_train)`, and empirical periods at least the theoretical ones
+   reach `L_train` from a pair at most `d_tcd`, strictly below it only if the
+   pair `d_tcd − 1` reaches `L_train` as well. Algorithm 1's line 2 has no
+   factor 2, so `d10_tcd` is a pair index, and line 3's loop "from `d10_tcd`
+   to `d_tcd`" with Eq. (7)'s 62 passes Phi3-mini's last pair 47; with the
+   pair index the candidates are `19, …, 31`, which contain Fig. 4's 25. For
+   LLaMA3-8B, Men et al.'s base 500000 and window 8192 (arXiv:2405.14591v1,
+   Table 1) with `d = 128`, which neither paper prints, give `d_tcd = 35` and
+   `d10_tcd = 24`. Algorithm 1's line 6 anchors the lower group's NTK at
+   `θ_{d10_tcd}`, so for `d_rcd ≥ d10_tcd + 2` the pair `d10_tcd + 1` gets
+   `s^{(d10_tcd+1)/d10_tcd} > s`, the factor of `d_rcd`, against §3.2's
+   constraint `λ_i ≤ λ_{i+1}`; anchored at `d_rcd`, as Algorithm 2's line 7
+   and the text have it, the vector is non-decreasing. Line 1's
+   `P0 = [0] ∗ 2/d` and Algorithm 2's line 8, `λ[0 : i]` with an undefined
+   `i`, are typos for `d/2` and `d_rcd`. Fig. 10's
+   `inv_freq = 1.0 / (base**[0, 1, 2, 3, ..., rope_dim])` gives `base^{−j}`,
+   below Eq. (5)'s `θ_j = base^{−2j/d}` for every `j ≥ 1` when `d > 2`.
+   Appendix B's "GPU memory and computation time increase exponentially with
+   sequence length" contradicts Appendix A's "grow quadratically": causal
+   attention scores `n(n+1)/2` pairs, which is `o(c^n)` for every `c > 1`.
+   The perplexities and benchmark scores are measurements and are not
+   formalized.
 
 ## Arbitrary coefficients and learned weights
 

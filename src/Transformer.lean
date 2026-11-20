@@ -227,7 +227,13 @@ Formalizations of papers on the mathematics and architecture of Transformers:
    (§§2.1–2.2); Liu's critical NTK base, the NTK-aware factor and YaRN against
    Eq. (10) (§§2.3–2.4). Eq. (7) counts real coordinates, twice the pair index
    that §2.4 calls `d_tcd`; YaRN's middle-band factor lies below the linear
-   blend of 1 and `s`.
+   blend of 1 and `s`. The consequences of §3.1's hypothesis; Algorithm 1's
+   candidates for `d_rcd`, 19–31 for Phi3-mini and 24–35 for LLaMA3-8B; the
+   NTK lower group, the monotone factor vector and Eq. (10) (§3.2); mixed
+   windows, the one-time switch and the attention cost (§3.3, Fig. 10,
+   Appendix B). Algorithm 1's line 6 breaks the monotone constraint; Fig. 10's
+   inverse frequencies are not Eq. (5)'s; attention cost is quadratic, not
+   exponential.
 
 45. Oka et al. — "Frequency Bands in RoPE", ICLR 2026, §5.
    The variance formula, the band-coordinate identity, and a counterexample
