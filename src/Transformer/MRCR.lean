@@ -20,6 +20,8 @@ public import Transformer.MRCR.PhraseKeyRotary
 public import Transformer.MRCR.PhraseKeySandwich
 public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
+public import Transformer.MRCR.ReRopeFading
+public import Transformer.MRCR.ReRopeHeads
 public import Transformer.MRCR.Returns
 public import Transformer.MRCR.RotaryCopy
 public import Transformer.MRCR.RotaryPartialHead
@@ -80,7 +82,12 @@ the distance at a window, as ReRoPE does, makes the score constant from the wind
 five layers answer the query at every window `W ≥ 2`, under SSMax too
 (`Transformer.MRCR.PhraseKeyReRope`). That logit is the dot product plus the merged score of
 Su's ReRoPE, kexue.fm/archives/9708, for a constant pair in one plane
-(`Transformer.MRCR.PhraseKeyReRopeSu`). Without a margin, at precision `0`, a negative logit
+(`Transformer.MRCR.PhraseKeyReRopeSu`). With the real softmax a single ReRoPE head reads the
+token at a distance `k < W` at every length under SSMax once `s A (1 − cos θ)` exceeds `1`, and
+under Su's scale `max(1, log_T n)`, which is SSMax with `s = 1 / log T` from the training length
+on, once `A (1 − cos θ)` exceeds `log T`; under the plain softmax, and under SSMax below its
+threshold, it fades (`Transformer.MRCR.ReRopeHeads`, `Transformer.MRCR.ReRopeFading`). Without a
+margin, at precision `0`, a negative logit
 already drops a key, yet RoPE with every plane rotated still gives keys arbitrarily far a weight
 (`Transformer.MRCR.RotaryPrevHead`); with a plane left unrotated, as in partial RoPE or when
 LeRoPE learns the frequency `2π`, a head attends to the token before alone, without a margin
@@ -90,4 +97,6 @@ a margin for the five layers, and RoPE or Sandwich by other means, are left open
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so
 a RoPE head that scores by the distance only loses every position at long range, at every scale.
+A ReRoPE head loses every position beyond its window, at every length and every scale: the keys
+there tie (`Transformer.MRCR.ReRopeFading`).
 -/

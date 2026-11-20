@@ -26,11 +26,11 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax), `RotaryPrevHead` (with every plane rotated, keys arbitrarily far keep a weight at least `1` at precision `0`, so a head of the first layer does not attend to the token before alone), `RotaryPartialHead` (with a plane left unrotated, as in partial RoPE or LeRoPE at the frequency `2π`, a head attends to the token before alone, without a margin); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax and Su's `log n` scale), `ReRopeHeads`, `ReRopeFading` (with the real softmax a ReRoPE head reads inside the window under SSMax with `s g > 1` and under Su's scale, and fades under the plain softmax), `RotaryPrevHead` (with every plane rotated, keys arbitrarily far keep a weight at least `1` at precision `0`, so a head of the first layer does not attend to the token before alone), `RotaryPartialHead` (with a plane left unrotated, as in partial RoPE or LeRoPE at the frequency `2π`, a head attends to the token before alone, without a margin); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
 | Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
-| Copy | return the whole answer, token by token | `Transformer.MRCR.Returns`, `RotaryCopy` (copy by position; copy by content open) |
+| Copy | return the whole answer, token by token | `Transformer.MRCR.Returns`, `RotaryCopy`, `ReRopeFading` (copy by position: RoPE loses every position at long range, ReRoPE every position beyond the window; copy by content open) |
 | Training | whether a trained model has the gaps | not attempted (the user, 2026-11-19) |
 
 ## Near misses (proved)
@@ -237,6 +237,23 @@ for `d = 128` has a frequency near `1.2 · 10^{−4}`, enough for windows up to 
 (a hand computation, not in Lean). The coefficients are parameters of the logit, like ALiBi's
 slope. That a rounded query and key carry the constant pair is not modelled.
 
+With the real softmax the plain softmax and SSMax part ways (`Transformer.MRCR.ReRopeHeads`,
+`Transformer.MRCR.ReRopeFading`). A rounded transformer drops every key whose logit is at most
+`−1`, at every length; with the real softmax the far keys add up. One frequency with the
+coefficients `A cos(θ k)`, `A sin(θ k)` scores the distance `t` by `A cos(θ (t − k))`
+(`ropeScore_peak`), and for `k < W` and `θ W ≤ π` every other clamped distance trails by
+`g = A (1 − cos θ)` (`reropePeak_gap`). At the scale `s log n` the head returns the value at the
+distance `k` within `2 C i (i + 1)^{−s g}` (`abs_logScaleAttention_rerope_sub_le`), so for
+`s g > 1` at every length (`exists_forall_rerope_recall`). Su's scale is SSMax with
+`s = 1 / log T` from the training length on (`softmaxAttention_logScale_eq`), so it reads at
+every length when `g > log T` (`exists_forall_logScale_rerope_recall`). The plain softmax fades
+at every frequency, coefficient and window: a RoPE score is bounded by `∑ (|a_m| + |b_m|)`
+(`abs_ropeScore_le`), so the dictionary that marks one key is answered with an error of at least
+`2 i / (e^{2B} + i)` (`two_mul_le_one_sub_softmax_rerope`), which tends to `2`
+(`exists_lt_softmax_rerope_error`). SSMax with `2 s B < 1` fades too
+(`exists_lt_logScale_rerope_error`). These are single heads: the five layers with the real
+softmax are not built.
+
 Without a margin RoPE still fails when every plane rotates (`Transformer.MRCR.RotaryPrevHead`).
 At precision `s = 0` a key whose logit is negative gets the weight `round(exp z) = 0`, so a head
 need not keep far keys at `−1`, only below `0`. But a RoPE score whose frequencies all lie outside
@@ -272,7 +289,7 @@ Not proved:
   layers above need the logit at the position before to vanish at every length, which a fixed
   `b` does not give when only the dot product grows with `log n`; this variant is not treated.
 
-## Copy by position (proved, RoPE)
+## Copy by position (proved, RoPE and ReRoPE)
 
 MRCR scores the reproduction of an answer of up to 512 tokens written after a random string
 (arXiv:2409.12640v2, `eval_framework.tex`, line 52). Written token by token, the copy can follow
@@ -293,6 +310,14 @@ on, the indicator dictionary of every position is answered with an error above e
 (`exists_lt_logScaleAttention_ropeScore_error`). This covers the previous-token head at the
 distance `1`. The proof needs `4 (N + 1)^K` tokens with `N + 1 > 2π s ∑_i (|a_i| + |b_i|)`,
 far beyond 1M for `K = 64`, so it says what fails at every length, not at the lengths of MRCR-V2.
+
+ReRoPE fails otherwise (`Transformer.MRCR.ReRopeFading`). Its score does not depend on the
+distance from the window on, so the keys at distances `≥ W` tie, and tied keys share the weight
+(`two_mul_le_one_sub_softmaxAttention_of_tie`). A positional head, whatever factor multiplies
+its logit (`1`, `s log n` or Su's `max(1, log_T n)`), answers the dictionary that marks one of
+them with an error of at least `2 (i − W) / (i − W + 1)`
+(`two_mul_le_one_sub_softmax_rerope_far`). That bound holds at every length `i ≥ W`, not only
+from some length on. Inside the window SSMax copies by position (`exists_forall_rerope_recall`).
 
 Open: copying by content. An induction head finds the source by the token before it
 (`Transformer.Grokking.FlatSpectrum.Recall.Induction`); in natural text that token recurs, the
