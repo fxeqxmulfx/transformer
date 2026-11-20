@@ -14,6 +14,7 @@ public import Transformer.MRCR.PhraseKeyLogits
 public import Transformer.MRCR.PhraseKeyPrev
 public import Transformer.MRCR.PhraseKeyPrevCorrect
 public import Transformer.MRCR.PhraseKeyReRope
+public import Transformer.MRCR.PhraseKeyReRopeSu
 public import Transformer.MRCR.PhraseKeyRope
 public import Transformer.MRCR.PhraseKeyRotary
 public import Transformer.MRCR.PhraseKeySandwich
@@ -77,7 +78,9 @@ of the token before, so the construction has no version with RoPE's grid, YaRN's
 and temperature, or LeRoPE's learned frequencies (`Transformer.MRCR.PhraseKeyRotary`). Clamping
 the distance at a window, as ReRoPE does, makes the score constant from the window on, and then
 five layers answer the query at every window `W ≥ 2`, under SSMax too
-(`Transformer.MRCR.PhraseKeyReRope`). Without a margin, at precision `0`, a negative logit
+(`Transformer.MRCR.PhraseKeyReRope`). That logit is the dot product plus the merged score of
+Su's ReRoPE, kexue.fm/archives/9708, for a constant pair in one plane
+(`Transformer.MRCR.PhraseKeyReRopeSu`). Without a margin, at precision `0`, a negative logit
 already drops a key, yet RoPE with every plane rotated still gives keys arbitrarily far a weight
 (`Transformer.MRCR.RotaryPrevHead`); with a plane left unrotated, as in partial RoPE or when
 LeRoPE learns the frequency `2π`, a head attends to the token before alone, without a margin

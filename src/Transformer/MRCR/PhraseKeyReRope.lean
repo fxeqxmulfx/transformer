@@ -5,12 +5,13 @@ public import Transformer.MRCR.PhraseKeyRotary
 /-!
 # RoPE with the distance clamped at a window answers spelled asks
 
-In no paper. ReRoPE (Su, 2023), which arXiv:2309.00071v3, §2.3, cites without its formula,
-extends RoPE by modifying the attention: it clamps the relative position at a window.
-`reropeLogit` is our reading of it: the dot product divided by `c` plus a RoPE score of the
-distance `min (i − j) W`. From the window on the logit no longer depends on the distance
-(`reropeLogit_of_le`), so it converges, which no RoPE score does unless it is constant
-(`Transformer.MRCR.ropeScore_eq_of_tendsto`).
+The theorems are in no paper. ReRoPE (Su, kexue.fm/archives/9708, 2023, formalized in
+`Transformer.RoPE.ReRoPE`; arXiv:2309.00071v3, §2.3, cites it without its formula) clamps
+RoPE's relative position at a window. `reropeLogit` is the dot product divided by `c` plus a
+RoPE score of the distance `min (i − j) W`, the position of Su's matrix (rerope);
+`Transformer.MRCR.PhraseKeyReRopeSu` derives it from Su's merged score. From the window on the
+logit no longer depends on the distance (`reropeLogit_of_le`), so it converges, which no RoPE
+score does unless it is constant (`Transformer.MRCR.ropeScore_eq_of_tendsto`).
 
 That is enough to read the token before. Take one frequency `θ` with `0 < θ` and
 `θ (W + 2) ≤ π`, and the sine coefficient `−β / sin θ` for `β = b / c ≥ 3`. The score at the
@@ -24,8 +25,9 @@ most `−2β cos θ ≤ −4β/3`, since `sin(θ t) ≥ sin(2θ)` there (`sin_tw
 The frequency is one of the head's own, the others get the coefficient `0`. A grid of
 frequencies serves a window up to `π / θ_min − 2`; for RoPE's grid `10000^{−2m/d}` with `d = 128`
 the slowest frequency is `10000^{−126/128} ≈ 1.2 · 10^{−4}` (a hand computation), about
-`2.7 · 10^4` tokens. As for ALiBi's slope, the coefficients are parameters of the logit; that
-the constant pairs of a rounded query and key carry them is not modelled.
+`2.7 · 10^4` tokens. As for ALiBi's slope, the coefficients are parameters of the logit. A
+constant pair in one plane gives them (`Transformer.MRCR.reropeLogit_eq_merge`), but that a
+rounded query and key carry that pair is not modelled.
 -/
 
 @[expose] public section
@@ -36,8 +38,8 @@ open Transformer.CRASP Transformer.CRASP.Grams
 
 variable {K F N V R : ℕ}
 
-/-- **ReRoPE's logit**, as read here: the dot product `x` divided by `c` plus the RoPE score of the
-distance `i − j` clamped at the window `W`. -/
+/-- **ReRoPE's logit**: the dot product `x` divided by `c` plus the RoPE score of the distance
+`i − j` clamped at the window `W`, Su's matrix (rerope) (`reropeLogit_eq_rectifiedPosition`). -/
 noncomputable def reropeLogit (c : ℝ) (θ a b : Fin K → ℝ) (W i j : ℕ) (x : ℝ) : ℝ :=
   x / c + ropeScore θ a b (min (i - j) W : ℕ)
 
