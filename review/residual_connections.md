@@ -540,3 +540,46 @@ premises, not consequences of flat or rank-one spectra. Full-model residual
 ablation and paired deep numerical retraining remain tasks #145 and #148;
 polynomial-resource source constructions and learning guarantees remain #139
 and #133/#134.
+
+## The ordinary residual inside mHC (added 2026-11-21)
+
+R0 of the open tasks on depth and visibility for functions of `n` variables. The main model's
+mHC (`Transformer.Phasor`) contains the ordinary residual of its former control (label `main`),
+of diff_gpt and of Rotate90 as an exact sub-model.
+
+A router of the main model computes its 24 logits as `scale · projection + bias` of the
+normalized four-stream state. Give every router zero scales, zero phase coordinates, read biases
+`−ln 3` and write biases `0`, and leave its projections and skip biases arbitrary. Then every
+router is constant. Each read gate is `σ(−ln 3) = 1/4`, so the four sum to exactly one, and each
+write gate is `2σ(0) = 1`. The phases are zero, so the skip is the finite Sinkhorn map `P` itself,
+and its last step normalizes rows, so `P(h, h, h, h) = (h, h, h, h)`. Four equal streams therefore
+stay equal through every block, each becoming `h + α R_D(raw(R_D h))`.
+
+So the forward pass equals, exactly, the one-stream model with the same embedding, heads and
+feed-forward branches:
+
+```
+h⁰_i = R_D(E t_i),    h ← h + α R_D(raw(R_D h)) per sublayer,    logits ⟨E v, R_D(h)⟩.
+```
+
+The attention of the one-stream model reads `R_D(h_j)` at every position where the main model
+reads `Router.read`. There is no `ε` caveat: the read gates sum to exactly one, and the statement
+holds for every `ε` and every depth scale `α`.
+
+Consequences:
+
+- a construction for the ordinary residual is a construction for mHC, at the same widths, heads,
+  depth and vocabulary;
+- a lower bound for mHC holds for the ordinary residual.
+
+The converse fails in general, as far as is known: mHC may do more, through its extra streams and
+through scalar functions of the whole state in its router gates and skip map. Those are open tasks
+T3d and T4. For experiments, the main model with every router frozen at these values is an arm that
+differs from the main model only in the residual.
+
+| Claim | Lean (`src/Transformer/Phasor/`, namespace `Transformer.Phasor`) | Differences |
+| --- | --- | --- |
+| The gates | `gate_neg_log_three`, `writeGate_zero`, `Router.IsPlain`, `Router.plain`, `Router.plain_isPlain`, `Router.IsPlain.routing_read`, `Router.IsPlain.routing_write`, `Router.IsPlain.read_const` | `PlainRouter.lean`. `Router.IsPlain` asks for zero scales, zero phase coordinates and the two biases; projections and skip biases are free. `Router.plain` is one such router. |
+| The skip keeps equal streams | `mix_finiteSinkhorn_const`, `step_const_of_isPlain` | Twenty exact Sinkhorn cycles, as in `Transformer.MHC.PeriRMS.step`. |
+| The forward pass | `OneLayer`, `OneModel`, `Attention.oneLogit`, `Attention.oneHeads`, `Attention.heads_const`, `oneStep`, `OneLayer.apply`, `OneModel.states`, `OneModel.logits`, `OneModel.withRouters`, `OneModel.states_withRouters`, `OneModel.logits_withRouters` | `OneStream.lean`. The main model's routers are `attnR l` and `ffnR l`, any plain routers. |
+| Sub-model | `range_oneLogits_subset` | The logit maps of one-stream models form a subset of those of main models with the same `D`, `d`, `H`, `F` and `V`. The two consequences are this inclusion read in each direction, by hand. |
