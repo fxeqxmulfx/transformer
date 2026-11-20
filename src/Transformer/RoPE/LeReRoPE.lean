@@ -4,6 +4,7 @@ public import Transformer.RoPE.LeReRoPE.Adjoint
 public import Transformer.RoPE.LeReRoPE.Clamp
 public import Transformer.RoPE.LeReRoPE.Covariance
 public import Transformer.RoPE.LeReRoPE.Fold
+public import Transformer.RoPE.LeReRoPE.Window
 
 /-!
 # LeReRoPE: LeRoPE with ReRoPE
@@ -29,4 +30,11 @@ over positions; under ReRoPE the near queries and keys enter at `s` and `t`, the
 `−Σ_s Cov_{t∼p_s}(v_tᵀ g_s, S_st)`, to the positions `ψ`. Under the clamp every pair at least `w`
 apart has the sine term of the offset `w`: a pair's weight in the gradient stops growing at the
 window, and the gradient's bound carries `w` where LeRoPE's carries the distance `s − t`.
+
+`Transformer.RoPE.LeReRoPE.Window` lets a head learn its window `w` and slope `s`: the distance
+`d` sits at `min(d, w) + s·max(d − w, 0)`, ReRoPE's position at `s = 0`, Leaky ReRoPE's at
+`s = 1/k` and RoPE's at `s = 1`. Two far distances are `s(d − d')` apart whatever the window:
+the window moves every far pair alike, `∂p/∂w = 1 − s`, and only the slope's derivative, the
+excess `d − w`, tells far distances apart. One pass computes the map, as it computes Leaky
+ReRoPE's.
 -/
