@@ -332,6 +332,16 @@ probability bounds outside that coverage are not claimed as proved.
    prints NTK's factor as `λ = s^i`, the base `θ·s^{d/2}`, not `s^{2i/(d−2)}`;
    the thresholds `n̂ = 0` and `n̂ = 1` give the same RoPE; the search space and
    the attention cost grow polynomially, not exponentially.
+57. Su — kexue.fm/archives/9728 (2023), "The road to upgrading the
+   Transformer, 13: Leaky ReRoPE used in reverse". Leaky ReRoPE's step `1/k`,
+   its monotone positions and the Review's rule that they stay within half the
+   training length; the composition of the leaky maps, by which RoPE at
+   inference is Leaky ReRoPE with `k⁻¹` in training distances; why training is
+   no single RoPE pass and its two merged matrices; the rule `k = 1/(2s)`,
+   `w = N/4` and the comparisons of the table: the sections Review, Inversion,
+   Experiments and Summary. At `w = N/2` no finite `k` meets the Review's rule,
+   the runs' inference positions break it, and "below ReRoPE/Leaky ReRoPE"
+   holds like for like only.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report

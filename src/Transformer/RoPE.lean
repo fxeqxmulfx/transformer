@@ -24,6 +24,7 @@ public import Transformer.RoPE.ReRoPE.Section3_RankLeaky
 public import Transformer.RoPE.ReRoPE.Section3_SinglePass
 public import Transformer.RoPE.ReRoPE.Section4_Experiments
 public import Transformer.RoPE.ReRoPE2D
+public import Transformer.RoPE.InvLeakyReRoPE.Section3_Experiments
 public import Transformer.RoPE.NTKAware.Section2_Comments
 public import Transformer.RoPE.BetaBase.Section5_Encoding
 public import Transformer.RoPE.FrequencyBands.Section5_Variance
