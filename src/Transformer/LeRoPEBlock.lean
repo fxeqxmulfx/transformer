@@ -7,6 +7,7 @@ public import Transformer.LeRoPEBlock.PiSwap
 public import Transformer.LeRoPEBlock.NoPE
 public import Transformer.LeRoPEBlock.Limit
 public import Transformer.LeRoPEBlock.TwoPi
+public import Transformer.LeRoPEBlock.Bound
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -34,4 +35,8 @@ model's own.
   on every input (`exists_pos_block_eq`, `exists_lerope_eq_noPos`), the positive frequencies
   being LeRoPE's own (`exists_alpha_block_eq`). Small frequencies give it up to `ε` as well
   (`exists_lerope_close`).
+* **Logits.** The score of every head of the main model, SSMax's gain `ln(i + 1)/d` times
+  `Re Z + β (Im Z)² / d`, is at most `(5/4) ln (i + 1)` for every distance, every frequency and
+  every `|β| ≤ 1`, once `Q x` and `K y` have squared length at most `d`, as after the per-head
+  Q/K RMS (`leropeLogit_abs_le`, `plainLogit_abs_le`).
 -/
