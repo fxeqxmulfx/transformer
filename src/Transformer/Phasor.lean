@@ -2,6 +2,7 @@ module
 
 public import Transformer.Phasor.Router
 public import Transformer.Phasor.Attention
+public import Transformer.Phasor.FFN
 
 /-!
 # The main model of DiffGPT as a forward pass
@@ -19,6 +20,7 @@ as concrete maps and plugs them into it, in exact real arithmetic.
 * `Attention`: the LeRoPE heads with the squared-imaginary phase score as a
   `Transformer.LeRoPEBlock.block` over the streams of each position, causal, and the bound
   `(5/4) ln (i + 1)` of every logit.
+* `FFN`: the complex-product feed-forward branch `W_F (W_g z ⊙_ℂ W_u z) / √2` as a `Sublayer`.
 
 The parameters are arbitrary: real-linear projections (the model's are the complex-linear ones, a
 subclass), any routers, phase coordinates and score coefficients. The model pairs the coordinates
