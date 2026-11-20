@@ -23,7 +23,8 @@ the first attention matrix
   `k ≥ 1` of an interpolation, which the source leaves implicit. For `k < 1` the maximum picks
   the other branch.
 
-Why one attention matrix does not suffice outside decoding is `Section3_SinglePass`.
+Why one attention matrix does not suffice outside decoding is `Section3_SinglePass`; how the two
+matrices make one attention over two disjoint sets of keys is `Section3_Merge`.
 -/
 
 @[expose] public section
