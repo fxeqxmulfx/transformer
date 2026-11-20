@@ -3,6 +3,7 @@ module
 public import Transformer.RoPE.ReRoPE2D.Defs
 public import Transformer.RoPE.ReRoPE2D.Basic
 public import Transformer.RoPE.ReRoPE2D.Regions
+public import Transformer.RoPE.ReRoPE2D.SinglePass
 
 /-!
 # 2D ReRoPE for the axial RoPE of vision encoders
@@ -20,4 +21,6 @@ axial RoPE score of two patches of a grid larger than the windows.
 `Transformer.RoPE.ReRoPE2D.Regions` splits the pairs of patches into `3 × 3` regions. Each
 region's scores are those of one ordinary attention pass over rotated queries and keys, and the
 nine passes, masked to their regions, merge exactly into softmax attention.
+`Transformer.RoPE.ReRoPE2D.SinglePass` shows that no single pass of linear maps of the head's
+dimension gives the scores, on a grid of `w + 2` patches along one axis.
 -/
