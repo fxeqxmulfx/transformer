@@ -127,6 +127,14 @@ theorem radialGate_of_normSq_eq (ε : ℝ) {w w' : ℂ}
     (h : Complex.normSq w' = Complex.normSq w) : radialGate ε w' = radialGate ε w := by
   rw [radialGate, radialGate, h]
 
+/-- The radial gate is a sigmoid value, so it is nonnegative. -/
+theorem radialGate_nonneg (ε : ℝ) (w : ℂ) : 0 ≤ radialGate ε w :=
+  Real.sigmoid_nonneg _
+
+/-- The radial gate is a sigmoid value, so it is at most `1`. -/
+theorem radialGate_le_one (ε : ℝ) (w : ℂ) : radialGate ε w ≤ 1 :=
+  Real.sigmoid_le_one _
+
 /-- A larger modulus gives a strictly larger radial gate when `ε ≥ 0`. -/
 theorem radialGate_lt (ε : ℝ) (hε : 0 ≤ ε) {w w' : ℂ}
     (h : Complex.normSq w < Complex.normSq w') : radialGate ε w < radialGate ε w' := by

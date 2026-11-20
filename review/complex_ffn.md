@@ -62,22 +62,51 @@ plain and radial FFNs with complex-linear projections err on it by at least
 `|φ z|² ‖w‖` (`plainFFN_gap_normSq`, `radialFFN_gap_normSq`). On the unit circle
 the zero map attains this bound.
 
+FFN5, the even part of SwiGLU (`EvenPart`). Without biases the even part of a SwiGLU
+FFN is the quadratic form `P/2` of FFN1, and product networks obey the parallelogram
+law `P(t(x+y)) + P(t(x-y)) = P x + P y` for `2t² = 1` (`productFFN_parallelogram`).
+On an even target `T` and a set closed under negation, a SwiGLU FFN of any width
+therefore errs by at least `‖T x + T y - T(t(x+y)) - T(t(x-y))‖ / 4`
+(`swigluFFN_gap_even`).
+
+FFN6, incomparability (`Incomparable`). The gate of the radial and diagonal products
+breaks that law. With `W_g = W_u = φ`, `W_F = 1`, `φ x = 1` and `φ y = 0`, the defect
+of one radial unit is `(s(1) - s(1/√2))/√2` and that of one diagonal unit is
+`s(1) - s(1/√2)`, positive for `ε ≥ 0` (`radialGate_inv_sqrt_two_lt`). So no SwiGLU
+FFN of any width approximates them with error below `(s(1) - s(1/√2))/(4√2)` and
+`(s(1) - s(1/√2))/4` (`swigluFFN_gap_radial`, `swigluFFN_gap_diagonal`); numerically,
+about `0.0108` and `0.0153` for `ε = 2^-23`, against unit values near `0.52` and
+`0.73`. The four points lie on one sphere when `x ⊥ y` and `‖x‖ = ‖y‖` (elementary,
+not formalized). The complex-linear `φ = fst/r` with `x = r e₁`, `y = r e₂` in `ℂ²` is
+such a case, so the bounds hold on the RMS sphere. One plain unit is exactly
+`φ₁ z · φ₂ z` (`plainFFN_unit`); one SwiGLU unit errs on it by at least `1` wherever
+the product takes every value of modulus one (`swigluUnit_gap_product`), as on the
+torus of `ℂ²`, where both units have ten real parameters and the zero map errs by `1`
+(`swigluUnit_gap_plainUnit_torus`).
+
 ## Verdict
 
 Refuted for the selected plain product: as a class of functions on the RMS sphere it
 lies strictly inside the bias-free SwiGLU class. It equals SwiGLU blocks of six
-times its width and misses SwiGLU blocks of width one. Its expressive content is the
-holomorphic quadratic maps `f(λ z) = λ² f(z)`.
+times its width and misses SwiGLU blocks of width one. With complex-linear `W_F` as
+well, a plain FFN is a holomorphic quadratic map, `f(λ z) = λ² f(z)` for complex `λ`
+(not formalized; the theorems use only `λ = -1` and `λ = i`).
+
+Radial and diagonal products: incomparable with SwiGLU. Each misses one unit of the
+other at any width: their evenness costs them SwiGLU's odd part, and their gate puts
+them outside SwiGLU's quadratic even part.
 
 Parameters: a complex unit has `3D` real parameters (complex-linear rows of `W_g`
 and `W_u`, a column of `W_F`, each `D/2` complex entries), as many as one SwiGLU
 unit. The exact embedding costs six times the parameters; the limit, three times.
-The selected model's FFN at `D = 128` has 171 complex units, `65664` independent
-parameters per layer; the SwiGLU control with the same 342 hidden units (`layout.rs`,
-`hidden`) has `131328`.
+At one unit each the plain and SwiGLU classes are incomparable (FFN4, FFN6); wider
+equal-parameter comparisons are not formalized. The selected model's FFN at
+`D = 128` has 171 complex units, `65664` independent parameters per layer; the SwiGLU
+control with the same 342 hidden units (`layout.rs`, `hidden`) has `131328`.
 
 Not claimed: anything about training, depth, initialization or the cubic task.
 The results concern one block whose input set is closed under `z ↦ -z` or `z ↦ i z`,
-as the RMS sphere is. The plain product's empirical advantage is therefore not one
-of approximation power; it is consistent with an inductive bias toward phase-adding
-products.
+as the RMS sphere is, and they rely on the blocks having no biases: with biases the
+even part of SwiGLU is no longer a quadratic form. The plain product's empirical
+advantage is therefore not one of approximation power; it is consistent with an
+inductive bias toward phase-adding products.

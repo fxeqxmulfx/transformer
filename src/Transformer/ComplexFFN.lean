@@ -4,6 +4,8 @@ public import Transformer.ComplexFFN.Defs
 public import Transformer.ComplexFFN.Basic
 public import Transformer.ComplexFFN.Embedding
 public import Transformer.ComplexFFN.Separation
+public import Transformer.ComplexFFN.EvenPart
+public import Transformer.ComplexFFN.Incomparable
 
 /-!
 # Complex-product FFNs against the bias-free SwiGLU FFN
@@ -25,6 +27,13 @@ approximates better than SiLU. As a statement about function classes it is false
 * with complex-linear projections plain and radial FFNs are negated by `z ↦ i z`
   (`plainFFN_anti`, `radialFFN_anti`); the four-unit SwiGLU block `|z₁|²` is then
   approximated no better than by zero (`plainFFN_gap_normSq`).
+
+The gated products are not inside SwiGLU either. The even part of a bias-free SwiGLU
+FFN is a quadratic form and obeys the parallelogram law (`swigluFFN_gap_even`), which
+one radial or diagonal unit breaks (`swigluFFN_gap_radial`, `swigluFFN_gap_diagonal`):
+those two classes and SwiGLU are incomparable. At equal parameters the plain class is
+not dominated: one SwiGLU unit misses one plain unit `z₁ z₂` on the torus by as much as
+the zero map (`swigluUnit_gap_plainUnit_torus`).
 
 These are statements about one block on a set of inputs closed under the symmetry,
 such as the RMS sphere that feeds it; the branch RMS keeps the symmetries

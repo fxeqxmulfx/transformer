@@ -365,8 +365,9 @@ active residual channels and fourteen hidden units; padding gives the documented
 width-16 and width-128 models. This is an existence theorem for weights.
 `Transformer.ComplexFFN` compares the complex-product feed-forward blocks of DiffGPT's
 complex model with its bias-free SwiGLU control: a plain complex-product FFN with `h`
-units is a SwiGLU FFN with `6h` units, and none of the three complex products
-approximates a single SwiGLU unit at any width.
+units is a SwiGLU FFN with `6h` units, none of the three complex products
+approximates a single SwiGLU unit at any width, and no SwiGLU FFN approximates a
+single radial or diagonal unit; one SwiGLU unit misses one plain unit.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
