@@ -204,7 +204,14 @@ Formalizations of papers on the mathematics and architecture of Transformers:
    Exact periods and the integer critical-coordinate cutoff, §3.2.
 
 42. Peng et al. — arXiv:2309.00071v3, "YaRN: Efficient Context Window Extension
-   of Large Language Models". Bandwise interpolation and NTK scaling, §3/A.2.
+   of Large Language Models". RoPE in complex coordinates, wavelengths and Position
+   Interpolation (§2); the pressure of PI and the NTK-aware base, the wavelengths
+   beyond the context and footnotes † and ‡ (§§3.1–3.2); bandwise interpolation and
+   the temperature (§§3.2–3.3); Dynamic Scaling, Dynamic NTK and the key–value cache
+   (§3.4); the arithmetic of Tables 3, 4 and 9 (§4); the out-of-bound phases of the
+   NTK-aware base (A.2) and Eq. (23) (A.3). Eq. (9) prints PI as `g(m) = s·m`; the
+   token at position 0 keeps its rotation; Table 4's Code Llama scale 88.6 and
+   Table 9's Together scale 4 follow from neither Eqs. (19)–(22) nor Eq. (20).
 
 43. Men et al. — arXiv:2405.14591v1, "Base of RoPE Bounds Context Length".
    Expected-score discrimination with explicit corrected moments, the NTK

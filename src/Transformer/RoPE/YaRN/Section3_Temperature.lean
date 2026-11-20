@@ -3,6 +3,7 @@ module
 public import Transformer.RoPE.Scores
 public import Transformer.RoPE.YaRN.Section3_Ramp
 public import Transformer.Precision.Basic
+public import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # YaRN's empirical temperature prescription
@@ -11,6 +12,7 @@ Peng et al., arXiv:2309.00071v3, §3.3, Eqs. (14)–(15). The equation
 `sqrt(1/t) = 1 + 0.1 log(s)` is a fitted recommendation for LLaMA models.
 We prove its algebraic effects, not optimality of the fitted coefficient,
 perplexity improvement, or successful retrieval for arbitrary learned weights.
+Appendix A.3, Eq. (23), evaluates the gain at `s = 8`: `length_gain_eight`.
 -/
 
 @[expose] public section
@@ -108,5 +110,14 @@ example : Precision.softmax (fun i : Fin 2 => (i.val : ℝ)) 1 /
 /-- Without context extension, neither Q/K length nor logits are rescaled. -/
 theorem gains_one : lengthGain 1 = 1 ∧ logitGain 1 = 1 := by
   norm_num [lengthGain, logitGain]
+
+/-- Appendix A.3, Eq. (23): at `s = 8`, `√(1/t) = 0.1 ln(s) + 1 ≈ 1.208`; it is `1.20794…`. -/
+theorem length_gain_eight : 1.2079 < lengthGain 8 ∧ lengthGain 8 < 1.208 := by
+  have h8 : Real.log 8 = 3 * Real.log 2 := by
+    rw [show (8 : ℝ) = 2 ^ 3 by norm_num, Real.log_pow]
+    norm_num
+  unfold lengthGain
+  rw [h8]
+  constructor <;> linarith [Real.log_two_gt_d9, Real.log_two_lt_d9]
 
 end Transformer.RoPE.YaRN

@@ -70,9 +70,13 @@ witness examples beside them.
 | --- | --- | --- |
 | Shared notation and existing model | `Basic.lean`, `Scores.lean` | Agreement with `GPTMini.invFreq`; actual last coordinate of an even head; monotone frequency grid; field/period rescaling; bounded integrable contrast; real query/key score expansion; realization of arbitrary score coefficients; amplitude bounds. |
 | Liu §3.2, Eq. (4) | `ScalingLaws/Section3_Periods.lean` | Full periods and the exact integer cutoff between complete and incomplete periods, with a strict inequality matching the boundary convention. |
-| YaRN §3.2 and A.2, Eqs. (19)–(22) | `YaRN/SectionA2_NTK.lean`, `YaRN/Section3_Bands.lean` | Coordinatewise NTK factors; preservation of the highest frequency; matching of the lowest-frequency phase; positivity and bounds for the actual interpolation blend. |
-| YaRN §3.2–3.4, Eqs. (10)–(15), Definitions 1–2 | `YaRN/Section3_Ramp.lean`, `YaRN/Section3_Temperature.lean`, `YaRN/Section3_Algorithm.lean` | The actual rotation-count ramp in all three regimes; context-derived scale; positive compressed frequencies; the squared Q/K temperature gain; exact softmax odds and preservation of logit order; the complete score construction, identity without extension, and fixed-activation slope and margin bounds. |
+| YaRN §3.2, footnote ‡, and A.2, Definition 3 and Eqs. (17)–(22) | `YaRN/SectionA2_NTK.lean`, `YaRN/Section3_Bands.lean` | Coordinatewise NTK factors; preservation of the highest frequency; matching of the lowest-frequency phase; every pair but the last beyond its pretrained phase over the extended window, the "out-of-bound" values; the pair `d` extended by `s^{2d/(|D|−2)}` only, so a nominal scale above the target; the scale from the two bases; positivity and bounds for the actual interpolation blend; footnote ‡'s harmonic mean as linear interpolation of wavelengths, between PI and the blend. |
+| YaRN §3.2–3.4, Eqs. (10)–(15), Definitions 1–2, and A.3, Eq. (23) | `YaRN/Section3_Ramp.lean`, `YaRN/Section3_Temperature.lean`, `YaRN/Section3_Algorithm.lean` | The actual rotation-count ramp in all three regimes; context-derived scale; positive compressed frequencies; the squared Q/K temperature gain; exact softmax odds and preservation of logit order; the complete score construction, identity without extension, and fixed-activation slope and margin bounds; the gain `1.20794…` of Eq. (23) at `s = 8`. |
 | Derived investigation of YaRN §3.3, Eq. (14), using existing ALM and Imbalance softmax results | `YaRN/Retention.lean`, `YaRN/Calibration.lean`, `YaRN/Approximation.lean` | Exact probability-preserving temperature under an explicit score model; a worst-case bound for arbitrary scores with a certified positive gap; changed-gap calibration; impossibility of a length-only rule even with positive margins; the local linear coefficient and exact quadratic approximation error. |
+| YaRN §§2.1–2.3, Eqs. (3)–(10) and (16), A.1 | `YaRN/Section2_Background.lean` | The inner product as the real part of the Hermitian product; Eq. (5) as multiplication by `e^{imθ_l}`; the score through `n − m` only; Eq. (7) for PI as the frequencies `θ/s`; Eq. (16)'s `m/s` keeps the extended window inside the pretrained one, the printed Eq. (9)'s `s·m` does not; Eq. (8)'s wavelength as the least period of the rotation; Eq. (10) in closed form. |
+| YaRN §§3.1–3.2, footnote † | `YaRN/Section3_Pressure.lean` | PI's frequencies at most `1/s`; the NTK-aware divisors growing from 1 to `s`; strictly increasing wavelengths, which for LLaMA (`b = 10000`, `|D| = 128`, `L = 2048`) exceed `L` exactly at the pairs `d ≥ 41`; distinct rotations at the positions below a wavelength. |
+| YaRN §3.4 | `YaRN/Section3_Dynamic.lean` | A rotation moves when a pair's phase moves by less than a turn; each Dynamic Scaling step past `L` moves the rotation of every token at `0 < n ≤ l'`, under PI and under Dynamic NTK, and never the token at 0; a key cached after RoPE gives a stale score. |
+| YaRN §§4.4–4.5, Tables 3, 4 and 9 | `YaRN/Section4_Experiments.lean` | The mean drop of `0.4875` points behind "0.49%", a pooled relative drop of `0.88%`; Code Llama's NTK-aware scale `100^{(|D|−2)/|D|}`, `93.06` at `|D| = 128` and `86.60` at `|D| = 64`, not `88.6`; Together's PI scale `8`, not Table 9's `4`. |
 | Men §4.2–4.3, Appendix A | `BaseBounds/Section4_ExpectedScores.lean` | The integral identity for the expected score gap under explicit coefficient moments; its nonzero-variance sign criterion; a counterexample to the omitted zero-mean/cross-moment implication. |
 | Men §2.2, Eq. (6) | `BaseBounds/Section2_OOD.lean` | The NTK base identity in the source's notation; every period of base 500 is below 4096. |
 | Men §4.1, Eq. (7) | `BaseBounds/Section4_LongTermDecay.lean` | Summation by parts; the bound with RoFormer's complex pair products and `h_{d/2} = 0`; a counterexample to the printed real products. |
@@ -216,6 +220,25 @@ retrieval, perplexity, and positional-resolution metrics.
    the highest-frequency term; the highest is `n/β^0 = n`, which no change of
    base touches, and `n/β` is the second. After Eq. (1) the text divides by
    `β^{k-1}` for `β^{m-1}`. The perplexity graphs and the accuracy table are
+   measurements and are not formalized.
+11. **YaRN: Eq. (9), A.2, §3.4 and the tables.** Eq. (9) prints Position
+   Interpolation as `g(m) = s·m`; Eq. (16) and the rest of the paper use
+   `g(m) = mL/L' = m/s`, and `s·m` sends the position `L` of the extended
+   window out of the pretrained one. A.2's "the last dimension `d ∈ D` is
+   `|D| − 2`" counts real coordinates; in the pair index of Eqs. (6) and (18)
+   the last pair is `|D|/2 − 1`, and Eq. (21)'s exponent `(|D|−2)/|D|` is that
+   pair's in both readings. §3.4's "the RoPE of every token changes when `s`
+   changes" leaves out the token at position 0, whose rotation is the identity
+   at every scale; for every other token it holds at each Dynamic Scaling step,
+   under PI and under Dynamic NTK. §4.4's "0.49% drop" is the mean drop in
+   percentage points, 0.4875; relative to the `s = 16` scores the pooled drop
+   is 0.88%. Tables 4 and 9 give Code Llama, base `10^4 → 10^6`, the NTK-aware
+   scale 88.6; Eqs. (19)–(22) give `100^{(|D|−2)/|D|}`, 93.06 at LLaMA's
+   `|D| = 128` and 86.60 at `|D| = 64`. Table 4's 44.2 for Xiong et al. is
+   `50^{62/64}` if their base is `5·10^5`, which the manuscript does not state;
+   under that `|D| = 64`, 88.6 may be a typo for 86.6. Table 9 gives Together's
+   32k PI model the scale 4; Table 4's `4k × 8` and Eq. (20) give 8. The
+   perplexities, passkey accuracies, benchmark scores and training times are
    measurements and are not formalized.
 
 ## Arbitrary coefficients and learned weights
