@@ -109,6 +109,11 @@ witness examples beside them.
 | LongRoPE2 §3.2, Algorithm 1 and Fig. 4 | `LongRoPE2/Section3_Candidates.lean` | Line 2's `d10_tcd` is a pair index: more than ten periods fit into `L_train` exactly below it; Phi3-mini has `d10_tcd = 19` and `d_tcd = 31`, 13 candidates containing 25; LLaMA3-8B, with Men et al.'s base `500000`, window `8192` and `d = 128`, has 24 and 35, containing 30. |
 | LongRoPE2 §3.2, Algorithms 1–2 | `LongRoPE2/Section3_Search.lean` | The base derived from `d_rcd` gives the lower group `s^{i/d_rcd}`; with a non-decreasing upper group the vector is non-decreasing, and with `d_rcd ≤ d_tcd` and upper factors at least `L/L_train` it meets Eq. (10) at every incomplete period; Algorithm 1's printed anchor at `d10_tcd` gives the pair `d10_tcd + 1` a factor above that of `d_rcd`. |
 | LongRoPE2 §3.3, Fig. 5, Fig. 10 and Appendix B | `LongRoPE2/Section3_Mixed.lean` | Masked short documents keep every phase below `L_train·θ`; long segments exceed it under the original RoPE and stay below it with `λ ≥ L/L_train`; the switch happens once and moves cached keys; Fig. 10's `base^{−j}` lies below `θ_j`; causal attention scores `n(n+1)/2` pairs, `o(c^n)`. |
+| LongRoPE2 abstract, §1, §§4.1–4.2, §5, Tables 1 and 4 | `LongRoPE2/Section4_ShortTasks.lean` | The token counts total 10B in §4.1 and in Table 1, with 1B and 3B for short windows, and `800/10 = 80`; §1's MMLU drops are 7.56, 4.35 and 3.52; Table 4's averages are the rows' means within 0.1 except YaRN's on Phi3-mini, 53.6 for 53.804; LongRoPE2 retains 97.6% and 98.6% by the printed averages, 97.6% and 98.45% by the means; only LongRoPE2 retains over 97% on both models; the declines −15.2% (−14.9% by the mean), −9.3%, 21.15 and 14.55. |
+| LongRoPE2 §4.2, Table 2 | `LongRoPE2/Section4_RULER.lean` | On Phi3-mini NTK leads LongRoPE2 at 4k, 91.34 against 90.41, and LongRoPE2 leads from 8k; on LLaMA3-8B LongRoPE2 leads at every length, and LongRoPE, ahead of YaRN and NTK at 64k and 128k, drops 7.83 points between them; on Phi3-mini NTK leads LongRoPE up to 32k and trails it beyond. |
+| LongRoPE2 §4.2, Table 3 | `LongRoPE2/Section4_RealWorld.lean` | The averages are the rows' means within 0.01 except InfiniteBench–LongBench's for YaRN on LLaMA3-8B, 51.81 for 53.81; LongRoPE2's four averages lead; on Phi3-mini LongRoPE leads SciFact and YaRN leads LCC. |
+| LongRoPE2 §4.3, Appendix B, Tables 5–7 and 10 | `LongRoPE2/Section4_Ablations.lean` | The rcd variants gain from 32k on, while three of four lose at 8k and two at 16k; LongRoPE2 leads them except NTK-rcd on Phi3-mini at 4k; the needle-driven search leads plain PG19 from 16k on Phi3-mini and at every length on LLaMA3-8B; mixed window training raises the short tasks and RULER from 8k on, not at 4k; searching all dimensions scores lower except on GSM8K; Phi3-mini's MMLU is 70.04 in Table 4 and 70.07 in Tables 5, 7 and 10. |
+| LongRoPE2 Appendix B, Tables 8–9 | `LongRoPE2/SectionB_RULER.lean` | Table 8's averages are the rows' means and repeat Table 2 except at 8192, where Tables 8, 2 and 7 print 87.34, 87.22 and 86.87; Table 9's repeat Table 2, and its 4096 row's mean is `94.61 + 0.45/13`; CWE at 131072 scores 0.3, and the other twelve tasks average 63.69. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
 | Wu/Liu/Jadbabaie §4, Theorem 2 and Corollary 1 | `FrequencyMatching/Section4_Dilation.lean` | Exact pushforward-measure utility invariance and maximizer transport; a counterexample when frequencies are scaled without dilating the task; no positive frequency covers unbounded widths. |
@@ -279,8 +284,8 @@ retrieval, perplexity, and positional-resolution metrics.
    NTK-aware factors are off the 0.01 grid: `4^{1/63}` lies between 1.02 and
    1.03. The perplexities, passkey accuracies, benchmark scores and costs are
    measurements and are not formalized.
-13. **LongRoPE2: Eq. (7)'s index, the prior methods, the search and the
-   appendices.** Eq. (7) prints
+13. **LongRoPE2: Eq. (7)'s index, the prior methods, the search, the
+   appendices and the tables.** Eq. (7) prints
    `d_tcd = 2⌈(d/2)·log_θbase(L_train/2π)⌉`, which counts real coordinates:
    62 for Phi3-mini, the "31st cosine dimension". The split "`T_i < L_train`,
    `i < d_tcd`" of §2.2 and §2.4's "`d_tcd = 31`" use the pair index, half
@@ -311,8 +316,30 @@ retrieval, perplexity, and positional-resolution metrics.
    Appendix B's "GPU memory and computation time increase exponentially with
    sequence length" contradicts Appendix A's "grow quadratically": causal
    attention scores `n(n+1)/2` pairs, which is `o(c^n)` for every `c > 1`.
-   The perplexities and benchmark scores are measurements and are not
-   formalized.
+   The scores are measurements; the arithmetic the text draws from them is
+   checked against the tables. §4.1's data mix puts 1B tokens into short
+   windows and 9B into long ones, Table 1 3B and 7B; both total 10B, 80 times
+   fewer than 800B. §1's MMLU drop for NTK is 4.35 in Table 4(a), not 4.34.
+   Table 4's averages are the rows' means except YaRN's on Phi3-mini, 53.6 for
+   53.804, from which §4.2's −15.2% follows (the mean gives −14.9%). The
+   retention 97.6% and 98.6% follows from the printed averages; from the
+   rows' means LLaMA3-8B retains 98.45%, below the abstract's "over 98.5%".
+   Only LongRoPE2 retains over 97% on both models, as §1 says. §4.2's
+   "superior results across all evaluation lengths" fails on Phi3-mini at 4k,
+   where NTK scores 91.34 against 90.41. Table 3's InfiniteBench–LongBench
+   average for YaRN on LLaMA3-8B is 51.81 for a mean of 53.81; LongRoPE2's
+   averages lead, but on Phi3-mini LongRoPE leads SciFact and YaRN leads LCC,
+   against "consistently improves performance across all benchmarks".
+   Table 5's rcd variants gain from 32k on, but three of four lose at 8k and
+   two at 16k, and NTK-rcd beats LongRoPE2 on Phi3-mini at 4k (90.51 against
+   90.41), against "consistently outperforms YaRN-rcd and NTK-rcd on both
+   short- and long-context benchmarks". Without mixed window training both
+   models score higher at 4k; Table 10's search over all dimensions scores
+   higher on GSM8K. Phi3-mini's LongRoPE2 MMLU is 70.04 in Table 4 and 70.07
+   in Tables 5, 7 and 10; its 8k RULER is 87.22 in Tables 2, 5, 6 and 10,
+   86.87 in Table 7 and 87.34 in Table 8, whose row has that mean. Table 9's
+   4096 row has the mean 94.64, not its printed 94.61. §4.2's CWE "achieves
+   only 1% accuracy"; Table 8 prints 0.3.
 
 ## Arbitrary coefficients and learned weights
 

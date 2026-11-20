@@ -233,7 +233,12 @@ Formalizations of papers on the mathematics and architecture of Transformers:
    windows, the one-time switch and the attention cost (§3.3, Fig. 10,
    Appendix B). Algorithm 1's line 6 breaks the monotone constraint; Fig. 10's
    inverse frequencies are not Eq. (5)'s; attention cost is quadratic, not
-   exponential.
+   exponential. The arithmetic of the abstract, §1, §4 and Appendix B over
+   Tables 1–10: the data mix, the averages, the retention, RULER, the
+   real-world benchmarks and the ablations. §1's NTK MMLU drop is 4.35, not
+   4.34; two printed averages are not their rows' means; from the means
+   LLaMA3-8B retains 98.45%, below the abstract's 98.5%; "all evaluation
+   lengths" and "all benchmarks" fail on Phi3-mini at 4k, SciFact and LCC.
 
 45. Oka et al. — "Frequency Bands in RoPE", ICLR 2026, §5.
    The variance formula, the band-coordinate identity, and a counterexample
