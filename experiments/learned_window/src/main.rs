@@ -29,14 +29,12 @@ mod engine;
 mod far_rotary;
 #[path = "../../../.lake/reproduction/gpt/research/complex_geometry_suite/native/src/gemm.rs"]
 mod gemm;
-#[path = "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/layout.rs"]
 mod layout;
 #[path = "../../../.lake/reproduction/gpt/research/complex_geometry_suite/native/src/metrics.rs"]
 #[allow(dead_code)]
 mod metrics;
 #[path = "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/mhc.rs"]
 mod mhc;
-#[path = "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/optimizer.rs"]
 // The checkpoint's optimizer state is saved and restored by `main` alone.
 #[cfg_attr(test, allow(dead_code))]
 mod optimizer;

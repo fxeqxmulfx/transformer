@@ -8,7 +8,10 @@ pub const FILES: &[(&str, &str)] = &[
         "experiments/learned_window/Cargo.lock",
         include_str!("../Cargo.lock"),
     ),
-    ("experiments/learned_window/build.rs", include_str!("../build.rs")),
+    (
+        "experiments/learned_window/build.rs",
+        include_str!("../build.rs"),
+    ),
     (
         "experiments/learned_window/rust-toolchain.toml",
         include_str!("../rust-toolchain.toml"),
@@ -17,10 +20,21 @@ pub const FILES: &[(&str, &str)] = &[
         "experiments/learned_window/PROTOCOL.md",
         include_str!("../PROTOCOL.md"),
     ),
-    ("experiments/learned_window/src/main.rs", include_str!("main.rs")),
+    (
+        "experiments/learned_window/src/main.rs",
+        include_str!("main.rs"),
+    ),
     (
         "experiments/learned_window/src/engine.rs",
         include_str!("engine.rs"),
+    ),
+    (
+        "experiments/learned_window/src/layout.rs",
+        include_str!("layout.rs"),
+    ),
+    (
+        "experiments/learned_window/src/optimizer.rs",
+        include_str!("optimizer.rs"),
     ),
     (
         "experiments/learned_window/src/far_rotary.rs",
@@ -151,12 +165,6 @@ pub const FILES: &[(&str, &str)] = &[
         ),
     ),
     (
-        "gpt/research/main_model/phase_score_native/src/layout.rs",
-        include_str!(
-            "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/layout.rs"
-        ),
-    ),
-    (
         "gpt/research/main_model/phase_score_native/src/mhc.rs",
         include_str!(
             "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/mhc.rs"
@@ -166,12 +174,6 @@ pub const FILES: &[(&str, &str)] = &[
         "gpt/research/main_model/phase_score_native/src/optimizer_kernels.rs",
         include_str!(
             "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/optimizer_kernels.rs"
-        ),
-    ),
-    (
-        "gpt/research/main_model/phase_score_native/src/optimizer.rs",
-        include_str!(
-            "../../../.lake/reproduction/gpt/research/main_model/phase_score_native/src/optimizer.rs"
         ),
     ),
     (

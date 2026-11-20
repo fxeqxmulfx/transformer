@@ -63,6 +63,12 @@ fn position_encoding(cfg: &Config) -> Value {
             json!({"kind":"Leaky ReRoPE","window":window,"slope":slope,
             "relative":"t-key < w ? t-key : w + (t-key-w)/k","far":"R^(w+(t-w)/k) q, R^(key/k) k"})
         }
+        Position::Learned { window, slope } => {
+            json!({"kind":"learned window and slope per layer and head","window":window,"slope":slope,
+            "relative":"min(t-key, w) + s*max(t-key-w, 0) (Transformer.RoPE.LeReRoPE.windowPosition)",
+            "parameters":"w = window*e^omega, s = 1/(1 + (slope-1)*e^(-sigma)), omega = sigma = 0 at the start",
+            "far":"R^(w+s(t-w)) q, R^(s*key) k"})
+        }
     };
     if let (Value::Object(row), Value::Object(common)) = (&mut row, common) {
         row.extend(common);

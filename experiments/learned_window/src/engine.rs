@@ -40,12 +40,18 @@ pub struct Config {
 /// pair of the query `t` and the key `key` is rotated by `t - key`. ReRoPE
 /// rotates it by `min(t - key, w)`, Leaky ReRoPE by `w + (t - key - w)/k`
 /// beyond the window (Su, kexue.fm/archives/9708; the window `w`, the slope
-/// `k`). Both keep LeRoPE's learned frequencies.
+/// `k`). `Learned` lets each head of each layer learn its window `w` and
+/// slope `s`: `min(t - key, w) + s·max(t - key - w, 0)`
+/// (`Transformer.RoPE.LeReRoPE.windowPosition`), with `w = window·e^ω` and
+/// `s = 1/(1 + (slope - 1)e^(-σ))`, so that it starts as Leaky ReRoPE's
+/// `window` and `slope` (`layout::window_count`). All keep LeRoPE's learned
+/// frequencies.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Position {
     Rope,
     ReRope { window: usize },
     Leaky { window: usize, slope: usize },
+    Learned { window: usize, slope: usize },
 }
 
 impl Position {
@@ -55,6 +61,8 @@ impl Position {
             Position::Rope => None,
             Position::ReRope { window } => Some((window, None)),
             Position::Leaky { window, slope } => Some((window, Some(slope))),
+            // Not routed yet: `Engine::new` refuses it.
+            Position::Learned { window, slope } => Some((window, Some(slope))),
         }
     }
 }
@@ -272,6 +280,9 @@ impl Engine {
         Ok(values)
     }
     pub fn new(config: Config, parameters: &[f32]) -> Result<Self> {
+        if let Position::Learned { .. } = config.position {
+            return Err("the learned window's kernels are not wired yet".into());
+        }
         let w = config.width;
         if ![64, 128, 256].contains(&w)
             || config.layers == 0
