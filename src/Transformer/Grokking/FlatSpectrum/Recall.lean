@@ -10,6 +10,7 @@ public import Transformer.Grokking.FlatSpectrum.Recall.Attention
 public import Transformer.Grokking.FlatSpectrum.Recall.Training
 public import Transformer.Grokking.FlatSpectrum.Recall.Softmax
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxRecall
+public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxWidth
 public import Transformer.Grokking.FlatSpectrum.Recall.SoftmaxScale
 public import Transformer.Grokking.FlatSpectrum.Recall.Fading
 public import Transformer.Grokking.FlatSpectrum.Recall.QueryFree
@@ -77,12 +78,14 @@ Softmax attention is not such a readout (*Softmax attention escapes the cut* of 
 attention of Yang, Cadilhac and Chiang, *Knee-Deep in C-RASP: A Transformer Depth Hierarchy*,
 §2.1, averages the values with the weights `exp s_j` (`Softmax`). With scores that pair the
 query with the key it recalls every number of bindings to every accuracy at projection
-dimension two, so it has no cut width below the number of keys (`SoftmaxRecall`), and it
-pays in the scale of its scores: bounded by `B`, they leave a squared error of at least the
-fraction `((m − 1) / (e^{2B} + m − 1))²` of the variance of `φ` (`SoftmaxScale`). The worst
-dictionary of values `±1` is answered with an error of at least `2 (m − 1) / (e^{2B} + m − 1)`:
-recall by the sign has `m − 1 < e^{2B}`, and at a fixed `B` that error tends to `2`, the
-opposite value (`Fading`). With scores
+dimension two, so it has no cut width below the number of keys (`SoftmaxRecall`). Over three
+keys or more no smaller dimension recalls by the sign: a key inside the hull of the others keeps
+at most half of the weight, and in dimension one a key lies between two others
+(`SoftmaxWidth`). It pays in the scale of its scores: bounded by `B`, they leave a squared
+error of at least the fraction `((m − 1) / (e^{2B} + m − 1))²` of the variance of `φ`
+(`SoftmaxScale`). The worst dictionary of values `±1` is answered with an error of at least
+`2 (m − 1) / (e^{2B} + m − 1)`: recall by the sign has `m − 1 < e^{2B}`, and at a fixed `B`
+that error tends to `2`, the opposite value (`Fading`). With scores
 that ignore the query, as in the transformers that paper builds from formulas, a linear readout
 read by its sign recalls at most `d + 1` bindings (`QueryFree`). The scale `s log n` over `n`
 tokens, which long-context systems take (*The Mean-Field Dynamics of Transformers*, §6), grows

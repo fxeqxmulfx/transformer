@@ -6217,14 +6217,44 @@ not a power of the length. Under the main model's own gain, `ln N / d` with `A =
 weight on the neighbours of the middle slot of a long window (`R ≥ 9`). What several heads, keys
 that depend on the token or a nonlinear `Φ` recover from that is not priced here.
 
+### NV4. Selecting an operand: dimension two is the least
+
+A model with a cut pays the width `m` to select one of `m` operands (AR4, AR5), and softmax
+attention selects every one of them by its sign with projections of dimension two (SA2).
+Dimension one does not suffice once there are three keys.
+
+A score linear in the key, `s_j = ⟨a, k_j⟩`, is at most its largest value on any set of keys
+everywhere on their convex hull. So a key `k` whose projection lies in the hull of the
+projections of the other keys never has the largest score: at every query and every scale some
+other key has at least its weight, and its own weight `w_k` is at most `1/2`. The dictionary with
+the value `1` at `k` and `−1` elsewhere is then answered at the query of `k` with
+
+```
+att = w_k − (1 − w_k) = 2 w_k − 1 ≤ 0,
+```
+
+the wrong sign. On a line, among three keys the middle one lies between the other two. Hence, for
+`m ≥ 3` keys,
+
+```
+min { d : projections of dimension d recall every dictionary of values ±1 by the sign } = 2.
+```
+
+SA2 attains it by putting the keys on a parabola, `(j, −j²/2)`, where none lies in the hull of
+the others. What dimension two buys is convex position, and from dimension two on any number of
+keys can have it.
+
 ### Lean
 
 `BilinearKernel` and `CutRange` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
-`src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`. All proved without `sorry`.
+`src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
+`src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
+`Transformer.Grokking.FlatSpectrum.Recall`. All proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | NV1 | `bilinearKernel`, `stdAddChar_sum`, `sum_stdAddChar_dotProduct`, `bilinearKernel_mul_star`, `bilinearKernel_mul_conjTranspose`, `isFlat_bilinearKernel`, `bilinearKernel_ne_zero`, `not_isMinOn_bilinearKernel`, `mul_sub_rank_le_frobeniusSq_sub_bilinearKernel`, `rank_bilinearKernel`, `nuclearNorm_bilinearKernel`, `bilinearKernel_cube_add_mul` | The groups are functions `ι → ZMod p` and `κ → ZMod p` for finite types `ι`, `κ`; `k = |ι|`, `l = |κ|`. "`w ↦ wᵀ M` injective" is `Function.Injective M.vecMul`, and the square case takes `IsUnit M`. R3 is stated with `min (p^k) (p^l)`. The quadratic form is not stated separately. |
 | NV2 | `frobeniusSq_conjTranspose`, `exists_rank_le_frobeniusSq_sub_eq`, `IsFlat.isLeast_frobeniusSq_sub`, `bilinearKernel_sum_sum`, `card_fun_zmod`, `isLeast_nuclearNorm_unimodular`, `isGreatest_nuclearNorm_unimodular`; the bounds `card_le_nuclearNorm_le_of_unimodular` of Proposition 2 | The least error is `IsLeast` of `{‖K − X‖_S2² : rank X ≤ d}`. The ends of the nuclear norm are `IsLeast` and `IsGreatest` over the tables `(ι → ZMod p) × (ι → ZMod p)` with entries of modulus one, `k = |ι|`; the additive table is stated as `ψ(Σ uᵢ + Σ vⱼ)`. |
 | NV3 | the cap: `sum_sum_band`, `sq_add_sq_sum_le`, `sum_sum_phaseLogit_sub_le`, `card_mul_exp_mean_le`, `depthWeight_le_of_sum_sum_le`, `depthWeight_leropeLogit_le`; the DFT head: `two_mul_sin_mul_sum_cos`, `sum_cos_dft`, `dftFreq`, `leropeLogit_dft`, `depthWeight_dft`, `half_lt_depthWeight_dft`, `depthWeight_dft_mem` | The cap is stated for a sequence whose tokens at the distances `t − R, …, t + R` are one token `y`, with `‖Q x_i‖², ‖K y‖² ≤ d`; a positional head on any input is the case of the constant sequence, by hand. The DFT head is stated at the query `2R` with the tokens `Unit` in `depthWeight_dft_mem`, and for every sequence in `depthWeight_dft`. The prices in `λ A` are solved by hand from the weights. |
+| NV4 | `sum_exp_mul_indicator`, `softmaxAttention_indicator_nonpos_of_mem_convexHull`, `exists_mem_convexHull_compl_of_le_one`, `isLeast_dim_softmaxAttention_recall_sign` | The projections are `Fin d → ℝ` and the score is `Σ_r a_r k_r`, as in SA2; the hull is `convexHull ℝ (kf '' {k}ᶜ)`. The least dimension is `IsLeast` of the set of `d` for which projections `Fin m → Fin d → ℝ` recall by the sign, for `m ≥ 3`. |
