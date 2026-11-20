@@ -67,6 +67,24 @@ head at the positions `k (w + (δ − w)/k)` (`lkHead_eq_piHead`); for an intege
 distances `w + 1` and `w` get `kw + 1` and `kw`, so every ReRoPE block misses it by the
 bound of R3 (`gap_rePosition_lkHead`).
 
+R6, ReRoPE's peak head (`Peak`). One ReRoPE head with the window `W ≥ 2`, every frequency
+`π/(W − 1)`, `β = 0`, the query `q` and the key `q` turned by `1` scores the distance `1` by
+`+κ ln N` and every distance `≥ W` by `−κ ln N`. At every query `D ≥ W`, `κ ≥ 1/2`,
+swapping the keys at the distances `1` and `D` moves it by at least
+`‖u_a − u_b‖ / (2(W + 1))`, whatever `D` (`le_norm_peakHead_sub`): unlike R3's bound it
+does not fall with the length.
+
+R7, toward the converse (`Softmax`, `Returns`, `Clamp`). A block with `Φ` continuous whose
+heads score the tokens `a, b` at the distance `D` within any `ε` of their scores at the
+distance `1`, at queries as far as wanted, misses the peak head by at least
+`‖u_a − u_b‖ / (4(W + 1))` at queries as far as wanted (`le_of_approx_peakHead`). The main
+model's score moves by at most `ln(i + 1)/d · η · C` when the position grows by a distance
+`n` whose phases `n θ_l` are within `η` of multiples of `2π` (`abs_headScore_add_sub_le`),
+and such returns exist as far as wanted with `ln(n + 2) η` as small as wanted
+(`exists_return_log`). Not assembled: the instances for LeRoPE blocks (`D = n + 1`) and
+for Leaky ReRoPE blocks with an integer `k` (`D = w + k(n + 1 − w)`), stopped on
+2026-11-20 at the user's request.
+
 ## Verdict, so far
 
 Inside the window: all three are one block. Beyond it ReRoPE is strictly weaker as an
@@ -79,5 +97,6 @@ head uses `θ` near and `θ/k` far, which one LeRoPE frequency does not.
 ## Open
 
 - Whether LeRoPE blocks with rotary scores approximate ReRoPE or Leaky ReRoPE blocks
-  beyond the window, and conversely whether Leaky ReRoPE blocks approximate LeRoPE's.
+  beyond the window (R7 reduces it to near returns; the instances are not stated), and
+  conversely whether Leaky ReRoPE blocks approximate LeRoPE's.
 - Nothing here concerns training, length generalization or the gpt runs.

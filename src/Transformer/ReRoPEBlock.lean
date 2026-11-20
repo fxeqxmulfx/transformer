@@ -5,6 +5,10 @@ public import Transformer.ReRoPEBlock.Basic
 public import Transformer.ReRoPEBlock.PiHead
 public import Transformer.ReRoPEBlock.FarOrder
 public import Transformer.ReRoPEBlock.Leaky
+public import Transformer.ReRoPEBlock.Peak
+public import Transformer.ReRoPEBlock.Softmax
+public import Transformer.ReRoPEBlock.Returns
+public import Transformer.ReRoPEBlock.Clamp
 
 /-!
 # A block of DiffGPT's main model: LeRoPE against ReRoPE
@@ -34,7 +38,16 @@ for ReRoPE.
   rotary scores, beyond the window its heads are LeRoPE heads at `k` times lower frequencies
   with a constant turn of the key (`headScore_lkPosition_of_le`). For an integer `k` every ReRoPE
   block misses its `kπ` head as it misses LeRoPE's π head (`gap_rePosition_lkHead`).
+* ReRoPE's peak head (`Peak`), one head with every frequency `π/(W − 1)` and the key turned by
+  `1`, notices at every query `D ≥ W` a swap of the keys at the distances `1` and `D`: for
+  `κ ≥ 1/2` its output moves by at least `‖u_a − u_b‖ / (2(W + 1))` (`le_norm_peakHead_sub`).
+* A block with `Φ` continuous whose scores at the distance `D` come within any `ε` of its scores
+  at the distance `1`, at queries as far as wanted, misses the peak head by at least
+  `‖u_a − u_b‖ / (4(W + 1))` (`le_of_approx_peakHead`). The main model's scores come back so at
+  the near returns of all frequencies, despite SSMax's growing gain (`abs_headScore_add_sub_le`,
+  `exists_return_log`).
 
-Whether LeRoPE blocks, with the main model's rotary scores, approximate ReRoPE or Leaky ReRoPE
-blocks beyond the window is not settled here.
+The instances of `le_of_approx_peakHead` for LeRoPE and Leaky ReRoPE blocks with the main
+model's rotary scores are not stated here, so whether those blocks approximate ReRoPE blocks
+beyond the window is not settled here.
 -/
