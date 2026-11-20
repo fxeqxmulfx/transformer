@@ -93,11 +93,12 @@ is its ungated product, a SwiGLU block by FFN3. The other witnesses survive. Pla
 radial FFNs with complex-linear projections stay `J`-anti after `R_D`, so at any width
 they miss the `J`-invariant four-unit block `R_D(|φ z|² w)` by its norm, as the zero
 map does (`plainFFN_rms_gap_normSq`, `radialFFN_rms_gap_normSq`); with `eps = 0` that
-norm is `√d` (`norm_rmsNormEps_zero`). One SwiGLU unit after `R_D` points along `w`, so
-it misses one plain unit `z₁ z₂` after `R_D` on the torus as much as the zero map does
-(by hand). For the erased witnesses, signs suffice: `R_D` multiplies by a nonnegative
-scalar, so it keeps the sign of every linear functional
-(`pos_inner_of_pos_inner_rmsNormEps`), and two units on each side separate again.
+norm is `√d` (`norm_rmsNormEps_zero`). One SwiGLU unit after `R_D` stays on the line
+through its column, so it misses one plain unit `z₁ z₂` after `R_D` on the torus as much
+as the zero map does (`swigluUnit_rms_gap_plainUnit_torus`). For the erased witnesses,
+signs suffice: `R_D` multiplies by a nonnegative scalar, so it keeps the sign of every
+linear functional (`pos_inner_of_pos_inner_rmsNormEps`), and two units on each side
+separate again.
 
 - Signs constrain the even part. If `R_D ∘ S` is within `δ` of an even target `w` with
   `δ ‖ℓ‖ < ⟪ℓ, w z⟫`, the product network `P z = S z + S(-z)` has `⟪ℓ, P z⟫ > 0`

@@ -389,9 +389,9 @@ complex model with its bias-free SwiGLU control: a plain complex-product FFN wit
 units is a SwiGLU FFN with `6h` units, none of the three complex products
 approximates a single SwiGLU unit at any width, and no SwiGLU FFN approximates a
 single radial or diagonal unit; one SwiGLU unit misses one plain unit. After the branch
-RMS the complex-structure gap of plain and radial FFNs remains; the RMS erases the
-one-unit evenness and parallelogram witnesses, and with two units each both separations
-hold again.
+RMS the complex-structure gap of plain and radial FFNs remains, and one SwiGLU unit still
+misses one plain unit; the RMS erases the one-unit evenness and parallelogram witnesses,
+and with two units each both separations hold again.
 `Transformer.ComplexProjection` compares the complex-linear projections of that model
 with real ones: a real projection splits uniquely into a complex-linear part and a
 conjugate-linear part, the block storage `[[A,-B],[B,A]]` holds exactly the first, and a
