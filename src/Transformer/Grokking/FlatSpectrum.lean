@@ -126,6 +126,7 @@ public import Transformer.Grokking.FlatSpectrum.OneCellMin
 public import Transformer.Grokking.FlatSpectrum.OneCellFlat
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
+public import Transformer.Grokking.FlatSpectrum.BilinearKernel
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -349,6 +350,10 @@ one: the opposite phase, at a modulus exponentially small in `m`. The block lang
 of the depth hierarchy of
 C-RASP (`BlockCut`): five numbers across every cut decide every `L_k` by a sign, the indicator
 of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` recognizes
-`L_{k+1}`, so that hierarchy is in depth at bounded cut width. -/
+`L_{k+1}`, so that hierarchy is in depth at bounded cut width. Functions of `n` variables
+(`BilinearKernel`): cut into groups of `k` and `l` variables, `g(u) + h(v) + uᵀ M v` has
+`K Kᴴ = p^l I` when `w ↦ wᵀ M` is injective, so Theorem A and R3 hold for it; for `k = l` and an
+invertible `M`, such as `k` copies of `x³ + x y`, the rank is `N = p^k` and the nuclear norm
+`N √N`. -/
 
 @[expose] public section

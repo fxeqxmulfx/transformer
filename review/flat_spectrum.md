@@ -6120,3 +6120,61 @@ questions remain open. Codes of more than two classes.
 | XE18 | `abs_nuclearNorm_sub_le`, `continuous_nuclearNorm`, `continuous_margin`, `continuousAt_margin_div_nuclearNorm`, `tendsto_inv_smul_of_tendsto_margin_div`; one phase: `phaseStep`, `phaseStep_pos`, `exists_tendsto_decayRun_phaseStep`, `exists_seq_of_forall_exists`; the run: `phaseRun`, `phaseProduct`, `exists_tendsto_margin_div_phaseProduct`; the direction: `exists_tendsto_inv_smul_phaseProduct`, `exists_tendsto_inv_smul_phaseProduct_codeProbe`, `exists_tendsto_inv_smul_phaseProduct_cubicKernel`, `exists_eventually_phaseProduct_unseen_wrong` | Modules `Scope/MarginContinuity`, `Scope/PhaseStep`, `Scope/PhasedRun` and `Scope/PhasedDirection`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. `phaseStep S C a lam W` is `η(λ, W)` with `N` and `\|C\|` as `Fintype.card S` and `Fintype.card C`. `phaseRun A y a lam T U₀ V₀ j` is the pair `W_j`, defined by recursion on `j` with the step `phaseStep S C a (lam j) W_j`, and `phaseProduct A y a lam T U₀ V₀ j` is `X_j`. The weight decays are any `lam : ℕ → ℝ` with `∀ j, 0 < lam j` and `Tendsto lam atTop (𝓝 0)`, and "there are lengths" is `∃ T : ℕ → ℕ`. Statement 2 is the conjunction of `Tendsto (fun j => nuclearNorm (X_j)) atTop atTop` and the limit of `margin A y (X_j) / nuclearNorm (X_j)`, Lean's quotient, which is `0` where the product is `0`. The Lipschitz bound is `\|‖X‖_S1 − ‖Y‖_S1\| ≤ √(card m * frobeniusSq (X − Y))`. `tendsto_inv_smul_of_tendsto_margin_div` is the statement about every sequence of matrices; its hypothesis on `Z₀` is that of XE10. For the code probes `a = 1`. "Decoded to the class of `−1`" is written as in XE15, at the cell `(1, 1)` of `phaseProduct`. `exists_seq_of_forall_exists` is the dependent choice of the phases. The bound `η_j ≤ λ_j / (8 s b)`, the numbers of the example's first phase and "the run has no limit" are not stated; the examples are the sample of XE3, `cubicKernel 3` with all nine cells seen, and the three seen cells of the kernel of signs, along `λ_j = 1 / (j + 1)` from the start `fromCols 1 0`, `fromCols 0 1`. |
 | XE19 | `signWeight`, `signWeight_pos`, `signWeight_le_two`, `signWeight_anti`, `signWeight_zero`, `mul_signWeight_le_two`; the system: `IsSignSystem`, `IsSignSystem.snd_nonneg`, `IsSignSystem.fst_pos`, `IsSignSystem.fst_mono`, `IsSignSystem.tendsto_fst_atTop`, `IsSignSystem.mul_le_mul_of_le`, `IsSignSystem.exists_lt`, `IsSignSystem.tendsto_sub_atTop`, `IsSignSystem.exists_forall_snd_le`; the run: `ceGrad_signProbe`, `decayStep_signProbe`, `pairing_one_mul_conjTranspose`, `frobeniusSq_add_frobeniusSq`, `signProduct`, `decayRun_signProbe_add`, `decayRun_signProbe_sub`, `isSignSystem_decayRun_signProbe`, `margin_signProbe`, `margin_signProduct`, `tendsto_modes_decayRun_signProbe`, `tendsto_frobeniusSq_decayRun_signProbe_atTop`; the limits: `tendsto_margin_signProduct_atTop`, `tendsto_ceLoss_signProduct`, `tendsto_margin_div_frobeniusSq_signProduct`, `tendsto_margin_div_signProduct`, `tendsto_inv_smul_signProduct`, `log_two_le_ceLoss_signProduct`, `tendsto_ceLoss_signProduct_iff`; the rate: `IsSignSystem.exp_add_le_exp_succ`, `IsSignSystem.exists_exp_ge`, `exists_ceLoss_signProduct_le`, `exists_log_le_frobeniusSq_decayRun_signProbe` | Modules `Scope/SignSystem`, `Scope/SignGap`, `Scope/SignRun`, `Scope/SignRunLimit` and `Scope/SignRate`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The sample is `signProbe` with the label `fun _ => true`; the factors are `U₀ V₀ : Matrix (Fin 1) k ℂ` for any finite `k`, the run is `decayRun (ceGrad signProbe fun _ => true) η 0 U₀ V₀`, and `signProduct η U₀ V₀ t` is `x_t` as a `1 × 1` matrix. `Re x` is `pairing 1 X`. `IsSignSystem η a b` states the two recursions for sequences `a b : ℕ → ℝ`; the run satisfies it with `a t = frobeniusSq (U_t + V_t)` and `b t = frobeniusSq (U_t − V_t)`. Statements 1 to 3 have the hypotheses `0 < η` and `U₀ + V₀ ≠ 0`; statement 4 is `log_two_le_ceLoss_signProduct` for every real `η` and the equivalence `tendsto_ceLoss_signProduct_iff` for `0 < η`. The quotient `margin / nuclearNorm` is Lean's, which is `0` where the product is `0`. The geometric growth of the ratio while `a ≤ b` is a private lemma. Statement 5 for the system is `∃ T, b T ≤ a T ∧ ∀ t, T ≤ t → exp ((a T - b T) / 2) + η * a T * (t - T) ≤ exp ((a t - b t) / 2)`; for the run it is `∃ T, 0 < a_T ∧ ∀ t, T ≤ t → ceLoss _ _ (signProduct η U₀ V₀ t) ≤ 1 / (1 + η * a_T * (t - T))` and the same with `Real.log (1 + η * a_T * (t - T)) ≤ frobeniusSq U_t + frobeniusSq V_t`, where `a_T` is `frobeniusSq (U_T + V_T)`. The remark on the eigenvector `(1, 1)` is not stated. The examples are the start `fromCols 1 0`, `fromCols 0 1` with `η = 1/10` and the starts `(1, −1)` and `(1, 1)` of width one; the witness of the system is `signWitness`, the first mode from `a_0 = 1`, `b = 0` with the step `1`. |
 | XE20 | `classSign`, `classSign_mul_self`, `ceGrad_term_signCode`, `ceGrad_signCode`, `ceGrad_signCode_mul_apply`, `conjTranspose_ceGrad_signCode_mul_apply`, `diagCell`, `injective_diagCell_fst`, `injective_diagCell_snd`; the rows: `rowOf`, `pairing_one_rowOf`, `rowOf_decayStep_signCode`, `rowOf_decayRun_signCode`, `frobeniusSq_rowOf_le`, `rowOf_add_ne_zero_iff`, `pairing_neg_left`, `crossEntropy_signCode_mul`, `ceLoss_decayRun_signCode`; the run: `tendsto_frobeniusSq_decayRun_signCode_atTop`, `log_two_le_ceLoss_decayRun_signCode`, `tendsto_ceLoss_decayRun_signCode_iff`, `tendsto_margin_decayRun_signCode_atTop`, `diagCell_one_add_zero_ne`, `diagCell_one_add_neg_one_eq`, `exists_ceLoss_decayRun_signCode_le` | Modules `Scope/SeparateCells`, `Scope/SeparateCellsRows`, `Scope/SeparateCellsRun` and `Scope/SeparateCellsRate`, namespace `Transformer.Grokking.FlatSpectrum.Training.Scope`. The samples are `codeProbe signCode cell` with `cell : S → m × n` and the labels `y : S → Bool`; `y_s = ±1` is `classSign (y s)`. "No two samples in one row" is `Function.Injective fun s => (cell s).1`, and the same with `.2` for the columns. `E_ij` is `Matrix.single i j 1`; the gradient is `ceGrad_signCode`, and the two statements on its rows are stated for the entries of `G X * V` and of `(G X)ᴴ * U`. The row `i` of a factor is `rowOf i U`, a matrix with one row: `u_s` is `rowOf (cell s).1 U` and `v_s` is `classSign (y s) • rowOf (cell s).2 V`. Statement 1 is `decayStep` and `decayRun` of the sign sample of XE19 at these rows, equal to the rows of the step and of the run; the loss of a sample is `crossEntropy_signCode_mul`, an equality with `ceLoss signProbe`, and the sum is `ceLoss_decayRun_signCode`, with `signProduct` of XE19. "`u_s + v_s ≠ 0` at the start" is `∃ b, U₀ (cell s).1 b + classSign (y s) • V₀ (cell s).2 b ≠ 0`, and its negation is `∀ b, _ = 0`. The run is `decayRun (ceGrad (codeProbe signCode cell) y) η 0 U₀ V₀`; the loss and the margin are those of the product of its two factors. The statement on the margin assumes `Nonempty S`. Statement 4 is `∃ T c, 0 < c ∧ ∀ t, T ≤ t → ceLoss _ _ _ ≤ Fintype.card S / (1 + c * (t - T))`, under `Nonempty S`; the step `T` and the constant `c` of its proof are not in the statement. The remark on the diagonal cells and the text of "Not covered" on the direction are not stated. `diagCell s` is `(s, s)` for `s : Fin 2`. The examples are those of the item. |
+
+## Functions of n variables (added)
+
+The theorems above are stated for a table of two variables, or for kernels of any shape. A
+function `f(x₁, …, x_n)` over `ℤ/p` becomes a kernel once its variables are cut into two
+groups: a group `u` of `k` variables indexes the rows, a group `v` of `l = n − k` variables the
+columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across such a cut and
+prices reading its `n` operands from a context. Every item gives a lower and an upper bound,
+exact where it can.
+
+### NV1. Bilinear coupling is flat
+
+Let `f(u, v) = g(u) + h(v) + uᵀ M v` with any `g`, `h` and a `k × l` matrix `M` over `ℤ/p`.
+One entry of `K Kᴴ` is
+
+```
+(K Kᴴ)(u, u') = Σ_v ψ(f(u, v)) conj ψ(f(u', v))
+              = ψ(g(u) − g(u')) Σ_v ψ((u − u')ᵀ M · v)
+              = ψ(g(u) − g(u')) p^l [(u − u')ᵀ M = 0],
+```
+
+since the characters `v ↦ ψ(w · v)` of `(ℤ/p)^l` sum to `p^l [w = 0]`: the sum over `v` is the
+product of the `l` one-variable sums `p [w_i = 0]`. The term `h(v)` cancels. So if `w ↦ wᵀ M`
+is injective,
+
+```
+K Kᴴ = p^l I,
+```
+
+and `K` is flat with `c = p^l` (R1). Neither `p` prime nor `g`, `h` special is needed. By R1 to
+R3:
+
+- `K` is the minimum of M from no proper Ω (Theorem A through R2), since no entry is zero;
+- every `X` has `‖K − X‖_S2² ≥ p^l (p^k − rank X)` (R3; injectivity forces `k ≤ l`);
+- for `k = l` and an invertible `M` the table is square with `N = p^k` rows, and
+
+```
+rank K = N,    ‖K‖_S1 = N √N.
+```
+
+Examples:
+
+- `k` copies of `x³ + x y`, `f = Σᵢ (xᵢ³ + xᵢ yᵢ)`, cut between the `x`s and the `y`s:
+  `g(x) = Σᵢ xᵢ³`, `h = 0`, `M = I`. Its kernel is the Kronecker power of the kernel of
+  Proposition 2.
+- A quadratic form `zᵀ Q z` with `Q = [[A, B], [C, D]]` on `z = (u, v)`: `g(u) = uᵀ A u`,
+  `h(v) = vᵀ D v` and `M = B + Cᵀ`, flat on the cut when `B + Cᵀ` is invertible.
+- `M = 0` gives `ψ(g(u)) ψ(h(v))`, of rank one; the additive table `ψ(x₁ + … + x_n)` is the
+  case `g(u) = Σ uᵢ`, `h(v) = Σ vⱼ`.
+
+### Lean
+
+`BilinearKernel` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`Transformer.Grokking.FlatSpectrum`, proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| NV1 | `bilinearKernel`, `stdAddChar_sum`, `sum_stdAddChar_dotProduct`, `bilinearKernel_mul_star`, `bilinearKernel_mul_conjTranspose`, `isFlat_bilinearKernel`, `bilinearKernel_ne_zero`, `not_isMinOn_bilinearKernel`, `mul_sub_rank_le_frobeniusSq_sub_bilinearKernel`, `rank_bilinearKernel`, `nuclearNorm_bilinearKernel`, `bilinearKernel_cube_add_mul` | The groups are functions `ι → ZMod p` and `κ → ZMod p` for finite types `ι`, `κ`; `k = |ι|`, `l = |κ|`. "`w ↦ wᵀ M` injective" is `Function.Injective M.vecMul`, and the square case takes `IsUnit M`. R3 is stated with `min (p^k) (p^l)`. The quadratic form is not stated separately. |
