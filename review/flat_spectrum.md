@@ -6128,8 +6128,9 @@ function `f(x₁, …, x_n)` over `ℤ/p` becomes a kernel once its variables ar
 groups: a group `u` of `k` variables indexes the rows, a group `v` of `l = n − k` variables the
 columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across such a cut,
 prices reading its `n` operands from a context, (NV6) prices what the labels show of one
-interaction among `k`, and (NV7) prices products of products across the cut. Every item gives a
-lower and an upper bound, exact where it can.
+interaction among `k`, and (NV7) prices what depth buys: a product network of depth
+`1 + ⌈log₂ k⌉` against one layer. Every item gives a lower and an upper bound, exact where it
+can.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6437,12 +6438,24 @@ rank(A ⊙ B) ≤ rank A · rank B.
 For `k` copies, `ψ(f) = Πᵢ ψ(xᵢ³) ψ(xᵢ yᵢ)`. Across the cut between the `x`s and the `y`s,
 `ψ(xᵢ³)` has rank one and `ψ(xᵢ yᵢ)` rank `p`, so the bound allows `p^k` for the product, and
 by NV1 the product has exactly that rank. Products of products reach the flat price from `2k`
-factors of small rank. A single layer cannot: by hand, a linear reading of features of `u` and
-of `v` is `a(u) + b(v)`, so a hidden unit is `(a(u) + b(v))(c(u) + d(v))`. Its terms `a(u) c(u)`
-and `b(v) d(v)` lie on one side of the cut, and the rest, `a(u) d(v) + b(v) c(u)`, has rank at
-most `2`. With the residual, the one-sided terms add up to `A(u) + B(v)`, of rank at most `2`,
-so a coordinate written by `m` hidden units of one layer has rank at most `2m + 2`, and holding
-`ψ(f)` exactly takes `m ≥ (p^k − 2)/2`.
+factors of small rank.
+
+*One layer pays the cut price.* A single layer cannot do the same. Feed it a state
+`e(u) + f(v)`, any encoding of each side of the cut added together, as the one-hot features of
+the operands are, and read its output by any linear functional `ℓ`. A linear reading of the state
+is `a(u) + b(v)`, so a hidden unit is `(a(u) + b(v))(c(u) + d(v))`. Its terms `a(u) c(u)` and
+`b(v) d(v)` lie on one side of the cut, and the rest, `a(u) d(v) + b(v) c(u)`, has rank at most
+`2`. With the residual, the one-sided terms of all units add up to `A(u) + B(v)`, of rank at most
+`2`, so the readout of a layer of `m` hidden units has rank at most `2m + 2` across the cut.
+Every table `ψ(g(x) + h(y) + xᵀ M y)` with `M` invertible has rank `p^k` (NV1), so reading it out
+exactly from one layer takes
+
+```
+2m + 2 ≥ p^k,    m ≥ (p^k − 2)/2,
+```
+
+and so do `k` copies of `x³ + x y`. That is NV2's flat price, halved because each unit adds rank
+two.
 
 *The product `x y` through characters.* A multiplicative character `χ` of `ℤ/p`, a homomorphism
 of the nonzero residues into `ℂ^×` with `χ(0) = 0`, turns the product into a product,
@@ -6476,14 +6489,50 @@ additive characters are spread evenly over the multiplicative ones: every nontri
 has the same modulus, as for two mutually unbiased bases. One pair is within a factor of two of
 the bound above, `p − 1` units against `(p − 2)/2`.
 
+*The network.* The model is main's FFN on an ordinary residual, without normalizations or
+attention, with the one-hot features of all operands at one position and a scratch part of the
+stream that starts at zero. A product tree multiplies `2^L` leaves in `L` layers: the two subtrees
+run side by side on disjoint coordinates, where their units add up, and one more unit multiplies
+their roots. So each layer of the tree has at most `2^L` units, and the scratch fewer than
+`2^{L+1}` coordinates. In front of the tree, one layer writes the leaves: a leaf
+`Σ_u G_u(x) H_u(y)` of a pair takes `|U|` units, unit `u` reading `G_u(x)` from the features of
+`x` through `W_g` and `H_u(y)` from those of `y` through `W_u`. Pad `k` pairs to
+`2^{⌈log₂ k⌉} < 2k` leaves with the constant `1`. Then
+
+```
+depth 1 + ⌈log₂ k⌉,    at most 2k|U| hidden units per layer,    fewer than 4k scratch coordinates
+```
+
+write `Πᵢ Σ_u G_u(xᵢ) H_u(yᵢ)` into one coordinate, exactly.
+
+Two choices of the leaf give `ψ(f)`. Through the characters, the phase `ψ(P(x))` folds into the
+reading of `x`:
+
+```
+ψ(P(x) + x y) = ψ(P(x)) · 1 + Σ_χ c(χ) ψ(P(x)) χ(x) · χ(y),
+```
+
+so a leaf is the whole `ψ(q(xᵢ, yᵢ))` at `p` units, and the tree multiplies `k` leaves rather
+than the `2k` phases `ψ(xᵢ³)` and `ψ(xᵢ yᵢ)`. Through point masses, `U = β`, `H_b(y) = [y = b]`
+and `G_b(x) = ψ(q(x, b))` give `ψ(q(x, y))` for any `q` at `|β|` units. Over `ℤ/p` both take `p`
+units per pair, so what makes the network cheap is the depth, not the characters. For `k` copies
+of `x³ + x y`, then, one layer needs at least `(p^k − 2)/2` hidden units to hold `ψ(f)` exactly,
+and `1 + ⌈log₂ k⌉` layers need at most `2kp`.
+
 *The readout.* `Re(ψ(f) conj ψ(c)) = cos(2π (f − c)/p)` is `1` at `c = f` and less than `1` at
-every other `c`, so a coordinate that holds `ψ(f)` exactly answers `f` by its largest logit.
+every other `c`, so a coordinate that holds `ψ(f)` exactly answers `f` by its largest logit, and
+the network's does.
+
+*Not covered.* The lower bound is for a readout equal to `ψ(f)`. The argmax readout asks less:
+only that the logit of `f` be the largest. What one layer needs for that is open. Normalizations,
+attention and the routing of operands are T3, and the price of the network in norms is T2b.
 
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
 `CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize` and `CopiesBestReadout`; for NV7,
-`ProductCharacters` and `ProductRank` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies` and
+`ProductOneLayer` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6500,5 +6549,7 @@ every other `c`, so a coordinate that holds `ψ(f)` exactly answers `f` by its l
 | NV6, constants | `var`, `meanSq_sub_eq_var_add`, `var_le_meanSq_sub`, `meanSq_comp_of_mean_stdAddChar`, `mean_stdAddChar_add`, `norm_cov_cube_add_mul_le`, `var_cube_add_mul_le_two_mul_var_copies`, `norm_cov_copies_cube_add_mul_le` | Theorem B for one pair is the root's `norm_mean_star_mul_cube_add_mul_le` applied to the centered readout. The `k` pairs are the first pair and `τ → ZMod p × ZMod p`, `k = 1 + \|τ\|`, and the intermediate is the first pair's. The variances are compared in one direction, `Var g(q) ≤ 2 Var g(f)`. The numbers at `p = 97` are by hand. |
 | NV6, sample size | `empiricalMean`, `mean_empiricalMean`, `meanSq_sum_pi_of_mean_eq_zero`, `meanSq_empiricalMean_sub`, `centeredProduct`, `mean_centeredProduct`, `meanSq_centeredProduct_ge`, `meanSq_centeredProduct_le`, `le_mul_meanSq_empiricalMean_sub`, `sq_norm_cov_mul_le`, `sq_le_of_meanSq_empiricalMean_le`, `copiesLabel`, `firstIntermediate`, `sq_norm_cov_mul_le_copies` | The `N` samples are `Fin N → α`, independent and uniform, and the mean square error is `meanSq` over them. The bounds on `Var X` are stated for `E \|X\|²`; `Var X = E \|X\|² − \|Cov\|²` is `meanSq_sub_eq_var_add`. For `k` copies, `k = 1 + \|τ\|`, the statement is `\|Cov\|² ((1 − 1/p)² − c) ≤ c N · MSE`; the threshold on `N` is the general `sq_le_of_meanSq_empiricalMean_le` with this `c`, and its instance and numbers at `p = 97` are by hand. |
 | NV6, the best readout | `condEnergy`, `law_bounds`, `mean_stdAddChar_copiesLabel`, `meanSq_ite_pair`, `meanSq_ite_copiesLabel`, `cov_ite_copiesLabel`, `condEnergy_copies` | `condEnergy` is defined as `Σ_t \|Cov(1{f = t}, h)\|² / P(f = t)`, with `P(f = t)` the mean square of the indicator; the scaling holds for any `P` with `P(0) = 0` and any `h` of the first pair. That it is the largest `\|Cov\|² / Var` over readouts, the bias `p/N` of a fitted readout, the factor of drawing without replacement and the ratio `2.1` are by hand; `0.044` is the root's measurement. |
-| NV7, rank and readout | `rank_hadamard_le`, `re_stdAddChar_mul_star_self`, `re_stdAddChar_mul_star_lt` | The rank bound is for matrices over any field with finite index types. The ranks `p` and `p^k` across the cut are NV5's and NV1's; the bound `2m + 2` for one layer and `(p^k − 2)/2` are by hand. |
+| NV7, rank and readout | `rank_hadamard_le`, `re_stdAddChar_mul_star_self`, `re_stdAddChar_mul_star_lt` | The rank bound is for matrices over any field with finite index types. The ranks `p` and `p^k` across the cut are NV5's and NV1's. |
 | NV7, characters | `card_mulChar`, `sum_mulChar_apply`, `sum_star_mulChar_mul`, `sum_mulChar_mul_star`, `mulCoeff`, `stdAddChar_eq_one_add_sum`, `stdAddChar_mul_eq`, `mulCoeff_eq`, `mulCoeff_one`, `norm_mulCoeff`, `mulCoeff_ne_zero`, `eq_mulCoeff_of_forall` | The characters are `MulChar (ZMod p) ℂ`, which send `0` to `0`, and `c_r(χ)` is `mulCoeff r χ`; the Gauss sums are `gaussSum χ (ZMod.stdAddChar.mulShift (−r))`. The uniqueness is stated for a constant `a` and coefficients `d` on all characters; that it costs one hidden unit per character is by hand. |
+| NV7, the network | the layer: `IsProductLayer`, `isProductLayer_iff_matrix`, `isProductLayer_id`, `IsProductLayer.mono`, `sideBySide`, `IsProductLayer.sideBySide`; the net: `IsProductNet`, `IsProductNet.mono`, `IsProductNet.id_net`, `IsProductNet.of_layer`, `IsProductNet.isProductLayer`, `IsProductNet.comp`, `IsProductNet.sideBySide`; the tree: `exists_productTree`, `oneHot`, `pairFeatures`, `exists_productNet`; `k` pairs: `two_pow_clog_lt`, `exists_productNet_pairs`, `exists_productNet_copies`, `exists_productNet_copies_readout`, `exists_productNet_mulChar` | A layer is `IsProductLayer m F`: `F z = z + Σ_u (g_u z)(w_u z) o_u` with at most `m` units and linear `g_u`, `w_u`; the matrix form is `isProductLayer_iff_matrix`. `IsProductNet m d F` is `d` such layers in a row. The stream is `((Fin k × α) ⊕ (Fin k × β)) ⊕ T`, the one-hot features `pairFeatures x y` and a scratch part `T` that starts at zero, and the value is read from one coordinate of `T`. The unit counts are the bounds `2k\|U\|`, `2k\|β\|` and `2kp`, not the exact `2^{⌈log₂ k⌉} \|U\|`. The point-mass route is `exists_productNet_copies`, the route through the characters `exists_productNet_mulChar`. |
+| NV7, one layer | `rank_productLayer_le`, `pow_le_of_productLayer_bilinear`, `pow_le_of_productLayer_copies`, `pairFeatures_eq_add` | The state is `e(u) + f(v)` for any maps `e`, `f` into the stream, and the readout any linear functional `ℓ`; the one-hot features are this case by `pairFeatures_eq_add`. The tables are `bilinearKernel p g h M` with `IsUnit M`, and `k` copies of `x³ + x y`. The examples are the network of `exists_productNet_copies` at `k = 1`, `p = 7`, which is one layer. |

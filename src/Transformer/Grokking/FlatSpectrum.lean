@@ -137,6 +137,10 @@ public import Transformer.Grokking.FlatSpectrum.CopiesSampleSize
 public import Transformer.Grokking.FlatSpectrum.CopiesBestReadout
 public import Transformer.Grokking.FlatSpectrum.ProductCharacters
 public import Transformer.Grokking.FlatSpectrum.ProductRank
+public import Transformer.Grokking.FlatSpectrum.ProductLayer
+public import Transformer.Grokking.FlatSpectrum.ProductTree
+public import Transformer.Grokking.FlatSpectrum.ProductCopies
+public import Transformer.Grokking.FlatSpectrum.ProductOneLayer
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -385,6 +389,13 @@ product layer computes `χ(x y) = χ(x) χ(y)` with one hidden unit per multipli
 and `ψ_r(x y) = 1 + ∑_χ c_r(χ) χ(x) χ(y)` with Gauss sums for coefficients, `c_r(1) = −p/(p − 1)`
 and `|c_r(χ)| = √p/(p − 1)` for `χ ≠ 1`; the expansion is unique, so this route needs all
 `p − 1` characters (`ProductCharacters`). Across a cut, rank is at most multiplicative under
-entrywise products, and `Re(ψ(f) conj ψ(c))` is largest at `c = f` (`ProductRank`). -/
+entrywise products, and `Re(ψ(f) conj ψ(c))` is largest at `c = f` (`ProductRank`). A product
+layer is `z ↦ z + W_out((W_g z) ⊙ (W_u z))` over `ℂ` (`ProductLayer`). On the one-hot features of
+`k` pairs, `1 + ⌈log₂ k⌉` such layers of at most `2k|β|` hidden units each, with fewer than `4k`
+scratch coordinates, write `ψ(∑_i q(x_i, y_i))` for any `q` exactly, so its readout is largest at
+the right answer; through the characters, `x³ + x y` takes `2kp` units (`ProductTree`,
+`ProductCopies`). One layer read out linearly has rank at most `2m + 2` across a cut, so writing
+`ψ(∑_i (x_i³ + x_i y_i))` exactly in one layer, from any encodings of the two sides, takes
+`2m + 2 ≥ p^k` (`ProductOneLayer`). -/
 
 @[expose] public section
