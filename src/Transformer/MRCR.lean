@@ -26,6 +26,9 @@ public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.ReRopeFading
 public import Transformer.MRCR.ReRopeHeads
+public import Transformer.MRCR.ReRopeSlots
+public import Transformer.MRCR.ReRopeStyleKeys
+public import Transformer.MRCR.ReRopeStyleRecall
 public import Transformer.MRCR.Returns
 public import Transformer.MRCR.RotaryCopy
 public import Transformer.MRCR.RotaryPartialHead
@@ -93,8 +96,12 @@ on, once `A (1 − cos θ)` exceeds `log T`; under the plain softmax, and under 
 threshold, it fades (`Transformer.MRCR.ReRopeHeads`, `Transformer.MRCR.ReRopeFading`). Keys of
 depth three, with MRCR-V2's style word after the topic, take one layer more: six layers answer
 the query with ALiBi and with ReRoPE's clamped logit, alone, under SSMax and with Su's scale
-(`Transformer.MRCR.PhraseKeyStyle`, `Transformer.MRCR.PhraseKeyStyleLogits`). Without a
-margin, at precision `0`, a negative logit
+(`Transformer.MRCR.PhraseKeyStyle`, `Transformer.MRCR.PhraseKeyStyleLogits`). With the real
+softmax three layers answer it under SSMax: four ReRoPE heads, rounded, read the last four tokens
+exactly at every length, and the heads of `Transformer.MRCR.CountHead` and
+`Transformer.MRCR.CountLookup` count the asks of each key and return the answer
+(`Transformer.MRCR.ReRopeSlots`, `Transformer.MRCR.ReRopeStyleKeys`,
+`Transformer.MRCR.ReRopeStyleRecall`). Without a margin, at precision `0`, a negative logit
 already drops a key, yet RoPE with every plane rotated still gives keys arbitrarily far a weight
 (`Transformer.MRCR.RotaryPrevHead`); with a plane left unrotated, as in partial RoPE or when
 LeRoPE learns the frequency `2π`, a head attends to the token before alone, without a margin

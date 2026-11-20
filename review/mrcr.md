@@ -26,10 +26,10 @@ what is proved in Lean and what is not.
 |---|---|---|
 | Length | keep the needle visible among `n` tokens | SA5 of [`flat_spectrum.md`](flat_spectrum.md): `s g > 1` recalls, `2 s B < 1` fades, exact error at `2 s B = 1` |
 | Near misses | a depth-3 key against distractors that share two of its parts | `Transformer.MRCR.NearMiss`, `NearMissThreshold`, `PartScore` |
-| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax and Su's `log n` scale), `ReRopeHeads`, `ReRopeFading` (with the real softmax a ReRoPE head reads inside the window under SSMax with `s g > 1` and under Su's scale, and fades under the plain softmax), `PhraseKeyStyleLogits` (keys of depth three, a style word after the topic: six layers with ALiBi or ReRoPE, alone, under SSMax or with Su's scale), `RotaryPrevHead` (with every plane rotated, keys arbitrarily far keep a weight at least `1` at precision `0`, so a head of the first layer does not attend to the token before alone), `RotaryPartialHead` (with a plane left unrotated, as in partial RoPE or LeRoPE at the frequency `2π`, a head attends to the token before alone, without a margin); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
+| Asks in words | find an ask spelled by several tokens, "a poem about penguins" | `Transformer.MRCR.PhraseKey`, `PhraseKeyRope`, `PhraseKeyTemplatedLimits` (no rounded transformer without positions, nor with RoPE or sinusoidal encodings at rational angles, also on templated conversations), `PhraseKeyPrevCorrect` (`TL[◁#, Y]`, the logic of ALiBi, answers it at depth two), `PhraseKeyLogits` (a transformer of five layers with ALiBi, KERPLE or SSMax of either answers it, the logit divided by `1`, `√d` or `d`), `PhraseKeySandwich` (not with Sandwich: its bias comes back near `0` far away, where a key beats the token before), `PhraseKeyRotary` (not with RoPE, YaRN or LeRoPE at any frequencies: a RoPE score converges only if it is constant, and a far key comes back within any margin of the token before), `PhraseKeyReRope` (with the distance clamped at a window, as in ReRoPE, five layers do, also under SSMax and Su's `log n` scale), `ReRopeHeads`, `ReRopeFading` (with the real softmax a ReRoPE head reads inside the window under SSMax with `s g > 1` and under Su's scale, and fades under the plain softmax), `PhraseKeyStyleLogits` (keys of depth three, a style word after the topic: six layers with ALiBi or ReRoPE, alone, under SSMax or with Su's scale), `ReRopeStyleRecall` (with the real softmax under SSMax, three layers: four ReRoPE heads, rounded, read the last four tokens exactly, then the heads of `CountLookup`), `RotaryPrevHead` (with every plane rotated, keys arbitrarily far keep a weight at least `1` at precision `0`, so a head of the first layer does not attend to the token before alone), `RotaryPartialHead` (with a plane left unrotated, as in partial RoPE or LeRoPE at the frequency `2π`, a head attends to the token before alone, without a margin); RoPE or Sandwich by other means, and SSMax of the dot product alone, open |
 | Ties | eight asks with the same key | `Transformer.MRCR.Ties`, `InnerNeedle` |
 | Ordinal | the `i`-th of the eight, counted from the start | `Transformer.MRCR.Ordinal`, `Counting` |
-| Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup` |
+| Count then look up | both at the scale `s log n` | `Transformer.MRCR.CountHead`, `CountLookup`, `ReRopeStyleRecall` (on the keys of asks in words) |
 | Copy | return the whole answer, token by token | `Transformer.MRCR.Returns`, `RotaryCopy`, `ReRopeFading` (copy by position: RoPE loses every position at long range, ReRoPE every position beyond the window; copy by content open) |
 | Training | whether a trained model has the gaps | not attempted (the user, 2026-11-19) |
 
@@ -110,7 +110,7 @@ whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, an
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
-## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`, and transformers with ALiBi, KERPLE, SSMax or RoPE clamped at a window; keys of depth three with ALiBi or ReRoPE)
+## Asks in words (proved: no rounded transformer without positions or with RoPE at rational angles, also templated; a formula of `TL[◁#, Y]`, and transformers with ALiBi, KERPLE, SSMax or RoPE clamped at a window; keys of depth three with ALiBi or ReRoPE, rounded or with the real softmax under SSMax)
 
 MRCR-V2 spells a key in words: "write a poem about penguins in an archaic style". The ordinal
 above gives an ask and its answer one token. `Transformer.MRCR.PhraseKey` spells the ask
@@ -251,8 +251,8 @@ at every frequency, coefficient and window: a RoPE score is bounded by `∑ (|a_
 (`abs_ropeScore_le`), so the dictionary that marks one key is answered with an error of at least
 `2 i / (e^{2B} + i)` (`two_mul_le_one_sub_softmax_rerope`), which tends to `2`
 (`exists_lt_softmax_rerope_error`). SSMax with `2 s B < 1` fades too
-(`exists_lt_logScale_rerope_error`). These are single heads: the five layers with the real
-softmax are not built.
+(`exists_lt_logScale_rerope_error`). Under SSMax such heads make three layers that answer the
+query of depth three (below).
 
 Keys of depth three take one layer more (`Transformer.MRCR.PhraseKeyStyle`,
 `PhraseKeyStyleCorrect`, `PhraseKeyStyleGrams`, `PhraseKeyStyleLogits`). MRCR-V2 adds a style to
@@ -266,6 +266,28 @@ before (`exists_styleAnswer`): ALiBi (`exists_alibi_styleAnswer`), and ReRoPE's 
 alone, under SSMax and with Su's scale (`exists_rerope_styleAnswer`,
 `exists_ssmax_rerope_styleAnswer`, `exists_logScale_rerope_styleAnswer`). As at depth two, each
 word of the key is one token, and the theorems hold for every number of needles, eight included.
+
+With the real softmax three layers answer the query of depth three under SSMax
+(`Transformer.MRCR.ReRopeSlots`, `ReRopeStyleKeys`, `ReRopeStyleRecall`). A ReRoPE head reads
+the distance `k < W` from the position `k` on. Before that position the peak would lie before the
+first token; the scores rise towards it by at least `g` per step (`cos_add_add_one_le`,
+`reropeEarly_gap`), so the head reads the first token (`abs_slotHead_sub_le`). For values in
+`{0, 1}` and `s g > 4` the error stays below `1/4` at every position, and a ReLU layer of width
+two rounds the reading to the token itself (`clampUnit_slotHead`). Four such slots at the
+distances `4, 3, 2, 1`, with `W > 4` and `θ W ≤ π`, and one ReLU unit per key give each position
+the one-hot key of the ask that ends just before it (`rowKey_eq_some`, `keyUnit_eq`,
+`keyVec_eq`). The dot product of two such vectors is the raw score of the counting head
+(`sum_keyVec_mul`, `styleCount_eq`), the position after the ask wanted has the count `r + 1` of
+its key (`occ_rowKey`), and the lookup head of `CountLookup` returns the token there
+(`styleLookup_eq`). So for every `s₂ > 1` some `s₁` makes the three layers return the answer
+within every `ε` from some length on (`exists_forall_styleLookup`), for every bound on the index
+asked, eight needles included. One ReRoPE head reads any distance inside its window, so one layer
+does the work of the four that read the token before in the rounded transformers. Layer 1 attends
+over the tokens without a BOS, and the lookup head leaves out the query token, as in
+`CountLookup`. Under Su's scale the three layers are not treated: below the training length it is
+the plain softmax, and the counting head is proved for `s₁ ≥ 1` only. Under the plain softmax
+every ReRoPE head fades (`exists_lt_softmax_rerope_error`), but that no transformer with it
+answers is not proved.
 
 Without a margin RoPE still fails when every plane rotates (`Transformer.MRCR.RotaryPrevHead`).
 At precision `s = 0` a key whose logit is negative gets the weight `round(exp z) = 0`, so a head
