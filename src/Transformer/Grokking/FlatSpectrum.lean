@@ -129,6 +129,9 @@ public import Transformer.Grokking.FlatSpectrum.BlockCut
 public import Transformer.Grokking.FlatSpectrum.BilinearKernel
 public import Transformer.Grokking.FlatSpectrum.CutRange
 public import Transformer.Grokking.FlatSpectrum.CutRank
+public import Transformer.Grokking.FlatSpectrum.CopiesCovariance
+public import Transformer.Grokking.FlatSpectrum.CopiesInvisible
+public import Transformer.Grokking.FlatSpectrum.CopiesTheoremB
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -361,6 +364,12 @@ rank `d` on a flat kernel is `c (min(m, n) − d)`, and over the tables of `2k` 
 entries of modulus one the nuclear norm ranges exactly over `[N, N √N]`. For every `M` the rank
 across the cut is the number of distinct `uᵀ M`, `p^{rank M}` over a prime (`CutRank`), so the
 order of the operands decides it: `k` pairs coupled by `xᵢ yᵢ` have the rank `p^s` across a cut
-that separates `s` of them. -/
+that separates `s` of them. A readout `g` of the label `u(a) + w(b)` of independent parts has
+with every `h(a)` the covariance `∑_{r ≠ 0} ĝ(r) E ψ_r(w) Cov(ψ_r(u), h)`
+(`CopiesCovariance`), and `P(x) + x y` with `P(0) = 0` has `E ψ_r = 1/p` for every `r ≠ 0`
+(`CopiesInvisible`). So among `k` copies of `x³ + x y` the covariance of every readout with every
+function of one pair falls by exactly `p^{−(k−1)}`, and a readout of unit variance covaries with
+one pair's intermediate `ψ_r(x y)` by at most `p^{−(k−1)} √(9/p + 16/p^{3/2})`
+(`CopiesTheoremB`). -/
 
 @[expose] public section

@@ -6126,9 +6126,9 @@ questions remain open. Codes of more than two classes.
 The theorems above are stated for a table of two variables, or for kernels of any shape. A
 function `f(x₁, …, x_n)` over `ℤ/p` becomes a kernel once its variables are cut into two
 groups: a group `u` of `k` variables indexes the rows, a group `v` of `l = n − k` variables the
-columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across such a cut and
-prices reading its `n` operands from a context. Every item gives a lower and an upper bound,
-exact where it can.
+columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across such a cut,
+prices reading its `n` operands from a context, and (NV6) prices what the labels show of one
+interaction among `k`. Every item gives a lower and an upper bound, exact where it can.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6287,9 +6287,67 @@ cut of some order, so only a coupling of full rank across every balanced cut kee
 `p^{n/2}` in every order: a quadratic form `zᵀ Q z` does when every balanced off-diagonal block of
 `Q + Qᵀ` is invertible.
 
+### NV6. One pair among `k` copies is invisible
+
+Theorem B hides the intermediate of one copy of `x³ + x y` from its labels: no function of the
+label of unit norm correlates with `ψ_r(x y)` by more than `O(p^{−1/2})`. Among `k` copies the
+other pairs hide it further, by an exact factor.
+
+Take independent uniform parts `a` and `b`, a label `f = u(a) + w(b)` in `ℤ/p`, a readout `g(f)`
+and a function `h(a)` of the first part, compared by `Cov(A, B) = E[A conj B] − E A conj(E B)`.
+Expand `g = Σ_r ĝ(r) ψ_r` with `ĝ(r) = E_s g(s) ψ(−r s)`. Since `ψ_r(u + w) = ψ_r(u) ψ_r(w)` and
+`w` is independent of `a`, averaging over `b` first gives
+
+```
+Cov(g(u + w), h) = Σ_{r ≠ 0} ĝ(r) · E ψ_r(w) · Cov(ψ_r(u), h);
+```
+
+the term `r = 0` is a constant and drops out. For independent blocks, `w = Σ_j q_j(z_j)`, the
+middle factor is `Π_j E ψ_r(q_j(z_j))`. When every `E ψ_r(w)` with `r ≠ 0` is one number `ε`, it
+comes out of the sum, and adding `w` scales the covariance of every readout with every `h` of `a`
+by exactly `ε`:
+
+```
+Cov(g(u + w), h) = ε · Cov(g(u), h).
+```
+
+The same condition fixes the law of `w`: `E φ(w) = (1 − ε) E φ + ε φ(0)` for every `φ`, the
+mixture `(1 − ε) U + ε δ₀` of the uniform law and the point mass at `0`.
+
+For a prime `p` and `q(x, y) = P(x) + x y` with `P(0) = 0`, such as `x³ + x y`,
+`E ψ_r(q) = 1/p` for every `r ≠ 0`: for `x ≠ 0` the sum of `ψ_r(x y)` over `y` vanishes, and
+`x = 0` contributes `p` terms equal to `1`. So `m` independent copies have `ε = p^{−m}`. For `k`
+copies of `x³ + x y`, `f = Σᵢ (xᵢ³ + xᵢ yᵢ)`, any set `S` of the pairs, any readout `g` and any
+`h` of the pairs in `S`,
+
+```
+Cov(g(f), h(z_S)) = p^{−(k − |S|)} · Cov(g(f_S), h(z_S)),
+```
+
+where `f_S` is the label of the pairs in `S` alone. The labels themselves differ slightly: one
+pair has `P(q = 0) = (2p − 1)/p²` and `P(q = t) = (p − 1)/p²` for `t ≠ 0`, while `k` pairs have
+`ε = p^{−k}` and are closer to uniform.
+
+*Constants.* These need Theorem B and are for `x³ + x y`. Read as a covariance, Theorem B bounds
+one pair: `|Cov(g(q), ψ_r(x y))| ≤ √(Var g(q)) √(9/(2p) + 8/p^{3/2})` for `r ≠ 0`. Among `k`
+pairs the covariance gains the factor `p^{−(k−1)}`, and the variance of a readout changes by at
+most a factor `2`, because the law of one pair is at most twice the law of `k` pairs at every
+value. Hence
+
+```
+|Cov(g(f), ψ_r(x₁ y₁))| ≤ p^{−(k−1)} √(Var g(f)) √(9/p + 16/p^{3/2}).
+```
+
+A readout of unit variance covaries with one pair's intermediate by at most
+`p^{−(k−1)} √(9/p + 16/p^{3/2})`: at `p = 97` that is `0.33` for `k = 1` and `0.0034` for
+`k = 2`. At `k = 1` the bound is `√2` looser than Theorem B's `0.23`, the price of comparing the
+variances. Like Theorem B, this is about the labels, not about layers: it bounds what a readout
+of the label can see, not what a network can compute.
+
 ### Lean
 
-`BilinearKernel`, `CutRange` and `CutRank` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`BilinearKernel`, `CutRange`, `CutRank` and, for NV6, `CopiesCovariance`, `CopiesInvisible` and
+`CopiesTheoremB` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6302,3 +6360,5 @@ cut of some order, so only a coupling of full rank across every balanced cut kee
 | NV3 | the cap: `sum_sum_band`, `sq_add_sq_sum_le`, `sum_sum_phaseLogit_sub_le`, `card_mul_exp_mean_le`, `depthWeight_le_of_sum_sum_le`, `depthWeight_leropeLogit_le`; the DFT head: `two_mul_sin_mul_sum_cos`, `sum_cos_dft`, `dftFreq`, `leropeLogit_dft`, `depthWeight_dft`, `half_lt_depthWeight_dft`, `depthWeight_dft_mem` | The cap is stated for a sequence whose tokens at the distances `t − R, …, t + R` are one token `y`, with `‖Q x_i‖², ‖K y‖² ≤ d`; a positional head on any input is the case of the constant sequence, by hand. The DFT head is stated at the query `2R` with the tokens `Unit` in `depthWeight_dft_mem`, and for every sequence in `depthWeight_dft`. The prices in `λ A` are solved by hand from the weights. The gap of the order is by hand. |
 | NV4 | `sum_exp_mul_indicator`, `softmaxAttention_indicator_nonpos_of_mem_convexHull`, `exists_mem_convexHull_compl_of_le_one`, `isLeast_dim_softmaxAttention_recall_sign` | The projections are `Fin d → ℝ` and the score is `Σ_r a_r k_r`, as in SA2; the hull is `convexHull ℝ (kf '' {k}ᶜ)`. The least dimension is `IsLeast` of the set of `d` for which projections `Fin m → Fin d → ℝ` recall by the sign, for `m ≥ 3`. |
 | NV5 | `sum_bilinearKernel_mul_star`, `bilinearKernel_row_eq`, `rank_bilinearKernel_eq_card`, `rank_bilinearKernel_eq_pow` | The number of couplings is `Nat.card (Set.range M.vecMul)`; `p^{rank M}` takes `Fact p.Prime`. The singular values, the least error of width `d`, the nuclear norm and the orders of the operands are by hand. |
+| NV6 | the identity: `cov`, `fourierCoeff`, `sum_fourierCoeff_mul`, `cov_prod_fst`, `cov_comp_eq_sum`, `cov_comp_add_eq_sum`, `mean_stdAddChar_sum_pi`, `cov_comp_add_sum_pi`; the ratio and the law: `cov_comp_add_of_mean_stdAddChar`, `mean_comp_of_mean_stdAddChar`, `mean_ite_eq_of_mean_stdAddChar`; `P(x) + x y`: `mean_stdAddChar_poly_add_mul`, `mean_stdAddChar_copies`, `cov_comp_add_copies`, `cov_copies_cube_add_mul` | The parts are finite types with the uniform law, `mean` is the average over them and `cov` is defined from it; independent blocks are a pi type `∀ j, X j`. The pairs in `S` are `σ → ZMod p × ZMod p` and the others `τ → ZMod p × ZMod p`, so `k − \|S\| = \|τ\|`. The ratio and the law take a complex `ε`; the law of one pair, `(2p − 1)/p²` at `0`, is its case `ε = 1/p`, by hand. |
+| NV6, constants | `var`, `meanSq_sub_eq_var_add`, `var_le_meanSq_sub`, `meanSq_comp_of_mean_stdAddChar`, `mean_stdAddChar_add`, `norm_cov_cube_add_mul_le`, `var_cube_add_mul_le_two_mul_var_copies`, `norm_cov_copies_cube_add_mul_le` | Theorem B for one pair is the root's `norm_mean_star_mul_cube_add_mul_le` applied to the centered readout. The `k` pairs are the first pair and `τ → ZMod p × ZMod p`, `k = 1 + \|τ\|`, and the intermediate is the first pair's. The variances are compared in one direction, `Var g(q) ≤ 2 Var g(f)`. The numbers at `p = 97` are by hand. |
