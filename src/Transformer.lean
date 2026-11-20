@@ -68,6 +68,7 @@ public import Transformer.ComplexFFN
 public import Transformer.ComplexProjection
 public import Transformer.ReRoPEBlock
 public import Transformer.LeRoPEBlock
+public import Transformer.Phasor
 public import Transformer.SequenceModel
 
 /-!
