@@ -134,38 +134,40 @@ theorem keyVec_eq (x : ℕ) (o : Option (Fin F × Fin N × Fin S)) :
     · simp
     · simp [Finset.sum_ite_eq]
 
-/-- **The raw score of the counting head**: the dot product of the units of two positions is `1`
-iff they carry the same key, and `0` otherwise. -/
-theorem sum_keyVec_mul (x y : ℕ) :
-    ∑ o, keyVec s A θ m W w x o * keyVec s A θ m W w y o =
+/-- **The raw score of the counting head**: the dot product of the units of two positions, at
+scales `s` and `s'` that both read exactly, is `1` iff they carry the same key, else `0`. -/
+theorem sum_keyVec_mul {s' : ℝ} (hs' : 0 ≤ s') (hsg' : 4 < s' * (A * (1 - Real.cos (θ m))))
+    (x y : ℕ) : ∑ o, keyVec s A θ m W w x o * keyVec s' A θ m W w y o =
       if rowKey w x = rowKey w y then 1 else 0 := by
-  simp only [keyVec_eq hA hs hθ hW hθW hsg, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-    mem_univ, ite_true]
+  simp only [keyVec_eq hA hs hθ hW hθW hsg, keyVec_eq hA hs' hθ hW hθW hsg', ite_mul, one_mul,
+    zero_mul, Finset.sum_ite_eq, mem_univ, ite_true]
   rcases eq_or_ne (rowKey w x) (rowKey w y) with h | h
   · simp [h]
   · simp [h, Ne.symm h]
 
 end Vec
 
-/-- The hypotheses of `keyUnit_eq` hold at `s = 40`, `A = 1`, `θ = π/6` and the window `6`, where
-`40 (1 − √3/2) > 4`. -/
+/-- The gap of the examples: `40 (1 − cos (π/6)) = 40 (1 − √3/2) > 4`. -/
+theorem four_lt_forty_mul_one_sub_cos :
+    (4 : ℝ) < 40 * (1 * (1 - Real.cos (Real.pi / 6))) := by
+  rw [Real.cos_pi_div_six]
+  nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num), Real.sqrt_nonneg 3]
+
+/-- The hypotheses of `keyUnit_eq`, `keyVec_eq` and `sum_keyVec_mul` hold at `s = 40`, `A = 1`,
+`θ = π/6` and the window `6`. -/
 example (w : List (StyleTok 1 1 1 1 8)) (x : ℕ) :=
   keyUnit_eq (s := 40) (A := 1) zero_le_one (by norm_num) (θ := fun _ : Fin 1 => Real.pi / 6)
     (m := 0) (by positivity) (W := 6) (by norm_num) (by push_cast; linarith)
-    (by rw [Real.cos_pi_div_six]; nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num),
-      Real.sqrt_nonneg 3]) w x 0 0 0
-
-/-- The same hypotheses for `keyVec_eq` and `sum_keyVec_mul`. -/
-example (w : List (StyleTok 1 1 1 1 8)) (x y : ℕ) :=
-  sum_keyVec_mul (s := 40) (A := 1) zero_le_one (by norm_num) (θ := fun _ : Fin 1 => Real.pi / 6)
-    (m := 0) (by positivity) (W := 6) (by norm_num) (by push_cast; linarith)
-    (by rw [Real.cos_pi_div_six]; nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num),
-      Real.sqrt_nonneg 3]) w x y
+    four_lt_forty_mul_one_sub_cos w x 0 0 0
 
 example (w : List (StyleTok 1 1 1 1 8)) (x : ℕ) :=
   keyVec_eq (s := 40) (A := 1) zero_le_one (by norm_num) (θ := fun _ : Fin 1 => Real.pi / 6)
     (m := 0) (by positivity) (W := 6) (by norm_num) (by push_cast; linarith)
-    (by rw [Real.cos_pi_div_six]; nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num),
-      Real.sqrt_nonneg 3]) w x none
+    four_lt_forty_mul_one_sub_cos w x none
+
+example (w : List (StyleTok 1 1 1 1 8)) (x y : ℕ) :=
+  sum_keyVec_mul (s := 40) (A := 1) zero_le_one (by norm_num) (θ := fun _ : Fin 1 => Real.pi / 6)
+    (m := 0) (by positivity) (W := 6) (by norm_num) (by push_cast; linarith)
+    four_lt_forty_mul_one_sub_cos w (s' := 40) (by norm_num) four_lt_forty_mul_one_sub_cos x y
 
 end Transformer.MRCR

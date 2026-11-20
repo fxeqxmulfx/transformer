@@ -78,8 +78,8 @@ theorem reropeEarly_gap (θ : Fin K → ℝ) (m : Fin K) {A : ℝ} (hA : 0 ≤ A
 
 /-- The hypotheses of `reropeEarly_gap` hold for `θ = π/4`, `A = 1`, the window `4`, the peak `3`,
 the query position `2` and the distance `1`. -/
-example := reropeEarly_gap (fun _ : Fin 1 => Real.pi / 4) 0 zero_le_one (by positivity)
-  (k := 3) (W := 4) (by norm_num) (by push_cast; linarith) (i := 2) (d := 1) (by norm_num) one_lt_two
+example := reropeEarly_gap (fun _ : Fin 1 => Real.pi / 4) 0 zero_le_one (by positivity) (k := 3)
+  (W := 4) (by norm_num) (by push_cast; linarith) (i := 2) (d := 1) (by norm_num) one_lt_two
 
 /-- **Before the peak the head reads the first token**: at the query position `i < k` the head of
 `reropeEarly_gap` at the scale `s log n` returns the value at the position `0` within

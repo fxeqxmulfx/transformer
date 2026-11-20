@@ -100,13 +100,14 @@ The second head, at the query for the key `q` and the ordinal `r`, scores the ro
 `[κ t = q] − K_r (c_t − 1/(r + 2))²` with `K_r = ((r + 2)(r + 3))²` and the BOS by `0`; the
 score is bilinear in `(e_κ, 1, c, c²)` against features of the query, and the feedforward layer
 supplies `c²`. Every count `o ≠ r + 1` puts `1/(o + 1)` at least `1/((r + 2)(r + 3))` from
-`1/(r + 2)` (`one_le_lookupWeight_mul_sq`), so the needle leads by
-`g = 1 − 2 K_r 2^{1 − s₁}` and the second head is within `2 C m (m + 1)^{−s₂ g}` of its value
-(`abs_lookupHead_sub_le`). For every bound `R` on the ordinal and every `s₂ > 1` some `s₁` returns
-the needle to every accuracy from some number of rows on, whatever the keys and the values
-(`exists_forall_lookupHead_recall`). The first rows keep an error of `2^{1 − s₁}` at every length,
-so `2 K_R 2^{1 − s₁}` must stay below `1`: the proof takes `2^{s₁ − 1} > 4 K_R s₂ / (s₂ − 1)`,
-whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s₁ = 18`, and the weight `K_r` of
+`1/(r + 2)` (`one_le_lookupWeight_mul_sq`). The first head may run at a scale `s₁(t)` that
+depends on the row; with `s₁(t) ≥ s` at every row the needle leads by `g = 1 − 2 K_r 2^{1 − s}`
+and the second head is within `2 C m (m + 1)^{−s₂ g}` of its value (`abs_lookupHead_sub_le`). For
+every bound `R` on the ordinal and every `s₂ > 1` some `s` returns the needle to every accuracy
+from some number of rows on, for all scales `s₁(t) ≥ s`, whatever the keys and the values
+(`exists_forall_lookupHead_recall`). The first rows keep an error up to `2^{1 − s}` at every
+length, so `2 K_R 2^{1 − s}` must stay below `1`: the proof takes `2^{s − 1} > 4 K_R s₂ / (s₂ − 1)`,
+whose least integer for eight needles (`R = 8`) at `s₂ = 2` is `s = 18`, and the weight `K_r` of
 the second head grows like `r⁴`. The query token is left out of the second head; its score would
 be at most `0`.
 
@@ -279,9 +280,10 @@ the one-hot key of the ask that ends just before it (`rowKey_eq_some`, `keyUnit_
 `keyVec_eq`). The dot product of two such vectors is the raw score of the counting head
 (`sum_keyVec_mul`, `styleCount_eq`), the position after the ask wanted has the count `r + 1` of
 its key (`occ_rowKey`), and the lookup head of `CountLookup` returns the token there
-(`styleLookup_eq`). So for every `s₂ > 1` some `s₁` makes the three layers return the answer
-within every `ε` from some length on (`exists_forall_styleLookup`), for every bound on the index
-asked, eight needles included. One ReRoPE head reads any distance inside its window, so one layer
+(`styleLookup_eq`). So for every `s₂ > 1` some `b` makes the three layers return the answer
+within every `ε` from some length on, for every bound on the index asked, eight needles included,
+when layer 2 runs at scales `s₁ ≥ b` (`exists_forall_styleLookup`). The scales of layers 1 and 2
+may vary with the position. One ReRoPE head reads any distance inside its window, so one layer
 does the work of the four that read the token before in the rounded transformers. Layer 1 attends
 over the tokens without a BOS, and the lookup head leaves out the query token, as in
 `CountLookup`. Under Su's scale the three layers are not treated: below the training length it is
