@@ -26,7 +26,7 @@ its key before it has `r + 1` positions of that key up to it (`occ_rowKey`); whe
 the query, the token there is `val v`. So for every `s₂ > 1` some `b` makes the three layers
 return the answer to every accuracy from some length on, for every number of needles, eight
 included, whenever layer 2 runs at scales `s₁ x ≥ b` (`exists_forall_styleLookup`). The scales of
-layers 1 and 2 may depend on the position, as Su's scale does.
+layers 1 and 2 may depend on the position, as Su's scale does (`Transformer.MRCR.ReRopeStyleSu`).
 
 Under the plain softmax the slot heads fade instead (`Transformer.MRCR.ReRopeFading`). The rounded
 transformers of `Transformer.MRCR.PhraseKeyStyleLogits` take six layers, as each of their reading
