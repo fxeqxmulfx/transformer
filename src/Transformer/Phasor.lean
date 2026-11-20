@@ -3,6 +3,7 @@ module
 public import Transformer.Phasor.Router
 public import Transformer.Phasor.Attention
 public import Transformer.Phasor.FFN
+public import Transformer.Phasor.Forward
 
 /-!
 # The main model of DiffGPT as a forward pass
@@ -21,6 +22,8 @@ as concrete maps and plugs them into it, in exact real arithmetic.
   `Transformer.LeRoPEBlock.block` over the streams of each position, causal, and the bound
   `(5/4) ln (i + 1)` of every logit.
 * `FFN`: the complex-product feed-forward branch `W_F (W_g z ⊙_ℂ W_u z) / √2` as a `Sublayer`.
+* `Forward`: layers and models, `Model.states`, `Model.logits`, and `Model.states_eq_run`: at each
+  position the forward pass is `PeriRMS.run` of these sublayers, so its theorems apply to it.
 
 The parameters are arbitrary: real-linear projections (the model's are the complex-linear ones, a
 subclass), any routers, phase coordinates and score coefficients. The model pairs the coordinates
