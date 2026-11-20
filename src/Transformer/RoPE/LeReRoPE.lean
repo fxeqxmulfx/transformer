@@ -5,6 +5,7 @@ public import Transformer.RoPE.LeReRoPE.Clamp
 public import Transformer.RoPE.LeReRoPE.Covariance
 public import Transformer.RoPE.LeReRoPE.Fold
 public import Transformer.RoPE.LeReRoPE.Window
+public import Transformer.RoPE.LeReRoPE.WindowKernel
 public import Transformer.RoPE.LeReRoPE.WindowLoss
 
 /-!
@@ -45,4 +46,9 @@ window's is `1 − s` times the loss's derivative along the indicator of the far
 for every far distance. A window wider than every distance of its head gets no gradient, and
 neither does its slope; at `s = 1` the window gets none at all. Nothing in the loss pulls an open
 window back.
+
+`Transformer.RoPE.LeReRoPE.WindowKernel` reads both gradients off the rotated chunks, as a kernel
+has them. One pass rotates the far queries to `w + s(t − w)` and the far keys to `s j`; the slope's
+gradient weighs the far queries' torques by their excess `t − w` and the far keys' by `j`, and the
+window's is `1 − s` times the far queries' torques, summed over the head's bands.
 -/
