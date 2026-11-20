@@ -3,6 +3,7 @@ module
 public import Transformer.MHC.Section4_Regularized
 public import Transformer.MHC.Section4_SinkhornDenominators
 public import Transformer.MHC.PhaseSkip
+public import Transformer.MHC.PhaseStep
 public import Transformer.MHC.PeriRMS
 
 /-!
@@ -14,8 +15,8 @@ The development proves ideal skip-map stability and conservation,
 formalizes the gate and finite Sinkhorn formulas, and separately models
 the epsilon-regularized code used by GLM-5.3-Flash and DeepSeek V4.1.
 It includes counterexamples to interpreting nonexpansion as an isometry
-or as a bound on the complete nonlinear block. `PhaseSkip` adds the phase-conjugated skip map
-of DiffGPT's main model, `D P D*`. No empirical performance
+or as a bound on the complete nonlinear block. `PhaseSkip` and `PhaseStep` add the
+phase-conjugated skip map and block of DiffGPT's main model, `D P D*`. No empirical performance
 or optimizer claim, and no infinite Sinkhorn convergence theorem, is asserted.
 
 See `review/residual_connections.md` for pinned manuscripts and code.

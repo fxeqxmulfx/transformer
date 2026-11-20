@@ -9,7 +9,8 @@ Local extension of arXiv:2512.24880v2, Eq. (3), around the two Peri-RMS
 sublayers of the diff-gpt model frozen at c6c517b. Migrated from
 `research/mhc_scaled/Bounds.lean`, with the same hypotheses and constants.
 
-There are attention and SwiGLU updates per decoder block. Normalized
+There are attention and feed-forward updates per decoder block, each the phase-conjugated
+four-stream block `step`; the bounds do not use the phases. Normalized
 embeddings and output-normalized branches give per-stream RMS bounds
 `1 + 2*sqrt(2L)` for coefficient `1/sqrt(2L)`, and `1 + 4L` for coefficient
 one. The factor two retains the paper's `2*sigmoid` write gates. Branches
@@ -23,7 +24,7 @@ namespace Transformer.MHC.PeriRMS
 open Transformer Transformer.Residual Transformer.MHC
 open scoped BigOperators
 
-/-- Current decoder order: attention addition, then SwiGLU addition.
+/-- Current decoder order: attention addition, then feed-forward addition.
 Layer count counts decoder blocks, not the two residual sublayers. -/
 noncomputable def run {d : ℕ} (eps scale : ℝ)
     (attention mlp : ℕ → Sublayer d) (initial : State d) : ℕ → State d
