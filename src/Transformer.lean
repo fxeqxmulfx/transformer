@@ -64,6 +64,7 @@ public import Transformer.KERPLE
 public import Transformer.Sandwich
 public import Transformer.Weil
 public import Transformer.Rotate90
+public import Transformer.ComplexFFN
 public import Transformer.SequenceModel
 
 /-!
@@ -362,6 +363,10 @@ critical points are strict saddles.
 all four RMSNorm calls, represents modular division at every prime with eight
 active residual channels and fourteen hidden units; padding gives the documented
 width-16 and width-128 models. This is an existence theorem for weights.
+`Transformer.ComplexFFN` compares the complex-product feed-forward blocks of DiffGPT's
+complex model with its bias-free SwiGLU control: a plain complex-product FFN with `h`
+units is a SwiGLU FFN with `6h` units, and none of the three complex products
+approximates a single SwiGLU unit at any width.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
