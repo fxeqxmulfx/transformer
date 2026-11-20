@@ -134,6 +134,9 @@ witness examples beside them.
 | Wu/Liu/Jadbabaie §4, Theorem 2 and Corollary 1 | `FrequencyMatching/Section4_Dilation.lean` | Exact pushforward-measure utility invariance and maximizer transport; a counterexample when frequencies are scaled without dilating the task; no positive frequency covers unbounded widths. |
 | Derived endpoint design results | `FrequencyMatching/Section3_WorstCase.lean`, `FrequencyMatching/Section3_Retention.lean` | Actual maximum token distance; exact slow-frequency base threshold; guarantees at all nearer distances; opposite directions of retention and contrast; a unique contrast optimum under a fixed retention floor; a realizable attention-score counterexample. |
 | LeRoPE §3.1, Eq. (5), and §3.2 | `LeRoPE/Section3_LearnedFrequencies.lean` | Positive frequencies, zero initialization, representation of every positive target, multiplicative increments, and the exact local log-frequency score derivative. |
+| LeRoPE §7, §6 and Appendix D.1, Table 10 | `LeRoPE/Section7_Extrapolation.lean` | Half a period on, a band comes back negated, and a band that vanishes on an interval is zero; so a band `≤ 0` throughout the training window, not zero, has `θ̂ L ≤ π`, a period of at least `2 L`, and is positive at some distance in `(L, L + π/θ̂]`. Table 10 lists `θ̂ L` from 2.714 to 3.086 and `λ / L` from 2.036 to 2.315, mean 2.138, not §6's "≈ 2.205 L_train". |
+| LeRoPE Appendix D.2, and §7's dominant-band interpolation | `LeRoPE/SectionD2_NTKByParts.lean` | LeRoPE's NTK-by-parts multiplier `s + w_m (1 − s)` is YaRN's at the scale `max(1, L_doc / L)`; a band of at most one rotation gets `M = s` at every document length, and a band `≤ 0` throughout its window turns at most half a rotation; so interpolated, it stays `≤ 0` at every distance of the document. |
+| In no paper: LeReRoPE, LeRoPE with ReRoPE | `LeReRoPE/Clamp.lean` | With a window `w ≤ L` ReRoPE keeps a band `≤ 0` throughout the training window `≤ 0` at every distance; Leaky ReRoPE's positions stay in the window up to the distance `w + k (L − w)`, and beyond it the band turns positive at a distance at most `w + k (L + π/θ − w)`. |
 | Wu/Du/Peng A.2, Proposition 2, and A.4/C.6 | `Scores.lean`, `Diagnostics/SectionA4_Response.lean` | Real score representation and its converse; exact adjacent-position response; deterministic frequency/amplitude bounds for arbitrary coefficients and complete heads. |
 | Wu/Du/Peng C.6 generalized to arbitrary shifts; derived margin guarantees | `Diagnostics/SectionC6_Stability.lean`, `Diagnostics/SectionC6_Margins.lean` | Exact response for any displacement; spectral Lipschitz budget; common query shifts with different baseline key phases; pairwise and whole-window ranking preservation under explicit reference margins; unbounded score changes without amplitude restrictions. |
 
@@ -208,7 +211,10 @@ retrieval, perplexity, and positional-resolution metrics.
    needle retrieval scores, compute improvements, and generalization beyond
    training lengths are not inferred from their frequency formulas. The
    LeRoPE derivative is the local score contribution with Q/K coefficients
-   held fixed, which is what the chain-rule calculation uses.
+   held fixed, which is what the chain-rule calculation uses. That LeRoPE's
+   dominant band is `≤ 0` throughout the training window (§7) is an observation
+   and enters as a hypothesis; the period bound and the sign beyond the window
+   are proved from it.
 5. **The later diagnostic paper's calibrated probability results are separate.**
    Its Fourier-frame moment estimates, Gaussian threshold calibration, and
    conditional context-length theorem are outside the deterministic response

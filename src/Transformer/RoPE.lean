@@ -10,6 +10,8 @@ public import Transformer.RoPE.YaRN.Approximation
 public import Transformer.RoPE.YaRN.Section3_Dynamic
 public import Transformer.RoPE.YaRN.Section4_Experiments
 public import Transformer.RoPE.LeRoPE.Section3_LearnedFrequencies
+public import Transformer.RoPE.LeRoPE.SectionD2_NTKByParts
+public import Transformer.RoPE.LeReRoPE
 public import Transformer.RoPE.LongRoPE.Section4_Experiments
 public import Transformer.RoPE.LongRoPE2.SectionB_RULER
 public import Transformer.RoPE.BaseBounds.Section2_OOD
