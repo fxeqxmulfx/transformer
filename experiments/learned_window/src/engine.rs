@@ -75,6 +75,8 @@ struct Rerope {
     slope: Option<usize>,
     forward: crate::rerope_forward::kernels::Kernels,
     backward: crate::rerope_backward::kernels::Kernels,
+    /// Each head's window: the arm's, the same for every head and layer.
+    windows: Buffer<u32>,
     rotary: crate::far_rotary::kernels::Kernels,
     query_base: F,
     query_base_rope: F,
@@ -441,6 +443,7 @@ impl Engine {
                         slope,
                         forward: crate::rerope_forward::kernels::Kernels::load(&cuda)?,
                         backward: crate::rerope_backward::kernels::Kernels::load(&cuda)?,
+                        windows: cuda.upload(&vec![window as u32; config.heads])?,
                         rotary: crate::far_rotary::kernels::Kernels::load(&cuda)?,
                         query_base: cuda.alloc(table)?,
                         query_base_rope: cuda.alloc(2 * table)?,
@@ -690,7 +693,7 @@ impl Engine {
                                 h as u32,
                                 length as u32,
                                 (r * h) as u32,
-                                rerope.window as u32,
+                                rerope.windows.ptr(),
                             )?;
                         } else {
                             forward.forward::<$d>(
@@ -818,7 +821,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.window as u32,
+                            rerope.windows.ptr(),
                         )?;
                     } else if let Some(ordinary) = &self.ordinary_attention {
                         ordinary.query_backward::<$d>(
@@ -886,7 +889,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.window as u32,
+                            rerope.windows.ptr(),
                         )?;
                     } else {
                         self.att.key_backward::<$d>(
@@ -920,7 +923,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.window as u32,
+                            rerope.windows.ptr(),
                         )?;
                         rerope.backward.key_correction::<$d>(
                             rows_grid(r * h),
@@ -934,7 +937,7 @@ impl Engine {
                             h as u32,
                             length as u32,
                             (r * h) as u32,
-                            rerope.window as u32,
+                            rerope.windows.ptr(),
                         )?;
                         score.coordinate_gradient(
                             grid(h),

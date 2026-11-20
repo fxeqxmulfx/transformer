@@ -10,6 +10,11 @@
 //! unchanged on a far pair. The values do not depend on the position, so
 //! their adjoint is the control's. The load and store helpers are the
 //! control's (`ordinary_attention` wraps the same load in a register copy).
+//!
+//! Experiment copy of `experiments/rerope/src/rerope_backward.rs`. One
+//! change: the window is the head's, `windows[h]`, so that each head of a
+//! layer may learn its own (`window_rotary`). Two heads that share a warp at
+//! D = 16 keep the same loop bounds; the region only selects operands.
 #[kernite_macros::kernels]
 pub mod kernels {
     fn load(v: f32, p: u64, i: u32) {
@@ -21,6 +26,12 @@ pub mod kernels {
         let a: u64;
         mad.wide.u32(a, i, 4, p);
         st.global.f32([a], v);
+    }
+    // The head's window: a pair is near when its distance is below it.
+    fn load_window(v: u32, p: u64, i: u32) {
+        let a: u64;
+        mad.wide.u32(a, i, 4, p);
+        ld.global.u32(v, [a]);
     }
     fn sum<const STEPS: usize>(v: f32) {
         let x: f32;
@@ -66,7 +77,7 @@ pub mod kernels {
         heads: u32,
         length: u32,
         head_count: u32,
-        window: u32,
+        windows: *const u32,
     ) {
         let (id, lane, b, t, h, w, base, qbase, anchor, scorebase, key, at, col, outbase): (
             u32,
@@ -103,6 +114,8 @@ pub mod kernels {
             ret();
         }
         rem.u32(h, id, heads);
+        let window: u32;
+        load_window(window, windows, h);
         div.u32(t, id, heads);
         div.u32(b, t, length);
         rem.u32(t, t, length);
@@ -248,7 +261,7 @@ pub mod kernels {
         heads: u32,
         length: u32,
         head_count: u32,
-        window: u32,
+        windows: *const u32,
     ) {
         let (id, lane, b, key, h, w, base, outbase, scorebase, t, at, col, qbase): (
             u32,
@@ -282,6 +295,8 @@ pub mod kernels {
             ret();
         }
         rem.u32(h, id, heads);
+        let window: u32;
+        load_window(window, windows, h);
         div.u32(key, id, heads);
         div.u32(b, key, length);
         rem.u32(key, key, length);
@@ -379,7 +394,7 @@ pub mod kernels {
         heads: u32,
         length: u32,
         head_count: u32,
-        window: u32,
+        windows: *const u32,
     ) {
         let (id, lane, h, b, t, w, base, qbase, scorebase, key, col, at, kbase): (
             u32,
@@ -403,6 +418,8 @@ pub mod kernels {
             ret();
         }
         rem.u32(h, id, heads);
+        let window: u32;
+        load_window(window, windows, h);
         div.u32(t, id, heads);
         div.u32(b, t, length);
         rem.u32(t, t, length);
@@ -512,7 +529,7 @@ pub mod kernels {
         heads: u32,
         length: u32,
         head_count: u32,
-        window: u32,
+        windows: *const u32,
     ) {
         let (id, lane, h, b, key, w, base, kbase, scorebase, query, col, at, qbase): (
             u32,
@@ -536,6 +553,8 @@ pub mod kernels {
             ret();
         }
         rem.u32(h, id, heads);
+        let window: u32;
+        load_window(window, windows, h);
         div.u32(key, id, heads);
         div.u32(b, key, length);
         rem.u32(key, key, length);

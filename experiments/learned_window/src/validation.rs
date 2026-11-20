@@ -319,6 +319,7 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
         (rows * heads) as u32,
         length as u32,
     );
+    let windows = cuda.upload(&vec![window; heads])?;
     let head_grid = || {
         Grid::new(
             ((rows * heads) / if d == 16 { 2 } else { 1 }).div_ceil(4) as u32,
@@ -399,7 +400,7 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
                 h,
                 l,
                 n,
-                window,
+                windows.ptr(),
             )?;
             k.routed.query_backward::<$d>(
                 head_grid(),
@@ -415,7 +416,7 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
                 h,
                 l,
                 n,
-                window,
+                windows.ptr(),
             )?;
             k.routed.key_backward::<$d>(
                 head_grid(),
@@ -430,7 +431,7 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
                 h,
                 l,
                 n,
-                window,
+                windows.ptr(),
             )?;
             k.routed.query_correction::<$d>(
                 row_grid(),
@@ -445,7 +446,7 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
                 h,
                 l,
                 n,
-                window,
+                windows.ptr(),
             )?;
             k.routed.key_correction::<$d>(
                 row_grid(),
@@ -459,7 +460,7 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
                 h,
                 l,
                 n,
-                window,
+                windows.ptr(),
             )?;
         }};
     }
