@@ -26,6 +26,7 @@ public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.ReRopeFading
 public import Transformer.MRCR.ReRopeHeads
+public import Transformer.MRCR.ReRopeLeRope
 public import Transformer.MRCR.ReRopeSlots
 public import Transformer.MRCR.ReRopeStyleKeys
 public import Transformer.MRCR.ReRopeStyleRecall
@@ -102,13 +103,16 @@ softmax three layers answer it under SSMax, and under Su's scale once `A (1 − 
 `4 log T`: four ReRoPE heads, rounded, read the last four tokens exactly at every length, and the
 heads of `Transformer.MRCR.CountHead` and `Transformer.MRCR.CountLookup` count the asks of each
 key and return the answer (`Transformer.MRCR.ReRopeSlots`, `Transformer.MRCR.ReRopeStyleKeys`,
-`Transformer.MRCR.ReRopeStyleRecall`, `Transformer.MRCR.ReRopeStyleSu`). Without a margin, at
-precision `0`, a negative logit already drops a key, yet RoPE with every plane rotated still
-gives keys arbitrarily far a weight
-(`Transformer.MRCR.RotaryPrevHead`); with a plane left unrotated, as in partial RoPE or when
-LeRoPE learns the frequency `2π`, a head attends to the token before alone, without a margin
-(`Transformer.MRCR.RotaryPartialHead`). SSMax that scales the dot product alone, a reader without
-a margin for the five layers, and RoPE or Sandwich by other means, are left open.
+`Transformer.MRCR.ReRopeStyleRecall`, `Transformer.MRCR.ReRopeStyleSu`). With the same clamp
+LeRoPE's learned frequencies answer too, from one band with `θ̂ (W + 2) ≤ π`. The dominant band
+LeRoPE learns has it at every window up to its training length `L` less two, but with the real
+softmax so slow a band needs `s A > 8 L² / π²` (`Transformer.MRCR.ReRopeLeRope`). Without a
+margin, at precision `0`, a negative logit already drops a key, yet RoPE with every plane rotated
+still gives keys arbitrarily far a weight (`Transformer.MRCR.RotaryPrevHead`); with a plane left
+unrotated, as in partial RoPE or when LeRoPE learns the frequency `2π`, a head attends to the
+token before alone, without a margin (`Transformer.MRCR.RotaryPartialHead`). SSMax that scales
+the dot product alone, a reader without a margin for the five layers, and RoPE or Sandwich by
+other means, are left open.
 
 `Transformer.MRCR.Returns` and `Transformer.MRCR.RotaryCopy` treat the copy of the answer by its
 position: a RoPE score of the distance comes back near its value at linearly many distances, so
