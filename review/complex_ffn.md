@@ -77,9 +77,9 @@ of one radial unit is `(s(1) - s(1/√2))/√2` and that of one diagonal unit is
 FFN of any width approximates them with error below `(s(1) - s(1/√2))/(4√2)` and
 `(s(1) - s(1/√2))/4` (`swigluFFN_gap_radial`, `swigluFFN_gap_diagonal`); numerically,
 about `0.0108` and `0.0153` for `ε = 2^-23`, against unit values near `0.52` and
-`0.73`. The four points lie on one sphere when `x ⊥ y` and `‖x‖ = ‖y‖` (elementary,
-not formalized). The complex-linear `φ = fst/r` with `x = r e₁`, `y = r e₂` in `ℂ²` is
-such a case, so the bounds hold on the RMS sphere. One plain unit is exactly
+`0.73`. The four points lie on one sphere when `x ⊥ y` and `‖x‖ = ‖y‖`
+(`four_points_mem_sphere`). The complex-linear `φ = fst/r` with `x = r e₁`, `y = r e₂`
+in `ℂ²` is such a case, so the bounds hold on the RMS sphere. One plain unit is exactly
 `φ₁ z · φ₂ z` (`plainFFN_unit`); one SwiGLU unit errs on it by at least `1` wherever
 the product takes every value of modulus one (`swigluUnit_gap_product`), as on the
 torus of `ℂ²`, where both units have ten real parameters and the zero map errs by `1`
@@ -127,7 +127,8 @@ separate again.
   (`even_rms_gap_swigluPair`), positive for `t > 0` (`swigluPair_rms_bound_pos`).
 
 Numerically (awk, not formalized), at `D = 128` with `ε = eps = 2^-23`: for orthogonal
-unit vectors `x, y` and `α² + β² = D` the four points lie on the RMS sphere (by hand).
+unit vectors `x, y` and `α² + β² = D` the four points lie on the RMS sphere
+(`four_points_mem_sphere`).
 The zero map errs by about `√D ≈ 11.3` on every target here, since `R_D(0) = 0`. The
 two-gate bound is `3.36`, `2.56`, `1.74`, `0.72` for `β = 0.1, 0.5, 1, 2`, that is 30%,
 23%, 15% and 6% of the zero map's error, the same for radial and diagonal units: at

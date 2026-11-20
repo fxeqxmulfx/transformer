@@ -21,7 +21,8 @@ target whose signs along `ℓ` at these four points contradict the identity by a
 `γ` is missed by `γ / ‖ℓ‖` at any width (`swigluFFN_rms_gap`).
 
 `inner_sub_rmsNormEps_pair` reads the normalized `A e + B e'` along `e - e'`;
-`RMSIncomparable` applies both to the gated products.
+`RMSIncomparable` applies both to the gated products. When `x ⊥ y` and `‖x‖ = ‖y‖` the
+four points lie on one sphere (`four_points_mem_sphere`), such as the RMS sphere.
 -/
 
 @[expose] public section
@@ -113,6 +114,31 @@ example (x y : ℝ) :
     (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _)
     (by simp) (by simp) (by simp) (by simp)
 
+section Sphere
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+/-- For orthogonal `x, y` of equal norm, `‖α x + β y‖² = (α² + β²) ‖x‖²`. -/
+theorem norm_smul_add_smul_sq {x y : E} (hxy : ⟪x, y⟫ = 0) (hn : ‖y‖ = ‖x‖) (α β : ℝ) :
+    ‖α • x + β • y‖ ^ 2 = (α ^ 2 + β ^ 2) * ‖x‖ ^ 2 := by
+  rw [norm_add_sq_real, real_inner_smul_left, real_inner_smul_right, hxy, norm_smul,
+    norm_smul, hn, Real.norm_eq_abs, Real.norm_eq_abs, mul_pow, mul_pow, sq_abs, sq_abs]
+  ring
+
+/-- The four points `αx ± βy`, `βx ± αy` of `productFFN_cross` lie on one sphere, of radius
+`√(α² + β²) ‖x‖`, when `x ⊥ y` and `‖x‖ = ‖y‖`. -/
+theorem four_points_mem_sphere {x y : E} (hxy : ⟪x, y⟫ = 0) (hn : ‖y‖ = ‖x‖) (α β : ℝ) :
+    ({α • x + β • y, α • x - β • y, β • x + α • y, β • x - α • y} : Set E) ⊆
+      Metric.sphere 0 (Real.sqrt (α ^ 2 + β ^ 2) * ‖x‖) := by
+  have h : ∀ a b : ℝ, a ^ 2 + b ^ 2 = α ^ 2 + β ^ 2 →
+      a • x + b • y ∈ Metric.sphere 0 (Real.sqrt (α ^ 2 + β ^ 2) * ‖x‖) := fun a b hab => by
+    rw [mem_sphere_zero_iff_norm, ← Real.sqrt_sq (norm_nonneg _), norm_smul_add_smul_sq hxy hn,
+      hab, Real.sqrt_mul (by positivity), Real.sqrt_sq (norm_nonneg _)]
+  simp only [Set.insert_subset_iff, Set.singleton_subset_iff, sub_eq_add_neg, ← neg_smul]
+  exact ⟨h α β rfl, h α (-β) (by ring), h β α (by ring), h β (-α) (by ring)⟩
+
+end Sphere
+
 /-- Read along `e - e'`, the normalized `A e + B e'` of orthonormal `e, e'` is
 `√d (A - B) / √(A² + B² + d ε)`. -/
 theorem inner_sub_rmsNormEps_pair (eps : ℝ) {e e' : EucSpace d} (he : ‖e‖ = 1)
@@ -121,10 +147,7 @@ theorem inner_sub_rmsNormEps_pair (eps : ℝ) {e e' : EucSpace d} (he : ‖e‖ 
       Real.sqrt d * (A - B) / Real.sqrt (A ^ 2 + B ^ 2 + d * eps) := by
   have he'e : ⟪e', e⟫ = 0 := (real_inner_comm e e').trans hee
   have hn : ‖A • e + B • e'‖ ^ 2 = A ^ 2 + B ^ 2 := by
-    rw [norm_add_sq_real, norm_smul, norm_smul, real_inner_smul_left, real_inner_smul_right,
-      hee, he, he', Real.norm_eq_abs, Real.norm_eq_abs]
-    ring_nf
-    rw [sq_abs, sq_abs]
+    rw [norm_smul_add_smul_sq hee (he'.trans he.symm), he, one_pow, mul_one]
   simp only [GPTMini.rmsNormEps, hn, real_inner_smul_right, inner_sub_left, inner_add_right,
     real_inner_self_eq_norm_sq, hee, he'e, he, he']
   ring
@@ -157,5 +180,18 @@ example (eps A B : ℝ) := inner_sub_rmsNormEps_pair eps single_orthonormal.1
 
 example := norm_sub_of_orthonormal single_orthonormal.1 single_orthonormal.2.1
   single_orthonormal.2.2
+
+example (α β : ℝ) := norm_smul_add_smul_sq single_orthonormal.2.2
+  (single_orthonormal.2.1.trans single_orthonormal.1.symm) α β
+
+/-- Orthonormal `e₀, e₁` and `α² + β² = 2`: the four points lie on the RMS sphere `√2`. -/
+example (α β : ℝ) (h : α ^ 2 + β ^ 2 = 2) :
+    ({α • EuclideanSpace.single 0 1 + β • EuclideanSpace.single 1 1,
+      α • EuclideanSpace.single 0 1 - β • EuclideanSpace.single 1 1,
+      β • EuclideanSpace.single 0 1 + α • EuclideanSpace.single 1 1,
+      β • EuclideanSpace.single 0 1 - α • EuclideanSpace.single 1 1} : Set (EucSpace 2)) ⊆
+      Metric.sphere 0 (Real.sqrt 2) := by
+  simpa [h] using four_points_mem_sphere single_orthonormal.2.2
+    (single_orthonormal.2.1.trans single_orthonormal.1.symm) α β
 
 end Transformer.ComplexFFN

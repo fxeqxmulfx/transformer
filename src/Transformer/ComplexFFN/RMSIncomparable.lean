@@ -27,7 +27,7 @@ SwiGLU block. Two units on each side bring the separations back.
 
 The radial and diagonal targets have complex-linear gate and value projections when
 `φ, ψ` are complex-linear, and any imaginary columns `c'`. The four points `αx ± βy`,
-`βx ± αy` lie on one sphere when `x ⊥ y` and `‖x‖ = ‖y‖` (elementary, not formalized), as
+`βx ± αy` lie on one sphere when `x ⊥ y` and `‖x‖ = ‖y‖` (`four_points_mem_sphere`), as
 for coordinate vectors of `ℂ^n`.
 -/
 
