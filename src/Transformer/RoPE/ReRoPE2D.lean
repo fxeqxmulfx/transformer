@@ -4,6 +4,7 @@ public import Transformer.RoPE.ReRoPE2D.Defs
 public import Transformer.RoPE.ReRoPE2D.Basic
 public import Transformer.RoPE.ReRoPE2D.Regions
 public import Transformer.RoPE.ReRoPE2D.SinglePass
+public import Transformer.RoPE.ReRoPE2D.Rank
 
 /-!
 # 2D ReRoPE for the axial RoPE of vision encoders
@@ -23,4 +24,7 @@ region's scores are those of one ordinary attention pass over rotated queries an
 nine passes, masked to their regions, merge exactly into softmax attention.
 `Transformer.RoPE.ReRoPE2D.SinglePass` shows that no single pass of linear maps of the head's
 dimension gives the scores, on a grid of `w + 2` patches along one axis.
+`Transformer.RoPE.ReRoPE2D.Rank` shows that a pass of any fixed dimension `D` gives them only on
+grids of at most `(D + 1) w` patches along an axis with a plane of `cos(w θ_l) ≠ 1`, as each axis
+of both encoders has.
 -/

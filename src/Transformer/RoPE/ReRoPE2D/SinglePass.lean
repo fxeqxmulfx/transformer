@@ -110,14 +110,8 @@ theorem not_single_pass (θ : Fin p → ℝ) (ax : Fin p → Fin 2) (l : Fin p) 
         (A X *ᵥ q) ⬝ᵥ (B Y *ᵥ k) =
           score θ ax (fun a => (W a : ℝ)) (fun a => (X a : ℝ)) (fun a => (Y a : ℝ)) q k := by
   rintro ⟨A, B, h⟩
-  have hgrid : ∀ c, c ≤ W (ax l) + 1 → ∀ a, (Pi.single (ax l) c : Fin 2 → ℕ) a < S a := by
-    intro c hc a
-    by_cases ha : a = ax l
-    · subst ha
-      rw [Pi.single_eq_same]
-      omega
-    · rw [Pi.single_eq_of_ne ha]
-      exact hS0 a
+  have hgrid : ∀ c, c ≤ W (ax l) + 1 → ∀ a, (Pi.single (ax l) c : Fin 2 → ℕ) a < S a :=
+    fun _ hc => single_lt hS0 (by omega)
   have hM : ∀ c d, c ≤ W (ax l) + 1 → d ≤ W (ax l) + 1 →
       (A (Pi.single (ax l) c))ᵀ * B (Pi.single (ax l) d) =
         axialRotary θ ax (-clampOffset (fun a => (W a : ℝ))

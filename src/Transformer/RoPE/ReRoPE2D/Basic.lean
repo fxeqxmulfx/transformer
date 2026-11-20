@@ -25,7 +25,9 @@ each axis's offset on both sides, each axis at its own window.
   left of the query, each is Su's merged score of his two attention matrices;
 * `exists_score_eq`: on a grid of any size every score is the axial RoPE score of two patches of the
   grid `S₀ × S₁` when the windows are below `S₀` and `S₁`. A model trained with axial RoPE on that
-  grid has seen every relative position 2D ReRoPE uses.
+  grid has seen every relative position 2D ReRoPE uses;
+* `single_lt`: the patches on the line of one axis through the corner lie in the grid, where the
+  no-go theorems place their positions.
 -/
 
 @[expose] public section
@@ -179,5 +181,18 @@ theorem exists_score_eq (θ : Fin p → ℝ) (ax : Fin p → Fin 2) {w S : Fin 2
 its table of `512 × 512` positions. -/
 example (X Y : Fin 2 → ℤ) (q k : Fin 2 × Fin 32 → ℝ) := exists_score_eq (kimiFreq 10000)
   kimiAxis (w := fun _ => 256) (S := fun _ => 512) (fun _ => by norm_num) X Y q k
+
+/-- The patch at `c` on the line of the axis `b` through the corner lies in the grid `S₀ × S₁`
+if `c < S_b`. -/
+theorem single_lt {S : Fin 2 → ℕ} (hS0 : ∀ a, 0 < S a) {b : Fin 2} {c : ℕ} (hc : c < S b)
+    (a : Fin 2) : (Pi.single b c : Fin 2 → ℕ) a < S a := by
+  by_cases ha : a = b
+  · subst ha
+    rwa [Pi.single_eq_same]
+  · rw [Pi.single_eq_of_ne ha]
+    exact hS0 a
+
+/-- The hypotheses of `single_lt` hold for the patch `(0, 2)` of the grid `3 × 3`. -/
+example := single_lt (S := fun _ => 3) (fun _ => by norm_num) (b := 1) (c := 2) (by norm_num) 0
 
 end Transformer.RoPE.ReRoPE2D
