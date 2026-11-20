@@ -10,6 +10,7 @@ public import Transformer.LeRoPEBlock.TwoPi
 public import Transformer.LeRoPEBlock.Bound
 public import Transformer.LeRoPEBlock.SlotFejer
 public import Transformer.LeRoPEBlock.SlotWeight
+public import Transformer.LeRoPEBlock.SlotDFT
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -47,5 +48,8 @@ model's own.
   of the score sum to their value at the slot times a Fejér factor in `[0, n²]`, so the margins sum
   to at most `n²` times the amplitude (`sum_sum_phaseLogit_sub_le`), and Jensen's inequality turns
   that into the weight (`depthWeight_le_of_sum_sum_le`). At `β = 0` the middle of three keys keeps
-  at most `9/10`, and the bound tends to `2/3`.
+  at most `9/10`, and the bound tends to `2/3`. The cap is nearly reached: `R` bands at the
+  frequencies of the discrete Fourier transform on `2R + 1` points keep
+  `1 / (1 + 2R N^{−1−1/(2R)})` on the middle key, more than half (`depthWeight_dft`,
+  `depthWeight_dft_mem`).
 -/

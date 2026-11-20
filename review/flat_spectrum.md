@@ -6195,12 +6195,36 @@ The nuclear norm of an `N × N` table with entries of modulus one lies between `
 
 The ratio of the two ends is `√N = p^{k/2}`, exponential in the number of variables.
 
+### NV3. Reading an operand by position
+
+Before a model computes `f(x₁, …, x_n)` from a context it reads the operands. A head of the main
+model, with LeRoPE and SSMax, reads the operand at a given distance by putting its softmax weight
+there. A positional head, one whose key ignores the token, has the same weights on every input,
+and both sides of its weight on a slot are in `review/lerope_block.md`, *Reading a slot* (RS1,
+RS2):
+
+- every such head, whatever its frequencies and its number of bands, keeps at most
+  `1 / (1 + R N^{−(1 + |β|)(1 + 1/R)})` of its weight on a slot with `R` keys on each side, `N`
+  keys in all; at `β = 0` the middle of `N = 2R + 1` keys keeps at most `9/10`, and the cap tends
+  to `2/3`;
+- `R` bands at the frequencies `2π (l + 1)/(2R + 1)` keep `1 / (1 + 2R N^{−1−1/(2R)})` on the
+  middle key, more than `1/2`.
+
+With a free gain `λ` in place of SSMax's and squared lengths at most `A`, the weight `1 − ε` costs
+`λ A` between `(R/(R + 1)) ln(R (1 − ε)/ε)` and `(2R/(2R + 1)) ln(2R (1 − ε)/ε)`: a logarithm,
+not a power of the length. Under the main model's own gain, `ln N / d` with `A = d`, the cap at
+`β = 0` is `0.72` on `33` keys and tends to `2/3`, so one head leaves more than a quarter of its
+weight on the neighbours of the middle slot of a long window (`R ≥ 9`). What several heads, keys
+that depend on the token or a nonlinear `Φ` recover from that is not priced here.
+
 ### Lean
 
 `BilinearKernel` and `CutRange` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
-`Transformer.Grokking.FlatSpectrum`, proved without `sorry`.
+`Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
+`src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`. All proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | NV1 | `bilinearKernel`, `stdAddChar_sum`, `sum_stdAddChar_dotProduct`, `bilinearKernel_mul_star`, `bilinearKernel_mul_conjTranspose`, `isFlat_bilinearKernel`, `bilinearKernel_ne_zero`, `not_isMinOn_bilinearKernel`, `mul_sub_rank_le_frobeniusSq_sub_bilinearKernel`, `rank_bilinearKernel`, `nuclearNorm_bilinearKernel`, `bilinearKernel_cube_add_mul` | The groups are functions `ι → ZMod p` and `κ → ZMod p` for finite types `ι`, `κ`; `k = |ι|`, `l = |κ|`. "`w ↦ wᵀ M` injective" is `Function.Injective M.vecMul`, and the square case takes `IsUnit M`. R3 is stated with `min (p^k) (p^l)`. The quadratic form is not stated separately. |
 | NV2 | `frobeniusSq_conjTranspose`, `exists_rank_le_frobeniusSq_sub_eq`, `IsFlat.isLeast_frobeniusSq_sub`, `bilinearKernel_sum_sum`, `card_fun_zmod`, `isLeast_nuclearNorm_unimodular`, `isGreatest_nuclearNorm_unimodular`; the bounds `card_le_nuclearNorm_le_of_unimodular` of Proposition 2 | The least error is `IsLeast` of `{‖K − X‖_S2² : rank X ≤ d}`. The ends of the nuclear norm are `IsLeast` and `IsGreatest` over the tables `(ι → ZMod p) × (ι → ZMod p)` with entries of modulus one, `k = |ι|`; the additive table is stated as `ψ(Σ uᵢ + Σ vⱼ)`. |
+| NV3 | the cap: `sum_sum_band`, `sq_add_sq_sum_le`, `sum_sum_phaseLogit_sub_le`, `card_mul_exp_mean_le`, `depthWeight_le_of_sum_sum_le`, `depthWeight_leropeLogit_le`; the DFT head: `two_mul_sin_mul_sum_cos`, `sum_cos_dft`, `dftFreq`, `leropeLogit_dft`, `depthWeight_dft`, `half_lt_depthWeight_dft`, `depthWeight_dft_mem` | The cap is stated for a sequence whose tokens at the distances `t − R, …, t + R` are one token `y`, with `‖Q x_i‖², ‖K y‖² ≤ d`; a positional head on any input is the case of the constant sequence, by hand. The DFT head is stated at the query `2R` with the tokens `Unit` in `depthWeight_dft_mem`, and for every sequence in `depthWeight_dft`. The prices in `λ A` are solved by hand from the weights. |

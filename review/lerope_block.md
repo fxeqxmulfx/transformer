@@ -144,8 +144,8 @@ bound on `Φ`'s Lipschitz constant, a number of layers, or the rounded model; th
 Request, 2026-11-21: in pricing functions of `n` variables (`review/flat_spectrum.md`,
 *Functions of n variables*), bound from below and from above what one head of the main model can
 do to read the operand at a given distance. The positional scheme is LeRoPE alone, SSMax's gain
-kept; abstract statements are welcome, special cases are not wanted. Lean: `SlotFejer` and
-`SlotWeight` of `src/Transformer/LeRoPEBlock/`.
+kept; abstract statements are welcome, special cases are not wanted. Lean: `SlotFejer`,
+`SlotWeight` and `SlotDFT` of `src/Transformer/LeRoPEBlock/`.
 
 A head reads the key at the distance `t` by putting its softmax weight there. When the keys
 around the slot carry the same token, or the head's keys ignore the token, only the way the score
@@ -190,12 +190,38 @@ The same two steps price a head with any gain `λ` in place of SSMax's and squar
 a logarithm in the number of neighbours and in `1/ε`, not a power of the length. Solved for `λ A`
 by hand; Lean states the weight bound it comes from.
 
+RS2, the cap is nearly reached (`SlotDFT`). Give a head `R` bands at the frequencies of the
+discrete Fourier transform on `2R + 1` points, `θ_l = 2π (l + 1)/(2R + 1)` (`dftFreq`), the query
+`1` on every channel and the key `1` turned by `R`, at `β = 0` and `d = 2R`; both have squared
+length `d`, as after Q/K RMS. At the query `2R` the distance `δ` scores `ln N / (2R)` times
+`2 Σ_l cos((R − δ) θ_l)`, `N = 2R + 1`, and Dirichlet's kernel sums these cosines to `−1/2` at
+every distance but `R` (`two_mul_sin_mul_sum_cos`, `sum_cos_dft`). So the middle key scores
+`ln N` and the other `2R` keys `−ln N / (2R)`, whatever the tokens (`leropeLogit_dft`), and the
+middle key keeps
+
+```
+1 / (1 + 2R N^{−1−1/(2R)})
+```
+
+of the weight (`depthWeight_dft`), more than half for every `R` (`half_lt_depthWeight_dft`).
+Against the cap of RS1 at `β = 0` (`depthWeight_dft_mem`): `0.72` against `0.9` at `R = 1`;
+`0.535` against `0.72` at `R = 16`, the main model's `16` bands on `33` keys; `1/2` against `2/3`
+as `R` grows. With a free gain `λ` and squared lengths `A` the same head pays
+`λ A = (2R / (2R + 1)) ln(2R (1 − ε)/ε)` for the weight `1 − ε` (by hand from
+`leropeLogit_dft`), against at least `(R / (R + 1)) ln(R (1 − ε)/ε)` for every head; as `ε → 0`
+the ratio of the two tends to `2 (R + 1)/(2R + 1) ≤ 4/3`.
+
 ### Not claimed
 
 - Sharp constants. The factor `1 + |β|` is crude: the score itself is at most `(5/4) ln N` at
   `|β| ≤ 1` (`leropeLogit_abs_le`). A sharper factor for the margins is not stated.
 - Slots near the ends. The theorem needs `R` keys on both sides of the slot (`R ≤ t`,
   `t + R ≤ i`); a slot next to the query or at the start of the context is not covered.
+- Few bands. The DFT head needs `R` bands for `2R + 1` keys, so the main model's `16` bands
+  cover `33` keys. On a longer context the cap of RS1 still holds for every head, but nothing
+  here is built from below it.
+- That the main model realizes the DFT head. Its query and key are the same for every token, which
+  needs `W_Q` and `W_K` to read a direction on which the tokens agree, as for the π head.
 - Content. The bound is for keys of one token around the slot. A head whose key depends on the
   token can single out a slot whose token differs from its neighbours'; reading an arbitrary
   operand needs a large weight for every assignment of tokens, and that is not stated.
