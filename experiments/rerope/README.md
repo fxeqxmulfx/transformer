@@ -247,6 +247,43 @@ aside (`runs/check-restart-1.sh`). The binary's replays are bit-identical
 killed copy is kept in `runs/cohort-1-interrupted/`. All these files are
 local in `runs/`, which git ignores.
 
+## Profile
+
+On 2026-11-20, between two cells, Nsight Systems traced 75 s of
+`gpt-probe-branch-amplitudes`, seed 0, in the ReRoPE arm and in the control
+arm (`lerope`). The build was this source with Kernite 0.4.0 (kgen
+`c99d91a0`, Rust 1.100.0) in place of 0.3.2. Its PTX hash is the cohort's,
+`0d544253…`, so the kernels are the cohort's. The control copy reached 99%
+at epoch 14, as the recorded control cell did. An epoch is 32 updates and
+one evaluation:
+
+| | ReRoPE | control |
+| --- | --- | --- |
+| update, median | 36.0 ms | 34.6 ms |
+| evaluation | 0.64 s | 0.67 s |
+| GPU busy | 97% | 96% |
+
+- **The GPU is the limit.** It runs kernels 97% of the time. The host
+  launches about 500 kernels per update, evaluation included, at 6 µs each,
+  and spends the rest of its time in blocking copies, waiting for them.
+- **One control kernel takes 45% of the GPU's time.**
+  `phase_mhc::phase_grad`, the gradient of phase-mHC's three learned stream
+  phases, runs 3 blocks of one warp each. Each warp sums its phase's terms
+  over all 3,136 rows and 32 pairs of the batch alone. Its four calls take
+  25 ms of each update's 36.
+- **An evaluation** runs 76 forward passes of about 7.9 ms. Most are greedy
+  generation, which reruns the whole sequence for each of the 33 answer
+  tokens. The attention forward takes 1.3 ms of each pass per layer.
+- **ReRoPE's own kernels**, the far rotation, its adjoint and the far
+  frequency gradient, add about 1.4 ms to an update, 4%.
+
+So a ReRoPE epoch costs what a control epoch costs. The ReRoPE cell took
+27 minutes because it ran 937.5 epochs, its whole budget, and the control
+needs 14. A parallel reduction in `phase_grad` would cut an update to about
+11 ms (estimated), but it changes the summation order, so the recorded
+control would no longer be reproduced. The traces, their summaries and the
+script are in `runs/profile-1/`.
+
 ## Findings
 
 Pending.
