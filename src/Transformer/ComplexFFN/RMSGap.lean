@@ -11,9 +11,9 @@ the branch is `f = R_D(W_F (g ⊙_ℂ u)/√2)` with the parameter-free
 
 `R_D` multiplies its input by a nonnegative scalar. It erases magnitudes, and with them
 the witnesses of `swigluFFN_gap_radial` and `swigluFFN_gap_diagonal`: with `eps = 0`, one
-gated unit after `R_D` is its ungated product after `R_D` (by hand). It keeps the sign of
-every linear functional, and signs suffice. If `R_D ∘ S` is within `δ` of an even target `w` and
-`δ ‖ℓ‖ < ⟪ℓ, w z⟫`, then `⟪ℓ, S z⟫ > 0` and `⟪ℓ, S(-z)⟫ > 0`
+gated unit after `R_D` is its ungated product after `R_D` (`RMSErased`). It keeps the
+sign of every linear functional, and signs suffice. If `R_D ∘ S` is within `δ` of an even
+target `w` and `δ ‖ℓ‖ < ⟪ℓ, w z⟫`, then `⟪ℓ, S z⟫ > 0` and `⟪ℓ, S(-z)⟫ > 0`
 (`pos_inner_of_rmsNormEps_near`), so the product network `P z = S z + S(-z)` of
 `swigluFFN_add_neg` has `⟪ℓ, P z⟫ > 0`. Product networks
 satisfy `P(αx + βy) - P(αx - βy) = P(βx + αy) - P(βx - αy)` (`productFFN_cross`). A

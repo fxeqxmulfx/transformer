@@ -10,6 +10,7 @@ public import Transformer.ComplexFFN.RMSGap
 public import Transformer.ComplexFFN.RMSTwoGate
 public import Transformer.ComplexFFN.RMSIncomparable
 public import Transformer.ComplexFFN.RMSSurviving
+public import Transformer.ComplexFFN.RMSErased
 
 /-!
 # Complex-product FFNs against the bias-free SwiGLU FFN
@@ -47,14 +48,16 @@ zero map (`plainFFN_rms_gap_normSq`, `radialFFN_rms_gap_normSq`). One SwiGLU uni
 it stays on a line, so it still misses one plain unit on the torus by as much as the
 zero map (`swigluUnit_rms_gap_plainUnit_torus`). But with `eps = 0` the RMS erases the
 one-unit witnesses of evenness and of the parallelogram law: one SwiGLU unit after it is
-even, and a positive gate is a positive scalar, so one radial or diagonal unit after it
-is its ungated product, a SwiGLU block (by hand). It keeps the sign of every linear
-functional, and through signs the even part of SwiGLU still obeys a four-point identity
-(`swigluFFN_rms_gap`). Two units on each side restore both separations after the RMS
-(`RMSIncomparable`): no SwiGLU FFN approximates two radial or diagonal units that share
-one product under two gates (`swigluFFN_rms_gap_radial`, `swigluFFN_rms_gap_diagonal`),
-and no even map approximates two SwiGLU units whose coefficients swap under `z ↦ -z`
-(`even_rms_gap_swigluPair`).
+even (`rmsNormEps_zero_swigluUnit_neg`), and a positive gate is a positive scalar, so one
+radial or diagonal unit after it is its ungated product, a SwiGLU block
+(`rmsNormEps_zero_radialFFN_unit_swiglu`, `rmsNormEps_zero_diagonalFFN_unit_swiglu`); with
+`eps > 0` it does not forget scale (`norm_rmsNormEps_lt_smul`). It keeps the sign of
+every linear functional, and through signs the even part of SwiGLU still obeys a
+four-point identity (`swigluFFN_rms_gap`). Two units on each side restore both
+separations after the RMS (`RMSIncomparable`): no SwiGLU FFN approximates two radial or
+diagonal units that share one product under two gates (`swigluFFN_rms_gap_radial`,
+`swigluFFN_rms_gap_diagonal`), and no even map approximates two SwiGLU units whose
+coefficients swap under `z ↦ -z` (`even_rms_gap_swigluPair`).
 
 None of this says anything about training, depth or the cubic task.
 -/

@@ -10,10 +10,10 @@ Source: DiffGPT (`~/python_projects/gpt`, `5a37c51`): the branch
 `R_D = GPTMini.rmsNormEps`, and the products of `Defs`.
 
 With RMS `eps = 0` the branch RMS erases the one-unit witnesses of
-`plainFFN_gap_swigluUnit`, `swigluFFN_gap_radial` and `swigluFFN_gap_diagonal` (by hand):
-`R_D(SiLU(a z) (b z) w)` has the sign of `(a z)(b z)`, which is even, and a positive gate
-is a positive scalar, so one radial or diagonal unit after `R_D` is its ungated product
-after `R_D`, a product network. Two units on each side bring the separations back.
+`plainFFN_gap_swigluUnit`, `swigluFFN_gap_radial` and `swigluFFN_gap_diagonal`
+(`RMSErased`): one SwiGLU unit after `R_D` is even, and a positive gate is a positive
+scalar, so one radial or diagonal unit after `R_D` is its ungated product after `R_D`, a
+SwiGLU block. Two units on each side bring the separations back.
 
 * No bias-free SwiGLU FFN of any width, after `R_D`, approximates the two radial units of
   `radialFFN_twoGate` after `R_D` with error below the bound of
