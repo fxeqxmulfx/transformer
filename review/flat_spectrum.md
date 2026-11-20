@@ -3414,7 +3414,7 @@ proved without `sorry`.
 | --- | --- | --- |
 | R1 | `IsFlat`, `IsFlat.conjTranspose`, `isFlat_of_singularValues_eq`, `singularValues_eq_of_conjTranspose_mul_self`, `IsFlat.gram_mul_gram`, `rank_eq_card_of_conjTranspose_mul_self`, `rank_eq_card_of_mul_conjTranspose_self`, `IsFlat.rank_eq`, `IsFlat.effectiveRank_eq`, `IsFlat.frobeniusSq_eq`, `IsFlat.nuclearNorm_eq`, `IsFlat.isContraction`; instances `isFlat_one`, `isFlat_cubicKernel`, `isFlat_row_ones` | `IsFlat K c` is the disjunction, with `c` real; the theorems take `c > 0` or `c ≠ 0` as a hypothesis. `singularValues` is indexed by the columns, so for `K Kᴴ = c I` with `m < n` it has `n − m` zeros; the norms are stated with `min (card m) (card n)`. |
 | R2 | `isMinOn_iff_of_full_row_rank`, `IsFlat.isMinOn_iff`, `IsFlat.not_isMinOn_of_ne_zero`, `IsFlat.not_isMinOn`, `IsFlat.not_forall_isMinOn_iff` | A minimum of M from Ω is `IsMinOn nuclearNorm S K` for the set `S` of the matrices equal to `K` on Ω, as in Theorem A. |
-| R3 | `nuclearNorm_sq_le_rank_mul_frobeniusSq`, `effectiveRank_le_rank`, `effectiveRank_le_min`, `IsFlat.pairing_le`, `IsFlat.mul_sub_rank_le_frobeniusSq_sub`, `IsFlat.mul_sub_card_le_frobeniusSq_sub`, `IsFlat.card_le_of_eq_mul` | `⟨K, X⟩` is `Training.pairing`. The width `k` is the cardinality of a finite column type. Whether a product through width `k` attains `c (r₀ − k)` is not formalized. |
+| R3 | `nuclearNorm_sq_le_rank_mul_frobeniusSq`, `effectiveRank_le_rank`, `effectiveRank_le_min`, `IsFlat.pairing_le`, `IsFlat.mul_sub_rank_le_frobeniusSq_sub`, `IsFlat.mul_sub_card_le_frobeniusSq_sub`, `IsFlat.card_le_of_eq_mul` | `⟨K, X⟩` is `Training.pairing`. The width `k` is the cardinality of a finite column type. The bound is attained (`IsFlat.isLeast_frobeniusSq_sub`, *Functions of n variables*, NV2). |
 | R4 | `Training.exists_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn`, `Training.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le_of_not_isMinOn`, `IsFlat.not_exists_isOptimalFit`, `IsFlat.exists_nuclearNorm_add_le`, `IsFlat.exists_tendsto_decayRun_nuclearNorm_add_le`, `IsFlat.exists_pos_ae_tendsto_decayRun_nuclearNorm_add_le`, `IsFlat.mul_sub_card_le_fitLoss_univ` | The two first theorems take "`K` is not a minimum of M from Ω" as their hypothesis, for any kernel. "Some nonzero cell is unseen" is `(i, j) ∉ Ω` with `K i j ≠ 0`. The width `k ≥ min(m, n)` is `card m ≤ card k ∨ card n ≤ card k`, and the constants of the runs are those of WD8 and WD10. The squared loss with every cell seen is `fitLoss Set.univ K (U * Vᴴ)`. |
 
 ## Associative recall has a flat spectrum (added)
@@ -6170,11 +6170,37 @@ Examples:
 - `M = 0` gives `ψ(g(u)) ψ(h(v))`, of rank one; the additive table `ψ(x₁ + … + x_n)` is the
   case `g(u) = Σ uᵢ`, `h(v) = Σ vⱼ`.
 
+### NV2. Both ends of the price are attained
+
+R3 bounds from below the error of every `X` of rank at most `d` on a flat kernel:
+`‖K − X‖_S2² ≥ c (r₀ − d)`, `r₀ = min(m, n)`. The bound is attained. If `Kᴴ K = c I`, every
+column of `K` has squared length `c`. Keep `d` columns and zero the others: the result has
+rank at most `d`, and its error is the squared length of the `n − d` dropped columns,
+`c (n − d)`. The adjoint handles `K Kᴴ = c I`. Hence
+
+```
+min over rank X ≤ d of ‖K − X‖_S2² = c (r₀ − d)    for d ≤ r₀.
+```
+
+So a product through width `d` on the flat table of NV1 pays exactly `p^l (p^k − d)`, and a
+model whose state across the cut has `d` numbers can do no better than this.
+
+The nuclear norm of an `N × N` table with entries of modulus one lies between `N` and
+`N √N` (Proposition 2: `Σ σᵢ² = N²` and at most `N` of the `σᵢ` are nonzero). For a table of
+`2k` variables cut into two groups of `k`, `N = p^k`, both ends are attained:
+
+- the additive table `ψ(x₁ + … + x_{2k})` is `ψ(Σ uᵢ) ψ(Σ vⱼ)ᵀ`, of rank one and nuclear
+  norm `N`;
+- `k` copies of `x³ + x y` have nuclear norm `N √N` (NV1).
+
+The ratio of the two ends is `√N = p^{k/2}`, exponential in the number of variables.
+
 ### Lean
 
-`BilinearKernel` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`BilinearKernel` and `CutRange` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`, proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
 | NV1 | `bilinearKernel`, `stdAddChar_sum`, `sum_stdAddChar_dotProduct`, `bilinearKernel_mul_star`, `bilinearKernel_mul_conjTranspose`, `isFlat_bilinearKernel`, `bilinearKernel_ne_zero`, `not_isMinOn_bilinearKernel`, `mul_sub_rank_le_frobeniusSq_sub_bilinearKernel`, `rank_bilinearKernel`, `nuclearNorm_bilinearKernel`, `bilinearKernel_cube_add_mul` | The groups are functions `ι → ZMod p` and `κ → ZMod p` for finite types `ι`, `κ`; `k = |ι|`, `l = |κ|`. "`w ↦ wᵀ M` injective" is `Function.Injective M.vecMul`, and the square case takes `IsUnit M`. R3 is stated with `min (p^k) (p^l)`. The quadratic form is not stated separately. |
+| NV2 | `frobeniusSq_conjTranspose`, `exists_rank_le_frobeniusSq_sub_eq`, `IsFlat.isLeast_frobeniusSq_sub`, `bilinearKernel_sum_sum`, `card_fun_zmod`, `isLeast_nuclearNorm_unimodular`, `isGreatest_nuclearNorm_unimodular`; the bounds `card_le_nuclearNorm_le_of_unimodular` of Proposition 2 | The least error is `IsLeast` of `{‖K − X‖_S2² : rank X ≤ d}`. The ends of the nuclear norm are `IsLeast` and `IsGreatest` over the tables `(ι → ZMod p) × (ι → ZMod p)` with entries of modulus one, `k = |ι|`; the additive table is stated as `ψ(Σ uᵢ + Σ vⱼ)`. |

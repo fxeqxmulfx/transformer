@@ -127,6 +127,7 @@ public import Transformer.Grokking.FlatSpectrum.OneCellFlat
 public import Transformer.Grokking.FlatSpectrum.Recall
 public import Transformer.Grokking.FlatSpectrum.BlockCut
 public import Transformer.Grokking.FlatSpectrum.BilinearKernel
+public import Transformer.Grokking.FlatSpectrum.CutRange
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -354,6 +355,8 @@ of `L_k` holds a flat kernel of size `k / 2`, and no transformer of depth `k` re
 (`BilinearKernel`): cut into groups of `k` and `l` variables, `g(u) + h(v) + uᵀ M v` has
 `K Kᴴ = p^l I` when `w ↦ wᵀ M` is injective, so Theorem A and R3 hold for it; for `k = l` and an
 invertible `M`, such as `k` copies of `x³ + x y`, the rank is `N = p^k` and the nuclear norm
-`N √N`. -/
+`N √N`. Both ends are exact (`CutRange`): dropping columns attains R3, so the least error of
+rank `d` on a flat kernel is `c (min(m, n) − d)`, and over the tables of `2k` variables with
+entries of modulus one the nuclear norm ranges exactly over `[N, N √N]`. -/
 
 @[expose] public section
