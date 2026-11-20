@@ -103,6 +103,8 @@ witness examples beside them.
 | LongRoPE §§3.1–3.2, Eq. (3) and Table 4 | `LongRoPE/Section3_Search.lean` | Eq. (3) as RoPE below `n̂` and Eq. (2) from it on; `n̂ = 0` as PI and NTK; the factor idle at exactly the `n̂` positions `0, …, n̂−1`; the thresholds 0 and 1 give the same angles; `400^{64}·14` between `4.76·10^{167}` and `4.77·10^{167}`, and 401 grid values; the count `o(c^s)` for every `c > 1`; the PI, NTK and YaRN factors admissible under the monotone constraint; the printed `s^i` inadmissible for `s ≥ 2`; `4^{1/63}` strictly between the grid values 1.02 and 1.03. |
 | LongRoPE §1, §3.3, §§4.2–4.3 and Appendix A | `LongRoPE/Section3_Progressive.lean`, `LongRoPE/Section4_Experiments.lean` | More than 99.5% new positions beyond `10^6`; the ratios `32×`, `64×`, `8×`, `16×` and `512× = 64·8`; `2048k > 2·10^6`; PI at `512×` keeps the original window's angles below `8θ_i`; causal attention's `n(n+1)/2` scores are `o(c^n)`; TruthfulQA's `+0.5` points and Table 10's averages 52.9 and 50.8 as means of Table 8. |
 | LongRoPE2 §2.2, Eqs. (8)–(10), and §3.3 | `LongRoPE2/Section2_Rescaling.lean` | The scaling-factor constraint is necessary and sufficient for endpoint phase coverage; it bounds every in-window phase; period scaling and the mixed-context rule preserve the original short-context phases. |
+| LongRoPE2 §§2.1–2.2, Eqs. (5)–(7) and Fig. 2(a) | `LongRoPE2/Section2_Critical.lean` | Eq. (7) counts real coordinates, twice the pair index of the first incomplete period; for Phi3-mini it gives 62, the periods below 2048 are those of the pairs `i < 31`, `51861 < T_47 < 51862` and `24 < T_7 < 25`, with 85 full periods of `T_7` in 2048 tokens; when `L·θ ≤ π` the cosines beyond `L_train` lie below every cosine of the window, as for the 40th dimension at 4096. |
+| LongRoPE2 §§2.3–2.4 | `LongRoPE2/Section2_Prior.lean` | Every base at least Liu's `θ^{log_{L_train/2π}(L/2π)}` meets Eq. (10) at every incomplete period; the NTK-aware factor `s^{2i/(d−2)}` misses it below the last pair; YaRN's factor is `s` exactly at the incomplete periods, `64` from `i = 31` on for Phi3-mini from 2k to 128k, and below the linear blend of 1 and `s` in the middle band. |
 | Oka §5.1, Eqs. (4)–(9) | `FrequencyBands/Section5_Variance.lean` | The variance formula from actual integrals; the exact continuous band-coordinate identity; a counterexample to the global-unimodality assertion in Step 2. |
 | Wu/Liu/Jadbabaie §3, Theorem 1 | `FrequencyMatching/Section3_Optimality.lean` | Strict increase of the actual integrated contrast and the unique maximizer `pi / width`, including atomic distributions and the essential positive-mass assumption. |
 | Wu/Liu/Jadbabaie §4, Theorem 2 and Corollary 1 | `FrequencyMatching/Section4_Dilation.lean` | Exact pushforward-measure utility invariance and maximizer transport; a counterexample when frequencies are scaled without dilating the task; no positive frequency covers unbounded widths. |
@@ -273,6 +275,17 @@ retrieval, perplexity, and positional-resolution metrics.
    NTK-aware factors are off the 0.01 grid: `4^{1/63}` lies between 1.02 and
    1.03. The perplexities, passkey accuracies, benchmark scores and costs are
    measurements and are not formalized.
+13. **LongRoPE2: Eq. (7)'s index and the prior methods.** Eq. (7) prints
+   `d_tcd = 2⌈(d/2)·log_θbase(L_train/2π)⌉`, which counts real coordinates:
+   62 for Phi3-mini, the "31st cosine dimension". The split "`T_i < L_train`,
+   `i < d_tcd`" of §2.2 and §2.4's "`d_tcd = 31`" use the pair index, half
+   of Eq. (7). §3.1's 8th dimension has the period `T_7 = 24.07…`; 2048
+   tokens hold 85 of its full periods, so "covers this dimension thousands of
+   times" does not count full periods. §2.3's YaRN uses "a linearly
+   increasing scale factor" in the middle band; its ramp is linear in the
+   blend of the frequencies, and the factor `1/((1−γ)/s + γ)` lies strictly
+   below the linear blend of 1 and `s`. The perplexities and benchmark
+   scores are measurements and are not formalized.
 
 ## Arbitrary coefficients and learned weights
 

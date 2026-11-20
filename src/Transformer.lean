@@ -222,7 +222,12 @@ Formalizations of papers on the mathematics and architecture of Transformers:
    bounds the context length, and it is not antitone.
 
 44. Shang et al. — arXiv:2502.20082v1, "LongRoPE2: Near-Lossless LLM Context
-   Window Scaling". Coordinatewise phase constraints and mixed windows, §2/§3.3.
+   Window Scaling". Coordinatewise phase constraints and mixed windows
+   (§2.2, §3.3); Eq. (7)'s critical dimension and Phi3-mini's periods
+   (§§2.1–2.2); Liu's critical NTK base, the NTK-aware factor and YaRN against
+   Eq. (10) (§§2.3–2.4). Eq. (7) counts real coordinates, twice the pair index
+   that §2.4 calls `d_tcd`; YaRN's middle-band factor lies below the linear
+   blend of 1 and `s`.
 
 45. Oka et al. — "Frequency Bands in RoPE", ICLR 2026, §5.
    The variance formula, the band-coordinate identity, and a counterexample
