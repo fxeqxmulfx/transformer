@@ -19,9 +19,10 @@ the attentions and every continuous `Φ` of them.
   every `ε > 0`, there are frequencies, all positive, such that the LeRoPE block with the same
   `Φ`, projections, `β`, `d` and values is within `ε` of it on the whole set.
 
-Together with `Transformer.LeRoPEBlock.NoPE` (the π head, a LeRoPE block, is out of reach of the
-position-free blocks) LeRoPE's blocks approximate everything that blocks with no positional
-encoding do, and something more.
+`Transformer.LeRoPEBlock.TwoPi` has the exact statement, at the frequency `2π`, which turns a
+natural distance by a multiple of `2π`. This module's is the reading that survives a perturbation
+of the frequencies: small frequencies, as the high planes of RoPE's grid, already give a block
+within `ε` of the one with none.
 -/
 
 @[expose] public section

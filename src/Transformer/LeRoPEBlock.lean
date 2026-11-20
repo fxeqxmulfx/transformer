@@ -6,6 +6,7 @@ public import Transformer.LeRoPEBlock.PiHead
 public import Transformer.LeRoPEBlock.PiSwap
 public import Transformer.LeRoPEBlock.NoPE
 public import Transformer.LeRoPEBlock.Limit
+public import Transformer.LeRoPEBlock.TwoPi
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -27,7 +28,10 @@ model's own.
   frequency `π`, sees the order of the first two keys: swapping them changes its output by at
   least `(1 − N^{−2κ}) / N` times `‖u_a − u_b‖` (`norm_piHead_sub_swap`), so every block with no
   positional encoding misses it by at least half of that (`gap_noPos_piHead`). Conversely LeRoPE
-  loses nothing: its frequencies are positive, never zero, but a block with no positional
-  encoding is within any `ε` of a LeRoPE block with the same projections, `Φ` and values on
-  every finite set of sequences (`exists_lerope_close`).
+  loses nothing: its frequencies are positive, never zero, but the frequency `2π` leaves a plane
+  unrotated at natural distances, so every rotary block with frequencies `θ ≥ 0` (RoPE's grid,
+  partial RoPE, no rotation at all) is a LeRoPE block with the same `Φ`, projections and values
+  on every input (`exists_pos_block_eq`, `exists_lerope_eq_noPos`), the positive frequencies
+  being LeRoPE's own (`exists_alpha_block_eq`). Small frequencies give it up to `ε` as well
+  (`exists_lerope_close`).
 -/

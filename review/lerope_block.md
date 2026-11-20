@@ -11,9 +11,11 @@ out of this note by the user's later instruction. Lean: `Transformer.LeRoPEBlock
 - DiffGPT, `~/python_projects/gpt` at `5a37c51`, `research/main_model/README.txt`,
   *Architecture*: `q_i = LeRoPE_i(R_d(W_Q z_i))`, `k_i = LeRoPE_i(R_d(W_K z_i))`,
   `p_ij = softmax_{j ≤ i}((ln N_i / d)(Re Z_ij + β (Im Z_ij)² / d))`, `N_i = i + 1`, `d = D/H`;
-  LeRoPE's angle `i 10000^{−2m/d} e^{α_m}`, the `α_m` shared by Q, K, heads and layers (so any
-  positive frequency is reachable); `β = a/√(1 + a²)`, one zero-initialized coordinate per layer
-  and head.
+  LeRoPE's angle `i 10000^{−2m/d} e^{α_m}`, the `α_m` shared by Q, K, heads and layers;
+  `β = a/√(1 + a²)`, one zero-initialized coordinate per layer and head.
+- LeRoPE, Karypis et al., arXiv:2607.10134v1, §3.1, Eq. (5): the learned frequency
+  `θ̂_m = e^{α_m} ω_m` is positive and reaches every positive target
+  (`Transformer.RoPE.LeRoPE.learned_frequency_surjective`).
 - The alternatives are the arms of `experiments/alibi_kerple` (no rotation and a distance bias
   added to the logit, or none) and the fixed-frequency RoPE the LeRoPE frequencies start from.
 
@@ -27,11 +29,9 @@ projections, the values and the number of heads range over everything, so every 
 covers the main model's own `Φ`. `leropeLogit` is the main model's head;
 `leropeLogit_sub` checks that it is LeRoPE's turn of the query by `i` and of the key by `j`.
 
-How to read a verdict: `A ⊆ B` is "every block of `A` is within any `ε` of a block of `B` on any
-finite set of inputs" (containment up to closure); a separation is a target in `B` that every
-block of `A` misses by a positive constant. With an arbitrary `Φ`, only an exact invariance of
-`A` can give a separation: an injective head followed by an arbitrary `Φ` interpolates anything
-on a finite set. So the rows below separate by invariances, or say that they do not.
+How to read a verdict: `A ⊆ B` is "every block of `A` is a block of `B`" (exact containment) or
+within any `ε` of one on any finite set of inputs (containment up to closure); a separation is a
+target in `B` that every block of `A` misses by a positive constant.
 
 ## Results
 
@@ -54,26 +54,64 @@ of heads, any scores and any values, misses the π head, on `x` and its swap, by
 about `0.0039 ‖u_a − u_b‖`: the π head spreads its weight over half of the keys, so this proves
 that the order is seen, not that it is seen well.
 
-LB3, LeRoPE loses nothing to it (`Limit`). LeRoPE's frequencies are positive, so a block with no
-positional encoding is not literally a LeRoPE block; but the logit, the attention and, for a
-continuous `Φ`, the block are continuous in the frequencies (`continuous_block`), and at zero
-frequencies the head has no rotation (`leropeLogit_zero`). So for the main model's own `Φ`,
-projections, `β`, `d` and values, every finite set of sequences and every `ε > 0`, there are
-positive frequencies with the LeRoPE block within `ε` of the block with none
-(`exists_lerope_close`).
+LB3, LeRoPE loses nothing to it (`TwoPi`, `Limit`). Positions are natural numbers, and the
+frequency `2π` turns a natural distance by a multiple of `2π`: it leaves its plane unrotated, as
+the frequency `0` does (`rotary_replace_zero`). LeRoPE's learned scales reach `2π`. So every
+rotary block with frequencies `θ ≥ 0` (RoPE's grid, partial RoPE with its unrotated planes, no
+rotation at all) is a LeRoPE block with the same `Φ`, projections, `β`, `d` and values, on every
+sequence and every query (`exists_pos_block_eq`, with LeRoPE's own parametrization in
+`exists_alpha_block_eq`). The block with no positional encoding is the case `θ = 0`
+(`exists_lerope_eq_noPos`). By continuity small frequencies give it up to `ε` on any finite set
+of sequences too (`exists_lerope_close`), the reading that survives a perturbation.
 
 ## Verdict, so far
 
-| alternative | LeRoPE contains it | it contains LeRoPE | lemmas |
+| alternative | LeRoPE's blocks contain it | it contains LeRoPE's | where |
 | --- | --- | --- | --- |
-| no positional encoding (`nope`) | yes, up to closure | no: the π head | LB1–LB3 |
-| fixed-frequency RoPE | not yet | not yet | |
-| distance biases (ALiBi, KERPLE, −ln(1 + r)) | not yet | not yet | |
-| Hermitian score (`β = 0`) | not yet | not yet | |
-| constant gain instead of SSMax's `ln N` | not yet | not yet | |
+| no positional encoding (`nope`) | yes, exactly | no: the π head | LB1–LB3 |
+| RoPE, fixed grid; partial RoPE | yes, exactly (`α = 0`; unrotated planes at `2π`) | not separated in this class | LB3; rounded model below |
+| distance biases (ALiBi, KERPLE, −ln(1 + r)) | not decided | not decided | task results below |
+| Hermitian score (`β = 0`) | yes: the main block at `β = 0` | not decided | `phaseLogit` |
+| constant gain (plain softmax) instead of SSMax's `ln N` | not decided | no, for one head's retrieval: bounded scores fade at long context, `s ln n` with `2 s B > 1` recalls | SA3, SA5 below |
 
-Against a block with no positional encoding LeRoPE's class is strictly better, in the sense of
-the reading above.
+So the block with LeRoPE is strictly better than a block with no positional encoding, and loses
+nothing to RoPE, partial RoPE or any rotary scheme with frequencies `θ ≥ 0`. The class does not
+decide the other rows, and nothing here says that LeRoPE is optimal.
+
+## Why the class does not decide the other rows
+
+With an arbitrary `Φ` and finite inputs only an exact invariance of the smaller class separates.
+RoPE, ALiBi and KERPLE blocks have none: the distance enters every score, and a head that
+separates the finitely many inputs followed by an arbitrary `Φ` can produce any target on them.
+Hand argument, not in Lean. So the rows below separate by what the class leaves out (rounding,
+bounded or restricted `Φ`, depth, length), not by function classes of the blocks as stated.
+
+## What the library already proves about them
+
+All of it is in the rounded model of `review/mrcr.md` (precision `s = 0` unless said), and each
+statement is about a construction, not about every transformer.
+
+- RoPE's grid against LeRoPE, one head. A RoPE head of the first layer, whose planes all rotate at
+  frequencies outside `2πℤ`, weighs keys arbitrarily far (`Transformer.MRCR.exists_one_le_weight_grid`),
+  so it does not attend to the token before alone. LeRoPE learns a frequency `2π` and an unrotated
+  plane, and then the weight is `1` at the token before and `0` elsewhere
+  (`Transformer.MRCR.exists_lerope_partial`). This separates the two in the rounded model; with
+  the real softmax the far keys come back within any margin for both, and nothing is separated.
+- ALiBi and KERPLE against LeRoPE, five layers on the spelled asks of MRCR. Five rounded layers
+  with ALiBi, KERPLE or SSMax of either answer them (`Transformer.MRCR.PhraseKeyLogits`). The head
+  that reads the token before with a margin does not exist with RoPE, YaRN or LeRoPE at any
+  frequencies (`Transformer.MRCR.not_readsPrev_lerope`), and the construction fails with them. Only
+  the construction is ruled out: LeRoPE's unrotated plane reads the token before without a margin
+  (`exists_lerope_partial`), and the five layers are not built on it.
+- The scale, for one head whose output is the answer (`review/flat_spectrum.md`). Softmax with
+  bounded scores answers the worst dictionary of values `±1` with an error above any `ε < 2` from
+  some number of keys on (`Transformer.Grokking.FlatSpectrum.Recall.exists_lt_softmaxAttention_recall_error`,
+  SA3), while the scale `s log n` fades if `2 s B < 1` and recalls if `2 s B > 1`
+  (`oneHot_logScaleAttention_threshold`, SA5). The main model has `s = 1/d` on raw scores up to
+  `d` (Peri-RMS: `‖q‖ ‖k‖ ≤ d`), so `2 s B` can reach `2`, above the threshold: a statement of what
+the head can do, not of what training finds.
+
+The FFN branch of the same block is in `review/complex_ffn.md`.
 
 ## Not claimed
 
@@ -88,10 +126,15 @@ the reading above.
 - Depth. A stack of blocks with no positional encoding can leak the position through the causal
   mask's counts into later layers; the statements are about one block acting on arbitrary token
   sequences.
-- Training, length generalization and the gpt runs.
+- Per-head frequencies. LeRoPE's `α` is shared by Q, K, heads and layers; a scheme with its own
+  frequencies in each head is not covered by the containments.
+- Training, length generalization, floating point (the exact `2π` of LB3 is a statement over the
+  reals) and the gpt runs.
 - The size of the gap: `0.0039 ‖u_a − u_b‖` at `N = 128`.
 
 ## Open
 
-The remaining rows of the table: fixed-frequency RoPE, the additive distance biases of the
-`alibi_kerple` arms, the Hermitian score and a constant gain. Each is one step.
+The distance biases, the Hermitian score and the constant gain are not decided by a class
+comparison here. A decision needs a restriction the main model has and the class lacks, such as a
+bound on `Φ`'s Lipschitz constant, a number of layers, or the rounded model; the cohort
+`experiments/alibi_kerple` measures the same question on the GPU, and its findings are pending.

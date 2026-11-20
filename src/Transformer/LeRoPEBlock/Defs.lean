@@ -16,7 +16,9 @@ streams into `z_i` and, per head of real width `d`,
 with `N_i = i + 1`. The heads' outputs `∑_j p_ij v_j` are concatenated and written into the
 streams through `R_D(W_O ·)` by the phase-conjugated mHC, and the FFN branch follows with its own
 routing. LeRoPE turns the channel `m` by the angle `i θ_m`, `θ_m = 10000^{−2m/d} e^{α_m}`, the
-`α_m` learned and shared by Q, K, heads and layers: any positive frequency is reachable.
+`α_m` learned and shared by Q, K, heads and layers (Karypis et al., arXiv:2607.10134v1, §3.1,
+Eq. (5)): any positive frequency is reachable
+(`Transformer.RoPE.LeRoPE.learned_frequency_surjective`).
 
 Everything but the attention acts on one position at a time: the routers and their Sinkhorn maps,
 the RMS normalizations, `W_O`, the FFN and the writes. So at the query `i` the block is
@@ -100,7 +102,8 @@ theorem leropeLogit_sub (θ : Fin p → ℝ) (β d : ℝ) (Q K : X → Fin 2 × 
     (hj : j ≤ i) (x y : X) :
     leropeLogit θ β d Q K i x y (i - j) =
       phaseLogit (Real.log ((i : ℝ) + 1) / d) β d (rotary θ i *ᵥ Q x) (rotary θ j *ᵥ K y) := by
-  have h : rotary θ (j : ℝ) *ᵥ K y = rotary θ (i : ℝ) *ᵥ (rotary θ (-((i - j : ℕ) : ℝ)) *ᵥ K y) := by
+  have h : rotary θ (j : ℝ) *ᵥ K y =
+      rotary θ (i : ℝ) *ᵥ (rotary θ (-((i - j : ℕ) : ℝ)) *ᵥ K y) := by
     rw [mulVec_mulVec, ← rotary_add]
     congr 2
     rw [Nat.cast_sub hj]
