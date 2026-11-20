@@ -226,6 +226,27 @@ the reference build. The arms' gradients there are the smallest (norms
 0.0037 and 0.0041, against the control's 0.0080), so their ratios move most.
 The production build reports the check but does not gate on it.
 
+## Interruption
+
+On 2026-11-20 at 12:53 the cohort was killed on request, 96 of 210 cells
+in, all passed. The running cell, `rerope/gpt-probe-branch-amplitudes/seed0`,
+had written only its epoch-0 observation in 13 minutes. The runner writes a
+cell's observations only every 500 epochs, 16,000 updates on this task.
+
+The cell was training, not hung. A copy of it, run from the frozen binaries
+in a separate root (`runs/diagnose-branch-1`), trained 1,632 updates in
+88 s. That is the control's pace, 1.7 s per epoch. It stopped on `STOP`
+2 s later.
+
+The killed cell had no durable update. The cohort resumed at 18:40 with
+that cell restarted from its initial state (`runs/resume-1.sh`). The
+restart and the killed copy have byte-identical protocol, initial
+parameters, state at update 0 and epoch-0 observation, wall-clock seconds
+aside (`runs/check-restart-1.sh`). The binary's replays are bit-identical
+(see Validation), so the restart reproduces the uninterrupted cell. The
+killed copy is kept in `runs/cohort-1-interrupted/`. All these files are
+local in `runs/`, which git ignores.
+
 ## Findings
 
 Pending.
