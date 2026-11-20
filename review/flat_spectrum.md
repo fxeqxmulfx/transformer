@@ -6217,6 +6217,15 @@ not a power of the length. Under the main model's own gain, `ln N / d` with `A =
 weight on the neighbours of the middle slot of a long window (`R ≥ 9`). What several heads, keys
 that depend on the token or a nonlinear `Φ` recover from that is not priced here.
 
+The same heads see the order of the operands. Swapping the tokens at two slots `a` and `b`
+changes the output of a positional head by `(w_a − w_b)(u_b − u_a)`. The DFT head with its key
+rotated by `2R` instead of `R` peaks at the first key: by the same sum of cosines it keeps more
+than `1/2` there and less than `1/N` on every other key. So it sees the order of the first two
+keys with a gap above `(1/2 − 1/N) ‖u_a − u_b‖`, against `(1 − N^{−2κ})/N` for the π head of
+`review/lerope_block.md`, LB2, and no positional head does better than `‖u_a − u_b‖`. It needs
+`R = (N − 1)/2` bands, so with the `16` bands of the main model it covers `N ≤ 33` keys. This is
+by hand, from RS2.
+
 ### NV4. Selecting an operand: dimension two is the least
 
 A model with a cut pays the width `m` to select one of `m` operands (AR4, AR5), and softmax
@@ -6244,9 +6253,43 @@ SA2 attains it by putting the keys on a parabola, `(j, −j²/2)`, where none li
 the others. What dimension two buys is convex position, and from dimension two on any number of
 keys can have it.
 
+### NV5. The order of the operands: the rank across a cut
+
+NV1 prices a cut whose coupling `M` is injective. For every `M` the rows of `K` still split by
+the value of `uᵀ M`: two rows with the same `uᵀ M` differ by the factor `ψ(g(u) − g(u'))` of
+modulus one, and two rows with different `uᵀ M` are orthogonal, by the computation of NV1,
+
+```
+Σ_v K(u, v) conj K(u', v) = ψ(g(u) − g(u')) p^l [uᵀ M = u'ᵀ M].
+```
+
+One row for each value of `uᵀ M` is an orthogonal basis of the row space, so
+
+```
+rank K = |{uᵀ M}| = p^{rank M}    for a prime p.
+```
+
+By hand, more holds. For a prime `p` and `s = rank M`, `K Kᴴ` is `p^l` times a matrix of `p^s`
+blocks of ones of size `p^{k−s}`, between unitary diagonal factors, so the `p^s` nonzero
+singular values of `K` are all `p^{(k+l−s)/2}`. By Eckart–Young a product through width
+`d ≤ p^s` misses `K` by exactly `(p^s − d) p^{k+l−s}` in squared Frobenius norm, and for `k = l`,
+`N = p^k`, the nuclear norm is `N p^{s/2}`: from `N` at `s = 0` to `N √N` at `s = k`, the two
+ends of NV2.
+
+The exponent belongs to the cut, not to the function. Take `k` pairs coupled by `xᵢ yᵢ`, as in
+`k` copies of `x³ + x y` (NV1). A cut that puts `xᵢ` on one side and `yᵢ` on the other for `s`
+of the pairs has a coupling of rank `s`, one entry for each such pair, and the table across it
+has rank `p^s`. In the order `x₁ … x_k y₁ … y_k` the middle cut separates every pair, and the
+rank is `p^k = N`. In the order `x₁ y₁ x₂ y₂ …` every cut into a prefix and a suffix separates at
+most one pair, and the rank is at most `p`. A model with a cut, reading the operands in order,
+pays the width `p^k` in the first order and `p` in the second. Every balanced cut is the middle
+cut of some order, so only a coupling of full rank across every balanced cut keeps the width
+`p^{n/2}` in every order: a quadratic form `zᵀ Q z` does when every balanced off-diagonal block of
+`Q + Qᵀ` is invertible.
+
 ### Lean
 
-`BilinearKernel` and `CutRange` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`BilinearKernel`, `CutRange` and `CutRank` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6256,5 +6299,6 @@ keys can have it.
 | --- | --- | --- |
 | NV1 | `bilinearKernel`, `stdAddChar_sum`, `sum_stdAddChar_dotProduct`, `bilinearKernel_mul_star`, `bilinearKernel_mul_conjTranspose`, `isFlat_bilinearKernel`, `bilinearKernel_ne_zero`, `not_isMinOn_bilinearKernel`, `mul_sub_rank_le_frobeniusSq_sub_bilinearKernel`, `rank_bilinearKernel`, `nuclearNorm_bilinearKernel`, `bilinearKernel_cube_add_mul` | The groups are functions `ι → ZMod p` and `κ → ZMod p` for finite types `ι`, `κ`; `k = |ι|`, `l = |κ|`. "`w ↦ wᵀ M` injective" is `Function.Injective M.vecMul`, and the square case takes `IsUnit M`. R3 is stated with `min (p^k) (p^l)`. The quadratic form is not stated separately. |
 | NV2 | `frobeniusSq_conjTranspose`, `exists_rank_le_frobeniusSq_sub_eq`, `IsFlat.isLeast_frobeniusSq_sub`, `bilinearKernel_sum_sum`, `card_fun_zmod`, `isLeast_nuclearNorm_unimodular`, `isGreatest_nuclearNorm_unimodular`; the bounds `card_le_nuclearNorm_le_of_unimodular` of Proposition 2 | The least error is `IsLeast` of `{‖K − X‖_S2² : rank X ≤ d}`. The ends of the nuclear norm are `IsLeast` and `IsGreatest` over the tables `(ι → ZMod p) × (ι → ZMod p)` with entries of modulus one, `k = |ι|`; the additive table is stated as `ψ(Σ uᵢ + Σ vⱼ)`. |
-| NV3 | the cap: `sum_sum_band`, `sq_add_sq_sum_le`, `sum_sum_phaseLogit_sub_le`, `card_mul_exp_mean_le`, `depthWeight_le_of_sum_sum_le`, `depthWeight_leropeLogit_le`; the DFT head: `two_mul_sin_mul_sum_cos`, `sum_cos_dft`, `dftFreq`, `leropeLogit_dft`, `depthWeight_dft`, `half_lt_depthWeight_dft`, `depthWeight_dft_mem` | The cap is stated for a sequence whose tokens at the distances `t − R, …, t + R` are one token `y`, with `‖Q x_i‖², ‖K y‖² ≤ d`; a positional head on any input is the case of the constant sequence, by hand. The DFT head is stated at the query `2R` with the tokens `Unit` in `depthWeight_dft_mem`, and for every sequence in `depthWeight_dft`. The prices in `λ A` are solved by hand from the weights. |
+| NV3 | the cap: `sum_sum_band`, `sq_add_sq_sum_le`, `sum_sum_phaseLogit_sub_le`, `card_mul_exp_mean_le`, `depthWeight_le_of_sum_sum_le`, `depthWeight_leropeLogit_le`; the DFT head: `two_mul_sin_mul_sum_cos`, `sum_cos_dft`, `dftFreq`, `leropeLogit_dft`, `depthWeight_dft`, `half_lt_depthWeight_dft`, `depthWeight_dft_mem` | The cap is stated for a sequence whose tokens at the distances `t − R, …, t + R` are one token `y`, with `‖Q x_i‖², ‖K y‖² ≤ d`; a positional head on any input is the case of the constant sequence, by hand. The DFT head is stated at the query `2R` with the tokens `Unit` in `depthWeight_dft_mem`, and for every sequence in `depthWeight_dft`. The prices in `λ A` are solved by hand from the weights. The gap of the order is by hand. |
 | NV4 | `sum_exp_mul_indicator`, `softmaxAttention_indicator_nonpos_of_mem_convexHull`, `exists_mem_convexHull_compl_of_le_one`, `isLeast_dim_softmaxAttention_recall_sign` | The projections are `Fin d → ℝ` and the score is `Σ_r a_r k_r`, as in SA2; the hull is `convexHull ℝ (kf '' {k}ᶜ)`. The least dimension is `IsLeast` of the set of `d` for which projections `Fin m → Fin d → ℝ` recall by the sign, for `m ≥ 3`. |
+| NV5 | `sum_bilinearKernel_mul_star`, `bilinearKernel_row_eq`, `rank_bilinearKernel_eq_card`, `rank_bilinearKernel_eq_pow` | The number of couplings is `Nat.card (Set.range M.vecMul)`; `p^{rank M}` takes `Fact p.Prime`. The singular values, the least error of width `d`, the nuclear norm and the orders of the operands are by hand. |
