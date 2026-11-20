@@ -8,21 +8,22 @@ public import Mathlib.Analysis.Real.Pi.Bounds
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
-# LeRoPE with ReRoPE's window answers spelled asks
+# LeReRoPE answers spelled asks
 
 In no paper. LeRoPE (Karypis et al., arXiv:2607.10134v1, §3.1, Eq. (5)) learns the frequencies
 `θ̂_m = e^{α_m} θ_m`, one scale `α_m` per band, shared by every head and layer. With the distance
 unclamped no learned frequencies read the token before (`Transformer.MRCR.not_readsPrev_lerope`).
 Clamping the distance at a window `W`, as ReRoPE does (`Transformer.MRCR.reropeLogit`), repairs
-LeRoPE as it repairs RoPE: the constructions of `Transformer.MRCR.PhraseKeyReRope` and
-`Transformer.MRCR.ReRopeStyleRecall` need one band, of any frequency up to about `π / W`.
+LeRoPE as it repairs RoPE. The two together are LeReRoPE (`Transformer.RoPE.LeReRoPE`). The
+constructions of `Transformer.MRCR.PhraseKeyReRope` and `Transformer.MRCR.ReRopeStyleRecall` need
+one band, of any frequency up to about `π / W`.
 
-* `exists_lerope_rerope_phraseAnswer`, `exists_ssmax_lerope_rerope_phraseAnswer`: five rounded
+* `exists_lererope_phraseAnswer`, `exists_ssmax_lererope_phraseAnswer`: five rounded
   layers answer spelled asks at every length once one band has `θ̂_m (W + 2) ≤ π`, the logit
   divided by `c d`, alone or under SSMax.
 * `learnedFrequency_mul_le_pi_iff`: a band has it exactly for `α_m ≤ log(π / ((W + 2) θ_m))`, so
   LeRoPE reaches it from every initial frequency.
-* `exists_forall_styleLookup_lerope`: three real-softmax layers under SSMax answer asks with a
+* `exists_forall_styleLookup_lererope`: three real-softmax layers under SSMax answer asks with a
   style at every length once one band has `θ̂_m W ≤ π` and `s A (1 − cos θ̂_m) > 4`.
 
 LeRoPE's dominant band, the one band whose contribution to the logits is large and nearly
@@ -48,7 +49,7 @@ variable {K F N S V R : ℕ}
 the logit divided by `c d`, at every window `W ≥ 2`, once one band of the learned frequencies
 `e^{α_m} θ_m` (arXiv:2607.10134v1, Eq. (5)) has `e^{α_m} θ_m (W + 2) ≤ π`. Unclamped, no
 learned frequencies do (`not_readsPrev_lerope`). -/
-theorem exists_lerope_rerope_phraseAnswer (c : ℕ → ℝ) (hc : ∀ d, 0 < d → 0 < c d)
+theorem exists_lererope_phraseAnswer (c : ℕ → ℝ) (hc : ∀ d, 0 < d → 0 < c d)
     {ω α : Fin K → ℝ} {m : Fin K} (hω : 0 < ω m) {W : ℕ} (hW : 2 ≤ W)
     (hθW : learnedFrequency (ω m) (α m) * (W + 2) ≤ Real.pi) (v : Fin V) :
     ∃ (p d : ℕ) (b : Fin K → ℝ) (T : LTfr (Option (PhraseTok F N V R)) p 0 d 5),
@@ -59,7 +60,7 @@ theorem exists_lerope_rerope_phraseAnswer (c : ℕ → ℝ) (hc : ∀ d, 0 < d �
 
 /-- The dominant band of Table 10's 2.52B run at `L = 2048`, `e^α = 0.2009` on
 `θ_17 ≈ 0.0075`, serves the window `2046`; the divisor is `√d`. -/
-example := exists_lerope_rerope_phraseAnswer (F := 1) (N := 1) (R := 1) (fun d => Real.sqrt d)
+example := exists_lererope_phraseAnswer (F := 1) (N := 1) (R := 1) (fun d => Real.sqrt d)
   (fun _ hd => Real.sqrt_pos.mpr (by exact_mod_cast hd)) (ω := fun _ : Fin 1 => 0.0075)
   (α := fun _ => Real.log 0.2009) (m := 0) (by norm_num) (W := 2046) (by norm_num)
   (by
@@ -70,7 +71,7 @@ example := exists_lerope_rerope_phraseAnswer (F := 1) (N := 1) (R := 1) (fun d =
 
 /-- **The same under SSMax** with `s log 2 ≥ 1` (arXiv:2501.19399v1, `eq:ssmax`), scaling the
 whole logit. -/
-theorem exists_ssmax_lerope_rerope_phraseAnswer (c : ℕ → ℝ) (hc : ∀ d, 0 < d → 0 < c d)
+theorem exists_ssmax_lererope_phraseAnswer (c : ℕ → ℝ) (hc : ∀ d, 0 < d → 0 < c d)
     {s : ℝ} (hs : 1 ≤ s * Real.log 2) {ω α : Fin K → ℝ} {m : Fin K} (hω : 0 < ω m) {W : ℕ}
     (hW : 2 ≤ W) (hθW : learnedFrequency (ω m) (α m) * (W + 2) ≤ Real.pi) (v : Fin V) :
     ∃ (p d : ℕ) (b : Fin K → ℝ) (T : LTfr (Option (PhraseTok F N V R)) p 0 d 5),
@@ -79,9 +80,9 @@ theorem exists_ssmax_lerope_rerope_phraseAnswer (c : ℕ → ℝ) (hc : ∀ d, 0
   exists_ssmax_rerope_phraseAnswer c hc hs (θ := fun l => learnedFrequency (ω l) (α l))
     (learned_frequency_pos hω (α m)) hW hθW v
 
-/-- The hypotheses of `exists_ssmax_lerope_rerope_phraseAnswer` hold for `s = 2`, the divisor
+/-- The hypotheses of `exists_ssmax_lererope_phraseAnswer` hold for `s = 2`, the divisor
 `d` and the same band and window. -/
-example := exists_ssmax_lerope_rerope_phraseAnswer (F := 1) (N := 1) (R := 1)
+example := exists_ssmax_lererope_phraseAnswer (F := 1) (N := 1) (R := 1)
   (fun d => (d : ℝ)) (fun _ hd => by exact_mod_cast hd) (s := 2)
   (by have := Real.log_two_gt_d9; linarith) (ω := fun _ : Fin 1 => 0.0075)
   (α := fun _ => Real.log 0.2009) (m := 0) (by norm_num) (W := 2046) (by norm_num)
@@ -105,7 +106,7 @@ example := learnedFrequency_mul_le_pi_iff (by norm_num : (0 : ℝ) < 0.0075) 0 2
 /-- **Three real-softmax layers with LeRoPE and ReRoPE's window answer asks with a style at
 every length** (`exists_forall_styleLookup`), once one band of the learned frequencies has
 `θ̂_m W ≤ π` and the slot heads' scale and amplitude have `s A (1 − cos θ̂_m) > 4`. -/
-theorem exists_forall_styleLookup_lerope {s : ℕ → ℝ} {A : ℝ} (hA : 0 ≤ A)
+theorem exists_forall_styleLookup_lererope {s : ℕ → ℝ} {A : ℝ} (hA : 0 ≤ A)
     (hs : ∀ x, 0 ≤ s x) {ω α : Fin K → ℝ} {m : Fin K} (hω : 0 < ω m) {W : ℕ} (hW : 4 < W)
     (hθW : learnedFrequency (ω m) (α m) * W ≤ Real.pi)
     (hsg : ∀ x, 4 < s x * (A * (1 - Real.cos (learnedFrequency (ω m) (α m)))))
@@ -118,9 +119,9 @@ theorem exists_forall_styleLookup_lerope {s : ℕ → ℝ} {A : ℝ} (hA : 0 ≤
   exists_forall_styleLookup hA hs (θ := fun l => learnedFrequency (ω l) (α l))
     (learned_frequency_pos hω (α m)) hW hθW hsg hs₂ hφ
 
-/-- The hypotheses of `exists_forall_styleLookup_lerope` hold for the band `θ = π/6` left at
+/-- The hypotheses of `exists_forall_styleLookup_lererope` hold for the band `θ = π/6` left at
 `α = 0`, the window `6`, `s = 1`, `A = 100`, `s₂ = 2` and `φ = 0`. -/
-example := exists_forall_styleLookup_lerope (F := 1) (N := 1) (S := 1) (V := 1) (R := 1)
+example := exists_forall_styleLookup_lererope (F := 1) (N := 1) (S := 1) (V := 1) (R := 1)
   (s := fun _ => 1) (A := 100) (by norm_num) (fun _ => zero_le_one)
   (ω := fun _ : Fin 1 => Real.pi / 6) (α := fun _ => 0) (m := 0) (by positivity) (W := 6)
   (by norm_num)

@@ -4,6 +4,7 @@ public import Transformer.MRCR.CountHead
 public import Transformer.MRCR.CountLookup
 public import Transformer.MRCR.Counting
 public import Transformer.MRCR.InnerNeedle
+public import Transformer.MRCR.LeReRope
 public import Transformer.MRCR.NearMiss
 public import Transformer.MRCR.NearMissThreshold
 public import Transformer.MRCR.Ordinal
@@ -26,7 +27,7 @@ public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.ReRopeFading
 public import Transformer.MRCR.ReRopeHeads
-public import Transformer.MRCR.ReRopeLeRope
+public import Transformer.MRCR.LeReRope
 public import Transformer.MRCR.ReRopeSlots
 public import Transformer.MRCR.ReRopeStyleKeys
 public import Transformer.MRCR.ReRopeStyleRecall
@@ -106,7 +107,7 @@ key and return the answer (`Transformer.MRCR.ReRopeSlots`, `Transformer.MRCR.ReR
 `Transformer.MRCR.ReRopeStyleRecall`, `Transformer.MRCR.ReRopeStyleSu`). With the same clamp
 LeRoPE's learned frequencies answer too, from one band with `θ̂ (W + 2) ≤ π`. The dominant band
 LeRoPE learns has it at every window up to its training length `L` less two, but with the real
-softmax so slow a band needs `s A > 8 L² / π²` (`Transformer.MRCR.ReRopeLeRope`). Without a
+softmax so slow a band needs `s A > 8 L² / π²` (`Transformer.MRCR.LeReRope`). Without a
 margin, at precision `0`, a negative logit already drops a key, yet RoPE with every plane rotated
 still gives keys arbitrarily far a weight (`Transformer.MRCR.RotaryPrevHead`); with a plane left
 unrotated, as in partial RoPE or when LeRoPE learns the frequency `2π`, a head attends to the

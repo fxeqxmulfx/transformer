@@ -45104,7 +45104,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.MRCR`
 
-**[Transformer.MRCR](src/Transformer/MRCR.lean)** — 122 lines, aggregator
+**[Transformer.MRCR](src/Transformer/MRCR.lean)** — 123 lines, aggregator
 
 **[Transformer.MRCR.CountHead](src/Transformer/MRCR/CountHead.lean)** — 144 lines
 
@@ -45144,6 +45144,17 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`spaced_strictAnti`](src/Transformer/MRCR/InnerNeedle.lean#L45) | lemma | proved |
 | [`exists_spaced_le_of_inner`](src/Transformer/MRCR/InnerNeedle.lean#L57) | theorem | proved |
 | [`exists_spaced_logScaleAttention_indicator_nonpos`](src/Transformer/MRCR/InnerNeedle.lean#L88) | theorem | proved |
+
+**[Transformer.MRCR.LeReRope](src/Transformer/MRCR/LeReRope.lean)** — 168 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`exists_lererope_phraseAnswer`](src/Transformer/MRCR/LeReRope.lean#L52) | theorem | proved |
+| [`exists_ssmax_lererope_phraseAnswer`](src/Transformer/MRCR/LeReRope.lean#L74) | theorem | proved |
+| [`learnedFrequency_mul_le_pi_iff`](src/Transformer/MRCR/LeReRope.lean#L97) | theorem | proved |
+| [`exists_forall_styleLookup_lererope`](src/Transformer/MRCR/LeReRope.lean#L109) | theorem | proved |
+| [`eight_lt_mul_sq`](src/Transformer/MRCR/LeReRope.lean#L136) | theorem | proved |
+| [`eight_mul_sq_div_lt`](src/Transformer/MRCR/LeReRope.lean#L149) | theorem | proved |
 
 **[Transformer.MRCR.NearMiss](src/Transformer/MRCR/NearMiss.lean)** — 114 lines
 
@@ -45435,17 +45446,6 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_forall_rerope_recall`](src/Transformer/MRCR/ReRopeHeads.lean#L119) | theorem | proved |
 | [`softmaxAttention_logScale_eq`](src/Transformer/MRCR/ReRopeHeads.lean#L156) | theorem | proved |
 | [`exists_forall_logScale_rerope_recall`](src/Transformer/MRCR/ReRopeHeads.lean#L176) | theorem | proved |
-
-**[Transformer.MRCR.ReRopeLeRope](src/Transformer/MRCR/ReRopeLeRope.lean)** — 167 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`exists_lerope_rerope_phraseAnswer`](src/Transformer/MRCR/ReRopeLeRope.lean#L51) | theorem | proved |
-| [`exists_ssmax_lerope_rerope_phraseAnswer`](src/Transformer/MRCR/ReRopeLeRope.lean#L73) | theorem | proved |
-| [`learnedFrequency_mul_le_pi_iff`](src/Transformer/MRCR/ReRopeLeRope.lean#L96) | theorem | proved |
-| [`exists_forall_styleLookup_lerope`](src/Transformer/MRCR/ReRopeLeRope.lean#L108) | theorem | proved |
-| [`eight_lt_mul_sq`](src/Transformer/MRCR/ReRopeLeRope.lean#L135) | theorem | proved |
-| [`eight_mul_sq_div_lt`](src/Transformer/MRCR/ReRopeLeRope.lean#L148) | theorem | proved |
 
 **[Transformer.MRCR.ReRopeSlots](src/Transformer/MRCR/ReRopeSlots.lean)** — 200 lines
 
