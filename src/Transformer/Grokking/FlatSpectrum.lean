@@ -141,6 +141,9 @@ public import Transformer.Grokking.FlatSpectrum.ProductLayer
 public import Transformer.Grokking.FlatSpectrum.ProductTree
 public import Transformer.Grokking.FlatSpectrum.ProductCopies
 public import Transformer.Grokking.FlatSpectrum.ProductOneLayer
+public import Transformer.Grokking.FlatSpectrum.ProductOrder
+public import Transformer.Grokking.FlatSpectrum.ProductCorners
+public import Transformer.Grokking.FlatSpectrum.ProductDepth
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -396,6 +399,10 @@ scratch coordinates, write `ψ(∑_i q(x_i, y_i))` for any `q` exactly, so its r
 the right answer; through the characters, `x³ + x y` takes `2kp` units (`ProductTree`,
 `ProductCopies`). One layer read out linearly has rank at most `2m + 2` across a cut, so writing
 `ψ(∑_i (x_i³ + x_i y_i))` exactly in one layer, from any encodings of the two sides, takes
-`2m + 2 ≥ p^k` (`ProductOneLayer`). -/
+`2m + 2 ≥ p^k` (`ProductOneLayer`). On the one-hot features the depth is the least possible, at any
+width: a product layer at most doubles the interaction order, the number of operands a function
+reads (`ProductOrder`), the alternating sum over the corners of a box vanishes below full order
+and factors over a product of pairs (`ProductCorners`), so a linear readout `ψ(f)` of `d` layers
+has `2k ≤ 2^d`, depth at least `1 + ⌈log₂ k⌉` (`ProductDepth`). -/
 
 @[expose] public section

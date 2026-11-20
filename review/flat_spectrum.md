@@ -6129,8 +6129,8 @@ groups: a group `u` of `k` variables indexes the rows, a group `v` of `l = n −
 columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across such a cut,
 prices reading its `n` operands from a context, (NV6) prices what the labels show of one
 interaction among `k`, and (NV7) prices what depth buys: a product network of depth
-`1 + ⌈log₂ k⌉` against one layer. Every item gives a lower and an upper bound, exact where it
-can.
+`1 + ⌈log₂ k⌉`, the least possible, against one layer. Every item gives a lower and an upper
+bound, exact where it can.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6516,23 +6516,70 @@ so a leaf is the whole `ψ(q(xᵢ, yᵢ))` at `p` units, and the tree multiplies
 than the `2k` phases `ψ(xᵢ³)` and `ψ(xᵢ yᵢ)`. Through point masses, `U = β`, `H_b(y) = [y = b]`
 and `G_b(x) = ψ(q(x, b))` give `ψ(q(x, y))` for any `q` at `|β|` units. Over `ℤ/p` both take `p`
 units per pair, so what makes the network cheap is the depth, not the characters. For `k` copies
-of `x³ + x y`, then, one layer needs at least `(p^k − 2)/2` hidden units to hold `ψ(f)` exactly,
-and `1 + ⌈log₂ k⌉` layers need at most `2kp`.
+of `x³ + x y`, then, `1 + ⌈log₂ k⌉` layers hold `ψ(f)` exactly with at most `2kp` hidden units
+each, while one layer needs at least `(p^k − 2)/2` from any encodings of the two sides, and on
+the one-hot features no number of units at all once `k ≥ 2` (below).
 
 *The readout.* `Re(ψ(f) conj ψ(c)) = cos(2π (f − c)/p)` is `1` at `c = f` and less than `1` at
 every other `c`, so a coordinate that holds `ψ(f)` exactly answers `f` by its largest logit, and
 the network's does.
 
-*Not covered.* The lower bound is for a readout equal to `ψ(f)`. The argmax readout asks less:
-only that the logit of `f` be the largest. What one layer needs for that is open. Normalizations,
-attention and the routing of operands are T3, and the price of the network in norms is T2b.
+*Depth cannot be less.* A wider network does not save layers. Call the `2k` operands
+`x₁, …, x_k, y₁, …, y_k`. A function of them *reads only* a set `S` of operands if it does not
+change when the others do, and has *order* at most `r` if it is a sum of functions that read at
+most `r` operands each. A one-hot feature reads one operand. A linear reading of the state keeps
+the order, and a product adds orders: if `φ` reads only `S` and `φ'` only `T`, then `φ φ'` reads
+only `S ∪ T`. So a hidden unit has at most twice the order of the state, the residual keeps it,
+and after `d` layers on the one-hot features every coordinate, and every linear readout, has
+order at most `2^d`.
+
+An alternating sum sees only the full order. Pick two values of each operand, `a⁰ᵢ, a¹ᵢ` for `xᵢ`
+and `b⁰ᵢ, b¹ᵢ` for `yᵢ`, and add up `φ` over the `2^{2k}` corners of this box, each corner with
+the sign `(−1)^n`, `n` the number of operands at their second value. If `φ` does not read some
+operand, flipping that operand pairs the corners into pairs of equal value and opposite sign, so
+the corner sum vanishes; hence it vanishes on every function of order less than `2k`. On a
+product over the pairs it factors into the mixed differences of the pairs,
+
+```
+Σ_corners ± Πᵢ φᵢ(xᵢ, yᵢ) = Πᵢ (φᵢ(a⁰ᵢ, b⁰ᵢ) − φᵢ(a¹ᵢ, b⁰ᵢ) − φᵢ(a⁰ᵢ, b¹ᵢ) + φᵢ(a¹ᵢ, b¹ᵢ)),
+```
+
+and for `ψ(P(x) + x y)` at the values `0` and `1` each factor is `ψ(P(1)) (ψ(1) − 1)`, not zero.
+So `ψ(f)` has order `2k`, and every network of `d` layers that writes it exactly, at any width,
+has
+
+```
+2k ≤ 2^d,    d ≥ 1 + ⌈log₂ k⌉.
+```
+
+The same holds for `ψ(Σᵢ q(xᵢ, yᵢ))` whenever `ψ ∘ q` has a nonzero mixed difference. The tree
+has the least depth, and one layer, whose readout has order at most `2`, cannot hold `ψ(f)` on
+the one-hot features at any width once `k ≥ 2`.
+
+The two lower bounds see different things. The rank bound of one layer holds for any encodings
+of the two sides, and there it is tight within a factor of two: on one-hot encodings of the whole
+tuples `x` and `y`, unit `a` multiplies `[x = a]` by `ψ(f(a, y))`, both linear readings, so `p^k`
+units hold `ψ(f)` in one layer (by hand). Each coordinate of those encodings reads `k` operands.
+The depth bound needs features that read one operand each, as main's embeddings do, one token at
+a position. A head whose weights do not depend on the tokens is linear in the values and keeps
+the order, so with such heads and without the normalizations the bound counts FFN layers
+(by hand).
+
+*Not covered.* The lower bounds are for a readout equal to `ψ(f)`. The argmax readout asks less:
+only that the logit of `f` be the largest. What one layer, or `d` layers, need for that is open.
+The scalars of the full model escape both counts: `R_D` divides the state by its norm, and a
+softmax over scores that depend on the tokens weighs the values, each by a function of all the
+operands at once. Whether they let one layer hold `f` below `p^k` units, or fewer layers hold it
+at all, is open, and so are the routing of the operands to one position and the price of the
+network in norms.
 
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
 `CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize` and `CopiesBestReadout`; for NV7,
-`ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies` and
-`ProductOneLayer` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies`,
+`ProductOneLayer`, `ProductOrder`, `ProductCorners` and `ProductDepth` of
+`src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6553,3 +6600,4 @@ attention and the routing of operands are T3, and the price of the network in no
 | NV7, characters | `card_mulChar`, `sum_mulChar_apply`, `sum_star_mulChar_mul`, `sum_mulChar_mul_star`, `mulCoeff`, `stdAddChar_eq_one_add_sum`, `stdAddChar_mul_eq`, `mulCoeff_eq`, `mulCoeff_one`, `norm_mulCoeff`, `mulCoeff_ne_zero`, `eq_mulCoeff_of_forall` | The characters are `MulChar (ZMod p) ℂ`, which send `0` to `0`, and `c_r(χ)` is `mulCoeff r χ`; the Gauss sums are `gaussSum χ (ZMod.stdAddChar.mulShift (−r))`. The uniqueness is stated for a constant `a` and coefficients `d` on all characters; that it costs one hidden unit per character is by hand. |
 | NV7, the network | the layer: `IsProductLayer`, `isProductLayer_iff_matrix`, `isProductLayer_id`, `IsProductLayer.mono`, `sideBySide`, `IsProductLayer.sideBySide`; the net: `IsProductNet`, `IsProductNet.mono`, `IsProductNet.id_net`, `IsProductNet.of_layer`, `IsProductNet.isProductLayer`, `IsProductNet.comp`, `IsProductNet.sideBySide`; the tree: `exists_productTree`, `oneHot`, `pairFeatures`, `exists_productNet`; `k` pairs: `two_pow_clog_lt`, `exists_productNet_pairs`, `exists_productNet_copies`, `exists_productNet_copies_readout`, `exists_productNet_mulChar` | A layer is `IsProductLayer m F`: `F z = z + Σ_u (g_u z)(w_u z) o_u` with at most `m` units and linear `g_u`, `w_u`; the matrix form is `isProductLayer_iff_matrix`. `IsProductNet m d F` is `d` such layers in a row. The stream is `((Fin k × α) ⊕ (Fin k × β)) ⊕ T`, the one-hot features `pairFeatures x y` and a scratch part `T` that starts at zero, and the value is read from one coordinate of `T`. The unit counts are the bounds `2k\|U\|`, `2k\|β\|` and `2kp`, not the exact `2^{⌈log₂ k⌉} \|U\|`. The point-mass route is `exists_productNet_copies`, the route through the characters `exists_productNet_mulChar`. |
 | NV7, one layer | `rank_productLayer_le`, `pow_le_of_productLayer_bilinear`, `pow_le_of_productLayer_copies`, `pairFeatures_eq_add` | The state is `e(u) + f(v)` for any maps `e`, `f` into the stream, and the readout any linear functional `ℓ`; the one-hot features are this case by `pairFeatures_eq_add`. The tables are `bilinearKernel p g h M` with `IsUnit M`, and `k` copies of `x³ + x y`. The examples are the network of `exists_productNet_copies` at `k = 1`, `p = 7`, which is one layer. |
+| NV7, depth | the order: `ReadsOnly`, `orderSpan`, `mem_orderSpan_of_readsOnly`, `orderSpan_mono`, `mul_mem_orderSpan`, `linear_mem_orderSpan`, `IsProductLayer.order`, `IsProductNet.order`, `features_mem_orderSpan`, `readout_mem_orderSpan`; the corners: `cornerX`, `cornerY`, `flipAt`, `flipAt_flipAt`, `flipAt_ne`, `cornerSign`, `cornerSign_flipAt`, `cornerSum`, `cornerSum_apply`, `cornerSum_eq_zero_of_readsOnly`, `cornerSum_eq_zero`, `cornerSum_prod`; the depth: `two_mul_card_le_of_productNet`, `mixed_stdAddChar_ne_zero`, `le_depth_of_productNet_copies` | The operands are `x : κ → α` and `y : κ → β`, the `2k` of them indexed by `κ ⊕ κ`, and the order is the span `orderSpan r` of the functions that read at most `r` of them. `IsProductNet.order` takes any input of order `r` and gives `2^d r`; the depth bound is stated for the one-hot features `pairFeatures x y`. The corners are `ε : κ ⊕ κ → Bool`, the sign `cornerSign ε`. The depth bound asks for a linear readout equal to `Πᵢ φᵢ(xᵢ, yᵢ)` with a nonzero mixed difference for every `i`, and for `ψ(Σᵢ q(xᵢ, yᵢ))` with one for `ψ ∘ q`; `P(x) + x y` has one at `0`, `1` by `mixed_stdAddChar_ne_zero`. The tight case on encodings of whole tuples and the heads that do not depend on the tokens are by hand. |
