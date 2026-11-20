@@ -1,6 +1,7 @@
 module
 
 public import Transformer.SequenceModel.Attention.Finite.Codes
+public import Transformer.SequenceModel.RotateHead
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
@@ -21,21 +22,6 @@ namespace Transformer.SequenceModel.Attention.Finite
 
 open GPTMini Expressivity
 open scoped RealInnerProductSpace
-
-/-- F5: zero phases are identity in the actual half-split layout, including
-the unused coordinate at an odd width. -/
-theorem rotateHead_zero_angles (d : ℕ) (x : EucSpace d) :
-    rotateHead d (fun _ => 0) x = x := by
-  ext i
-  have hi := (ropeSplit d).symm_apply_apply i
-  change (match ropeSplit d i with
-    | .inl (.inl k) => rotate (fun _ => 0) (splitPairs d x) (k, 0)
-    | .inl (.inr k) => rotate (fun _ => 0) (splitPairs d x) (k, 1)
-    | .inr j => x ((ropeSplit d).symm (.inr j))) = x i
-  rw [rotate_zero]
-  rcases h : ropeSplit d i with (k | k) | k <;>
-    simp only [h] at hi ⊢ <;> simp only [splitPairs, ↓reduceIte, Fin.isValue,
-      one_ne_zero, ropeFst, ropeSnd, hi]
 
 /-- F5: the first coordinate of one actual rotation pair has the usual
 cosine/sine expression, with no alternate coordinate convention. -/
