@@ -18,6 +18,10 @@ public import Transformer.MRCR.PhraseKeyReRopeSu
 public import Transformer.MRCR.PhraseKeyRope
 public import Transformer.MRCR.PhraseKeyRotary
 public import Transformer.MRCR.PhraseKeySandwich
+public import Transformer.MRCR.PhraseKeyStyle
+public import Transformer.MRCR.PhraseKeyStyleCorrect
+public import Transformer.MRCR.PhraseKeyStyleGrams
+public import Transformer.MRCR.PhraseKeyStyleLogits
 public import Transformer.MRCR.PhraseKeyTemplated
 public import Transformer.MRCR.PhraseKeyTemplatedLimits
 public import Transformer.MRCR.ReRopeFading
@@ -86,7 +90,10 @@ Su's ReRoPE, kexue.fm/archives/9708, for a constant pair in one plane
 token at a distance `k < W` at every length under SSMax once `s A (1 − cos θ)` exceeds `1`, and
 under Su's scale `max(1, log_T n)`, which is SSMax with `s = 1 / log T` from the training length
 on, once `A (1 − cos θ)` exceeds `log T`; under the plain softmax, and under SSMax below its
-threshold, it fades (`Transformer.MRCR.ReRopeHeads`, `Transformer.MRCR.ReRopeFading`). Without a
+threshold, it fades (`Transformer.MRCR.ReRopeHeads`, `Transformer.MRCR.ReRopeFading`). Keys of
+depth three, with MRCR-V2's style word after the topic, take one layer more: six layers answer
+the query with ALiBi and with ReRoPE's clamped logit, alone, under SSMax and with Su's scale
+(`Transformer.MRCR.PhraseKeyStyle`, `Transformer.MRCR.PhraseKeyStyleLogits`). Without a
 margin, at precision `0`, a negative logit
 already drops a key, yet RoPE with every plane rotated still gives keys arbitrarily far a weight
 (`Transformer.MRCR.RotaryPrevHead`); with a plane left unrotated, as in partial RoPE or when
