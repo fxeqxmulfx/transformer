@@ -1,0 +1,62 @@
+# A learned window and slope in the main model
+
+## Question
+
+ReRoPE and Leaky ReRoPE ([`rerope`](../rerope)) give every head the same
+window w = 16 and the same slope. Here each head of each layer learns both. A
+query t and a key j, r = t − j apart, are rotated by
+p(r) = min(r, w) + s · max(r − w, 0). The slope s = 0 is ReRoPE, s = 1/k Leaky
+ReRoPE and s = 1 RoPE (`Transformer.RoPE.LeReRoPE.windowPosition`).
+
+Does each head open its window where the task needs it, and keep it narrow
+where it does not? Lean proves that nothing in the loss closes a window. A
+head whose window covers every distance of a batch gets no gradient in its
+window or slope (`hasDerivAt_loss_of_window_open`). At s = 1 the window gets
+none at all (`hasDerivAt_window_loss_of_slope_one`). The runs show what
+training does with that freedom.
+
+[`PROTOCOL.md`](PROTOCOL.md) holds the plan, frozen before the first cell.
+
+## Runs
+
+| arm | position of r = t − j | parameters added |
+| --- | --- | --- |
+| control (gpt `phase-score-lerope`, recorded) | r | none |
+| `rerope` ([`rerope`](../rerope), recorded) | min(r, 16) | none |
+| `leaky-rerope` ([`rerope`](../rerope), recorded) | r if r < 16, else 16 + (r − 16)/16 | none |
+| `learned-window` | min(r, w) + s · max(r − w, 0) | w and s per layer and head |
+
+The window is w = 16 e^ω and the slope s = 1/(1 + 15 e^(−σ)). ω and σ start
+at 0, so every head starts as the fixed Leaky arm. They join LeRoPE's
+frequencies in their optimizer group: AdamW without weight decay, clipped
+on its own.
+
+Of the 35 tasks, 25 never exceed 16 tokens. Their windows get no gradient,
+so their cells must equal the control's bit for bit. The other ten reach
+beyond the window (see [`rerope`](../rerope/README.md#runs)).
+
+## Design
+
+The crate starts as a copy of [`rerope`](../rerope), whose source stays
+frozen while its cohort runs. The plan, in small steps:
+
+- **Parameters.** `layout.rs` and `optimizer.rs` become local copies. ω and σ
+  per layer and head follow LeRoPE's frequencies, in their optimizer group.
+- **Tables.** Before each forward, a kernel computes w and s per layer and
+  head, and the far rotations' tables. The far query of row t sits at
+  min(t, w) + s · max(t − w, 0), the far key of row j at s·j. Rows t < w
+  have no far pair, so their far query is never read.
+- **Attention.** The routed kernels read each head's window, as the integer
+  ⌈w⌉: t − j < w holds exactly when t − j < ⌈w⌉.
+- **Gradients.** One kernel sums each head and band's torques. A second gives
+  the window's, the slope's and the far part of the frequencies' gradients
+  (`hasDerivAt_window_chunk_slope`, `hasDerivAt_window_chunk_window`).
+- **Validation.** f64 oracles for the tables and gradients, and central
+  differences of the loss in the `fp32-affine-reference` build. The 25 tasks
+  within the window replay the control's cells bit for bit.
+
+GPU work waits until the `rerope` cohort finishes.
+
+## Findings
+
+Pending.
