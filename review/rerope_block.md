@@ -56,15 +56,28 @@ R4, free scores (`FarOrder`). If the scores may be any function of the position,
 ReRoPE blocks are the LeRoPE blocks that read their positions through the clamp
 (`rePosition_class_subset`); R3 makes the inclusion strict.
 
+R5, Leaky ReRoPE (`Leaky`). Su's Leaky ReRoPE gives the distance `δ ≥ w` the position
+`w + (δ − w)/k`; the post's runs take `k = 8, 16, 32, 64`. Inside the window its block is
+LeRoPE's (`block_lkPosition_of_lt`). For `k > 0` the position is invertible, so with free
+scores the Leaky ReRoPE blocks are exactly the LeRoPE blocks (`lkPosition_class_eq`): R2
+has no analogue. With rotary scores, beyond the window a head with the frequencies `θ` is
+a LeRoPE head with the frequencies `θ/k` whose keys are turned by the constant
+`(w − w/k) θ` (`headScore_lkPosition_of_le`). The head with every frequency `kπ` is a π
+head at the positions `k (w + (δ − w)/k)` (`lkHead_eq_piHead`); for an integer `k` the
+distances `w + 1` and `w` get `kw + 1` and `kw`, so every ReRoPE block misses it by the
+bound of R3 (`gap_rePosition_lkHead`).
+
 ## Verdict, so far
 
-Inside the window: equal. Beyond it ReRoPE is strictly weaker as an information
-channel: it cannot see the order of the far keys, and with free scores its class is
-strictly inside LeRoPE's. This does not settle the question for the main model's rotary
-scores: LeRoPE turns a key by `δ θ` and cannot clamp, so a ReRoPE head beyond the window
-need not be a LeRoPE head.
+Inside the window: all three are one block. Beyond it ReRoPE is strictly weaker as an
+information channel: it cannot see the order of the far keys, and with free scores its
+class is strictly inside LeRoPE's, which is Leaky ReRoPE's. This does not settle the
+question for the main model's rotary scores: LeRoPE turns a key by `δ θ` and cannot
+clamp, so a ReRoPE head beyond the window need not be a LeRoPE head; and a Leaky ReRoPE
+head uses `θ` near and `θ/k` far, which one LeRoPE frequency does not.
 
 ## Open
 
-- Whether LeRoPE blocks with rotary scores approximate ReRoPE blocks beyond the window.
+- Whether LeRoPE blocks with rotary scores approximate ReRoPE or Leaky ReRoPE blocks
+  beyond the window, and conversely whether Leaky ReRoPE blocks approximate LeRoPE's.
 - Nothing here concerns training, length generalization or the gpt runs.

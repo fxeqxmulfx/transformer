@@ -404,7 +404,8 @@ At equal parameters the two classes are incomparable.
 block with ReRoPE. Inside the window they are one function. Beyond it every ReRoPE block,
 whatever its per-position maps, heads and frequencies, is unchanged when the far keys are
 permuted, so it misses LeRoPE's π head, which sees their order, by at least
-`(1 − N^{−2κ}) / (2N)` times the distance of two values, `N = w + 2`.
+`(1 − N^{−2κ}) / (2N)` times the distance of two values, `N = w + 2`. Leaky ReRoPE forgets
+nothing: with free scores its blocks are LeRoPE's, and ReRoPE misses its `kπ` head likewise.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has

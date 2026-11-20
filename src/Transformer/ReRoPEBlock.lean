@@ -4,6 +4,7 @@ public import Transformer.ReRoPEBlock.Defs
 public import Transformer.ReRoPEBlock.Basic
 public import Transformer.ReRoPEBlock.PiHead
 public import Transformer.ReRoPEBlock.FarOrder
+public import Transformer.ReRoPEBlock.Leaky
 
 /-!
 # A block of DiffGPT's main model: LeRoPE against ReRoPE
@@ -28,7 +29,12 @@ for ReRoPE.
   `Φ`, heads and frequencies, misses it by at least half of that (`gap_rePosition_piHead`).
 * With scores free functions of the position the ReRoPE blocks are LeRoPE blocks
   (`rePosition_class_subset`), strictly by that gap.
+* Leaky ReRoPE (`Leaky`) is LeRoPE inside the window (`block_lkPosition_of_lt`). Its position is
+  invertible, so with free scores its blocks are exactly LeRoPE's (`lkPosition_class_eq`). With
+  rotary scores, beyond the window its heads are LeRoPE heads at `k` times lower frequencies
+  with a constant turn of the key (`headScore_lkPosition_of_le`). For an integer `k` every ReRoPE
+  block misses its `kπ` head as it misses LeRoPE's π head (`gap_rePosition_lkHead`).
 
-Whether LeRoPE blocks, with the main model's rotary scores, approximate ReRoPE blocks beyond the
-window is not settled here.
+Whether LeRoPE blocks, with the main model's rotary scores, approximate ReRoPE or Leaky ReRoPE
+blocks beyond the window is not settled here.
 -/
