@@ -1,5 +1,6 @@
 module
 
+public import Transformer.RoPE.LeReRoPE.Adjoint
 public import Transformer.RoPE.LeReRoPE.Clamp
 public import Transformer.RoPE.LeReRoPE.Fold
 
@@ -18,5 +19,8 @@ it so `k` times further and then lets it turn positive.
 `Transformer.RoPE.LeReRoPE.Fold` carries LeRoPE's frequency gradient (§3.2, Eq. (6) and
 Lemma 3.1) to the positions of ReRoPE: it is the derivative of the same surrogate with the offset
 `δ` rotated by `ψ(δ)`, and under the clamp the frequency sees the far pairs only through their
-summed phasor, at the single offset `w`.
+summed phasor, at the single offset `w`. `Transformer.RoPE.LeReRoPE.Adjoint` reads the same gradient
+off the rotated chunks and their gradients, as a kernel has them: `Σ_i a_i Im(x̃_i^* dx̃_i)`, a sum
+over positions; under ReRoPE the near queries and keys enter at `s` and `t`, the far queries at
+`w`, and the unrotated far keys not at all.
 -/
