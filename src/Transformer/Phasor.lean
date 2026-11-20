@@ -4,6 +4,7 @@ public import Transformer.Phasor.Router
 public import Transformer.Phasor.Attention
 public import Transformer.Phasor.FFN
 public import Transformer.Phasor.Forward
+public import Transformer.Phasor.Bounds
 
 /-!
 # The main model of DiffGPT as a forward pass
@@ -24,9 +25,17 @@ as concrete maps and plugs them into it, in exact real arithmetic.
 * `FFN`: the complex-product feed-forward branch `W_F (W_g z ⊙_ℂ W_u z) / √2` as a `Sublayer`.
 * `Forward`: layers and models, `Model.states`, `Model.logits`, and `Model.states_eq_run`: at each
   position the forward pass is `PeriRMS.run` of these sublayers, so its theorems apply to it.
+* `Bounds`: after `L` layers every stream and their mean have RMS at most `1 + 2√(2L)`, the final
+  feature RMS at most one, every logit at most `√D ‖E v‖`, and every attention logit at most
+  `(5/4) ln (i + 1)` at the query position `i`, for any parameters and any token sequence.
 
 The parameters are arbitrary: real-linear projections (the model's are the complex-linear ones, a
 subclass), any routers, phase coordinates and score coefficients. The model pairs the coordinates
 of a stream inside each head block; the half-split pairing of the whole stream used here is the
 same after a fixed permutation of the coordinates, which arbitrary projections absorb.
+
+What differs from the model, none of it used by the bounds: the arithmetic is exact real, not FP16
+operands with FP32 accumulation, and the skip is the paper's twenty exact Sinkhorn cycles, not the
+compensated log-space first cycle; the projections are not required to be complex-linear; the
+width `D`, the head width `d` and the number of heads `H` are independent, the model has `D = H d`.
 -/

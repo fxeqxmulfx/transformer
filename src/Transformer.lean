@@ -416,6 +416,11 @@ positional encoding misses it by at least `(1 − N^{−2κ}) / (2N)` times the 
 values, `N` keys. Conversely every such block is a LeRoPE block with the same projections on every
 input, with the frequency `2π` on each plane: it is unrotated at natural distances, as RoPE's
 unrotated planes are, and the learned scales reach it.
+`Transformer.Phasor` writes that model's forward pass: the dynamic routers, the LeRoPE heads with
+the squared-imaginary phase score, the complex-product feed-forward branches, the layers and the
+tied readout. At each position it is `Transformer.MHC.PeriRMS.run`, so for any parameters after `L`
+layers every stream and their mean have RMS at most `1 + 2√(2L)`, the final feature has RMS at
+most one, and every attention logit at the query position `i` is at most `(5/4) ln (i + 1)`.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
