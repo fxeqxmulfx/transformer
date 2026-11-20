@@ -223,12 +223,16 @@ score at the position of Su's matrix (rerope), `min (i − j) W`
 (`reropeLogit_eq_rectifiedPosition`). It is the dot product plus Su's merged score of a constant
 pair in one plane (`Transformer.MRCR.PhraseKeyReRopeSu`, `reropeLogit_eq_merge`). The dot product
 itself is not rotated, as in partial RoPE, while in Su's ReRoPE every plane rotates. From the
-window on the logit no longer depends on the distance (`reropeLogit_of_le`), so it converges. One frequency `θ` with
-`θ (W + 2) ≤ π` and the sine coefficient `−β / sin θ`, `β = b / c ≥ 3`, score `0`, `−β` and at most
-`−2β cos θ ≤ −4β/3` at the clamped distances `0`, `1` and `2, …, W` (`sin_two_mul_le_sin`,
-`two_thirds_le_cos`), so `ReadsPrev` holds at every window `W ≥ 2` (`readsPrev_rerope`) and five
-layers answer spelled asks, the logit divided by any positive `c d`, with or without SSMax
-(`exists_rerope_phraseAnswer`, `exists_ssmax_rerope_phraseAnswer`). RoPE's grid `10000^{−2m/d}`
+window on the logit no longer depends on the distance (`reropeLogit_of_le`), so it converges.
+One frequency `θ` with `θ (W + 2) ≤ π` and the sine coefficient `−β / sin θ`, `β = b / c ≥ 3`,
+score `0`, `−β` and at most `−2β cos θ ≤ −4β/3` at the clamped distances `0`, `1` and `2, …, W`
+(`sin_two_mul_le_sin`, `two_thirds_le_cos`), so `ReadsPrev` holds at every window `W ≥ 2`
+(`readsPrev_rerope`) and five layers answer spelled asks, the logit divided by any positive
+`c d`, with or without SSMax (`exists_rerope_phraseAnswer`, `exists_ssmax_rerope_phraseAnswer`).
+Su's own `log n` runs multiply each query by `max(1, log_T n)`, `T` the training length; the
+rotation keeps the factor, so it multiplies the whole logit. It is not SSMax: it is `1` up to `T`.
+Every factor of at least `1` keeps `ReadsPrev` (`readsPrev_mul`), so five layers answer with it
+at every `T` (`exists_logScale_rerope_phraseAnswer`). RoPE's grid `10000^{−2m/d}`
 for `d = 128` has a frequency near `1.2 · 10^{−4}`, enough for windows up to about `2.7 · 10^4`
 (a hand computation, not in Lean). The coefficients are parameters of the logit, like ALiBi's
 slope. That a rounded query and key carry the constant pair is not modelled.
