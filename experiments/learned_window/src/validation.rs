@@ -12,20 +12,24 @@
 //! 2. The engine's attention block beyond the window. The first layer's block
 //!    at length 40, from random q, k and v, learned frequencies and score
 //!    coordinates, against an f64 oracle that rotates each pair by its
-//!    relative position alone: `t - key` within the window and
-//!    `w + (t - key - w)/k` beyond it, at the learned arm's initial window
-//!    and slope. The output, and the adjoints of q, k and v, of the learned
-//!    frequencies and of the score coordinates against f64 central
-//!    differences of `⟨G, out⟩`, at D = 16, 32 and 128. The control runs the
-//!    same check with `t - key` everywhere, which checks the oracle.
+//!    relative position alone: `t - key` within the head's window and
+//!    `w + s(t - key - w)` beyond it. The arm's heads get windows and slopes
+//!    that differ (`HEAD_SHAPES`): off the integers, and one window open over
+//!    the block. The output, and the adjoints of q, k and v, of the learned
+//!    frequencies, of the score coordinates and of the heads' ω and σ against
+//!    f64 central differences of `⟨G, out⟩`, at D = 16, 32 and 128. The
+//!    control runs the same check with `t - key` everywhere, which checks the
+//!    oracle.
 //! 3. Initialization. The arm's parameters are the recorded control cell's
 //!    `initial.f32` bytes, then its windows' and slopes' ω and σ at zero: the
 //!    arm changes the position map alone.
-//! 4. The learned frequencies' gradient in the whole model against central
-//!    differences of the loss, for the control and the arm. Rounding in the
-//!    FP16 forward GEMMs moves central differences by percents, so this check
-//!    gates only in the `fp32-affine-reference` build; the production build
-//!    reports it.
+//! 4. The learned frequencies' gradient, and the arm's windows' and slopes',
+//!    in the whole model against central differences of the loss, for the
+//!    control and the arm. The arm's windows sit off the integers
+//!    (`WHOLE_SHAPES`), away from the kink at a pair's distance. Rounding in
+//!    the FP16 forward GEMMs moves central differences by percents, so this
+//!    check gates only in the `fp32-affine-reference` build; the production
+//!    build reports it.
 //! 5. The control binary `main-phase-score-native`, built from the pinned gpt
 //!    sources, has the control cohort's PTX, suite and plan hashes, and every
 //!    source file it archives is the cohort's, byte for byte, except
@@ -500,18 +504,38 @@ fn near_check(cuda: &Cuda, k: &Kernels, d: usize, heads: usize) -> Result<Value>
     )
 }
 
-/// The relative position the arm's map gives the query `t` and the key `key`:
-/// the learned arm's at its initial window w and slope 1/k,
-/// `min(t - key, w) + max(t - key - w, 0)/k`.
-fn relative(position: Position, t: usize, key: usize) -> f64 {
-    let distance = t - key;
+/// The window and slope of a head's ω and σ under the arm's map, in f64:
+/// w = window·e^ω and s = 1/(1 + (slope − 1)e^(−σ)). LeRoPE has none.
+fn shape(position: Position, omega: f64, sigma: f64) -> Option<(f64, f64)> {
     match position {
-        Position::Learned { window, slope } if distance >= window => {
-            window as f64 + (distance - window) as f64 / slope as f64
-        }
-        _ => distance as f64,
+        Position::Learned { window, slope } => Some((
+            window as f64 * omega.exp(),
+            1. / (1. + (slope - 1) as f64 * (-sigma).exp()),
+        )),
+        Position::Rope => None,
     }
 }
+
+/// The relative position of the query `t` and the key `key` under a head's
+/// window and slope: `min(t - key, w) + s·max(t - key - w, 0)`
+/// (`Transformer.RoPE.LeReRoPE.windowPosition`); LeRoPE's is `t - key`.
+fn relative(shape: Option<(f64, f64)>, t: usize, key: usize) -> f64 {
+    let distance = (t - key) as f64;
+    match shape {
+        Some((w, s)) if distance >= w => w + s * (distance - w),
+        _ => distance,
+    }
+}
+
+/// The first layer's heads in the block check: windows off the integers, so
+/// that no pair sits on the kink, one of them open over the block's 40
+/// positions, and slopes between 0 and 1. The first is the arm's initial
+/// slope.
+const HEAD_SHAPES: [(f64, f64); 4] = [(12.5, 0.0625), (23.25, 0.3), (16.75, 0.02), (45.5, 0.75)];
+/// The windows and slopes of the whole-model gradient check, by layer and head:
+/// off the integers by a quarter or more, which the check's step of 0.01 in ω
+/// keeps, around the initial window and slope.
+const WHOLE_SHAPES: [(f64, f64); 3] = [(16.5, 0.0625), (12.5, 0.2), (20.5, 0.5)];
 
 /// The attention block in f64, scored from relative positions alone: the
 /// query rotated by the pair's relative angle, the key not at all.
@@ -526,8 +550,9 @@ struct Oracle {
 }
 impl Oracle {
     /// The output and `⟨g, out⟩` from q and k after their norm and v, `x`, the
-    /// learned frequencies `alpha` and the score coordinates `a`.
-    fn forward(&self, x: &[f64], alpha: &[f64], a: &[f64]) -> (Vec<f64>, f64) {
+    /// learned frequencies `alpha`, the score coordinates `a` and the heads'
+    /// ω, then σ, `windows` (none in the control).
+    fn forward(&self, x: &[f64], alpha: &[f64], a: &[f64], windows: &[f64]) -> (Vec<f64>, f64) {
         let (length, d) = (self.length, self.d);
         let (width, half) = (self.heads * d, d / 2);
         let frequency: Vec<f64> = (0..half)
@@ -538,13 +563,18 @@ impl Oracle {
         for b in 0..self.batch {
             for (head, a) in a.iter().enumerate() {
                 let beta = a / (1. + a * a).sqrt();
+                let shape = if windows.is_empty() {
+                    None
+                } else {
+                    shape(self.position, windows[head], windows[self.heads + head])
+                };
                 let at = |t: usize, part: usize| ((b * length + t) * 3 + part) * width + head * d;
                 for t in 0..length {
                     let gain = ((t + 1) as f64).ln() / d as f64;
                     let q = &x[at(t, 0)..at(t, 0) + d];
                     for key in 0..=t {
                         let k = &x[at(key, 1)..at(key, 1) + d];
-                        let r = relative(self.position, t, key);
+                        let r = relative(shape, t, key);
                         for l in 0..half {
                             let (sin, cos) = (r * frequency[l]).sin_cos();
                             rotated[l] = q[l] * cos - q[l + half] * sin;
@@ -599,9 +629,27 @@ fn block(control: &Path, case: &str, extend: bool, arm: &str) -> Result<Value> {
     parameters[frequencies..frequencies + bands]
         .copy_from_slice(&uniform(&mut rng, bands, -0.5, 0.5));
     parameters[scores..scores + heads].copy_from_slice(&uniform(&mut rng, heads, -2., 2.));
+    // The first layer's ω, then σ, at `HEAD_SHAPES`.
+    let windows = match position {
+        Position::Learned { window, slope } => {
+            let omega = layout::window_offset(&cfg);
+            let sigma = omega + cfg.layers * heads;
+            for h in 0..heads {
+                let (w, s) = HEAD_SHAPES[h % HEAD_SHAPES.len()];
+                parameters[omega + h] = (w / window as f64).ln() as f32;
+                parameters[sigma + h] = ((slope - 1) as f64 * s / (1. - s)).ln() as f32;
+            }
+            [
+                &parameters[omega..omega + heads],
+                &parameters[sigma..sigma + heads],
+            ]
+            .concat()
+        }
+        Position::Rope => Vec::new(),
+    };
     let qkv = gauss(&mut rng, batch * length * 3 * width);
     let g = gauss(&mut rng, batch * length * width);
-    let [x, out, dx, dalpha, dscore] =
+    let [x, out, dx, dalpha, dscore, dwindows] =
         Engine::new(cfg, &parameters)?.attention_probe(&qkv, &g, batch, length)?;
     let oracle = Oracle {
         position,
@@ -614,27 +662,55 @@ fn block(control: &Path, case: &str, extend: bool, arm: &str) -> Result<Value> {
     let x64 = wide(&x);
     let alpha = wide(&parameters[frequencies..frequencies + bands]);
     let a = wide(&parameters[scores..scores + heads]);
-    let (expected, _) = oracle.forward(&x64, &alpha, &a);
+    let windows = wide(&windows);
+    let (expected, _) = oracle.forward(&x64, &alpha, &a, &windows);
     let step = 1e-6;
     let central = |f: &dyn Fn(f64) -> f64| (f(step) - f(-step)) / (2. * step);
-    let loss = |x: &[f64], alpha: &[f64], a: &[f64]| oracle.forward(x, alpha, a).1;
+    let loss = |x: &[f64], alpha: &[f64], a: &[f64], windows: &[f64]| {
+        oracle.forward(x, alpha, a, windows).1
+    };
     let shifted = |v: &[f64], i: usize, e: f64| {
         let mut v = v.to_vec();
         v[i] += e;
         v
     };
     let alpha_difference: Vec<f64> = (0..bands)
-        .map(|l| central(&|e| loss(&x64, &shifted(&alpha, l, e), &a)))
+        .map(|l| central(&|e| loss(&x64, &shifted(&alpha, l, e), &a, &windows)))
         .collect();
     let score_difference: Vec<f64> = (0..heads)
-        .map(|h| central(&|e| loss(&x64, &alpha, &shifted(&a, h, e))))
+        .map(|h| central(&|e| loss(&x64, &alpha, &shifted(&a, h, e), &windows)))
         .collect();
-    // Both sides of the window's edge, the first and last positions, q, k and
-    // v; then random coordinates.
-    let w = runner::WINDOW;
+    let window_difference: Vec<f64> = (0..windows.len())
+        .map(|i| central(&|e| loss(&x64, &alpha, &a, &shifted(&windows, i, e))))
+        .collect();
+    // Each head's window as the kernels test it, ⌈w⌉, and its far pairs.
+    let edges: Vec<usize> = (0..heads)
+        .map(
+            |h| match shape(position, windows.get(h).copied().unwrap_or(0.), 0.) {
+                Some((w, _)) => w.ceil() as usize,
+                None => usize::MAX,
+            },
+        )
+        .collect();
+    let far_pairs: Vec<usize> = edges
+        .iter()
+        .map(|&c| (c.min(length)..length).map(|t| t + 1 - c).sum())
+        .collect();
+    // Both sides of the initial window's edge and of each head's, the first
+    // and last positions, q, k and v; then random coordinates.
+    let mut rows = vec![0, 1, runner::WINDOW - 1, runner::WINDOW, runner::WINDOW + 1];
+    rows.extend(
+        edges
+            .iter()
+            .filter(|&&c| c < length)
+            .flat_map(|&c| [c - 1, c]),
+    );
+    rows.extend([length - 2, length - 1]);
+    rows.sort_unstable();
+    rows.dedup();
     let mut coordinates = Vec::new();
     for b in [0, batch - 1] {
-        for t in [0, 1, w - 1, w, w + 1, length - 2, length - 1] {
+        for &t in &rows {
             for part in 0..3 {
                 let (head, col) = (rng.below(heads as u32), rng.below(d as u32));
                 coordinates
@@ -647,7 +723,7 @@ fn block(control: &Path, case: &str, extend: bool, arm: &str) -> Result<Value> {
     }
     let x_difference: Vec<f64> = coordinates
         .iter()
-        .map(|&i| central(&|e| loss(&shifted(&x64, i, e), &alpha, &a)))
+        .map(|&i| central(&|e| loss(&shifted(&x64, i, e), &alpha, &a, &windows)))
         .collect();
     let x_backward: Vec<f64> = coordinates.iter().map(|&i| dx[i] as f64).collect();
     let direction = gauss(&mut rng, x.len());
@@ -657,7 +733,7 @@ fn block(control: &Path, case: &str, extend: bool, arm: &str) -> Result<Value> {
             .map(|(x, u)| x + e * *u as f64)
             .collect()
     };
-    let directional_difference = central(&|e| loss(&along(e), &alpha, &a));
+    let directional_difference = central(&|e| loss(&along(e), &alpha, &a, &windows));
     let directional: f64 = dx
         .iter()
         .zip(&direction)
@@ -670,23 +746,28 @@ fn block(control: &Path, case: &str, extend: bool, arm: &str) -> Result<Value> {
         relative_error(&x_backward, &x_difference),
         ((directional - directional_difference) / directional_difference).abs(),
     ];
-    let far_pairs: usize = match position {
-        Position::Learned { window, .. } => (window..length).map(|t| t + 1 - window).sum(),
-        Position::Rope => 0,
+    // The windows' and slopes' gradients, in the learned arm only.
+    let window_error = if windows.is_empty() {
+        0.
+    } else {
+        relative_error(&wide(&dwindows), &window_difference)
     };
     Ok(
         json!({"case": case, "arm": arm, "d": d, "heads": heads, "batch": batch,
-        "length": length, "far_pairs_per_head": far_pairs,
+        "length": length, "windows": edges, "far_pairs_per_head": far_pairs,
         "output_relative_error": errors[0],
         "frequency_gradient_relative_error": errors[1],
         "score_gradient_relative_error": errors[2],
         "qkv_gradient_relative_error": errors[3],
         "directional_relative_error": errors[4],
+        "window_gradient_relative_error": window_error,
         "frequency_gradient": {"backward": dalpha, "central_difference": alpha_difference},
         "score_gradient": {"backward": dscore, "central_difference": score_difference},
+        "window_gradient": {"omega_then_sigma": true, "backward": dwindows,
+            "central_difference": window_difference},
         "qkv_coordinates": coordinates, "directional": [directional, directional_difference],
-        "pass": errors[0] < 1e-4 && errors[1..].iter().all(|e| *e < 2e-3)
-            && (arm == runner::CONTROL || far_pairs > 0)}),
+        "pass": errors[0] < 1e-4 && errors[1..].iter().all(|e| *e < 2e-3) && window_error < 2e-3
+            && (arm == runner::CONTROL || far_pairs.iter().any(|&n| n > 0))}),
     )
 }
 
@@ -736,20 +817,41 @@ fn initialization(control: &Path) -> Result<Value> {
     Ok(rows.into())
 }
 
-/// The learned frequencies' backward gradient against central differences of
-/// the training loss on one batch, at the initial parameters of seed 0.
+/// The backward gradient of the learned frequencies, and of the learned
+/// arm's windows and slopes, against central differences of the training
+/// loss on one batch of seed 0. The control runs at its initial parameters.
+/// The arm first moves every window off the integers, to `WHOLE_SHAPES` by
+/// layer and head: at w = 16 the pairs 16 apart sit on the kink, where the
+/// backward takes the derivative from below and central differences
+/// average both sides.
 fn gradient(control: &Path, case: &str, arm: &str) -> Result<Value> {
     let (row, seed, _) = recorded(control, case)?;
     let task = data::build(&row)?;
     let cfg = runner::config(&row, &task, arm)?;
     let train = &task.splits["train"];
     let batch = cfg.max_batch.min(train.len());
-    let parameters = layout::initialize_model(&cfg, seed);
-    let (at, n, vocab) = (
-        layout::frequency_offset(&cfg),
-        layout::frequency_count(&cfg),
-        cfg.vocab,
-    );
+    let mut parameters = layout::initialize_model(&cfg, seed);
+    if let Position::Learned { window, slope } = cfg.position {
+        let (omega, n) = (layout::window_offset(&cfg), cfg.layers * cfg.heads);
+        for i in 0..n {
+            let (w, s) = WHOLE_SHAPES[i % WHOLE_SHAPES.len()];
+            parameters[omega + i] = (w / window as f64).ln() as f32;
+            parameters[omega + n + i] = ((slope - 1) as f64 * s / (1. - s)).ln() as f32;
+        }
+    }
+    let groups = [
+        (
+            "frequencies",
+            layout::frequency_offset(&cfg),
+            layout::frequency_count(&cfg),
+        ),
+        (
+            "windows_then_slopes",
+            layout::window_offset(&cfg),
+            layout::window_count(&cfg),
+        ),
+    ];
+    let vocab = cfg.vocab;
     let mut engine = Engine::new(cfg, &parameters)?;
     let mut packed = metrics::Packed::default();
     let indices: Vec<u32> = (0..batch as u32).collect();
@@ -768,46 +870,53 @@ fn gradient(control: &Path, case: &str, arm: &str) -> Result<Value> {
     };
     let center = loss(&mut engine, &parameters)?;
     engine.backward(batch, packed.length)?;
-    let gradient: Vec<f64> = engine.gradients.read()?[at..at + n]
-        .iter()
-        .map(|&g| g as f64)
-        .collect();
+    let all = engine.gradients.read()?;
     let step = 1e-2f32;
-    let mut coordinates = Vec::new();
-    let mut estimates = Vec::new();
-    for i in 0..n {
-        let mut p = parameters.clone();
-        p[at + i] = parameters[at + i] + step;
-        let (up, high) = (loss(&mut engine, &p)?, p[at + i]);
-        p[at + i] = parameters[at + i] - step;
-        let (down, low) = (loss(&mut engine, &p)?, p[at + i]);
-        let estimate = (up - down) / (high - low) as f64;
-        estimates.push(estimate);
-        coordinates
-            .push(json!({"index": i, "backward": gradient[i], "central_difference": estimate}));
+    let mut checked = Vec::new();
+    let mut met = true;
+    for (name, at, n) in groups.into_iter().filter(|g| g.2 > 0) {
+        let gradient: Vec<f64> = all[at..at + n].iter().map(|&g| g as f64).collect();
+        let mut coordinates = Vec::new();
+        let mut estimates = Vec::new();
+        for i in 0..n {
+            let mut p = parameters.clone();
+            p[at + i] = parameters[at + i] + step;
+            let (up, high) = (loss(&mut engine, &p)?, p[at + i]);
+            p[at + i] = parameters[at + i] - step;
+            let (down, low) = (loss(&mut engine, &p)?, p[at + i]);
+            let estimate = (up - down) / (high - low) as f64;
+            estimates.push(estimate);
+            coordinates
+                .push(json!({"index": i, "backward": gradient[i], "central_difference": estimate}));
+        }
+        let norm = gradient.iter().map(|g| g * g).sum::<f64>().sqrt();
+        let delta = 1e-2;
+        let (mut high, mut low) = (parameters.clone(), parameters.clone());
+        for i in 0..n {
+            high[at + i] = (parameters[at + i] as f64 + delta * gradient[i] / norm) as f32;
+            low[at + i] = (parameters[at + i] as f64 - delta * gradient[i] / norm) as f32;
+        }
+        let predicted: f64 = (0..n)
+            .map(|i| gradient[i] * (high[at + i] - low[at + i]) as f64)
+            .sum();
+        let measured = loss(&mut engine, &high)? - loss(&mut engine, &low)?;
+        let ratio = measured / predicted;
+        let largest = gradient.iter().fold(0f64, |m, g| m.max(g.abs()));
+        let worst = (0..n)
+            .filter(|&i| gradient[i].abs() >= 0.05 * largest)
+            .map(|i| (estimates[i] - gradient[i]).abs() / gradient[i].abs())
+            .fold(0f64, f64::max);
+        let group_met = norm > 0. && (ratio - 1.).abs() < 0.02 && worst < 0.05;
+        met &= group_met;
+        checked.push(
+            json!({"group": name, "offset": at, "count": n, "gradient_norm": norm,
+            "directional_ratio": ratio, "worst_relative_error_of_large_coordinates": worst,
+            "coordinates": coordinates, "criterion_met": group_met}),
+        );
     }
-    let norm = gradient.iter().map(|g| g * g).sum::<f64>().sqrt();
-    let delta = 1e-2;
-    let (mut high, mut low) = (parameters.clone(), parameters.clone());
-    for i in 0..n {
-        high[at + i] = (parameters[at + i] as f64 + delta * gradient[i] / norm) as f32;
-        low[at + i] = (parameters[at + i] as f64 - delta * gradient[i] / norm) as f32;
-    }
-    let predicted: f64 = (0..n)
-        .map(|i| gradient[i] * (high[at + i] - low[at + i]) as f64)
-        .sum();
-    let measured = loss(&mut engine, &high)? - loss(&mut engine, &low)?;
-    let ratio = measured / predicted;
-    let largest = gradient.iter().fold(0f64, |m, g| m.max(g.abs()));
-    let worst = (0..n)
-        .filter(|&i| gradient[i].abs() >= 0.05 * largest)
-        .map(|i| (estimates[i] - gradient[i]).abs() / gradient[i].abs())
-        .fold(0f64, f64::max);
-    let met = norm > 0. && (ratio - 1.).abs() < 0.02 && worst < 0.05;
     let mut row = json!({"case": case, "arm": arm, "seed": seed, "batch": batch,
-        "length": packed.length, "loss": center, "gradient_norm": norm, "step": step,
-        "directional_ratio": ratio, "worst_relative_error_of_large_coordinates": worst,
-        "coordinates": coordinates, "criterion_met": met});
+        "length": packed.length, "loss": center, "step": step, "groups": checked,
+        "criterion_met": met});
     if crate::precision::FP32_AFFINE_REFERENCE {
         row["pass"] = met.into();
     }

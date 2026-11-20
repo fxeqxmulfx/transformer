@@ -58,12 +58,13 @@ gone from it.
 - **Gradients.** `torques` sums each head and band's torques. `finish` gives
   the window's, the slope's and the far part of the frequencies' gradients
   (`hasDerivAt_window_chunk_slope`, `hasDerivAt_window_chunk_window`).
-- **Validation.** f64 oracles for the attention block and its gradients,
-  central differences of the loss in the `fp32-affine-reference` build, and
-  replays of the control's cells on the 25 tasks within the window. A CPU
-  test assembles the experiment's kernels with `ptxas` for sm_86. Still to
-  come: windows and slopes that differ per head, and their gradients against
-  central differences.
+- **Validation.** An f64 oracle for the attention block, whose heads get
+  windows and slopes that differ, one window open, and its gradients: of q,
+  k and v, the frequencies, the score coordinates, ω and σ. Central
+  differences of the loss in the `fp32-affine-reference` build, at windows
+  off the integers, away from the kink. Replays of the control's cells on
+  the 25 tasks within the window. A CPU test assembles the experiment's
+  kernels with `ptxas` for sm_86.
 
 GPU work waits until the `rerope` cohort finishes.
 

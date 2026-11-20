@@ -1683,15 +1683,16 @@ impl Engine {
     /// forward from `qkv`, the rows of q, k and v before the norm of q and k,
     /// and its adjoint from `datt`, into cleared gradients. Returns q and k
     /// after their norm with v, the block's output, the adjoint of these,
-    /// the first layer's share of the learned frequencies' gradient and the
-    /// gradient of its score coordinates.
+    /// the first layer's share of the learned frequencies' gradient, the
+    /// gradient of its score coordinates, and the gradients of its heads' ω,
+    /// then σ (none in the control).
     pub(crate) fn attention_probe(
         &mut self,
         qkv: &[f32],
         datt: &[f32],
         batch: usize,
         length: usize,
-    ) -> Result<[Vec<f32>; 5]> {
+    ) -> Result<[Vec<f32>; 6]> {
         let (r, w) = (batch * length, self.config.width);
         if qkv.len() != r * 3 * w || datt.len() != r * w {
             return Err("invalid attention probe".into());
@@ -1719,6 +1720,13 @@ impl Engine {
             prefix(&layer.dqnorm, r * 3 * w)?,
             gradients[at..at + layout::frequency_count(&self.config)].to_vec(),
             gradients[layer.score_offset..layer.score_offset + self.config.heads].to_vec(),
+            if layout::window_count(&self.config) == 0 {
+                Vec::new()
+            } else {
+                let (omega, h) = (layout::window_offset(&self.config), self.config.heads);
+                let sigma = omega + self.config.layers * h;
+                [&gradients[omega..omega + h], &gradients[sigma..sigma + h]].concat()
+            },
         ])
     }
 
