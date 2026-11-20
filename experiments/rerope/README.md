@@ -83,20 +83,28 @@ Implementation:
 Inside the window every operation is the control's, in its order. A batch
 with no sequence longer than w runs the control's kernels.
 
-What the learned frequencies see changes with the map. In LeRoPE's logit
-model, a band's frequency gradient under a position map ψ is LeRoPE's
-Eq. (6) with ψ(s − t) in place of the offset s − t
-(`Transformer.RoPE.LeReRoPE.hasDerivAt_positioned_loss`):
+The learned frequencies' gradient is read off the rotated chunks x̃_i and
+their adjoints dx̃_i. Take any loss differentiable in band l's chunks
+rotated to the positions a_i; the control's score is one. For the learned
+frequency θ̂ = e^α θ, its gradient is ∂L/∂α = θ̂ Σ_i a_i Im(x̃_i^* dx̃_i)
+(`Transformer.RoPE.LeReRoPE.hasDerivAt_rotate_adjoint`). The control's
+`rotary::frequency_backward` sums the near chunks, and `far_rotary.rs` adds
+the far ones:
+
+- **ReRoPE.** The far queries sit at w. The unrotated far keys add nothing
+  (`hasDerivAt_rerope_log_frequency`).
+- **Leaky ReRoPE.** The far queries sit at w + (t − w)/k and the far keys
+  at j/k.
+
+So what the frequencies see changes with the map. In LeRoPE's logit model,
+a band's frequency gradient under a position map ψ is Eq. (6) with
+ψ(s − t) in place of the offset (`hasDerivAt_positioned_loss`):
 
 - **ReRoPE.** Under the clamp, the far pairs reach the frequency only
   through their summed phasor, at the single offset w
   (`positionedSurrogate_rectified`).
 - **Leaky ReRoPE.** It keeps every far offset, at the phase
   (w + (δ − w)/k)θ.
-
-That model omits the control's squared-imaginary term and its gain. The
-kernels here differentiate through both rotations instead, and the
-validation checks them against central differences.
 
 ## Build and commands
 
