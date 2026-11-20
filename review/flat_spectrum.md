@@ -6344,10 +6344,84 @@ A readout of unit variance covaries with one pair's intermediate by at most
 variances. Like Theorem B, this is about the labels, not about layers: it bounds what a readout
 of the label can see, not what a network can compute.
 
+*Sample size.* A model sees these covariances only through a sample. On `N` independent uniform
+inputs, the empirical covariance of a fixed readout `A` with `h` is the empirical mean of the
+centered product `X = (A − E A) conj(h − E h)`, whose mean is `Cov(A, h)`. It is unbiased, and
+its mean square error is exactly `Var X / N`. For `|h| = 1` and `|E h| ≤ ε ≤ 1`,
+
+```
+(1 − ε)² Var A − |Cov(A, h)|² ≤ Var X ≤ (1 + ε)² Var A,
+```
+
+so the noise of a readout is its own spread over `√N`, however weak its signal. If the signal is
+weak, `|Cov(A, h)|² ≤ c Var A`, the two combine for every `N ≥ 1`:
+
+```
+|Cov(A, h)|² ((1 − ε)² − c) ≤ c N · MSE.
+```
+
+For a readout of `k` copies and `h = ψ_r(x₁ y₁)`, `ε = 1/p`, and the constants above give
+`c = p^{−2(k−1)} (9/p + 16/p^{3/2})`. So the mean square error is at most the squared signal only
+if
+
+```
+N + 1 ≥ (1 − 1/p)² p^{2k−1} / (9 + 16/√p).
+```
+
+At `p = 97` that is `N ≥ 8` for `k = 1` and `N ≥ 84,140` for `k = 2`, against a table of
+`p⁴ = 88,529,281` cells. The condition is necessary for every readout fixed before the sample is
+drawn; it does not say that `N` above it suffices.
+
+*The best readout.* Over all readouts of the label, the largest `|Cov(g(f), h)|² / Var g(f)` is,
+by Cauchy–Schwarz, the energy of the centered conditional mean,
+
+```
+E(f, h) = Σ_t |Cov(1{f = t}, h)|² / P(f = t) = E |E[h | f] − E h|²,
+```
+
+attained at `g(f) = E[h | f]`. For one pair and `h = ψ_r(x y)` it is Theorem B's
+`‖E[ψ_r(ab) | f]‖²` less `|E h|² = 1/p²`, and its maximum over `r` is `0.044` at `p = 97`. For
+`k = 1 + m` pairs, any `P` with `P(0) = 0` and any `h` of the first pair, every covariance with
+an indicator falls by exactly `p^{−m}`, and at every value the law of one pair is between
+`1 − 1/p` and `2` times the law of `k` pairs, so
+
+```
+(1 − 1/p) p^{−2m} E₁ ≤ E_k ≤ 2 p^{−2m} E₁.
+```
+
+A readout fitted on the sample estimates `p` conditional means, one for each value of the label,
+and the plug-in energy carries a bias of about `p/N`: one `1/N` for each value, since `|h| = 1`.
+On a half split of one pair, `N = p²/2`, that is the root's `2/p`. On a half split of `k` pairs,
+`N = p^{2k}/2`, the bias is `2/p^{2k−1}` while the signal is `p^{−2(k−1)}` times the energy of
+one pair, and the powers of `p` cancel:
+
+```
+signal / noise ≈ θ · E₁ / (2/p),    θ ∈ [1 − 1/p, 2],
+```
+
+`0.044 · 97/2 ≈ 2.1` at `k = 1`, and the same up to `θ` at every `k`.
+
+The estimate holds. One pair among `k` clears the noise only once `N ≳ p^{2k−1}`: for a fixed
+readout with the constant above, while a fitted readout pays `p/N` instead of `1/N` and needs
+about `p` times more. On a half split the root's comparison of `0.044` against `2/p` does not
+change with `k`, up to `θ`. The exponent in visibility is absolute: the covariance of every
+readout with every function of one pair falls by exactly `p^{−(k−1)}`, whatever the sample. Its
+effect on learning depends on `N`. On a fixed fraction of the table, `N ∝ p^{2k}`, the factor
+`p^{2(k−1)}` in `N` cancels it; at a fixed `N` it does not, and one pair sinks below the noise as
+`k` grows.
+
+Two simplifications. The samples are independent and uniform, drawn with replacement, while a
+split draws without replacement; that multiplies the variance of each conditional mean by
+`(M_t − n_t)/(M_t − 1)` for `n_t` of the `M_t` cells with label `t`, about `1/2` on a half split
+(so the bias there is closer to `1/p`), at every `k` alike, and the comparison across `k` stands.
+And the bias `p/N` of a fitted readout is the usual χ² estimate, which assumes every
+`|E[h | f = t]|` small, as here.
+
 ### Lean
 
-`BilinearKernel`, `CutRange`, `CutRank` and, for NV6, `CopiesCovariance`, `CopiesInvisible` and
-`CopiesTheoremB` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`BilinearKernel`, `CutRange`, `CutRank` and, for NV6, `CopiesCovariance`, `CopiesInvisible`,
+`CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize` and `CopiesBestReadout` of
+`src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6360,5 +6434,7 @@ of the label can see, not what a network can compute.
 | NV3 | the cap: `sum_sum_band`, `sq_add_sq_sum_le`, `sum_sum_phaseLogit_sub_le`, `card_mul_exp_mean_le`, `depthWeight_le_of_sum_sum_le`, `depthWeight_leropeLogit_le`; the DFT head: `two_mul_sin_mul_sum_cos`, `sum_cos_dft`, `dftFreq`, `leropeLogit_dft`, `depthWeight_dft`, `half_lt_depthWeight_dft`, `depthWeight_dft_mem` | The cap is stated for a sequence whose tokens at the distances `t − R, …, t + R` are one token `y`, with `‖Q x_i‖², ‖K y‖² ≤ d`; a positional head on any input is the case of the constant sequence, by hand. The DFT head is stated at the query `2R` with the tokens `Unit` in `depthWeight_dft_mem`, and for every sequence in `depthWeight_dft`. The prices in `λ A` are solved by hand from the weights. The gap of the order is by hand. |
 | NV4 | `sum_exp_mul_indicator`, `softmaxAttention_indicator_nonpos_of_mem_convexHull`, `exists_mem_convexHull_compl_of_le_one`, `isLeast_dim_softmaxAttention_recall_sign` | The projections are `Fin d → ℝ` and the score is `Σ_r a_r k_r`, as in SA2; the hull is `convexHull ℝ (kf '' {k}ᶜ)`. The least dimension is `IsLeast` of the set of `d` for which projections `Fin m → Fin d → ℝ` recall by the sign, for `m ≥ 3`. |
 | NV5 | `sum_bilinearKernel_mul_star`, `bilinearKernel_row_eq`, `rank_bilinearKernel_eq_card`, `rank_bilinearKernel_eq_pow` | The number of couplings is `Nat.card (Set.range M.vecMul)`; `p^{rank M}` takes `Fact p.Prime`. The singular values, the least error of width `d`, the nuclear norm and the orders of the operands are by hand. |
-| NV6 | the identity: `cov`, `fourierCoeff`, `sum_fourierCoeff_mul`, `cov_prod_fst`, `cov_comp_eq_sum`, `cov_comp_add_eq_sum`, `mean_stdAddChar_sum_pi`, `cov_comp_add_sum_pi`; the ratio and the law: `cov_comp_add_of_mean_stdAddChar`, `mean_comp_of_mean_stdAddChar`, `mean_ite_eq_of_mean_stdAddChar`; `P(x) + x y`: `mean_stdAddChar_poly_add_mul`, `mean_stdAddChar_copies`, `cov_comp_add_copies`, `cov_copies_cube_add_mul` | The parts are finite types with the uniform law, `mean` is the average over them and `cov` is defined from it; independent blocks are a pi type `∀ j, X j`. The pairs in `S` are `σ → ZMod p × ZMod p` and the others `τ → ZMod p × ZMod p`, so `k − \|S\| = \|τ\|`. The ratio and the law take a complex `ε`; the law of one pair, `(2p − 1)/p²` at `0`, is its case `ε = 1/p`, by hand. |
+| NV6 | the identity: `cov`, `fourierCoeff`, `sum_fourierCoeff_mul`, `cov_prod_fst`, `cov_comp_eq_sum`, `cov_comp_add_eq_sum`, `mean_stdAddChar_sum_pi`, `cov_comp_add_sum_pi`; the ratio and the law: `cov_comp_add_of_mean_stdAddChar`, `mean_comp_of_mean_stdAddChar`, `mean_ite_eq_of_mean_stdAddChar`; `P(x) + x y`: `mean_stdAddChar_poly_add_mul`, `mean_stdAddChar_copies`, `cov_comp_add_copies`, `cov_copies_cube_add_mul` | The parts are finite types with the uniform law, `mean` is the average over them and `cov` is defined from it; independent blocks are a pi type `∀ j, X j`. The pairs in `S` are `σ → ZMod p × ZMod p` and the others `τ → ZMod p × ZMod p`, so `k − \|S\| = \|τ\|`. The ratio and the law take a complex `ε`; the laws of one pair, `(2p − 1)/p²` at `0`, and of `k` pairs are its cases `meanSq_ite_pair` and `meanSq_ite_copiesLabel`. |
 | NV6, constants | `var`, `meanSq_sub_eq_var_add`, `var_le_meanSq_sub`, `meanSq_comp_of_mean_stdAddChar`, `mean_stdAddChar_add`, `norm_cov_cube_add_mul_le`, `var_cube_add_mul_le_two_mul_var_copies`, `norm_cov_copies_cube_add_mul_le` | Theorem B for one pair is the root's `norm_mean_star_mul_cube_add_mul_le` applied to the centered readout. The `k` pairs are the first pair and `τ → ZMod p × ZMod p`, `k = 1 + \|τ\|`, and the intermediate is the first pair's. The variances are compared in one direction, `Var g(q) ≤ 2 Var g(f)`. The numbers at `p = 97` are by hand. |
+| NV6, sample size | `empiricalMean`, `mean_empiricalMean`, `meanSq_sum_pi_of_mean_eq_zero`, `meanSq_empiricalMean_sub`, `centeredProduct`, `mean_centeredProduct`, `meanSq_centeredProduct_ge`, `meanSq_centeredProduct_le`, `le_mul_meanSq_empiricalMean_sub`, `sq_norm_cov_mul_le`, `sq_le_of_meanSq_empiricalMean_le`, `copiesLabel`, `firstIntermediate`, `sq_norm_cov_mul_le_copies` | The `N` samples are `Fin N → α`, independent and uniform, and the mean square error is `meanSq` over them. The bounds on `Var X` are stated for `E \|X\|²`; `Var X = E \|X\|² − \|Cov\|²` is `meanSq_sub_eq_var_add`. For `k` copies, `k = 1 + \|τ\|`, the statement is `\|Cov\|² ((1 − 1/p)² − c) ≤ c N · MSE`; the threshold on `N` is the general `sq_le_of_meanSq_empiricalMean_le` with this `c`, and its instance and numbers at `p = 97` are by hand. |
+| NV6, the best readout | `condEnergy`, `law_bounds`, `mean_stdAddChar_copiesLabel`, `meanSq_ite_pair`, `meanSq_ite_copiesLabel`, `cov_ite_copiesLabel`, `condEnergy_copies` | `condEnergy` is defined as `Σ_t \|Cov(1{f = t}, h)\|² / P(f = t)`, with `P(f = t)` the mean square of the indicator; the scaling holds for any `P` with `P(0) = 0` and any `h` of the first pair. That it is the largest `\|Cov\|² / Var` over readouts, the bias `p/N` of a fitted readout, the factor of drawing without replacement and the ratio `2.1` are by hand; `0.044` is the root's measurement. |
