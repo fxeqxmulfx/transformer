@@ -388,7 +388,9 @@ width-16 and width-128 models. This is an existence theorem for weights.
 complex model with its bias-free SwiGLU control: a plain complex-product FFN with `h`
 units is a SwiGLU FFN with `6h` units, none of the three complex products
 approximates a single SwiGLU unit at any width, and no SwiGLU FFN approximates a
-single radial or diagonal unit; one SwiGLU unit misses one plain unit.
+single radial or diagonal unit; one SwiGLU unit misses one plain unit. The branch RMS
+erases the single SwiGLU, radial and diagonal targets; with two units each, both
+separations hold after it.
 `Transformer.ComplexProjection` compares the complex-linear projections of that model
 with real ones: a real projection splits uniquely into a complex-linear part and a
 conjugate-linear part, the block storage `[[A,-B],[B,A]]` holds exactly the first, and a

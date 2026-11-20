@@ -28,8 +28,9 @@ DiffGPT, `~/python_projects/gpt` at `5a37c51`:
 The Lean blocks (`Defs`) are written unit by unit and take real-linear projections
 `V →ₗ[ℝ] ℂ`. Complex linearity is the hypothesis `g (J z) = i g z`, where `J` is
 multiplication by `i` on `ℂ^n`. The output `W_F` is any real matrix, given by two
-columns per complex unit. The branch RMS is outside the maps; it is odd
-(`rmsNormEps_neg`), so every symmetry below survives it.
+columns per complex unit. The branch RMS is outside the maps of FFN1–FFN6. It is odd
+(`rmsNormEps_neg`), so every symmetry below survives it; the evenness and parallelogram
+witnesses do not, and FFN7 replaces them with two-unit witnesses.
 
 ## Results
 
@@ -84,22 +85,69 @@ the product takes every value of modulus one (`swigluUnit_gap_product`), as on t
 torus of `ℂ²`, where both units have ten real parameters and the zero map errs by `1`
 (`swigluUnit_gap_plainUnit_torus`).
 
+FFN7, after the branch RMS (`RMSGap`, `RMSTwoGate`, `RMSIncomparable`). With RMS
+`eps = 0`, `R_D` erases the evenness witness of FFN4 and the parallelogram witnesses of
+FFN6 (by hand). One SwiGLU unit after it has the sign of `(a z)(b z)` and is even. A
+positive gate is a positive scalar, so one radial or diagonal unit after it is its
+ungated product, a SwiGLU block by FFN3. The other one-unit witnesses survive (by hand):
+plain and radial FFNs with complex-linear projections stay `J`-anti after `R_D` and miss
+the `J`-invariant target `R_D(|φ z|² w)` by its norm, and one SwiGLU unit after `R_D`
+points along `w`, so it misses one plain unit `z₁ z₂` after `R_D` on the torus as much
+as the zero map does. `R_D` multiplies by a nonnegative
+scalar, so it keeps the sign of every linear functional
+(`pos_inner_of_pos_inner_rmsNormEps`), and two units on each side suffice.
+
+- Signs constrain the even part. If `R_D ∘ S` is within `δ` of an even target `w` with
+  `δ ‖ℓ‖ < ⟪ℓ, w z⟫`, the product network `P z = S z + S(-z)` has `⟪ℓ, P z⟫ > 0`
+  (`pos_inner_of_rmsNormEps_near`). Product networks satisfy
+  `P(αx+βy) - P(αx-βy) = P(βx+αy) - P(βx-αy)` (`productFFN_cross`), so signs
+  `+, -, -, +` of `⟪ℓ, w⟫` at these four points with margin `γ` force `δ ≥ γ/‖ℓ‖` at
+  any width (`swigluFFN_rms_gap`).
+- Two gated units with gates `φ, ψ`, values `ψ, φ`, orthonormal real columns `e, e'`
+  and any imaginary columns, where `φ x = ψ y = 1` and `φ y = ψ x = 0`, output
+  `κ p q (s(p) e + s(q) e')` at `p x + q y`: `κ = 1/√2` for radial units
+  (`radialFFN_twoGate`), `κ = 1` for diagonal ones (`diagonalFFN_twoGate`). Along
+  `e - e'` the normalized output has signs `+, -, -, +` for `0 < β < α`. No SwiGLU FFN
+  of any width approximates them after `R_D` with error below
+  `√d κ α β (s(α) - s(β)) / (√2 √((κ α β)² (s(α)² + s(β)²) + d eps))`
+  (`swigluFFN_rms_gap_radial`, `swigluFFN_rms_gap_diagonal`), positive for
+  `0 < β < α`, `ε ≥ 0` and `eps ≥ 0` (`radial_rms_bound_pos`, `diagonal_rms_bound_pos`).
+- Conversely, the SwiGLU units `SiLU(ρ z)(ρ z) e` and `SiLU(-ρ z)(-ρ z) e'` add up to
+  `t² (σ(t) e + σ(-t) e')` with `t = ρ z` (`swigluFFN_pair`); `z ↦ -z` swaps the
+  coefficients. Every even map, so every plain, radial or diagonal FFN after `R_D`,
+  misses the pair after `R_D` on a set holding `±z` by at least
+  `√d t² (σ(t) - σ(-t)) / (√2 √(t⁴ (σ(t)² + σ(-t)²) + d eps))`
+  (`even_rms_gap_swigluPair`), positive for `t > 0` (`swigluPair_rms_bound_pos`).
+
+Numerically (awk, not formalized), at `D = 128` with `ε = eps = 2^-23`: for orthogonal
+unit vectors `x, y` and `α² + β² = D` the four points lie on the RMS sphere (by hand).
+The zero map errs by about `√D ≈ 11.3` on every target here, since `R_D(0) = 0`. The
+two-gate bound is `3.36`, `2.56`, `1.74`, `0.72` for `β = 0.1, 0.5, 1, 2`, that is 30%,
+23%, 15% and 6% of the zero map's error, the same for radial and diagonal units: at
+`eps = 0` it is `√d (s(α) - s(β)) / (√2 √(s(α)² + s(β)²))`, free of `κ`. The pair bound
+is `2.69`, `4.75`, `6.85`, `7.85` for `t = 1/2, 1, 2, 4`, from 24% to 69%.
+
 ## Verdict
 
 Refuted for the selected plain product: as a class of functions on the RMS sphere it
 lies strictly inside the bias-free SwiGLU class. It equals SwiGLU blocks of six
-times its width and misses SwiGLU blocks of width one. With complex-linear `W_F` as
+times its width and misses SwiGLU blocks of width one. After the branch RMS the
+inclusion persists and stays strict, with a witness of width two (FFN7). With
+complex-linear `W_F` as
 well, a plain FFN is a holomorphic quadratic map, `f(λ z) = λ² f(z)` for complex `λ`
 (not formalized; the theorems use only `λ = -1` and `λ = i`).
 
 Radial and diagonal products: incomparable with SwiGLU. Each misses one unit of the
 other at any width: their evenness costs them SwiGLU's odd part, and their gate puts
-them outside SwiGLU's quadratic even part.
+them outside SwiGLU's quadratic even part. After the branch RMS, with `eps = 0`, these
+two arguments give nothing at one unit; with two units of each class they separate the
+classes again at any width (FFN7).
 
 Parameters: a complex unit has `3D` real parameters (complex-linear rows of `W_g`
 and `W_u`, a column of `W_F`, each `D/2` complex entries), as many as one SwiGLU
 unit. The exact embedding costs six times the parameters; the limit, three times.
-At one unit each the plain and SwiGLU classes are incomparable (FFN4, FFN6); wider
+Before the branch RMS, at one unit each, the plain and SwiGLU classes are incomparable
+(FFN4, FFN6); wider
 equal-parameter comparisons are not formalized. The selected model's FFN at
 `D = 128` has 171 complex units, `65664` independent parameters per layer; the SwiGLU
 control with the same 342 hidden units (`layout.rs`, `hidden`) has `131328`.

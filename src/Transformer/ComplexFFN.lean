@@ -6,6 +6,9 @@ public import Transformer.ComplexFFN.Embedding
 public import Transformer.ComplexFFN.Separation
 public import Transformer.ComplexFFN.EvenPart
 public import Transformer.ComplexFFN.Incomparable
+public import Transformer.ComplexFFN.RMSGap
+public import Transformer.ComplexFFN.RMSTwoGate
+public import Transformer.ComplexFFN.RMSIncomparable
 
 /-!
 # Complex-product FFNs against the bias-free SwiGLU FFN
@@ -35,7 +38,18 @@ those two classes and SwiGLU are incomparable. At equal parameters the plain cla
 not dominated: one SwiGLU unit misses one plain unit `z₁ z₂` on the torus by as much as
 the zero map (`swigluUnit_gap_plainUnit_torus`).
 
-These are statements about one block on a set of inputs closed under the symmetry,
-such as the RMS sphere that feeds it; the branch RMS keeps the symmetries
-(`rmsNormEps_neg`). They say nothing about training, depth or the cubic task.
+These are statements about one block before its branch RMS, on a set of inputs closed
+under the symmetry, such as the RMS sphere that feeds it. The branch RMS is odd
+(`rmsNormEps_neg`), so the symmetries survive it, but with RMS `eps = 0` it erases the
+one-unit witnesses of evenness and of the parallelogram law: one SwiGLU unit after it is
+even, and a positive gate is a positive scalar, so one radial or diagonal unit after it
+is its ungated product, a SwiGLU block (by hand). It keeps the sign of every linear
+functional, and through signs the even part of SwiGLU still obeys a four-point identity
+(`swigluFFN_rms_gap`). Two units on each side restore both separations after the RMS
+(`RMSIncomparable`): no SwiGLU FFN approximates two radial or diagonal units that share
+one product under two gates (`swigluFFN_rms_gap_radial`, `swigluFFN_rms_gap_diagonal`),
+and no even map approximates two SwiGLU units whose coefficients swap under `z ↦ -z`
+(`even_rms_gap_swigluPair`).
+
+None of this says anything about training, depth or the cubic task.
 -/
