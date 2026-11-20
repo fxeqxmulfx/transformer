@@ -612,7 +612,7 @@ pub fn run() -> Result<()> {
                 }
             }Ok(())
         },
-        _=>Err("usage: learned-window preflight | archive ROOT | smoke ROOT | suite ROOT short|long | report ROOT | cell|resume ROOT CASE SEED ARM TIER".into())
+        _=>Err("usage: learned-window preflight | archive ROOT | smoke ROOT | suite ROOT short|long | report ROOT | cell|resume ROOT CASE SEED ARM TIER | validate CONTROL_ROOT OUT | analyze ROOT CONTROL_ROOT RERUN_ROOT".into())
     }
 }
 

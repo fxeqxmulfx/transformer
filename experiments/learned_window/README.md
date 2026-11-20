@@ -66,6 +66,26 @@ gone from it.
   the 25 tasks within the window. A CPU test assembles the experiment's
   kernels with `ptxas` for sm_86.
 
+## Commands
+
+```
+cargo build --offline --release
+cargo build --offline --release --features fp32-affine-reference --target-dir target/fp32
+mkdir -p runs/cohort-1-bin
+cp target/release/learned-window target/release/main-phase-score-native runs/cohort-1-bin/
+CONTROL=<gpt>/runs/main-model-phase-score-01/phase-score-lerope
+./target/fp32/release/learned-window validate $CONTROL runs/validation-fp32-1
+./runs/cohort-1-bin/learned-window validate $CONTROL runs/validation-1
+./runs/cohort-1-bin/learned-window suite runs/cohort-1 short
+./runs/cohort-1-bin/learned-window suite runs/cohort-1 long
+./runs/cohort-1-bin/learned-window analyze runs/cohort-1 $CONTROL ../rerope/runs/cohort-1
+```
+
+As in `rerope`, the cohort runs from a copy of the binaries: the copy that
+was validated is the copy that trains. `analyze` prints the six comparisons
+of `PROTOCOL.md` § Analysis as JSON. The fourth reads each head's final
+window and slope from the cell's last checkpoint, written when it finished.
+
 GPU work waits until the `rerope` cohort finishes.
 
 ## Findings
