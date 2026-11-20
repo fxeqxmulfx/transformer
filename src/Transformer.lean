@@ -65,6 +65,7 @@ public import Transformer.Sandwich
 public import Transformer.Weil
 public import Transformer.Rotate90
 public import Transformer.ComplexFFN
+public import Transformer.ComplexProjection
 public import Transformer.SequenceModel
 
 /-!
@@ -388,6 +389,9 @@ complex model with its bias-free SwiGLU control: a plain complex-product FFN wit
 units is a SwiGLU FFN with `6h` units, none of the three complex products
 approximates a single SwiGLU unit at any width, and no SwiGLU FFN approximates a
 single radial or diagonal unit; one SwiGLU unit misses one plain unit.
+`Transformer.ComplexProjection` compares the complex-linear projections of that model
+with real ones: a real projection splits uniquely into a complex-linear part and a
+conjugate-linear part, and the block storage `[[A,-B],[B,A]]` holds exactly the first.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
