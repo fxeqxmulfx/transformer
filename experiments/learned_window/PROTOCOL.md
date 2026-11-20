@@ -1,7 +1,7 @@
 # Protocol: a learned window and slope in the main model
 
-Draft. It is frozen before the first cell: the runner compiles this file into
-the binary, and every cell records its hash. The findings go to `README.md`.
+Frozen before the first cell. The runner compiles this file into the binary,
+and every cell records its hash. The findings go to `README.md`.
 
 ## Question
 
@@ -81,6 +81,9 @@ below any length.
   exact accuracy is at least 99%, or when its budget runs out.
 - **Final evaluation.** Every split, including the length and position-shift
   splits, is evaluated at the end of each cell.
+- **Validation first.** The first cell starts only after `validate` passes,
+  in the `fp32-affine-reference` build and in the copy of the binaries that
+  trains.
 - **Integrity.** No cell is rerun or dropped. Failures are kept. No source
   changes after the first cell; the runner refuses a changed source.
 
