@@ -5,10 +5,12 @@ public import Transformer.MHC.PeriRMS.CurrentModel
 /-!
 # Current-model bounds with square-root attention gain
 
-Requested companion to `CurrentModel.lean`: change only the attention gain
+Requested companion to the parent architecture of `CurrentModel.lean` (real score, fixed RoPE,
+centered XSA, SwiGLU; not the main model, whose gain is `1/head_width` and whose score is the
+phase score): change only the attention gain
 from `1/head_width` to `1/sqrt(head_width)`. Both retain per-head Q/K RMS,
-fixed RoPE, SSMax's log(visible keys), centered XSA, SwiGLU, both Peri-RMS
-sites, and the same four-stream finite mHC connections. These statements
+SSMax's log(visible keys), both Peri-RMS
+sites, and the same four-stream finite mHC connections, now with phase-conjugated skips. These statements
 provide each gain with and without the residual coefficient `1/sqrt(2L)`.
 
 The normalized residual bounds are unchanged because they use output RMS.

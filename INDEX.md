@@ -45155,7 +45155,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.MHC](src/Transformer/MHC.lean)** — 23 lines, aggregator
 
-**[Transformer.MHC.PeriRMS](src/Transformer/MHC/PeriRMS.lean)** — 19 lines, aggregator
+**[Transformer.MHC.PeriRMS](src/Transformer/MHC/PeriRMS.lean)** — 21 lines, aggregator
 
 **[Transformer.MHC.PhaseSkip](src/Transformer/MHC/PhaseSkip.lean)** — 197 lines
 
@@ -45284,15 +45284,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`witnessBranch`](src/Transformer/MHC/PeriRMS/Basic.lean#L130) | def |  |
 | [`phasedBranch`](src/Transformer/MHC/PeriRMS/Basic.lean#L148) | def |  |
 
-**[Transformer.MHC.PeriRMS.CurrentModel](src/Transformer/MHC/PeriRMS/CurrentModel.lean)** — 143 lines
+**[Transformer.MHC.PeriRMS.CurrentModel](src/Transformer/MHC/PeriRMS/CurrentModel.lean)** — 160 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`finalFeature`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L41) | def |  |
-| [`current_model_bounds`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L52) | theorem | proved |
-| [`unscaled_current_model_bounds`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L78) | theorem | proved |
-| [`scaled_bound_lt_unscaled_bound`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L100) | theorem | proved |
-| [`final_feature_rms_le_one`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L111) | theorem | proved |
+| [`finalFeature`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L45) | def |  |
+| [`current_model_bounds`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L58) | theorem | proved |
+| [`unscaled_current_model_bounds`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L90) | theorem | proved |
+| [`scaled_bound_lt_unscaled_bound`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L117) | theorem | proved |
+| [`final_feature_rms_le_one`](src/Transformer/MHC/PeriRMS/CurrentModel.lean#L128) | theorem | proved |
 
 **[Transformer.MHC.PeriRMS.Dynamics](src/Transformer/MHC/PeriRMS/Dynamics.lean)** — 124 lines
 
@@ -45354,12 +45354,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`score_bound`](src/Transformer/MHC/PeriRMS/Scores.lean#L79) | theorem | proved |
 | [`inverse_sqrt_score_bound`](src/Transformer/MHC/PeriRMS/Scores.lean#L91) | theorem | proved |
 
-**[Transformer.MHC.PeriRMS.SqrtGain](src/Transformer/MHC/PeriRMS/SqrtGain.lean)** — 85 lines
+**[Transformer.MHC.PeriRMS.SqrtGain](src/Transformer/MHC/PeriRMS/SqrtGain.lean)** — 87 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`inverse_sqrt_current_model_bounds`](src/Transformer/MHC/PeriRMS/SqrtGain.lean#L30) | theorem | proved |
-| [`unscaled_inverse_sqrt_current_model_bounds`](src/Transformer/MHC/PeriRMS/SqrtGain.lean#L56) | theorem | proved |
+| [`inverse_sqrt_current_model_bounds`](src/Transformer/MHC/PeriRMS/SqrtGain.lean#L32) | theorem | proved |
+| [`unscaled_inverse_sqrt_current_model_bounds`](src/Transformer/MHC/PeriRMS/SqrtGain.lean#L58) | theorem | proved |
 
 ### `Transformer.MRCR`
 

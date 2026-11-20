@@ -14,6 +14,8 @@ post-RMS depth scaling and with the original twice-sigmoid write gates.
 The development includes the independent score bounds and
 concrete nonzero examples; it assumes no exact finite double stochasticity.
 `PhaseScore` and `PhaseScoreHead` bound the squared-imaginary phase score of the complex heads
-by `(5/4) ln N`, after the same Q/K RMS and arbitrary rotary phases.
+by `(5/4) ln N`, after the same Q/K RMS and arbitrary rotary phases. The skip maps are
+conjugated by stream phases, `D P D*` (`Basic`, `MHC.PhaseStep`), and `CurrentModel` states the
+bounds of DiffGPT's main model, both scores included.
 See `review/mhc_peri_rms/validation.json` for migration and check evidence.
 -/
