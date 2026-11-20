@@ -8,6 +8,8 @@ public import Transformer.LeRoPEBlock.NoPE
 public import Transformer.LeRoPEBlock.Limit
 public import Transformer.LeRoPEBlock.TwoPi
 public import Transformer.LeRoPEBlock.Bound
+public import Transformer.LeRoPEBlock.SlotFejer
+public import Transformer.LeRoPEBlock.SlotWeight
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -39,4 +41,11 @@ model's own.
   `Re Z + β (Im Z)² / d`, is at most `(5/4) ln (i + 1)` for every distance, every frequency and
   every `|β| ≤ 1`, once `Q x` and `K y` have squared length at most `d`, as after the per-head
   Q/K RMS (`leropeLogit_abs_le`, `plainLogit_abs_le`).
+* **Reading a slot.** A head of the main model keeps at most `1 / (1 + R N^{−(1 + |β|)(1 + 1/R)})`
+  of its weight on a key whose `R` neighbours on each side carry its token, `N = i + 1`, whatever
+  the frequencies (`depthWeight_leropeLogit_le`). Over a window of distances `c + s − s'` the bands
+  of the score sum to their value at the slot times a Fejér factor in `[0, n²]`, so the margins sum
+  to at most `n²` times the amplitude (`sum_sum_phaseLogit_sub_le`), and Jensen's inequality turns
+  that into the weight (`depthWeight_le_of_sum_sum_le`). At `β = 0` the middle of three keys keeps
+  at most `9/10`, and the bound tends to `2/3`.
 -/

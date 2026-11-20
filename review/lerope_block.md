@@ -138,3 +138,66 @@ The distance biases, the Hermitian score and the constant gain are not decided b
 comparison here. A decision needs a restriction the main model has and the class lacks, such as a
 bound on `Φ`'s Lipschitz constant, a number of layers, or the rounded model; the cohort
 `experiments/alibi_kerple` measures the same question on the GPU, and its findings are pending.
+
+## Reading a slot (added)
+
+Request, 2026-11-21: in pricing functions of `n` variables (`review/flat_spectrum.md`,
+*Functions of n variables*), bound from below and from above what one head of the main model can
+do to read the operand at a given distance. The positional scheme is LeRoPE alone, SSMax's gain
+kept; abstract statements are welcome, special cases are not wanted. Lean: `SlotFejer` and
+`SlotWeight` of `src/Transformer/LeRoPEBlock/`.
+
+A head reads the key at the distance `t` by putting its softmax weight there. When the keys
+around the slot carry the same token, or the head's keys ignore the token, only the way the score
+depends on the distance tells the slot from its neighbours, and the question is how much weight
+that can buy.
+
+RS1, a head keeps a bounded share on a slot, whatever its frequencies. The score of a LeRoPE head
+at the distance `t` is a sum of bands, one per rotated plane, `X_l cos(tθ_l) + Y_l sin(tθ_l)`,
+each at most `(|q_l|² + |k_l|²)/2` (`dotProduct_rotary_neg`, `abs_band_le`). Over the window of
+distances `c + s − s'`, `s, s' < n`, a band sums to its value at `c` times
+`|Σ_{s<n} e^{isθ}|²`, a Fejér factor between `0` and `n²` (`sum_sum_band`, `sq_add_sq_sum_le`).
+So the window cannot lie below the slot everywhere: its `n²` margins `ℓ(c) − ℓ(c + s − s')` sum
+to at most `n²` times the amplitude, at every frequency and with any number of bands
+(`sum_sum_dotProduct_rotary_sub_le`). With the term `β (Im Z)²/d` and a gain `g ≥ 0` the sum is
+at most `n² g ((|q|² + |k|²)/2 + |β| |q|² |k|²/d)` (`sum_sum_phaseLogit_sub_le`).
+
+Margins become weight by counting keys. With `n = R + 1`, the row `s` of the window hits `R + 1`
+distinct keys, so its `R` pairs off the diagonal carry at most `Z − e^{ℓ(c)}` of the partition
+function `Z`. Jensen's inequality for `exp` along each row, then over the rows
+(`card_mul_exp_mean_le`), gives: if the margins sum to at most `(R + 1)² B`, the slot keeps at
+most `1 / (1 + R e^{−B(1 + 1/R)})` of the weight (`depthWeight_le_of_sum_sum_le`).
+
+For the main model, Q/K RMS bounds `|q|²` and `|k|²` by `d`, and SSMax's gain is `ln N / d`,
+`N = i + 1`. So `B = (1 + |β|) ln N`, and a slot whose `R` keys on each side carry its token has
+
+```
+weight on the slot ≤ 1 / (1 + R N^{−(1 + |β|)(1 + 1/R)}),
+```
+
+whatever the frequencies (`depthWeight_leropeLogit_le`). A head whose keys ignore the token has,
+on every input, the weights of the constant sequence of the query's token, so the bound holds for
+it everywhere. At `β = 0` the middle of `N = 2R + 1` keys keeps at most `9/10` at `R = 1` (the
+example of the theorem), `0.72` at `R = 16`, and the bound falls to `2/3` as `R` grows.
+
+The same two steps price a head with any gain `λ` in place of SSMax's and squared lengths at most
+`A`, since the statements take any `g ≥ 0`: at `β = 0`, a weight `1 − ε` on the slot needs
+
+```
+λ A ≥ (R / (R + 1)) ln(R (1 − ε) / ε),
+```
+
+a logarithm in the number of neighbours and in `1/ε`, not a power of the length. Solved for `λ A`
+by hand; Lean states the weight bound it comes from.
+
+### Not claimed
+
+- Sharp constants. The factor `1 + |β|` is crude: the score itself is at most `(5/4) ln N` at
+  `|β| ≤ 1` (`leropeLogit_abs_le`). A sharper factor for the margins is not stated.
+- Slots near the ends. The theorem needs `R` keys on both sides of the slot (`R ≤ t`,
+  `t + R ≤ i`); a slot next to the query or at the start of the context is not covered.
+- Content. The bound is for keys of one token around the slot. A head whose key depends on the
+  token can single out a slot whose token differs from its neighbours'; reading an arbitrary
+  operand needs a large weight for every assignment of tokens, and that is not stated.
+- Readout. Weight is not output: a value read with the weight `w` is mixed with its neighbours'
+  values, and how much of that a nonlinear `Φ` undoes is not bounded here.
