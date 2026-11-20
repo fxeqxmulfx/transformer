@@ -391,7 +391,10 @@ approximates a single SwiGLU unit at any width, and no SwiGLU FFN approximates a
 single radial or diagonal unit; one SwiGLU unit misses one plain unit.
 `Transformer.ComplexProjection` compares the complex-linear projections of that model
 with real ones: a real projection splits uniquely into a complex-linear part and a
-conjugate-linear part, and the block storage `[[A,-B],[B,A]]` holds exactly the first.
+conjugate-linear part, the block storage `[[A,-B],[B,A]]` holds exactly the first, and a
+map commuting with the complex structure errs on a real projection by at least its
+conjugate-linear part, which the complex part attains; after the RMS it still misses a
+normalized conjugate-linear target by its full norm.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
