@@ -5,6 +5,7 @@ public import Transformer.RoPE.LeReRoPE.Clamp
 public import Transformer.RoPE.LeReRoPE.Covariance
 public import Transformer.RoPE.LeReRoPE.Fold
 public import Transformer.RoPE.LeReRoPE.Window
+public import Transformer.RoPE.LeReRoPE.WindowLoss
 
 /-!
 # LeReRoPE: LeRoPE with ReRoPE
@@ -37,4 +38,11 @@ window, and the gradient's bound carries `w` where LeRoPE's carries the distance
 the window moves every far pair alike, `∂p/∂w = 1 − s`, and only the slope's derivative, the
 excess `d − w`, tells far distances apart. One pass computes the map, as it computes Leaky
 ReRoPE's.
+
+`Transformer.RoPE.LeReRoPE.WindowLoss` differentiates every loss of the heads' positions in a
+head's window and slope. The slope's gradient weighs each far pair by its excess `d − w`; the
+window's is `1 − s` times the loss's derivative along the indicator of the far pairs, the same
+for every far distance. A window wider than every distance of its head gets no gradient, and
+neither does its slope; at `s = 1` the window gets none at all. Nothing in the loss pulls an open
+window back.
 -/
