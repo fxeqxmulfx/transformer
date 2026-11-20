@@ -9,7 +9,8 @@ Karypis et al., arXiv:2607.10134v1, §3.2, Lemma 3.1, which is Lemma B.2 of Appe
 `g_st` on the pairs and band `m`'s chunks define
 
 * `offsetSignal`: the signal `C(δ) = Σ_{s−t=δ} ‖q_s‖ ‖k_t‖ e^{iφ_st} g_st` of the offset `δ`; in
-  the paper `g_st = α_st (v_t − o_s)ᵀ g_s`, which is `∂L/∂z_st` (Lemma B.1);
+  the paper `g_st = α_st (v_t − o_s)ᵀ g_s`, which is `∂L/∂z_st` (Lemma B.1, in
+  `SectionB1_SoftmaxJacobian`);
 * `surrogate`: `P(θ) = Re Σ_{δ=1}^{L−1} C(δ) e^{iδθ}`, the real part of the signal's discrete-time
   Fourier transform at `θ`, here of a context of `L = n` tokens.
 
