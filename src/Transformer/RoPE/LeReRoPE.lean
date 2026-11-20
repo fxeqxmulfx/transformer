@@ -2,6 +2,7 @@ module
 
 public import Transformer.RoPE.LeReRoPE.Adjoint
 public import Transformer.RoPE.LeReRoPE.Clamp
+public import Transformer.RoPE.LeReRoPE.Covariance
 public import Transformer.RoPE.LeReRoPE.Fold
 
 /-!
@@ -23,4 +24,9 @@ summed phasor, at the single offset `w`. `Transformer.RoPE.LeReRoPE.Adjoint` rea
 off the rotated chunks and their gradients, as a kernel has them: `Σ_i a_i Im(x̃_i^* dx̃_i)`, a sum
 over positions; under ReRoPE the near queries and keys enter at `s` and `t`, the far queries at
 `w`, and the unrotated far keys not at all.
+
+`Transformer.RoPE.LeReRoPE.Covariance` carries LeRoPE's Lemma B.3, the gradient as
+`−Σ_s Cov_{t∼p_s}(v_tᵀ g_s, S_st)`, to the positions `ψ`. Under the clamp every pair at least `w`
+apart has the sine term of the offset `w`: a pair's weight in the gradient stops growing at the
+window, and the gradient's bound carries `w` where LeRoPE's carries the distance `s − t`.
 -/
