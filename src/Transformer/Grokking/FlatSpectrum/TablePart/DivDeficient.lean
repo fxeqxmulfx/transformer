@@ -94,8 +94,8 @@ example : (Matrix.of fun c c' : ZMod 8 =>
   det_circ_ne_zero (p := 17) (q := 103) (z := 64) (e := fun s => (3 ^ 2) ^ s % 17) (W := wDiv17k2)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
 
-example : ¬ IsMinOn nuclearNorm {X | ∀ ij ∈ divSeen 17 mask17, X ij.1 ij.2 = divKernel 17 2 ij.1 ij.2}
-    (divKernel 17 2) :=
+example : ¬ IsMinOn nuclearNorm
+    {X | ∀ ij ∈ divSeen 17 mask17, X ij.1 ij.2 = divKernel 17 2 ij.1 ij.2} (divKernel 17 2) :=
   not_returned_classes (R := 8) (g := 3) (q := 103) (z := 64) (W := wDiv17k2)
     (by decide +kernel) (by decide +kernel) (by decide +kernel)
 

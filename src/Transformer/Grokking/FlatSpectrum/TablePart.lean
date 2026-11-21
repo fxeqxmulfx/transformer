@@ -11,6 +11,7 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.DivDeficient
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivFlat
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivTasks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6AbsMax
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6DivParts
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
@@ -18,12 +19,15 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Mask
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Outside
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Peel
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6PeelMasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6PermAdd
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Shuffle
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6SumTasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6SumWitnesses
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Sums
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tasks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tridiagonal
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Witnesses
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatBest
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatClass
@@ -67,25 +71,25 @@ A part with an empty row or column does not determine the class. Over the parts 
 from `m = 511` (PT5, `TablePart.RandomCount`, `TablePart.RandomFlat`).
 
 On a proper part with a connected graph and twists that span all matrices, the data leave one
-function `g + h + uᵀ M v` of the class, and for injective `w ↦ wᵀ M` the minimum of M does not return
-its kernel (PT6, `TablePart.AgainstM`). The training half of E6 at `p = 97` is such a part: the
-kernel runs the SplitMix64(1) shuffle of the 9409 cells (`TablePart.E6Shuffle`), and its first 4704
-entries are different cells (`TablePart.E6Marks`) that determine the class (`TablePart.E6Half`).
-Inside the class they give all 4705 held-out cells of twelve tasks of the data. M returns the
-kernel of none of the seven with `m ≠ 0`, and the five with `m = 0` have kernels of rank one
-(`TablePart.E6Tasks`). For the other 21 tasks with the full table, two rectangles of training
-cells ask for two couplings, so no function of the class fits them (`TablePart.Rectangles`,
-`TablePart.E6Witnesses`, `TablePart.E6Outside`).
+function `g + h + uᵀ M v` of the class, and for injective `w ↦ wᵀ M` the minimum of M does not
+return its kernel (PT6, `TablePart.AgainstM`). The training half of E6 at `p = 97` is such a part:
+the kernel runs the SplitMix64(1) shuffle of the 9409 cells (`TablePart.E6Shuffle`), and its first
+4704 entries are different cells (`TablePart.E6Marks`) that determine the class
+(`TablePart.E6Half`). Inside the class they give all 4705 held-out cells of twelve tasks of the
+data. M returns the kernel of none of the seven with `m ≠ 0`, and the five with `m = 0` have
+kernels of rank one (`TablePart.E6Tasks`). For the other 21 tasks with the full table, two
+rectangles of training cells ask for two couplings, so no function of the class fits them
+(`TablePart.Rectangles`, `TablePart.E6Witnesses`, `TablePart.E6Outside`).
 
-The 15 tasks `(a / b)^k` lie on tables without the column `b = 0`, at `p = 17`, `97` and `193`. Their
-training part has an empty column and does not determine the class, but it fixes a function of the
-class on the columns it has (`TablePart.DivPart`). So the constant `(a / b)⁰` comes back on the whole
-table, and its kernel has rank one. The twelve others have no function of the class on their
-training cells (`TablePart.DivTasks`, `TablePart.E6DivParts`, `TablePart.E6Div`).
+The 15 tasks `(a / b)^k` lie on tables without the column `b = 0`, at `p = 17`, `97` and `193`.
+Their training part has an empty column and does not determine the class, but it fixes a function
+of the class on the columns it has (`TablePart.DivPart`). So the constant `(a / b)⁰` comes back on
+the whole table, and its kernel has rank one. The twelve others have no function of the class on
+their training cells (`TablePart.DivTasks`, `TablePart.E6DivParts`, `TablePart.E6Div`).
 
-Three tables that are neither flat nor in the class, `a² b`, `a³ + a b² + b` and the mixed task, have
-a line orthogonal to all the others, and the half misses a cell of it, so M does not return their
-kernels (`TablePart.E6Mask`, `TablePart.E6Lines`).
+Three tables that are neither flat nor in the class, `a² b`, `a³ + a b² + b` and the mixed task,
+have a line orthogonal to all the others, and the half misses a cell of it, so M does not return
+their kernels (`TablePart.E6Mask`, `TablePart.E6Lines`).
 
 Twelve tables are functions of `a + b`. Eleven have an invertible kernel, proved by one inverse over
 `ZMod 389` (`TablePart.Cyclotomic`), and every anti-diagonal has an unseen cell. In `perm-add` the
@@ -97,4 +101,10 @@ classes of equal columns. The kernel on the rows `g^c` is a circulant with an in
 `ZMod q`, so the indicator of each class lies in its row space, and the scalings
 `(a, b) ↦ (t a, t b)` hide a whole class in every row (`TablePart.DivClasses`, `TablePart.DivCover`,
 `TablePart.DivDeficient`).
+
+The kernels of `|a − b|` and `max(a, b)` have tridiagonal inverses up to a scalar and phases
+(`TablePart.E6Tridiagonal`). Their one certificate `Y` is symmetric, and `Y T` is Hermitian up to a
+phase, so an entry of `Y T` with a single live term kills that term. Four rounds of this, checked
+by the kernel, empty all 4704 seen cells, so `Y = 0` and M returns neither table
+(`TablePart.E6PeelMasks`, `TablePart.E6Peel`, `TablePart.E6AbsMax`).
 -/

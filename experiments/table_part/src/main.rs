@@ -362,6 +362,9 @@ mod tests {
         |a, b| u32::from(pow97(a + b, 48) == 1),
     ];
 
+    /// The two formulas of `E6AbsMax.lean`, in the same order.
+    const PEEL_TASKS: [fn(u32, u32) -> u32; 2] = [|a, b| a.abs_diff(b), |a, b| a.max(b)];
+
     /// The tasks with the full table at `p = 97`, by name, on their frozen splits.
     fn full_tables() -> arithmetic::Result<Vec<(String, Dataset)>> {
         let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
@@ -419,12 +422,17 @@ mod tests {
         Ok(())
     }
 
-    /// Each formula of `TablePart.E6.tasks`, `E6Lines.lean` and `E6SumTasks.lean` is the table of
-    /// exactly one task of the data.
+    /// Each formula of `TablePart.E6.tasks`, `E6Lines.lean`, `E6SumTasks.lean` and `E6AbsMax.lean` is
+    /// the table of exactly one task of the data.
     #[test]
     fn lean_tasks_are_tables_of_the_data() -> arithmetic::Result<()> {
         let tables = full_tables()?;
-        for f in TASKS.iter().chain(&LINE_TASKS).chain(&SUM_TASKS) {
+        for f in TASKS
+            .iter()
+            .chain(&LINE_TASKS)
+            .chain(&SUM_TASKS)
+            .chain(&PEEL_TASKS)
+        {
             let matching = tables
                 .iter()
                 .filter(|(_, d)| {

@@ -31,6 +31,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.constant_off_column
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.rank_constant_kernel
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_div_function
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.kernel_mul_triMatrix
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_of_tri
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_absDiff
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_max
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate17
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate193
@@ -62,6 +66,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.length_outside97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.outside97_valid
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function_on_half
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.peel_chain
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.Vanishes.step
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_of_peel
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.perm_values
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.pair_cover
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_permAdd
@@ -90,6 +97,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_uncoupled
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.rank_uncoupled
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.sum_kms_tri
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.connected_cross
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.rigid_cross
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_crossPart
@@ -137,6 +145,12 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_ann
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_balanced
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_classes
+#print axioms Transformer.Grokking.FlatSpectrum.conjTranspose_mul_of_certificate
+#print axioms Transformer.Grokking.FlatSpectrum.mul_gramSqrt_of_certificate
+#print axioms Transformer.Grokking.FlatSpectrum.IsContraction.transpose
+#print axioms Transformer.Grokking.FlatSpectrum.eq_of_certificates
+#print axioms Transformer.Grokking.FlatSpectrum.smul_mul_eq_of_certificate
+#print axioms Transformer.Grokking.FlatSpectrum.entry_eq_zero_of_peel
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_column
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_row
 #print axioms Transformer.Grokking.FlatSpectrum.mul_eigenbasis_of_certificate

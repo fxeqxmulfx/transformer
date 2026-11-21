@@ -7237,6 +7237,21 @@ of the kernel, and these indicators are the test vectors of the first criterion.
 checks on the training mask. Some class is unseen in the row `a = 0`, and for every class some row
 `t ≠ 0` has all the cells `(t, t b)`, `b` in that class, unseen. All five masks pass both.
 
+The tables `|a − b|` and `max(a, b)` need more than these two criteria, and what helps is that their
+inverses are sparse. For `ρ = ψ(1)` the kernel of `|a − b|` is `[ρ^{|a − b|}]`, and `(1 − ρ²)` times
+its inverse is the tridiagonal matrix `T` with `−ρ` beside the diagonal and `1 + ρ²` on it, except
+for `1` in the two corners. The kernel of `max(a, b)` is the same matrix for `σ = ψ(49)`, so that
+`σ² = ρ`, between the diagonal phases `σ^a` and `σ^b`, because `a + |a − b| + b = 2 max(a, b)`.
+
+A certificate `Y` of `K` has `Yᴴ K` equal to the Hermitian square root of `Kᴴ K`. So an invertible
+kernel has one certificate, and from `K T = c 1` the matrix `Y T` is Hermitian up to the phase of
+`c`. Both kernels are symmetric, so `Y` is symmetric, and the flip `x ↦ 96 − x` keeps each kernel up
+to phases, so the zeros of `Y` also come in transposed and flipped pairs. Now read one entry of
+`Y T`. It sums at most three entries of `Y`. If only one of them can be nonzero, and the mirror
+entry of `Y T` sums only zeros, that one entry vanishes too. On the half this leaves 588 of the 4704
+seen cells alive, then 42, then 2, then none. So `Y = 0`, which is impossible for `K ≠ 0`, and M
+returns neither table.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7278,6 +7293,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, three tables with an orthogonal line | `E6.halfMask`, `E6.mem_half_iff`, `E6.tableKernel`, `E6.not_returned_squareTimes`, `E6.not_returned_cubicMixed`, `E6.mixedTable`, `E6.not_returned_mixed` | `certificate` proves that the shuffle gives exactly the literal `halfMask`, so these theorems read the mask without rerunning it. The test `lean_tasks_are_tables_of_the_data` checks that each formula is the table of exactly one task of the data. |
 | PT6, twelve tables of `a + b` | `det_aeval_ne_zero`, `not_isMinOn_of_balanced`, `E6.ConvCheck`, `E6.det_sum_ne_zero`, `E6.diag_cover`, `E6.not_returned_sum`, `E6.not_returned_sum_pow`, `E6.not_returned_sumPow3`, `4`, `6`, `8`, `12`, `16`, `24`, `32`, `48`, `E6.not_returned_sumInterval`, `E6.not_returned_sumSquares`, `E6.permMap`, `E6.pair_cover`, `E6.not_returned_permAdd` | The vectors `w` are literals in `E6SumWitnesses`, checked over `ℕ` by the kernel with `q = 389` and `z = 256`. The test `lean_tasks_are_tables_of_the_data` links the eleven formulas to the data, and `lean_perm_table_is_the_task` links the permutation. |
 | PT6, five tables of `(a / b)^k` with classes of equal columns | `not_isMinOn_of_classes`, `E6.CircCheck`, `E6.det_circ_ne_zero`, `E6.ClassCheck`, `E6.not_returned_classes`, `E6.not_returned_div17_k2`, `E6.not_returned_div97_k2`, `E6.not_returned_div97_k3`, `E6.not_returned_div193_k2`, `E6.not_returned_div193_k3` | The inverses are literals in `DivDeficient`, checked over `ℕ` by the kernel with `q = 103`, `389`, `773`. The test `lean_div_masks_are_the_training_cells` links the masks and the labels `(a / b)^k` to the data. |
+| PT6, the distance and the maximum, with a tridiagonal inverse | `gramSqrt`, `conjTranspose_mul_of_certificate`, `mul_gramSqrt_of_certificate`, `eq_of_certificates`, `smul_mul_eq_of_certificate`, `entry_eq_zero_of_peel`, `E6.forced`, `E6.PeelStep`, `E6.peel_chain`, `E6.Vanishes.step`, `E6.not_returned_of_peel`, `E6.tri`, `E6.sum_kms_tri`, `E6.kernel_mul_triMatrix`, `E6.not_returned_of_tri`, `E6.not_returned_absDiff`, `E6.not_returned_max` | The masks `peel1`, `peel2`, `peel3` are literals in `E6PeelMasks`, and `peel_chain` checks each step over `ℕ` in the kernel. The test `lean_tasks_are_tables_of_the_data` links the two formulas to the data. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random
