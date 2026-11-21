@@ -70,6 +70,7 @@ public import Transformer.ReRoPEBlock
 public import Transformer.LeRoPEBlock
 public import Transformer.Phasor
 public import Transformer.SequenceModel
+public import Transformer.GainMatroid
 
 /-!
 Formalizations of papers on the mathematics and architecture of Transformers:
@@ -356,6 +357,11 @@ probability bounds outside that coverage are not claimed as proved.
    constraint allows only `w̃ ≤ 23`; the author's "even faster" needs
    `11w̃ < 5(n + 1)`; the bold `49.50` is the largest of the runs, not of the
    table.
+
+59. Funk, Pivotto, Slilaty — arXiv:1609.05574v5, "Matrix representations of
+   frame and lifted-graphic matroids correspond to gain functions". Projective
+   equivalence as sequences of the source's elementary operations, and
+   Proposition 1.1.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
