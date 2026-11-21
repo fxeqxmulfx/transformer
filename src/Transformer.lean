@@ -363,8 +363,9 @@ probability bounds outside that coverage are not claimed as proved.
    equivalence as sequences of the source's elementary operations and
    Proposition 1.1; canonical matrices, switching and scaling; walks, cycles,
    thetas, biased graphs and the balanced cycles of a gain function; deletion,
-   contraction and induced gains; connectivity and the balance classes of biased
-   graphs; frame and lift matroids, matroid connectivity and uniform matroids;
+   contraction, link minors and induced gains; connectivity and the balance
+   classes of biased graphs; frame and lift matroids, matroid connectivity and
+   uniform matroids;
    Propositions 2.1, 2.2, 2.3 and 4.1, Lemmas 4.2 to 4.12 and Theorem 5.1;
    which biased 2C₃, tubes and K₄ are properly unbalanced; 𝖴₂ and 𝖴₃ as
    representations of U_{2,4}; counterexamples to Conjectures 1 and 2 as
