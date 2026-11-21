@@ -4,6 +4,7 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
+public import Transformer.Grokking.FlatSpectrum.TablePart.DivFlat
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivTasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div

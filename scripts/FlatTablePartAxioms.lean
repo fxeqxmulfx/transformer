@@ -12,6 +12,12 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.totalDegree_mul_pow
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_half_not_determines_degree_96
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_degreeClass
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.divKernel_conjTranspose_mul
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.isFlat_divKernel
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div17
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div97
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div193
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.eq_on_columns
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.eq_off_column
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.constant_off_column
