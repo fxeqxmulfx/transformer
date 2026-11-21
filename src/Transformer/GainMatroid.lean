@@ -43,6 +43,7 @@ public import Transformer.GainMatroid.Section2_TriadColumns
 public import Transformer.GainMatroid.Section2_K4Forms
 public import Transformer.GainMatroid.Section2_K4Matrix
 public import Transformer.GainMatroid.Section2_ExchangedMatrices
+public import Transformer.GainMatroid.Section2_BiasedMatroids
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -106,7 +107,9 @@ matrices represent the same matroid and brings a represented triangle to the las
 the printed claim that every triad takes the first three columns of `I(K₄)`, and `Section2_K4Forms`
 proves it for an independent triad. `Section2_K4Matrix` proves that every representation of `M(K₄)`
 is projectively equivalent to `I(K₄)`, and `Section2_ExchangedMatrices` states that the exchanged
-matrices represent the exchanged matroids.
+matrices represent the exchanged matroids. `Section2_BiasedMatroids` states what the source cites
+from Zaslavsky on `F(G, B)`, `L(G, B)`, their canonical matrices and minors, and proves that the
+biased graph determines them and that they agree without vertex-disjoint unbalanced cycles.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
