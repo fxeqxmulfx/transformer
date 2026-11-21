@@ -60,6 +60,9 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.FlatWorst
 public import Transformer.Grokking.FlatSpectrum.TablePart.OffLine
 public import Transformer.Grokking.FlatSpectrum.TablePart.RandomCount
 public import Transformer.Grokking.FlatSpectrum.TablePart.RandomFlat
+public import Transformer.Grokking.FlatSpectrum.TablePart.ReadoutCodes
+public import Transformer.Grokking.FlatSpectrum.TablePart.ReadoutEnergy
+public import Transformer.Grokking.FlatSpectrum.TablePart.ReadoutShare
 public import Transformer.Grokking.FlatSpectrum.TablePart.Rectangles
 public import Transformer.Grokking.FlatSpectrum.TablePart.RowSum
 public import Transformer.Grokking.FlatSpectrum.TablePart.Threshold
@@ -145,11 +148,15 @@ cells lean towards `ψ(23)`. Filling the unseen cells with the constant `ψ(23) 
 completion of smaller norm (`TablePart.E6Pairing`, `TablePart.E6Fill`). The kernel adds up both
 sums over certified lower bounds on the cosines (`TablePart.E6CosTable`, `TablePart.E6ParityBlind`).
 
-The kernel of `⌊a b / 97⌋` has rank 96 and no exact structure these arguments could use, so the proof
-is by certified numbers. The polar factor rounded to 13 bits, over `1.0044`, is a contraction by
-the row-sum test (`TablePart.RowSum`). The rows of `Ẑᴴ Ẑ` reach the kernel packed into big integers
-(`TablePart.E6FloorDigits`, `TablePart.E6FloorGram`), and the pairing gives `‖K‖_S1 ≥ 153.7`
-(`TablePart.E6FloorPhase`, `TablePart.E6FloorDual`). A completion equal to a matrix of rank 4 on the
-unseen cells has norm at most 152.8 (`TablePart.E6FloorFactors`, `TablePart.E6FloorPrimal`), so M
-does not return the table (`TablePart.E6FloorProduct`).
+The kernel of `⌊a b / 97⌋` has rank 96 and no exact structure these arguments could use, so the
+proof is by certified numbers. The polar factor rounded to 13 bits, over `1.0044`, is a contraction
+by the row-sum test (`TablePart.RowSum`). The rows of `Ẑᴴ Ẑ` reach the kernel packed into big
+integers (`TablePart.E6FloorDigits`, `TablePart.E6FloorGram`), and the pairing gives
+`‖K‖_S1 ≥ 153.7` (`TablePart.E6FloorPhase`, `TablePart.E6FloorDual`). A completion equal to a matrix
+of rank 4 on the unseen cells has norm at most 152.8 (`TablePart.E6FloorFactors`,
+`TablePart.E6FloorPrimal`), so M does not return the table (`TablePart.E6FloorProduct`).
+
+Every code of a task pays. For `f = P(a) + a b` with `deg P ≥ 2`, every code `ρ` has
+`(p − 1)² ‖ρ_c‖² ≤ (1 + √κ) ‖K_ρ‖²_S1` (`TablePart.ReadoutShare`), so a minimum of M needs seen
+cells whatever the code (`TablePart.ReadoutCodes`, `TablePart.ReadoutEnergy`).
 -/

@@ -317,7 +317,8 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 
 Not formalized: the numerical maxima above; that training of the real network behaves like the factorization model
 (Lemma 1's modeling step; for the pure factorization see *Training reaches the optimal fit*); the note's readout-free conjecture about the least `r_eff`. Theorem C
-bounds the largest centered mode, which is a different quantity.
+bounds the largest centered mode, which is a different quantity. PT8 of *What a part of the table
+determines* turns that bound into a floor on `r_eff` of order `√p`, which is short of the conjecture.
 
 Scope:
 - Real readouts are covered, since `ρ` is any complex function of the label.
@@ -7305,12 +7306,53 @@ split. This is that statement without a learner: inside `H`, the half holds the 
   solve of PT6 is told `H`. A model is not, and nothing here says that training reaches this class.
 - *One code of the task.* PT6 is about `K = [ψ(f)]`. Through a multiplicative character the table
   of `a b` has rank one and M recovers it (*The readout decides*). So the data hold `f` while M does
-  not return this code, which is not to say that M fails on the task through every code.
+  not return this code, which is not to say that M fails on the task through every code. PT8 gives
+  the part that does hold for every code of `P(a) + a b`.
 - *Exact labels.* Hidden cells are erasures here. Wrong labels are not treated.
 - *Prime `p`.* NV1 holds over `ℤ/n`. The count here uses a field, through the annihilator of the
   twists.
 - *Not new.* PT1 and PT2 are coding theory, and PT3 at `k = l = 1` is the rank of a lift matroid. No
   novelty is claimed for PT1 to PT4. The point of the section is to set them against Theorem A.
+
+### PT8. What every code pays
+
+PT6 fixes the code `ψ`, and another code of the same task can be far cheaper (PT7). How cheap can a
+code get? For the family `f(a, b) = P(a) + a b` with `m = deg P ≥ 2` there is a floor that holds
+for every code. Let `ρ : ℤ/p → ℂ` be any code, `K_ρ = [ρ(f)]` its table, `ρ_c = ρ − mean ρ`, and
+`κ = (m − 1)(2p − 1)` as in Theorem C.
+
+**Theorem.** `(p − 1)² ‖ρ_c‖² ≤ (1 + √κ) ‖K_ρ‖²_S1`.
+
+*Proof.* Let `W(a, b) = ρ_c(f(a, b))` for `a ≠ 0` and `W(0, b) = 0`. For `a ≠ 0` the map
+`b ↦ f(a, b)` is a bijection, so each row of `W` is a permutation of `ρ_c` and sums to zero. Hence
+`W v = W v_c` for the centered part `v_c` of `v`, and Theorem C.3 gives
+`‖W v‖² ≤ (1 + √κ) ‖ρ_c‖² ‖v‖²`. The same bijection gives `tr(Wᴴ K_ρ) = (p − 1) ‖ρ_c‖²`. Pairing
+`K_ρ` with the contraction `W / √((1 + √κ) ‖ρ_c‖²)` bounds its nuclear norm from below, and
+squaring gives the claim.
+
+If M returns `K_ρ` from the cells `Ω`, the share inequality (*Rank above one*, item 5.5) turns this
+into a demand on the seen cells:
+
+`(p − 1)² ‖ρ_c‖² ≤ (1 + √κ) p ∑_Ω |ρ(f)|²`.
+
+- A code of phases with mean `μ` needs `|Ω| ≥ (p − 1)² (1 − |μ|²) / (1 + √κ)`.
+- A balanced code of phases has `r_eff ≥ (p − 1)² / (p (1 + √κ))`. For `a³ + a b` at `p = 97` this
+  is `r_eff ≥ 4.6`, and M needs at least 447 of the 9409 cells.
+- A balanced code of any shape keeps at least the share `(p − 1)² / ((2p − 1)(1 + √κ) p)` of its
+  energy on the seen cells, about `0.024` at `p = 97`, `m = 3`.
+
+This does not show that M fails through every code at half the data. The floor is far below the
+codes we know. The lowest effective rank found for `a³ + a b` at `p = 97` is about `31`, through the
+indicator of answer `0` (*Torch check*). By the share inequality that code asks for only about a
+third of its energy on the seen cells, so nothing here excludes it at half the data. That M does
+not complete it is a measurement of *Torch check*, not a consequence of this theorem.
+
+What the theorem does fix is the scale. A balanced code of phases of this family needs on the order
+of `p^{3/2} / √(2(m − 1))` cells, while `ψ(a + b)` is recovered from the `2p` cells of two diagonals
+(*Exact recovery of a rank-one kernel*). The floor on `r_eff` grows like `√(p / (2(m − 1)))` and the
+best code found like `p/4 + √(p/2)`. That gap is the open part of the readout-free conjecture. The
+family is also a limit: the proof uses the bijection of the rows and Theorem C, so the other tasks
+of PT6 are not covered.
 
 ### Lean
 
@@ -7341,10 +7383,13 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, a table on half of the circle, beaten by a constant fill | `E6.cosLow_check`, `E6.re_stdAddChar_ge_cosLow`, `E6.nuclearNorm_ge_pairing`, `E6.frobeniusSq_fill`, `E6.not_returned_of_pairing`, `E6.parityBlindTable`, `E6.parityBlind_pair`, `E6.parityBlind_seen`, `E6.not_returned_parityCubicBlind` | The kernel checks 97 lower bounds on `cos(2π r / 97)` against exact powers of a rational point, then both sums over the 9409 cells. `E6.parityBlindTable` is checked against the frozen data by the Rust test `lean_tasks_are_tables_of_the_data`. |
 | PT6, a table with a certified gap | `TablePart.isContraction_of_row_sum`, `E6.digit_hornerAt`, `E6.rowSum_le`, `E6.isContraction_zMat`, `E6.dualSum_ge`, `E6.nuclearNorm_floor_ge`, `E6.factorSum_le`, `E6.residSum_le`, `E6.roundSum_le`, `E6.nuclearNorm_floorFill_le`, `E6.floorTable`, `E6.not_returned_floorProduct` | The kernel checks the 13-bit polar factor through the row sums of `Ẑᴴ Ẑ`, a table of 97 powers of `ψ(1)`, and the three sums of the rank-4 completion. `E6.floorTable` is checked against the frozen data by the Rust test `lean_tasks_are_tables_of_the_data`. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
+| PT8, the floor for every code | `centerCode`, `sum_centerCode`, `sum_norm_sq_centerCode`, `sum_row_eq`, `testKernel`, `sum_norm_sq_testKernel_le`, `trace_testKernel`, `isContraction_smul_of_sum_norm_sq_le`, `centered_energy_le_nuclearNorm_sq` | `ρ_c` is `centerCode ρ`. |
+| PT8, the three cases | `codeTable`, `centered_energy_le_of_isMinOn`, `phase_code_le_card`, `card_ge_of_balanced_phase`, `effectiveRank_ge_of_balanced_phase`, `card_ge_cubic`, `frobeniusSq_codeTable_le`, `energy_share_of_isMinOn` | The share of energy is stated without division, as `(p − 1)² ‖K‖²_F ≤ (2p − 1)(1 + √κ) p ∑_Ω \|K\|²`. `card_ge_cubic` uses `√386 ≤ 19.65`. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random
 parts and the 5000 random halves of PT5, and the counts that PT3 and PT4 compare with their
 theorems. The solver of PT6 is Rust code: Lean proves its answer for each of the 48 tasks, but not
 the solver or its running time. That the cells and formulas in Lean are those of the data is what
-the tests named above check. The link of PT3 to the lift matroid is a citation.
+the tests named above check. The link of PT3 to the lift matroid is a citation. The effective rank
+of the indicator of `0`, which PT8 compares with its floor, is a measurement of *Torch check*.
 

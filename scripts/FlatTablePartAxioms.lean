@@ -169,7 +169,15 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.mul_log_194_mem
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.mul_exp_lt_one_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_emptyLine_le_97
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.centered_energy_le_of_isMinOn
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.phase_code_le_card
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_ge_of_balanced_phase
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_ge_cubic
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.effectiveRank_ge_of_balanced_phase
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.energy_share_of_isMinOn
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.centered_energy_le_nuclearNorm_sq
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_fits
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.isContraction_smul_of_sum_norm_sq_le
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.isContraction_of_row_sum
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.ncard_le_pow_of_determines

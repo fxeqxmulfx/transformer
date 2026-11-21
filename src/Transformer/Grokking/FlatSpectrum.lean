@@ -439,6 +439,7 @@ members that agree on it are equal, and every part of `m` cells does exactly whe
 (`TablePart`).
 On the training half of E6 at `p = 97`, which the kernel computes, the flat class gives all 4705
 held-out labels of twelve tasks, and the minimum of M returns none of the seven flat kernels among
-them (`TablePart.E6Tasks`). -/
+them (`TablePart.E6Tasks`). For `P(a) + a b` with `deg P ≥ 2`, every code `ρ` of the answers has
+`(p − 1)² ‖ρ_c‖² ≤ (1 + √κ) ‖K_ρ‖²_S1` (`TablePart.ReadoutShare`). -/
 
 @[expose] public section

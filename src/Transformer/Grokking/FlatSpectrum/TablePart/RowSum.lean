@@ -78,19 +78,27 @@ example (v : Fin 1 → ℂ) :
     rw [Subsingleton.elim p 0]
     simp) v
 
-/-- **The row-sum test**: if every row of `Zᴴ Z` has absolute sum at most `c²`, then `Z / c` is a
-contraction. -/
-theorem isContraction_of_row_sum {Z : Matrix m n ℂ} {c : ℝ} (hc : 0 < c)
-    (h : ∀ p, ∑ q, ‖(Zᴴ * Z) p q‖ ≤ c ^ 2) : IsContraction (((c : ℝ) : ℂ)⁻¹ • Z) := by
+/-- If `‖W v‖² ≤ c² ‖v‖²` for every `v`, then `W / c` is a contraction. -/
+theorem isContraction_smul_of_sum_norm_sq_le {W : Matrix m n ℂ} {c : ℝ} (hc : 0 < c)
+    (h : ∀ v, ∑ i, ‖(W *ᵥ v) i‖ ^ 2 ≤ c ^ 2 * ∑ j, ‖v j‖ ^ 2) :
+    IsContraction (((c : ℝ) : ℂ)⁻¹ • W) := by
   rw [isContraction_iff_sum_norm_sq_le]
   intro v
-  have h1 := sum_norm_mulVec_sq_le_of_row_sum Z h v
-  have e (i : m) : ‖((((c : ℝ) : ℂ)⁻¹ • Z) *ᵥ v) i‖ ^ 2 = (c ^ 2)⁻¹ * ‖(Z *ᵥ v) i‖ ^ 2 := by
+  have e (i : m) : ‖((((c : ℝ) : ℂ)⁻¹ • W) *ᵥ v) i‖ ^ 2 = (c ^ 2)⁻¹ * ‖(W *ᵥ v) i‖ ^ 2 := by
     rw [smul_mulVec, Pi.smul_apply, smul_eq_mul, norm_mul, norm_inv, Complex.norm_real,
       Real.norm_of_nonneg hc.le, mul_pow, inv_pow]
   simp only [e]
   rw [← Finset.mul_sum, inv_mul_le_iff₀ (by positivity)]
-  exact h1
+  exact h v
+
+example : IsContraction (((1 : ℝ) : ℂ)⁻¹ • (1 : Matrix (Fin 1) (Fin 1) ℂ)) :=
+  isContraction_smul_of_sum_norm_sq_le one_pos fun v => by simp
+
+/-- **The row-sum test**: if every row of `Zᴴ Z` has absolute sum at most `c²`, then `Z / c` is a
+contraction. -/
+theorem isContraction_of_row_sum {Z : Matrix m n ℂ} {c : ℝ} (hc : 0 < c)
+    (h : ∀ p, ∑ q, ‖(Zᴴ * Z) p q‖ ≤ c ^ 2) : IsContraction (((c : ℝ) : ℂ)⁻¹ • Z) :=
+  isContraction_smul_of_sum_norm_sq_le hc (sum_norm_mulVec_sq_le_of_row_sum Z h)
 
 example : IsContraction (((1 : ℝ) : ℂ)⁻¹ • (1 : Matrix (Fin 1) (Fin 1) ℂ)) :=
   isContraction_of_row_sum one_pos fun p => by
