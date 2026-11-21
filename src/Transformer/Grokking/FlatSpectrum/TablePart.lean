@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
+public import Transformer.Grokking.FlatSpectrum.TablePart.Cyclotomic
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
@@ -14,7 +15,11 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Mask
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Outside
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6PermAdd
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Shuffle
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6SumTasks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6SumWitnesses
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Sums
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Witnesses
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatBest
@@ -78,4 +83,9 @@ training cells (`TablePart.DivTasks`, `TablePart.E6DivParts`, `TablePart.E6Div`)
 Three tables that are neither flat nor in the class, `a² b`, `a³ + a b² + b` and the mixed task, have
 a line orthogonal to all the others, and the half misses a cell of it, so M does not return their
 kernels (`TablePart.E6Mask`, `TablePart.E6Lines`).
+
+Twelve tables are functions of `a + b`. Eleven have an invertible kernel, proved by one inverse over
+`ZMod 389` (`TablePart.Cyclotomic`), and every anti-diagonal has an unseen cell. In `perm-add` the
+rows sum to zero, `K + J` is invertible, and any two anti-diagonals share a row with an unseen cell
+on each (`TablePart.E6Sums`, `TablePart.E6SumTasks`, `TablePart.E6PermAdd`).
 -/

@@ -156,6 +156,7 @@ public import Transformer.Grokking.FlatSpectrum.SingleFeature
 public import Transformer.Grokking.FlatSpectrum.SeenShare
 public import Transformer.Grokking.FlatSpectrum.CertificateOrbit
 public import Transformer.Grokking.FlatSpectrum.CertificateTests
+public import Transformer.Grokking.FlatSpectrum.CertificateBalanced
 public import Transformer.Grokking.FlatSpectrum.CertificateLines
 public import Transformer.Grokking.FlatSpectrum.TablePart
 

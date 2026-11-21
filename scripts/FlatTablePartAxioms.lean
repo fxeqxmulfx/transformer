@@ -4,6 +4,7 @@ import Transformer
 
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.rank_submatrix_bilinearKernel_zero
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determined_and_not_returned
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.det_aeval_ne_zero
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_degreeClass_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_half_determines_degree_48
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_half_zero_degree_49
@@ -54,7 +55,26 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.length_outside97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.outside97_valid
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function_on_half
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.perm_values
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.pair_cover
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_permAdd
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.iterFast_eq
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.checkPow3
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.det_sum_ne_zero
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.diag_cover
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sum
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sum_pow
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow3
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow4
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow6
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow8
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow12
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow16
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow24
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow32
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumPow48
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumInterval
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_sumSquares
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_formulas
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_coupled
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.card_held_out
@@ -108,6 +128,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_le_card_of_determines
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_submodule
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_ann
+#print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_balanced
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_column
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_row
 #print axioms Transformer.Grokking.FlatSpectrum.mul_eigenbasis_of_certificate

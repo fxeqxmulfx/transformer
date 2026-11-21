@@ -7215,6 +7215,18 @@ The second criterion already closes three tasks that are neither flat nor in `H`
 (`a / b` for odd `b`, `a − b` for even `b`) the column `b = 3`. The half misses a cell of each of
 these lines, the cells `(0, 0)`, `(0, 0)` and `(4, 3)`, so M returns none of the three.
 
+Twelve more tasks are functions of `a + b`: `(a + b)^k` for `k = 3, 4, 6, 8, 12, 16, 24, 32, 48`, the
+interval `a + b ≤ 47`, the nonzero squares, and `π(a + b)` for a fixed permutation `π` (`perm-add`).
+Such a kernel keeps its form under `(a, b) ↦ (a + t, b − t)`, so when it is invertible, the first
+criterion asks only for an unseen cell on each anti-diagonal. The first eleven are invertible, and
+the proof avoids floating point. Write the entries as polynomials in `ζ`. If the determinant
+vanished at `ζ`, the cyclotomic polynomial would divide it, and it would vanish at every `p`-th root
+of unity `z ≠ 1` of any finite field. At `z = 256` in `ℤ/389` the image has an explicit inverse
+`w(b + c)`, a vector of 97 residues that the Lean kernel multiplies out. The rows of the table of `π`
+sum to zero, so it has no inverse, but `K + J` has one, with `J` the matrix of ones. Then the
+differences `e_s − e_{j₀}` lie in the row space, and the criterion asks for one row with an unseen
+cell on each of two given anti-diagonals. The half has such a row for all `97²` pairs.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7254,6 +7266,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, the seven flat tables of division | `E6.pow_injective_of_coprime`, `E6.divKernel`, `E6.divSeen`, `E6.divKernel_conjTranspose_mul`, `E6.isFlat_divKernel`, `E6.not_returned_div`, `E6.notMem_divPart`, `E6.divSeen_ne_univ`, `E6.not_returned_div17`, `E6.not_returned_div97`, `E6.not_returned_div193` | The kernel is a `p × (p − 1)` matrix whose columns are the `b ≠ 0`. The masks are those of the row above. |
 | PT6, certificates on the row space | `mul_eigenbasis_of_certificate`, `mul_conjTranspose_eq_of_certificates`, `smul_mulVec_of_certificate`, `IsContraction.phased`, `trace_phased`, `not_isMinOn_of_tests`, `not_isMinOn_of_orbits`, `not_isMinOn_of_orthogonal_column`, `not_isMinOn_of_orthogonal_row` | `CertificateOrbit`, `CertificateTests`, `CertificateLines`. |
 | PT6, three tables with an orthogonal line | `E6.halfMask`, `E6.mem_half_iff`, `E6.tableKernel`, `E6.not_returned_squareTimes`, `E6.not_returned_cubicMixed`, `E6.mixedTable`, `E6.not_returned_mixed` | `certificate` proves that the shuffle gives exactly the literal `halfMask`, so these theorems read the mask without rerunning it. The test `lean_tasks_are_tables_of_the_data` checks that each formula is the table of exactly one task of the data. |
+| PT6, twelve tables of `a + b` | `det_aeval_ne_zero`, `not_isMinOn_of_balanced`, `E6.ConvCheck`, `E6.det_sum_ne_zero`, `E6.diag_cover`, `E6.not_returned_sum`, `E6.not_returned_sum_pow`, `E6.not_returned_sumPow3`, `4`, `6`, `8`, `12`, `16`, `24`, `32`, `48`, `E6.not_returned_sumInterval`, `E6.not_returned_sumSquares`, `E6.permMap`, `E6.pair_cover`, `E6.not_returned_permAdd` | The vectors `w` are literals in `E6SumWitnesses`, checked over `ℕ` by the kernel with `q = 389` and `z = 256`. The test `lean_tasks_are_tables_of_the_data` links the eleven formulas to the data, and `lean_perm_table_is_the_task` links the permutation. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random

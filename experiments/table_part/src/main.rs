@@ -342,6 +342,26 @@ mod tests {
         |a, b| if b % 2 == 1 { a * inv97(b) } else { a + 97 - b },
     ];
 
+    /// `x^k` mod 97.
+    fn pow97(x: u32, k: u32) -> u32 {
+        (0..k).fold(1, |acc, _| acc * (x % 97) % 97)
+    }
+
+    /// The eleven formulas of `E6SumTasks.lean`, in the same order.
+    const SUM_TASKS: [fn(u32, u32) -> u32; 11] = [
+        |a, b| pow97(a + b, 3),
+        |a, b| pow97(a + b, 4),
+        |a, b| pow97(a + b, 6),
+        |a, b| pow97(a + b, 8),
+        |a, b| pow97(a + b, 12),
+        |a, b| pow97(a + b, 16),
+        |a, b| pow97(a + b, 24),
+        |a, b| pow97(a + b, 32),
+        |a, b| pow97(a + b, 48),
+        |a, b| u32::from((a + b) % 97 <= 47),
+        |a, b| u32::from(pow97(a + b, 48) == 1),
+    ];
+
     /// The tasks with the full table at `p = 97`, by name, on their frozen splits.
     fn full_tables() -> arithmetic::Result<Vec<(String, Dataset)>> {
         let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
@@ -399,12 +419,12 @@ mod tests {
         Ok(())
     }
 
-    /// Each formula of `TablePart.E6.tasks` and of `E6Lines.lean` is the table of exactly one task of
-    /// the data.
+    /// Each formula of `TablePart.E6.tasks`, `E6Lines.lean` and `E6SumTasks.lean` is the table of
+    /// exactly one task of the data.
     #[test]
     fn lean_tasks_are_tables_of_the_data() -> arithmetic::Result<()> {
         let tables = full_tables()?;
-        for f in TASKS.iter().chain(&LINE_TASKS) {
+        for f in TASKS.iter().chain(&LINE_TASKS).chain(&SUM_TASKS) {
             let matching = tables
                 .iter()
                 .filter(|(_, d)| {
@@ -416,6 +436,30 @@ mod tests {
                 })
                 .count();
             assert_eq!(matching, 1);
+        }
+        Ok(())
+    }
+
+    /// `permTable` of `E6SumWitnesses.lean` is the permutation of the task `perm-add`.
+    #[test]
+    fn lean_perm_table_is_the_task() -> arithmetic::Result<()> {
+        let source = include_str!(
+            "../../../src/Transformer/Grokking/FlatSpectrum/TablePart/E6SumWitnesses.lean"
+        );
+        let (_, rest) = source.split_once("def permTable : List ℕ := [").ok_or("permTable")?;
+        let (list, _) = rest.split_once(']').ok_or("end of permTable")?;
+        let perm: Vec<u32> = list
+            .split(',')
+            .map(|x| x.trim().parse().expect("a number"))
+            .collect();
+        assert_eq!(perm.len(), 97);
+        let tables = full_tables()?;
+        let (_, d) = tables
+            .iter()
+            .find(|(name, _)| name == "arithmetic-perm-add")
+            .ok_or("perm-add")?;
+        for &[a, b, y] in d.training.rows.iter().chain(&d.validation) {
+            assert_eq!(perm[((a + b) % 97) as usize], y);
         }
         Ok(())
     }
