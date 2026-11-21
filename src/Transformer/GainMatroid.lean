@@ -10,6 +10,8 @@ public import Transformer.GainMatroid.Section2_Cycles
 public import Transformer.GainMatroid.Section2_Balance
 public import Transformer.GainMatroid.Section2_Biased
 public import Transformer.GainMatroid.Section2_BiasedExamples
+public import Transformer.GainMatroid.Section2_Forests
+public import Transformer.GainMatroid.Section2_Normalized
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 
@@ -25,6 +27,7 @@ source's elementary operations, and `Section1_Prop11` proves that the two agree 
 `Section2_Gains` defines switching and scaling of gain functions, `Section2_Walks` walks and paths,
 and `Section2_Cycles` cycles and thetas. `Section2_Balance` gives the gain of a walk and proves that
 balance of a cycle does not depend on the walk, `Section2_Biased` defines biased graphs and `B_γ`,
-and `Section2_BiasedExamples` applies them to three parallel links.
+and `Section2_BiasedExamples` applies them to three parallel links. `Section2_Forests` proves
+Proposition 2.1 and `Section2_Normalized` Proposition 2.2.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 -/

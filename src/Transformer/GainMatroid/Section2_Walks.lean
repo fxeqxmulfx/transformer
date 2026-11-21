@@ -131,6 +131,52 @@ theorem IsPath.edges_nodup {u v : V} {p : G.Walk u v} (hp : p.IsPath) : p.edges.
     · exact hcons.1 (h₃ ▸ h₁)
     · exact hcons.1 (h₃ ▸ h₂)
 
+/-- A vertex on a path starts a subpath to the same end. -/
+theorem IsPath.exists_suffix {a v u : V} {q : G.Walk a v} (hq : q.IsPath) (hu : u ∈ q.support) :
+    ∃ r : G.Walk u v, r.IsPath ∧ ∀ e ∈ r.edges, e ∈ q.edges := by
+  induction q with
+  | nil a =>
+    obtain rfl : u = a := by simpa [support] using hu
+    exact ⟨nil u, hq, fun _ he => he⟩
+  | @cons x y z f h q ih =>
+    by_cases hux : u = x
+    · subst hux
+      exact ⟨cons f h q, hq, fun _ he => he⟩
+    · have hu' : u ∈ q.support := by simpa [support, hux] using hu
+      have hq' : q.IsPath := (List.nodup_cons.1 hq).2
+      obtain ⟨r, hr, hsub⟩ := ih hq' hu'
+      exact ⟨r, hr, fun e he => List.mem_cons_of_mem _ (hsub e he)⟩
+
+/-- A walk contains a path with the same ends. -/
+theorem exists_isPath {u v : V} (p : G.Walk u v) :
+    ∃ q : G.Walk u v, q.IsPath ∧ ∀ e ∈ q.edges, e ∈ p.edges := by
+  induction p with
+  | nil u => exact ⟨nil u, by simp [IsPath, support], fun _ he => he⟩
+  | @cons x y z f h p ih =>
+    obtain ⟨q, hq, hsub⟩ := ih
+    by_cases hx : x ∈ q.support
+    · obtain ⟨r, hr, hsub'⟩ := hq.exists_suffix hx
+      exact ⟨r, hr, fun e he => List.mem_cons_of_mem _ (hsub e (hsub' e he))⟩
+    · refine ⟨cons f h q, ?_, fun e he => ?_⟩
+      · have hnd : q.support.Nodup := hq
+        simpa [IsPath, support, hx] using hnd
+      · simp only [edges, List.mem_cons] at he ⊢
+        exact he.imp_right (hsub e)
+
+/-- A walk through `e` splits at `e`. -/
+theorem exists_append_cons_of_mem {u v : V} (p : G.Walk u v) {e : E} (he : e ∈ p.edges) :
+    ∃ (s t : V) (hj : G.Joins e s t) (A : G.Walk u s) (B : G.Walk t v),
+      p = A.append (cons e hj B) := by
+  induction p with
+  | nil => simp [edges] at he
+  | @cons x y z f h q ih =>
+    by_cases hef : e = f
+    · subst hef
+      exact ⟨x, y, h, nil x, q, rfl⟩
+    · have he' : e ∈ q.edges := by simpa [edges, hef] using he
+      obtain ⟨s, t, hj, A, B, rfl⟩ := ih he'
+      exact ⟨s, t, hj, cons f h A, B, rfl⟩
+
 end Walk
 
 /-- One link from `0` to `1` joins `1` and `0`. -/
