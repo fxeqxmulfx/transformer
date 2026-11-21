@@ -8,6 +8,13 @@ public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream
 public import Transformer.Phasor.TwoCopies
+public import Transformer.Phasor.StreamSum
+public import Transformer.Phasor.MeanStream
+public import Transformer.Phasor.ZeroSumPart
+public import Transformer.Phasor.PositiveReads
+public import Transformer.Phasor.PhaseHiding
+public import Transformer.Phasor.HideSkip
+public import Transformer.Phasor.HideRouter
 
 /-!
 # The main model of DiffGPT as a forward pass
@@ -37,6 +44,14 @@ as concrete maps and plugs them into it, in exact real arithmetic.
 * `TwoCopies`: two copies `q₀(x₀, y₀) + q₁(x₁, y₁)` of any tasks over `ℤ/p` computed exactly, in the
   one-stream model and so in this one, with `D ≥ 4p + 7`, four heads, `F ≥ 2p` units and two
   layers, for every `ε ≥ 0` (T3c).
+* `StreamSum`, `MeanStream`, `ZeroSumPart`: routers with zero scales and phases, read biases
+  `−ln 3`, write gates summing to four and balanced skip biases make the mean of the streams the
+  one-stream state, though the streams differ; a part of the streams that sums to zero is carried
+  by the skip maps alone and never read (T3d).
+* `PositiveReads`: with zero phases a block keeps every stream a combination of the contents
+  written so far with positive coefficients, so no read misses a content exactly (T3d).
+* `PhaseHiding`, `HideSkip`, `HideRouter`: with phases a router of main hides four equal streams
+  from their sum while stream `0` keeps them, and a later read with unequal gates sees them (T3d).
 
 The parameters are arbitrary: real-linear projections (the model's are the complex-linear ones, a
 subclass), any routers, phase coordinates and score coefficients. The model pairs the coordinates

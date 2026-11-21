@@ -573,8 +573,9 @@ Consequences:
 - a lower bound for mHC holds for the ordinary residual.
 
 The converse fails in general, as far as is known: mHC may do more, through its extra streams and
-through scalar functions of the whole state in its router gates and skip map. Those are open tasks
-T3d and T4. For experiments, the main model with every router frozen at these values is an arm that
+through scalar functions of the whole state in its router gates and skip map. The extra streams
+are the next section, *What the extra streams can hold* (T3d); the scalar functions are open task
+T4. For experiments, the main model with every router frozen at these values is an arm that
 differs from the main model only in the residual.
 
 | Claim | Lean (`src/Transformer/Phasor/`, namespace `Transformer.Phasor`) | Differences |
@@ -583,3 +584,132 @@ differs from the main model only in the residual.
 | The skip keeps equal streams | `mix_finiteSinkhorn_const`, `step_const_of_isPlain` | Twenty exact Sinkhorn cycles, as in `Transformer.MHC.PeriRMS.step`. |
 | The forward pass | `OneLayer`, `OneModel`, `Attention.oneLogit`, `Attention.oneHeads`, `Attention.heads_const`, `oneStep`, `OneLayer.apply`, `OneModel.states`, `OneModel.logits`, `OneModel.withRouters`, `OneModel.states_withRouters`, `OneModel.logits_withRouters` | `OneStream.lean`. The main model's routers are `attnR l` and `ffnR l`, any plain routers. |
 | Sub-model | `range_oneLogits_subset` | The logit maps of one-stream models form a subset of those of main models with the same `D`, `d`, `H`, `F` and `V`. The two consequences are this inclusion read in each direction, by hand. |
+
+## What the extra streams can hold (added 2026-11-21)
+
+T3d of the open tasks on depth and visibility. mHC keeps `4D` numbers per position, while each
+sublayer reads one `D`-wide mixture of the four streams and writes one `D`-wide output. Can the
+extra streams hold the intermediates of NV7's product tree past the layers that do not use them,
+and so lower the width of NV8, the construction of T3c? In short: the streams can hold what no
+read sees, and with phases a skip hides a content without any branch writing its negative. But
+NV8's width is set by one read that needs every code at once, and no residual scheme relaxes that.
+
+*Not NV8's width.* NV8 takes `D = 2kp + 4k − 1` directions for `k` copies (`4p + 7` for two): a
+bias, `2k` codes of `p` directions and `2k − 1` planes of two. The codes are needed at one read.
+The unit `(c, a)` of layer 0's FFN multiplies a form on the code of `x_c` by a form on the code of
+`y_c`, so that read sees every code at once, and a read of mHC is one `D`-wide mixture as well. So
+in this design that read needs the `2kp` code directions and the bias under either residual.
+Nothing in it waits, either: the codes and each plane are read by the next FFN and never again.
+The most that hiding, or erasing, could reclaim is the planes' `O(k)` directions, against `2kp`
+for the codes. That is not built.
+
+*Without phases, a content leaves the reads only by cancellation.* Call four streams a positive
+combination of contents `v_k` when stream `s` is `Σ_k a_sk v_k` with every `a_sk > 0`
+(`IsPosComb`). Four equal streams are a positive combination of the one content they hold, as the
+embedding state is (`isPosComb_const`). A block with zero phases keeps this, with its branch output
+as one content more, because its finite Sinkhorn map has positive entries and its write gates are
+positive (`isPosComb_phaseMHCStep`). Every read of a positive combination is `Σ_k c_k v_k` with
+every `c_k > 0` (`IsPosComb.exists_read`). The step holds at any logits, so along every forward
+pass, and by induction over the sublayers (by hand) every read of the model with zero phases sees
+the embedding and every earlier branch output at its position with a positive weight. A read
+misses a content only where other contents cancel it, as a branch that writes its negative does in
+the ordinary residual. The weights can be small at extreme logits, so only exact hiding is
+excluded.
+
+*The mean follows the ordinary residual.* Call a router balanced when its scales and phases are
+zero, its read biases are `−ln 3`, its four write gates sum to four and the exponentials of its
+skip biases have all row and column sums equal to a common `c ≠ 0` (`Router.IsBalanced`). The finite
+Sinkhorn map of such logits is `exp(logits)/c` exactly: the first cycle divides by `c` and every
+later one is the identity (`finiteSinkhorn_balanced`). So its columns sum to one, and the mix
+keeps the sum of the streams (`sum_mix_of_col_sum`). A balanced router reads `R_D` of the mean of
+the streams (`Router.IsBalanced.read`), its block adds to the mean the ordinary residual's update
+`α R_D(raw(R_D mean))` (`Router.IsBalanced.collapse_step`), and the heads of its attention see
+only the means of the positions (`Attention.heads_collapse`). So with balanced routers the mean of
+the four streams is the one-stream state at every layer and position, and the logits are the
+one-stream logits, though the streams differ (`OneModel.logits_withRouters_of_isBalanced`). This
+is R0 with unequal write gates. Main's initial skip logits `2 I` are balanced, with `c = e² + 3`,
+and `Router.uneven` has them with the write gates `3/2, 1/2, 1, 1`.
+
+*The rest is carried by the skip alone.* Write the streams as their mean plus a part `y` with
+`Σ_s y_s = 0`. A block with equal read gates and zero phases never reads `y`: adding `y` to its
+input adds `P y` to its output and changes nothing that is read (`phaseMHCStep_add_of_sum_zero`;
+`Router.IsBalanced.step_add` for a balanced router). When the columns of `P` sum to one, `P y`
+sums to zero again, so `y` stays out of sight through any number of such blocks. At `2 I` the map
+is `(e² I + J − I)/(e² + 3)` and `J y = 0`, so each block multiplies `y` by
+`r = (e² − 1)/(e² + 3) ≈ 0.61` (`mix_finiteSinkhorn_two_of_sum_zero`): the part fades and is never
+lost. So the streams can carry what no read with equal gates sees. With unequal write gates, a
+branch that writes a content `v` and a later branch that writes `−v` leave the mean as it was and
+`v` in `y`: the gates `3/2, 1/2, 1, 1` and then `1/2, 3/2, 1, 1` at `2 I` leave
+`((1 + r)/2) (v, −v, 0, 0) ≈ 0.81 (v, −v, 0, 0)` (by hand). That parks `v` at the price of erasing
+it from the mean, the price the ordinary residual pays to lose it.
+
+*With phases, the skip hides without any branch.* Read a stream of even width as `D/2` complex
+coordinates, as the stream phases do. The conjugated skip `D P D*` sends four equal streams `h` to
+`a_s h` on stream `s`, one complex number per stream,
+`a_s = Σ_t P_st e^{i(φ_s − φ_t)} = C_s + i S_s` (`phaseCos`, `phaseSin`, `phaseMix_const_fst`,
+`phaseMix_const_snd`). For a symmetric `P` the imaginary parts sum to zero
+(`sum_phaseSin_eq_zero`), and if the real parts do too, the four streams after the skip sum to
+zero (`sum_phaseMix_const_eq_zero`). With `c = cos φ` and `s = sin φ` taken per stream, the real
+parts sum to `cᵀ P c + sᵀ P s`.
+
+The skip logits `ln 22` between stream `s` and its mirror `3 − s` and `ln 3` elsewhere have
+exponentials with all row and column sums `31`, so the finite map is `P = (19 Π + 3 J)/31`, with
+`Π` the reversal of the streams and `J` all ones (`hideLogits`, `finiteSinkhorn_hideLogits`).
+Main's stream phases are `φ_0 = 0` and `φ_s = arctan b_s` with learned `b_s`; `b = (√15, −√15, −√3)`
+gives the angles `0, θ, −θ, −π/3` with `cos θ = 1/4` (`hidePhase`, `hideAngle`). Then
+`c = (1, 1/4, 1/4, 1/2)`, `s = (0, √15/4, −√15/4, −√3/2)` and
+
+```
+cᵀ P c = (19 · 9/8 + 3 · 4)/31 = 267/248,    sᵀ P s = (19 · (−15/8) + 3 · 3/4)/31 = −267/248,
+```
+
+so the real parts sum to zero (`sum_phaseCos_hide`). After the block the four streams sum to the
+write gates' total times the branch: `h` has left the sum (`Router.sum_step_of_hide`), and a next
+router with zero scales and equal read biases, which reads the sum (`Router.read_of_const`), does
+not see it. No branch wrote anything to remove it. Stream `0` keeps `a_0 h` with
+`a_0 = 1/2 + i 11√3/31` (`phaseCos_hide_zero`, `phaseSin_hide_zero`, `phaseMix_hide_zero_ne`), and
+a later read with the gate `g_0` on stream `0` and `γ` on the others sees `(g_0 − γ) a_0 h` besides
+the branch (`Router.weightedSum_step_of_hide`). `Router.hide` is such a router: zero scales and
+projections, read biases `−ln 3`, write biases `0`, the skip biases `hideLogits` and the phase
+parameters `hidePhase`.
+
+What this hiding can and cannot do:
+
+- It takes a pattern of the streams, not chosen directions. The skip turns every pair of
+  coordinates by the same phases and mixes the streams with the same `P`, so it acts on the pattern
+  across the four streams, the same way in every direction. Contents written with one pattern of
+  write gates leave the sum together. A code can leave while the bias stays only if they were
+  written with different patterns and one skip separates the two; that is not built.
+- Every read sees the mean. Read gates are sigmoids, so a read `Σ_s g_s x_s` takes the mean with
+  the weight `Σ_s g_s > 0`. What a read with unequal gates gets back is the hidden part on top of
+  the mean, cleanly only in directions the mean leaves free at that time.
+- A hidden part stays hidden under skips without phases whose columns sum to one, and a second
+  phased skip can bring it back. Two hiding skips in a row send `(h, h, h, h)` to streams that sum
+  to `(cᵀ P² c + sᵀ P² s) h = (4313/1922) h ≈ 2.24 h`, with `P² = (361 I + 150 J)/961` (by hand).
+- Main's initial skip cannot hide equal streams. Main's phases have `φ_0 = 0` and `|φ_s| < π/2`, so
+  every `c_s > 0`, and `P c` has positive entries. If the symmetric part of `P` is positive
+  semidefinite, then `cᵀ P c > 0`, `sᵀ P s ≥ 0`, and the real parts do not sum to zero (by hand).
+  At `2 I` the map has the eigenvalues `1` and `r > 0`; the hiding map has `1, 19/31, −19/31,
+  −19/31`. Hiding needs a skip with a negative eigenvalue, which training would have to reach from
+  the positive definite `2 I`.
+
+*Where it would pay.* Main's four heads read at most three operands exactly per layer (RS4,
+`card_lt_of_read`), so more than two copies need their operands read in stages, and then the
+intermediates of one stage wait while the next stage reads. A scheme that frees the directions of
+codes already used could bound the width by what one stage reads plus what waits, instead of by
+all `2k` codes. The ordinary residual frees them by erasing: a branch writes the negative of a
+code, with `p` FFN units for a code of `p` directions, exact when the norms do not depend on the
+tokens, as in NV8 (by hand). mHC can also park them, by cancellation at the same price, or by a
+phased skip at no price in units but a whole pattern at once. Neither scheme is built here, and
+whether either lowers the width below NV8's for `k > 2` is open.
+
+| Claim | Lean (`src/Transformer/Phasor/`, namespace `Transformer.Phasor`) | Differences |
+| --- | --- | --- |
+| The sum of the streams | `sum_mix`, `sum_mix_of_col_sum`, `weightedSum_const_weights`, `sum_phaseMHCStep_zero_phases`, `Router.read_of_const`, `Router.sum_step` | `StreamSum.lean`. The first four for any finite set of streams in any real normed space. `Router.sum_step` takes zero scales and phases and balanced skip biases; the read biases are free. |
+| Balanced logits | `sinkhornCycle_balanced`, `sinkhornIterate_balanced`, `finiteSinkhorn_balanced`, `col_sum_finiteSinkhorn_of_balanced`, `sum_exp_two_smul_one`, `sum_exp_two_smul_one'`, `col_sum_finiteSinkhorn_two` | `StreamSum.lean`. Stated for a matrix whose rows and columns all sum to `c ≠ 0`; `sinkhornIterate_balanced` for every number of cycles from one on. |
+| The mean follows the ordinary residual | `Router.IsBalanced`, `Router.uneven`, `Router.uneven_isBalanced`, `collapse_eq`, `Router.IsBalanced.read`, `Router.IsBalanced.collapse_step`, `Attention.heads_collapse`, `OneModel.collapse_states_withRouters`, `OneModel.logits_withRouters_of_isBalanced` | `MeanStream.lean`. The mean is `collapse`, a quarter of the sum. The main model's routers are `attnR l` and `ffnR l`, any balanced routers. |
+| The rest is carried by the skip | `phaseMHCStep_add_of_sum_zero`, `Router.IsBalanced.step_add`, `mix_finiteSinkhorn_two_of_sum_zero` | `ZeroSumPart.lean`. For a branch that sees the state only through what it reads, as the FFN does, and as the attention does through the means (`Attention.heads_collapse`). The induction over layers and positions and the parking by cancellation are by hand. |
+| No hiding without phases | `IsPosComb`, `isPosComb_const`, `IsPosComb.mix`, `isPosComb_phaseMHCStep`, `IsPosComb.exists_read` | `PositiveReads.lean`. One block of `phaseMHCStep` with zero phases, at any logits; the new branch output is the content `none` of `Option κ`. The induction over the model is by hand. |
+| Phases hide equal streams | `headPhase_fst`, `headPhase_snd`, `phaseCos`, `phaseSin`, `phaseMix_const_fst`, `phaseMix_const_snd`, `sum_phaseSin_eq_zero`, `sum_phaseMix_const_eq_zero`, `phaseMix_const_ne_zero`, `weightedSum_eq_sum_add` | `PhaseHiding.lean`. Any finite set of streams, any angles and every even width; the sums take a symmetric `H`. Each `a_s` is stated through its real and imaginary parts on every pair. |
+| The hiding skip and phases | `hideCounts`, `hideCounts_pos`, `hideCounts_symm`, `sum_hideCounts_row`, `sum_hideCounts_col`, `hideLogits`, `hideSkip`, `hideSkip_symm`, `finiteSinkhorn_hideLogits`, `hidePhase`, `hideAngle`, `cos_arctan_sqrt`, `sin_arctan_sqrt`, `cos_hideAngle`, `sin_hideAngle`, `sum_phaseCos_hide`, `phaseCos_hide_zero`, `phaseSin_hide_zero`, `sum_phaseMix_hide`, `phaseMix_hide_zero_ne` | `HideSkip.lean`. `hideCounts` is `19 Π + 3 J`. The eigenvalues, the two skips in a row and the bound for a positive semidefinite skip are by hand. |
+| The hiding router | `Router.hide`, `Router.routing_phase_of_hide`, `Router.step_of_hide`, `Router.sum_step_of_hide`, `Router.weightedSum_step_of_hide` | `HideRouter.lean`. On four equal streams, for any router with zero scales, the skip biases `hideLogits` and the phase parameters `hidePhase`, at every even width; the read and write biases are free, and `Router.hide` takes `−ln 3` and `0`. |
