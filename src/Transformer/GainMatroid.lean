@@ -7,6 +7,9 @@ public import Transformer.GainMatroid.Section1_Canonical
 public import Transformer.GainMatroid.Section2_Gains
 public import Transformer.GainMatroid.Section2_Walks
 public import Transformer.GainMatroid.Section2_Cycles
+public import Transformer.GainMatroid.Section2_Balance
+public import Transformer.GainMatroid.Section2_Biased
+public import Transformer.GainMatroid.Section2_BiasedExamples
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 
@@ -20,6 +23,8 @@ to gain functions* (arXiv:1609.05574v5). The modules follow the sections of the 
 source's elementary operations, and `Section1_Prop11` proves that the two agree and Proposition 1.1.
 `Section1_Canonical` defines oriented graphs and the canonical frame and lift matrices.
 `Section2_Gains` defines switching and scaling of gain functions, `Section2_Walks` walks and paths,
-and `Section2_Cycles` cycles and thetas.
+and `Section2_Cycles` cycles and thetas. `Section2_Balance` gives the gain of a walk and proves that
+balance of a cycle does not depend on the walk, `Section2_Biased` defines biased graphs and `B_γ`,
+and `Section2_BiasedExamples` applies them to three parallel links.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 -/
