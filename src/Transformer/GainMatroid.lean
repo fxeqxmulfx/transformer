@@ -41,6 +41,7 @@ public import Transformer.GainMatroid.Section2_ExchangeForms
 public import Transformer.GainMatroid.Section2_TriadForms
 public import Transformer.GainMatroid.Section2_TriadColumns
 public import Transformer.GainMatroid.Section2_K4Forms
+public import Transformer.GainMatroid.Section2_K4Matrix
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -102,7 +103,8 @@ that are the identity on the triangle. `Section2_ExchangeForms` proves that proj
 matrices represent the same matroid and brings a represented triangle to the last three columns of
 `I(K₄)`. `Section2_TriadForms` gives the row vector of a cocircuit, `Section2_TriadColumns` refutes
 the printed claim that every triad takes the first three columns of `I(K₄)`, and `Section2_K4Forms`
-proves it for an independent triad.
+proves it for an independent triad. `Section2_K4Matrix` proves that every representation of `M(K₄)`
+is projectively equivalent to `I(K₄)`.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
