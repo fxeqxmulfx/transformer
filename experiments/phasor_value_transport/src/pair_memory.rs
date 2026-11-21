@@ -1,4 +1,4 @@
-//! Learned hidden values for the field coordinates in Phasor.PairValues.
+//! Learned values of the preceding and current tokens at every position.
 //! Build the incidence lists from input tokens alone. Their transpose gathers
 //! gradients in minibatch order, including repeated addresses and short tails.
 use crate::engine::{Config, Result};
@@ -6,19 +6,9 @@ use kernite_cuda::{Buffer, Cuda};
 
 pub const TABLES: usize = 17;
 
-pub fn active(cfg: &Config) -> bool {
-    let p = cfg.vocab;
-    cfg.pair_values
-        && cfg.max_length == 2
-        && p >= 2
-        && (2..)
-            .take_while(|&i| i <= p / i)
-            .all(|i| !p.is_multiple_of(i))
-}
-
 pub fn parameters(cfg: &Config) -> usize {
-    if active(cfg) {
-        TABLES * cfg.vocab * cfg.width
+    if cfg.shared_values {
+        TABLES * cfg.vocab * cfg.width + 1
     } else {
         0
     }
@@ -28,11 +18,15 @@ pub fn start(cfg: &Config) -> usize {
     crate::layout::score_offset(cfg) + crate::layout::score_count(cfg)
 }
 
-fn inverse(x: usize, p: usize) -> usize {
+pub fn gain(cfg: &Config) -> usize {
+    start(cfg) + TABLES * cfg.vocab * cfg.width
+}
+
+fn power_factor(x: usize, p: usize) -> usize {
     if x == 0 {
         return 0;
     }
-    let (mut base, mut exp, mut acc) = (x, p - 2, 1);
+    let (mut base, mut exp, mut acc) = (x, p.saturating_sub(2), 1);
     while exp > 0 {
         if exp % 2 == 1 {
             acc = acc * base % p;
@@ -43,7 +37,7 @@ fn inverse(x: usize, p: usize) -> usize {
     acc
 }
 
-fn addresses(a: usize, b: usize, p: usize, inverse_b: usize) -> [u32; TABLES] {
+fn addresses(a: usize, b: usize, p: usize, factor_b: usize) -> [u32; TABLES] {
     let powers = |x| [x, x * x % p, (x * x % p) * x % p];
     let (left, right) = (powers(a), powers(b));
     let mut result = [0; TABLES];
@@ -52,7 +46,7 @@ fn addresses(a: usize, b: usize, p: usize, inverse_b: usize) -> [u32; TABLES] {
         let (table, dest) = keys.next().unwrap();
         *dest = (table * p + value) as u32;
     };
-    for value in [b, (a + p - b) % p, a.abs_diff(b), a * inverse_b % p] {
+    for value in [b, (a + p - b) % p, a.abs_diff(b), a * factor_b % p] {
         put(value);
     }
     for &x in &left {
@@ -73,44 +67,57 @@ pub struct PairMemory {
     pub keys: Buffer<u32>,
     pub offsets: Buffer<u32>,
     pub owners: Buffer<u32>,
-    pub output: Buffer<f32>,
+    pub causal: crate::causal_values::kernels::Kernels,
+    pub dscores: Buffer<f32>,
+    pub merged: Buffer<f32>,
+    pub scaled: Buffer<f32>,
+    pub partial: Buffer<f32>,
     indices: Vec<u32>,
     starts: Vec<u32>,
     cursor: Vec<u32>,
     rows: Vec<u32>,
-    inverses: Vec<usize>,
+    factors: Vec<usize>,
 }
 
 impl PairMemory {
     pub fn new(cuda: &Cuda, cfg: &Config) -> Result<Self> {
         let words = TABLES * cfg.vocab;
-        let entries = TABLES * cfg.max_batch;
+        let rows = cfg.max_batch * cfg.max_length;
+        let entries = TABLES * rows;
         Ok(Self {
             kernels: crate::pair_ops::kernels::Kernels::load(cuda)?,
             keys: cuda.alloc(entries)?,
             offsets: cuda.alloc(words + 1)?,
             owners: cuda.alloc(entries)?,
-            output: cuda.alloc(2 * cfg.max_batch * cfg.vocab)?,
+            causal: crate::causal_values::kernels::Kernels::load(cuda)?,
+            dscores: cuda.alloc(rows * cfg.vocab)?,
+            merged: cuda.alloc(rows * cfg.width)?,
+            scaled: cuda.alloc(rows * cfg.width)?,
+            partial: cuda.alloc(rows)?,
             indices: vec![0; entries],
             starts: vec![0; words + 1],
             cursor: vec![0; words],
             rows: vec![0; entries],
-            inverses: (0..cfg.vocab).map(|b| inverse(b, cfg.vocab)).collect(),
+            factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
         })
     }
 
-    pub fn prepare(&mut self, tokens: &[u32]) -> Result<()> {
-        let p = self.inverses.len();
-        let used = tokens.len() / 2 * TABLES;
+    pub fn prepare(&mut self, tokens: &[u32], length: usize) -> Result<()> {
+        let p = self.factors.len();
+        let used = tokens.len() * TABLES;
         self.starts.fill(0);
-        for (pair, keys) in tokens
-            .as_chunks::<2>()
-            .0
+        for (row, (&token, keys)) in tokens
             .iter()
-            .zip(self.indices.as_chunks_mut::<TABLES>().0.iter_mut())
+            .zip(self.indices.as_chunks_mut::<TABLES>().0)
+            .enumerate()
         {
-            let (a, b) = (pair[0] as usize, pair[1] as usize);
-            keys.copy_from_slice(&addresses(a, b, p, self.inverses[b]));
+            let prev = if row.is_multiple_of(length) {
+                row
+            } else {
+                row - 1
+            };
+            let (a, b) = (tokens[prev] as usize, token as usize);
+            keys.copy_from_slice(&addresses(a, b, p, self.factors[b]));
             for &k in keys.iter() {
                 self.starts[k as usize + 1] += 1;
             }

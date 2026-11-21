@@ -31,21 +31,29 @@ fn load(path: &Path, cfg: Config) -> Result<Engine> {
     Engine::new(cfg, &weights)
 }
 
-pub fn predict(path: &Path, field: Option<usize>, a: u32, b: u32) -> Result<()> {
+pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result<()> {
     let mut cfg = config(1)?;
-    if let Some(prime) = field {
-        cfg.vocab = prime;
-        cfg.pair_values = true;
-        if !pair_memory::active(&cfg) {
-            return Err("pair prediction requires a prime vocabulary".into());
+    if let Some(vocab) = vocabulary {
+        if vocab == 0
+            || vocab > u32::MAX as usize
+            || vocab as u64 > fs::metadata(path)?.len() / (4 * cfg.width as u64)
+        {
+            return Err("vocabulary outside the checkpoint's embedding capacity".into());
         }
+        cfg.vocab = vocab;
+        cfg.shared_values = true;
     }
     let mut e = load(path, cfg)?;
     e.forward(&[a, b], &[u32::MAX, u32::MAX], 1, 2)?;
-    let address = e.predictions.read()?[0];
-    if field.is_none() {
-        ValueLayer::new(&e)?.forward(&e, 1, true)?;
+    if vocabulary.is_some() {
+        println!(
+            "{}",
+            json!({"a":a,"b":b,"prediction":e.predictions.read()?[1]})
+        );
+        return Ok(());
     }
+    let address = e.predictions.read()?[0];
+    ValueLayer::new(&e)?.forward(&e, 1, true)?;
     println!(
         "{}",
         json!({"a":a,"b":b,"address":address,"prediction":e.predictions.read()?[1]})

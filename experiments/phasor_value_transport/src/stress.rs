@@ -36,7 +36,7 @@ fn task_config(row: &Value, task: &Task) -> Result<Config> {
         })
         .max()
         .ok_or("empty task")?;
-    cfg.pair_values = true;
+    cfg.shared_values = true;
     Ok(cfg)
 }
 
@@ -72,6 +72,8 @@ fn nv11() -> Result<(Value, Task)> {
     ))
 }
 
+const MODEL: &str = "phasor-causal-value-residual-v1";
+
 pub fn routes() -> Result<()> {
     for row in cases()? {
         let task = data::build(&row)?;
@@ -82,7 +84,7 @@ pub fn routes() -> Result<()> {
             row["tier"].as_str().unwrap(),
             cfg.max_length,
             cfg.vocab,
-            pair_memory::active(&cfg)
+            cfg.shared_values
         );
     }
     Ok(())
@@ -162,7 +164,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
                 let bytes: Vec<_> = values.iter().flat_map(|x| x.to_le_bytes()).collect();
                 history.sync_all()?;
                 publish(&dest, "weights.f32", &bytes)?;
-                let result = json!({"observation":point,"previous_step":previous,"train_correct":training["exact"],
+                let result = json!({"model":MODEL,"gain":values[pair_memory::gain(&e.config)],"observation":point,"previous_step":previous,"train_correct":training["exact"],
                     "train_total":train.len(),"selection":task.selection,"pair_parameters":extra,
                     "parameters":values.len(),"weights_sha256":hash(&bytes),"gpu":e.cuda.name(),
                     "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":hash(arithmetic::ORIGINAL35.as_bytes())});
@@ -197,7 +199,8 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
     let dest = out.join(name).join(format!("seed{seed}"));
     let result: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;
     let bytes = fs::read(dest.join("weights.f32"))?;
-    if result["weights_sha256"] != hash(&bytes)
+    if result["model"] != MODEL
+        || result["weights_sha256"] != hash(&bytes)
         || result["suite_sha256"] != hash(arithmetic::ORIGINAL35.as_bytes())
         || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
         || result["observation"]["case"] != name
@@ -219,17 +222,19 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
         return Err("checkpoint failed to reproduce its held-out score".into());
     }
     let mut report = json!({"case":name,"seed":seed,"correct":correct,"total":held.len()});
-    if pair_memory::active(&e.config) {
-        let zeros: Vec<_> = held.iter().filter(|e| e.tokens[0] == 0).cloned().collect();
-        if !zeros.is_empty() {
-            report["zero_row_total"] = json!(zeros.len());
-            report["zero_row_correct"] = metrics::evaluate(&mut e, &zeros, true)?["exact"].clone();
-            let start = pair_memory::start(&e.config);
-            values[start..layout::frequency_offset(&e.config)].fill(0.);
-            e.parameters.write(&values)?;
-            report["zero_row_correct_without_tables"] =
-                metrics::evaluate(&mut e, &zeros, true)?["exact"].clone();
-        }
+    let zeros: Vec<_> = held
+        .iter()
+        .filter(|e| e.tokens.len() == 2 && e.prompt.is_empty() && e.tokens[0] == 0)
+        .cloned()
+        .collect();
+    if !zeros.is_empty() {
+        report["zero_row_total"] = json!(zeros.len());
+        report["zero_row_correct"] = metrics::evaluate(&mut e, &zeros, true)?["exact"].clone();
+        let start = pair_memory::start(&e.config);
+        values[start..pair_memory::gain(&e.config)].fill(0.);
+        e.parameters.write(&values)?;
+        report["zero_row_correct_without_tables"] =
+            metrics::evaluate(&mut e, &zeros, true)?["exact"].clone();
     }
     println!("{report}");
     Ok(())

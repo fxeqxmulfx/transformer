@@ -1,4 +1,4 @@
-// Included in the pinned engine module to reuse its affine, RMS, CE and adjoint kernels.
+// Included in the pinned engine to share its RMS, tied projection and GEMM kernels.
 pub struct ValueLayer {
     memory: Option<crate::pair_memory::PairMemory>,
     addresses: crate::addresses::kernels::Kernels,
@@ -14,10 +14,12 @@ pub struct ValueLayer {
 
 impl ValueLayer {
     pub fn new(e: &Engine) -> Result<Self> {
-        let rows = 2 * e.config.max_batch;
+        let rows = e.config.max_batch * e.config.max_length;
         let (d, p) = (e.config.width, e.config.vocab);
         Ok(Self {
-            memory: crate::pair_memory::active(&e.config)
+            memory: e
+                .config
+                .shared_values
                 .then(|| crate::pair_memory::PairMemory::new(&e.cuda, &e.config))
                 .transpose()?,
             addresses: crate::addresses::kernels::Kernels::load(&e.cuda)?,
@@ -32,22 +34,33 @@ impl ValueLayer {
         })
     }
 
-    // Each active pair owns two contiguous rows. The first token's loss is
-    // masked in the original dataset. All kernel calls share the engine stream.
-    fn project(&self, e: &Engine, batch: usize, product: bool) -> Result<()> {
-        let (rows, p, d) = (2 * batch, e.config.vocab, e.config.width);
-        unsafe {
-            self.addresses.forward(
-                grid(batch),
-                self.weights.ptr(),
-                e.logits.ptr(),
-                e.tokens.ptr(),
-                p as u32,
-                u32::from(product),
-                batch as u32,
-            )?;
+    fn project(&self, e: &Engine, batch: usize, length: usize, product: bool) -> Result<()> {
+        let (rows, p, d) = (batch * length, e.config.vocab, e.config.width);
+        if let Some(m) = &self.memory {
+            unsafe {
+                m.causal.weights(
+                    Grid::new(rows as u32, 32),
+                    self.weights.ptr(),
+                    e.logits.ptr(),
+                    e.tokens.ptr(),
+                    p as u32,
+                    length as u32,
+                )?;
+            }
+        } else {
+            // The historical two-token transport control is a separate experiment.
+            unsafe {
+                self.addresses.forward(
+                    grid(batch),
+                    self.weights.ptr(),
+                    e.logits.ptr(),
+                    e.tokens.ptr(),
+                    p as u32,
+                    u32::from(product),
+                    batch as u32,
+                )?;
+            }
         }
-        // W is already indexed by the translated value address, so Z = W E.
         if let Some(pipeline) = &e.pipeline {
             pipeline.multiply::<{ crate::precision::BF16 }>(
                 self.hidden.ptr(),
@@ -67,11 +80,10 @@ impl ValueLayer {
                 p,
             )?;
         }
-        let mut output = e.logits.ptr();
         if let Some(m) = &self.memory {
             unsafe {
                 m.kernels.read(
-                    Grid::new(batch as u32, d as u32),
+                    Grid::new(rows as u32, d as u32),
                     self.hidden.ptr(),
                     e.parameters.at(crate::pair_memory::start(&e.config)),
                     m.keys.ptr(),
@@ -79,56 +91,54 @@ impl ValueLayer {
                     crate::pair_memory::TABLES as u32,
                 )?;
             }
-            output = m.output.ptr();
         }
         e.rms(self.normalized.ptr(), self.hidden.ptr(), rows)?;
-        e.linear(output, self.normalized.ptr(), 0, rows, p, d)?;
-        if let Some(m) = &self.memory {
+        let features = if let Some(m) = &self.memory {
             unsafe {
-                m.kernels.logits::<true, false>(
-                    Grid::new(batch as u32, 128),
-                    e.logits.ptr(),
-                    output,
-                    p as u32,
+                m.causal.combine(
+                    Grid::new(rows as u32, d as u32),
+                    m.merged.ptr(),
+                    m.scaled.ptr(),
+                    e.last.ptr(),
+                    self.normalized.ptr(),
+                    e.parameters.at(crate::pair_memory::gain(&e.config)),
+                    d as u32,
                 )?;
             }
-        }
+            m.merged.ptr()
+        } else {
+            self.normalized.ptr()
+        };
+        e.linear(e.logits.ptr(), features, 0, rows, p, d)?;
         Ok(())
     }
 
+    // Historical masked, two-token experiment. The single-model runner always
+    // calls Engine::forward and uses its label normalizer on every position.
     pub fn forward(&self, e: &Engine, batch: usize, product: bool) -> Result<()> {
-        self.project(e, batch, product)?;
-        let (rows, p) = (2 * batch, e.config.vocab);
+        self.project(e, batch, 2, product)?;
         unsafe {
             e.stable_loss.as_ref().unwrap().loss(
-                rows_grid(rows),
+                rows_grid(2 * batch),
                 e.dlogits.ptr(),
                 e.losses.ptr(),
                 e.predictions.ptr(),
                 e.logits.ptr(),
                 e.labels.ptr(),
-                p as u32,
-                rows as u32,
+                e.config.vocab as u32,
+                (2 * batch) as u32,
                 batch as f32,
             )?;
         }
         Ok(())
     }
 
-    // The shared table has three gradient paths: ordinary first-token Phasor,
-    // the outer tied readout, and the transported embedding values.
     pub fn backward(&self, e: &Engine, batch: usize, product: bool) -> Result<()> {
-        let (rows, p, d) = (2 * batch, e.config.vocab, e.config.width);
-        if let Some(m) = &self.memory {
-            unsafe {
-                m.kernels.logits::<false, false>(
-                    Grid::new(batch as u32, 128),
-                    e.dlogits.ptr(),
-                    m.output.ptr(),
-                    p as u32,
-                )?;
-            }
-        }
+        self.pull_back(e, batch, 2, product)
+    }
+
+    fn pull_back(&self, e: &Engine, batch: usize, length: usize, product: bool) -> Result<()> {
+        let (rows, p, d) = (batch * length, e.config.vocab, e.config.width);
         e.mm_backward(
             self.dnormalized.ptr(),
             e.dlogits.ptr(),
@@ -137,11 +147,33 @@ impl ValueLayer {
             d,
             p,
         )?;
+        let value_feature = if let Some(m) = &self.memory {
+            let gain = crate::pair_memory::gain(&e.config);
+            unsafe {
+                m.causal.gain_back(
+                    Grid::new(rows as u32, 32),
+                    m.partial.ptr(),
+                    self.dnormalized.ptr(),
+                    self.normalized.ptr(),
+                    e.parameters.at(gain),
+                    d as u32,
+                )?;
+                m.causal.gain_sum(
+                    Grid::new(1, 32),
+                    e.gradients.at(gain),
+                    m.partial.ptr(),
+                    rows as u32,
+                )?;
+            }
+            m.scaled.ptr()
+        } else {
+            self.normalized.ptr()
+        };
         e.transpose(e.dlogits.ptr(), rows, p)?;
         e.mm_backward(
             self.read_gradient.ptr(),
             e.scratch.ptr(),
-            self.normalized.ptr(),
+            value_feature,
             p,
             d,
             rows,
@@ -170,30 +202,48 @@ impl ValueLayer {
             d,
             rows,
         )?;
-        unsafe {
-            self.addresses.backward(
-                grid(batch),
-                e.dlogits.ptr(),
-                self.weights.ptr(),
-                self.dweights.ptr(),
-                e.tokens.ptr(),
-                p as u32,
-                u32::from(product),
-                batch as u32,
-            )?;
-        }
         if let Some(m) = &self.memory {
             unsafe {
-                m.kernels.logits::<false, true>(
-                    Grid::new(batch as u32, 128),
-                    e.dlogits.ptr(),
-                    m.output.ptr(),
+                m.kernels.backward(
+                    Grid::new((p * crate::pair_memory::TABLES) as u32, d as u32),
+                    e.gradients.at(crate::pair_memory::start(&e.config)),
+                    self.dhidden.ptr(),
+                    m.offsets.ptr(),
+                    m.owners.ptr(),
+                    d as u32,
+                )?;
+                m.causal.pullback(
+                    Grid::new(rows as u32, 32),
+                    m.dscores.ptr(),
+                    self.weights.ptr(),
+                    self.dweights.ptr(),
+                    e.tokens.ptr(),
                     p as u32,
+                    length as u32,
+                )?;
+                m.causal.add_sources(
+                    Grid::new(rows as u32, 128),
+                    e.dlogits.ptr(),
+                    m.dscores.ptr(),
+                    p as u32,
+                    length as u32,
                 )?;
             }
-            self.table_backward::<false>(e)?;
+        } else {
+            unsafe {
+                self.addresses.backward(
+                    grid(batch),
+                    e.dlogits.ptr(),
+                    self.weights.ptr(),
+                    self.dweights.ptr(),
+                    e.tokens.ptr(),
+                    p as u32,
+                    u32::from(product),
+                    batch as u32,
+                )?;
+            }
         }
-        e.backward_original(batch, 2)?;
+        e.backward_original(batch, length)?;
         for extra in [&self.read_gradient, &self.value_gradient] {
             unsafe {
                 e.ops.add(
@@ -207,47 +257,27 @@ impl ValueLayer {
         }
         Ok(())
     }
-
-    fn table_backward<const CLEAR: bool>(&self, e: &Engine) -> Result<()> {
-        let m = self.memory.as_ref().unwrap();
-        let (p, d) = (e.config.vocab, e.config.width);
-        unsafe {
-            m.kernels.backward::<CLEAR>(
-                Grid::new((p * crate::pair_memory::TABLES) as u32, d as u32),
-                e.gradients.at(crate::pair_memory::start(&e.config)),
-                self.dhidden.ptr(),
-                m.offsets.ptr(),
-                m.owners.ptr(),
-                d as u32,
-            )?;
-        }
-        Ok(())
-    }
 }
 
 impl Engine {
-    fn enable_pair_values(&mut self) -> Result<()> {
-        if crate::pair_memory::active(&self.config) {
-            self.pair_layer = Some(ValueLayer::new(self)?);
+    fn enable_shared_values(&mut self) -> Result<()> {
+        if self.config.shared_values {
+            self.shared_layer = Some(ValueLayer::new(self)?);
         }
         Ok(())
     }
-
-    fn project_pair_values(&mut self, tokens: &[u32], batch: usize, length: usize) -> Result<()> {
-        if length == 2
-            && let Some(layer) = &mut self.pair_layer
-        {
-            layer.memory.as_mut().unwrap().prepare(tokens)?;
-            self.pair_layer
+    fn project_shared_values(&mut self, tokens: &[u32], batch: usize, length: usize) -> Result<()> {
+        if let Some(layer) = &mut self.shared_layer {
+            layer.memory.as_mut().unwrap().prepare(tokens, length)?;
+            self.shared_layer
                 .as_ref()
                 .unwrap()
-                .project(self, batch, true)?;
+                .project(self, batch, length, true)?;
         }
         Ok(())
     }
-
     pub fn backward(&self, batch: usize, length: usize) -> Result<()> {
-        if let Some(layer) = &self.pair_layer {
+        if let Some(layer) = &self.shared_layer {
             if batch == 0
                 || batch > self.config.max_batch
                 || length == 0
@@ -255,10 +285,7 @@ impl Engine {
             {
                 return Err("batch or length outside allocated bounds".into());
             }
-            if length == 2 {
-                return layer.backward(self, batch, true);
-            }
-            layer.table_backward::<true>(self)?;
+            return layer.pull_back(self, batch, length, true);
         }
         self.backward_original(batch, length)
     }

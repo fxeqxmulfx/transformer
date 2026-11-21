@@ -81,23 +81,23 @@ fn main() {
     for (from, to) in [
         (
             "pub phase_optimizer: bool,",
-            "pub phase_optimizer: bool,\n    pub pair_values: bool,",
+            "pub phase_optimizer: bool,\n    pub shared_values: bool,",
         ),
         (
             "pub struct Engine {",
-            "pub struct Engine {\n    pair_layer: Option<ValueLayer>,",
+            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,",
         ),
         (
             "let mut engine = Self {",
-            "let mut engine = Self {\n            pair_layer: None,",
+            "let mut engine = Self {\n            shared_layer: None,",
         ),
         (
             "        Ok(engine)",
-            "        engine.enable_pair_values()?;\n        Ok(engine)",
+            "        engine.enable_shared_values()?;\n        Ok(engine)",
         ),
         (
             "        let normalizer = labels",
-            "        self.project_pair_values(tokens, batch, length)?;\n        let normalizer = labels",
+            "        self.project_shared_values(tokens, batch, length)?;\n        let normalizer = labels",
         ),
         (
             "pub fn backward(&self, batch: usize, length: usize)",
@@ -112,6 +112,9 @@ fn main() {
         engine = engine.replace(from, to);
     }
     let layout = fs::read_to_string(src.join("layout.rs")).unwrap();
+    let initialize = "p.resize(total_count(cfg), 0.);";
+    assert_eq!(layout.matches(initialize).count(), 1);
+    let layout = layout.replace(initialize, "p.resize(total_count(cfg), 0.);\n    if cfg.shared_values { p[crate::pair_memory::gain(cfg)] = 1.; }");
     let offset = "score_offset(cfg) + score_count(cfg)";
     assert_eq!(layout.matches(offset).count(), 1);
     fs::write(

@@ -1,4 +1,90 @@
-# Transported embedding values for NV11
+# One Phasor architecture for NV11 and the GPT stress suite
+
+Can a single change to Phasor's hidden state learn NV11 and retain both
+tiers of the GPT stress suite with the original AdamW? Every task uses the
+same causal value residual, including sequence tasks with composite
+vocabularies. Model seeds and per-task training follow the original suite.
+
+## Architecture
+
+Let `b` be the current token and `a` its predecessor in the same sequence.
+The first token serves as its own predecessor. At each position the preceding
+contextual Phasor feature scores the tied embeddings. Its softmax reads
+`E[(s + ab) mod V]` at address `s`, where `V` is the vocabulary size.
+
+Seventeen learned tables add hidden vectors to that read. Their addresses
+are the current token, modular difference, ordinary absolute distance,
+`a b^(V-2) mod V` (zero on a zero denominator), the nine sums `a^i + b^j`
+for `1 ≤ i,j ≤ 3`, and the four products `a^i b^j` for `1 ≤ i,j ≤ 2`.
+The exponentiation map gives field division for prime vocabularies. The sums
+and products use the vocabulary modulus in every configuration. Some of
+these addresses coincide with individual benchmark functions. NV11's
+`a³ + ab` is absent from the address list.
+
+Phasor normalizes the resulting vector, multiplies it by one trainable real
+gain and adds it to its current contextual feature. One tied projection of
+that combined hidden state produces the output logits. Context length,
+vocabulary primality and task name play no role in selecting a computation.
+The first position, later positions, training and autoregressive generation
+all use this update.
+
+The tables start at zero and the gain at one. This adds `17 × V × width + 1`
+real parameters, all in Phasor's ordinary AdamW coordinate group. The
+original encoder, tied embeddings, cross-entropy, clipping, parameter
+groups and WSD schedule train together. Only the shape and training budget
+vary as specified in the benchmark.
+
+Lean gives the exact decision margin at every position. For an arbitrary
+fixed-depth backbone with orthonormal embeddings it proves that one gain
+and one right-operand table can distinguish every second operand on the
+entire zero row. The width-128 example covers all 97 NV11 residues.
+[Shared forward map and proofs](../../src/Transformer/Phasor/SharedValues.lean)
+
+## Training and replay
+
+Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` and Kernite at
+`a1b6bc2c956e1a5f35960e26b209e1b6c213096c` under
+`.lake/reproduction/{gpt,kgen}`. The Rust build checks their revisions and
+the relevant source trees. [Checkout instructions](../rerope/README.md#build-and-commands)
+
+The native runner reconstructs the fingerprinted splits and uses the complete
+DiffGPT scorer, including greedy generation from the model's own tokens.
+Its criterion is the first scheduled observation with at least 99% exact
+sequences on the primary held-out split. Each task and seed starts from fresh
+weights. NV11 uses its original 4,704/4,705 half-table split and separate
+250-step observation cadence. [Original 35-task protocol](../convex_stress/suite.json)
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SharedValues
+cd experiments/phasor_value_transport
+cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+"$bin" shared-check
+./run_stress.sh cell runs/shared-values
+./run_stress.sh replay runs/shared-values
+"$bin" predict runs/shared-values/arithmetic-cubic-product/seed0/weights.f32 97 12 34
+for seed in 0 1 2
+do
+    "$bin" shared-values "runs/shared-retention/seed$seed" "$seed"
+done
+```
+
+For one case, use `cell CASE SEED RUN_DIR` and `replay CASE SEED RUN_DIR`.
+Replay verifies the architecture identifier, weights digest, precision,
+suite identity and exact held-out count. For two-token validation examples
+with first operand zero it also scores the fitted weights with the value
+tables cleared. The contextual feature and transported read remain active
+in that ablation. The two-token prediction command takes a weights file,
+vocabulary size and two operands.
+
+The `shared-check` command compares logits with an independent scalar FP64
+forward evaluation. It checks the tied embedding, gain and all 17 table
+gradients by finite differences at lengths 1, 2 and 4, and executes the
+97-way zero-row witness. The FP32 affine backend runs on the local Pascal
+GPU. The default build uses upstream FP16-forward/TF32-backward matrix
+kernels on supported GPUs.
+
+## Earlier transport-only experiment
 
 Can one change to the hidden answer state let Phasor learn
 `a³ + a b (mod 97)` from random initialization with its ordinary AdamW?
@@ -15,7 +101,7 @@ The Lean result gives both an exact decision rule for orthonormal embeddings
 and a sufficient Gram margin for general embeddings. Its width-128 witness
 fits the 97 address codes. [Forward map and proofs](../../src/Transformer/Phasor/TransportedValues.lean)
 
-## Findings
+### Transport-only findings
 
 The transported model got every training and held-out answer right by update
 250, the first observation after initialization. It stayed perfect at every
@@ -46,7 +132,7 @@ unnormalized bounds across all held-out pairs and rival classes were 0.1490,
 3.1369 and 0.1409 respectively. These are FP64 evaluations of the proved
 inequality using the saved FP32 weights and first-token scores.
 
-## Protocol
+### Transport-only protocol
 
 Use the fingerprinted 4,704/4,705 split, a one-layer width-128 Phasor with
 four heads, and fresh seed-1 upstream weights shared by the two arms. Score
@@ -73,7 +159,7 @@ upstream FP16-forward/TF32-backward matrix kernels on Ampere or newer.
 The `fp32-affine-reference` feature selects the upstream scalar FP32 GEMMs
 for a matched comparison on Pascal. All arms use the same precision.
 
-## Reproduction
+### Reproducing the transport-only runs
 
 Use the DiffGPT checkout at `5a37c515639f23037d191b0659a5a0853984328d` and
 Kernite at `a1b6bc2c956e1a5f35960e26b209e1b6c213096c` in the repository's
@@ -109,96 +195,11 @@ both offsets. `inspect` replays the checkpoint on the held-out split and
 evaluates the Lean sufficient bound numerically in FP64 using the learned
 embedding Gram matrix and the first-token attention scores.
 
-## Operand-sensitive pair values
 
-The transported head uses the first operand and the product. When the first
-operand is zero, the head produces the same scores for every second operand.
-The canonical addition and absolute-difference validation splits each contain
-51 different answers on that row. A model with that collision can get at
-most 4,655 of the 4,705 examples right. The 99% threshold requires 4,658.
+## Earlier two-token residual
 
-The new head adds learned width-128 vectors to the transported vector before
-the final RMS and tied projection. One table reads the second operand
-directly. The other tables use the modular difference, ordinary absolute
-distance, field quotient (zero for denominator zero), the nine sums
-`a^i + b^j` for `1 ≤ i,j ≤ 3`, and the four products `a^i b^j` for
-`1 ≤ i,j ≤ 2`. Every pair task receives all 17 tables. A table maps an
-address to a trainable hidden vector. Some addresses coincide with individual
-benchmark functions. The NV11 target `a³ + ab` is absent from the addresses.
-The cubic address distribution and tied embeddings are still learned.
-
-The residual tables start at zero, recovering the previous transported head
-exactly at initialization. Lean proves that a winner survives precisely when
-the residual's adverse projected gap is smaller than the transport advantage.
-It also constructs one width-128 table that separates all 97 possible second
-operands on the zero row, with the transport branch active. The full-model
-proof obtains the mass bounds from the actual first-position softmax at every
-depth. The field layer
-applies to position one (zero-based) in a model configured for exactly two
-tokens and a prime vocabulary. Every other position or configuration uses the
-ordinary causal Phasor. [Forward map and proofs](../../src/Transformer/Phasor/PairValues.lean)
-
-### Training and replay
-
-The pair layer adds 211,072 parameters at modulus 97 and 419,968 at modulus
-193. They join the existing AdamW group for ordinary real coordinates before
-the LeRoPE frequency group. Initialization, minibatch order, warmup, learning
-rates, weight decay, gradient clipping, cross-entropy and the tied projection
-use the same implementations as Phasor. Training and greedy generation both
-call the modified engine's ordinary forward method. Inactive configurations
-allocate zero additional parameters.
-
-The stress runner reconstructs the fingerprinted data and uses the pinned
-DiffGPT complete-split scorer, including autoregressive decoding on generation
-tasks. Each case and model seed starts from fresh weights. The suite criterion
-is the first scheduled observation with at least 99% exact sequences on the
-primary held-out split. NV11 is a separate half-table experiment. [Stress
-protocol and task definitions](../convex_stress/suite.json)
-
-From the repository root with the pinned source checkouts described above:
-
-```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.PairValues
-cd experiments/phasor_value_transport
-cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference
-bin=./target/release/phasor-value-transport
-"$bin" pair-check
-./run_stress.sh cell runs/pair-values
-./run_stress.sh replay runs/pair-values
-"$bin" predict runs/pair-values/arithmetic-cubic-product/seed0/weights.f32 97 12 34
-for seed in 0 1 2
-do
-    "$bin" pair-values "runs/pair-retention/seed$seed" "$seed"
-done
-```
-
-For a single task, use `cell CASE SEED RUN_DIR` and `replay CASE SEED RUN_DIR`.
-Replay checks the weights digest, precision, suite identity and exact held-out
-count. It also measures the zero row with the trained tables and with the
-tables cleared. Prediction uses the two operands and the field size.
-The `pair-check` command exercises both supervised positions, repeated
-addresses and a one-token prefix. It compares nonzero table values with a
-scalar FP64 forward calculation, checks all 17 table gradients and the tied
-embedding by finite differences, and executes the Lean zero-row witness.
-
-## One architecture at every position
-
-The shared-value Phasor applies one hidden update to arithmetic pairs, long
-sequences, prime and composite vocabularies. At position `i`, let `b` be the
-current token and `a` its predecessor within that sequence. At the first
-position use the current token for both. The preceding Phasor feature scores
-the tied vocabulary embeddings. Attention reads the learned values translated
-by `ab` modulo the vocabulary size. The 17 learned tables above add their
-vectors to that read. With composite vocabulary size `V` the fourth table
-uses the total map `a b^(V-2) mod V`, with zero for a zero denominator.
-
-The normalized result is multiplied by one learned scalar and added to the
-current contextual Phasor feature. One tied projection of that combined
-hidden vector gives the prediction. The same computation runs at every
-training and generation position. All configurations initialize the gain at
-one and the tables at zero. Each task trains its own weights with the original
-AdamW, as specified by the GPT stress suite.
-
-Lean gives the exact decision margin and proves that, at any fixed depth,
-one gain and one right-operand table separate the whole zero row
-simultaneously at width 128 and modulus 97. [Shared forward map and proof](../../src/Transformer/Phasor/SharedValues.lean)
+The initial operand-sensitive implementation applied its additional tables
+only to a configured two-token prime vocabulary. Its arithmetic runs and
+proof at commits `4595508c` and `8a16ce76` document that intermediate
+design. The shared-value cohort uses fresh weights and one positional rule
+on all 35 tasks. [Two-token decision margin and zero-row proof](../../src/Transformer/Phasor/PairValues.lean)
