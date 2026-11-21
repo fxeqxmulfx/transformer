@@ -1258,6 +1258,12 @@ linearly away from `K`, which at full rank fails as soon as one cell is missing.
    4. Full column rank. If also `V` is square, `K` is a minimum exactly when `U Vᴴ` vanishes off
       `Ω`. For an invertible `K`, `U Vᴴ` is the polar factor `K (Kᴴ K)^{−1/2}`, and this is
       Theorem A (that identification is a remark, not in Lean).
+   5. Seen share. A minimum pays for its nuclear norm with seen cells:
+      `‖K‖²_S1 ≤ min(m, n) ∑_{(i, j) ∈ Ω} |K_ij|²`. If every `|K_ij| = 1`, this is
+      `r_eff(K) / min(m, n) ≤ |Ω| / (m n)`: the share of the table M must see is at least the
+      effective rank over the largest rank the table can have. So a flat table of phases, with
+      `r_eff = min(m, n)`, is a minimum only when `Ω` is the whole table. The bound holds for
+      every `K`, so for every code of a task and not only for `ψ`.
 
    Item 5 decides whether `K` is a minimum, not whether it is the only one. Lemmas of the proof:
    the nuclear norm is subadditive, and a matrix `Y` is a contraction exactly when
@@ -1366,6 +1372,11 @@ linearly away from `K`, which at full rank fails as soon as one cell is missing.
      semidefinite.
    - 5.3 is 5.1 with 5.2. 5.4: a square `V` with `Vᴴ V = 1` has `V Vᴴ = 1`, so
      `W = W V Vᴴ = 0`.
+   - 5.5. Take `Y` from 5.1. As `Y` vanishes off `Ω`, `‖K‖_S1 = tr(Yᴴ K)` is a sum over `Ω`, and
+     Cauchy–Schwarz gives `‖K‖²_S1 ≤ ‖Y‖²_S2 ∑_Ω |K_ij|²`. Each column of a contraction has norm
+     at most one, so `‖Y‖²_S2 ≤ n`, and the same for `Yᴴ` gives `‖Y‖²_S2 ≤ m`. If every
+     `|K_ij| = 1`, then `‖K‖²_S2 = m n`, `r_eff = ‖K‖²_S1 / (m n)` and `∑_Ω |K_ij|² = |Ω|`. A flat
+     table has `r_eff = min(m, n)`, which leaves `|Ω| ≥ m n`.
 7. Item 6.
    - The lemmas. The matrix unit `E_ij` is a contraction, so `|X_ij| = |tr(E_ijᴴ X)| ≤ ‖X‖_S1`.
      A product of contractions is one, as `‖A B v‖ ≤ ‖B v‖ ≤ ‖v‖`, and so is `Π`, as
@@ -1438,6 +1449,7 @@ All declarations are in `Transformer.Grokking.FlatSpectrum` and are proved witho
 | Item 5.2 | `mul_eq_of_isContraction`, `isContraction_trace_eq_iff` | `K = U * diagonal (fun k => (s k : ℂ)) * Vᴴ` with `∀ k, 0 < s k`. |
 | Item 5.3 | `isMinOn_iff_exists_certificate` | |
 | Item 5.4 | `isMinOn_iff_of_full_rank` | `V : Matrix n n ℂ`, `s : n → ℝ`. Its `example` is `diag(1, 2)` from its diagonal. That `U Vᴴ` is `polarFactor K` for invertible `K` is not proved; `isMinOn_nuclearNorm_iff` is Theorem A itself. |
+| Item 5.5 | `IsContraction.frobeniusSq_le_min`, `nuclearNorm_sq_le_of_isMinOn`, `share_ge_of_isMinOn`, `eq_univ_of_isFlat_of_isMinOn` | The sum over `Ω` is `∑ i, ∑ j, if (i, j) ∈ Ω then ‖K i j‖ ^ 2 else 0`. The two share statements take `Ω : Finset (m × n)` and nonempty `m`, `n`; flat is `IsFlat K c` with `c > 0`. |
 | Item 6.1 | `exists_pos_le_nuclearNorm_add_iff` | Linear growth is `∃ c > 0, ∀ H, (∀ ij ∈ Ω, H ij.1 ij.2 = 0) → nuclearNorm K + c * nuclearNorm H ≤ nuclearNorm (K + H)`, with `K = U * diagonal (fun k => (s k : ℂ)) * Vᴴ` and `∀ k, 0 < s k`; the certificate is written as in item 1.1, with `1 < c`. |
 | Item 6.1, its three parts | `exists_pos_le_nuclearNorm_add_of_certificate`, `eq_zero_of_exists_pos_le_nuclearNorm_add`, `exists_certificate_of_exists_pos_le_nuclearNorm_add` | The first takes item 1.2's hypotheses as `isMinOn_iff_of_certificate` does, with `U Uᴴ K = K` and `tr((U Vᴴ)ᴴ K) = ‖K‖_S1` in place of the decomposition. The Hahn–Banach theorem is `exists_extension_of_le_sublinear`, as in item 5.1. |
 | Item 6, the lemmas | `isContraction_single_one`, `norm_apply_le_nuclearNorm`, `IsContraction.mul`, `isContraction_one_sub_mul_conjTranspose`, `nuclearNorm_mul_mul_le`, `nuclearNorm_real_smul_eq_abs`, `eq_sum_re_smul_single_add`, `exists_nuclearNorm_map_le`, `exists_nuclearNorm_add_smul_tangent_le`, `exists_nuclearNorm_add_smul_le`, `exists_nuclearNorm_le_of_tangent` | `t` is real and enters as `(t : ℂ) • H`. The left inverse is Mathlib's `LinearMap.exists_leftInverse_of_injective`. Lemma 1 is `nuclearNorm_le_of_eq_mul`. |
