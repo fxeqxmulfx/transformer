@@ -6130,7 +6130,8 @@ columns, and `K = [ψ(f(u, v))]` is `p^k × p^l`. This section prices `f` across
 prices reading its `n` operands from a context, (NV6) prices what the labels show of one
 interaction among `k`, and (NV7) prices what depth buys: a product network of depth
 `1 + ⌈log₂ k⌉`, the least possible, against one layer. Every item gives a lower and an upper
-bound, exact where it can.
+bound, exact where it can, except NV8, a construction: two copies of any task through main's own
+layers, the routing of the operands included.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6570,8 +6571,107 @@ only that the logit of `f` be the largest. What one layer, or `d` layers, need f
 The scalars of the full model escape both counts: `R_D` divides the state by its norm, and a
 softmax over scores that depend on the tokens weighs the values, each by a function of all the
 operands at once. Whether they let one layer hold `f` below `p^k` units, or fewer layers hold it
-at all, is open, and so are the routing of the operands to one position and the price of the
-network in norms.
+at all, is open, and so is the price of the network in norms. NV8 routes the operands to one
+position, for two copies.
+
+### NV8. Routing the operands: two copies through main's layers
+
+NV7's network has the features of all operands at one position. Main's FFN reads only its own
+position, and the operands are separate tokens, so attention has to bring them together first.
+One positional head cannot pick out a key (NV3), but several heads read keys exactly: RS4's DFT
+heads and a uniform head have an invertible matrix of weights, RS5 inverts it at every scale of
+the logits, and main's `W_O` can apply the inverse. With it the whole construction fits main's
+layers.
+
+Let `q₀, q₁ : ℤ/p × ℤ/p → ℤ/p` be any two functions, `p ≥ 2`, and let the context be the four
+operands `x₀, y₀, x₁, y₁` at the positions `0, …, 3`. The one-stream model of R0 with the width
+`D ≥ 4p + 7`, the head width `d ≥ max(p, 4)`, four heads and `F ≥ 2p` units has parameters with
+which, at every depth `L ≥ 2`, every `ε ≥ 0` and every depth scale `s > 0`, the logit of
+
+```
+u = q₀(x₀, y₀) + q₁(x₁, y₁)
+```
+
+at the position `3` is larger than the logit of every other residue. By R0, main's model with mHC
+has such parameters too. Neither `p` prime nor `q₀`, `q₁` special is needed.
+
+*The stream.* Every quantity has directions of its own: a bias, four codes of `p` directions, one
+per operand, a plane for each copy and an output plane, `4p + 7` orthonormal directions. The
+embedding of `v` puts `b` on the bias, `1` on the code `(3, v)` and `ψ(v)` on the output plane, so
+every token has the squared length `b² + 2`. Until the answer is written, the states at the
+position `3` have squared lengths that do not depend on the tokens either, so each RMS multiplies
+their coefficients by a constant. The last RMS, before the logits, multiplies all of them by one
+positive factor.
+
+*Layer 0, the attention.* The queries and the keys read only the bias, so the weights do not
+depend on the tokens, and the values read the code `(3, ·)` of each key. The heads `h < 3` are
+RS5's DFT heads, turned to peak at the key `h`; the head `3` has the zero query and is uniform.
+The output projection is RS5's decoder. It takes a multiple of the uniform head from each DFT head
+and divides by the difference of that head's two weights, which leaves the code of the token at
+`h`, and writes it into the code `(h, ·)` of the stream. The fourth operand is the query's own
+token, already in the code `(3, ·)`. The decoder is exact at every positive scale of the logits,
+so the head RMS and SSMax's gain change its coefficients, not its result, and main's bound
+`(5/4) ln(i + 1)` on every logit is no obstacle.
+
+*Layer 0, the FFN.* The unit `(c, a)` multiplies the indicator of `x_c = a`, a form on the code of
+`x_c`, by `ψ(q_c(a, y_c))`, a form on the code of `y_c`, and writes the product into the plane of
+the copy `c`. Only the unit `a = x_c` is on, so the plane receives `P_c ψ(w_c)`,
+`w_c = q_c(x_c, y_c)`, with an amplitude `P_c` that does not depend on the tokens. That is NV7's
+point-mass route: `p` units per copy, `2p` in all.
+
+*Layer 1.* The attention is zero, and one unit multiplies the two planes read as complex numbers,
+`P₀ ψ(w₀) · P₁ ψ(w₁) = P₀ P₁ ψ(u)`, into the output plane with a gain `g`. The layers from `2` on
+are zero.
+
+*The readout.* With tied embeddings the logit of `v` reads the final state against `E v`. The
+state still holds the own token's embedding, which the residual keeps, so the logit has two terms:
+
+```
+logit(v) = κ (κ_E (b² + [v = y₁] + cos(θ_v − θ_{y₁})) + A cos(θ_v − θ_u)),    θ_v = 2π v/p,
+```
+
+where `κ > 0` is the factor of the last RMS, `κ_E` that of the first and `A` the amplitude of the
+answer. Between two residues the own token's term moves by at most `3 κ_E`, while the answer's
+term falls by at least `A (1 − cos(2π/p))` from `u` to any other residue. The bias decides between
+them. It adds the same `κ_E b²` to every logit and shrinks the rest of the own token's term,
+`κ_E = √D/√(b² + 2 + D ε) < √D/b`, while the answer's amplitude does not depend on it. With
+`b = 5/(s (1 − cos(2π/p)))`, and `g` such that the product of layer 1 is `G = √(D ε) + 1`, the
+amplitude is `A = s √D G/√(G² + D ε) > (3/5) s √D`, and
+
+```
+3 κ_E < (3/5) s √D (1 − cos(2π/p)) < A (1 − cos(2π/p)).
+```
+
+So `u` has the largest logit, and no other residue ties it.
+
+*Sizes.* Two copies take `D ≥ 4p + 7`, `d ≥ max(p, 4)`, four heads, `F ≥ 2p` and `L ≥ 2`. At
+main's sizes, `D = 128`, `d = 32`, four heads and `F = 128`, the width binds: every `p ≤ 30`, and
+the Lean example is two copies of `x³ + x y` over `ℤ/29`. Main's projections are complex-linear,
+a subclass of the real-linear ones that `Transformer.Phasor` allows. A complex-linear map cannot
+separate the real and the imaginary part of a coordinate, so with them the bias and each code
+direction take a complex coordinate of the stream, each plane one, and each code a complex
+coordinate of a head: `D = 8p + 8` and `d ≥ max(2p, 4)`, so `p ≤ 15` at main's sizes (by hand).
+
+*`k` copies, by hand.* With `2k` heads, `2k − 1` DFT heads and a uniform one, layer 0 reads all
+`2k` operands into the last position, its FFN writes the `k` phases `ψ(q_i(x_i, y_i))` with `kp`
+units, and NV7's tree multiplies them in `⌈log₂ k⌉` more layers, one unit per product. The stream
+holds the bias, `2k` codes and `2k − 1` planes, so
+
+```
+H = 2k,    D = 2kp + 4k − 1,    d ≥ max(p, 2k),    F = kp,    L = 1 + ⌈log₂ k⌉.
+```
+
+Main's four heads read three operands per layer (RS4, `card_lt_of_read`), so at `H = 4` more than
+two copies need more reading, by more layers or by reading partial products from other positions,
+and that is not worked out here. The price of depth `1 + ⌈log₂ k⌉`, the least in NV7's model
+without normalizations, is a width linear in `kp`, against NV2's `p^k` for one product through
+the cut between the `x`s and the `y`s.
+
+*Not covered.* Lean has `k = 2`. The arithmetic is exact and real. RS5's decoder divides by the
+difference of two weights of a head, and what FP16 operands with FP32 accumulation do to it is not
+priced, nor are the norms of the construction (T2b), whose bias grows like `p²/s`. Whether
+`p = 97` fits main's width is open: this design needs `D ≥ 395`, and no lower bound is claimed.
+Whether training finds this construction, or any other, is not addressed here.
 
 ### Lean
 
@@ -6583,7 +6683,10 @@ network in norms.
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
-`Transformer.Grokking.FlatSpectrum.Recall`. All proved without `sorry`.
+`Transformer.Grokking.FlatSpectrum.Recall`; for NV8, `Slots`, `States`, `Pairs`, `Heads`, `Read`,
+`Forms`, `Product`, `Constants`, `Forward`, `Logits`, `Margin` and `Theorem` of
+`src/Transformer/Phasor/TwoCopies/`, namespace `Transformer.Phasor.TwoCopies`. All proved without
+`sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -6601,3 +6704,4 @@ network in norms.
 | NV7, the network | the layer: `IsProductLayer`, `isProductLayer_iff_matrix`, `isProductLayer_id`, `IsProductLayer.mono`, `sideBySide`, `IsProductLayer.sideBySide`; the net: `IsProductNet`, `IsProductNet.mono`, `IsProductNet.id_net`, `IsProductNet.of_layer`, `IsProductNet.isProductLayer`, `IsProductNet.comp`, `IsProductNet.sideBySide`; the tree: `exists_productTree`, `oneHot`, `pairFeatures`, `exists_productNet`; `k` pairs: `two_pow_clog_lt`, `exists_productNet_pairs`, `exists_productNet_copies`, `exists_productNet_copies_readout`, `exists_productNet_mulChar` | A layer is `IsProductLayer m F`: `F z = z + Σ_u (g_u z)(w_u z) o_u` with at most `m` units and linear `g_u`, `w_u`; the matrix form is `isProductLayer_iff_matrix`. `IsProductNet m d F` is `d` such layers in a row. The stream is `((Fin k × α) ⊕ (Fin k × β)) ⊕ T`, the one-hot features `pairFeatures x y` and a scratch part `T` that starts at zero, and the value is read from one coordinate of `T`. The unit counts are the bounds `2k\|U\|`, `2k\|β\|` and `2kp`, not the exact `2^{⌈log₂ k⌉} \|U\|`. The point-mass route is `exists_productNet_copies`, the route through the characters `exists_productNet_mulChar`. |
 | NV7, one layer | `rank_productLayer_le`, `pow_le_of_productLayer_bilinear`, `pow_le_of_productLayer_copies`, `pairFeatures_eq_add` | The state is `e(u) + f(v)` for any maps `e`, `f` into the stream, and the readout any linear functional `ℓ`; the one-hot features are this case by `pairFeatures_eq_add`. The tables are `bilinearKernel p g h M` with `IsUnit M`, and `k` copies of `x³ + x y`. The examples are the network of `exists_productNet_copies` at `k = 1`, `p = 7`, which is one layer. |
 | NV7, depth | the order: `ReadsOnly`, `orderSpan`, `mem_orderSpan_of_readsOnly`, `orderSpan_mono`, `mul_mem_orderSpan`, `linear_mem_orderSpan`, `IsProductLayer.order`, `IsProductNet.order`, `features_mem_orderSpan`, `readout_mem_orderSpan`; the corners: `cornerX`, `cornerY`, `flipAt`, `flipAt_flipAt`, `flipAt_ne`, `cornerSign`, `cornerSign_flipAt`, `cornerSum`, `cornerSum_apply`, `cornerSum_eq_zero_of_readsOnly`, `cornerSum_eq_zero`, `cornerSum_prod`; the depth: `two_mul_card_le_of_productNet`, `mixed_stdAddChar_ne_zero`, `le_depth_of_productNet_copies` | The operands are `x : κ → α` and `y : κ → β`, the `2k` of them indexed by `κ ⊕ κ`, and the order is the span `orderSpan r` of the functions that read at most `r` of them. `IsProductNet.order` takes any input of order `r` and gives `2^d r`; the depth bound is stated for the one-hot features `pairFeatures x y`. The corners are `ε : κ ⊕ κ → Bool`, the sign `cornerSign ε`. The depth bound asks for a linear readout equal to `Πᵢ φᵢ(xᵢ, yᵢ)` with a nonzero mixed difference for every `i`, and for `ψ(Σᵢ q(xᵢ, yᵢ))` with one for `ψ ∘ q`; `P(x) + x y` has one at `0`, `1` by `mixed_stdAddChar_ne_zero`. The tight case on encodings of whole tuples and the heads that do not depend on the tokens are by hand. |
+| NV8 | the stream: `Slot`, `card_slot`, `coordSlots`, `orthonormal_coordSlots`, `vec`, `inner_vec_vec`, `rmsNormEps_vec`; the states: `embC`, `sum_embC_sq`, `stateC`, `stateC_add`, `smul_stateC`, `sum_stateC_sq`, `sum_embC_mul_stateC`, `cos_angle_sub_le`; the attention: `dftAlpha`, `leropeFrequencies_dftAlpha`, `dftQuery`, `dftKey`, `attention0`, `dftScale_pos`, `oneHeads_attention0`, `readOut`, `readOut_heads`; the FFN: `ffnOf`, `plainFFN_ffnOf`, `ffn0`, `plainFFN_ffn0`, `ffn1`, `plainFFN_ffn1`; the model: `twoModel`, `apply_layer0`, `apply_layer1`, `states_add_two`, `states_twoModel`, `logits_twoModel`; the margin: `one_sub_cos_pos`, `three_kEmb_lt`, `bTwo`, `gTwo`, `logits_twoModel_lt`; the statements: `exists_oneModel_twoCopies`, `exists_model_twoCopies` | The model is R0's `OneModel D d 4 F p`, its vocabulary the `p` residues, and main's is its `withRouters` with plain routers. The context is `tokens : ℕ → Fin p`, read at the position `3`, and the answer is `q 0 (tokens 0) (tokens 1) + q 1 (tokens 2) (tokens 3)` in `Fin p`. The depth scale `s > 0` is free, so main's `α = 1/√(2L)` is a case; the phase-score coefficients are `0`. `logits_twoModel_lt` holds for any orthonormal slots and codes, and the existence statements use the coordinate directions. The projections are real-linear; the complex-linear count, `k` copies and the comparison with NV2 are by hand. The examples are at main's sizes, `D = 128`, `d = 32`, `F = 128`, `ε = 2⁻²³` and `s = 1/√8`, with `x³ + x y` over `ℤ/29`. |

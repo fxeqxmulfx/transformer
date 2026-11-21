@@ -569,7 +569,7 @@ holds for every `ε` and every depth scale `α`.
 Consequences:
 
 - a construction for the ordinary residual is a construction for mHC, at the same widths, heads,
-  depth and vocabulary;
+  depth and vocabulary (NV8 of `flat_spectrum.md` is one, two copies of any task);
 - a lower bound for mHC holds for the ordinary residual.
 
 The converse fails in general, as far as is known: mHC may do more, through its extra streams and

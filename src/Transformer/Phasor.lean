@@ -7,6 +7,7 @@ public import Transformer.Phasor.Forward
 public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream
+public import Transformer.Phasor.TwoCopies
 
 /-!
 # The main model of DiffGPT as a forward pass
@@ -33,6 +34,9 @@ as concrete maps and plugs them into it, in exact real arithmetic.
 * `PlainRouter`, `OneStream`: routers with zero scales and phases, read biases `−ln 3` and write
   biases `0` keep four equal streams equal, so the model is then the one-stream model
   `h ← h + α R_D(raw(R_D h))`: the ordinary residual is a sub-model of mHC (R0).
+* `TwoCopies`: two copies `q₀(x₀, y₀) + q₁(x₁, y₁)` of any tasks over `ℤ/p` computed exactly, in the
+  one-stream model and so in this one, with `D ≥ 4p + 7`, four heads, `F ≥ 2p` units and two
+  layers, for every `ε ≥ 0` (T3c).
 
 The parameters are arbitrary: real-linear projections (the model's are the complex-linear ones, a
 subclass), any routers, phase coordinates and score coefficients. The model pairs the coordinates
