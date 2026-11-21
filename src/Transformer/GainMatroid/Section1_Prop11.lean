@@ -118,6 +118,16 @@ theorem reach_mul {k : ℕ} (T : Matrix (Fin k) (Fin k) F) (hT : T.det ≠ 0)
     rw [Matrix.mul_assoc]
     exact (hB M).trans (hA (B * M))
 
+/-- A nonsingular diagonal matrix is the diagonal matrix of its unit entries. -/
+theorem exists_units_of_isDiag_of_isUnit {n : Type*} [Fintype n] [DecidableEq n]
+    {S : Matrix n n F} (hD : S.IsDiag) (hU : IsUnit S) :
+    ∃ s : n → Fˣ, diagonal (fun j => (s j : F)) = S := by
+  have hSeq : diagonal (diag S) = S := hD.diagonal_diag
+  have hdet : S.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det S).1 hU).ne_zero
+  rw [← hSeq, det_diagonal] at hdet
+  have hne : ∀ j, S j j ≠ 0 := fun j => Finset.prod_ne_zero_iff.1 hdet j (Finset.mem_univ j)
+  exact ⟨fun j => Units.mk0 (S j j) (hne j), hSeq⟩
+
 /-- Zero rows can be appended up to any larger number of rows, reversibly. -/
 theorem exists_pad {a : ℕ} (X : Matrix (Fin a) E F) (k : ℕ) (hk : a ≤ k) :
     ∃ X' : Matrix (Fin k) E F, rowSpace X' = rowSpace X ∧
@@ -169,14 +179,8 @@ theorem elemOps_iff_exists_mul_mul {r : ℕ} [Fintype E] [DecidableEq E]
     rw [Matrix.isUnit_iff_isUnit_det, det_diagonal, isUnit_iff_ne_zero]
     exact Finset.prod_ne_zero_iff.2 fun j _ => (s j).ne_zero
   · rintro ⟨T, S, hT, hS, hD, rfl⟩
-    have hSeq : diagonal (diag S) = S := hD.diagonal_diag
-    have hdet : S.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det S).1 hS).ne_zero
-    rw [← hSeq, det_diagonal] at hdet
-    have hne : ∀ j, S j j ≠ 0 := fun j =>
-      Finset.prod_ne_zero_iff.1 hdet j (Finset.mem_univ j)
-    refine ⟨T, fun j => Units.mk0 (S j j) (hne j), hT, ?_⟩
-    conv_rhs => rw [← hSeq]
-    rfl
+    obtain ⟨s, rfl⟩ := exists_units_of_isDiag_of_isUnit hD hS
+    exact ⟨T, s, hT, rfl⟩
 
 example : ReflTransGen ElemOp (⟨2, 1⟩ : RowMatrix (Fin 2) ℚ)
     ⟨2, diagonal (fun _ => 1) * (1 : Matrix (Fin 2) (Fin 2) ℚ)⟩ :=
