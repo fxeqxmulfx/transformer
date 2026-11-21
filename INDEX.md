@@ -31358,31 +31358,31 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`finrank_ker_flatEval`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatClass.lean#L144) | lemma | proved |
 | [`finrank_flatClass`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatClass.lean#L152) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.TablePart.FlatCount](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean)** — 149 lines
+**[Transformer.Grokking.FlatSpectrum.TablePart.FlatCount](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean)** — 171 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`potentials`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L33) | def |  |
 | [`potentials_eq_of_walk`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L42) | lemma | proved |
-| [`finrank_potentials`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L51) | theorem | proved |
-| [`vanishing`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L77) | def |  |
-| [`mem_vanishing`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L84) | lemma | proved |
-| [`pair_gain_eq`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L89) | lemma | proved |
-| [`pair_twist_eq`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L106) | lemma | proved |
-| [`snd_mem_ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L116) | lemma | proved |
-| [`exists_potential`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L127) | lemma | proved |
+| [`finrank_potentials`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L55) | theorem | proved |
+| [`vanishing`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L81) | def |  |
+| [`mem_vanishing`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L88) | lemma | proved |
+| [`pair_gain_eq`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L93) | lemma | proved |
+| [`pair_twist_eq`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L110) | lemma | proved |
+| [`snd_mem_ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L120) | lemma | proved |
+| [`exists_potential`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCount.lean#L131) | lemma | proved |
 
-**[Transformer.Grokking.FlatSpectrum.TablePart.FlatCycles](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean)** — 95 lines
+**[Transformer.Grokking.FlatSpectrum.TablePart.FlatCycles](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean)** — 105 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`exists_fourCycle_twist`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L23) | theorem | proved |
-| [`vecMulVec_sub_mem_twistSpan`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L35) | theorem | proved |
-| [`twistSpan_eq_top_of_ne_zero`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L46) | lemma | proved |
-| [`connected_patternGraph_univ`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L61) | lemma | proved |
-| [`determines_of_connected_of_fourCycle`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L76) | theorem | proved |
+| [`vecMulVec_sub_mem_twistSpan`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L39) | theorem | proved |
+| [`twistSpan_eq_top_of_ne_zero`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L50) | lemma | proved |
+| [`connected_patternGraph_univ`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L71) | lemma | proved |
+| [`determines_of_connected_of_fourCycle`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatCycles.lean#L86) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.TablePart.FlatRank](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean)** — 176 lines
+**[Transformer.Grokking.FlatSpectrum.TablePart.FlatRank](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean)** — 184 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -31390,13 +31390,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`mem_vanishingParams`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L32) | lemma | proved |
 | [`mem_potentials_of_snd_eq_zero`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L39) | lemma | proved |
 | [`mem_vanishingParams_of_potentials`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L48) | lemma | proved |
-| [`finrank_vanishing_add_one`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L58) | lemma | proved |
-| [`finrank_vanishingParams`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L73) | lemma | proved |
-| [`one_le_card_components`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L102) | lemma | proved |
-| [`finrank_twistSpan_le`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L110) | lemma | proved |
-| [`finrank_vanishing`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L117) | theorem | proved |
-| [`determines_flatClass_iff`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L135) | theorem | proved |
-| [`finrank_map_restrict_flatClass`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L155) | theorem | proved |
+| [`finrank_vanishing_add_one`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L66) | lemma | proved |
+| [`finrank_vanishingParams`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L81) | lemma | proved |
+| [`one_le_card_components`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L110) | lemma | proved |
+| [`finrank_twistSpan_le`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L118) | lemma | proved |
+| [`finrank_vanishing`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L125) | theorem | proved |
+| [`determines_flatClass_iff`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L143) | theorem | proved |
+| [`finrank_map_restrict_flatClass`](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatRank.lean#L163) | theorem | proved |
 
 **[Transformer.Grokking.FlatSpectrum.TablePart.FlatThreshold](src/Transformer/Grokking/FlatSpectrum/TablePart/FlatThreshold.lean)** — 131 lines
 
@@ -31462,7 +31462,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`finrank_le_card_of_determines`](src/Transformer/Grokking/FlatSpectrum/TablePart/Threshold.lean#L146) | theorem | proved |
 | [`minDistance_submodule`](src/Transformer/Grokking/FlatSpectrum/TablePart/Threshold.lean#L161) | theorem | proved |
 
-**[Transformer.Grokking.FlatSpectrum.TablePart.Twist](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean)** — 161 lines
+**[Transformer.Grokking.FlatSpectrum.TablePart.Twist](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean)** — 170 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -31474,16 +31474,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`twist_append`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L54) | lemma | proved |
 | [`twist_reverse`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L61) | lemma | proved |
 | [`twist_copy`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L70) | lemma | proved |
-| [`twist_row_step`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L76) | lemma | proved |
-| [`twistSpan`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L87) | def |  |
-| [`twist_mem_twistSpan`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L92) | lemma | proved |
-| [`pair`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L109) | def |  |
-| [`pair_apply`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L116) | lemma | proved |
-| [`pair_vecMulVec`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L119) | lemma | proved |
-| [`ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L126) | def |  |
-| [`mem_ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L129) | lemma | proved |
-| [`pair_injective`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L134) | lemma | proved |
-| [`finrank_ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L142) | theorem | proved |
+| [`twist_row_step`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L79) | lemma | proved |
+| [`twistSpan`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L96) | def |  |
+| [`twist_mem_twistSpan`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L101) | lemma | proved |
+| [`pair`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L118) | def |  |
+| [`pair_apply`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L125) | lemma | proved |
+| [`pair_vecMulVec`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L128) | lemma | proved |
+| [`ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L135) | def |  |
+| [`mem_ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L138) | lemma | proved |
+| [`pair_injective`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L143) | lemma | proved |
+| [`finrank_ann`](src/Transformer/Grokking/FlatSpectrum/TablePart/Twist.lean#L151) | theorem | proved |
 
 ### `Transformer.Grokking.FlatSpectrum.Training`
 

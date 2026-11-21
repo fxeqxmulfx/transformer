@@ -52,6 +52,14 @@ lemma mem_vanishingParams_of_potentials {Ω : Set ((ι → F) × (κ → F))}
   rintro ⟨u, v⟩ hc
   simp [hy (.inl u) (.inr v) (patternGraph_adj_inl_inr.2 hc)]
 
+example : (0 : (Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ) ∈
+    potentials ℚ (patternGraph (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ)))) :=
+  mem_potentials_of_snd_eq_zero (p := 0) (fun c _ => by simp) rfl
+
+example : ((0, 0) : ((Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ) × Matrix (Fin 1) (Fin 1) ℚ) ∈
+    vanishingParams (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ))) :=
+  mem_vanishingParams_of_potentials (Submodule.zero_mem _)
+
 variable [Fintype F] [DecidableEq ι] [DecidableEq κ]
 
 /-- Dividing the parameters by the kernel of the parametrization removes one dimension. -/

@@ -45,6 +45,10 @@ lemma potentials_eq_of_walk {x : α → F} (hx : x ∈ potentials F G) {a b : α
   | nil => rfl
   | cons h _ ih => exact (hx _ _ h).trans ih
 
+example : (0 : Fin 2 → ℚ) 0 = (0 : Fin 2 → ℚ) 1 :=
+  potentials_eq_of_walk (G := ⊤) (Submodule.zero_mem _)
+    (Walk.cons (by simp : (⊤ : SimpleGraph (Fin 2)).Adj 0 1) Walk.nil)
+
 variable (F G)
 
 /-- The potentials are the functions on the components: one free constant per component. -/
@@ -145,5 +149,23 @@ lemma exists_potential {Ω : Set ((ι → F) × (κ → F))} {M : Matrix ι κ F
   simp only [gain, pair_vecMulVec] at hC
   rw [flatEval_apply]
   linear_combination hC
+
+example : pair (0 : Matrix (Fin 1) (Fin 1) ℚ) (gain (.inl 0) (.inr 0)) =
+    (0 : (Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ) (.inr 0) - (0 : (Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ) (.inl 0) :=
+  pair_gain_eq (Ω := Set.univ) (p := 0) (fun c _ => by simp)
+    (patternGraph_adj_inl_inr.2 (Set.mem_univ _))
+
+example : pair (0 : Matrix (Fin 1) (Fin 1) ℚ) (twist (Walk.nil :
+      (patternGraph (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ)))).Walk (.inl 0) (.inl 0))) =
+    (0 : (Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ) (.inl 0) - (0 : (Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ) (.inl 0) :=
+  pair_twist_eq (p := 0) (fun c _ => by simp) Walk.nil
+
+example : (0 : Matrix (Fin 1) (Fin 1) ℚ) ∈
+    ann (twistSpan (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ)))) :=
+  snd_mem_ann (p := 0) fun c _ => by simp
+
+example : ∃ x : (Fin 1 → ℚ) ⊕ (Fin 1 → ℚ) → ℚ,
+    ∀ c ∈ (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ))), flatEval ℚ (Fin 1) (Fin 1) (x, 0) c = 0 :=
+  exists_potential (Submodule.zero_mem _)
 
 end Transformer.Grokking.FlatSpectrum.TablePart

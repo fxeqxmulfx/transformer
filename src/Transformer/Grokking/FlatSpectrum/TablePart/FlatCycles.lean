@@ -31,6 +31,10 @@ theorem exists_fourCycle_twist {Ω : Set ((ι → F) × (κ → F))} {u u' : ι 
   simp [vecMulVec_apply]
   ring
 
+example : ∃ w : (patternGraph (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ)))).Walk (.inl 0) (.inl 0),
+    w.length = 4 ∧ twist w = vecMulVec ((0 : Fin 1 → ℚ) - 1) ((0 : Fin 1 → ℚ) - 1) :=
+  exists_fourCycle_twist (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _)
+
 /-- The twist of a four-cycle lies in the span of the twists. -/
 theorem vecMulVec_sub_mem_twistSpan {Ω : Set ((ι → F) × (κ → F))} {u u' : ι → F} {v v' : κ → F}
     (h₁ : (u, v) ∈ Ω) (h₂ : (u', v) ∈ Ω) (h₃ : (u', v') ∈ Ω) (h₄ : (u, v') ∈ Ω) :
@@ -56,6 +60,12 @@ lemma twistSpan_eq_top_of_ne_zero {Ω : Set ((Fin 1 → F) × (Fin 1 → F))}
     simp [hz]
   rw [hA]
   exact Submodule.smul_mem _ _ hZ
+
+example : twistSpan (Set.univ : Set ((Fin 1 → ℚ) × (Fin 1 → ℚ))) = ⊤ :=
+  twistSpan_eq_top_of_ne_zero
+    (vecMulVec_sub_mem_twistSpan (u := 1) (u' := 0) (v := 1) (v' := 0)
+      (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _))
+    fun h => by simpa [vecMulVec_apply] using congrFun (congrFun h 0) 0
 
 /-- The whole table has a connected graph. -/
 lemma connected_patternGraph_univ {m n : Type*} [Nonempty m] [Nonempty n] :

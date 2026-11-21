@@ -72,6 +72,9 @@ lemma twist_copy {a a' b b' : (ι → F) ⊕ (κ → F)} (p : G.Walk a b) (ha : 
   subst ha hb
   rfl
 
+example : twist ((Walk.nil : (⊤ : SimpleGraph ((Fin 1 → ℚ) ⊕ (Fin 1 → ℚ))).Walk
+    (.inl 0) (.inl 0)).copy rfl rfl) = 0 := twist_copy Walk.nil rfl rfl
+
 /-- Two steps through a column contribute `(u − u') vᵀ`, the summand of the source's `Z`. -/
 lemma twist_row_step {u u' : ι → F} {v : κ → F} {b : (ι → F) ⊕ (κ → F)}
     (h : G.Adj (.inl u) (.inr v)) (h' : G.Adj (.inr v) (.inl u')) (p : G.Walk (.inl u') b) :
@@ -81,6 +84,12 @@ lemma twist_row_step {u u' : ι → F} {v : κ → F} {b : (ι → F) ⊕ (κ �
   ext i j
   simp [gain, vecMulVec_apply, sub_eq_add_neg]
   ring
+
+example : twist (Walk.cons
+      (by simp : (⊤ : SimpleGraph ((Fin 1 → ℚ) ⊕ (Fin 1 → ℚ))).Adj (.inl 0) (.inr 0))
+      (Walk.cons (by simp : (⊤ : SimpleGraph ((Fin 1 → ℚ) ⊕ (Fin 1 → ℚ))).Adj (.inr 0) (.inl 1))
+        Walk.nil)) = vecMulVec ((0 : Fin 1 → ℚ) - 1) (0 : Fin 1 → ℚ) + 0 :=
+  twist_row_step _ _ _
 
 /-- The span of the twists of the closed walks of the graph of `Ω`
 (`review/flat_spectrum.md`, PT3). A closed walk there starts from a row. -/
