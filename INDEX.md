@@ -273,7 +273,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer`
 
-**[Transformer](src/Transformer.lean)** — 456 lines, aggregator
+**[Transformer](src/Transformer.lean)** — 457 lines, aggregator
 
 **[Transformer.Basic](src/Transformer/Basic.lean)** — 186 lines
 
@@ -18552,7 +18552,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.GainMatroid`
 
-**[Transformer.GainMatroid](src/Transformer/GainMatroid.lean)** — 39 lines, aggregator
+**[Transformer.GainMatroid](src/Transformer/GainMatroid.lean)** — 41 lines, aggregator
 
 **[Transformer.GainMatroid.Section1_Canonical](src/Transformer/GainMatroid/Section1_Canonical.lean)** — 146 lines
 
