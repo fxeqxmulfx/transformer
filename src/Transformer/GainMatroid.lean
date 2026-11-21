@@ -28,6 +28,7 @@ public import Transformer.GainMatroid.Section2_MatrixEquivalence
 public import Transformer.GainMatroid.Section2_DeltaY
 public import Transformer.GainMatroid.Section2_DeltaYExamples
 public import Transformer.GainMatroid.Section2_CycleDegrees
+public import Transformer.GainMatroid.Section2_FiniteMatroids
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -76,7 +77,8 @@ projective equivalence passes to minors of a matrix.
 `Section2_DeltaY` defines the Δ-Y and Y-Δ exchanges of biased graphs and states Propositions 2.6
 and 2.7, and `Section2_DeltaYExamples` shows that the printed `∇_Y B` can contain a non-cycle.
 `Section2_CycleDegrees` proves that a vertex of a loopless graph meets a cycle in zero or two edges
-and lists the seven cycles of `K₄`.
+and lists the seven cycles of `K₄`. `Section2_FiniteMatroids` builds finite matroids from their
+independent sets and decides their flats.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
