@@ -135,6 +135,7 @@ public import Transformer.Grokking.FlatSpectrum.CopiesTheoremB
 public import Transformer.Grokking.FlatSpectrum.SampleNoise
 public import Transformer.Grokking.FlatSpectrum.CopiesSampleSize
 public import Transformer.Grokking.FlatSpectrum.CopiesBestReadout
+public import Transformer.Grokking.FlatSpectrum.CopiesValue
 public import Transformer.Grokking.FlatSpectrum.ProductCharacters
 public import Transformer.Grokking.FlatSpectrum.ProductRank
 public import Transformer.Grokking.FlatSpectrum.ProductLayer
@@ -387,7 +388,9 @@ square error `Var X / N` exactly, and `E |X|²` lies between `(1 − ε)²` and 
 readout's own variance when `|h| = 1` and `|E h| ≤ ε ≤ 1` (`SampleNoise`). So the error of a
 fixed readout of `k` copies is at most its squared covariance with one pair's intermediate only if
 `N + 1 ≥ (1 − 1/p)² p^{2k−1}/(9 + 16/√p)` (`CopiesSampleSize`), and the energy of the best
-readout falls by `p^{−2(k−1)}`, up to a factor in `[1 − 1/p, 2]` (`CopiesBestReadout`). A
+readout falls by `p^{−2(k−1)}`, up to a factor in `[1 − 1/p, 2]` (`CopiesBestReadout`). The
+pair's own value falls by the same factor: its energy given one pair is `1 − p^{−2}`, and the
+other pairs move the ratio of two energies of one pair by at most `2/(1 − 1/p)` (`CopiesValue`). A
 product layer computes `χ(x y) = χ(x) χ(y)` with one hidden unit per multiplicative character,
 and `ψ_r(x y) = 1 + ∑_χ c_r(χ) χ(x) χ(y)` with Gauss sums for coefficients, `c_r(1) = −p/(p − 1)`
 and `|c_r(χ)| = √p/(p − 1)` for `χ ≠ 1`; the expansion is unique, so this route needs all

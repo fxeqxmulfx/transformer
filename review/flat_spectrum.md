@@ -6392,6 +6392,31 @@ an indicator falls by exactly `p^{−m}`, and at every value the law of one pair
 (1 − 1/p) p^{−2m} E₁ ≤ E_k ≤ 2 p^{−2m} E₁.
 ```
 
+The factor does not single out the intermediate. The pair's own value is a function of the first
+pair too, and `p^{−(k−1)}` hits it just as hard. For `h = ψ_r(q(x₁, y₁))` the label of one pair is
+the value itself, so `E[h | q] = h` and `E₁ = Var h = 1 − p^{−2}` for every `r ≠ 0`; among `k`
+pairs the sandwich scales it like any other `h`. Two sandwiches bound a ratio: for any `h`, `h'`
+of the first pair,
+
+```
+(1 − 1/p) E_k(h) E₁(h') ≤ 2 E₁(h) E_k(h'),
+```
+
+so the other pairs move `E(h)/E(h')` by at most `2/(1 − 1/p)` either way. Relative to the value,
+then, the intermediate is hidden only by Theorem B's factor, its `E₁` over `1 − p^{−2}`, at every
+`k`. The largest energies over `r ≠ 0`, computed exactly in Rust (`depth-visibility-native
+energies p k` in `~/python_projects/gpt/research/depth_visibility/native`), are:
+
+| `p` | `k` | value | intermediate `ψ_r(x₁ y₁)` | intermediate / value |
+| --- | --- | --- | --- | --- |
+| 97 | 1 | 0.99989 | 0.044102 | 0.0441 |
+| 97 | 2 | 1.0728e-4 | 5.3799e-6 | 0.0501 |
+| 97 | 3 | 1.1405e-8 | 5.7333e-10 | 0.0503 |
+| 13 | 1 | 0.99408 | 0.37440 | 0.377 |
+| 13 | 2 | 6.1086e-3 | 2.0690e-3 | 0.339 |
+
+The ratio moves by 14% at `p = 97` and by 10% at `p = 13`, well inside the factor `2/(1 − 1/p)`.
+
 A readout fitted on the sample estimates `p` conditional means, one for each value of the label,
 and the plug-in energy carries a bias of about `p/N`: one `1/N` for each value, since `|h| = 1`.
 On a half split of one pair, `N = p²/2`, that is the root's `2/p`. On a half split of `k` pairs,
@@ -6680,7 +6705,7 @@ Whether training finds this construction, or any other, is not addressed here.
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
-`CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize` and `CopiesBestReadout`; for NV7,
+`CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize`, `CopiesBestReadout` and `CopiesValue`; for NV7,
 `ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies`,
 `ProductOneLayer`, `ProductOrder`, `ProductCorners` and `ProductDepth` of
 `src/Transformer/Grokking/FlatSpectrum/`, namespace
@@ -6703,6 +6728,7 @@ Whether training finds this construction, or any other, is not addressed here.
 | NV6, constants | `var`, `meanSq_sub_eq_var_add`, `var_le_meanSq_sub`, `meanSq_comp_of_mean_stdAddChar`, `mean_stdAddChar_add`, `norm_cov_cube_add_mul_le`, `var_cube_add_mul_le_two_mul_var_copies`, `norm_cov_copies_cube_add_mul_le` | Theorem B for one pair is the root's `norm_mean_star_mul_cube_add_mul_le` applied to the centered readout. The `k` pairs are the first pair and `τ → ZMod p × ZMod p`, `k = 1 + \|τ\|`, and the intermediate is the first pair's. The variances are compared in one direction, `Var g(q) ≤ 2 Var g(f)`. The numbers at `p = 97` are by hand. |
 | NV6, sample size | `empiricalMean`, `mean_empiricalMean`, `meanSq_sum_pi_of_mean_eq_zero`, `meanSq_empiricalMean_sub`, `centeredProduct`, `mean_centeredProduct`, `meanSq_centeredProduct_ge`, `meanSq_centeredProduct_le`, `le_mul_meanSq_empiricalMean_sub`, `sq_norm_cov_mul_le`, `sq_le_of_meanSq_empiricalMean_le`, `copiesLabel`, `firstIntermediate`, `sq_norm_cov_mul_le_copies` | The `N` samples are `Fin N → α`, independent and uniform, and the mean square error is `meanSq` over them. The bounds on `Var X` are stated for `E \|X\|²`; `Var X = E \|X\|² − \|Cov\|²` is `meanSq_sub_eq_var_add`. For `k` copies, `k = 1 + \|τ\|`, the statement is `\|Cov\|² ((1 − 1/p)² − c) ≤ c N · MSE`; the threshold on `N` is the general `sq_le_of_meanSq_empiricalMean_le` with this `c`, and its instance and numbers at `p = 97` are by hand. |
 | NV6, the best readout | `condEnergy`, `law_bounds`, `mean_stdAddChar_copiesLabel`, `meanSq_ite_pair`, `meanSq_ite_copiesLabel`, `cov_ite_copiesLabel`, `condEnergy_copies` | `condEnergy` is defined as `Σ_t \|Cov(1{f = t}, h)\|² / P(f = t)`, with `P(f = t)` the mean square of the indicator; the scaling holds for any `P` with `P(0) = 0` and any `h` of the first pair. That it is the largest `\|Cov\|² / Var` over readouts, the bias `p/N` of a fitted readout, the factor of drawing without replacement and the ratio `2.1` are by hand; `0.044` is the root's measurement. |
+| NV6, the value | `condEnergy_nonneg`, `condEnergy_comp`, `condEnergy_value`, `condEnergy_copies_value`, `condEnergy_copies_ratio` | The energy of a function of the label is stated for any label `f : α → ZMod p` and any `φ`, as `var (φ ∘ f)`. The value is `ψ_r(P(x₁) + x₁ y₁)` with `P(0) = 0`, `r ≠ 0`. The ratio is stated as `(1 − 1/p) E_k(h) E₁(h') ≤ 2 E₁(h) E_k(h')` for any `h`, `h'` of the first pair. The table of energies is computed in Rust, not in Lean. |
 | NV7, rank and readout | `rank_hadamard_le`, `re_stdAddChar_mul_star_self`, `re_stdAddChar_mul_star_lt` | The rank bound is for matrices over any field with finite index types. The ranks `p` and `p^k` across the cut are NV5's and NV1's. |
 | NV7, characters | `card_mulChar`, `sum_mulChar_apply`, `sum_star_mulChar_mul`, `sum_mulChar_mul_star`, `mulCoeff`, `stdAddChar_eq_one_add_sum`, `stdAddChar_mul_eq`, `mulCoeff_eq`, `mulCoeff_one`, `norm_mulCoeff`, `mulCoeff_ne_zero`, `eq_mulCoeff_of_forall` | The characters are `MulChar (ZMod p) ℂ`, which send `0` to `0`, and `c_r(χ)` is `mulCoeff r χ`; the Gauss sums are `gaussSum χ (ZMod.stdAddChar.mulShift (−r))`. The uniqueness is stated for a constant `a` and coefficients `d` on all characters; that it costs one hidden unit per character is by hand. |
 | NV7, the network | the layer: `IsProductLayer`, `isProductLayer_iff_matrix`, `isProductLayer_id`, `IsProductLayer.mono`, `sideBySide`, `IsProductLayer.sideBySide`; the net: `IsProductNet`, `IsProductNet.mono`, `IsProductNet.id_net`, `IsProductNet.of_layer`, `IsProductNet.isProductLayer`, `IsProductNet.comp`, `IsProductNet.sideBySide`; the tree: `exists_productTree`, `oneHot`, `pairFeatures`, `exists_productNet`; `k` pairs: `two_pow_clog_lt`, `exists_productNet_pairs`, `exists_productNet_copies`, `exists_productNet_copies_readout`, `exists_productNet_mulChar` | A layer is `IsProductLayer m F`: `F z = z + Σ_u (g_u z)(w_u z) o_u` with at most `m` units and linear `g_u`, `w_u`; the matrix form is `isProductLayer_iff_matrix`. `IsProductNet m d F` is `d` such layers in a row. The stream is `((Fin k × α) ⊕ (Fin k × β)) ⊕ T`, the one-hot features `pairFeatures x y` and a scratch part `T` that starts at zero, and the value is read from one coordinate of `T`. The unit counts are the bounds `2k\|U\|`, `2k\|β\|` and `2kp`, not the exact `2^{⌈log₂ k⌉} \|U\|`. The point-mass route is `exists_productNet_copies`, the route through the characters `exists_productNet_mulChar`. |
