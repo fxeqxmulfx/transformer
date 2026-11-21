@@ -7217,4 +7217,6 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, the twelve tasks | `E6.Form`, `E6.form`, `E6.tasks`, `E6.tasks_formulas`, `E6.tasks_coupled`, `E6.card_held_out`, `E6.held_out_eq`, `E6.not_returned` | The theorems hold for every `(g, h, m)`, and `tasks` lists the twelve. The test `lean_tasks_are_tables_of_the_data` checks that each formula is the table of exactly one task of the data. |
 | PT7, the class is the prior | `E6.update_not_mem` | Stated for any function of the class and any held-out cell of the half of E6. The proof goes through `determines_half` rather than the weight bound of PT4. |
 
-The other tasks of PT6 are not in Lean yet: the 33 with no function of the class on their training cells, and the three tables of `(a/b)⁰` without the column `b = 0`.
+| PT6, the 21 tasks of the full table outside the class | `E6.Rect`, `E6.corners`, `E6.altSum`, `E6.gap`, `E6.refutes`, `E6.not_fits`, `E6.outside97`, `E6.length_outside97`, `E6.outside97_valid`, `E6.no_function_on_half` | Each task is given by two rectangles of its training cells with its labels, on which no single coupling fits, and the theorem holds for every table with these labels. The test `lean_witnesses_are_training_cells` reads the Lean table, checks each cell and label against the real split, and checks that these are exactly the tasks the solve puts outside the class. |
+
+The 15 tasks on the tables without the column `b = 0`, at `p = 17`, `97` and `193`, are not in Lean yet.

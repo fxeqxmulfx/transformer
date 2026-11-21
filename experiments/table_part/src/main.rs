@@ -310,6 +310,7 @@ fn main() -> arithmetic::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use crate::solve::{Completion, complete};
     use arithmetic::dataset::Dataset;
     use serde_json::Value;
 
@@ -329,8 +330,8 @@ mod tests {
         |a, b| a * a * a + a * b,
     ];
 
-    /// The tasks with the full table at `p = 97`, on their frozen splits.
-    fn full_tables() -> arithmetic::Result<Vec<Dataset>> {
+    /// The tasks with the full table at `p = 97`, by name, on their frozen splits.
+    fn full_tables() -> arithmetic::Result<Vec<(String, Dataset)>> {
         let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
         let mut tables = Vec::with_capacity(cases.len());
         for row in &cases {
@@ -338,10 +339,32 @@ mod tests {
                 && d.training.vocabulary == 97
                 && d.training.rows.len() == 4704
             {
-                tables.push(d);
+                let name = row["case"]["name"].as_str().ok_or("name")?;
+                tables.push((name.to_owned(), d));
             }
         }
         Ok(tables)
+    }
+
+    /// The refutations of `E6Witnesses.lean`, read from the Lean source: a task and two rectangles
+    /// `(a, a', b, b', y(a, b), y(a', b), y(a', b'), y(a, b'))`.
+    fn lean_witnesses() -> Vec<(&'static str, [u32; 16])> {
+        include_str!("../../../src/Transformer/Grokking/FlatSpectrum/TablePart/E6Witnesses.lean")
+            .lines()
+            .filter_map(|line| {
+                let (_, rest) = line.split_once("(\"")?;
+                let (name, rest) = rest.split_once('"')?;
+                let numbers: Vec<u32> = rest
+                    .split(|c: char| !c.is_ascii_digit())
+                    .filter(|x| !x.is_empty())
+                    .map(|x| x.parse().expect("a number"))
+                    .collect();
+                Some((
+                    name,
+                    <[u32; 16]>::try_from(numbers).expect("two rectangles"),
+                ))
+            })
+            .collect()
     }
 
     /// The order of the cells in the split E6 trains on, as FNV-1a over `97 a + b`. The Lean theorem
@@ -350,7 +373,7 @@ mod tests {
     fn lean_port_of_the_e6_shuffle() -> arithmetic::Result<()> {
         let tables = full_tables()?;
         assert_eq!(tables.len(), 33);
-        for d in &tables {
+        for (_, d) in &tables {
             let hash = d
                 .training
                 .rows
@@ -371,7 +394,7 @@ mod tests {
         for f in TASKS {
             let matching = tables
                 .iter()
-                .filter(|d| {
+                .filter(|(_, d)| {
                     d.training
                         .rows
                         .iter()
@@ -381,6 +404,43 @@ mod tests {
                 .count();
             assert_eq!(matching, 1);
         }
+        Ok(())
+    }
+
+    /// Every cell and label of `E6Witnesses.lean` is a training row of its task, and the witnesses
+    /// are exactly the tasks of the full table that the solve puts outside the class.
+    #[test]
+    fn lean_witnesses_are_training_cells() -> arithmetic::Result<()> {
+        let witnesses = lean_witnesses();
+        let mut outside = 0;
+        for (name, d) in &full_tables()? {
+            let mut present = vec![false; 2 * 97];
+            for &[a, b, _] in d.training.rows.iter().chain(&d.validation) {
+                present[a as usize] = true;
+                present[97 + b as usize] = true;
+            }
+            let none = matches!(
+                complete(97, &d.training.rows, &present),
+                Completion::NoMember
+            );
+            let witness = witnesses.iter().find(|w| w.0 == name);
+            assert_eq!(none, witness.is_some(), "{name}");
+            let Some((_, w)) = witness else {
+                continue;
+            };
+            outside += 1;
+            for r in w.chunks_exact(8) {
+                for cell in [
+                    [r[0], r[2], r[4]],
+                    [r[1], r[2], r[5]],
+                    [r[1], r[3], r[6]],
+                    [r[0], r[3], r[7]],
+                ] {
+                    assert!(d.training.rows.contains(&cell), "{name}: {cell:?}");
+                }
+            }
+        }
+        assert_eq!(outside, witnesses.len());
         Ok(())
     }
 }

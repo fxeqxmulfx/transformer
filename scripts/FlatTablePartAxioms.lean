@@ -23,6 +23,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.determines_half
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.half_ne_univ
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.mark_spec
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.length_outside97
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.outside97_valid
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function_on_half
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.iterFast_eq
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_formulas
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_coupled
@@ -66,6 +69,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.mul_log_194_mem
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.mul_exp_lt_one_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_emptyLine_le_97
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_fits
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.ncard_le_pow_of_determines
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_univ_iff

@@ -3,6 +3,7 @@ module
 public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Witnesses
 
 /-!
 # PT6: the real half of E6
@@ -33,13 +34,15 @@ def marksFast : ℕ × ℕ × ℕ :=
   iterFast mark 5 (iterFast mark 6 (iterFast mark 9 (iterFast mark 12 (0, 0, shuffleFast.2.2))))
 
 /-- What the kernel computes: the end of the shuffle `e`, the count `m`, the mask `T` and the hash
-`d` of the whole order. -/
+`d` of the whole order. The last line puts the cells of `outside97` in the half. -/
 abbrev Certificate (e m T d : ℕ) : Prop :=
   e = 0 ∧ m = 4704 ∧
     (∀ u, u < 97 → ∃ b, b < 97 ∧ T.testBit (97 * 0 + b) = true ∧ T.testBit (97 * u + b) = true) ∧
     (∀ v, v < 97 → ∃ a, a < 97 ∧ T.testBit (97 * a + v) = true) ∧
     T.testBit (97 * 0 + 2) = true ∧ T.testBit (97 * 1 + 2) = true ∧
-    T.testBit (97 * 1 + 3) = true ∧ T.testBit (97 * 0 + 3) = true ∧ d = 359723728075922973
+    T.testBit (97 * 1 + 3) = true ∧ T.testBit (97 * 0 + 3) = true ∧ d = 359723728075922973 ∧
+    (outside97.all fun w => (corners w.2.1 ++ corners w.2.2).all fun c =>
+      T.testBit (97 * c.1 + c.2.1)) = true
 
 /-- **The kernel's computation on the real split of E6.** -/
 theorem certificate :
@@ -81,7 +84,7 @@ theorem fnvFast_eq : fnvFast = fnvStep^[9409] (0, 0xcbf29ce484222325, shuffleFas
 theorem fingerprint :
     (fnvStep^[9409] (0, 0xcbf29ce484222325, shuffleFast.2.2)).2.1 = 359723728075922973 := by
   rw [← fnvFast_eq]
-  exact certificate.2.2.2.2.2.2.2.2
+  exact certificate.2.2.2.2.2.2.2.2.1
 
 lemma count_marks : (mark^[4704] (0, 0, shuffleFast.2.2)).1 = 4704 :=
   marksFast_eq ▸ certificate.2.1

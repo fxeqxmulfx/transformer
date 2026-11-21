@@ -16,8 +16,7 @@ class, so the class is what carries the half to the rest of the table (PT7, `upd
 The test `lean_tasks_are_tables_of_the_data` of `experiments/table_part` checks that each formula
 of `tasks` is the table of one task of the data.
 
-That the other tasks of the data have no function of the class on their splits, and the three
-tables `(a/b)⁰`, stay measurements of `experiments/table_part`.
+The other 21 tasks with the full table lie outside the class (`E6Outside`).
 -/
 
 @[expose] public section
