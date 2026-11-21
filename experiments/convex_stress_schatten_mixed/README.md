@@ -44,6 +44,33 @@ reading anything else into the result. If the prediction holds, E1's barrier is 
 representation, not the target's spectrum or the information in the half split: for this
 learner the half split determines `a³ + ab` exactly as it determines `ab`.
 
+## Findings (2026-11-21)
+
+The cohort `runs/e6-v1` ran at `68c17174`, source fingerprint `c5998c9f…`. All 36 cells
+completed and replayed, and the hull selection replayed. Every prediction holds:
+
+1. The hull selects `full_rank` for all 18 tasks and arms.
+2. Every cell stops at the update and for the reason of multiplication's cell: `full_rank` at
+   updates 19 / 57 / 19 (full batch / minibatch / forward only) on `ideal_ce_excess`, and
+   `rank_one` on its budget, at 128 / 512 / 128 updates.
+3. The selected models get 4705 / 4703 / 4705 of the 4705 held-out cells exactly, 100 / 99.9575
+   / 100 percent, on every task.
+4. The largest `|P_f[a, b, c + u(a) + v(b)] − P_mul[a, b, c]|` over the 36 cells is `1.4e-14`
+   (forward only, rank one, `arithmetic-quadratic`). No argmax moves, and the shift of every
+   table is `u(a) + v(b)`.
+
+The selected models' training CE, `3.5922701555123604`, is the same for every task to the last
+digit, and the multiplication model is the unchanged binary's, SHA-256 `18b63663…`. So this
+learner completes `a³ + ab`, `a² + ab`, `a² + ab + b²` and `a² + ab + b² + a` from the half
+split exactly as it completes `ab`. By the reading fixed above, E1's barrier is main's
+representation, not the target's spectrum or the information in the half split.
+
+Two of the tasks lack pass credit in `convex_stress_catalog`: `arithmetic-quadratic` and
+`arithmetic-quadratic-linear`, for which `convex_stress_bounded_compare` found no compatible
+program, nor did `convex_stress_wide_latents` for `arithmetic-quadratic-linear`. This cohort passes
+both in all three modes. It is one cohort, on split seed 1, replayed but not independently
+repeated, so the catalog's count is not changed here.
+
 ## What changed, and what did not
 
 `src/main.rs` is `convex_stress_schatten/src/main.rs` at `09fc84dd` with the task source
