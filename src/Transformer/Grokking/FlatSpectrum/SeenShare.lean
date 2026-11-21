@@ -95,6 +95,28 @@ example : nuclearNorm (1 : Matrix (Fin 2) (Fin 2) ℂ) ^ 2 ≤ (min (Fintype.car
       ‖(1 : Matrix (Fin 2) (Fin 2) ℂ) i j‖ ^ 2 else 0 :=
   nuclearNorm_sq_le_of_isMinOn (isMinOn_univ _)
 
+/-- **A minimum of a table of phases has `‖K‖²_S1 ≤ min(m, n) |Ω|`**
+(`review/flat_spectrum.md`, *Rank above one*, item 5.5). -/
+theorem nuclearNorm_sq_le_card_of_isMinOn {K : Matrix m n ℂ} {Ω : Finset (m × n)}
+    (hunit : ∀ i j, ‖K i j‖ = 1)
+    (hK : IsMinOn nuclearNorm {X | ∀ ij ∈ (Ω : Set (m × n)), X ij.1 ij.2 = K ij.1 ij.2} K) :
+    nuclearNorm K ^ 2 ≤ (min (Fintype.card m) (Fintype.card n) : ℕ) * Ω.card := by
+  classical
+  have h := nuclearNorm_sq_le_of_isMinOn (Ω := (Ω : Set (m × n))) hK
+  have hΩ : (∑ i, ∑ j, if (i, j) ∈ (Ω : Set (m × n)) then ‖K i j‖ ^ 2 else 0 : ℝ) = Ω.card := by
+    simp only [hunit, one_pow, Finset.mem_coe]
+    rw [← Fintype.sum_prod_type' (f := fun i j => if (i, j) ∈ Ω then (1 : ℝ) else 0)]
+    simp
+  rwa [hΩ] at h
+
+/-- The `1 × 1` identity from its one cell. -/
+example : nuclearNorm (1 : Matrix (Fin 1) (Fin 1) ℂ) ^ 2 ≤
+    (min (Fintype.card (Fin 1)) (Fintype.card (Fin 1)) : ℕ) *
+      (univ : Finset (Fin 1 × Fin 1)).card :=
+  nuclearNorm_sq_le_card_of_isMinOn
+    (fun i j => by rw [Subsingleton.elim i j, Matrix.one_apply_eq, norm_one])
+    (by simpa using isMinOn_univ (1 : Matrix (Fin 1) (Fin 1) ℂ))
+
 /-- **The share of cells a table of phases needs** (`review/flat_spectrum.md`, *Rank above one*,
 item 5.5): `r_eff / min(m, n) ≤ |Ω| / (m n)`. -/
 theorem share_ge_of_isMinOn [Nonempty m] [Nonempty n] {K : Matrix m n ℂ} {Ω : Finset (m × n)}
@@ -102,13 +124,7 @@ theorem share_ge_of_isMinOn [Nonempty m] [Nonempty n] {K : Matrix m n ℂ} {Ω :
     (hK : IsMinOn nuclearNorm {X | ∀ ij ∈ (Ω : Set (m × n)), X ij.1 ij.2 = K ij.1 ij.2} K) :
     effectiveRank K / (min (Fintype.card m) (Fintype.card n) : ℕ) ≤
       (Ω.card : ℝ) / (Fintype.card m * Fintype.card n) := by
-  classical
-  have h := nuclearNorm_sq_le_of_isMinOn (Ω := (Ω : Set (m × n))) hK
-  have hΩ : (∑ i, ∑ j, if (i, j) ∈ (Ω : Set (m × n)) then ‖K i j‖ ^ 2 else 0 : ℝ) = Ω.card := by
-    simp only [hunit, one_pow, Finset.mem_coe]
-    rw [← Fintype.sum_prod_type' (f := fun i j => if (i, j) ∈ Ω then (1 : ℝ) else 0)]
-    simp
-  rw [hΩ] at h
+  have h := nuclearNorm_sq_le_card_of_isMinOn hunit hK
   have hF : frobeniusSq K = Fintype.card m * Fintype.card n := by
     simp [frobeniusSq, hunit]
   have hm : (0 : ℝ) < Fintype.card m := by exact_mod_cast Fintype.card_pos

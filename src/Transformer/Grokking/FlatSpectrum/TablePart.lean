@@ -24,6 +24,7 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Mask
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Outside
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6ParityCubic
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Peel
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6PeelMasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6PermAdd
@@ -119,4 +120,8 @@ so its certificate is symmetric and keeps its form under the flip (`TablePart.E6
 columns then have two live rows each, and eight entries of `Kᴴ Y = Yᴴ K` close on their four
 unknowns (`TablePart.E6BlindBlock`). This system is invertible too (`TablePart.E6BlindSystem`), so
 a column of `Y` vanishes, and M does not return the table (`TablePart.E6AbsBlind`).
+
+The table of `parity-cubic` moves `a³ + a b` by at most one step in every cell. So its kernel stays
+close to the flat kernel of `a³ + a b`, and `‖K‖_S1 ≥ 0.9 · 97^{3/2}`, more than a minimum over half
+of the cells can have (`TablePart.E6ParityCubic`).
 -/

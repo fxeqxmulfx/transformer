@@ -7261,6 +7261,12 @@ Eight entries of `Kᴴ Y = Yᴴ K` involve only these unknowns and their conjuga
 row 38. But `K = Y (Yᴴ K)`, so row 38 of `K` would vanish too, and no entry of `K` is zero. M does
 not return this table.
 
+The table of `parity-cubic` needs no certificate at all. It moves `a³ + a b` by at most one step:
+in every cell, `f − (a³ + a b)` is `0`, `1` or `−1`. The kernel `C` of `a³ + a b` has `Cᴴ C = 97`, so
+`C / √97` is a contraction, and the phases of `K` stay within `2π / 97` of those of `C`. So the real
+part of `tr(Cᴴ K)` is at least `0.9 · 97²`, which gives `‖K‖_S1 ≥ 0.9 · 97^{3/2} ≈ 860`. A minimum
+over half of the table has `‖K‖_S1 ≤ √(97 · 4704) ≈ 675`, so M does not return this table.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7304,6 +7310,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, five tables of `(a / b)^k` with classes of equal columns | `not_isMinOn_of_classes`, `E6.CircCheck`, `E6.det_circ_ne_zero`, `E6.ClassCheck`, `E6.not_returned_classes`, `E6.not_returned_div17_k2`, `E6.not_returned_div97_k2`, `E6.not_returned_div97_k3`, `E6.not_returned_div193_k2`, `E6.not_returned_div193_k3` | The inverses are literals in `DivDeficient`, checked over `ℕ` by the kernel with `q = 103`, `389`, `773`. The test `lean_div_masks_are_the_training_cells` links the masks and the labels `(a / b)^k` to the data. |
 | PT6, the distance and the maximum, with a tridiagonal inverse | `gramSqrt`, `conjTranspose_mul_of_certificate`, `mul_gramSqrt_of_certificate`, `eq_of_certificates`, `smul_mul_eq_of_certificate`, `entry_eq_zero_of_peel`, `E6.forced`, `E6.PeelStep`, `E6.peel_chain`, `E6.Vanishes.step`, `E6.not_returned_of_peel`, `E6.tri`, `E6.sum_kms_tri`, `E6.kernel_mul_triMatrix`, `E6.not_returned_of_tri`, `E6.not_returned_absDiff`, `E6.not_returned_max` | The masks `peel1`, `peel2`, `peel3` are literals in `E6PeelMasks`, and `peel_chain` checks each step over `ℕ` in the kernel. The test `lean_tasks_are_tables_of_the_data` links the two formulas to the data. |
 | PT6, half the distance, with a closed block of four columns | `E6.blindTable`, `E6.det_blind_ne_zero`, `E6.certificate_symmetries`, `E6.block_dead`, `E6.block_eq`, `E6.blindSys`, `E6.det_blindSys_ne_zero`, `E6.blindSys_solve`, `E6.not_returned_absDiffBlind` | The inverse of the kernel over `ZMod 389` is a literal in `E6BlindInverse`, and the kernel multiplies it out in four theorems over ranges of rows. The test `lean_tasks_are_tables_of_the_data` links the formula to the data. |
+| PT6, a table one step away from `a³ + a b` | `nuclearNorm_sq_le_card_of_isMinOn`, `E6.isContraction_cubicLine`, `E6.nuclearNorm_ge_of_near`, `E6.not_returned_of_near`, `E6.parityTable`, `E6.not_returned_parityCubic` | The kernel checks that `parityTable` is within one step of `a³ + a b` in all 9409 cells. The test `lean_tasks_are_tables_of_the_data` links the formula to the data. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random

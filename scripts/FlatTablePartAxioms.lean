@@ -76,6 +76,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.length_outside97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.outside97_valid
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function_on_half
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.nuclearNorm_ge_of_near
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_of_near
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_parityCubic
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.peel_chain
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.Vanishes.step
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_of_peel
