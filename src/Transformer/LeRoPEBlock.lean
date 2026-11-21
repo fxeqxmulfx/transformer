@@ -19,6 +19,7 @@ public import Transformer.LeRoPEBlock.SlotAdjacent
 public import Transformer.LeRoPEBlock.ReadSeveral
 public import Transformer.LeRoPEBlock.ReadDFT
 public import Transformer.LeRoPEBlock.ReadPrice
+public import Transformer.LeRoPEBlock.ReadScaled
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -75,4 +76,9 @@ model's own.
   all of them together read every key stably with the smallest singular value `p − q`
   (`dft_read_stable`), more than `1/2` on `2R + 1` keys (`half_lt_dftGap`). `H` heads with
   positive weights read at most `H − 1` keys of a longer context (`card_lt_of_read`).
+* **At any scale of the logits.** At `β = 0` the logit is bilinear in the query and the key
+  (`leropeLogit_smul_smul`), so the normalized query and key of the main model scale the DFT
+  heads' logits by some `c > 0`. The heads keep their shape with `P_c = n^{c (1 + 1/(2R))}`
+  (`depthWeight_smul_dftScores`) and read as before (`dft_read_uniform_smul`), and two of them
+  read the difference of their keys at every position (`dft_read_sub`).
 -/

@@ -321,6 +321,32 @@ The logit bound `(5/4) ln N` does not set this price. The DFT heads stay within
 `σ = 0.995`. What holds a positional head near `1/2` is that its score is a sum of bands (RS1,
 RS3).
 
+RS5, RS4 at any scale of the logits. RS4's heads have the query `1` and the key `1` turned by
+`t`. The main model normalizes each head's query and key before the rotation, with `ε > 0`, so a
+query that `W_Q` reads from a coordinate `a > 0` on which all tokens agree comes out as `λ · 1`
+with `λ = a/√(a² + ε) < 1`, and the key likewise. At `β = 0` the logit is bilinear in the query
+and the key (`leropeLogit_smul_smul`), so the turned heads score RS4's logits times
+`c = λ_Q λ_K`. A head that scores one key `a` and every other key `b` puts `e^a/(e^a + i e^b)`
+on it (`depthWeight_ite`). So the head turned by `i − s` keeps RS4's shape with
+`P_c = n^{c(1+1/(2R))}` in place of `P` (`depthWeight_smul_dftScores`), and RS4's reading holds
+for every `c > 0`,
+
+```
+v_s = (o_s − (n/(P_c + i)) o_0) / (p_c − q_c),    p_c − q_c = (P_c − 1)/(P_c + i),
+```
+
+with `o_0` the average of a uniform head (`dft_read_uniform_smul`). The price grows as `c` falls:
+`p_c − q_c` tends to `0` with `c`. At `R = 16` and `i = 3` it is `0.443` at `c = 1` and `0.207`
+at `c = 1/2` (by hand, not in Lean).
+
+The decoder's coefficient `n/(P_c + i)` on the uniform head changes with the query position: at
+`R = 16` and `c = 1` it is `0.657` at `i = 1` and `0.557` at `i = 3` (by hand). `W_O` is shared
+by the positions, so RS4's decoder is exact at one position only. That is enough when the
+operands are read where the answer is. Two turned heads of one shape read the difference of their
+keys at every position instead: their weights off the two keys are equal, so
+`o_s − o_{s'} = (p_c − q_c)(v_s − v_{s'})` (`dft_read_sub`). The factor `p_c − q_c` still
+changes with `i`, but it scales the difference instead of mixing in another head's average.
+
 ### Not claimed
 
 - Sharp constants. The factor `1 + |β|` is crude, and so is RS3's `|β|`: the score itself is at
