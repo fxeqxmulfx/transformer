@@ -70,6 +70,9 @@ done
 ```
 
 For one case, use `cell CASE SEED RUN_DIR` and `replay CASE SEED RUN_DIR`.
+On a memory-constrained GPU, `PHASOR_EVAL_BATCH_CAP=16` limits the scorer's
+chunk size down to the training batch size. Training still consumes the
+original minibatches, and each evaluation visits the entire split.
 Replay verifies the architecture identifier, weights digest, precision,
 suite identity and exact held-out count. For two-token validation examples
 with first operand zero it also scores the fitted weights with the value

@@ -21,7 +21,14 @@ fn task_config(row: &Value, task: &Task) -> Result<Config> {
     } else {
         128
     };
-    cfg.max_batch = cfg.max_batch.max(evaluation);
+    // The scorer visits every example independently. Bound its allocation on
+    // smaller GPUs while preserving the suite minibatch and its update order.
+    let cap = env::var("PHASOR_EVAL_BATCH_CAP")
+        .ok()
+        .map(|s| s.parse::<std::num::NonZeroUsize>())
+        .transpose()?
+        .map_or(evaluation, |n| n.get().min(evaluation));
+    cfg.max_batch = cfg.max_batch.max(cap);
     cfg.gain = cfg.heads as f32 / cfg.width as f32;
     cfg.warmup = schedule::Schedule::new(number("max_updates")?)?.warmup;
     cfg.vocab = task.vocab;
