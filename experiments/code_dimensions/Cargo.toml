@@ -1,0 +1,14 @@
+[package]
+name = "code-dimensions"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+num-complex = "=0.4.6"
+rayon = "=1.12.0"
+
+[profile.release]
+lto = "thin"
