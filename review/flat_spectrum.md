@@ -6957,6 +6957,12 @@ show that main cannot represent the task: main's failure at depth 1 and depth 4 
 the theorem says nothing that separates depth 4 from depth 1, and which code main actually holds
 has not been measured.
 
+At depth 4 a structured fit now gives a Phasor at main's widths that solves this task. Starting
+from a multiplication circuit, the fit learns a CM121 shift per row from training logits and
+labels. The ordinary tied readout then gets all 4705 held-out cells right. Setting the shift
+phases to one restores multiplication and gives 51 correct cubic answers. E1's AdamW runs
+used a different initialization and fitting rule. [Experiment and weights recipe](../experiments/phasor_nv11/README.md)
+
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,

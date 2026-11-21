@@ -2,13 +2,12 @@
 //! `review/flat_spectrum.md`, section *What a part of the table determines*. See `README.md`.
 
 mod class;
-mod solve;
 
 use arithmetic::reference::SplitMix64;
 use class::{Table, Workspace, design_rank, graph_count, min_support};
 use rayon::prelude::*;
 use serde_json::Value;
-use solve::{Completion, complete};
+use table_part::solve::{Completion, complete};
 
 /// How the parts of one table split by the criterion, and how often the count missed the rank.
 #[derive(Clone, Copy, Default)]
@@ -310,7 +309,7 @@ fn main() -> arithmetic::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use crate::solve::{Completion, complete};
+    use table_part::solve::{Completion, complete};
     use arithmetic::dataset::Dataset;
     use serde_json::Value;
 
