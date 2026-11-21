@@ -20,6 +20,7 @@ pub(super) fn validate(row: &Value, seed: u32, dir: &Path, result: &Value) -> Re
         )
     };
     if result["model"] != MODEL
+        || result["initial_gain"] != json!(pair_memory::INITIAL_GAIN)
         || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
         || result["suite_sha256"] != hash(arithmetic::ORIGINAL35.as_bytes())
         || result["selection"] != row["selection"]

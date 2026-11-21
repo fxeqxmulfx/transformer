@@ -59,6 +59,51 @@ theorem Model.sharedLogit_lt_iff [NeZero p] (M : Model D d H F p) (T : PairTable
   simp only [Model.sharedLogit_eq, mul_sub]
   constructor <;> intro h <;> linarith
 
+/-- The norm of the shared correction is bounded at every position and depth,
+even when the learned tables have arbitrarily large entries. This controls
+the size of the initialization in the shared-value experiment. -/
+theorem Model.sharedFeature_displacement [NeZero p] (M : Model D d H F p) (T : PairTables D p)
+    (gain : ℝ) {eps : ℝ} (heps : 0 < eps) (hD : 0 < D) (scale : ℝ)
+    (tokens : ℕ → Fin p) (L i : ℕ) :
+    ‖M.sharedFeature T gain eps scale tokens L i - M.feature eps scale tokens L i‖ ≤
+      |gain| * Real.sqrt D := by
+  simp only [Model.sharedFeature, add_sub_cancel_left, norm_smul, Real.norm_eq_abs]
+  exact mul_le_mul_of_nonneg_left (GPTMini.rmsNormEps_norm_le eps heps hD _) (abs_nonneg _)
+
+/-- The architecture's effect on a pairwise decision margin is at most the
+feature displacement times the distance between the two tied codes.
+In particular the quarter-gain initialization limits the perturbation for
+every class pair without any distributional assumption on inputs or weights. -/
+theorem Model.sharedLogit_margin_displacement [NeZero p] (M : Model D d H F p) (T : PairTables D p)
+    (gain : ℝ) {eps : ℝ} (heps : 0 < eps) (hD : 0 < D) (scale : ℝ)
+    (tokens : ℕ → Fin p) (L i : ℕ) (y c : Fin p) :
+    |(M.sharedLogit T gain eps scale tokens L i y - M.sharedLogit T gain eps scale tokens L i c) -
+      (M.logits eps scale tokens L i y - M.logits eps scale tokens L i c)| ≤
+      ‖M.embedding y - M.embedding c‖ * (|gain| * Real.sqrt D) := by
+  simpa only [Model.sharedLogit, Model.logits, inner_sub_right, inner_sub_left] using
+    (abs_real_inner_le_norm (M.embedding y - M.embedding c)
+      (M.sharedFeature T gain eps scale tokens L i - M.feature eps scale tokens L i)).trans
+      (mul_le_mul_of_nonneg_left (M.sharedFeature_displacement T gain heps hD scale tokens L i)
+        (norm_nonneg _))
+
+/-- The feature and margin bounds at the experimental NV11 width, epsilon
+and initial scalar. They also apply to nonzero tables later in training
+whenever the scalar has this value. -/
+example (M : Model 128 32 4 171 97) (T : PairTables 128 97) (scale : ℝ)
+    (tokens : ℕ → Fin 97) (L i : ℕ) (y c : Fin 97) :
+    let eps : ℝ := 1 / 8388608
+    ‖M.sharedFeature T (1/4) eps scale tokens L i - M.feature eps scale tokens L i‖ ≤
+      Real.sqrt 128 / 4 ∧
+    |(M.sharedLogit T (1/4) eps scale tokens L i y - M.sharedLogit T (1/4) eps scale tokens L i c) -
+      (M.logits eps scale tokens L i y - M.logits eps scale tokens L i c)| ≤
+      ‖M.embedding y - M.embedding c‖ * (Real.sqrt 128 / 4) := by
+  dsimp only
+  have h : (0 : ℝ) < 1 / 8388608 := by norm_num
+  simpa only [abs_of_pos (by norm_num : (0 : ℝ) < 1/4), one_div_mul_eq_div,
+    Nat.cast_ofNat] using And.intro
+    (M.sharedFeature_displacement T (1/4) h (by decide) scale tokens L i)
+    (M.sharedLogit_margin_displacement T (1/4) h (by decide) scale tokens L i y c)
+
 /-- A finite collection of strict value advantages can overcome all of its
 contextual score gaps with a single positive scalar. -/
 theorem exists_shared_gain {ι : Type*} [Fintype ι] (gap advantage : ι → ℝ)

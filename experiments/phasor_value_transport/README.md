@@ -28,7 +28,7 @@ vocabulary primality and task name play no role in selecting a computation.
 The first position, later positions, training and autoregressive generation
 all use this update.
 
-The tables start at zero and the gain at one. This adds `17 × V × width + 1`
+The tables start at zero and the gain at 0.25 for every task. This adds `17 × V × width + 1`
 real parameters, all in Phasor's ordinary AdamW coordinate group. The
 original encoder, tied embeddings, cross-entropy, clipping, parameter
 groups and WSD schedule train together. Only the shape and training budget
@@ -37,7 +37,10 @@ vary as specified in the benchmark.
 Lean gives the exact decision margin at every position. For an arbitrary
 fixed-depth backbone with orthonormal embeddings it proves that one gain
 and one right-operand table can distinguish every second operand on the
-entire zero row. The width-128 example covers all 97 NV11 residues.
+entire zero row. The width-128 example covers all 97 NV11 residues. Lean also
+bounds the initial displacement of the contextual feature by `sqrt(width)/4`.
+The change in any two-class margin is bounded by that quantity times the
+distance between the two tied embeddings.
 [Shared forward map and proofs](../../src/Transformer/Phasor/SharedValues.lean)
 
 ## Training and replay
@@ -60,13 +63,13 @@ cd experiments/phasor_value_transport
 cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
-./run_stress.sh cell runs/shared-values
-./run_stress.sh replay runs/shared-values
-"$bin" report runs/shared-values
-"$bin" predict runs/shared-values/arithmetic-cubic-product/seed0/weights.f32 97 12 34
+./run_stress.sh cell runs/shared-quarter
+./run_stress.sh replay runs/shared-quarter
+"$bin" report runs/shared-quarter
+"$bin" predict runs/shared-quarter/arithmetic-cubic-product/seed0/weights.f32 97 12 34
 for seed in 0 1 2
 do
-    "$bin" shared-values "runs/shared-retention/seed$seed" "$seed"
+    "$bin" shared-values "runs/shared-quarter-retention/seed$seed" "$seed"
 done
 ```
 

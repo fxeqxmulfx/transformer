@@ -5,6 +5,7 @@ use crate::engine::{Config, Result};
 use kernite_cuda::{Buffer, Cuda};
 
 pub const TABLES: usize = 17;
+pub const INITIAL_GAIN: f32 = 0.25;
 
 pub fn parameters(cfg: &Config) -> usize {
     if cfg.shared_values {

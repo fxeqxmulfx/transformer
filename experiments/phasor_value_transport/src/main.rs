@@ -144,8 +144,10 @@ fn cell(arm: &str, out: &Path, seed: u32) -> Result<()> {
             writeln!(log, "{row}")?;
             log.flush()?;
             println!("{row}");
-            if layer.is_some() && (completed == OBSERVE || completed == WINDOW) {
-                snapshot::save(&e, &out.join(format!("transport-{completed}.f32")))?;
+            if (layer.is_some() || e.config.shared_values)
+                && (completed == OBSERVE || completed == WINDOW)
+            {
+                snapshot::save(&e, &out.join(format!("{arm}-{completed}.f32")))?;
             }
         }
         if completed == WINDOW {

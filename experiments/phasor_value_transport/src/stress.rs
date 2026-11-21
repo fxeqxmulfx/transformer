@@ -85,7 +85,7 @@ fn nv11() -> Result<(Value, Task)> {
     ))
 }
 
-const MODEL: &str = "phasor-causal-value-residual-v1";
+const MODEL: &str = "phasor-causal-value-residual-v2";
 
 pub fn routes() -> Result<()> {
     for row in cases()? {
@@ -177,7 +177,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
                 let bytes: Vec<_> = values.iter().flat_map(|x| x.to_le_bytes()).collect();
                 history.sync_all()?;
                 publish(&dest, "weights.f32", &bytes)?;
-                let result = json!({"model":MODEL,"gain":values[pair_memory::gain(&e.config)],"observation":point,"previous_step":previous,"train_correct":training["exact"],
+                let result = json!({"model":MODEL,"initial_gain":pair_memory::INITIAL_GAIN,"gain":values[pair_memory::gain(&e.config)],"observation":point,"previous_step":previous,"train_correct":training["exact"],
                     "train_total":train.len(),"selection":task.selection,"pair_parameters":extra,
                     "parameters":values.len(),"weights_sha256":hash(&bytes),"gpu":e.cuda.name(),
                     "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":hash(arithmetic::ORIGINAL35.as_bytes())});
