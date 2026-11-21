@@ -360,8 +360,9 @@ probability bounds outside that coverage are not claimed as proved.
 
 59. Funk, Pivotto, Slilaty — arXiv:1609.05574v5, "Matrix representations of
    frame and lifted-graphic matroids correspond to gain functions". Projective
-   equivalence as sequences of the source's elementary operations, and
-   Proposition 1.1.
+   equivalence as sequences of the source's elementary operations and
+   Proposition 1.1; canonical matrices, switching and scaling; Proposition 4.1
+   and Lemma 4.2.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
