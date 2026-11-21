@@ -154,6 +154,9 @@ public import Transformer.Grokking.FlatSpectrum.ProductCostFlat
 public import Transformer.Grokking.FlatSpectrum.ProductCostCodes
 public import Transformer.Grokking.FlatSpectrum.SingleFeature
 public import Transformer.Grokking.FlatSpectrum.SeenShare
+public import Transformer.Grokking.FlatSpectrum.CertificateOrbit
+public import Transformer.Grokking.FlatSpectrum.CertificateTests
+public import Transformer.Grokking.FlatSpectrum.CertificateLines
 public import Transformer.Grokking.FlatSpectrum.TablePart
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
@@ -425,7 +428,9 @@ a flat kernel is no local minimum of that cost among the interpolants of any pro
 (`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). The task
 `a³ + a b` is no function of one feature `u(a) ∘ v(b)` in a group or a type with zero of at most
 `p` elements (`SingleFeature`). A minimum of M needs a share of the table at least its effective
-rank over the largest rank (`SeenShare`). A part of a table determines a class when two members
+rank over the largest rank (`SeenShare`). All certificates of `K` agree on its row space, so a
+symmetry or an orthogonal line rules out a minimum (`CertificateOrbit`, `CertificateTests`,
+`CertificateLines`). A part of a table determines a class when two members
 that agree on it are equal, and every part of `m` cells does exactly when `m > N − δ(H)`
 (`TablePart`).
 On the training half of E6 at `p = 97`, which the kernel computes, the flat class gives all 4705

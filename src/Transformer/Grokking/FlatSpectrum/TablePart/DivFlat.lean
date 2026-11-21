@@ -88,6 +88,9 @@ theorem divKernel_conjTranspose_mul {k : ℕ} (hk : k ≠ 0) (hcop : k.Coprime (
       exact hne (inv_injective (hinj h)).symm
     simp [hd0, Matrix.one_apply_ne hvv]
 
+example : (divKernel 17 3)ᴴ * divKernel 17 3 = ((17 : ℕ) : ℂ) • 1 :=
+  divKernel_conjTranspose_mul (by norm_num) (by norm_num)
+
 /-- **The kernel of `(a / b)^k` is flat** for `k ≠ 0` coprime to `p − 1`, with `c = p`. -/
 theorem isFlat_divKernel {k : ℕ} (hk : k ≠ 0) (hcop : k.Coprime (p - 1)) :
     IsFlat (divKernel p k) p :=
@@ -142,6 +145,14 @@ lemma divSeen_ne_univ {T a b : ℕ} (hp : 1 < p) (ha : a < p) (hb : b < p - 1)
     rw [hu]
     trivial
   exact notMem_divPart hp ha hb h hmem
+
+example : divSeen 17 0 ≠ Set.univ :=
+  divSeen_ne_univ (a := 0) (b := 0) (by norm_num) (by norm_num) (by norm_num) (by simp)
+
+example : ¬ IsMinOn nuclearNorm {X | ∀ ij ∈ divSeen 17 0, X ij.1 ij.2 = divKernel 17 1 ij.1 ij.2}
+    (divKernel 17 1) :=
+  not_returned_div (by norm_num) (by norm_num)
+    (divSeen_ne_univ (a := 0) (b := 0) (by norm_num) (by norm_num) (by norm_num) (by simp))
 
 /-- **M does not return `(a / b)^k`, `k = 1, 3, 5`, from the training half at `p = 17`**
 (`review/flat_spectrum.md`, PT6). -/

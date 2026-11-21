@@ -7200,6 +7200,16 @@ bijection of `ℤ/p`, so two columns `b ≠ b'` of the kernel of `(a / b)^k` hav
 of this kind: `k = 1, 3, 5` at `p = 17` and `k = 1, 5` at `p = 97` and `p = 193`. No function of `H`
 fits their training cells, and M does not return their kernels from these cells either.
 
+For a kernel that is not flat, the tool is a fact about certificates. A minimum of M has a contraction
+`Y` vanishing off `Ω` with `tr(Yᴴ K) = ‖K‖_S1` (*Rank above one*, 5.1). In an eigenbasis `v_k` of
+`Kᴴ K` that trace is a sum of `⟨Y v_k, K v_k⟩`, each at most `s_k`, so each equals `s_k`, and
+`s_k Y v_k = K v_k`. So any two certificates of `K` have `Y Kᴴ = Z Kᴴ`, and on an eigenvector `x` of
+`Kᴴ K` with eigenvalue `c²` every certificate is `K x / c`. Two criteria follow. A permutation of rows
+and columns up to phases that preserves `K` carries a certificate to a certificate, so `Y b` is
+constant along the orbit of a vector `b` of the row space of `K`, and if each orbit leaves `b` unseen
+somewhere, then `Y Kᴴ = 0`, which is impossible for `K ≠ 0`. And a row or a column orthogonal to all
+the others has to be seen in full.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7237,6 +7247,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, the 21 tasks of the full table outside the class | `E6.Rect`, `E6.corners`, `E6.altSum`, `E6.gap`, `E6.refutes`, `E6.not_fits`, `E6.outside97`, `E6.length_outside97`, `E6.outside97_valid`, `E6.no_function_on_half` | Each task is given by two rectangles of its training cells with its labels, on which no single coupling fits, and the theorem holds for every table with these labels. The test `lean_witnesses_are_training_cells` reads the Lean table, checks each cell and label against the real split, and checks that these are exactly the tasks the solve puts outside the class. |
 | PT6, the 15 tasks on the tables without the column `b = 0` | `E6.eq_on_columns`, `E6.divCell`, `E6.divPart`, `E6.DivCertificate`, `E6.eq_off_column`, `E6.divTable`, `E6.constant_off_column`, `E6.divWitnessOk`, `E6.no_div_function`, `E6.mask17`, `E6.mask97`, `E6.mask193`, `E6.certificate17`, `E6.certificate97`, `E6.certificate193`, `E6.constant17`, `E6.constant97`, `E6.constant193`, `E6.no_function17`, `E6.no_function97`, `E6.no_function193` | The training part misses the column `b = 0`, so it does not determine `H`. `eq_on_columns` states what it does fix: the values on the columns it has. Unlike the full table, the kernel does not rerun the shuffle here. The training cells are bit masks in the Lean source (`E6DivParts`), and the tests `lean_div_masks_are_the_training_cells` and `lean_div_witnesses_are_training_cells` compare them with the split that `dataset::build` gives each of the 15 tasks, compare the labels with `(a / b)^k`, and check that the twelve refuted tasks are exactly those the solve puts outside the class. |
 | PT6, the seven flat tables of division | `E6.pow_injective_of_coprime`, `E6.divKernel`, `E6.divSeen`, `E6.divKernel_conjTranspose_mul`, `E6.isFlat_divKernel`, `E6.not_returned_div`, `E6.notMem_divPart`, `E6.divSeen_ne_univ`, `E6.not_returned_div17`, `E6.not_returned_div97`, `E6.not_returned_div193` | The kernel is a `p × (p − 1)` matrix whose columns are the `b ≠ 0`. The masks are those of the row above. |
+| PT6, certificates on the row space | `mul_eigenbasis_of_certificate`, `mul_conjTranspose_eq_of_certificates`, `smul_mulVec_of_certificate`, `IsContraction.phased`, `trace_phased`, `not_isMinOn_of_tests`, `not_isMinOn_of_orbits`, `not_isMinOn_of_orthogonal_column`, `not_isMinOn_of_orthogonal_row` | `CertificateOrbit`, `CertificateTests`, `CertificateLines`. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random

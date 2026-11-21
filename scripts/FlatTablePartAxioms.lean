@@ -104,3 +104,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_le_card_of_determines
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_submodule
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_ann
+#print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_column
+#print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_row
+#print axioms Transformer.Grokking.FlatSpectrum.mul_eigenbasis_of_certificate
+#print axioms Transformer.Grokking.FlatSpectrum.mul_conjTranspose_eq_of_certificates
+#print axioms Transformer.Grokking.FlatSpectrum.smul_mulVec_of_certificate
+#print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_tests
+#print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orbits
