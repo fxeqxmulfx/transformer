@@ -6760,6 +6760,34 @@ exactly: with any bias `β` in `(0, 1)` on class `0`, the logit `Re(conj χ(c) �
 is strictly largest at `c = f`. So the rank across the cut cannot rule this code out, and what a
 code needs has to be compared with `dim(col X + row X)`.
 
+*What each code needs.* The table gives `dim(col X + row X)` at `p = 97` for the injective
+characters: `ψ_r(f)` with `r ≠ 0`, and `χ^j(f)` with `gcd(j, p − 1) = 1`
+(`experiments/code_dimensions`). Within a family the codes are Galois conjugates and the dimension
+is the same. Each number is the rank of `[X | Xᵀ]` modulo two primes `ℓ ≡ 1 mod p(p − 1)`, a
+certified lower bound on the rank over `ℂ`, and an SVD in double precision finds the same rank.
+
+| `f` | `ψ` | `χ` |
+| --- | ---: | ---: |
+| `a³ + a b` | 97 | 72 |
+| `a² + a b` | 97 | 97 |
+| `a² + a b + b²` | 97 | 96 |
+| `(a + b)²` | 97 | 96 |
+| `a b` | 97 | 1 |
+| `a² b` | 73 | 2 |
+| `a + a b` | 97 | 2 |
+
+Against `D_ℂ + 3 = 67`, one layer holds no additive or multiplicative code of `a³ + a b`,
+`a² + a b` or `a² + a b + b²`. It can hold `χ(a b)`, `χ(a² b)` and `χ(a + a b)`: each is a function
+of `a` times a function of `b`, so one hidden unit writes it from two coordinates of the embedding.
+The margin on `χ(a³ + a b)` is five dimensions, and a state with `D_ℂ ≥ 69` passes the count.
+
+The count is about a code written into a value, not about solving the task. No code of `(a + b)²`
+fits either, and main passes that task in one layer on all three seeds, as it does `a b`, `a² b`
+and `a + a b` (`runs/main-model-phase-score-01` of the `gpt` repository). A route the count leaves
+open is to hold the rank-one features `ψ(j (a + b))` and let the readout do the squaring; whether
+the trained model uses it was not checked here. For `a³ + a b` no rank-one route is known, and
+whether a route through other features exists is open.
+
 *Not covered.* The count bounds values, the complex-linear readings of a layer. Main's logits are
 `Re⟨E(c), z⟩`, a real part, which adds the conjugate table, with columns in the span of `conj E`.
 So the logits escape the count, and nothing here bounds the argmax accuracy of one layer. With
