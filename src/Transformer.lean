@@ -366,8 +366,9 @@ probability bounds outside that coverage are not claimed as proved.
    contraction and induced gains; connectivity and the balance classes of biased
    graphs; frame and lift matroids, matroid connectivity and uniform matroids;
    Propositions 2.1, 2.2, 2.3 and 4.1, Lemmas 4.2 to 4.12 and Theorem 5.1;
-   which biased 2C₃, tubes and K₄ are properly unbalanced; counterexamples to
-   Conjectures 1 and 2 as literally stated and to Theorem 1 (i) as printed.
+   which biased 2C₃, tubes and K₄ are properly unbalanced; 𝖴₂ and 𝖴₃ as
+   representations of U_{2,4}; counterexamples to Conjectures 1 and 2 as
+   literally stated and to Theorem 1 (i) as printed.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report

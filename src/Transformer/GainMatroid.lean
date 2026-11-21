@@ -34,6 +34,8 @@ public import Transformer.GainMatroid.Section1_Fan
 public import Transformer.GainMatroid.Section1_Theorem1
 public import Transformer.GainMatroid.Section4_TwoVertices
 public import Transformer.GainMatroid.Section4_U24
+public import Transformer.GainMatroid.Section4_TwoVertexCircuits
+public import Transformer.GainMatroid.Section4_U24Matroid
 
 /-!
 # Matrix representations of frame and lifted-graphic matroids
@@ -65,4 +67,6 @@ gives concrete ones. `Section5_ProperlyUnbalanced` proves Theorem 5.1 from the r
 `U_{3,5}` as a frame matroid on three vertices, and `Section1_Theorem1` proves from it that
 Theorem 1 (i) fails as printed on an almost-balanced biased graph. `Section4_TwoVertices` treats
 the columns of loops and the cycles on two vertices, and `Section4_U24` proves Lemmas 4.11 and 4.12.
+`Section4_TwoVertexCircuits` counts the edges of circuits on two vertices, and `Section4_U24Matroid`
+proves that `𝖴₂` and `𝖴₃` represent `U_{2,4}`.
 -/
