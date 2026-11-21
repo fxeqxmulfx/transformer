@@ -16,6 +16,9 @@ public import Transformer.LeRoPEBlock.SlotOneSidedHead
 public import Transformer.LeRoPEBlock.SlotGeometric
 public import Transformer.LeRoPEBlock.SlotDFTShift
 public import Transformer.LeRoPEBlock.SlotAdjacent
+public import Transformer.LeRoPEBlock.ReadSeveral
+public import Transformer.LeRoPEBlock.ReadDFT
+public import Transformer.LeRoPEBlock.ReadPrice
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -65,4 +68,11 @@ model's own.
   (`depthWeight_leropeLogit_le_geom`, `depthWeight_leropeLogit_le_geom_newer`): `0.676` and
   `0.668` on `33` keys at `β = 0`. The DFT head turned by `t` keeps more than half on the key at
   the distance `t` (`depthWeight_dft_shift`, `depthWeight_adjacent_mem`, `depthWeight_first_mem`).
+* **Several heads read a key exactly.** A combination of heads reads the key `t` when it turns
+  their weights into the indicator of `t` (`sum_smul_attend_eq`). The DFT heads turned by
+  `i − s` put `p` on the key `s` and `q` on the others (`depthWeight_dftScores`), so with a
+  uniform head they read any key, `v_s = (o_s − (n q) o_0) / (p − q)` (`dft_read_uniform`), and
+  all of them together read every key stably with the smallest singular value `p − q`
+  (`dft_read_stable`), more than `1/2` on `2R + 1` keys (`half_lt_dftGap`). `H` heads with
+  positive weights read at most `H − 1` keys of a longer context (`card_lt_of_read`).
 -/

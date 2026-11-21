@@ -145,8 +145,8 @@ Request, 2026-11-21: in pricing functions of `n` variables (`review/flat_spectru
 *Functions of n variables*), bound from below and from above what one head of the main model can
 do to read the operand at a given distance. The positional scheme is LeRoPE alone, SSMax's gain
 kept; abstract statements are welcome, special cases are not wanted. Lean: `SlotFejer`,
-`SlotWeight`, `SlotDFT`, `SlotOneSided`, `SlotOneSidedHead`, `SlotGeometric`, `SlotDFTShift` and
-`SlotAdjacent` of `src/Transformer/LeRoPEBlock/`.
+`SlotWeight`, `SlotDFT`, `SlotOneSided`, `SlotOneSidedHead`, `SlotGeometric`, `SlotDFTShift`,
+`SlotAdjacent`, `ReadSeveral`, `ReadDFT` and `ReadPrice` of `src/Transformer/LeRoPEBlock/`.
 
 A head reads the key at the distance `t` by putting its softmax weight there. When the keys
 around the slot carry the same token, or the head's keys ignore the token, only the way the score
@@ -274,6 +274,53 @@ at `β = 0` with the main model's `16` bands on `33` keys: the key next to the q
 `0.535` under the DFT head and at most `0.676` under any head (`depthWeight_adjacent_mem`), the
 first key `0.535` and at most `0.668` (`depthWeight_first_mem`).
 
+RS4, several heads read a key exactly. At `β = 0` one head keeps at most about `0.7` on a key
+(RS1, RS3), so its average mixes the key's value with the others' however it is tuned. Several
+heads can cancel the mixture. Let the head `h` put the weight `A_hj` on the key `j`. Coefficients
+`b` with `Σ_h b_h A_hj = [j = t]` turn the heads' averages into the value at `t`, whatever the
+values (`sum_smul_attend_eq`). In the main model `W_O` applies `b` to the concatenated heads, so
+the branch writes `R_D` of a linear image of the read values: the operands up to the branch's
+positive scalar, provided the combined heads share `W_V`. If the `H × N` matrix `A` has rank `N`,
+every key can be read, and the price is its smallest singular value `σ`: the shortest decoder
+multiplies an error in the averages by at most `1/σ`, and no `b` that reads `t` is shorter than
+`1/‖A e_t‖` (`one_le_sum_sq_mul_sum_sq`).
+
+The DFT heads turned by `t` build such a matrix. At the query position `i ≤ 2R` the head turned by
+`i − s` scores the key `s` by `ln n` and every other key by `−ln n/(2R)`, `n = i + 1`
+(`leropeLogit_dft_shift_at`). So it puts `p = P/(P + i)` on `s` and `q = 1/(P + i)` on each other
+key, `P = n^{1+1/(2R)}` (`depthWeight_dftScores`), and its average is `(p − q) v_s + q Σ_j v_j`
+(`weightedSum_ite_eq`). Hence
+
+```
+v_s = (o_s − q Σ_j v_j) / (p − q)
+```
+
+(`decode_weightedSum_ite`, `dft_read`). The sum `Σ_j v_j` is the sum of the averages of all `n`
+turned heads (`sum_weightedSum_ite`), or `n` times the average of a head with the zero query, which
+scores every key `0` (`leropeLogit_zero_query`, `dft_read_uniform`). All `n` heads together have
+the weight matrix `(p − q) I + q J`, whose smallest singular value is `p − q = (P − 1)/(P + i)`:
+`Σ_s ‖o_s − o'_s‖² ≥ (p − q)² Σ_j ‖v_j − v'_j‖²` for any two sets of values
+(`sum_norm_sq_weightedSum_ite_ge`, `dft_read_stable`). On `N = 2R + 1` keys
+`P = N · N^{1/(2R)} > N + 1`, since `ln N > 1 − 1/N`, so `p − q > 1/2` for every `R`
+(`half_lt_dftGap`): `0.583` at `R = 1`, `0.520` at the main model's `R = 16`, tending to `1/2`.
+With `16` bands on shorter prefixes it is `0.343` at `i = 1`, `0.460` at `i = 4` and `0.508` at
+`i = 16`. The decoder's coefficients have length `1.90` at `i = 32` with all `33` heads and `2.13`
+with a uniform head in place of the sum; at `i = 1`, `2.18` and `3.49`.
+
+The main model has `4` heads per layer, not `33`, and fewer heads than keys cannot read every key.
+Softmax weights are positive. If `H` heads read every key of a set `T` and some key lies outside
+`T`, the indicators of `T` cannot span the heads' weight vectors, since those vanish nowhere; so
+`|T| ≤ H − 1` (`card_lt_of_read`). One uniform head and `H − 1` turned heads reach it. One layer of
+the main model therefore reads `3` operands exactly at every position, at distances of its choice
+up to `32`, and multiplies an error in the averages by at most `2.13` on `33` keys and `3.49` on
+two. The statements are about the block, whatever `Φ`, so they hold under either residual scheme.
+
+The logit bound `(5/4) ln N` does not set this price. The DFT heads stay within
+`[−ln N/(2R), ln N]`. A head whose scores were free within `±(5/4) ln N` could put
+`1/(1 + (N − 1) N^{−5/2})` on one key, `0.995` on `33` keys, and a family of such heads would have
+`σ = 0.995`. What holds a positional head near `1/2` is that its score is a sum of bands (RS1,
+RS3).
+
 ### Not claimed
 
 - Sharp constants. The factor `1 + |β|` is crude, and so is RS3's `|β|`: the score itself is at
@@ -284,12 +331,16 @@ first key `0.535` and at most `0.668` (`depthWeight_first_mem`).
   distance (Dirichlet's simultaneous approximation), which drives the weight on any slot towards
   `1/2`, but only from around `10⁵⁰` keys (by hand); nothing in between is stated.
 - Few bands. The DFT head needs `R` bands for `2R + 1` keys, so the main model's `16` bands
-  cover `33` keys. On a longer context the caps of RS1 and RS3 still hold for every head, but
-  nothing here is built from below them.
+  cover `33` keys, and RS4's heads read within those `33`. On a longer context the caps of RS1
+  and RS3 still hold for every head, but nothing here is built from below them.
 - That the main model realizes the DFT head. Its query and key are the same for every token, which
-  needs `W_Q` and `W_K` to read a direction on which the tokens agree, as for the π head.
+  needs `W_Q` and `W_K` to read a direction on which the tokens agree, as for the π head. RS4's
+  uniform head is exact: its query is zero.
+- The best reading. Whether another family of positional heads has a smallest singular value
+  above RS4's `p − q` is not stated; RS1 and RS3 bound one weight, not the matrix.
 - Content. The bound is for keys of one token around the slot. A head whose key depends on the
   token can single out a slot whose token differs from its neighbours'; reading an arbitrary
   operand needs a large weight for every assignment of tokens, and that is not stated.
 - Readout. Weight is not output: a value read with the weight `w` is mixed with its neighbours'
-  values, and how much of that a nonlinear `Φ` undoes is not bounded here.
+  values. RS4 undoes the mixing linearly with several heads; how much of it a nonlinear `Φ`
+  undoes from one head is not bounded here.
