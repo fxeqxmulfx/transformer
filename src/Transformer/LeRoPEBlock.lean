@@ -11,6 +11,11 @@ public import Transformer.LeRoPEBlock.Bound
 public import Transformer.LeRoPEBlock.SlotFejer
 public import Transformer.LeRoPEBlock.SlotWeight
 public import Transformer.LeRoPEBlock.SlotDFT
+public import Transformer.LeRoPEBlock.SlotOneSided
+public import Transformer.LeRoPEBlock.SlotOneSidedHead
+public import Transformer.LeRoPEBlock.SlotGeometric
+public import Transformer.LeRoPEBlock.SlotDFTShift
+public import Transformer.LeRoPEBlock.SlotAdjacent
 
 /-!
 # A block of DiffGPT's main model with LeRoPE, against other positional schemes
@@ -52,4 +57,12 @@ model's own.
   frequencies of the discrete Fourier transform on `2R + 1` points keep
   `1 / (1 + 2R N^{−1−1/(2R)})` on the middle key, more than half (`depthWeight_dft`,
   `depthWeight_dft_mem`).
+* **The ends of the context.** Where `R` neighbours on each side do not fit, weights on keys of
+  the slot's token on one side do their job through Gibbs' inequality
+  (`depthWeight_le_of_weighted`). Geometric weights cap every head at
+  `1 / (1 + e^{(1 − r^T)(r − ln(1 − r))} N^{−(2(1 + r^{T+1})/(1 + r) + |β|)})` for every
+  `r ∈ (0, 1)`, on the key next to the query and on the first key
+  (`depthWeight_leropeLogit_le_geom`, `depthWeight_leropeLogit_le_geom_newer`): `0.676` and
+  `0.668` on `33` keys at `β = 0`. The DFT head turned by `t` keeps more than half on the key at
+  the distance `t` (`depthWeight_dft_shift`, `depthWeight_adjacent_mem`, `depthWeight_first_mem`).
 -/

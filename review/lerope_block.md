@@ -145,7 +145,8 @@ Request, 2026-11-21: in pricing functions of `n` variables (`review/flat_spectru
 *Functions of n variables*), bound from below and from above what one head of the main model can
 do to read the operand at a given distance. The positional scheme is LeRoPE alone, SSMax's gain
 kept; abstract statements are welcome, special cases are not wanted. Lean: `SlotFejer`,
-`SlotWeight` and `SlotDFT` of `src/Transformer/LeRoPEBlock/`.
+`SlotWeight`, `SlotDFT`, `SlotOneSided`, `SlotOneSidedHead`, `SlotGeometric`, `SlotDFTShift` and
+`SlotAdjacent` of `src/Transformer/LeRoPEBlock/`.
 
 A head reads the key at the distance `t` by putting its softmax weight there. When the keys
 around the slot carry the same token, or the head's keys ignore the token, only the way the score
@@ -211,15 +212,80 @@ as `R` grows. With a free gain `λ` and squared lengths `A` the same head pays
 `leropeLogit_dft`), against at least `(R / (R + 1)) ln(R (1 − ε)/ε)` for every head; as `ε → 0`
 the ratio of the two tends to `2 (R + 1)/(2R + 1) ≤ 4/3`.
 
+RS3, the ends of the context. RS1's window needs `R` keys of the slot's token on each side. The
+key next to the query has one key on its near side and the first key of the context none on its
+far side, so RS1 caps neither, and these are the slots a head reads when the operand sits at an
+end of the sequence. Weights on the keys of one side do the window's job.
+
+Put weights `w ≥ 0` summing to one on other keys, at the offsets `e` from the slot, on either
+side. Gibbs' inequality, `Σ e^a ≥ e^{Σ w a + H}` with the entropy `H = −Σ w ln w`
+(`exp_add_entropy_le`), turns margins into weight: if the margins `ℓ(t) − ℓ(t + e)` average to at
+most `M` under `w`, the slot keeps at most `1 / (1 + e^{H − M})` (`depthWeight_le_of_weighted`).
+A band's margins average to its value at the slot times `1 − C` minus its quadrature times `S`,
+where `C + iS = Σ w e^{ieθ}`, and value and quadrature are the two legs of the band's amplitude,
+so the average is at most `V` times the amplitude once `|1 − Σ w e^{ieθ}| ≤ V` at every frequency
+(`sum_weight_band_sub_le`). For a head of the main model, Q/K RMS and SSMax's gain make
+`M = (V + |β|) ln N` (`sum_weight_phaseLogit_sub_le`), and a slot whose weighted keys carry its
+token keeps at most
+
+```
+1 / (1 + e^H N^{−(V + |β|)})
+```
+
+whatever the frequencies and the query's token (`depthWeight_leropeLogit_le_of_weights`).
+
+The two numbers pull against each other: spreading `w` over more keys raises `H`, but the defect
+`V` stays above `1`. For offsets on one side, `1 − Σ w z^e` is a polynomial equal to `1` at
+`z = 0`, so the mean of `ln |1 − Σ w z^e|` over the unit circle is at least `0` (Jensen's
+formula); the polynomial vanishes at `z = 1`, where the weights sum to one, so its modulus
+exceeds `1` elsewhere on the circle and `V > 1` (by hand). Geometric weights strike the balance:
+`(1 − r) r^j` at the offsets `j + 1 ≤ T` and the rest, `r^T`, at `T + 1` (`geomWeight`,
+`sum_geomWeight`). With `z = e^{iφ}` the defect factors,
+`1 − Σ w z^{j+1} = (1 − z) Σ_{j≤T} (rz)^j` (`defect_eq_norm_sq`, `one_sub_sum_geomWeight`), and
+`(1 + r)|1 − z| ≤ 2|1 − rz|` on the circle (`one_add_mul_norm_one_sub_le`), so
+`V = 2(1 + r^{T+1})/(1 + r)` (`defect_geomWeight_le`), while
+`H ≥ (1 − r^T)(r − ln(1 − r))` (`le_entropy_geomWeight`). A key whose `T + 1` keys on one side
+carry its token keeps at most
+
+```
+1 / (1 + e^{(1 − r^T)(r − ln(1 − r))} N^{−(2(1 + r^{T+1})/(1 + r) + |β|)})
+```
+
+for every `r ∈ (0, 1)`: older keys for the key next to the query
+(`depthWeight_leropeLogit_le_geom`), newer keys for the first key of the context
+(`depthWeight_leropeLogit_le_geom_newer`).
+
+At `β = 0` and the best `r` (by hand), on `33` keys the key next to the query keeps at most
+`0.676` (`T = 30`, `r = 0.91`) and the first key `0.668` (`T = 31`). Next to the query the cap is
+`0.656` on `100` keys, `0.653` on `300`, `0.657` on `1000` (`r = 0.996`), `0.669` on `10⁴`,
+`0.688` on `10⁶` and `0.705` on `10⁹`: it is lowest near `300` keys and creeps back to `1`, the
+best `r` having `1 − r` of order `ln ln N / N` and the cap a deficit of order `1 / ln ln N` (by
+hand). On `33` keys one side already caps the end keys below RS1's `0.72` for the middle key; the
+middle key itself has only `16` keys on each side, and one side of them gives `0.82`, worse than
+RS1.
+
+From below, turn RS2's key by `t` instead of `R`. Now `t − δ` runs over `[−2R, 2R]`, past the
+window of `sum_cos_dft`, but the cosines of the discrete Fourier transform repeat with the period
+`N = 2R + 1`, so they still sum to `−1/2` at every `0 < |t − δ| ≤ 2R`
+(`sum_cos_dft_of_abs_le`). The distance `t` scores `ln N` and the other `2R` distances
+`−ln N/(2R)` (`leropeLogit_dft_shift`), and the key at the distance `t` keeps RS2's
+`1 / (1 + 2R N^{−1−1/(2R)})` (`depthWeight_dft_shift`), at every `t ≤ 2R`. Both sides together,
+at `β = 0` with the main model's `16` bands on `33` keys: the key next to the query keeps
+`0.535` under the DFT head and at most `0.676` under any head (`depthWeight_adjacent_mem`), the
+first key `0.535` and at most `0.668` (`depthWeight_first_mem`).
+
 ### Not claimed
 
-- Sharp constants. The factor `1 + |β|` is crude: the score itself is at most `(5/4) ln N` at
-  `|β| ≤ 1` (`leropeLogit_abs_le`). A sharper factor for the margins is not stated.
-- Slots near the ends. The theorem needs `R` keys on both sides of the slot (`R ≤ t`,
-  `t + R ≤ i`); a slot next to the query or at the start of the context is not covered.
+- Sharp constants. The factor `1 + |β|` is crude, and so is RS3's `|β|`: the score itself is at
+  most `(5/4) ln N` at `|β| ≤ 1` (`leropeLogit_abs_le`). A sharper factor for the margins is not
+  stated, and RS3 uses a lower bound on the entropy, not the entropy itself.
+- Long contexts at the ends. RS3's cap holds for any number of bands and creeps back to `1` as
+  `N` grows. With the main model's `16` bands the phases of all bands return together at some
+  distance (Dirichlet's simultaneous approximation), which drives the weight on any slot towards
+  `1/2`, but only from around `10⁵⁰` keys (by hand); nothing in between is stated.
 - Few bands. The DFT head needs `R` bands for `2R + 1` keys, so the main model's `16` bands
-  cover `33` keys. On a longer context the cap of RS1 still holds for every head, but nothing
-  here is built from below it.
+  cover `33` keys. On a longer context the caps of RS1 and RS3 still hold for every head, but
+  nothing here is built from below them.
 - That the main model realizes the DFT head. Its query and key are the same for every token, which
   needs `W_Q` and `W_K` to read a direction on which the tokens agree, as for the π head.
 - Content. The bound is for keys of one token around the slot. A head whose key depends on the
