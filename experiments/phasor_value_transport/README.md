@@ -180,3 +180,25 @@ The `pair-check` command exercises both supervised positions, repeated
 addresses and a one-token prefix. It compares nonzero table values with a
 scalar FP64 forward calculation, checks all 17 table gradients and the tied
 embedding by finite differences, and executes the Lean zero-row witness.
+
+## One architecture at every position
+
+The shared-value Phasor applies one hidden update to arithmetic pairs, long
+sequences, prime and composite vocabularies. At position `i`, let `b` be the
+current token and `a` its predecessor within that sequence. At the first
+position use the current token for both. The preceding Phasor feature scores
+the tied vocabulary embeddings. Attention reads the learned values translated
+by `ab` modulo the vocabulary size. The 17 learned tables above add their
+vectors to that read. With composite vocabulary size `V` the fourth table
+uses the total map `a b^(V-2) mod V`, with zero for a zero denominator.
+
+The normalized result is multiplied by one learned scalar and added to the
+current contextual Phasor feature. One tied projection of that combined
+hidden vector gives the prediction. The same computation runs at every
+training and generation position. All configurations initialize the gain at
+one and the tables at zero. Each task trains its own weights with the original
+AdamW, as specified by the GPT stress suite.
+
+Lean gives the exact decision margin and proves that, at any fixed depth,
+one gain and one right-operand table separate the whole zero row
+simultaneously at width 128 and modulus 97. [Shared forward map and proof](../../src/Transformer/Phasor/SharedValues.lean)
