@@ -1,14 +1,15 @@
 //! Scalar forward oracle and an end-to-end directional derivative through the tied embedding.
 use super::*;
 
-fn reference(scores: &[f32], e: &[f32], width: usize, offset: usize) -> Vec<f64> {
+pub(super) fn reference(scores: &[f32], e: &[f32], residual: &[f64], offset: usize) -> Vec<f64> {
+    let width = residual.len();
     let peak = f64::from(scores.iter().copied().fold(f32::NEG_INFINITY, f32::max));
     let masses: Vec<_> = scores
         .iter()
         .map(|&s| (f64::from(s) - peak).exp())
         .collect();
     let total: f64 = masses.iter().sum();
-    let mut value = vec![0.; width];
+    let mut value = residual.to_vec();
     for (s, mass) in masses.iter().enumerate() {
         let index = (s + offset) % scores.len();
         for (v, &x) in value.iter_mut().zip(&e[index * width..]) {
@@ -41,6 +42,7 @@ pub fn run() -> Result<()> {
     ];
     let cfg = config(8)?;
     let (p, d) = (cfg.vocab, cfg.width);
+    let zero = vec![0.; d];
     let initial = layout::initialize_model(&cfg, SEED);
     let mut e = Engine::new(cfg, &initial)?;
     let l = ValueLayer::new(&e)?;
@@ -56,7 +58,7 @@ pub fn run() -> Result<()> {
             let gold = reference(
                 &scores[2 * i * p..(2 * i + 1) * p],
                 &initial[..p * d],
-                d,
+                &zero,
                 offset,
             );
             for (&v, expected) in actual[(2 * i + 1) * p..].iter().zip(gold) {

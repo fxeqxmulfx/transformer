@@ -27,3 +27,4 @@ arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stre
 kernite-cuda = { path = "../../.lake/reproduction/kgen/crates/cuda" }
 kernite-macros = { path = "../../.lake/reproduction/kgen/crates/macros" }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+sha2 = "=0.11.1"

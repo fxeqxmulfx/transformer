@@ -2,14 +2,19 @@
 #![recursion_limit = "256"]
 
 use arithmetic::{CASES, dataset};
+use arithmetic::{hash, reference as arithmetic_data};
 use serde_json::{Value, json};
 use std::{env, fs, io::Write, path::Path};
 
 mod addresses;
+mod pair_checks;
+mod pair_memory;
+mod pair_ops;
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
 mod checks;
 mod snapshot;
+mod stress;
 
 const SEED: u32 = 1;
 const BUDGET: usize = 100_000;
@@ -33,6 +38,7 @@ fn config(batch: usize) -> Result<Config> {
         warmup: schedule::Schedule::new(BUDGET)?.warmup,
         architecture: "complex-phase-score-lerope".into(),
         phase_optimizer: false,
+        pair_values: false,
     })
 }
 
@@ -98,9 +104,10 @@ fn evaluate(
     )
 }
 
-fn cell(candidate: bool, out: &Path, seed: u32) -> Result<()> {
+fn cell(arm: &str, out: &Path, seed: u32) -> Result<()> {
     let data = cubic_data()?;
-    let cfg = config(BATCH)?;
+    let mut cfg = config(BATCH)?;
+    cfg.pair_values = arm == "pair-values";
     let initial = layout::initialize_model(&cfg, seed);
     let digest = arithmetic::hash(
         &initial
@@ -109,13 +116,14 @@ fn cell(candidate: bool, out: &Path, seed: u32) -> Result<()> {
             .collect::<Vec<_>>(),
     );
     let mut e = Engine::new(cfg, &initial)?;
-    let layer = candidate.then(|| ValueLayer::new(&e)).transpose()?;
+    let layer = (arm == "transport")
+        .then(|| ValueLayer::new(&e))
+        .transpose()?;
     let mut opt = optimizer::Optimizer::new(&e, BUDGET)?;
     let mut rng = random::Random::new(seed.checked_add(10_000).ok_or("invalid order seed")?);
     let mut epoch = Vec::new();
     let mut offset = 0;
     fs::create_dir_all(out)?;
-    let arm = if candidate { "transport" } else { "phasor" };
     let mut log = fs::OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -135,7 +143,7 @@ fn cell(candidate: bool, out: &Path, seed: u32) -> Result<()> {
             writeln!(log, "{row}")?;
             log.flush()?;
             println!("{row}");
-            if candidate && (completed == OBSERVE || completed == WINDOW) {
+            if layer.is_some() && (completed == OBSERVE || completed == WINDOW) {
                 snapshot::save(&e, &out.join(format!("transport-{completed}.f32")))?;
             }
         }
@@ -169,14 +177,19 @@ fn main() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
         [op] if op == "check" => checks::run(),
-        [arm, dest] if arm == "transport" || arm == "phasor" => {
-            cell(arm == "transport", Path::new(dest), SEED)
+        [op] if op == "pair-check" => pair_checks::run(),
+        [op] if op == "routes" => stress::routes(),
+        [op, name, seed, out] if op == "cell" => stress::run(name, seed.parse()?, Path::new(out)),
+        [op, name, seed, out] if op == "replay" => stress::replay(name, seed.parse()?, Path::new(out)),
+        [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "pair-values") => {
+            cell(arm, Path::new(dest), SEED)
         }
-        [arm, dest, seed] if arm == "transport" || arm == "phasor" => {
-            cell(arm == "transport", Path::new(dest), seed.parse()?)
+        [arm, dest, seed] if matches!(arm.as_str(), "transport" | "phasor" | "pair-values") => {
+            cell(arm, Path::new(dest), seed.parse()?)
         }
         [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
-        [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport check | {transport|phasor} RUN_DIR [SEED] | inspect FILE | predict FILE A B".into()),
+        [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
+        [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
+        _ => Err("usage: phasor-value-transport {check|pair-check|routes} | {cell|replay} CASE SEED RUN_DIR | {transport|phasor|pair-values} RUN_DIR [SEED] | inspect FILE | predict FILE [PRIME] A B".into()),
     }
 }

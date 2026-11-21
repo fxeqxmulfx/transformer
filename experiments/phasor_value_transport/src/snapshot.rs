@@ -16,8 +16,7 @@ pub fn save(e: &Engine, path: &Path) -> Result<()> {
     Ok(())
 }
 
-fn load(path: &Path, batch: usize) -> Result<Engine> {
-    let cfg = config(batch)?;
+fn load(path: &Path, cfg: Config) -> Result<Engine> {
     let bytes = fs::read(path)?;
     if bytes.len() != 4 * layout::total_count(&cfg) {
         return Err("wrong checkpoint length".into());
@@ -32,11 +31,21 @@ fn load(path: &Path, batch: usize) -> Result<Engine> {
     Engine::new(cfg, &weights)
 }
 
-pub fn predict(path: &Path, a: u32, b: u32) -> Result<()> {
-    let mut e = load(path, 1)?;
+pub fn predict(path: &Path, field: Option<usize>, a: u32, b: u32) -> Result<()> {
+    let mut cfg = config(1)?;
+    if let Some(prime) = field {
+        cfg.vocab = prime;
+        cfg.pair_values = true;
+        if !pair_memory::active(&cfg) {
+            return Err("pair prediction requires a prime vocabulary".into());
+        }
+    }
+    let mut e = load(path, cfg)?;
     e.forward(&[a, b], &[u32::MAX, u32::MAX], 1, 2)?;
     let address = e.predictions.read()?[0];
-    ValueLayer::new(&e)?.forward(&e, 1, true)?;
+    if field.is_none() {
+        ValueLayer::new(&e)?.forward(&e, 1, true)?;
+    }
     println!(
         "{}",
         json!({"a":a,"b":b,"address":address,"prediction":e.predictions.read()?[1]})
@@ -81,7 +90,7 @@ fn gram_gaps(e: &[f32], p: usize, d: usize) -> Vec<Vec<(f64, f64)>> {
 
 pub fn inspect(path: &Path) -> Result<()> {
     let data = cubic_data()?;
-    let mut e = load(path, BATCH)?;
+    let mut e = load(path, config(BATCH)?)?;
     let (p, d) = (e.config.vocab, e.config.width);
     let layer = ValueLayer::new(&e)?;
     let metrics = evaluate(&mut e, Some((&layer, true)), &data.validation)?;

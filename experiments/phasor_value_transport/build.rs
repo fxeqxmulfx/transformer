@@ -76,6 +76,52 @@ fn main() {
         );
         engine = engine.replace(from, to);
     }
+    // The ordinary parameter group includes the new hidden tables. Keep the
+    // optimizer, cross-entropy and schedule at their pinned implementations.
+    for (from, to) in [
+        (
+            "pub phase_optimizer: bool,",
+            "pub phase_optimizer: bool,\n    pub pair_values: bool,",
+        ),
+        (
+            "pub struct Engine {",
+            "pub struct Engine {\n    pair_layer: Option<ValueLayer>,",
+        ),
+        (
+            "let mut engine = Self {",
+            "let mut engine = Self {\n            pair_layer: None,",
+        ),
+        (
+            "        Ok(engine)",
+            "        engine.enable_pair_values()?;\n        Ok(engine)",
+        ),
+        (
+            "        let normalizer = labels",
+            "        self.project_pair_values(tokens, batch, length)?;\n        let normalizer = labels",
+        ),
+        (
+            "pub fn backward(&self, batch: usize, length: usize)",
+            "fn backward_original(&self, batch: usize, length: usize)",
+        ),
+    ] {
+        assert_eq!(
+            engine.matches(from).count(),
+            1,
+            "unexpected engine source for {from}"
+        );
+        engine = engine.replace(from, to);
+    }
+    let layout = fs::read_to_string(src.join("layout.rs")).unwrap();
+    let offset = "score_offset(cfg) + score_count(cfg)";
+    assert_eq!(layout.matches(offset).count(), 1);
+    fs::write(
+        out.join("layout.rs"),
+        layout.replace(
+            offset,
+            "crate::pair_memory::start(cfg) + crate::pair_memory::parameters(cfg)",
+        ),
+    )
+    .unwrap();
     let mhc = src.join("engine_mhc.rs");
     engine = engine.replace(
         "include!(\"engine_mhc.rs\");",
@@ -90,18 +136,18 @@ fn main() {
     for (dir, names) in [
         (
             src,
-            "attention base_ops centered_attention embedding_backward layout mhc optimizer optimizer_kernels ordinary_attention ordinary_forward phase_mhc phase_score phase_score_forward pipeline pipeline_host placement precision rotary stable_attention stable_chain stable_loss tensor tiled_transpose",
+            "attention base_ops centered_attention embedding_backward mhc optimizer optimizer_kernels ordinary_attention ordinary_forward phase_mhc phase_score phase_score_forward pipeline pipeline_host placement precision rotary stable_attention stable_chain stable_loss tensor tiled_transpose",
         ),
         (
             geometry.join("native/src"),
-            "complex gemm random sequence_ops",
+            "blake complex data gemm metrics pcg random sequence_ops",
         ),
         (geometry.join("diagnostic/src"), "plain_product"),
         (
             gpt.join("research/main_model/wsd_suite_native/src"),
             "schedule",
         ),
-        (out.clone(), "engine"),
+        (out.clone(), "engine layout"),
     ] {
         for name in names.split_whitespace() {
             let path = dir.join(format!("{name}.rs"));

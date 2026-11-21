@@ -135,3 +135,46 @@ operands on the zero row, with the transport branch active. The field layer
 applies to position one (zero-based) in a model configured for exactly two
 tokens and a prime vocabulary. Every other position or configuration uses the
 ordinary causal Phasor. [Forward map and proofs](../../src/Transformer/Phasor/PairValues.lean)
+
+### Training and replay
+
+The pair layer adds 211,072 parameters at modulus 97 and 419,968 at modulus
+193. They join the existing AdamW group for ordinary real coordinates before
+the LeRoPE frequency group. Initialization, minibatch order, warmup, learning
+rates, weight decay, gradient clipping, cross-entropy and the tied projection
+use the same implementations as Phasor. Training and greedy generation both
+call the modified engine's ordinary forward method. Inactive configurations
+allocate zero additional parameters.
+
+The stress runner reconstructs the fingerprinted data and uses the pinned
+DiffGPT complete-split scorer, including autoregressive decoding on generation
+tasks. Each case and model seed starts from fresh weights. The suite criterion
+is the first scheduled observation with at least 99% exact sequences on the
+primary held-out split. NV11 is a separate half-table experiment. [Stress
+protocol and task definitions](../convex_stress/suite.json)
+
+From the repository root with the pinned source checkouts described above:
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.PairValues
+cd experiments/phasor_value_transport
+cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+"$bin" pair-check
+./run_stress.sh cell runs/pair-values
+./run_stress.sh replay runs/pair-values
+"$bin" predict runs/pair-values/arithmetic-cubic-product/seed0/weights.f32 97 12 34
+for seed in 0 1 2
+do
+    "$bin" pair-values "runs/pair-retention/seed$seed" "$seed"
+done
+```
+
+For a single task, use `cell CASE SEED RUN_DIR` and `replay CASE SEED RUN_DIR`.
+Replay checks the weights digest, precision, suite identity and exact held-out
+count. It also measures the zero row with the trained tables and with the
+tables cleared. Prediction uses the two operands and the field size.
+The `pair-check` command exercises both supervised positions, repeated
+addresses and a one-token prefix. It compares nonzero table values with a
+scalar FP64 forward calculation, checks all 17 table gradients and the tied
+embedding by finite differences, and executes the Lean zero-row witness.

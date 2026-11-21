@@ -28,9 +28,12 @@ pub mod kernels {
         ld.global.u32(a, [addr]);
         add.u64(addr, addr, 4);
         ld.global.u32(b, [addr]);
-        mul.lo.u32(offset, a, b);
+        let (product, modulus): (u64, u64);
+        mul.wide.u32(product, a, b);
+        cvt.u64.u32(modulus, p);
+        rem.u64(product, product, modulus);
+        cvt.u32.u64(offset, product);
         mul.lo.u32(offset, offset, route);
-        rem.u32(offset, offset, p);
         mul.lo.u32(row, row, 2);
         mul.lo.u32(row, row, p);
     }

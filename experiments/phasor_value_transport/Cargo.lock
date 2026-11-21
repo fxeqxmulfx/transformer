@@ -159,6 +159,7 @@ dependencies = [
  "kernite-cuda",
  "kernite-macros",
  "serde_json",
+ "sha2",
 ]
 
 [[package]]
