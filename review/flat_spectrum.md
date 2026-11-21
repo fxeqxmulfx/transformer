@@ -6894,7 +6894,7 @@ So the test reaches the cheapest code of `a³ + a b`, and spares `χ(a b)`, `χ(
 `‖R‖ / ‖G‖ = 0.707`, and main still passes this task in one layer. A route open to it is to hold
 the rank-one features `ψ(j (a + b))` and let the readout do the squaring (NV9). So a complete
 account prices features and readout together, not codes of `f`. For `a³ + a b` no rank-one route
-is known. That is open, not proved.
+is known, and NV11 excludes one through a single feature. The general question is open.
 
 *Depth.* Beyond one layer the cost is no longer spectral, and that is where depth can matter.
 NV7's tree writes `ψ(f)` for `k` copies with one leaf per pair, at `(3/2) p^{4/3}` each, and `k − 1`
@@ -6904,6 +6904,46 @@ factorization `p^{3k/2}`. The tree can do this because `ψ(f)` has rank one acro
 the copies. This prices the right answer only. Whether it is the cheapest interpolant of a split
 in the deep model is open, and nothing here decides it.
 
+### NV11. What no single feature carries
+
+CM121 of `review/convex/moments.md` makes `a b`, `a + a b` and `a³ + a b` one task for the convex
+learner: its free table absorbs any shift `c ↦ c + u(a) + v(b)` of a cell's classes. Main has no
+free table, so it has to compute the shift. What can one feature do towards that? A character
+turns one operation into a product, `ψ(x + y) = ψ(x) ψ(y)` and `χ(x y) = χ(x) χ(y)`, so for `∘` the
+sum or the product of `ℤ/p`, a task `f = h(u(a) ∘ v(b))` is a readout of rank-one characters of
+the single feature `u(a) ∘ v(b)`. The task `a + a b = a (1 + b)` has this form, and so does
+`(a + b)²`, the route NV10 named. Does `a³ + a b`?
+
+It does not. Take any `f = w(a) + a b`. Each nonzero row is a bijection of `b`, so in
+`f = h(u(a) ∘ v(b))` the map `v` is injective, and on at most `p` values it is a bijection.
+
+*In a group.* Compare the rows `1` and `−1`. If `u(−1) v(b') = u(1) v(b)`, the two cells have the
+same answer. Inside the group, `b ↦ b'` is a translation by `g = u(−1)⁻¹ u(1)`, which has no fixed
+point unless `g = 1`. On the answers it is the reflection `b' = w(−1) − w(1) − b`, which for odd
+`p` has one. So `g = 1`, and then the rows `1` and `−1` would be equal, which they are not. For
+`p ≥ 3`, no `w(a) + a b` is a function of a product in a group of at most `p` elements, even on
+the nonzero rows alone.
+
+*With a zero.* Let `v(b₀) = 0`. Then every nonzero row has the same answer in column `b₀`,
+`w(a) + a b₀ = h(0)`, so `w(a) = h(0) − b₀ a` is affine on `a ≠ 0`. Conversely,
+`c + d a + a b = c + a (b + d)` is a function of the product `a · (b + d)`. So in `ℤ/p` with
+multiplication, `w(a) + a b` has a feature exactly when `w` is affine on `a ≠ 0`. A power `a^k`
+with `2 ≤ k ≤ p − 2` is not: `X^k − d X − c` would be a nonzero polynomial of degree `k` with
+`p − 1` roots.
+
+So for `p ≥ 5`, neither `a³ + a b` nor `a² + a b` is a function of `u(a) ∘ v(b)`, for `∘` the
+operation of a group or of a type with zero of at most `p` elements. Both bounds are needed. The
+case with a zero fails at `p = 3`, where the cube is the identity and `a³ + a b = a (b + 1)`. And
+every table is a function of `u(a) + v(b)` in `ℤ/p × ℤ/p`, with `u(a) = (a, 0)` and
+`v(b) = (0, b)`, at `p²` values.
+
+*What this does not say.* It is about one feature. A model may hold several, and `(a, b)` itself
+is two. So it closes only the one-feature route that NV10 left open for `a³ + a b`, and does not
+show that main cannot represent the task: main's failure at depth 1 and depth 4 (E1 of
+`~/python_projects/gpt/research/depth_visibility/README.txt`) has no proved cause. In particular
+the theorem says nothing that separates depth 4 from depth 1, and which code main actually holds
+has not been measured.
+
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
@@ -6911,8 +6951,8 @@ in the deep model is open, and nothing here decides it.
 `ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies`,
 `ProductOneLayer`, `ProductOrder`, `ProductCorners` and `ProductDepth`; for NV9, `SharedEmbedding`
 and `SharedLayer`; for NV10, `UnitaryAverage`, `ProductCost`, `ProductCostSVD`,
-`ProductCostFlat` and `ProductCostCodes`, all of `src/Transformer/Grokking/FlatSpectrum/`, namespace
-`Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
+`ProductCostFlat` and `ProductCostCodes`; for NV11, `SingleFeature`, all of
+`src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
 `Transformer.Grokking.FlatSpectrum.Recall`; for NV8, `Slots`, `States`, `Pairs`, `Heads`, `Read`,
@@ -6940,6 +6980,7 @@ and `SharedLayer`; for NV10, `UnitaryAverage`, `ProductCost`, `ProductCostSVD`,
 | NV8 | the stream: `Slot`, `card_slot`, `coordSlots`, `orthonormal_coordSlots`, `vec`, `inner_vec_vec`, `rmsNormEps_vec`; the states: `embC`, `sum_embC_sq`, `stateC`, `stateC_add`, `smul_stateC`, `sum_stateC_sq`, `sum_embC_mul_stateC`, `cos_angle_sub_le`; the attention: `dftAlpha`, `leropeFrequencies_dftAlpha`, `dftQuery`, `dftKey`, `attention0`, `dftScale_pos`, `oneHeads_attention0`, `readOut`, `readOut_heads`; the FFN: `ffnOf`, `plainFFN_ffnOf`, `ffn0`, `plainFFN_ffn0`, `ffn1`, `plainFFN_ffn1`; the model: `twoModel`, `apply_layer0`, `apply_layer1`, `states_add_two`, `states_twoModel`, `logits_twoModel`; the margin: `one_sub_cos_pos`, `three_kEmb_lt`, `bTwo`, `gTwo`, `logits_twoModel_lt`; the statements: `exists_oneModel_twoCopies`, `exists_model_twoCopies` | The model is R0's `OneModel D d 4 F p`, its vocabulary the `p` residues, and main's is its `withRouters` with plain routers. The context is `tokens : ℕ → Fin p`, read at the position `3`, and the answer is `q 0 (tokens 0) (tokens 1) + q 1 (tokens 2) (tokens 3)` in `Fin p`. The depth scale `s > 0` is free, so main's `α = 1/√(2L)` is a case; the phase-score coefficients are `0`. `logits_twoModel_lt` holds for any orthonormal slots and codes, and the existence statements use the coordinate directions. The projections are real-linear; the complex-linear count, `k` copies and the comparison with NV2 are by hand. The examples are at main's widths, `D = 128`, `d = 32`, `F = 171`, `ε = 2⁻²³` and `s = 1/√8`, with real-linear projections and `x³ + x y` over `ℤ/29`. |
 | NV9 | the count: `IsSharedTable`, `transpose_shared`, `mulVec_mem_of_shared`, `IsSharedTable.finrank_col_sup_row_le`, `not_isSharedTable_of_lt`, `not_isSharedTable_cubicKernel`; the code: `mulCharLogit`, `mulCharLogit_lt`, with `rank_cubicKernelMulChar`, `card_eigenvalues_cubicKernelMulChar` and `singularValues_cubicKernelMulChar_mem` of `MulCharSpectrum`; the layer: `IsSharedTable.add`, `IsSharedTable.smul`, `isSharedTable_left`, `isSharedTable_right`, `isSharedTable_const`, `isSharedTable_zero`, `isSharedTable_bilinear`, `isSharedTable_product`, `IsProductLayer.isSharedTable`; `k` copies: `copiesEmbedding`, `IsProductLayer.ne_bilinearKernel`, `IsProductLayer.ne_copies` | The count is over any field, for a matrix `E` whose rows are the tokens. The layer is NV7's `IsProductLayer` over `ℂ` at the state `A (E a) + B (E b) + z`, with `A`, `B` from the embedding's coordinates to the state's; that main's layer has this form, for positional heads without `R_D`, is by hand. For `k` copies the table is square over `Fin k → ZMod p`, and any invertible coupling `M` will do. The example of `ne_copies` is at `D_ℂ = 64`, `k = 2`, `p = 13`. The thresholds on `p`, the conjugate count `2 D_ℂ + 3`, Forster's bound and the experiment's numbers are by hand. |
 | NV10 | the bound: `productCost`, `sum_rpow_singularValues_mul_le`, `productCost_le`, with `rpow_one_third_le`, `sum_rpow_one_third_le`, `sum_norm_sq_col_eq_one`, `sum_norm_sq_row_eq_one`, `mul_diagonal_mul_apply_self`, `apply_eq_zero_of_gram`, `isContraction_conjTranspose_of_gram`; the minimum: `frobeniusSq_mul_diagonal_ofReal`, `exists_productFactorization`, `productCost_isLeast`; the scale: `frobeniusSq_smul_eq`, `productCost_smul_le`, `productCost_smul`; Theorem A: `rpow_two_thirds_le`, `productCost_lt_of_nuclearNorm_lt`, `not_isLocalMinOn_productCost`, `cubicKernel_apply_ne_zero`, `not_isLocalMinOn_productCost_cubicKernel`; the codes: `productCost_cubicKernel`, `productCost_vecMulVec_le`, `sqrt_rpow_two_thirds`, `productCost_cubicKernelMulChar`, `productCost_mulCode_le` | The layer is `M = G diag(o) Wᴴ`; `Wᵀ` is the case of a conjugated `W`, of the same norm. The proof does not use Hölder: it compares the eigenbases of `Mᴴ M` and `Yᴴ Y` for `Y = diag(o) Wᴴ`, whose squared overlaps are doubly stochastic, and averages `x^{1/3} ≤ x/(3t²) + 2t/3`. Theorem A is stated for a square `K` with equal singular values and no zero entry, as `¬ IsLocalMinOn`. For `χ(a b)` the statement is an upper bound. The gradient, the tangent-space test for codes of lower rank and the cost of the tree are by hand; the table is computed in Rust. That the network's layer has this form, and the choice of normalization, are by hand. |
+| NV11 | `bijective_of_feature`, `exists_affine_of_mul_feature`, `not_group_feature`, `not_addGroup_feature`, `exists_mul_feature_iff`, `pow_not_affine`, `pow_add_mul_not_mulZero_feature`, `cubic_not_group_feature`, `cubic_not_addGroup_feature`, `cubic_not_mulZero_feature`, `cubic_mul_feature_three`, `exists_prod_feature` | The operation is a group's, written multiplicatively or additively and not assumed commutative, or the multiplication of a `MulZeroClass`, on a type with `Nat.card ≤ p`. The general statements hold on the rows `a ≠ 0`, those for `a³ + a b` on all cells. The group case for `a³ + a b` needs only `p ≥ 3`. That a character of one feature is a rank-one table, and the links to CM121, NV10 and main, are by hand. |
 
 ## What a part of the table determines (added)
 
