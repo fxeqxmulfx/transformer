@@ -37,6 +37,14 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.decoderHull_fit_minimum
 #print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.decodedPhase_hull_minimum
 #print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.corner_decoderHull_ambiguity
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.rows_shift_iff
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.moment_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.norm_moment_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.nuclearNorm_moment_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.budgetFeasible_shift_iff
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.shift_image_budgetFeasible
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.loss_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.shift_fit_iff
 
 run_cmd do
   let env ← getEnv

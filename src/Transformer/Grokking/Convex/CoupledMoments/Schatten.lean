@@ -18,12 +18,13 @@ public import Transformer.Grokking.Convex.CoupledMoments.Schatten.Paired
 public import Transformer.Grokking.Convex.CoupledMoments.Schatten.PairedPhase
 public import Transformer.Grokking.Convex.CoupledMoments.Schatten.PairedCoding
 public import Transformer.Grokking.Convex.CoupledMoments.Schatten.PairedLimits
+public import Transformer.Grokking.Convex.CoupledMoments.Schatten.Shift
 
 /-!
 # Shared complex moments with singular-value budgets
 
-Source: `review/convex/moments.md`, CM5–CM7, CM9–CM11 and CM13–CM16. Convex bounds on the largest
-singular value
+Source: `review/convex/moments.md`, CM5–CM7, CM9–CM11, CM13–CM16 and CM121. Convex bounds on
+the largest singular value
 and their sum accommodate different spectral shapes. A concrete rank-one recovery proof
 starts with ordinary empirical CE and does not assume correct missing labels or a trained
 factorization. The two endpoint budgets miss an explicit intermediate-rank moment.
@@ -46,6 +47,8 @@ Equal probabilities on opposite latent states are linear constraints that cost a
 decoder no prediction; a symmetric phase witness is feasible and CE-optimal when it fits,
 the folding decoder admits a table outside the permutation-phase constructions, and two
 paired optima still disagree at an unseen cell.
+A class shift `c ↦ c + u i + v j` in every cell maps each budget set of character moments onto
+itself and observed CE to observed CE with the labels shifted alike.
 -/
 
 @[expose] public section

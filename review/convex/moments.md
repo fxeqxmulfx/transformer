@@ -8343,3 +8343,47 @@ six Rewrite tasks and two-hop lookup. Check all teacher and greedy
 training vectors at zero, the complete training-loss derivative at zero,
 and the fixed coefficients $-4,-2,-1,0,1,2,4$. These measurements use
 the original training examples and their ordinary next-object targets.
+
+## CM121. A class shift in every cell is a symmetry of the budget sets
+
+E6 (`experiments/convex_stress_schatten_mixed`) runs the unchanged Schatten
+learner on the labels $ab+u(a)+v(b)$, among them $a^3+ab$, and every cell
+stops as multiplication's. The reason is a symmetry of the model.
+
+Let the classes form a finite additive group and give the cell $(i,j)$ the
+offset $u_i+v_j$. The shift
+
+$$
+(TP)(i,j,c)=P(i,j,c-u_i-v_j)
+$$
+
+permutes the classes inside each cell, so $P$ has probability rows exactly
+when $TP$ does. It is linear and fixes the uniform table, so it commutes with
+the common mixture of CM4.
+
+CM12 showed that one global renaming of the classes need not preserve a
+spectral bound in a fixed code. This translation, different in each cell,
+does preserve it when the code is an additive character $\chi$ of the class
+group:
+
+$$
+M_\chi(TP)=\operatorname{diag}(\chi(u))\,M_\chi(P)\,\operatorname{diag}(\chi(v)).
+$$
+
+The moment gains unit phases on its rows and columns, which change neither its
+operator norm nor its nuclear norm. So $T$ maps every budget set of CM5 with
+character codes onto itself, at all radii and budgets. The Fourier codes
+$c\mapsto\exp(2\pi i fc/V)$ of CM3 are such characters. A code that is not an
+additive character of the classes, such as a multiplicative character, is
+outside this statement.
+
+Cross-entropy reindexes in the same way. With the labels moved by the cell's
+offset,
+
+$$
+\operatorname{CE}\big((TP)(i,j),\,y+u_i+v_j\big)=\operatorname{CE}\big(P(i,j),\,y\big),
+$$
+
+because the softmax denominator sums over all classes. So the observed loss
+and the exact observed fits of $y+u+v$ under $TP$ are those of $y$ under $P$.
+`CoupledMoments/Schatten/Shift.lean` proves these statements.
