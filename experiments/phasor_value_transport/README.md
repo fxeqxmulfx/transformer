@@ -53,6 +53,27 @@ crossed 99% with the smaller gain. These published splits informed the choice
 of initialization. The reported quarter-gain suite starts each task and seed
 from fresh weights.
 
+## NV11 results
+
+Each model reached the original 99% held-out threshold at update 1,500.
+Continuing the same AdamW trajectory produced one checkpoint per seed that
+classified all 4,704 training pairs and all 4,705 held-out pairs correctly.
+An exhaustive forward replay with masked targets measured the smallest
+target logit minus its highest-scoring rival on each split.
+
+| Seed | Held-out correct at 1,500 | First observed all 9,409 correct | Minimum training margin | Minimum held-out margin |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 4,700/4,705 | 2,500 updates | 12.3811 | 3.6761 |
+| 1 | 4,703/4,705 | 2,000 updates | 13.5084 | 1.5141 |
+| 2 | 4,701/4,705 | 2,000 updates | 10.9942 | 1.9265 |
+
+At update 2,000 seed 0 still missed the held-out pair `(23, 13)`.
+Its target was 50 and class 63 led by 1.5026 logits. The first exact
+checkpoint for this seed assigns the correct class to that pair as well.
+At update 5,000 all three checkpoints again classified the complete
+modulus-97 table correctly, with minimum held-out margins of 10.9882,
+9.1783 and 11.6655 in seed order.
+
 ## Training and replay
 
 Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` and Kernite at
