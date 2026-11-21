@@ -363,7 +363,8 @@ probability bounds outside that coverage are not claimed as proved.
    equivalence as sequences of the source's elementary operations and
    Proposition 1.1; canonical matrices, switching and scaling; walks, cycles,
    thetas, biased graphs and the balanced cycles of a gain function; Propositions
-   2.1, 2.2 and 4.1 and Lemma 4.2.
+   2.1, 2.2 and 4.1 and Lemma 4.2; counterexamples to Conjectures 1 and 2 as
+   literally stated.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
