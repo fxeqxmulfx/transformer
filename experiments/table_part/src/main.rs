@@ -443,4 +443,154 @@ mod tests {
         assert_eq!(outside, witnesses.len());
         Ok(())
     }
+
+    const LEAN_DIV_PARTS: &str =
+        include_str!("../../../src/Transformer/Grokking/FlatSpectrum/TablePart/E6DivParts.lean");
+
+    /// The tasks `(a / b)^k` on the tables without the column `b = 0`, as `(name, p, k, data)`.
+    fn div_tables() -> arithmetic::Result<Vec<(String, u32, u32, Dataset)>> {
+        let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
+        let mut tables = Vec::with_capacity(15);
+        for row in &cases {
+            let spec = &row["case"]["data"];
+            let k = match spec["operation"].as_str() {
+                Some("div") => 1,
+                Some("power-division") => spec["power"].as_u64().ok_or("power")? as u32,
+                _ => continue,
+            };
+            if let Some(d) = arithmetic::dataset::build(row)? {
+                let name = row["case"]["name"].as_str().ok_or("name")?;
+                tables.push((name.to_owned(), d.training.vocabulary as u32, k, d));
+            }
+        }
+        Ok(tables)
+    }
+
+    /// The mask `mask{p}` of `E6DivParts.lean`, one flag per cell `a (p − 1) + (b − 1)`. A bit
+    /// beyond the table panics.
+    fn lean_div_mask(p: u32) -> Vec<bool> {
+        let header = format!("def mask{p} : ℕ := fromWords 368 [");
+        let (_, rest) = LEAN_DIV_PARTS.split_once(&header).expect("the mask");
+        let (body, _) = rest.split_once(']').expect("the end of the mask");
+        let mut bits = vec![false; (p * (p - 1)) as usize];
+        for (w, word) in body.split(',').enumerate() {
+            let hex = word.trim().strip_prefix("0x").expect("a hex word");
+            assert_eq!(hex.len(), 92);
+            for (i, c) in hex.chars().rev().enumerate() {
+                let digit = c.to_digit(16).expect("a hex digit");
+                for j in (0..4).filter(|j| (digit >> j) & 1 == 1) {
+                    bits[w * 368 + 4 * i + j] = true;
+                }
+            }
+        }
+        bits
+    }
+
+    /// The rectangles of `E6DivParts.lean`: a task, its `k` and two rectangles.
+    fn lean_div_witnesses() -> Vec<(&'static str, u32, [u32; 16])> {
+        LEAN_DIV_PARTS
+            .lines()
+            .filter_map(|line| {
+                let (_, rest) = line.split_once("(\"")?;
+                let (name, rest) = rest.split_once('"')?;
+                let numbers: Vec<u32> = rest
+                    .split(|c: char| !c.is_ascii_digit())
+                    .filter(|x| !x.is_empty())
+                    .map(|x| x.parse().expect("a number"))
+                    .collect();
+                let (k, rectangles) = numbers.split_first().expect("k");
+                Some((
+                    name,
+                    *k,
+                    <[u32; 16]>::try_from(rectangles).expect("two rectangles"),
+                ))
+            })
+            .collect()
+    }
+
+    /// `x^k` modulo `p`, written apart from the port of the data so that the check is independent.
+    fn pow_mod(mut x: u32, mut k: u32, p: u32) -> u32 {
+        let mut out = 1;
+        while k > 0 {
+            if k & 1 == 1 {
+                out = out * x % p;
+            }
+            x = x * x % p;
+            k >>= 1;
+        }
+        out
+    }
+
+    /// The masks of `E6DivParts.lean` are the training cells of all 15 tasks on the tables without
+    /// the column `b = 0`, and the labels of each table are `(a / b)^k`.
+    #[test]
+    fn lean_div_masks_are_the_training_cells() -> arithmetic::Result<()> {
+        let tables = div_tables()?;
+        assert_eq!(tables.len(), 15);
+        for (name, p, k, d) in &tables {
+            let (p, k) = (*p, *k);
+            let mask = lean_div_mask(p);
+            assert_eq!(
+                d.training.rows.len() + d.validation.len(),
+                mask.len(),
+                "{name}"
+            );
+            let mut train = vec![false; mask.len()];
+            for &[a, b, _] in &d.training.rows {
+                assert_ne!(b, 0, "{name}");
+                train[((p - 1) * a + b - 1) as usize] = true;
+            }
+            assert_eq!(
+                train.iter().filter(|&&x| x).count(),
+                d.training.rows.len(),
+                "{name}"
+            );
+            assert_eq!(train, mask, "{name}");
+            for &[a, b, y] in d.training.rows.iter().chain(&d.validation) {
+                assert_ne!(b, 0, "{name}");
+                assert_eq!(pow_mod(a * pow_mod(b, p - 2, p) % p, k, p), y, "{name}");
+            }
+        }
+        Ok(())
+    }
+
+    /// Every cell and label of the rectangles in `E6DivParts.lean` is a training row of its task,
+    /// with the task's `k`, and these are exactly the tasks the solve puts outside the class.
+    #[test]
+    fn lean_div_witnesses_are_training_cells() -> arithmetic::Result<()> {
+        let witnesses = lean_div_witnesses();
+        assert_eq!(witnesses.len(), 12);
+        let mut outside = 0;
+        for (name, p, k, d) in &div_tables()? {
+            let mut present = vec![false; 2 * *p as usize];
+            for &[a, b, _] in d.training.rows.iter().chain(&d.validation) {
+                present[a as usize] = true;
+                present[(*p + b) as usize] = true;
+            }
+            let none = matches!(
+                complete(*p, &d.training.rows, &present),
+                Completion::NoMember
+            );
+            let witness = witnesses.iter().find(|w| w.0 == name);
+            assert_eq!(none, witness.is_some(), "{name}");
+            assert_eq!(none, *k != 0, "{name}");
+            let Some((_, lean_k, w)) = witness else {
+                continue;
+            };
+            assert_eq!(lean_k, k, "{name}");
+            outside += 1;
+            for r in w.chunks_exact(8) {
+                for cell in [
+                    [r[0], r[2], r[4]],
+                    [r[1], r[2], r[5]],
+                    [r[1], r[3], r[6]],
+                    [r[0], r[3], r[7]],
+                ] {
+                    assert!(d.training.rows.contains(&cell), "{name}: {cell:?}");
+                }
+            }
+        }
+        assert_eq!(outside, witnesses.len());
+        Ok(())
+    }
 }

@@ -88,13 +88,15 @@ cells, and the solve says so.
 
 ## What this does not show
 
-PT1 to PT4, the first-moment bound of PT5, the general claim of PT6, and the real half of E6 at
-`p = 97` with all 33 of its tasks (twelve in the class, 21 outside it) are proved in Lean
-(`TablePart` of `src/Transformer/Grokking/FlatSpectrum/`). `cargo test --release` ties them to this
-data: the FNV-1a hash of the order of the 9409 cells, which Lean computes from its port of the
-shuffle, is the hash of the split of all 33 tasks, each of the twelve formulas in Lean is the table
-of exactly one task, and every cell and label of the 21 refutations is a training row of its task.
-This check covers the tables listed, and its other counts, including the table of random parts and
-the 15 tasks without the column `b = 0`, are measurements rather than proofs. The class is given to
-the solve: a part determines a task only against the alternatives the class allows, so the solve is
-not a learner, and this says nothing about whether a model finds `H`. Labels are exact.
+PT1 to PT4, the first-moment bound of PT5, the general claim of PT6, the real half of E6 at
+`p = 97` with all 33 of its tasks (twelve in the class, 21 outside it), and the 15 tasks on the
+tables without the column `b = 0` (three constants in the class, twelve outside it) are proved in
+Lean (`TablePart` of `src/Transformer/Grokking/FlatSpectrum/`). `cargo test --release` ties them to
+this data. The FNV-1a hash of the order of the 9409 cells, which Lean computes from its port of the
+shuffle, is the hash of the split of all 33 tasks. Each of the twelve formulas in Lean is the table
+of exactly one task, and every cell and label of the 33 refutations is a training row of its task.
+For the tables without `b = 0` Lean does not run the shuffle: it takes the training cells as bit
+masks, and the tests check that they are the real ones. The other counts of this check, including
+the table of random parts, are measurements rather than proofs. The class is given to the solve: a
+part determines a task only against the alternatives the class allows, so the solve is not a
+learner, and this says nothing about whether a model finds `H`. Labels are exact.

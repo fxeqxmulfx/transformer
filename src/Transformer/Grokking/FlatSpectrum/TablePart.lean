@@ -4,6 +4,10 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
+public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
+public import Transformer.Grokking.FlatSpectrum.TablePart.DivTasks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6DivParts
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Outside
@@ -60,4 +64,10 @@ Inside the class they give all 4705 held-out cells of twelve tasks of the data, 
 kernel of none of the seven with `m ≠ 0` (`TablePart.E6Tasks`). For the other 21 tasks with the
 full table, two rectangles of training cells ask for two couplings, so no function of the class
 fits them (`TablePart.Rectangles`, `TablePart.E6Witnesses`, `TablePart.E6Outside`).
+
+The 15 tasks `(a / b)^k` lie on tables without the column `b = 0`, at `p = 17`, `97` and `193`. Their
+training part has an empty column and does not determine the class, but it fixes a function of the
+class on the columns it has (`TablePart.DivPart`). So the constant `(a / b)⁰` comes back on the whole
+table, and the twelve others have no function of the class on their training cells
+(`TablePart.DivTasks`, `TablePart.E6DivParts`, `TablePart.E6Div`).
 -/
