@@ -310,22 +310,47 @@ fn main() -> arithmetic::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use arithmetic::dataset::Dataset;
     use serde_json::Value;
+
+    /// The twelve formulas of `TablePart.E6.tasks` in Lean, in the same order. `49 = 1/2` mod 97.
+    const TASKS: [fn(u32, u32) -> u32; 12] = [
+        |a, b| a + b,
+        |a, b| a + 97 - b,
+        |a, b| (a + b) * 49,
+        |a, b| a * b,
+        |a, b| a + a * b,
+        |a, b| a * a + a * b,
+        |a, b| a * a + a * b + b * b,
+        |a, b| a * a + a * b + b * b + a,
+        |a, b| a * a + b * b,
+        |a, b| (a + b) * (a + b),
+        |a, b| a * a * a + b,
+        |a, b| a * a * a + a * b,
+    ];
+
+    /// The tasks with the full table at `p = 97`, on their frozen splits.
+    fn full_tables() -> arithmetic::Result<Vec<Dataset>> {
+        let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
+        let mut tables = Vec::with_capacity(cases.len());
+        for row in &cases {
+            if let Some(d) = arithmetic::dataset::build(row)?
+                && d.training.vocabulary == 97
+                && d.training.rows.len() == 4704
+            {
+                tables.push(d);
+            }
+        }
+        Ok(tables)
+    }
 
     /// The order of the cells in the split E6 trains on, as FNV-1a over `97 a + b`. The Lean theorem
     /// `TablePart.E6.fingerprint` proves the same value for its port of the shuffle.
     #[test]
     fn lean_port_of_the_e6_shuffle() -> arithmetic::Result<()> {
-        let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
-        let mut tables = 0;
-        for row in &cases {
-            let Some(d) = arithmetic::dataset::build(row)? else {
-                continue;
-            };
-            if d.training.vocabulary != 97 || d.training.rows.len() != 4704 {
-                continue;
-            }
-            tables += 1;
+        let tables = full_tables()?;
+        assert_eq!(tables.len(), 33);
+        for d in &tables {
             let hash = d
                 .training
                 .rows
@@ -334,9 +359,28 @@ mod tests {
                 .fold(0xcbf2_9ce4_8422_2325_u64, |h, &[a, b, _]| {
                     (h ^ u64::from(97 * a + b)).wrapping_mul(0x0100_0000_01b3)
                 });
-            assert_eq!(hash, 359_723_728_075_922_973, "{}", row["case"]["name"]);
+            assert_eq!(hash, 359_723_728_075_922_973);
         }
-        assert_eq!(tables, 33);
+        Ok(())
+    }
+
+    /// Each formula of `TablePart.E6.tasks` is the table of exactly one task of the data.
+    #[test]
+    fn lean_tasks_are_tables_of_the_data() -> arithmetic::Result<()> {
+        let tables = full_tables()?;
+        for f in TASKS {
+            let matching = tables
+                .iter()
+                .filter(|d| {
+                    d.training
+                        .rows
+                        .iter()
+                        .chain(&d.validation)
+                        .all(|&[a, b, y]| f(a, b) % 97 == y)
+                })
+                .count();
+            assert_eq!(matching, 1);
+        }
         Ok(())
     }
 }

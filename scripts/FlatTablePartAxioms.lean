@@ -24,6 +24,12 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.half_ne_univ
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.mark_spec
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.iterFast_eq
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_formulas
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_coupled
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.card_held_out
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.held_out_eq
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.update_not_mem
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.connected_cross
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.rigid_cross
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_crossPart

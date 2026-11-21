@@ -424,6 +424,9 @@ a flat kernel is no local minimum of that cost among the interpolants of any pro
 (`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). The task
 `a³ + a b` is no function of one feature `u(a) ∘ v(b)` in a group or a type with zero of at most
 `p` elements (`SingleFeature`). A part of a table determines a class when two members that agree
-on it are equal, and every part of `m` cells does exactly when `m > N − δ(H)` (`TablePart`). -/
+on it are equal, and every part of `m` cells does exactly when `m > N − δ(H)` (`TablePart`).
+On the training half of E6 at `p = 97`, which the kernel computes, the flat class gives all 4705
+held-out labels of twelve tasks, and the minimum of M returns none of the seven flat kernels among
+them (`TablePart.E6Tasks`). -/
 
 @[expose] public section

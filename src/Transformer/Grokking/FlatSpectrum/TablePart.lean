@@ -7,6 +7,7 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Shuffle
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatBest
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatClass
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatCount
@@ -52,4 +53,6 @@ function `g + h + uᵀ M v` of the class, and for injective `w ↦ wᵀ M` the m
 its kernel (PT6, `TablePart.AgainstM`). The training half of E6 at `p = 97` is such a part: the
 kernel runs the SplitMix64(1) shuffle of the 9409 cells (`TablePart.E6Shuffle`), and its first 4704
 entries are different cells (`TablePart.E6Marks`) that determine the class (`TablePart.E6Half`).
+Inside the class they give all 4705 held-out cells of twelve tasks of the data, and M returns the
+kernel of none of the seven with `m ≠ 0` (`TablePart.E6Tasks`).
 -/

@@ -88,11 +88,12 @@ cells, and the solve says so.
 
 ## What this does not show
 
-PT1 to PT4, the first-moment bound of PT5, the general claim of PT6 and the real half of E6 at
-`p = 97` are proved in Lean (`TablePart` of `src/Transformer/Grokking/FlatSpectrum/`).
-`cargo test --release` ties that half to this data: the FNV-1a hash of the order of the 9409 cells,
-which Lean computes from its port of the shuffle, is the hash of the split of all 33 tasks with the
-full table at `p = 97`. This check covers the tables listed, and its other counts, including the
-table of random parts, are measurements rather than proofs. The class is given to the solve: a part
-determines a task only against the alternatives the class allows, so the solve is not a learner,
-and this says nothing about whether a model finds `H`. Labels are exact.
+PT1 to PT4, the first-moment bound of PT5, the general claim of PT6, and the real half of E6 at
+`p = 97` with its twelve tasks are proved in Lean (`TablePart` of
+`src/Transformer/Grokking/FlatSpectrum/`). `cargo test --release` ties them to this data: the FNV-1a
+hash of the order of the 9409 cells, which Lean computes from its port of the shuffle, is the hash
+of the split of all 33 tasks with the full table at `p = 97`, and each of the twelve formulas in
+Lean is the table of exactly one task. This check covers the tables listed, and its other counts,
+including the table of random parts, are measurements rather than proofs. The class is given to the
+solve: a part determines a task only against the alternatives the class allows, so the solve is not
+a learner, and this says nothing about whether a model finds `H`. Labels are exact.
