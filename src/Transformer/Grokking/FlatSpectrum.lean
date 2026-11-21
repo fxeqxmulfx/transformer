@@ -147,6 +147,11 @@ public import Transformer.Grokking.FlatSpectrum.ProductCorners
 public import Transformer.Grokking.FlatSpectrum.ProductDepth
 public import Transformer.Grokking.FlatSpectrum.SharedEmbedding
 public import Transformer.Grokking.FlatSpectrum.SharedLayer
+public import Transformer.Grokking.FlatSpectrum.UnitaryAverage
+public import Transformer.Grokking.FlatSpectrum.ProductCost
+public import Transformer.Grokking.FlatSpectrum.ProductCostSVD
+public import Transformer.Grokking.FlatSpectrum.ProductCostFlat
+public import Transformer.Grokking.FlatSpectrum.ProductCostCodes
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -411,6 +416,9 @@ and factors over a product of pairs (`ProductCorners`), so a linear readout `ψ(
 has `2k ≤ 2^d`, depth at least `1 + ⌈log₂ k⌉` (`ProductDepth`). Through one shared embedding of
 width `D`, every complex-linear reading of one such layer, at any number of hidden units, has its
 columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so writing the table
-of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). -/
+of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
+`(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so
+a flat kernel is no local minimum of that cost among the interpolants of any proper training set
+(`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). -/
 
 @[expose] public section

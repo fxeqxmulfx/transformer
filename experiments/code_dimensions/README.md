@@ -1,7 +1,8 @@
 # What each character code of a task needs from one layer
 
-Source: `review/flat_spectrum.md`, NV9. One layer of the main model, with positional heads and
-the scalars of `R_D` set aside, writes only tables `X` with `dim(col X + row X) ≤ D_ℂ + 3 = 67`.
+Source: `review/flat_spectrum.md`, NV9 and NV10. One layer of the main model, with positional
+heads and the scalars of `R_D` set aside, writes only tables `X` with
+`dim(col X + row X) ≤ D_ℂ + 3 = 67`.
 This experiment computes that dimension for the codes of seven tasks over `ℤ/97`, together with
 the cost of each code in one product layer and a first-order test on a half split.
 

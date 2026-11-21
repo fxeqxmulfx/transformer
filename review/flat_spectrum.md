@@ -6132,7 +6132,8 @@ interaction among `k`, and (NV7) prices what depth buys: a product network of de
 `1 + ⌈log₂ k⌉`, the least possible, against one layer. Every item gives a lower and an upper
 bound, exact where it can, except NV8, a construction: two copies of any task through main's own
 layers, the routing of the operands included, and NV9, a lower bound on what one such layer writes
-through its shared embedding.
+through its shared embedding. NV10 prices one product layer in the norm of Theorem A, code by
+code.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6811,13 +6812,106 @@ held-out hits. The other rows score 8.8–10.5%, which is 1.7 to 8.0 standard er
 of any predictor that ignores `y₁` or `y₂`. So at this size one layer buys memorization and,
 approximately but not exactly, no reading of all four operands.
 
+### NV10. What one product layer pays
+
+Theorem A prices the factorization model: a table written as `U Vᴴ` costs `½ (‖U‖² + ‖V‖²)`, and
+the least such cost is `‖X‖_S1` (Lemma 1). To say whether a product network solves a task cheaply
+in the same sense, price it by the same kind of norm. Take NV7's network without normalizations,
+on one-hot inputs, so that the first layer's `W_g` and `W_u` are the embeddings and no feature
+comes for free. Its cost is half the sum of the squared Frobenius norms of its weights. Two other
+measures were set aside. Main's raw norms, which weight decay penalizes, set no scale under `R_D`,
+so their minimum is fixed by `ε` alone. Norms measured on the inputs a matrix actually receives
+are determined by the function, but have no counterpart in Theorem A.
+
+*One product layer is spectral.* Take a layer whose units read a gate `g_u` from the features of
+`x` and a value `w_u` from those of `y`, as NV7's leaf layer does, and write `o_u` into a fresh
+coordinate. It writes the table `M = G diag(o) Wᵀ`. Hölder's inequality for Schatten classes, with
+exponents `(2, 2, 2)` giving `2/3`, bounds `‖M‖_{S_{2/3}}` by `‖G‖ ‖o‖ ‖W‖`, and AM–GM then gives
+
+```
+½ (‖G‖² + ‖o‖² + ‖W‖²) ≥ C(M) := (3/2) Σᵢ σᵢ(M)^{2/3}.
+```
+
+Equality holds at the SVD `M = U S Vᴴ`, with `G = U S^{1/3}`, `o = σ^{1/3}` and
+`W = conj(V) S^{1/3}`, so `C(M)` is the exact price of `M` in one layer, at any width. This is
+Lemma 1 with the exponent `2/3` in place of `1`.
+
+The two models differ in their degree of homogeneity, so a price depends on the scale `c` of the
+output. The factorization pays `c ‖K‖_S1`, and one product layer pays `c^{2/3} C(K)`. At `c = 1`
+the flat table of NV1 costs `p^{3/2}` in the first and `(3/2) p^{4/3}` in the second.
+
+*Theorem A carries over.* The function `σ ↦ (3/2) σ^{2/3}` is concave, so it lies below its
+tangent at the common singular value `s` of a flat `K`:
+
+```
+(3/2) σ^{2/3} ≤ s^{−1/3} σ + ½ s^{2/3}.
+```
+
+Summed over the singular values, `C(X) ≤ s^{−1/3} ‖X‖_S1 + (n/2) s^{2/3}`, with equality at `K`.
+So a matrix that beats `K` in nuclear norm beats it in `C`. When no entry of `K` vanishes, Theorem A
+gives such a matrix for every proper `Ω`, and by the triangle inequality so does every point of
+the segment from `K` towards it. So `K` is not even a local minimum of `C` among the interpolants
+of `Ω`. The gradient says the same: at a unimodular flat `K`, where `s = √p`, it is `p^{−2/3} K`,
+nonzero on every cell. A product layer that has to write `ψ(f)` fails on one copy just as the
+factorization does.
+
+*But it does not have to write `ψ(f)`.* Under that premise `a b` and `a³ + a b` are one problem:
+`ψ(a³ + a b)` is `diag ψ(a³)` times `ψ(a b)`, with the same flat spectrum and the same cost, so the
+argument would predict that one product layer fails on `a b`. Main solves `a b` in one layer
+(NV9). So the cost has to range over the codes `g(f)` that a readout can decode: at least `ψ_r`
+with `r ≠ 0` and `χ^j` with `gcd(j, p − 1) = 1`. The code `χ(a b) = χ(a) χ(b)` has rank one and
+costs at most `(3/2) (p − 1)^{2/3}`. The code `χ(a³ + a b)` costs exactly
+`(3/2) ((p + 1)^{1/3} + (p − 3)/2 · (2p)^{1/3})`, by its spectrum (NV9), still of order `p^{4/3}`.
+
+*A first-order test for codes of lower rank.* A code of rank `r < p` is not flat, and the argument
+above does not reach it. Write `M = U S Vᴴ` at rank `r` and `G = U S^{−1/3} Vᴴ`, the gradient of
+`C` along the manifold of rank-`r` matrices, and let `R` be the component of `G` in the directions
+that are tangent to that manifold at `M` and vanish on the training cells. Along `−R` the cost
+falls at rate `‖R‖²` while the training cells stay fixed: the singular values that were zero grow
+only at order `t²`, so they add `O(t^{4/3})`. A direction off the tangent space adds order
+`t^{2/3}` and cannot help. So `R = 0` is necessary for `M` to be a local minimum among
+interpolants.
+
+The table gives the cheapest code of each family at `p = 97` (`experiments/code_dimensions`), with
+`‖R‖ / ‖G‖` over five random half splits. Within a family the rank and, with one exception, the
+cost do not depend on the code. The exception is `χ(a² + a b + b²)`, whose cost runs from 542.4 to
+585.7.
+
+| `f` | `ψ`: rank | cost | `‖R‖/‖G‖` | `χ`: rank | cost | `‖R‖/‖G‖` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `a³ + a b` | 97 | 668.5 | 0.707 | 48 | 415.0 | 0.584–0.588 |
+| `a b` | 97 | 668.5 | 0.707 | 1 | 31.4 | 0.000 |
+| `a² b` | 49 | 423.7 | 0.588–0.593 | 1 | 31.4 | 0.000 |
+| `a + a b` | 97 | 668.5 | 0.707 | 1 | 31.4 | 0.000 |
+| `a² + a b` | 97 | 668.5 | 0.707 | 96 | 656.2 | 0.706–0.708 |
+| `a² + a b + b²` | 97 | 668.5 | 0.707 | 96 | 542.4 | 0.705–0.709 |
+| `(a + b)²` | 97 | 668.5 | 0.707 | 96 | 661.6 | 0.707 |
+
+So the test reaches the cheapest code of `a³ + a b`, and spares `χ(a b)`, `χ(a² b)` and
+`χ(a + a b)`, which the count of NV9 also lets one layer hold.
+
+*What this does not price.* Every code of `(a + b)²` is flat on its support, the cheapest has
+`‖R‖ / ‖G‖ = 0.707`, and main still passes this task in one layer. A route open to it is to hold
+the rank-one features `ψ(j (a + b))` and let the readout do the squaring (NV9). So a complete
+account prices features and readout together, not codes of `f`. For `a³ + a b` no rank-one route
+is known. That is open, not proved.
+
+*Depth.* Beyond one layer the cost is no longer spectral, and that is where depth can matter.
+NV7's tree writes `ψ(f)` for `k` copies with one leaf per pair, at `(3/2) p^{4/3}` each, and `k − 1`
+product units that each read two coordinates and write one with unit weights, at `3/2` each: about
+`k · (3/2) p^{4/3} + O(k)`. One layer pays `(3/2) p^{4k/3}` for the same table, and the
+factorization `p^{3k/2}`. The tree can do this because `ψ(f)` has rank one across the cut between
+the copies. This prices the right answer only. Whether it is the cheapest interpolant of a split
+in the deep model is open, and nothing here decides it.
+
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
 `CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize`, `CopiesBestReadout` and `CopiesValue`; for NV7,
 `ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies`,
 `ProductOneLayer`, `ProductOrder`, `ProductCorners` and `ProductDepth`; for NV9, `SharedEmbedding`
-and `SharedLayer`, all of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+and `SharedLayer`; for NV10, `UnitaryAverage`, `ProductCost`, `ProductCostSVD`,
+`ProductCostFlat` and `ProductCostCodes`, all of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6845,3 +6939,4 @@ and `SharedLayer`, all of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 | NV7, depth | the order: `ReadsOnly`, `orderSpan`, `mem_orderSpan_of_readsOnly`, `orderSpan_mono`, `mul_mem_orderSpan`, `linear_mem_orderSpan`, `IsProductLayer.order`, `IsProductNet.order`, `features_mem_orderSpan`, `readout_mem_orderSpan`; the corners: `cornerX`, `cornerY`, `flipAt`, `flipAt_flipAt`, `flipAt_ne`, `cornerSign`, `cornerSign_flipAt`, `cornerSum`, `cornerSum_apply`, `cornerSum_eq_zero_of_readsOnly`, `cornerSum_eq_zero`, `cornerSum_prod`; the depth: `two_mul_card_le_of_productNet`, `mixed_stdAddChar_ne_zero`, `le_depth_of_productNet_copies` | The operands are `x : κ → α` and `y : κ → β`, the `2k` of them indexed by `κ ⊕ κ`, and the order is the span `orderSpan r` of the functions that read at most `r` of them. `IsProductNet.order` takes any input of order `r` and gives `2^d r`; the depth bound is stated for the one-hot features `pairFeatures x y`. The corners are `ε : κ ⊕ κ → Bool`, the sign `cornerSign ε`. The depth bound asks for a linear readout equal to `Πᵢ φᵢ(xᵢ, yᵢ)` with a nonzero mixed difference for every `i`, and for `ψ(Σᵢ q(xᵢ, yᵢ))` with one for `ψ ∘ q`; `P(x) + x y` has one at `0`, `1` by `mixed_stdAddChar_ne_zero`. The tight case on encodings of whole tuples and the heads that do not depend on the tokens are by hand. |
 | NV8 | the stream: `Slot`, `card_slot`, `coordSlots`, `orthonormal_coordSlots`, `vec`, `inner_vec_vec`, `rmsNormEps_vec`; the states: `embC`, `sum_embC_sq`, `stateC`, `stateC_add`, `smul_stateC`, `sum_stateC_sq`, `sum_embC_mul_stateC`, `cos_angle_sub_le`; the attention: `dftAlpha`, `leropeFrequencies_dftAlpha`, `dftQuery`, `dftKey`, `attention0`, `dftScale_pos`, `oneHeads_attention0`, `readOut`, `readOut_heads`; the FFN: `ffnOf`, `plainFFN_ffnOf`, `ffn0`, `plainFFN_ffn0`, `ffn1`, `plainFFN_ffn1`; the model: `twoModel`, `apply_layer0`, `apply_layer1`, `states_add_two`, `states_twoModel`, `logits_twoModel`; the margin: `one_sub_cos_pos`, `three_kEmb_lt`, `bTwo`, `gTwo`, `logits_twoModel_lt`; the statements: `exists_oneModel_twoCopies`, `exists_model_twoCopies` | The model is R0's `OneModel D d 4 F p`, its vocabulary the `p` residues, and main's is its `withRouters` with plain routers. The context is `tokens : ℕ → Fin p`, read at the position `3`, and the answer is `q 0 (tokens 0) (tokens 1) + q 1 (tokens 2) (tokens 3)` in `Fin p`. The depth scale `s > 0` is free, so main's `α = 1/√(2L)` is a case; the phase-score coefficients are `0`. `logits_twoModel_lt` holds for any orthonormal slots and codes, and the existence statements use the coordinate directions. The projections are real-linear; the complex-linear count, `k` copies and the comparison with NV2 are by hand. The examples are at main's widths, `D = 128`, `d = 32`, `F = 171`, `ε = 2⁻²³` and `s = 1/√8`, with real-linear projections and `x³ + x y` over `ℤ/29`. |
 | NV9 | the count: `IsSharedTable`, `transpose_shared`, `mulVec_mem_of_shared`, `IsSharedTable.finrank_col_sup_row_le`, `not_isSharedTable_of_lt`, `not_isSharedTable_cubicKernel`; the code: `mulCharLogit`, `mulCharLogit_lt`, with `rank_cubicKernelMulChar`, `card_eigenvalues_cubicKernelMulChar` and `singularValues_cubicKernelMulChar_mem` of `MulCharSpectrum`; the layer: `IsSharedTable.add`, `IsSharedTable.smul`, `isSharedTable_left`, `isSharedTable_right`, `isSharedTable_const`, `isSharedTable_zero`, `isSharedTable_bilinear`, `isSharedTable_product`, `IsProductLayer.isSharedTable`; `k` copies: `copiesEmbedding`, `IsProductLayer.ne_bilinearKernel`, `IsProductLayer.ne_copies` | The count is over any field, for a matrix `E` whose rows are the tokens. The layer is NV7's `IsProductLayer` over `ℂ` at the state `A (E a) + B (E b) + z`, with `A`, `B` from the embedding's coordinates to the state's; that main's layer has this form, for positional heads without `R_D`, is by hand. For `k` copies the table is square over `Fin k → ZMod p`, and any invertible coupling `M` will do. The example of `ne_copies` is at `D_ℂ = 64`, `k = 2`, `p = 13`. The thresholds on `p`, the conjugate count `2 D_ℂ + 3`, Forster's bound and the experiment's numbers are by hand. |
+| NV10 | the bound: `productCost`, `sum_rpow_singularValues_mul_le`, `productCost_le`, with `rpow_one_third_le`, `sum_rpow_one_third_le`, `sum_norm_sq_col_eq_one`, `sum_norm_sq_row_eq_one`, `mul_diagonal_mul_apply_self`, `apply_eq_zero_of_gram`, `isContraction_conjTranspose_of_gram`; the minimum: `frobeniusSq_mul_diagonal_ofReal`, `exists_productFactorization`, `productCost_isLeast`; the scale: `frobeniusSq_smul_eq`, `productCost_smul_le`, `productCost_smul`; Theorem A: `rpow_two_thirds_le`, `productCost_lt_of_nuclearNorm_lt`, `not_isLocalMinOn_productCost`, `cubicKernel_apply_ne_zero`, `not_isLocalMinOn_productCost_cubicKernel`; the codes: `productCost_cubicKernel`, `productCost_vecMulVec_le`, `sqrt_rpow_two_thirds`, `productCost_cubicKernelMulChar`, `productCost_mulCode_le` | The layer is `M = G diag(o) Wᴴ`; `Wᵀ` is the case of a conjugated `W`, of the same norm. The proof does not use Hölder: it compares the eigenbases of `Mᴴ M` and `Yᴴ Y` for `Y = diag(o) Wᴴ`, whose squared overlaps are doubly stochastic, and averages `x^{1/3} ≤ x/(3t²) + 2t/3`. Theorem A is stated for a square `K` with equal singular values and no zero entry, as `¬ IsLocalMinOn`. For `χ(a b)` the statement is an upper bound. The gradient, the tangent-space test for codes of lower rank and the cost of the tree are by hand; the table is computed in Rust. That the network's layer has this form, and the choice of normalization, are by hand. |
