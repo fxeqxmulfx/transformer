@@ -29,6 +29,9 @@ public import Transformer.GainMatroid.Section3_Classes
 public import Transformer.GainMatroid.Section3_SmallGraphs
 public import Transformer.GainMatroid.Section3_SmallExamples
 public import Transformer.GainMatroid.Section5_ProperlyUnbalanced
+public import Transformer.GainMatroid.Section1_ThreeVertices
+public import Transformer.GainMatroid.Section1_Fan
+public import Transformer.GainMatroid.Section1_Theorem1
 
 /-!
 # Matrix representations of frame and lifted-graphic matroids
@@ -56,4 +59,7 @@ off the rows of `T`. `Section4_Small` deduces Lemmas 4.3 to 4.10, and `Section4_
 their hypotheses. `Section3_Classes` reads off cycles of two and three edges, `Section3_SmallGraphs`
 decides which biased `2C₃`, tubes and `K₄` are properly unbalanced, and `Section3_SmallExamples`
 gives concrete ones. `Section5_ProperlyUnbalanced` proves Theorem 5.1 from the rows of `T`.
+`Section1_ThreeVertices` counts the edges of circuits on three vertices, `Section1_Fan` realizes
+`U_{3,5}` as a frame matroid on three vertices, and `Section1_Theorem1` proves from it that
+Theorem 1 (i) fails as printed on an almost-balanced biased graph.
 -/
