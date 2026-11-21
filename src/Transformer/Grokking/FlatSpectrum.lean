@@ -152,6 +152,7 @@ public import Transformer.Grokking.FlatSpectrum.ProductCost
 public import Transformer.Grokking.FlatSpectrum.ProductCostSVD
 public import Transformer.Grokking.FlatSpectrum.ProductCostFlat
 public import Transformer.Grokking.FlatSpectrum.ProductCostCodes
+public import Transformer.Grokking.FlatSpectrum.TablePart
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -419,6 +420,8 @@ columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so
 of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
 `(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so
 a flat kernel is no local minimum of that cost among the interpolants of any proper training set
-(`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). -/
+(`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). A part of a
+table determines a class when two members that agree on it are equal, and every part of `m` cells
+does exactly when `m > N − δ(H)` (`TablePart`). -/
 
 @[expose] public section
