@@ -365,8 +365,9 @@ probability bounds outside that coverage are not claimed as proved.
    thetas, biased graphs and the balanced cycles of a gain function; deletion,
    contraction, link minors and induced gains; connectivity and the balance
    classes of biased graphs; frame and lift matroids, matroid connectivity and
-   uniform matroids; Δ-Y and Y-Δ exchanges of biased graphs and of matroids;
-   Propositions 2.1 to 2.4 and 4.1, Lemma 2.5 with its frame case corrected,
+   uniform matroids; Δ-Y and Y-Δ exchanges of biased graphs, of matroids and of
+   matrices; Propositions 2.1 to 2.4 and 4.1, Lemma 2.5 with its frame case
+   corrected, Proposition 2.11 for identity gains on the exchanged edges,
    Lemmas 4.2 to 4.12 and Theorem 5.1; which biased 2C₃, tubes and K₄ are
    properly unbalanced; 𝖴₂ and 𝖴₃ as representations of U_{2,4}; counterexamples
    to Conjectures 1 and 2 as literally stated and to Lemma 2.5 (ii),
