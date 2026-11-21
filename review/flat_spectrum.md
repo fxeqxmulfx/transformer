@@ -7202,9 +7202,15 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 
 ### Lean
 
-Nothing of this section is in Lean. PT1, PT3 and PT4 are proved by hand above, and
-`experiments/table_part` checks the count of PT3 and the `δ` of PT4 on small tables. PT2's bound on
-zeros is Mathlib's `MvPolynomial.schwartz_zippel_totalDegree`, and its minimum distance is cited.
-What PT3 and PT6 rest on is in Lean: `rigid_iff_connected` of `PatternGraph`, and
-`isFlat_bilinearKernel` and `not_isMinOn_bilinearKernel` of `BilinearKernel`, all in
-`src/Transformer/Grokking/FlatSpectrum/`.
+`TablePart` of `src/Transformer/Grokking/FlatSpectrum/`, namespace
+`Transformer.Grokking.FlatSpectrum.TablePart`. All proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| PT1 | `Determines`, `minDistance`, `forall_determines_iff`, `ncard_le_pow_of_determines`, `determines_univ_iff`, `minDistance_univ`, `determines_submodule_iff`, `finrank_le_card_of_determines`, `minDistance_submodule` | None. |
+| PT2 | `degreeClass`, `minDistance_degreeClass`, `forall_determines_degreeClass_iff`, `forall_half_determines_degree_48`, `exists_half_zero_degree_49`, `eq_cube_add_mul_of_card`, `div_eq_mul_pow`, `totalDegree_mul_pow`, `exists_half_not_determines_degree_96` | `k + 1` variables, so that there is at least one. The bound on zeros is Mathlib's `MvPolynomial.schwartz_zippel_totalDegree`. |
+
+PT3 to PT6 are not in Lean yet. PT3 and PT4 are proved by hand above, and `experiments/table_part`
+checks the count of PT3 and the `δ` of PT4 on small tables. What PT3 and PT6 rest on is in Lean:
+`rigid_iff_connected` of `PatternGraph`, and `isFlat_bilinearKernel` and
+`not_isMinOn_bilinearKernel` of `BilinearKernel`, all in `src/Transformer/Grokking/FlatSpectrum/`.
