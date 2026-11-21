@@ -43,6 +43,16 @@ The change in any two-class margin is bounded by that quantity times the
 distance between the two tied embeddings.
 [Shared forward map and proofs](../../src/Transformer/Phasor/SharedValues.lean)
 
+### Choice of initial gain
+
+The first uniform architecture used an initial gain of one. Hard depth seed 0
+classified all 512 length-128 sequences correctly at update 1,000. Seed 1
+peaked at 490/512 in its first 10,000 updates. Reducing the initial gain to
+0.25 gave that seed 512/512 at update 1,250. All three NV11 pilots also
+crossed 99% with the smaller gain. These published splits informed the choice
+of initialization. The reported quarter-gain suite starts each task and seed
+from fresh weights.
+
 ## Training and replay
 
 Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` and Kernite at
@@ -69,7 +79,8 @@ bin=./target/release/phasor-value-transport
 "$bin" predict runs/shared-quarter/arithmetic-cubic-product/seed0/weights.f32 97 12 34
 for seed in 0 1 2
 do
-    "$bin" shared-values "runs/shared-quarter-retention/seed$seed" "$seed"
+    "$bin" shared-values "runs/shared-quarter-5000/seed$seed" "$seed" 5000
+    "$bin" nv11-score "runs/shared-quarter-5000/seed$seed/shared-values-first-exact.f32"
 done
 ```
 
@@ -85,6 +96,12 @@ with first operand zero it also scores the fitted weights with the value
 tables cleared. The contextual feature and transported read remain active
 in that ablation. The two-token prediction command takes a weights file,
 vocabulary size and two operands.
+
+The optional final argument of `shared-values` sets the observation window
+within the original 100,000-step schedule. It saves the first checkpoint
+that classifies the entire NV11 table correctly. `nv11-score` takes a
+shared-value checkpoint, masks all training targets in the forward pass
+and measures the minimum correct-class margin on each split.
 
 The `shared-check` command compares logits with an independent scalar FP64
 forward evaluation. It checks the tied embedding, gain and all 17 table

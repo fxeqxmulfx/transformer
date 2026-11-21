@@ -105,7 +105,12 @@ fn evaluate(
     )
 }
 
-fn cell(arm: &str, out: &Path, seed: u32) -> Result<()> {
+fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
+    if window == 0 || window > BUDGET || !window.is_multiple_of(OBSERVE) {
+        return Err(
+            "NV11 observation window must be a positive multiple of 250 up to 100000".into(),
+        );
+    }
     let data = cubic_data()?;
     let mut cfg = config(BATCH)?;
     cfg.shared_values = arm == "shared-values";
@@ -129,7 +134,8 @@ fn cell(arm: &str, out: &Path, seed: u32) -> Result<()> {
         .write(true)
         .create_new(true)
         .open(out.join(format!("{arm}.jsonl")))?;
-    for completed in 0..=WINDOW {
+    let mut saved_exact = false;
+    for completed in 0..=window {
         if completed % OBSERVE == 0 {
             let read = layer.as_ref().map(|l| (l, true));
             let train = evaluate(&mut e, read, &data.training.rows)?;
@@ -145,12 +151,20 @@ fn cell(arm: &str, out: &Path, seed: u32) -> Result<()> {
             log.flush()?;
             println!("{row}");
             if (layer.is_some() || e.config.shared_values)
-                && (completed == OBSERVE || completed == WINDOW)
+                && (completed == OBSERVE || completed == window)
             {
                 snapshot::save(&e, &out.join(format!("{arm}-{completed}.f32")))?;
             }
+            if e.config.shared_values
+                && !saved_exact
+                && row["train"]["correct"] == data.training.rows.len()
+                && row["held_out"]["correct"] == data.validation.len()
+            {
+                snapshot::save(&e, &out.join(format!("{arm}-first-exact.f32")))?;
+                saved_exact = true;
+            }
         }
-        if completed == WINDOW {
+        if completed == window {
             break;
         }
         if offset == epoch.len() {
@@ -186,14 +200,17 @@ fn main() -> Result<()> {
         [op, name, seed, out] if op == "cell" => stress::run(name, seed.parse()?, Path::new(out)),
         [op, name, seed, out] if op == "replay" => stress::replay(name, seed.parse()?, Path::new(out)),
         [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values") => {
-            cell(arm, Path::new(dest), SEED)
+            cell(arm, Path::new(dest), SEED, WINDOW)
         }
         [arm, dest, seed] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values") => {
-            cell(arm, Path::new(dest), seed.parse()?)
+            cell(arm, Path::new(dest), seed.parse()?, WINDOW)
         }
+        [arm, dest, seed, steps] if arm == "shared-values" =>
+            cell(arm, Path::new(dest), seed.parse()?, steps.parse()?),
         [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
+        [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|shared-check|routes} | report RUN_DIR | {cell|replay} CASE SEED RUN_DIR | {transport|phasor|shared-values} RUN_DIR [SEED] | inspect FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|shared-check|routes} | report RUN_DIR | {cell|replay} CASE SEED RUN_DIR | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
     }
 }

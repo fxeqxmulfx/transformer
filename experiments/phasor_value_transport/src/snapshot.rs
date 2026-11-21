@@ -61,6 +61,54 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
     Ok(())
 }
 
+/// Score all 9,409 pairs using just the two input tokens in the forward pass.
+/// Keep the smallest correct-class advantage over every wrong class, including
+/// a negative margin when the checkpoint misclassifies an input.
+pub fn nv11_scores(path: &Path) -> Result<()> {
+    let data = cubic_data()?;
+    let mut cfg = config(BATCH)?;
+    cfg.shared_values = true;
+    let p = cfg.vocab;
+    let mut e = load(path, cfg)?;
+    let mut split = |rows: &[[u32; 3]]| -> Result<Value> {
+        let mut correct = 0usize;
+        let mut minimum = f64::INFINITY;
+        let mut closest = None;
+        for batch in rows.chunks(BATCH) {
+            let tokens: Vec<_> = batch.iter().flat_map(|&[a, b, _]| [a, b]).collect();
+            e.forward(&tokens, &vec![u32::MAX; tokens.len()], batch.len(), 2)?;
+            let logits = e.logits.read()?;
+            let predictions = e.predictions.read()?;
+            for (row, &[a, b, y]) in batch.iter().enumerate() {
+                let pos = 2 * row + 1;
+                let scores = &logits[p * pos..p * (pos + 1)];
+                if scores.iter().any(|s| !s.is_finite()) {
+                    return Err("nonfinite NV11 logits".into());
+                }
+                correct += usize::from(predictions[pos] == y);
+                let rival = (0..p)
+                    .filter(|&j| j != y as usize)
+                    .max_by(|&i, &j| scores[i].total_cmp(&scores[j]))
+                    .unwrap();
+                let margin = f64::from(scores[y as usize]) - f64::from(scores[rival]);
+                if margin < minimum {
+                    minimum = margin;
+                    closest = Some([a, b, y, rival as u32]);
+                }
+            }
+        }
+        Ok(
+            json!({"correct":correct,"examples":rows.len(),"minimum_margin":minimum,
+            "closest_pair_target_rival":closest}),
+        )
+    };
+    println!(
+        "{}",
+        json!({"training":split(&data.training.rows)?,"held_out":split(&data.validation)?})
+    );
+    Ok(())
+}
+
 /// For each ordered target/rival pair, compute the good-address gap and the
 /// smallest gap across all other value codes. Translation permutes the codes.
 fn gram_gaps(e: &[f32], p: usize, d: usize) -> Vec<Vec<(f64, f64)>> {
