@@ -5,6 +5,7 @@ public import Transformer.Phasor.Attention
 public import Transformer.Phasor.FFN
 public import Transformer.Phasor.Forward
 public import Transformer.Phasor.TransportedValues
+public import Transformer.Phasor.PairValues
 public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream

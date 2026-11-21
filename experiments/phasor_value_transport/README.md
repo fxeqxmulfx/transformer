@@ -108,3 +108,30 @@ complete tied-embedding gradient by directional finite differences with
 both offsets. `inspect` replays the checkpoint on the held-out split and
 evaluates the Lean sufficient bound numerically in FP64 using the learned
 embedding Gram matrix and the first-token attention scores.
+
+## Operand-sensitive pair values
+
+The transported head uses the first operand and the product. When the first
+operand is zero, the head produces the same scores for every second operand.
+The canonical addition and absolute-difference validation splits each contain
+51 different answers on that row. A model with that collision can get at
+most 4,655 of the 4,705 examples right. The 99% threshold requires 4,658.
+
+The new head adds learned width-128 vectors to the transported vector before
+the final RMS and tied projection. One table reads the second operand
+directly. The other tables use the modular difference, ordinary absolute
+distance, field quotient (zero for denominator zero), the nine sums
+`a^i + b^j` for `1 ≤ i,j ≤ 3`, and the four products `a^i b^j` for
+`1 ≤ i,j ≤ 2`. Every pair task receives all 17 tables. A table maps an
+address to a trainable hidden vector. Some addresses coincide with individual
+benchmark functions. The NV11 target `a³ + ab` is absent from the addresses.
+The cubic address distribution and tied embeddings are still learned.
+
+The residual tables start at zero, recovering the previous transported head
+exactly at initialization. Lean proves that a winner survives precisely when
+the residual's adverse projected gap is smaller than the transport advantage.
+It also constructs one width-128 table that separates all 97 possible second
+operands on the zero row, with the transport branch active. The field layer
+applies to position one (zero-based) in a model configured for exactly two
+tokens and a prime vocabulary. Every other position or configuration uses the
+ordinary causal Phasor. [Forward map and proofs](../../src/Transformer/Phasor/PairValues.lean)
