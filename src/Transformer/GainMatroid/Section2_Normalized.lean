@@ -30,11 +30,9 @@ namespace OrientedGraph
 
 variable {G : OrientedGraph V E}
 
-/-- A function constant across the edges of a maximal forest is constant across every edge. -/
-theorem eq_of_maximal_isForest {α : Type*} {F : Set E} (hF : Maximal G.IsForest F) (η : V → α)
-    (h : ∀ f ∈ F, η (G.tail f) = η (G.head f)) (e : E) : η (G.tail e) = η (G.head e) := by
-  by_cases he : e ∈ F
-  · exact h e he
+/-- An edge outside a maximal forest lies on a cycle whose other edges are in the forest. -/
+theorem exists_cycleWalk_of_maximal {F : Set E} (hF : Maximal G.IsForest F) {e : E} (he : e ∉ F) :
+    ∃ (u : V) (W : G.Walk u u), W.IsCycleWalk ∧ e ∈ W.edges ∧ ∀ f ∈ W.edges, f ≠ e → f ∈ F := by
   have hnot : ¬G.IsForest (insert e F) := fun hins =>
     he (hF.2 hins (Set.subset_insert e F) (Set.mem_insert e F))
   simp only [IsForest, not_forall, not_not] at hnot
@@ -45,22 +43,34 @@ theorem eq_of_maximal_isForest {α : Type*} {F : Set E} (hF : Maximal G.IsForest
     rcases Set.mem_insert_iff.1 (hsub hf) with rfl | hfF
     · exact absurd hf hne
     · exact hfF
-  have hmem : ∀ f ∈ W.edges, f ≠ e → f ∈ F := fun f hf hfe =>
-    (Set.mem_insert_iff.1 (hsub hf)).resolve_left hfe
+  exact ⟨u, W, hW, heW, fun f hf hfe => (Set.mem_insert_iff.1 (hsub hf)).resolve_left hfe⟩
+
+/-- A function constant across every edge of a cycle but `e` is constant across `e`. -/
+theorem Walk.IsCycleWalk.eq_of_forall_ne {α : Type*} {u : V} {W : G.Walk u u} (hW : W.IsCycleWalk)
+    {e : E} (he : e ∈ W.edges) (η : V → α)
+    (h : ∀ f ∈ W.edges, f ≠ e → η (G.tail f) = η (G.head f)) : η (G.tail e) = η (G.head e) := by
   have hnd := hW.edges_nodup
-  obtain ⟨s, t, hj, A, B, rfl⟩ := W.exists_append_cons_of_mem heW
-  rw [Walk.edges_append] at hnd hmem
-  simp only [Walk.edges] at hnd hmem
+  obtain ⟨s, t, hj, A, B, rfl⟩ := W.exists_append_cons_of_mem he
+  rw [Walk.edges_append] at hnd h
+  simp only [Walk.edges] at hnd h
   obtain ⟨-, hB, hAB⟩ := List.nodup_append.1 hnd
   have heA : e ∉ A.edges := fun hc => hAB e hc e List.mem_cons_self rfl
   have heB : e ∉ B.edges := (List.nodup_cons.1 hB).1
   have hA' : η u = η s := Walk.eq_of_forall_mem_edges η A fun f hf =>
-    h f (hmem f (List.mem_append_left _ hf) (fun hc => heA (hc ▸ hf)))
+    h f (List.mem_append_left _ hf) fun hc => heA (hc ▸ hf)
   have hB' : η t = η u := Walk.eq_of_forall_mem_edges η B fun f hf =>
-    h f (hmem f (List.mem_append_right _ (List.mem_cons_of_mem _ hf)) (fun hc => heB (hc ▸ hf)))
+    h f (List.mem_append_right _ (List.mem_cons_of_mem _ hf)) fun hc => heB (hc ▸ hf)
   rcases hj with ⟨h₁, h₂⟩ | ⟨h₁, h₂⟩
   · rw [h₁, h₂, ← hA', hB']
   · rw [h₁, h₂, ← hA', hB']
+
+/-- A function constant across the edges of a maximal forest is constant across every edge. -/
+theorem eq_of_maximal_isForest {α : Type*} {F : Set E} (hF : Maximal G.IsForest F) (η : V → α)
+    (h : ∀ f ∈ F, η (G.tail f) = η (G.head f)) (e : E) : η (G.tail e) = η (G.head e) := by
+  by_cases he : e ∈ F
+  · exact h e he
+  obtain ⟨u, W, hW, heW, hsub⟩ := exists_cycleWalk_of_maximal hF he
+  exact hW.eq_of_forall_ne heW η fun f hf hfe => h f (hsub f hf hfe)
 
 /-- **Proposition 2.2**, first part (§2.3). Over an abelian group, two gain functions normalized on
 a maximal forest are switching equivalent exactly when they are equal. -/
