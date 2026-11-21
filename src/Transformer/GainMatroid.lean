@@ -25,6 +25,8 @@ public import Transformer.GainMatroid.Section2_MatrixMinors
 public import Transformer.GainMatroid.Section2_MatrixContractions
 public import Transformer.GainMatroid.Section2_MatrixJoints
 public import Transformer.GainMatroid.Section2_MatrixEquivalence
+public import Transformer.GainMatroid.Section2_DeltaY
+public import Transformer.GainMatroid.Section2_DeltaYExamples
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -70,6 +72,8 @@ defines balanced, almost-balanced, properly unbalanced and tangled biased graphs
 proves Lemma 2.5 (i), `Section2_MatrixContractions` proves it for links and refutes the printed
 frame case, `Section2_MatrixJoints` treats joints, and `Section2_MatrixEquivalence` proves that
 projective equivalence passes to minors of a matrix.
+`Section2_DeltaY` defines the Δ-Y and Y-Δ exchanges of biased graphs and states Propositions 2.6
+and 2.7, and `Section2_DeltaYExamples` shows that the printed `∇_Y B` can contain a non-cycle.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
