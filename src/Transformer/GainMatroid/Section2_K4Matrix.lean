@@ -7,8 +7,9 @@ public import Transformer.GainMatroid.Section2_K4Forms
 
 Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.4: "Over any field, a matrix representing the
 matroid `M(K₄)` is projectively equivalent to the matrix `I(K₄)` shown below." The elements of
-`k4Matroid` are `a, b, c = inl 0, inl 1, inl 2` on the triangle and `a′, b′, c′ = inr 0, inr 1, inr 2`
-on the triad, and `k4Label` sends them to the printed columns of `I(K₄)`.
+`k4Matroid` are `a, b, c = inl 0, inl 1, inl 2` on the triangle and
+`a′, b′, c′ = inr 0, inr 1, inr 2` on the triad, and `k4Label` sends them to the printed columns of
+`I(K₄)`.
 
 Scaling the columns of a representation gives `a = b′ − c′`, `b = a′ − c′` and `c = a′ − b′`
 (`IsK4Frame`). The independent columns `a′`, `b′`, `c′` then determine every vector of the row

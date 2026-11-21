@@ -1,0 +1,90 @@
+module
+
+public import Transformer.GainMatroid.Section2_K4Matrix
+
+/-!
+# The matroids of the exchanged matrices
+
+Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.4, citing Brylawski: "Let `Δ_X A` denote the
+matrix obtained from `A` by replacing the columns for `X` with first three columns of `I(K₄)`, where
+possibly the fourth row is omitted or additional zero rows are added. Then `M(Δ_X A) = Δ_X M(A)`",
+and "Let `∇_Y A` denote the matrix `A` obtained by replacing the columns of `Y` with those of the
+last three columns of `I(K₄)`. Then `M(∇_Y A) = ∇_Y M(A)`."
+
+`isDeltaMatroid_of_isTriangleForm` and `isNablaMatroid_of_isTriadForm` state these for matrices in
+the forms `IsTriangleForm` and `IsTriadForm`. As in the source, `Y` is a triad. Brylawski's paper is
+not among the local sources, so these two statements are left unproved.
+-/
+
+@[expose] public section
+
+namespace Transformer.GainMatroid
+
+open OrientedGraph
+
+variable {R E F : Type*} [Field F]
+
+/-- **§2.4** (Brylawski). `M(Δ_X A) = Δ_X M(A)` when the columns of `A` on the triangle
+`X = {a, b, c}` are the last three columns of `I(K₄)`. -/
+theorem isDeltaMatroid_of_isTriangleForm [DecidableEq E] [DecidableEq R] [Finite E]
+    {M M' : Matroid E} {A : Matrix R E F} {a b c : E} {x y z : R}
+    (hA : IsMatrixRepresentation M A) (hform : IsTriangleForm A a b c x y z)
+    (hA' : IsMatrixRepresentation M' (deltaMatrix A a b c x y z)) :
+    IsDeltaMatroid M a b c M' := by
+  sorry
+
+/-- **§2.4** (Brylawski). `M(∇_Y A) = ∇_Y M(A)` when the columns of `A` on the triad
+`Y = {a, b, c}` are the first three columns of `I(K₄)`. -/
+theorem isNablaMatroid_of_isTriadForm [DecidableEq E] [DecidableEq R] [Finite E]
+    {M M' : Matroid E} {A : Matrix R E F} {v : R} {a b c : E} {x y z : R}
+    (hA : IsMatrixRepresentation M A) (hform : IsTriadForm A v a b c x y z)
+    (ht : M✶.IsCircuit {a, b, c})
+    (hA' : IsMatrixRepresentation M' (nablaMatrix A a b c x y z)) :
+    IsNablaMatroid M a b c M' := by
+  sorry
+
+/-- The triangle of `U_{2,3}` over `𝔽₂`, with the last three columns of `I(K₄)`. -/
+def triangleMatrix : Matrix (Fin 3) (Fin 3) (ZMod 2) := !![1, 0, 1; 1, 1, 0; 0, 1, 1]
+
+set_option maxRecDepth 100000 in
+theorem triangleMatrix_represents : IsMatrixRepresentation twoOfThree triangleMatrix := by
+  refine ⟨rfl, fun I => ?_⟩
+  obtain ⟨I, rfl⟩ := I.toFinite.exists_finset_coe
+  refine (matroidOfFinset_indep I).trans (Iff.trans ?_ linearIndepOn_finset_iff.symm)
+  revert I
+  decide +kernel
+
+theorem triangleMatrix_isTriangleForm : IsTriangleForm triangleMatrix 1 2 0 0 1 2 := by
+  refine ⟨by decide, by decide, by decide, ?_, ?_, ?_⟩ <;> decide +kernel
+
+set_option maxRecDepth 100000 in
+/-- The exchanged triangle is the free matroid on three elements. -/
+theorem deltaMatrix_triangleMatrix_represents :
+    IsMatrixRepresentation freeThree (deltaMatrix triangleMatrix 1 2 0 0 1 2) := by
+  refine ⟨rfl, fun I => ?_⟩
+  obtain ⟨I, rfl⟩ := I.toFinite.exists_finset_coe
+  refine (matroidOfFinset_indep I).trans (Iff.trans ?_ linearIndepOn_finset_iff.symm)
+  revert I
+  decide +kernel
+
+theorem clawMatrix_isTriadForm : IsTriadForm clawMatrix 0 0 1 2 1 2 3 := by
+  refine ⟨by decide, by decide, by decide, by decide, by decide, by decide, ?_, ?_, ?_, ?_⟩ <;>
+    decide +kernel
+
+set_option maxRecDepth 100000 in
+/-- The exchanged star of `clawGraph` is the matroid of `clawNabla`. -/
+theorem nablaMatrix_clawMatrix_represents :
+    IsMatrixRepresentation nablaMatroid (nablaMatrix clawMatrix 0 1 2 1 2 3) := by
+  refine ⟨rfl, fun I => ?_⟩
+  obtain ⟨I, rfl⟩ := I.toFinite.exists_finset_coe
+  refine (matroidOfFinset_indep I).trans (Iff.trans ?_ linearIndepOn_finset_iff.symm)
+  revert I
+  decide +kernel
+
+example := isDeltaMatroid_of_isTriangleForm triangleMatrix_represents
+  triangleMatrix_isTriangleForm deltaMatrix_triangleMatrix_represents
+
+example := isNablaMatroid_of_isTriadForm clawMatrix_represents clawMatrix_isTriadForm
+  clawMatroid_triad nablaMatrix_clawMatrix_represents
+
+end Transformer.GainMatroid
