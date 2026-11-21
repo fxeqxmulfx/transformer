@@ -4,6 +4,7 @@ import Transformer
 
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_fourCycle_twist
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.vecMulVec_sub_mem_twistSpan
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.connected_of_hub
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_of_connected_of_fourCycle
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_flatClass_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.not_determines_off_row
@@ -53,3 +54,4 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_potentials
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_flatClass
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_flatClass
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.determined_and_not_returned

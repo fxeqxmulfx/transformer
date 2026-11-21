@@ -1,5 +1,6 @@
 module
 
+public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
@@ -42,4 +43,8 @@ the 9312 outside one row do not (`TablePart.FlatThreshold`).
 A part with an empty row or column does not determine the class. Over the parts of `m` cells at
 `k = l = 1` the empty lines average at most `2 p e^{−m/p}`, and at `p = 97` this is below 1 exactly
 from `m = 511` (PT5, `TablePart.RandomCount`, `TablePart.RandomFlat`).
+
+On a proper part with a connected graph and twists that span all matrices, the data leave one
+function `g + h + uᵀ M v` of the class, and for injective `w ↦ wᵀ M` the minimum of M does not return
+its kernel (PT6, `TablePart.AgainstM`).
 -/

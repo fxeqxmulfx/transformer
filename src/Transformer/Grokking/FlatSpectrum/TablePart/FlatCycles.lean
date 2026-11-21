@@ -81,19 +81,47 @@ lemma connected_patternGraph_univ {m n : Type*} [Nonempty m] [Nonempty n] :
   · exact (hrow j₀).reachable.trans (hcol i).reachable
   · exact (hrow j).reachable
 
-/-- **A connected part with a four-cycle at `k = l = 1`** (`review/flat_spectrum.md`, PT3): it
-determines the flat class. -/
-theorem determines_of_connected_of_fourCycle [Fintype F] {Ω : Set ((Fin 1 → F) × (Fin 1 → F))}
-    (hΩ : (patternGraph Ω).Connected) {u u' v v' : Fin 1 → F} (hu : u ≠ u') (hv : v ≠ v')
-    (h₁ : (u, v) ∈ Ω) (h₂ : (u', v) ∈ Ω) (h₃ : (u', v') ∈ Ω) (h₄ : (u, v') ∈ Ω) :
-    Determines (flatClass F (Fin 1) (Fin 1) : Set ((Fin 1 → F) × (Fin 1 → F) → F)) Ω := by
-  refine (determines_flatClass_iff Ω).2 ⟨hΩ,
-    twistSpan_eq_top_of_ne_zero (vecMulVec_sub_mem_twistSpan h₁ h₂ h₃ h₄) fun h => ?_⟩
+/-- **A hub connects the graph**: if every row shares a column with the row `r` and no column is
+empty, the graph of `Ω` is connected. -/
+theorem connected_of_hub {m n : Type*} {Ω : Set (m × n)} (r : m)
+    (hrow : ∀ u, ∃ v, (r, v) ∈ Ω ∧ (u, v) ∈ Ω) (hcol : ∀ v, ∃ u, (u, v) ∈ Ω) :
+    (patternGraph Ω).Connected := by
+  have hu (u : m) : (patternGraph Ω).Reachable (.inl r) (.inl u) := by
+    obtain ⟨v, h₁, h₂⟩ := hrow u
+    exact (patternGraph_adj_inl_inr.2 h₁).reachable.trans (patternGraph_adj_inr_inl.2 h₂).reachable
+  refine (connected_iff_exists_forall_reachable _).2 ⟨.inl r, ?_⟩
+  rintro (u | v)
+  · exact hu u
+  · obtain ⟨u, h⟩ := hcol v
+    exact (hu u).trans (patternGraph_adj_inl_inr.2 h).reachable
+
+example : (patternGraph (Set.univ : Set (Fin 2 × Fin 2))).Connected :=
+  connected_of_hub 0 (fun _ => ⟨0, Set.mem_univ _, Set.mem_univ _⟩) fun _ => ⟨0, Set.mem_univ _⟩
+
+/-- At `k = l = 1`, a four-cycle on two different rows and two different columns spans all the
+twists. -/
+lemma twistSpan_eq_top_of_fourCycle {Ω : Set ((Fin 1 → F) × (Fin 1 → F))} {u u' v v' : Fin 1 → F}
+    (hu : u ≠ u') (hv : v ≠ v') (h₁ : (u, v) ∈ Ω) (h₂ : (u', v) ∈ Ω) (h₃ : (u', v') ∈ Ω)
+    (h₄ : (u, v') ∈ Ω) : twistSpan Ω = ⊤ := by
+  refine twistSpan_eq_top_of_ne_zero (vecMulVec_sub_mem_twistSpan h₁ h₂ h₃ h₄) fun h => ?_
   have h00 : (u 0 - u' 0) * (v 0 - v' 0) = 0 := by
     simpa [vecMulVec_apply] using congrFun (congrFun h 0) 0
   rcases mul_eq_zero.1 h00 with h | h
   · exact hu (funext fun i => by rw [Subsingleton.elim i 0]; exact sub_eq_zero.1 h)
   · exact hv (funext fun i => by rw [Subsingleton.elim i 0]; exact sub_eq_zero.1 h)
+
+example : twistSpan (Set.univ : Set ((Fin 1 → ZMod 2) × (Fin 1 → ZMod 2))) = ⊤ :=
+  twistSpan_eq_top_of_fourCycle (u := fun _ => 0) (u' := fun _ => 1) (v := fun _ => 0)
+    (v' := fun _ => 1) (fun h => zero_ne_one (congrFun h 0)) (fun h => zero_ne_one (congrFun h 0))
+    (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _) (Set.mem_univ _)
+
+/-- **A connected part with a four-cycle at `k = l = 1`** (`review/flat_spectrum.md`, PT3): it
+determines the flat class. -/
+theorem determines_of_connected_of_fourCycle [Fintype F] {Ω : Set ((Fin 1 → F) × (Fin 1 → F))}
+    (hΩ : (patternGraph Ω).Connected) {u u' v v' : Fin 1 → F} (hu : u ≠ u') (hv : v ≠ v')
+    (h₁ : (u, v) ∈ Ω) (h₂ : (u', v) ∈ Ω) (h₃ : (u', v') ∈ Ω) (h₄ : (u, v') ∈ Ω) :
+    Determines (flatClass F (Fin 1) (Fin 1) : Set ((Fin 1 → F) × (Fin 1 → F) → F)) Ω :=
+  (determines_flatClass_iff Ω).2 ⟨hΩ, twistSpan_eq_top_of_fourCycle hu hv h₁ h₂ h₃ h₄⟩
 
 example : Determines (flatClass (ZMod 2) (Fin 1) (Fin 1) :
     Set ((Fin 1 → ZMod 2) × (Fin 1 → ZMod 2) → ZMod 2)) Set.univ :=
