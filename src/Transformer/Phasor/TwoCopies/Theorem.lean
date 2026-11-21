@@ -13,8 +13,10 @@ operands `x₀, y₀, x₁, y₁` at the positions `0, …, 3`. A one-stream mod
 width `D ≥ 4p + 7`, the head width `d ≥ max(p, 4)`, four heads, `F ≥ 2p` units and `L ≥ 2` layers
 puts its largest logit at the position `3` on `q₀(x₀, y₀) + q₁(x₁, y₁)` and nowhere else, for
 every `ε ≥ 0` and every depth scale `s > 0` (`exists_oneModel_twoCopies`). By R0 so does main's
-model with mHC (`exists_model_twoCopies`). At main's sizes, `D = 128`, `d = 32`, `F = 128`, that is
-every `p ≤ 30`; the example is `x³ + xy` over `ℤ/29`.
+model with mHC (`exists_model_twoCopies`). The projections are real-linear, as
+`Transformer.Phasor` allows: at main's widths, `D = 128`, `d = 32` and `F = 171` complex units,
+that is every `p ≤ 30`, and the example is `x³ + xy` over `ℤ/29`. Main's own projections are
+complex-linear, and with them the design needs `D ≥ 8p + 8`, so `p ≤ 15` (NV8, by hand).
 
 The logit of `v` is `κ (κ_emb (b² + [v = t₃] + cos(θ_v − θ_{t₃})) + A cos(θ_v − θ_u))`
 (`logits_twoModel`), `u` the answer, and `Margin` makes the answer's term win
@@ -75,8 +77,9 @@ theorem logits_twoModel_lt (hp : 2 ≤ p) (he : Orthonormal ℝ e) (hf : Orthono
   have hAc := mul_le_mul_of_nonneg_left (cos_angle_sub_le hv) hA.le
   nlinarith
 
-/-- Two copies of `x³ + xy` over `ℤ/29` at main's sizes, on the zero tokens, against `v = 1`. -/
-example (ι₀ : Fin 2 × Fin 29 ↪ Fin 128) (ι₁ : Unit ↪ Fin 128) :=
+/-- Two copies of `x³ + xy` over `ℤ/29` at main's widths with real-linear projections, on the zero
+tokens, against `v = 1`. -/
+example (ι₀ : Fin 2 × Fin 29 ↪ Fin 171) (ι₁ : Unit ↪ Fin 171) :=
   logits_twoModel_lt (ι₀ := ι₀) (ι₁ := ι₁) (q := fun _ x y => x ^ 3 + x * y) (by norm_num)
     (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128))
     (orthonormal_coordCodes (by norm_num : 29 ≤ 32)) (by norm_num) (by norm_num)
@@ -113,9 +116,10 @@ theorem exists_model_twoCopies (hp : 2 ≤ p) (hD : 4 * p + 7 ≤ D) (hd : p ≤
     (fun _ => Router.plain_isPlain D)]
   exact hM tokens L hL v hv
 
-/-- **Main's sizes**: `D = 128`, `d = 32`, four heads, `F = 128`, `ε = 2⁻²³`, four layers
-(`α = 1/√8`), two copies of `x³ + xy` over `ℤ/29`, the ordinary residual. -/
-example : ∃ M : OneModel 128 32 4 128 29, ∀ (tokens : ℕ → Fin 29) (L : ℕ), 2 ≤ L → ∀ v,
+/-- **Main's widths, real-linear projections**: `D = 128`, `d = 32`, four heads, `F = 171`,
+`ε = 2⁻²³`, four layers (`α = 1/√8`), two copies of `x³ + xy` over `ℤ/29`, the ordinary
+residual. -/
+example : ∃ M : OneModel 128 32 4 171 29, ∀ (tokens : ℕ → Fin 29) (L : ℕ), 2 ≤ L → ∀ v,
     v ≠ (tokens 0 ^ 3 + tokens 0 * tokens 1) + (tokens 2 ^ 3 + tokens 2 * tokens 3) →
       M.logits (1 / 8388608) (1 / Real.sqrt 8) tokens L 3 v <
         M.logits (1 / 8388608) (1 / Real.sqrt 8) tokens L 3
@@ -124,7 +128,7 @@ example : ∃ M : OneModel 128 32 4 128 29, ∀ (tokens : ℕ → Fin 29) (L : �
     (by norm_num) (by positivity) (fun _ x y => x ^ 3 + x * y)
 
 /-- The same with main's mHC. -/
-example : ∃ M : Model 128 32 4 128 29, ∀ (tokens : ℕ → Fin 29) (L : ℕ), 2 ≤ L → ∀ v,
+example : ∃ M : Model 128 32 4 171 29, ∀ (tokens : ℕ → Fin 29) (L : ℕ), 2 ≤ L → ∀ v,
     v ≠ (tokens 0 ^ 3 + tokens 0 * tokens 1) + (tokens 2 ^ 3 + tokens 2 * tokens 3) →
       M.logits (1 / 8388608) (1 / Real.sqrt 8) tokens L 3 v <
         M.logits (1 / 8388608) (1 / Real.sqrt 8) tokens L 3

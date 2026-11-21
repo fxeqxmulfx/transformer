@@ -143,7 +143,7 @@ theorem range_oneLogits_subset (eps scale : ℝ) :
 
 /-- The model's sizes, `D = 128`, `d = 32`, `H = 4`, `ε = 2⁻²³`: plain routers give the one-stream
 logits. -/
-example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (L i : ℕ) (v : Fin 97) :
+example (M : OneModel 128 32 4 171 97) (tokens : ℕ → Fin 97) (L i : ℕ) (v : Fin 97) :
     (M.withRouters (fun _ => Router.plain 128) (fun _ => Router.plain 128)).logits (1 / 8388608)
         (1 / Real.sqrt 8) tokens L i v =
       M.logits (1 / 8388608) (1 / Real.sqrt 8) tokens L i v :=
@@ -151,7 +151,7 @@ example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (L i : ℕ) (v 
     _ _ tokens L i v
 
 /-- The model's sizes and plain routers: four copies of the one-stream state at every layer. -/
-example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (l : ℕ) :
+example (M : OneModel 128 32 4 171 97) (tokens : ℕ → Fin 97) (l : ℕ) :
     (M.withRouters (fun _ => Router.plain 128) (fun _ => Router.plain 128)).states (1 / 8388608)
         (1 / Real.sqrt 8) tokens l =
       fun i _ => M.states (1 / 8388608) (1 / Real.sqrt 8) tokens l i :=

@@ -42,7 +42,8 @@ theorem rmsNormEps_vec_embC (he : Orthonormal ℝ e) (eps a b : ℝ) (v : Fin p)
       vec e ((rmsScale D eps (a ^ 2 * (b ^ 2 + 2)) * a) • embC b v) := by
   rw [rmsNormEps_vec_smul he, sum_embC_sq]
 
-/-- Main's sizes, `D = 128`, `d = 32`, `p = 29`, `ε = 2⁻²³`, on the coordinate slots. -/
+/-- Main's widths, `D = 128` and `d = 32`, with real-linear projections, `p = 29` and
+`ε = 2⁻²³`, on the coordinate slots. -/
 example (c : Slot 29 → ℝ) :=
   headVector_slotMap_vec (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) (1 / 8388608)
     (dftQuery 32) c
@@ -115,15 +116,15 @@ theorem oneHeads_attention0 (he : Orthonormal ℝ e) (WO : (Fin 4 → EucSpace d
   · funext j
     rw [hx, value_vec_embC he]
 
-/-- Main's sizes on the coordinate slots and codes, with the embeddings of bias `1` read by the
-heads: the heads of the first layer at the position `3`. -/
+/-- Main's widths with real-linear projections, on the coordinate slots and codes, with the
+embeddings of bias `1` read by the heads: the heads of the first layer at the position `3`. -/
 example (t : ℕ → Fin 29) (WO : (Fin 4 → EucSpace 32) →ₗ[ℝ] EucSpace 128) (h : Fin 4) :=
   oneHeads_attention0 (f := coordCodes (by norm_num : 29 ≤ 32))
     (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) WO (by norm_num) (1 / 8388608) _ 1 t
     (fun j => vec (coordSlots _) ((1 : ℝ) • embC 1 (t j)))
     (fun j => rmsNormEps_vec_embC (orthonormal_coordSlots _) _ 1 1 (t j)) h
 
-/-- The values of the heads at main's sizes. -/
+/-- The values of the heads at the same sizes. -/
 example (WO : (Fin 4 → EucSpace 32) →ₗ[ℝ] EucSpace 128) (h : Fin 4) (a b : ℝ) (v : Fin 29) :=
   value_vec_embC (f := coordCodes (by norm_num : 29 ≤ 32))
     (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) WO h a b v

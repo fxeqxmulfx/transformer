@@ -56153,7 +56153,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`vec_stateC_planes`](src/Transformer/Phasor/TwoCopies/Forms.lean#L79) | theorem | proved |
 | [`sum_stateC_out_sq`](src/Transformer/Phasor/TwoCopies/Forms.lean#L89) | theorem | proved |
 
-**[Transformer.Phasor.TwoCopies.Forward](src/Transformer/Phasor/TwoCopies/Forward.lean)** — 176 lines
+**[Transformer.Phasor.TwoCopies.Forward](src/Transformer/Phasor/TwoCopies/Forward.lean)** — 177 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -56166,29 +56166,29 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`toks`](src/Transformer/Phasor/TwoCopies/Forward.lean#L84) | def |  |
 | [`copyVals`](src/Transformer/Phasor/TwoCopies/Forward.lean#L87) | abbrev |  |
 | [`apply_layer0`](src/Transformer/Phasor/TwoCopies/Forward.lean#L95) | theorem | proved |
-| [`apply_layer1`](src/Transformer/Phasor/TwoCopies/Forward.lean#L155) | theorem | proved |
+| [`apply_layer1`](src/Transformer/Phasor/TwoCopies/Forward.lean#L156) | theorem | proved |
 
-**[Transformer.Phasor.TwoCopies.Heads](src/Transformer/Phasor/TwoCopies/Heads.lean)** — 131 lines
+**[Transformer.Phasor.TwoCopies.Heads](src/Transformer/Phasor/TwoCopies/Heads.lean)** — 132 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`headVector_slotMap_vec`](src/Transformer/Phasor/TwoCopies/Heads.lean#L33) | theorem | proved |
 | [`rmsNormEps_vec_embC`](src/Transformer/Phasor/TwoCopies/Heads.lean#L40) | theorem | proved |
-| [`attention0`](src/Transformer/Phasor/TwoCopies/Heads.lean#L56) | def |  |
-| [`dftScale`](src/Transformer/Phasor/TwoCopies/Heads.lean#L65) | def |  |
-| [`dftScale_pos`](src/Transformer/Phasor/TwoCopies/Heads.lean#L69) | theorem | proved |
-| [`value_vec_embC`](src/Transformer/Phasor/TwoCopies/Heads.lean#L83) | theorem | proved |
-| [`oneHeads_attention0`](src/Transformer/Phasor/TwoCopies/Heads.lean#L93) | theorem | proved |
+| [`attention0`](src/Transformer/Phasor/TwoCopies/Heads.lean#L57) | def |  |
+| [`dftScale`](src/Transformer/Phasor/TwoCopies/Heads.lean#L66) | def |  |
+| [`dftScale_pos`](src/Transformer/Phasor/TwoCopies/Heads.lean#L70) | theorem | proved |
+| [`value_vec_embC`](src/Transformer/Phasor/TwoCopies/Heads.lean#L84) | theorem | proved |
+| [`oneHeads_attention0`](src/Transformer/Phasor/TwoCopies/Heads.lean#L94) | theorem | proved |
 
-**[Transformer.Phasor.TwoCopies.Logits](src/Transformer/Phasor/TwoCopies/Logits.lean)** — 115 lines
+**[Transformer.Phasor.TwoCopies.Logits](src/Transformer/Phasor/TwoCopies/Logits.lean)** — 116 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`states_zero`](src/Transformer/Phasor/TwoCopies/Logits.lean#L34) | theorem | proved |
-| [`states_add_three`](src/Transformer/Phasor/TwoCopies/Logits.lean#L48) | theorem | proved |
-| [`states_add_two`](src/Transformer/Phasor/TwoCopies/Logits.lean#L58) | theorem | proved |
-| [`states_twoModel`](src/Transformer/Phasor/TwoCopies/Logits.lean#L66) | theorem | proved |
-| [`logits_twoModel`](src/Transformer/Phasor/TwoCopies/Logits.lean#L88) | theorem | proved |
+| [`states_add_three`](src/Transformer/Phasor/TwoCopies/Logits.lean#L49) | theorem | proved |
+| [`states_add_two`](src/Transformer/Phasor/TwoCopies/Logits.lean#L59) | theorem | proved |
+| [`states_twoModel`](src/Transformer/Phasor/TwoCopies/Logits.lean#L67) | theorem | proved |
+| [`logits_twoModel`](src/Transformer/Phasor/TwoCopies/Logits.lean#L89) | theorem | proved |
 
 **[Transformer.Phasor.TwoCopies.Margin](src/Transformer/Phasor/TwoCopies/Margin.lean)** — 82 lines
 
@@ -56218,7 +56218,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`dftQuery_ne_zero`](src/Transformer/Phasor/TwoCopies/Pairs.lean#L99) | theorem | proved |
 | [`dftKey_ne_zero`](src/Transformer/Phasor/TwoCopies/Pairs.lean#L102) | theorem | proved |
 
-**[Transformer.Phasor.TwoCopies.Product](src/Transformer/Phasor/TwoCopies/Product.lean)** — 145 lines
+**[Transformer.Phasor.TwoCopies.Product](src/Transformer/Phasor/TwoCopies/Product.lean)** — 146 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -56293,15 +56293,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sin_angle_add`](src/Transformer/Phasor/TwoCopies/States.lean#L158) | theorem | proved |
 | [`cos_angle_sub_le`](src/Transformer/Phasor/TwoCopies/States.lean#L165) | theorem | proved |
 
-**[Transformer.Phasor.TwoCopies.Theorem](src/Transformer/Phasor/TwoCopies/Theorem.lean)** — 135 lines
+**[Transformer.Phasor.TwoCopies.Theorem](src/Transformer/Phasor/TwoCopies/Theorem.lean)** — 139 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`bTwo`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L33) | def |  |
-| [`gTwo`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L36) | def |  |
-| [`logits_twoModel_lt`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L44) | theorem | proved |
-| [`exists_oneModel_twoCopies`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L89) | theorem | proved |
-| [`exists_model_twoCopies`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L102) | theorem | proved |
+| [`bTwo`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L35) | def |  |
+| [`gTwo`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L38) | def |  |
+| [`logits_twoModel_lt`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L46) | theorem | proved |
+| [`exists_oneModel_twoCopies`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L92) | theorem | proved |
+| [`exists_model_twoCopies`](src/Transformer/Phasor/TwoCopies/Theorem.lean#L105) | theorem | proved |
 
 ### `Transformer.Precision`
 

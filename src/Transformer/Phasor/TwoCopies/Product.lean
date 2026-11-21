@@ -132,13 +132,14 @@ theorem plainFFN_ffn1 (he : Orthonormal ℝ e) (ι : Unit ↪ Fin F) (g b k a : 
   simp [Fin.sum_univ_two, circ, phase, smul_smul]
   congr 1 <;> congr 1 <;> ring
 
-/-- At `p = 29` on the coordinate slots of `D = 128`, with `F = 128` units: the first branch. -/
-example (ι : Fin 2 × Fin 29 ↪ Fin 128) (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (b k a : ℝ)
+/-- At `p = 29` on the real coordinate slots of `D = 128`, with main's `F = 171` units: the first
+branch. -/
+example (ι : Fin 2 × Fin 29 ↪ Fin 171) (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (b k a : ℝ)
     (t : Fin 4 → Fin 29) (w : Fin 2 → Fin 29) (u : Fin 29) :=
   plainFFN_ffn0 (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) ι q b k a t w u
 
 /-- The second branch. -/
-example (ι : Unit ↪ Fin 128) (g b k a : ℝ) (t : Fin 4 → Fin 29) (P : Fin 2 → ℝ)
+example (ι : Unit ↪ Fin 171) (g b k a : ℝ) (t : Fin 4 → Fin 29) (P : Fin 2 → ℝ)
     (w : Fin 2 → Fin 29) (u : Fin 29) :=
   plainFFN_ffn1 (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) ι g b k a t P w u
 

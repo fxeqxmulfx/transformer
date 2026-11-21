@@ -130,7 +130,7 @@ theorem OneModel.collapse_states_withRouters (M : OneModel D d H F V)
     rfl
 
 /-- Main's sizes with `Router.uneven` in every sublayer: the mean is the one-stream state. -/
-example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (l i : ℕ) :=
+example (M : OneModel 128 32 4 171 97) (tokens : ℕ → Fin 97) (l i : ℕ) :=
   M.collapse_states_withRouters (fun _ => Router.uneven_isBalanced 128)
     (fun _ => Router.uneven_isBalanced 128) (1 / 8388608) (1 / Real.sqrt 8) tokens l i
 
@@ -142,9 +142,9 @@ theorem OneModel.logits_withRouters_of_isBalanced (M : OneModel D d H F V)
   rw [Model.logits, Model.feature, M.collapse_states_withRouters hA hF]
   rfl
 
-/-- Main's sizes, `D = 128`, `d = 32`, four heads, `F = 128`, `ε = 2⁻²³`, `α = 1/√8`, with
+/-- Main's sizes, `D = 128`, `d = 32`, four heads, `F = 171`, `ε = 2⁻²³`, `α = 1/√8`, with
 `Router.uneven` in every sublayer: the one-stream logits. -/
-example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (L i : ℕ) (v : Fin 97) :
+example (M : OneModel 128 32 4 171 97) (tokens : ℕ → Fin 97) (L i : ℕ) (v : Fin 97) :
     (M.withRouters (fun _ => Router.uneven 128) (fun _ => Router.uneven 128)).logits (1 / 8388608)
         (1 / Real.sqrt 8) tokens L i v =
       M.logits (1 / 8388608) (1 / Real.sqrt 8) tokens L i v :=

@@ -42,8 +42,8 @@ as concrete maps and plugs them into it, in exact real arithmetic.
   biases `0` keep four equal streams equal, so the model is then the one-stream model
   `h ← h + α R_D(raw(R_D h))`: the ordinary residual is a sub-model of mHC (R0).
 * `TwoCopies`: two copies `q₀(x₀, y₀) + q₁(x₁, y₁)` of any tasks over `ℤ/p` computed exactly, in the
-  one-stream model and so in this one, with `D ≥ 4p + 7`, four heads, `F ≥ 2p` units and two
-  layers, for every `ε ≥ 0` (T3c).
+  one-stream model and so in this one, with real-linear projections, `D ≥ 4p + 7`, four heads,
+  `F ≥ 2p` units and two layers, for every `ε ≥ 0` (T3c).
 * `StreamSum`, `MeanStream`, `ZeroSumPart`: routers with zero scales and phases, read biases
   `−ln 3`, write gates summing to four and balanced skip biases make the mean of the streams the
   one-stream state, though the streams differ; a part of the streams that sums to zero is carried

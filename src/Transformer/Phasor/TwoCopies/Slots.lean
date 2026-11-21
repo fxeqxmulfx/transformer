@@ -49,7 +49,7 @@ noncomputable def coordSlots (h : 4 * p + 7 ≤ D) : Slot p → EucSpace D :=
 theorem orthonormal_coordSlots (h : 4 * p + 7 ≤ D) : Orthonormal ℝ (coordSlots h) :=
   (orthonormal_coords D).comp _ ((Fin.castLE_injective _).comp (Fintype.equivFin _).injective)
 
-/-- Main's width `D = 128` holds the slots of `p = 29`. -/
+/-- Main's width `D = 128` holds the slots of `p = 29` as real directions. -/
 example : Orthonormal ℝ (coordSlots (p := 29) (D := 128) (by norm_num)) :=
   orthonormal_coordSlots _
 

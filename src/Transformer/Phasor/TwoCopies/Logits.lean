@@ -37,8 +37,9 @@ theorem states_zero (he : Orthonormal ℝ e) (eps b g s : ℝ) (tokens : ℕ →
   change GPTMini.rmsNormEps eps (vec e (embC b (tokens j))) = _
   rw [rmsNormEps_vec he, sum_embC_sq]; rfl
 
-/-- Main's sizes, `D = 128`, `d = 32`, `F = 128`, `ε = 2⁻²³`, `α = 1/√8`, with `p = 29`. -/
-example (ι₀ : Fin 2 × Fin 29 ↪ Fin 128) (ι₁ : Unit ↪ Fin 128)
+/-- Main's widths, `D = 128`, `d = 32` and `F = 171`, with real-linear projections, `ε = 2⁻²³`,
+`α = 1/√8` and `p = 29`. -/
+example (ι₀ : Fin 2 × Fin 29 ↪ Fin 171) (ι₁ : Unit ↪ Fin 171)
     (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (tokens : ℕ → Fin 29) :=
   states_zero (f := coordCodes (by norm_num : 29 ≤ 32)) (ι₀ := ι₀) (ι₁ := ι₁) (q := q)
     (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) (1 / 8388608) 1 1
@@ -76,7 +77,7 @@ theorem states_twoModel (he : Orthonormal ℝ e) (hf : Orthonormal ℝ f) (hd : 
       ((twoModel e f ι₀ ι₁ q eps b g).states eps s tokens 0) (states_zero he eps b g s tokens))
 
 /-- The same sizes, at the depth `4`. -/
-example (ι₀ : Fin 2 × Fin 29 ↪ Fin 128) (ι₁ : Unit ↪ Fin 128)
+example (ι₀ : Fin 2 × Fin 29 ↪ Fin 171) (ι₁ : Unit ↪ Fin 171)
     (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (tokens : ℕ → Fin 29) :=
   states_twoModel (ι₀ := ι₀) (ι₁ := ι₁) (q := q)
     (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128))
@@ -105,7 +106,7 @@ theorem logits_twoModel (he : Orthonormal ℝ e) (hf : Orthonormal ℝ f) (hd : 
     ring
 
 /-- The same sizes. -/
-example (ι₀ : Fin 2 × Fin 29 ↪ Fin 128) (ι₁ : Unit ↪ Fin 128)
+example (ι₀ : Fin 2 × Fin 29 ↪ Fin 171) (ι₁ : Unit ↪ Fin 171)
     (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (tokens : ℕ → Fin 29) :=
   logits_twoModel (ι₀ := ι₀) (ι₁ := ι₁) (q := q)
     (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128))

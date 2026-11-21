@@ -142,8 +142,9 @@ theorem apply_layer0 (he : Orthonormal ℝ e) (hf : Orthonormal ℝ f) (hd : 4 �
   rw [hattn, hx 3, show tokens 3 = toks tokens 3 from rfl, hatt]
   exact hffn
 
-/-- At main's sizes, `D = 128`, `d = 32`, `ε = 2⁻²³`, depth scale `1/√8`, with `p = 29`. -/
-example (ι₀ : Fin 2 × Fin 29 ↪ Fin 128) (q : Fin 2 → Fin 29 → Fin 29 → Fin 29)
+/-- At main's widths, `D = 128`, `d = 32` and `F = 171`, with real-linear projections, `ε = 2⁻²³`,
+depth scale `1/√8` and `p = 29`. -/
+example (ι₀ : Fin 2 × Fin 29 ↪ Fin 171) (q : Fin 2 → Fin 29 → Fin 29 → Fin 29)
     (tokens : ℕ → Fin 29) :=
   apply_layer0 (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128))
     (orthonormal_coordCodes (by norm_num : 29 ≤ 32)) (ι₀ := ι₀) (q := q) (by norm_num)
@@ -169,7 +170,7 @@ theorem apply_layer1 (he : Orthonormal ℝ e) {eps b : ℝ} (s g : ℝ) (tokens 
   · simp only [zero_add, ampOut, ampProd, kFFN1]; ring
 
 /-- The same sizes, on any state of the form that layer `0` leaves. -/
-example (ι₁ : Unit ↪ Fin 128) (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (tokens : ℕ → Fin 29) :=
+example (ι₁ : Unit ↪ Fin 171) (q : Fin 2 → Fin 29 → Fin 29 → Fin 29) (tokens : ℕ → Fin 29) :=
   apply_layer1 (d := 32) (orthonormal_coordSlots (by norm_num : 4 * 29 + 7 ≤ 128)) (ι₁ := ι₁)
     (q := q) (eps := 1 / 8388608) (b := 1) (1 / Real.sqrt 8) 1 tokens (fun _ => _) rfl
 
