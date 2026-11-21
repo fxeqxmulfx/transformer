@@ -4,6 +4,8 @@ use super::*;
 use data::{Example, Task};
 use std::collections::BTreeMap;
 
+pub mod report;
+
 fn cases() -> Result<Vec<Value>> {
     let suite: Value = serde_json::from_str(arithmetic::ORIGINAL35)?;
     Ok(suite["tasks"].as_array().ok_or("missing tasks")?.clone())
@@ -47,6 +49,12 @@ fn task_config(row: &Value, task: &Task) -> Result<Config> {
     Ok(cfg)
 }
 
+fn nv11_case() -> Value {
+    json!({"name":"arithmetic-cubic-product","tier":"NV11","train_examples":4704,
+        "heldout_examples":4705,"selection":"validation",
+        "case":{"width":128,"heads":4,"layers":1,"batch":BATCH,"max_updates":BUDGET,"observe":OBSERVE}})
+}
+
 fn nv11() -> Result<(Value, Task)> {
     let d = cubic_data()?;
     let examples = |rows: Vec<[u32; 3]>| {
@@ -64,10 +72,8 @@ fn nv11() -> Result<(Value, Task)> {
             })
             .collect()
     };
-    let row = json!({"name":"arithmetic-cubic-product","tier":"NV11",
-        "case":{"width":128,"heads":4,"layers":1,"batch":BATCH,"max_updates":BUDGET,"observe":OBSERVE}});
     Ok((
-        row,
+        nv11_case(),
         Task {
             vocab: d.training.vocabulary,
             selection: "validation".into(),
@@ -205,6 +211,7 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
     let cfg = task_config(&row, &task)?;
     let dest = out.join(name).join(format!("seed{seed}"));
     let result: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;
+    report::validate(&row, seed, &dest, &result)?;
     let bytes = fs::read(dest.join("weights.f32"))?;
     if result["model"] != MODEL
         || result["weights_sha256"] != hash(&bytes)

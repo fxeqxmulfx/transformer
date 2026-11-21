@@ -62,6 +62,7 @@ bin=./target/release/phasor-value-transport
 "$bin" shared-check
 ./run_stress.sh cell runs/shared-values
 ./run_stress.sh replay runs/shared-values
+"$bin" report runs/shared-values
 "$bin" predict runs/shared-values/arithmetic-cubic-product/seed0/weights.f32 97 12 34
 for seed in 0 1 2
 do
@@ -74,7 +75,9 @@ On a memory-constrained GPU, `PHASOR_EVAL_BATCH_CAP=16` limits the scorer's
 chunk size down to the training batch size. Training still consumes the
 original minibatches, and each evaluation visits the entire split.
 Replay verifies the architecture identifier, weights digest, precision,
-suite identity and exact held-out count. For two-token validation examples
+suite identity and exact held-out count. The report verifies the full observation
+history, update cadence and examples consumed before counting a task and seed.
+It lists budget misses and pending runs separately. For two-token validation examples
 with first operand zero it also scores the fitted weights with the value
 tables cleared. The contextual feature and transported read remain active
 in that ablation. The two-token prediction command takes a weights file,

@@ -180,6 +180,7 @@ fn main() -> Result<()> {
         [op] if op == "check" => checks::run(),
         [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(),
         [op] if op == "routes" => stress::routes(),
+        [op, dest] if op == "report" => stress::report::run(Path::new(dest)),
         [op, name, seed, out] if op == "cell" => stress::run(name, seed.parse()?, Path::new(out)),
         [op, name, seed, out] if op == "replay" => stress::replay(name, seed.parse()?, Path::new(out)),
         [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values") => {
@@ -191,6 +192,6 @@ fn main() -> Result<()> {
         [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|shared-check|routes} | {cell|replay} CASE SEED RUN_DIR | {transport|phasor|shared-values} RUN_DIR [SEED] | inspect FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|shared-check|routes} | report RUN_DIR | {cell|replay} CASE SEED RUN_DIR | {transport|phasor|shared-values} RUN_DIR [SEED] | inspect FILE | predict FILE [VOCAB] A B".into()),
     }
 }
