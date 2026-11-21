@@ -1,8 +1,8 @@
 module
 
 public import Mathlib.Combinatorics.Matroid.Closure
+public import Mathlib.Combinatorics.Matroid.Dual
 public import Mathlib.Data.Fintype.Powerset
-public import Transformer.GainMatroid.Section2_CycleDegrees
 public import Transformer.GainMatroid.Section2_Matroids
 
 /-!
@@ -11,10 +11,6 @@ public import Transformer.GainMatroid.Section2_Matroids
 Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.2 and §2.4. `matroidOfFinset` builds a matroid
 on a finite type from a decidable predicate on finite sets, and `FlatTest` decides its flats, so
 that small matroids can be checked by evaluation.
-
-In a balanced biased graph every handcuff and theta contains a balanced cycle, so the circuits of
-the frame and lift matroids are the cycles of the graph (`BiasedGraph.IsBalanced.isFrameCircuit_iff`
-and `BiasedGraph.IsBalanced.isLiftCircuit_iff`).
 -/
 
 @[expose] public section
@@ -104,46 +100,57 @@ theorem matroidOfFinset_isCircuit_iff (C : Finset α) :
   simp only [matroidOfFinset_indep, herase, matroidOfFinset_E, Set.subset_univ, and_true,
     Finset.mem_coe]
 
+/-- `B` is a maximal member of `indep`. -/
+def IsFinsetBase (indep : Finset α → Prop) (B : Finset α) : Prop :=
+  indep B ∧ ∀ e, e ∉ B → ¬indep (insert e B)
+
+instance [Fintype α] (indep : Finset α → Prop) [DecidablePred indep] (B : Finset α) :
+    Decidable (IsFinsetBase indep B) := by
+  unfold IsFinsetBase
+  infer_instance
+
+/-- The bases of `matroidOfFinset` are the maximal members of its predicate. -/
+theorem matroidOfFinset_isBase_iff (B : Finset α) :
+    (matroidOfFinset indep h0 hsub haug).IsBase (B : Set α) ↔ IsFinsetBase indep B := by
+  constructor
+  · intro h
+    refine ⟨(matroidOfFinset_indep B).1 h.indep, fun e he hins => he ?_⟩
+    have hI : (matroidOfFinset indep h0 hsub haug).Indep ((insert e B : Finset α) : Set α) :=
+      (matroidOfFinset_indep _).2 hins
+    have heq := h.eq_of_subset_indep hI (by simp)
+    have hmem : e ∈ ((insert e B : Finset α) : Set α) := by simp
+    rw [← heq] at hmem
+    exact Finset.mem_coe.1 hmem
+  · rintro ⟨hB, hmax⟩
+    refine Matroid.Indep.isBase_of_forall_insert ((matroidOfFinset_indep B).2 hB) fun e he hins => ?_
+    have hI : (matroidOfFinset indep h0 hsub haug).Indep ((insert e B : Finset α) : Set α) := by
+      simpa using hins
+    exact hmax e (fun hmem => he.2 (Finset.mem_coe.2 hmem)) ((matroidOfFinset_indep _).1 hI)
+
+/-- The independent sets of the dual of `matroidOfFinset`: those missing a base. -/
+theorem matroidOfFinset_dual_indep_iff [Finite α] (I : Finset α) :
+    (matroidOfFinset indep h0 hsub haug)✶.Indep (I : Set α) ↔
+      ∃ B, IsFinsetBase indep B ∧ Disjoint I B := by
+  rw [Matroid.dual_indep_iff_exists (Set.subset_univ _)]
+  constructor
+  · rintro ⟨B, hB, hd⟩
+    obtain ⟨B, rfl⟩ := (Set.toFinite B).exists_finset_coe
+    exact ⟨B, (matroidOfFinset_isBase_iff B).1 hB, Finset.disjoint_coe.1 hd⟩
+  · rintro ⟨B, hB, hd⟩
+    exact ⟨B, (matroidOfFinset_isBase_iff B).2 hB, Finset.disjoint_coe.2 hd⟩
+
+/-- The circuits of the dual of `matroidOfFinset`, by a test on its bases. -/
+theorem matroidOfFinset_dual_isCircuit_iff [Finite α] (C : Finset α) :
+    (matroidOfFinset indep h0 hsub haug)✶.IsCircuit (C : Set α) ↔
+      (∀ B, IsFinsetBase indep B → ¬Disjoint C B) ∧
+        ∀ e ∈ C, ∃ B, IsFinsetBase indep B ∧ Disjoint (C.erase e) B := by
+  rw [Matroid.isCircuit_iff_dep_forall_sdiff_singleton_indep, Matroid.Dep]
+  have herase (e : α) : (C : Set α) \ {e} = ((C.erase e : Finset α) : Set α) := by
+    simp [Finset.coe_erase]
+  simp only [matroidOfFinset_dual_indep_iff, herase, Matroid.dual_ground, matroidOfFinset_E,
+    Set.subset_univ, and_true, Finset.mem_coe, not_exists, not_and]
+
 end FiniteMatroid
-
-namespace BiasedGraph
-
-variable {V E : Type*} {Ω : BiasedGraph V E} {X : Set E}
-
-private theorem exists_isCycle_of_theta {G : OrientedGraph V E} (h : G.IsThetaSet X) :
-    ∃ C ⊆ X, G.IsCycle C := by
-  obtain ⟨x, y, P, Q, R, hT, rfl⟩ := h
-  exact ⟨_, Set.subset_union_left, hT.isCycle.1⟩
-
-/-- In a balanced biased graph the circuits of the frame matroid are the cycles: a handcuff or a
-theta contains a cycle, which is balanced. -/
-theorem IsBalanced.isFrameCircuit_iff (h : Ω.IsBalanced) :
-    Ω.IsFrameCircuit X ↔ Ω.graph.IsCycle X := by
-  refine ⟨?_, fun hX => Or.inl (h X hX)⟩
-  rintro (hX | ⟨hshape, hno⟩)
-  · exact Ω.isCycle_of_mem _ hX
-  · obtain ⟨C, hCX, hC⟩ : ∃ C ⊆ X, Ω.graph.IsCycle C := by
-      rcases hshape with ⟨C, D, v, hC, -, -, -, rfl⟩ |
-        ⟨C, D, x, y, P, hC, -, -, -, -, -, -, -, rfl⟩ | ht
-      · exact ⟨C, Set.subset_union_left, hC⟩
-      · exact ⟨C, Set.subset_union_left.trans Set.subset_union_left, hC⟩
-      · exact exists_isCycle_of_theta ht
-    exact absurd (h C hC) (hno C hCX hC)
-
-/-- In a balanced biased graph the circuits of the lift matroid are the cycles. -/
-theorem IsBalanced.isLiftCircuit_iff (h : Ω.IsBalanced) :
-    Ω.IsLiftCircuit X ↔ Ω.graph.IsCycle X := by
-  refine ⟨?_, fun hX => Or.inl (h X hX)⟩
-  rintro (hX | ⟨hshape, hno⟩)
-  · exact Ω.isCycle_of_mem _ hX
-  · obtain ⟨C, hCX, hC⟩ : ∃ C ⊆ X, Ω.graph.IsCycle C := by
-      rcases hshape with ⟨C, D, v, hC, -, -, -, rfl⟩ | ⟨C, D, hC, -, -, rfl⟩ | ht
-      · exact ⟨C, Set.subset_union_left, hC⟩
-      · exact ⟨C, Set.subset_union_left, hC⟩
-      · exact exists_isCycle_of_theta ht
-    exact absurd (h C hC) (hno C hCX hC)
-
-end BiasedGraph
 
 /-- `U_{2,3}`, built from its independent sets, for the examples below. -/
 noncomputable def twoOfThree : Matroid (Fin 3) :=
@@ -160,10 +167,13 @@ example : twoOfThree.IsFlat (({0} : Finset (Fin 3)) : Set (Fin 3)) :=
 example : twoOfThree.IsCircuit (({0, 1, 2} : Finset (Fin 3)) : Set (Fin 3)) :=
   (matroidOfFinset_isCircuit_iff _).2 (by decide +kernel)
 
-example :=
-  (gainBiased_one_isBalanced (Γ := ℚˣ) OrientedGraph.K4).isFrameCircuit_iff (X := {0, 1, 3})
+example : twoOfThree.IsBase (({0, 1} : Finset (Fin 3)) : Set (Fin 3)) :=
+  (matroidOfFinset_isBase_iff _).2 (by decide +kernel)
 
-example :=
-  (gainBiased_one_isBalanced (Γ := ℚˣ) OrientedGraph.K4).isLiftCircuit_iff (X := {0, 1, 3})
+example : twoOfThree✶.Indep (({0} : Finset (Fin 3)) : Set (Fin 3)) :=
+  (matroidOfFinset_dual_indep_iff _).2 ⟨{1, 2}, by decide +kernel, by decide⟩
+
+example : twoOfThree✶.IsCircuit (({0, 1} : Finset (Fin 3)) : Set (Fin 3)) :=
+  (matroidOfFinset_dual_isCircuit_iff _).2 (by decide +kernel)
 
 end Transformer.GainMatroid
