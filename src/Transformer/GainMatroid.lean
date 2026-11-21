@@ -39,6 +39,8 @@ public import Transformer.GainMatroid.Section2_ExchangeMatrices
 public import Transformer.GainMatroid.Section2_GainExchange
 public import Transformer.GainMatroid.Section2_ExchangeForms
 public import Transformer.GainMatroid.Section2_TriadForms
+public import Transformer.GainMatroid.Section2_TriadColumns
+public import Transformer.GainMatroid.Section2_K4Forms
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -98,7 +100,9 @@ exchanges of matrices and proves Proposition 2.11 for identity gains on the exch
 `Section2_GainExchange` refutes Proposition 2.10 (i) as printed and states it for gain functions
 that are the identity on the triangle. `Section2_ExchangeForms` proves that projectively equivalent
 matrices represent the same matroid and brings a represented triangle to the last three columns of
-`I(K₄)`, and `Section2_TriadForms` applies this to `U_{2,3}`.
+`I(K₄)`. `Section2_TriadForms` gives the row vector of a cocircuit, `Section2_TriadColumns` refutes
+the printed claim that every triad takes the first three columns of `I(K₄)`, and `Section2_K4Forms`
+proves it for an independent triad.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
