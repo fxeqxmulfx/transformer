@@ -7209,8 +7209,8 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | --- | --- | --- |
 | PT1 | `Determines`, `minDistance`, `forall_determines_iff`, `ncard_le_pow_of_determines`, `determines_univ_iff`, `minDistance_univ`, `determines_submodule_iff`, `finrank_le_card_of_determines`, `minDistance_submodule` | None. |
 | PT2 | `degreeClass`, `minDistance_degreeClass`, `forall_determines_degreeClass_iff`, `forall_half_determines_degree_48`, `exists_half_zero_degree_49`, `eq_cube_add_mul_of_card`, `div_eq_mul_pow`, `totalDegree_mul_pow`, `exists_half_not_determines_degree_96` | `k + 1` variables, so that there is at least one. The bound on zeros is Mathlib's `MvPolynomial.schwartz_zippel_totalDegree`. |
+| PT3 | `flatClass`, `finrank_flatClass`, `gain`, `twist`, `twistSpan`, `finrank_ann`, `potentials`, `finrank_potentials`, `vanishing`, `finrank_vanishing`, `finrank_map_restrict_flatClass`, `determines_flatClass_iff`, `exists_fourCycle_twist`, `determines_of_connected_of_fourCycle`, `offLine`, `card_offLine`, `exists_sixCycle_twist`, `connected_offLine`, `not_determines_offLine`, `twistSpan_offLine` | Any finite field in place of `F_p`, and any finite index types for the coordinates. `dim H` and the rank are written as sums, without subtraction. |
 
-PT3 to PT6 are not in Lean yet. PT3 and PT4 are proved by hand above, and `experiments/table_part`
-checks the count of PT3 and the `δ` of PT4 on small tables. What PT3 and PT6 rest on is in Lean:
-`rigid_iff_connected` of `PatternGraph`, and `isFlat_bilinearKernel` and
-`not_isMinOn_bilinearKernel` of `BilinearKernel`, all in `src/Transformer/Grokking/FlatSpectrum/`.
+PT4 to PT6 are not in Lean yet. PT4 is proved by hand above, and `experiments/table_part` checks its
+`δ` on small tables. What PT6 rests on is in Lean: `isFlat_bilinearKernel` and
+`not_isMinOn_bilinearKernel` of `BilinearKernel` in `src/Transformer/Grokking/FlatSpectrum/`.
