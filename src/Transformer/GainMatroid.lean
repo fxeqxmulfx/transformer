@@ -16,6 +16,7 @@ public import Transformer.GainMatroid.Section2_Normalized
 public import Transformer.GainMatroid.Section2_Minors
 public import Transformer.GainMatroid.Section2_Connectivity
 public import Transformer.GainMatroid.Section2_Classes
+public import Transformer.GainMatroid.Section2_Matroids
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -47,6 +48,7 @@ Proposition 2.1 and `Section2_Normalized` Proposition 2.2. `Section2_Minors` def
 contraction and induced gain functions and proves Proposition 2.3. `Section2_Connectivity` defines
 separations and `k`-connected graphs and extends forests to maximal ones. `Section2_Classes`
 defines balanced, almost-balanced, properly unbalanced and tangled biased graphs and joints.
+`Section2_Matroids` defines frame and lift circuits, matroid connectivity and uniform matroids.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
