@@ -145,6 +145,8 @@ public import Transformer.Grokking.FlatSpectrum.ProductOneLayer
 public import Transformer.Grokking.FlatSpectrum.ProductOrder
 public import Transformer.Grokking.FlatSpectrum.ProductCorners
 public import Transformer.Grokking.FlatSpectrum.ProductDepth
+public import Transformer.Grokking.FlatSpectrum.SharedEmbedding
+public import Transformer.Grokking.FlatSpectrum.SharedLayer
 
 /-! The flat-spectrum note on `x³ + x y mod p`, `review/flat_spectrum.md`, with the complex
 readout `ψ x = exp (2πi x / p)`. Lemma 1: the nuclear norm is the least balanced
@@ -406,6 +408,9 @@ the right answer; through the characters, `x³ + x y` takes `2kp` units (`Produc
 width: a product layer at most doubles the interaction order, the number of operands a function
 reads (`ProductOrder`), the alternating sum over the corners of a box vanishes below full order
 and factors over a product of pairs (`ProductCorners`), so a linear readout `ψ(f)` of `d` layers
-has `2k ≤ 2^d`, depth at least `1 + ⌈log₂ k⌉` (`ProductDepth`). -/
+has `2k ≤ 2^d`, depth at least `1 + ⌈log₂ k⌉` (`ProductDepth`). Through one shared embedding of
+width `D`, every complex-linear reading of one such layer, at any number of hidden units, has its
+columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so writing the table
+of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). -/
 
 @[expose] public section

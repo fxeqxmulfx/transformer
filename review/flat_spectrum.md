@@ -6131,7 +6131,8 @@ prices reading its `n` operands from a context, (NV6) prices what the labels sho
 interaction among `k`, and (NV7) prices what depth buys: a product network of depth
 `1 + ⌈log₂ k⌉`, the least possible, against one layer. Every item gives a lower and an upper
 bound, exact where it can, except NV8, a construction: two copies of any task through main's own
-layers, the routing of the operands included.
+layers, the routing of the operands included, and NV9, a lower bound on what one such layer writes
+through its shared embedding.
 
 ### NV1. Bilinear coupling is flat
 
@@ -6702,13 +6703,93 @@ priced, nor are the norms of the construction (T2b), whose bias grows like `p²/
 `D ≥ 784` with main's complex-linear ones, and no lower bound is claimed.
 Whether training finds this construction, or any other, is not addressed here.
 
+### NV9. What one layer writes through a shared embedding
+
+NV2's `p^k` prices a product through width `d`, and NV7's count limits the hidden units of one
+layer. Neither uses a fact of main's design: both sides of a cut are read through one embedding
+`E`, with `p` rows and `D_ℂ` complex columns (`D_ℂ = 64`). With it, one layer is bounded in the
+width of its state, at any number of hidden units.
+
+*The form.* Take the ordinary residual with positional heads and set aside the scalars of `R_D`.
+The weights of a head are then constants. Main's value maps are complex-linear, and LeRoPE rotates
+the query and the key but not the value, so the state that reaches the FFN is
+
+```
+z(a, b) = A E(a) + B E(b) + z₀,
+```
+
+with complex-linear `A`, `B` and a constant `z₀`. A hidden unit multiplies two complex-linear
+readings of `z`. Expanded, the product has a part bilinear in `E(a)` and `E(b)`, and the rest
+depends on `a` alone, on `b` alone or on neither. So every complex-linear reading `X` of the
+layer's output is
+
+```
+X(a, b) = (E C Eᵀ)(a, b) + f(a) + g(b) + c.
+```
+
+*The count.* The rank across `a | b` is at most `D_ℂ + 2`. The form says more. The columns of
+`E C Eᵀ`, functions of `a`, and its rows, functions of `b`, lie in one space, the column space of
+`E`. With `f`, `g` and the constant,
+
+```
+dim(col X + row X) ≤ D_ℂ + 3,
+```
+
+which is 67 in main.
+
+*`k` copies.* Across the cut between the `x`s and the `y`s, each side is `k` operands read through
+`E`. Their coordinates together are one embedding of width `k D_ℂ`, so
+`dim(col X + row X) ≤ k D_ℂ + 3`. The flat table of NV1, `ψ(Σᵢ xᵢ³ + xᵢ yᵢ)`, has rank `p^k`
+across this cut, so a layer that writes it has
+
+```
+k D_ℂ + 3 ≥ p^k.
+```
+
+The price of one layer is `D_ℂ ≥ (p^k − 3)/k` in the width of the state, whatever the width of
+the FFN. At `D_ℂ = 64` no layer writes this table for `k = 1` from `p = 68` on, or for `k = 2`
+from `p = 12` on. At `p = 13` two layers of main's widths do write the table of two copies (NV8,
+by hand in the complex-linear class), so with `R_D` set aside one layer and two differ in what
+they can write there.
+
+*Rank does not exclude every code.* The bound is for the additive code. For any nontrivial
+multiplicative character `χ`, the table `χ(a³ + a b) = χ(a) χ(a² + b)` has rank exactly
+`(p − 1)/2`, which is 48 at `p = 97` and fits inside `D_ℂ + 2`. Its nonzero singular values are
+`√(2p)`, taken `(p − 3)/2` times, and `√(p + 1)`, taken once. For an injective `χ` it decodes
+exactly: with any bias `β` in `(0, 1)` on class `0`, the logit `Re(conj χ(c) χ(f)) + β [c = 0]`
+is strictly largest at `c = f`. So the rank across the cut cannot rule this code out, and what a
+code needs has to be compared with `dim(col X + row X)`.
+
+*Not covered.* The count bounds values, the complex-linear readings of a layer. Main's logits are
+`Re⟨E(c), z⟩`, a real part, which adds the conjugate table, with columns in the span of `conj E`.
+So the logits escape the count, and nothing here bounds the argmax accuracy of one layer. With
+real-linear projections `conj E` enters the state too, and the count rises to `2 D_ℂ + 3 = 131`,
+more than `p = 97`: the bound rests on main's complex-linearity. The remaining scalars are set
+aside. `R_D` divides the state by a norm of both operands, a softmax over token-dependent scores
+weighs the values, and mHC's router gates and `P(x)` are functions of the whole state. By R0 a
+bound for mHC would cover the ordinary residual, but this one does not cover mHC, nor heads whose
+weights depend on the tokens. "`p^k` is the price of depth 1" therefore holds for the factorization
+model and, as `p^k / k` in the width of the state, for the values of this restricted layer.
+
+For the argmax the natural route is sign rank, and it has a ceiling. Forster's theorem bounds the
+sign rank of an `N × N` sign matrix `M` below by `N / ‖M‖`, and `‖M‖ ≥ √N`, so the bound is at most
+`√N`: across the cut, `p^{k/2}` and not `p^k`.
+
+The experiments show what one layer does with the scalars it has (D1 in
+`research/depth_visibility/README.txt` of the `gpt` repository). At two copies, `p = 13` and 14280
+training rows, the one-layer cells reach 81.8–85.2% on the training set and 19.6–21.1% on the
+held-out half. The rows whose label depends on one pair, 27.7% of the split, carry 64–68% of the
+held-out hits. The other rows score 8.8–10.5%, which is 1.7 to 8.0 standard errors above the 8.3%
+of any predictor that ignores `y₁` or `y₂`. So at this size one layer buys memorization and,
+approximately but not exactly, no reading of all four operands.
+
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,
 `CopiesTheoremB`, `SampleNoise`, `CopiesSampleSize`, `CopiesBestReadout` and `CopiesValue`; for NV7,
 `ProductCharacters`, `ProductRank`, `ProductLayer`, `ProductTree`, `ProductCopies`,
-`ProductOneLayer`, `ProductOrder`, `ProductCorners` and `ProductDepth` of
-`src/Transformer/Grokking/FlatSpectrum/`, namespace
+`ProductOneLayer`, `ProductOrder`, `ProductCorners` and `ProductDepth`; for NV9, `SharedEmbedding`
+and `SharedLayer`, all of `src/Transformer/Grokking/FlatSpectrum/`, namespace
 `Transformer.Grokking.FlatSpectrum`; for NV3, `SlotFejer`, `SlotWeight` and `SlotDFT` of
 `src/Transformer/LeRoPEBlock/`, namespace `Transformer.LeRoPEBlock`; for NV4, `SoftmaxWidth` of
 `src/Transformer/Grokking/FlatSpectrum/Recall/`, namespace
@@ -6735,3 +6816,4 @@ Whether training finds this construction, or any other, is not addressed here.
 | NV7, one layer | `rank_productLayer_le`, `pow_le_of_productLayer_bilinear`, `pow_le_of_productLayer_copies`, `pairFeatures_eq_add` | The state is `e(u) + f(v)` for any maps `e`, `f` into the stream, and the readout any linear functional `ℓ`; the one-hot features are this case by `pairFeatures_eq_add`. The tables are `bilinearKernel p g h M` with `IsUnit M`, and `k` copies of `x³ + x y`. The examples are the network of `exists_productNet_copies` at `k = 1`, `p = 7`, which is one layer. |
 | NV7, depth | the order: `ReadsOnly`, `orderSpan`, `mem_orderSpan_of_readsOnly`, `orderSpan_mono`, `mul_mem_orderSpan`, `linear_mem_orderSpan`, `IsProductLayer.order`, `IsProductNet.order`, `features_mem_orderSpan`, `readout_mem_orderSpan`; the corners: `cornerX`, `cornerY`, `flipAt`, `flipAt_flipAt`, `flipAt_ne`, `cornerSign`, `cornerSign_flipAt`, `cornerSum`, `cornerSum_apply`, `cornerSum_eq_zero_of_readsOnly`, `cornerSum_eq_zero`, `cornerSum_prod`; the depth: `two_mul_card_le_of_productNet`, `mixed_stdAddChar_ne_zero`, `le_depth_of_productNet_copies` | The operands are `x : κ → α` and `y : κ → β`, the `2k` of them indexed by `κ ⊕ κ`, and the order is the span `orderSpan r` of the functions that read at most `r` of them. `IsProductNet.order` takes any input of order `r` and gives `2^d r`; the depth bound is stated for the one-hot features `pairFeatures x y`. The corners are `ε : κ ⊕ κ → Bool`, the sign `cornerSign ε`. The depth bound asks for a linear readout equal to `Πᵢ φᵢ(xᵢ, yᵢ)` with a nonzero mixed difference for every `i`, and for `ψ(Σᵢ q(xᵢ, yᵢ))` with one for `ψ ∘ q`; `P(x) + x y` has one at `0`, `1` by `mixed_stdAddChar_ne_zero`. The tight case on encodings of whole tuples and the heads that do not depend on the tokens are by hand. |
 | NV8 | the stream: `Slot`, `card_slot`, `coordSlots`, `orthonormal_coordSlots`, `vec`, `inner_vec_vec`, `rmsNormEps_vec`; the states: `embC`, `sum_embC_sq`, `stateC`, `stateC_add`, `smul_stateC`, `sum_stateC_sq`, `sum_embC_mul_stateC`, `cos_angle_sub_le`; the attention: `dftAlpha`, `leropeFrequencies_dftAlpha`, `dftQuery`, `dftKey`, `attention0`, `dftScale_pos`, `oneHeads_attention0`, `readOut`, `readOut_heads`; the FFN: `ffnOf`, `plainFFN_ffnOf`, `ffn0`, `plainFFN_ffn0`, `ffn1`, `plainFFN_ffn1`; the model: `twoModel`, `apply_layer0`, `apply_layer1`, `states_add_two`, `states_twoModel`, `logits_twoModel`; the margin: `one_sub_cos_pos`, `three_kEmb_lt`, `bTwo`, `gTwo`, `logits_twoModel_lt`; the statements: `exists_oneModel_twoCopies`, `exists_model_twoCopies` | The model is R0's `OneModel D d 4 F p`, its vocabulary the `p` residues, and main's is its `withRouters` with plain routers. The context is `tokens : ℕ → Fin p`, read at the position `3`, and the answer is `q 0 (tokens 0) (tokens 1) + q 1 (tokens 2) (tokens 3)` in `Fin p`. The depth scale `s > 0` is free, so main's `α = 1/√(2L)` is a case; the phase-score coefficients are `0`. `logits_twoModel_lt` holds for any orthonormal slots and codes, and the existence statements use the coordinate directions. The projections are real-linear; the complex-linear count, `k` copies and the comparison with NV2 are by hand. The examples are at main's widths, `D = 128`, `d = 32`, `F = 171`, `ε = 2⁻²³` and `s = 1/√8`, with real-linear projections and `x³ + x y` over `ℤ/29`. |
+| NV9 | the count: `IsSharedTable`, `transpose_shared`, `mulVec_mem_of_shared`, `IsSharedTable.finrank_col_sup_row_le`, `not_isSharedTable_of_lt`, `not_isSharedTable_cubicKernel`; the code: `mulCharLogit`, `mulCharLogit_lt`, with `rank_cubicKernelMulChar`, `card_eigenvalues_cubicKernelMulChar` and `singularValues_cubicKernelMulChar_mem` of `MulCharSpectrum`; the layer: `IsSharedTable.add`, `IsSharedTable.smul`, `isSharedTable_left`, `isSharedTable_right`, `isSharedTable_const`, `isSharedTable_zero`, `isSharedTable_bilinear`, `isSharedTable_product`, `IsProductLayer.isSharedTable`; `k` copies: `copiesEmbedding`, `IsProductLayer.ne_bilinearKernel`, `IsProductLayer.ne_copies` | The count is over any field, for a matrix `E` whose rows are the tokens. The layer is NV7's `IsProductLayer` over `ℂ` at the state `A (E a) + B (E b) + z`, with `A`, `B` from the embedding's coordinates to the state's; that main's layer has this form, for positional heads without `R_D`, is by hand. For `k` copies the table is square over `Fin k → ZMod p`, and any invertible coupling `M` will do. The example of `ne_copies` is at `D_ℂ = 64`, `k = 2`, `p = 13`. The thresholds on `p`, the conjugate count `2 D_ℂ + 3`, Forster's bound and the experiment's numbers are by hand. |
