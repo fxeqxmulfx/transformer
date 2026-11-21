@@ -1,0 +1,29 @@
+[package]
+name = "phasor-value-transport"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[workspace.metadata.kernite]
+name = "wsd_native"
+
+[features]
+default = ["tf32-backward", "tiled-transpose", "fused-attention"]
+tf32-backward = []
+bf16-forward = []
+tiled-transpose = []
+fused-attention = []
+fp32-affine-reference = []
+
+[[bin]]
+name = "phasor-value-transport"
+path = "src/main.rs"
+test = false
+
+[dependencies]
+arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
+kernite-cuda = { path = "../../.lake/reproduction/kgen/crates/cuda" }
+kernite-macros = { path = "../../.lake/reproduction/kgen/crates/macros" }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }

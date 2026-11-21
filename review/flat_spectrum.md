@@ -6963,6 +6963,31 @@ labels. The ordinary tied readout then gets all 4705 held-out cells right. Setti
 phases to one restores multiplication and gives 51 correct cubic answers. E1's AdamW runs
 used a different initialization and fitting rule. [Experiment and weights recipe](../experiments/phasor_nv11/README.md)
 
+#### Transported embedding values for NV11
+
+Consider a causal attention layer at the answer position. The ordinary first-token
+Phasor feature scores its own tied embeddings, giving a softmax distribution
+`w(a)`. The new layer reads the learned value `E[s + a*b]` at address `s`, then
+applies the ordinary final RMS and tied readout to the weighted sum. All addresses
+are modulo 97. The layer supplies multiplication and translation. It has no
+parameters of its own and receives no cubic values or transformed labels.
+
+For orthonormal embeddings the unnormalized score of `u + a*b` is exactly
+`w(a)[u]`. These 97 directions fit in width 128. For learned embeddings, let
+`γ` bound from below the tied score gap against a given competitor when the
+attention reads its correct address `u`. If every other address has gap at least
+`−B`, the normalized readout ranks the target above that competitor whenever
+`w(a)[u] γ > (1 − w(a)[u]) B`. For NV11 take `u = a³`. The training question
+is whether ordinary cross-entropy and the original AdamW learn such a row address
+from the observed pairs. [Lean formalization](../src/Transformer/Phasor/TransportedValues.lean)
+
+In three random initializations of the one-layer, width-128 model, AdamW
+learned the cubic address for all 97 first operands. Each run gave 4,705/4,705
+held-out answers at the first 250-update observation. The matched original
+Phasor gave 48, 48 and 49. The sufficient Gram bound evaluated positively
+for every rival on every held-out pair in all three final checkpoints at
+2,000 updates. [Experiment, controls and checkpoint recipe](../experiments/phasor_value_transport/README.md)
+
 ### Lean
 
 `BilinearKernel`, `CutRange`, `CutRank`; for NV6, `CopiesCovariance`, `CopiesInvisible`,

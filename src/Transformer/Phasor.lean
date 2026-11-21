@@ -4,6 +4,7 @@ public import Transformer.Phasor.Router
 public import Transformer.Phasor.Attention
 public import Transformer.Phasor.FFN
 public import Transformer.Phasor.Forward
+public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream
@@ -35,6 +36,9 @@ as concrete maps and plugs them into it, in exact real arithmetic.
 * `FFN`: the complex-product feed-forward branch `W_F (W_g z ⊙_ℂ W_u z) / √2` as a `Sublayer`.
 * `Forward`: layers and models, `Model.states`, `Model.logits`, and `Model.states_eq_run`: at each
   position the forward pass is `PeriRMS.run` of these sublayers, so its theorems apply to it.
+* `TransportedValues` studies the NV11 variant. First-token attention reads learned embeddings
+  at product-shifted addresses in the answer state. Its tied readout translates the winner for
+  orthonormal embeddings and admits a sufficient margin bound for arbitrary learned embeddings.
 * `Bounds`: after `L` layers every stream and their mean have RMS at most `1 + 2√(2L)`, the final
   feature RMS at most one, every logit at most `√D ‖E v‖`, and every attention logit at most
   `(5/4) ln (i + 1)` at the query position `i`, for any parameters and any token sequence.

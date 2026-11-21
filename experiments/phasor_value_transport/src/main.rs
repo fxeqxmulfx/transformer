@@ -1,0 +1,182 @@
+//! Matched AdamW training on the original half-table split of NV11.
+#![recursion_limit = "256"]
+
+use arithmetic::{CASES, dataset};
+use serde_json::{Value, json};
+use std::{env, fs, io::Write, path::Path};
+
+mod addresses;
+include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
+use engine::{Config, Engine, Result, ValueLayer};
+mod checks;
+mod snapshot;
+
+const SEED: u32 = 1;
+const BUDGET: usize = 100_000;
+const BATCH: usize = 256;
+const OBSERVE: usize = 250;
+const WINDOW: usize = 2000;
+
+fn config(batch: usize) -> Result<Config> {
+    Ok(Config {
+        width: 128,
+        vocab: 97,
+        layers: 1,
+        heads: 4,
+        max_length: 2,
+        max_batch: batch,
+        normalized: true,
+        ssmax: true,
+        gain: 4. / 128.,
+        lr: schedule::PEAK,
+        decay: 0.1,
+        warmup: schedule::Schedule::new(BUDGET)?.warmup,
+        architecture: "complex-phase-score-lerope".into(),
+        phase_optimizer: false,
+    })
+}
+
+fn cubic_data() -> Result<dataset::Dataset> {
+    let cases: Vec<Value> = serde_json::from_str(CASES)?;
+    let row = cases
+        .iter()
+        .find(|v| v["case"]["name"] == "arithmetic-cubic-product")
+        .ok_or("missing arithmetic-cubic-product case")?;
+    dataset::build(row)?.ok_or_else(|| "missing NV11 split".into())
+}
+
+fn forward(e: &mut Engine, rows: &[[u32; 3]]) -> Result<()> {
+    let tokens: Vec<_> = rows.iter().flat_map(|&[a, b, _]| [a, b]).collect();
+    let labels: Vec<_> = rows.iter().flat_map(|&[_, _, y]| [u32::MAX, y]).collect();
+    e.forward(&tokens, &labels, rows.len(), 2)
+}
+
+fn evaluate(
+    e: &mut Engine,
+    layer: Option<(&ValueLayer, bool)>,
+    rows: &[[u32; 3]],
+) -> Result<Value> {
+    let mut correct = 0;
+    let mut loss = 0.;
+    let mut first = [None; 97];
+    for chunk in rows.chunks(BATCH) {
+        forward(e, chunk)?;
+        if let Some((l, product)) = layer {
+            let addresses = e.predictions.read()?;
+            for (i, &[a, _, _]) in chunk.iter().enumerate() {
+                let address = addresses[2 * i];
+                if first[a as usize]
+                    .replace(address)
+                    .is_some_and(|old| old != address)
+                {
+                    return Err("first causal token changed address across second operands".into());
+                }
+            }
+            l.forward(e, chunk.len(), product)?;
+        }
+        let answers = e.predictions.read()?;
+        let losses = e.losses(2 * chunk.len())?;
+        for (i, &[_, _, target]) in chunk.iter().enumerate() {
+            correct += usize::from(answers[2 * i + 1] == target);
+            loss += f64::from(losses[2 * i + 1]);
+        }
+    }
+    if !loss.is_finite() {
+        return Err("nonfinite evaluation loss".into());
+    }
+    // The cube is inspected only after inference to diagnose the learned address.
+    let cubic_rows = layer.map(|_| {
+        first
+            .iter()
+            .enumerate()
+            .filter(|&(a, s)| *s == Some(((a * a * a) % 97) as u32))
+            .count()
+    });
+    Ok(
+        json!({"correct":correct,"examples":rows.len(),"mean_ce":loss/rows.len() as f64,
+        "cubic_address_rows":cubic_rows}),
+    )
+}
+
+fn cell(candidate: bool, out: &Path, seed: u32) -> Result<()> {
+    let data = cubic_data()?;
+    let cfg = config(BATCH)?;
+    let initial = layout::initialize_model(&cfg, seed);
+    let digest = arithmetic::hash(
+        &initial
+            .iter()
+            .flat_map(|v| v.to_le_bytes())
+            .collect::<Vec<_>>(),
+    );
+    let mut e = Engine::new(cfg, &initial)?;
+    let layer = candidate.then(|| ValueLayer::new(&e)).transpose()?;
+    let mut opt = optimizer::Optimizer::new(&e, BUDGET)?;
+    let mut rng = random::Random::new(seed.checked_add(10_000).ok_or("invalid order seed")?);
+    let mut epoch = Vec::new();
+    let mut offset = 0;
+    fs::create_dir_all(out)?;
+    let arm = if candidate { "transport" } else { "phasor" };
+    let mut log = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(out.join(format!("{arm}.jsonl")))?;
+    for completed in 0..=WINDOW {
+        if completed % OBSERVE == 0 {
+            let read = layer.as_ref().map(|l| (l, true));
+            let train = evaluate(&mut e, read, &data.training.rows)?;
+            let held = evaluate(&mut e, read, &data.validation)?;
+            let ablated = layer
+                .as_ref()
+                .map(|l| evaluate(&mut e, Some((l, false)), &data.validation))
+                .transpose()?;
+            let row = json!({"arm":arm,"step":completed,"seed":seed,"initial_sha256":digest,
+                "train":train,"held_out":held,"zero_offset_held_out":ablated,
+                "fp32_affines":precision::FP32_AFFINE_REFERENCE,"gpu":e.cuda.name()});
+            writeln!(log, "{row}")?;
+            log.flush()?;
+            println!("{row}");
+            if candidate && (completed == OBSERVE || completed == WINDOW) {
+                snapshot::save(&e, &out.join(format!("transport-{completed}.f32")))?;
+            }
+        }
+        if completed == WINDOW {
+            break;
+        }
+        if offset == epoch.len() {
+            epoch = (0..data.training.rows.len()).collect();
+            rng.shuffle(&mut epoch);
+            offset = 0;
+        }
+        let end = (offset + BATCH).min(epoch.len());
+        let batch: Vec<_> = epoch[offset..end]
+            .iter()
+            .map(|&i| data.training.rows[i])
+            .collect();
+        offset = end;
+        forward(&mut e, &batch)?;
+        if let Some(l) = &layer {
+            l.forward(&e, batch.len(), true)?;
+            l.backward(&e, batch.len(), true)?;
+        } else {
+            e.backward(batch.len(), 2)?;
+        }
+        opt.step(&e, completed)?;
+    }
+    Ok(())
+}
+
+fn main() -> Result<()> {
+    let args: Vec<_> = env::args().skip(1).collect();
+    match args.as_slice() {
+        [op] if op == "check" => checks::run(),
+        [arm, dest] if arm == "transport" || arm == "phasor" => {
+            cell(arm == "transport", Path::new(dest), SEED)
+        }
+        [arm, dest, seed] if arm == "transport" || arm == "phasor" => {
+            cell(arm == "transport", Path::new(dest), seed.parse()?)
+        }
+        [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
+        [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), a.parse()?, b.parse()?),
+        _ => Err("usage: phasor-value-transport check | {transport|phasor} RUN_DIR [SEED] | inspect FILE | predict FILE A B".into()),
+    }
+}
