@@ -381,6 +381,9 @@ mod tests {
         },
     ];
 
+    /// The formula of `floorTable` in `E6FloorDual.lean`.
+    const FLOOR_TASKS: [fn(u32, u32) -> u32; 1] = [|a, b| a * b / 97];
+
     /// The tasks with the full table at `p = 97`, by name, on their frozen splits.
     fn full_tables() -> arithmetic::Result<Vec<(String, Dataset)>> {
         let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
@@ -450,6 +453,7 @@ mod tests {
             .chain(&PEEL_TASKS)
             .chain(&BLIND_TASKS)
             .chain(&PARITY_TASKS)
+            .chain(&FLOOR_TASKS)
         {
             let matching = tables
                 .iter()

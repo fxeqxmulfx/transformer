@@ -179,6 +179,9 @@ theorem cosLow_le {r : ℕ} (hr : r < 97) : (cosLow r : ℝ) / 10 ^ 6 ≤ (ζ ^ 
     ring
   linarith
 
+example : (cosLow 0 : ℝ) / 10 ^ 6 ≤ ((ZMod.stdAddChar (1 : ZMod 97) : ℂ) ^ 0).re :=
+  cosLow_le (by norm_num)
+
 /-- **A lower bound on the real part of every value of the character.** -/
 theorem re_stdAddChar_ge_cosLow (x : ZMod 97) :
     (cosLow x.val : ℝ) / 10 ^ 6 ≤ (ZMod.stdAddChar x : ℂ).re := by

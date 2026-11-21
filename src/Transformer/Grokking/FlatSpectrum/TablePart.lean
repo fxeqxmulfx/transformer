@@ -21,6 +21,15 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.E6CosTable
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6DivParts
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Fill
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorDigits
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorDual
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorFactors
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorGram
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorPhase
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorPrimal
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorProduct
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorZIm
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6FloorZRe
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
@@ -52,6 +61,7 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.OffLine
 public import Transformer.Grokking.FlatSpectrum.TablePart.RandomCount
 public import Transformer.Grokking.FlatSpectrum.TablePart.RandomFlat
 public import Transformer.Grokking.FlatSpectrum.TablePart.Rectangles
+public import Transformer.Grokking.FlatSpectrum.TablePart.RowSum
 public import Transformer.Grokking.FlatSpectrum.TablePart.Threshold
 public import Transformer.Grokking.FlatSpectrum.TablePart.Twist
 
@@ -134,4 +144,12 @@ kernel still correlates with the flat kernel of `a³ + a b` after a turn by `ψ(
 cells lean towards `ψ(23)`. Filling the unseen cells with the constant `ψ(23) / 2` then gives a
 completion of smaller norm (`TablePart.E6Pairing`, `TablePart.E6Fill`). The kernel adds up both
 sums over certified lower bounds on the cosines (`TablePart.E6CosTable`, `TablePart.E6ParityBlind`).
+
+The kernel of `⌊a b / 97⌋` has rank 96 and no exact structure these arguments could use, so the proof
+is by certified numbers. The polar factor rounded to 13 bits, over `1.0044`, is a contraction by
+the row-sum test (`TablePart.RowSum`). The rows of `Ẑᴴ Ẑ` reach the kernel packed into big integers
+(`TablePart.E6FloorDigits`, `TablePart.E6FloorGram`), and the pairing gives `‖K‖_S1 ≥ 153.7`
+(`TablePart.E6FloorPhase`, `TablePart.E6FloorDual`). A completion equal to a matrix of rank 4 on the
+unseen cells has norm at most 152.8 (`TablePart.E6FloorFactors`, `TablePart.E6FloorPrimal`), so M
+does not return the table (`TablePart.E6FloorProduct`).
 -/

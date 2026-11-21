@@ -71,6 +71,12 @@ theorem not_returned_parityCubicBlind : NotReturned parityBlindTable := by
   simp only [↓reduceIte] at h1
   exact not_returned_of_pairing (by exact_mod_cast h1) (by exact_mod_cast h2)
 
-example : NotReturned parityBlindTable := not_returned_parityCubicBlind
+example : NotReturned parityBlindTable := by
+  have h1 := sum_re_ge (s := 5900) (fun _ _ => true)
+    (fun a b => parityBlindTable a b - (a ^ 3 + a * b) + 24) parityBlind_pair
+  have h2 := sum_re_ge (s := 2950) (fun a b => halfMask.testBit (97 * a.val + b.val))
+    (fun a b => parityBlindTable a b - 23) parityBlind_seen
+  simp only [↓reduceIte] at h1
+  exact not_returned_of_pairing (by exact_mod_cast h1) (by exact_mod_cast h2)
 
 end Transformer.Grokking.FlatSpectrum.TablePart.E6

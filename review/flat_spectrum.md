@@ -7279,6 +7279,21 @@ This completion is `t J` plus a matrix `R` that lives on the seen cells, with
 over certified lower bounds on `cos(2π r / 97)`, taken from a rational point within `3 · 10⁻⁶` of
 `ψ(1)` whose powers the kernel computes exactly.
 
+The last table, `floor-product` with `f = ⌊a b / 97⌋`, has none of these handles. Its kernel has
+rank 96, and the near-symmetry `K(97 − a, b) = ψ(b − 1) · conj K(a, b)` holds only off row and
+column 0, so no small exact system closes. What it does have is a gap between `‖K‖_S1` and the
+minimum, and a gap can be certified with rounded numbers. For the lower bound, round the polar
+factor of `K` to 13 bits and call it `Ẑ`. Every row of `Ẑᴴ Ẑ` has absolute sum at most `1.0044²`,
+so by Schur's test `Ẑ / 1.0044` is a contraction, and `Re tr(Ẑᴴ K) ≥ 154.4` gives `‖K‖_S1 ≥ 153.7`.
+For the upper bound, keep `K` on the seen cells and put a matrix `L = P Qᴴ` of rank 4 on the others.
+The completion is `L` plus a matrix that lives on the seen cells, so its norm is at most
+`(‖P‖²_F + ‖Q‖²_F) / 2 + √97 ‖(K − L)|_Ω‖_F ≤ 140.5 + 12.29 < 152.8`, and `K` is not a minimum. Lean
+checks every number in its kernel. A row of 97 integers travels as one big integer in base `2³⁴`,
+so a row of `Ẑᴴ Ẑ` is a single linear combination of 97 such integers, and the phases come from a
+table checked against exact powers of a rational point. This was the last of the 40 tasks whose
+kernel has rank at least 2: for every one of them, M does not return the table from its training
+part.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7324,6 +7339,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, half the distance, with a closed block of four columns | `E6.blindTable`, `E6.det_blind_ne_zero`, `E6.certificate_symmetries`, `E6.block_dead`, `E6.block_eq`, `E6.blindSys`, `E6.det_blindSys_ne_zero`, `E6.blindSys_solve`, `E6.not_returned_absDiffBlind` | The inverse of the kernel over `ZMod 389` is a literal in `E6BlindInverse`, and the kernel multiplies it out in four theorems over ranges of rows. The test `lean_tasks_are_tables_of_the_data` links the formula to the data. |
 | PT6, a table one step away from `a³ + a b` | `nuclearNorm_sq_le_card_of_isMinOn`, `E6.isContraction_cubicLine`, `E6.nuclearNorm_ge_of_near`, `E6.not_returned_of_near`, `E6.parityTable`, `E6.not_returned_parityCubic` | The kernel checks that `parityTable` is within one step of `a³ + a b` in all 9409 cells. The test `lean_tasks_are_tables_of_the_data` links the formula to the data. |
 | PT6, a table on half of the circle, beaten by a constant fill | `E6.cosLow_check`, `E6.re_stdAddChar_ge_cosLow`, `E6.nuclearNorm_ge_pairing`, `E6.frobeniusSq_fill`, `E6.not_returned_of_pairing`, `E6.parityBlindTable`, `E6.parityBlind_pair`, `E6.parityBlind_seen`, `E6.not_returned_parityCubicBlind` | The kernel checks 97 lower bounds on `cos(2π r / 97)` against exact powers of a rational point, then both sums over the 9409 cells. `E6.parityBlindTable` is checked against the frozen data by the Rust test `lean_tasks_are_tables_of_the_data`. |
+| PT6, a table with a certified gap | `TablePart.isContraction_of_row_sum`, `E6.digit_hornerAt`, `E6.rowSum_le`, `E6.isContraction_zMat`, `E6.dualSum_ge`, `E6.nuclearNorm_floor_ge`, `E6.factorSum_le`, `E6.residSum_le`, `E6.roundSum_le`, `E6.nuclearNorm_floorFill_le`, `E6.floorTable`, `E6.not_returned_floorProduct` | The kernel checks the 13-bit polar factor through the row sums of `Ẑᴴ Ẑ`, a table of 97 powers of `ψ(1)`, and the three sums of the rank-4 completion. `E6.floorTable` is checked against the frozen data by the Rust test `lean_tasks_are_tables_of_the_data`. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random
