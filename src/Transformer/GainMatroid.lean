@@ -33,6 +33,8 @@ public import Transformer.GainMatroid.Section2_MatroidExchange
 public import Transformer.GainMatroid.Section2_ExchangeGraphs
 public import Transformer.GainMatroid.Section2_ExchangeMatroids
 public import Transformer.GainMatroid.Section2_DeltaYMatroids
+public import Transformer.GainMatroid.Section2_Representable
+public import Transformer.GainMatroid.Section2_RepresentationExchange
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -85,7 +87,9 @@ and lists the seven cycles of `K₄`. `Section2_FiniteMatroids` builds finite ma
 independent sets and decides their flats. `Section2_MatroidExchange` defines `M(K₄)` and the Δ-Y and
 Y-Δ exchanges of matroids, `Section2_ExchangeGraphs` and `Section2_ExchangeMatroids` compute them on
 small graphs, and `Section2_DeltaYMatroids` states Proposition 2.8 and shows that part (ii) needs
-`Y` to be a triad.
+`Y` to be a triad. `Section2_Representable` defines the matrix representations of a matroid and their
+projective classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed and
+states it for a coindependent triangle.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

@@ -81,6 +81,23 @@ elements keep their names. Its range misses `X`, so pulling back along it delete
 def deltaRelabel [DecidableEq E] (a b c e : E) : E ⊕ Fin 3 :=
   if e = a then .inr 0 else if e = b then .inr 1 else if e = c then .inr 2 else .inl e
 
+/-- `deltaEmbed` is injective on a labelled triangle. -/
+theorem deltaEmbed_injective {a b c : E} (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
+    Function.Injective (deltaEmbed a b c) := by
+  rintro (i | i) (j | j) h
+  · have h' : ![a, b, c] i = ![a, b, c] j := Sum.inl_injective h
+    fin_cases i <;> fin_cases j <;> simp_all
+  · exact (Sum.inl_ne_inr h).elim
+  · exact (Sum.inr_ne_inl h).elim
+  · exact congrArg _ (Sum.inr_injective h)
+
+/-- `deltaRelabel` is injective. -/
+theorem deltaRelabel_injective [DecidableEq E] (a b c : E) :
+    Function.Injective (deltaRelabel a b c) := by
+  intro e f h
+  simp only [deltaRelabel] at h
+  split_ifs at h <;> simp_all
+
 /-- **`M' = Δ_X M`** (§2.4) for a triangle `X = {a, b, c}` of `M`: `P` is the generalized parallel
 connection of `M` and `M(K₄)` across `X`, and `M'` is `P \ X` relabelled. -/
 structure IsDeltaMatroid [DecidableEq E] (M : Matroid E) (a b c : E) (M' : Matroid E) : Prop where
