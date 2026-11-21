@@ -46,6 +46,10 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.twistSpan_half
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.determines_half
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.half_ne_univ
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.mem_half_iff
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_squareTimes
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_cubicMixed
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_mixed
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.mark_spec
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.length_outside97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.outside97_valid

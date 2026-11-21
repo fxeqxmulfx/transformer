@@ -153,4 +153,10 @@ theorem smul_mulVec_of_certificate {K Y : Matrix m n ℂ} (hY : IsContraction Y)
         rw [← hD, mulVec_mulVec]
     _ = K *ᵥ x := by rw [hcert, ← mulVec_mulVec, hxW]
 
+example (x : Fin 2 → ℂ) :
+    ((1 : ℝ) : ℂ) • (polarFactor (1 : Matrix (Fin 2) (Fin 2) ℂ) *ᵥ x) =
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) *ᵥ x :=
+  smul_mulVec_of_certificate (polarFactor_isContraction_trace 1).1
+    (polarFactor_isContraction_trace 1).2 zero_le_one (by simp)
+
 end Transformer.Grokking.FlatSpectrum

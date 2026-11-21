@@ -35,7 +35,7 @@ lemma line_mem_half {w : String × Rect × Rect} (hw : w ∈ outside97) {c : ℕ
   rw [Bool.and_eq_true] at hv
   have hb : decide (c.2.1 < 97) = true := List.all_eq_true.1 hv.2 c hc
   have hT : marksFast.2.1.testBit (97 * c.1 + c.2.1) = true :=
-    List.all_eq_true.1 (List.all_eq_true.1 certificate.2.2.2.2.2.2.2.2.2 w hw) c hc
+    List.all_eq_true.1 (List.all_eq_true.1 certificate.2.2.2.2.2.2.2.2.2.1 w hw) c hc
   exact mem_half (of_decide_eq_true hb) hT
 
 example : (line 97 0, line 97 2) ∈ half :=

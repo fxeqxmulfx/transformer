@@ -10,7 +10,9 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.DivTasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6DivParts
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Mask
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Outside
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Shuffle
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tasks
@@ -72,4 +74,8 @@ training part has an empty column and does not determine the class, but it fixes
 class on the columns it has (`TablePart.DivPart`). So the constant `(a / b)⁰` comes back on the whole
 table, and its kernel has rank one. The twelve others have no function of the class on their
 training cells (`TablePart.DivTasks`, `TablePart.E6DivParts`, `TablePart.E6Div`).
+
+Three tables that are neither flat nor in the class, `a² b`, `a³ + a b² + b` and the mixed task, have
+a line orthogonal to all the others, and the half misses a cell of it, so M does not return their
+kernels (`TablePart.E6Mask`, `TablePart.E6Lines`).
 -/

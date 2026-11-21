@@ -7210,6 +7210,11 @@ constant along the orbit of a vector `b` of the row space of `K`, and if each or
 somewhere, then `Y Kᴴ = 0`, which is impossible for `K ≠ 0`. And a row or a column orthogonal to all
 the others has to be seen in full.
 
+The second criterion already closes three tasks that are neither flat nor in `H`. In `a² b` the row
+`a = 0` is orthogonal to the others, in `a³ + a b² + b` the column `b = 0`, and in the mixed task
+(`a / b` for odd `b`, `a − b` for even `b`) the column `b = 3`. The half misses a cell of each of
+these lines, the cells `(0, 0)`, `(0, 0)` and `(4, 3)`, so M returns none of the three.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7248,6 +7253,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, the 15 tasks on the tables without the column `b = 0` | `E6.eq_on_columns`, `E6.divCell`, `E6.divPart`, `E6.DivCertificate`, `E6.eq_off_column`, `E6.divTable`, `E6.constant_off_column`, `E6.divWitnessOk`, `E6.no_div_function`, `E6.mask17`, `E6.mask97`, `E6.mask193`, `E6.certificate17`, `E6.certificate97`, `E6.certificate193`, `E6.constant17`, `E6.constant97`, `E6.constant193`, `E6.no_function17`, `E6.no_function97`, `E6.no_function193` | The training part misses the column `b = 0`, so it does not determine `H`. `eq_on_columns` states what it does fix: the values on the columns it has. Unlike the full table, the kernel does not rerun the shuffle here. The training cells are bit masks in the Lean source (`E6DivParts`), and the tests `lean_div_masks_are_the_training_cells` and `lean_div_witnesses_are_training_cells` compare them with the split that `dataset::build` gives each of the 15 tasks, compare the labels with `(a / b)^k`, and check that the twelve refuted tasks are exactly those the solve puts outside the class. |
 | PT6, the seven flat tables of division | `E6.pow_injective_of_coprime`, `E6.divKernel`, `E6.divSeen`, `E6.divKernel_conjTranspose_mul`, `E6.isFlat_divKernel`, `E6.not_returned_div`, `E6.notMem_divPart`, `E6.divSeen_ne_univ`, `E6.not_returned_div17`, `E6.not_returned_div97`, `E6.not_returned_div193` | The kernel is a `p × (p − 1)` matrix whose columns are the `b ≠ 0`. The masks are those of the row above. |
 | PT6, certificates on the row space | `mul_eigenbasis_of_certificate`, `mul_conjTranspose_eq_of_certificates`, `smul_mulVec_of_certificate`, `IsContraction.phased`, `trace_phased`, `not_isMinOn_of_tests`, `not_isMinOn_of_orbits`, `not_isMinOn_of_orthogonal_column`, `not_isMinOn_of_orthogonal_row` | `CertificateOrbit`, `CertificateTests`, `CertificateLines`. |
+| PT6, three tables with an orthogonal line | `E6.halfMask`, `E6.mem_half_iff`, `E6.tableKernel`, `E6.not_returned_squareTimes`, `E6.not_returned_cubicMixed`, `E6.mixedTable`, `E6.not_returned_mixed` | `certificate` proves that the shuffle gives exactly the literal `halfMask`, so these theorems read the mask without rerunning it. The test `lean_tasks_are_tables_of_the_data` checks that each formula is the table of exactly one task of the data. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random

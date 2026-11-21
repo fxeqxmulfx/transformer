@@ -3,6 +3,7 @@ module
 public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Mask
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Witnesses
 
 /-!
@@ -34,7 +35,8 @@ def marksFast : ℕ × ℕ × ℕ :=
   iterFast mark 5 (iterFast mark 6 (iterFast mark 9 (iterFast mark 12 (0, 0, shuffleFast.2.2))))
 
 /-- What the kernel computes: the end of the shuffle `e`, the count `m`, the mask `T` and the hash
-`d` of the whole order. The last line puts the cells of `outside97` in the half. -/
+`d` of the whole order. The last lines put the cells of `outside97` in the half and give `T` as the
+literal `halfMask`. -/
 abbrev Certificate (e m T d : ℕ) : Prop :=
   e = 0 ∧ m = 4704 ∧
     (∀ u, u < 97 → ∃ b, b < 97 ∧ T.testBit (97 * 0 + b) = true ∧ T.testBit (97 * u + b) = true) ∧
@@ -42,7 +44,7 @@ abbrev Certificate (e m T d : ℕ) : Prop :=
     T.testBit (97 * 0 + 2) = true ∧ T.testBit (97 * 1 + 2) = true ∧
     T.testBit (97 * 1 + 3) = true ∧ T.testBit (97 * 0 + 3) = true ∧ d = 359723728075922973 ∧
     (outside97.all fun w => (corners w.2.1 ++ corners w.2.2).all fun c =>
-      T.testBit (97 * c.1 + c.2.1)) = true
+      T.testBit (97 * c.1 + c.2.1)) = true ∧ T = halfMask
 
 /-- **The kernel's computation on the real split of E6.** -/
 theorem certificate :

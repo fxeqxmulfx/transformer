@@ -330,6 +330,18 @@ mod tests {
         |a, b| a * a * a + a * b,
     ];
 
+    /// `b⁻¹` mod 97, by Fermat.
+    fn inv97(b: u32) -> u32 {
+        (0..95).fold(1, |x, _| x * b % 97)
+    }
+
+    /// The three formulas of `TablePart.E6` with a line orthogonal to the others (`E6Lines.lean`).
+    const LINE_TASKS: [fn(u32, u32) -> u32; 3] = [
+        |a, b| a * a * b,
+        |a, b| a * a * a + a * b * b + b,
+        |a, b| if b % 2 == 1 { a * inv97(b) } else { a + 97 - b },
+    ];
+
     /// The tasks with the full table at `p = 97`, by name, on their frozen splits.
     fn full_tables() -> arithmetic::Result<Vec<(String, Dataset)>> {
         let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
@@ -387,11 +399,12 @@ mod tests {
         Ok(())
     }
 
-    /// Each formula of `TablePart.E6.tasks` is the table of exactly one task of the data.
+    /// Each formula of `TablePart.E6.tasks` and of `E6Lines.lean` is the table of exactly one task of
+    /// the data.
     #[test]
     fn lean_tasks_are_tables_of_the_data() -> arithmetic::Result<()> {
         let tables = full_tables()?;
-        for f in TASKS {
+        for f in TASKS.iter().chain(&LINE_TASKS) {
             let matching = tables
                 .iter()
                 .filter(|(_, d)| {
