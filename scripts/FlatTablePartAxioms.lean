@@ -5,6 +5,13 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_fourCycle_twist
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.vecMulVec_sub_mem_twistSpan
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_of_connected_of_fourCycle
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_flatClass_iff
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.not_determines_off_row
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.not_determines_off_col
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_flatClass_two
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_flatClass_97
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_flat_9313
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_off_row_97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_vanishing
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_flatClass_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_map_restrict_flatClass
@@ -16,6 +23,14 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_submodule_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_le_card_of_determines
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_submodule
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.connected_cross
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.rigid_cross
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_crossPart
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.add_le_card_of_determines
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_crossPart
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_determines_card_194
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.le_card_of_determines_97
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_cross_97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_degreeClass_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_half_determines_degree_48
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_half_zero_degree_49
@@ -31,3 +46,4 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_ann
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_potentials
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_flatClass
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_flatClass

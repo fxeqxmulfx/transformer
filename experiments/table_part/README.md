@@ -88,7 +88,7 @@ cells, and the solve says so.
 
 ## What this does not show
 
-The theorems are the hand proofs of PT3 and PT4. This check covers the tables listed, and none of it
-is in Lean. The class is given to the solve: a part determines a task only against the alternatives
-the class allows, so the solve is not a learner, and this says nothing about whether a model finds
-`H`. Labels are exact.
+PT1 to PT4 are proved in Lean (`TablePart` of `src/Transformer/Grokking/FlatSpectrum/`). This check
+covers the tables listed, and its counts are measurements rather than proofs. The class is given to
+the solve: a part determines a task only against the alternatives the class allows, so the solve is
+not a learner, and this says nothing about whether a model finds `H`. Labels are exact.

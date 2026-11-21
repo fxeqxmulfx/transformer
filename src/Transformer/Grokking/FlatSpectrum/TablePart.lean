@@ -3,10 +3,14 @@ module
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
+public import Transformer.Grokking.FlatSpectrum.TablePart.FlatBest
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatClass
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatCount
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatCycles
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatRank
+public import Transformer.Grokking.FlatSpectrum.TablePart.FlatThreshold
+public import Transformer.Grokking.FlatSpectrum.TablePart.FlatWeight
+public import Transformer.Grokking.FlatSpectrum.TablePart.FlatWorst
 public import Transformer.Grokking.FlatSpectrum.TablePart.OffLine
 public import Transformer.Grokking.FlatSpectrum.TablePart.Threshold
 public import Transformer.Grokking.FlatSpectrum.TablePart.Twist
@@ -27,4 +31,9 @@ dimension of the span of the twists of its closed walks (`TablePart.Twist`, `Tab
 So `Ω` determines the class exactly when its graph is connected and its twists span all matrices
 (PT3, `TablePart.FlatRank`). A four-cycle gives a twist of rank one (`TablePart.FlatCycles`), and a
 connected cycle with twist zero does not determine the class (`TablePart.OffLine`).
+
+The least part that determines the flat class is the cross with `k l` more cells, of size `dim H`
+(PT4, `TablePart.FlatBest`). Except at `q = 2`, `k = l = 1`, `δ = min(q^k, q^l)`
+(`TablePart.FlatWeight`, `TablePart.FlatWorst`), so at `p = 97` every 9313 cells determine it and
+the 9312 outside one row do not (`TablePart.FlatThreshold`).
 -/

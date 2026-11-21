@@ -1,6 +1,5 @@
 module
 
-public import Mathlib.Tactic.NormNum.Prime
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatCycles
 
 /-!
@@ -19,8 +18,6 @@ cells off the line `a + b = 2` (`offLine`, `card_offLine`) form one cycle throug
 namespace Transformer.Grokking.FlatSpectrum.TablePart
 
 open Matrix Module SimpleGraph
-
-local instance fact_prime_three : Fact (Nat.Prime 3) := ⟨by norm_num⟩
 
 /-- The six cells of the table over `ℤ/3` off the line `a + b = 2`
 (`review/flat_spectrum.md`, PT3). -/
