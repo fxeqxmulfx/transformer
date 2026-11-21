@@ -71,6 +71,22 @@ program, nor did `convex_stress_wide_latents` for `arithmetic-quadratic-linear`.
 both in all three modes. It is one cohort, on split seed 1, replayed but not independently
 repeated, so the catalog's count is not changed here.
 
+## Repeat (2026-11-21)
+
+The cohort `runs/e6-v1-repeat` reran `run_e6.sh` into a fresh directory at `c8da99f6`, with the
+binary of `e6-v1`. Its source fingerprint, protocol, plan, 36 models, 36 diagnostic states, cell
+logs, replays, hull selection, hull replay and comparison are byte for byte those of `e6-v1`. The
+36 results, the 36 traces, `summary.json` and `hull.json` differ only in the wall-clock fields
+`elapsed_seconds` and `seconds`.
+
+That is still not catalog credit. The banks that added credit accept it after an independent
+source rebuild repeats the whole workflow, with every training outcome sealed before any
+held-out pool is parsed (`convex_stress_bounded_compare`; `convex_stress_wide_latents` asks the
+same of its later comparison). This repeat reused the binary, and the learner of
+`convex_stress_schatten` scores the selection split at every logged update, for its trace and
+`first_primary_99_update`, although it uses that score neither to stop nor to select. So the
+catalog's count stays 98/165.
+
 ## What changed, and what did not
 
 `src/main.rs` is `convex_stress_schatten/src/main.rs` at `09fc84dd` with the task source
