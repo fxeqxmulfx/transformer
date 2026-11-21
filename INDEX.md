@@ -55963,7 +55963,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`Model.states_eq_run`](src/Transformer/Phasor/Forward.lean#L94) | theorem | proved |
 | [`Model.feature_eq_finalFeature`](src/Transformer/Phasor/Forward.lean#L108) | theorem | proved |
 
-**[Transformer.Phasor.OneStream](src/Transformer/Phasor/OneStream.lean)** — 166 lines
+**[Transformer.Phasor.OneStream](src/Transformer/Phasor/OneStream.lean)** — 167 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -55981,7 +55981,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`OneModel.logits_withRouters`](src/Transformer/Phasor/OneStream.lean#L124) | theorem | proved |
 | [`range_oneLogits_subset`](src/Transformer/Phasor/OneStream.lean#L135) | theorem | proved |
 
-**[Transformer.Phasor.PlainRouter](src/Transformer/Phasor/PlainRouter.lean)** — 114 lines
+**[Transformer.Phasor.PlainRouter](src/Transformer/Phasor/PlainRouter.lean)** — 116 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

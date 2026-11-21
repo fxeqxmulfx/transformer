@@ -93,7 +93,8 @@ copies of the ordinary residual `h + α R_D(raw(R_D h))`. -/
 theorem step_const_of_isPlain {R : Router D} (hR : R.IsPlain) (eps scale : ℝ)
     (raw : State D → EucSpace D → EucSpace D) (h : EucSpace D) :
     step eps scale ⟨R.routing eps, raw⟩ (fun _ => h) =
-      fun _ => h + scale • GPTMini.rmsNormEps eps (raw (fun _ => h) (GPTMini.rmsNormEps eps h)) := by
+      fun _ => h +
+        scale • GPTMini.rmsNormEps eps (raw (fun _ => h) (GPTMini.rmsNormEps eps h)) := by
   funext i
   rw [Router.step_apply, Router.routing_phase_eq_zero R eps _ hR.phase, phaseMix_zero,
     mix_finiteSinkhorn_const, hR.routing_write, writeGate_zero, one_smul, hR.read_const]
@@ -104,7 +105,8 @@ example (h : EucSpace 128) :
     (Router.plain 128).read (1 / 8388608) (fun _ => h) = GPTMini.rmsNormEps (1 / 8388608) h :=
   (Router.plain_isPlain 128).read_const _ h
 
-/-- A block of the model's width with a plain router and any raw branch keeps equal streams equal. -/
+/-- A block of the model's width with a plain router and any raw branch keeps equal streams
+equal. -/
 example (raw : State 128 → EucSpace 128 → EucSpace 128) (h : EucSpace 128) :
     step (1 / 8388608) (1 / 4) ⟨(Router.plain 128).routing (1 / 8388608), raw⟩ (fun _ => h) =
       fun _ => h + (1 / 4 : ℝ) • GPTMini.rmsNormEps (1 / 8388608)

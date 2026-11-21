@@ -153,7 +153,8 @@ example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (L i : ℕ) (v 
 /-- The model's sizes and plain routers: four copies of the one-stream state at every layer. -/
 example (M : OneModel 128 32 4 128 97) (tokens : ℕ → Fin 97) (l : ℕ) :
     (M.withRouters (fun _ => Router.plain 128) (fun _ => Router.plain 128)).states (1 / 8388608)
-        (1 / Real.sqrt 8) tokens l = fun i _ => M.states (1 / 8388608) (1 / Real.sqrt 8) tokens l i :=
+        (1 / Real.sqrt 8) tokens l =
+      fun i _ => M.states (1 / 8388608) (1 / Real.sqrt 8) tokens l i :=
   M.states_withRouters (fun _ => Router.plain_isPlain 128) (fun _ => Router.plain_isPlain 128)
     _ _ tokens l
 
