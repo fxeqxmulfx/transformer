@@ -50,6 +50,8 @@ public import Transformer.GainMatroid.Section2_UnbalancingRelation
 public import Transformer.GainMatroid.Section2_Unrolling
 public import Transformer.GainMatroid.Section2_UnrollingFailures
 public import Transformer.GainMatroid.Section2_UnrollingClasses
+public import Transformer.GainMatroid.Section2_RollUps
+public import Transformer.GainMatroid.Section2_RollUpClaims
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -123,6 +125,8 @@ almost-balanced biased graph, and `Section2_UnbalancingRelation` states what §2
 `Section2_Unrolling` defines the unrolling `(Ĝ, B̂)`, `Section2_UnrollingFailures` refutes its
 printed `B̂`, and `Section2_UnrollingClasses` refutes the printed claim on its unbalancing classes
 and states the corrected claims.
+`Section2_RollUps` defines the roll-ups of an unrolling and counts them, and `Section2_RollUpClaims`
+states what §2.5 claims of them and of a biased graph balanced off its joints.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

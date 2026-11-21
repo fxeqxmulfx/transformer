@@ -371,7 +371,7 @@ probability bounds outside that coverage are not claimed as proved.
    columns of I(K₄) on a represented triangle and on an independent triad, every
    representation of M(K₄) as I(K₄) up to projective equivalence, F(G, B) =
    L(G, B) without vertex-disjoint unbalanced cycles, the unrolling of an
-   almost-balanced biased graph, full-rank lift matrices,
+   almost-balanced biased graph and its roll-ups, full-rank lift matrices,
    Lemmas 4.2 to 4.12 and Theorem 5.1; which biased 2C₃, tubes and K₄ are
    properly unbalanced; 𝖴₂ and 𝖴₃ as representations of U_{2,4}; counterexamples
    to Conjectures 1 and 2 as literally stated and to Lemma 2.5 (ii),
