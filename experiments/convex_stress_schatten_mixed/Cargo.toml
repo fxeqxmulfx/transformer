@@ -1,0 +1,15 @@
+[package]
+name = "convex-stress-schatten-mixed"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
+convex-stress-schatten = { path = "../convex_stress_schatten" }
+serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
+
+[profile.release]
+lto = "thin"
