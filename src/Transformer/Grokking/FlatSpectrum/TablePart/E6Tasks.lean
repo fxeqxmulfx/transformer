@@ -9,8 +9,9 @@ Source: `review/flat_spectrum.md`, *What a part of the table determines*, PT6. A
 `g(a) + h(b) + m a b` at `p = 97` is a triple `(g, h, m)` (`form`). Twelve tasks of the arithmetic
 data are of this kind (`tasks`, `tasks_formulas`). Inside the flat class the half gives each of them
 on all 4705 held-out cells (`card_held_out`, `held_out_eq`). The seven with `m ≠ 0`
-(`tasks_coupled`) have flat kernels, which M does not return from this half (`not_returned`). A
-table that differs from a task at one held-out cell agrees with it on the half and lies outside the
+(`tasks_coupled`) have flat kernels, which M does not return from this half (`not_returned`). The
+five with `m = 0` (`tasks_uncoupled`) have kernels of rank one (`rank_uncoupled`). A table that
+differs from a task at one held-out cell agrees with it on the half and lies outside the
 class, so the class is what carries the half to the rest of the table (PT7, `update_not_mem`).
 
 The test `lean_tasks_are_tables_of_the_data` of `experiments/table_part` checks that each formula
@@ -126,5 +127,21 @@ theorem not_returned {t : Form} (hm : t.2.2 ≠ 0) :
 
 /-- `a³ + a b`, the task of E1: M does not return its kernel from the half of E6. -/
 example := not_returned (t := (fun a => a ^ 3, fun _ => 0, 1)) one_ne_zero
+
+/-- **Five of the twelve have `m = 0`** (`review/flat_spectrum.md`, PT6). -/
+theorem tasks_uncoupled : (tasks.map fun t => t.2.2).countP (· = 0) = 5 := by
+  decide +kernel
+
+/-- **A task with `m = 0` has a kernel of rank one** (`review/flat_spectrum.md`, PT6). -/
+theorem rank_uncoupled {t : Form} (hm : t.2.2 = 0) :
+    (bilinearKernel 97 (fun u => t.1 (u 0)) (fun v => t.2.1 (v 0)) (coupling t)).rank = 1 := by
+  have h0 : coupling t = 0 := by simp [coupling, hm]
+  rw [h0]
+  simpa using rank_submatrix_bilinearKernel_zero (p := 97)
+    (fun u : Fin 1 → ZMod 97 => t.1 (u 0)) (fun v : Fin 1 → ZMod 97 => t.2.1 (v 0))
+    (id : (Fin 1 → ZMod 97) → Fin 1 → ZMod 97) (id : (Fin 1 → ZMod 97) → Fin 1 → ZMod 97)
+
+/-- `a² + b²`, one of the five. -/
+example := rank_uncoupled (t := (fun a => a ^ 2, fun b => b ^ 2, 0)) rfl
 
 end Transformer.Grokking.FlatSpectrum.TablePart.E6

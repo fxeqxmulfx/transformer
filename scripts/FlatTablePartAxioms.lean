@@ -2,6 +2,7 @@ import Transformer
 
 /-! Audit *What a part of the table determines* of `review/flat_spectrum.md`, items PT1–PT7. -/
 
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.rank_submatrix_bilinearKernel_zero
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determined_and_not_returned
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_degreeClass_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_half_determines_degree_48
@@ -14,6 +15,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.eq_on_columns
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.eq_off_column
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.constant_off_column
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.rank_constant_kernel
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_div_function
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate17
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate97
@@ -49,6 +51,8 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.held_out_eq
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.update_not_mem
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.tasks_uncoupled
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.rank_uncoupled
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.connected_cross
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.rigid_cross
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_crossPart

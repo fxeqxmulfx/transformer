@@ -1,6 +1,7 @@
 module
 
 public import Mathlib.Tactic.NormNum.Prime
+public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
 
 /-!
@@ -8,7 +9,8 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
 
 Source: `review/flat_spectrum.md`, *What a part of the table determines*, PT6. The table `(a / b)^0`
 is the constant 1, so it lies in the class, and a part with a certificate gives it back on every
-cell of the table (`constant_off_column`). For the others, two rectangles of the part whose labels
+cell of the table (`constant_off_column`). Its kernel has rank one (`rank_constant_kernel`). For the
+others, two rectangles of the part whose labels
 ask for two couplings leave no function of the class (`no_div_function`). The kernel checks such a
 pair through `divWitnessOk`, which compares `a^k` with `y b^k` and so needs no inverse modulo `p`
 (`div_pow_natCast`).
@@ -42,6 +44,19 @@ theorem constant_off_column {T a a' b b' : ℕ} (hT : DivCertificate p T a a' b 
 example : divTable 3 0 (0, 1) = divTable 3 0 (0, 1) :=
   constant_off_column (T := 63) (a := 0) (a' := 1) (b := 0) (b' := 1) (by decide)
     divTable_zero_mem (fun _ _ => rfl) 0 (by decide)
+
+/-- **The kernel of `(a / b)^0` has rank one** on the table without the column `b = 0`
+(`review/flat_spectrum.md`, PT6). -/
+theorem rank_constant_kernel :
+    (Matrix.of fun (u : Fin 1 → ZMod p) (v : {v : Fin 1 → ZMod p // v ≠ 0}) =>
+      (ZMod.stdAddChar (divTable p 0 (u, v.1)) : ℂ)).rank = 1 := by
+  have : Nonempty {v : Fin 1 → ZMod p // v ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
+  have hr := rank_submatrix_bilinearKernel_zero (p := p) (fun _ : Fin 1 → ZMod p => 1)
+    (fun _ : Fin 1 → ZMod p => 0) (id : (Fin 1 → ZMod p) → Fin 1 → ZMod p)
+    (fun v : {v : Fin 1 → ZMod p // v ≠ 0} => v.1)
+  convert hr using 2
+  ext u v
+  simp [bilinearKernel, divTable]
 
 /-- A label of `(a / b)^k`, checked by multiplying out. -/
 lemma div_pow_natCast {a b l k : ℕ} (hb : b ≠ 0) (hbp : b < p) (h : a ^ k % p = l * b ^ k % p) :
