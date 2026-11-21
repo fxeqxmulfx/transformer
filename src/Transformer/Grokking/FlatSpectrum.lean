@@ -157,6 +157,7 @@ public import Transformer.Grokking.FlatSpectrum.SeenShare
 public import Transformer.Grokking.FlatSpectrum.CertificateOrbit
 public import Transformer.Grokking.FlatSpectrum.CertificateTests
 public import Transformer.Grokking.FlatSpectrum.CertificateBalanced
+public import Transformer.Grokking.FlatSpectrum.CertificateClasses
 public import Transformer.Grokking.FlatSpectrum.CertificateLines
 public import Transformer.Grokking.FlatSpectrum.TablePart
 
@@ -431,8 +432,8 @@ a flat kernel is no local minimum of that cost among the interpolants of any pro
 `p` elements (`SingleFeature`). A minimum of M needs a share of the table at least its effective
 rank over the largest rank (`SeenShare`). All certificates of `K` agree on its row space, so a
 symmetry or an orthogonal line rules out a minimum (`CertificateOrbit`, `CertificateTests`,
-`CertificateLines`). A part of a table determines a class when two members
-that agree on it are equal, and every part of `m` cells does exactly when `m > N − δ(H)`
+`CertificateBalanced`, `CertificateClasses`, `CertificateLines`). A part of a table determines a
+class when two members that agree on it are equal, and every part of `m` cells does exactly when `m > N − δ(H)`
 (`TablePart`).
 On the training half of E6 at `p = 97`, which the kernel computes, the flat class gives all 4705
 held-out labels of twelve tasks, and the minimum of M returns none of the seven flat kernels among

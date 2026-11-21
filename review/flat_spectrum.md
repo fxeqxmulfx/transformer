@@ -7227,6 +7227,16 @@ sum to zero, so it has no inverse, but `K + J` has one, with `J` the matrix of o
 differences `e_s − e_{j₀}` lie in the row space, and the criterion asks for one row with an unseen
 cell on each of two given anti-diagonals. The half has such a row for all `97²` pairs.
 
+Five tables `(a / b)^k` lose columns instead: `k = 2` at `p = 17`, and `k = 2, 3` at `p = 97` and
+`193`. Here `k` divides `p − 1`, so the column `b` depends only on `b^k`, and the columns fall into
+`R = (p − 1) / k` classes of equal columns. On the rows `g^c`, for a generator `g`, the kernel is the
+circulant `ψ(h^(c − c'))` with `h = g^k`, and it is invertible by the same argument, with a circulant
+inverse over `ℤ/q` for `q = 103`, `389`, `773`. So the indicator of each class lies in the row space
+of the kernel, and these indicators are the test vectors of the first criterion. The scalings
+`(a, b) ↦ (t a, t b)` keep the kernel and permute the classes, so the criterion reduces to two finite
+checks on the training mask. Some class is unseen in the row `a = 0`, and for every class some row
+`t ≠ 0` has all the cells `(t, t b)`, `b` in that class, unseen. All five masks pass both.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7267,6 +7277,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, certificates on the row space | `mul_eigenbasis_of_certificate`, `mul_conjTranspose_eq_of_certificates`, `smul_mulVec_of_certificate`, `IsContraction.phased`, `trace_phased`, `not_isMinOn_of_tests`, `not_isMinOn_of_orbits`, `not_isMinOn_of_orthogonal_column`, `not_isMinOn_of_orthogonal_row` | `CertificateOrbit`, `CertificateTests`, `CertificateLines`. |
 | PT6, three tables with an orthogonal line | `E6.halfMask`, `E6.mem_half_iff`, `E6.tableKernel`, `E6.not_returned_squareTimes`, `E6.not_returned_cubicMixed`, `E6.mixedTable`, `E6.not_returned_mixed` | `certificate` proves that the shuffle gives exactly the literal `halfMask`, so these theorems read the mask without rerunning it. The test `lean_tasks_are_tables_of_the_data` checks that each formula is the table of exactly one task of the data. |
 | PT6, twelve tables of `a + b` | `det_aeval_ne_zero`, `not_isMinOn_of_balanced`, `E6.ConvCheck`, `E6.det_sum_ne_zero`, `E6.diag_cover`, `E6.not_returned_sum`, `E6.not_returned_sum_pow`, `E6.not_returned_sumPow3`, `4`, `6`, `8`, `12`, `16`, `24`, `32`, `48`, `E6.not_returned_sumInterval`, `E6.not_returned_sumSquares`, `E6.permMap`, `E6.pair_cover`, `E6.not_returned_permAdd` | The vectors `w` are literals in `E6SumWitnesses`, checked over `ℕ` by the kernel with `q = 389` and `z = 256`. The test `lean_tasks_are_tables_of_the_data` links the eleven formulas to the data, and `lean_perm_table_is_the_task` links the permutation. |
+| PT6, five tables of `(a / b)^k` with classes of equal columns | `not_isMinOn_of_classes`, `E6.CircCheck`, `E6.det_circ_ne_zero`, `E6.ClassCheck`, `E6.not_returned_classes`, `E6.not_returned_div17_k2`, `E6.not_returned_div97_k2`, `E6.not_returned_div97_k3`, `E6.not_returned_div193_k2`, `E6.not_returned_div193_k3` | The inverses are literals in `DivDeficient`, checked over `ℕ` by the kernel with `q = 103`, `389`, `773`. The test `lean_div_masks_are_the_training_cells` links the masks and the labels `(a / b)^k` to the data. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random

@@ -13,6 +13,13 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.totalDegree_mul_pow
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.exists_half_not_determines_degree_96
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_degreeClass
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.det_circ_ne_zero
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_classes
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div17_k2
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div97_k2
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div97_k3
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div193_k2
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div193_k3
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.divKernel_conjTranspose_mul
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.isFlat_divKernel
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_div
@@ -129,6 +136,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_submodule
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_ann
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_balanced
+#print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_classes
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_column
 #print axioms Transformer.Grokking.FlatSpectrum.not_isMinOn_of_orthogonal_row
 #print axioms Transformer.Grokking.FlatSpectrum.mul_eigenbasis_of_certificate

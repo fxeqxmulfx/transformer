@@ -5,6 +5,9 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.Cyclotomic
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
+public import Transformer.Grokking.FlatSpectrum.TablePart.DivClasses
+public import Transformer.Grokking.FlatSpectrum.TablePart.DivCover
+public import Transformer.Grokking.FlatSpectrum.TablePart.DivDeficient
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivFlat
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivTasks
@@ -88,4 +91,10 @@ Twelve tables are functions of `a + b`. Eleven have an invertible kernel, proved
 `ZMod 389` (`TablePart.Cyclotomic`), and every anti-diagonal has an unseen cell. In `perm-add` the
 rows sum to zero, `K + J` is invertible, and any two anti-diagonals share a row with an unseen cell
 on each (`TablePart.E6Sums`, `TablePart.E6SumTasks`, `TablePart.E6PermAdd`).
+
+Five tables `(a / b)^k` have `k` dividing `p − 1`, so their columns fall into `R = (p − 1) / k`
+classes of equal columns. The kernel on the rows `g^c` is a circulant with an inverse over
+`ZMod q`, so the indicator of each class lies in its row space, and the scalings
+`(a, b) ↦ (t a, t b)` hide a whole class in every row (`TablePart.DivClasses`, `TablePart.DivCover`,
+`TablePart.DivDeficient`).
 -/
