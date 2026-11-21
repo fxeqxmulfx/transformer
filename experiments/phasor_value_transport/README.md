@@ -131,7 +131,9 @@ The residual tables start at zero, recovering the previous transported head
 exactly at initialization. Lean proves that a winner survives precisely when
 the residual's adverse projected gap is smaller than the transport advantage.
 It also constructs one width-128 table that separates all 97 possible second
-operands on the zero row, with the transport branch active. The field layer
+operands on the zero row, with the transport branch active. The full-model
+proof obtains the mass bounds from the actual first-position softmax at every
+depth. The field layer
 applies to position one (zero-based) in a model configured for exactly two
 tokens and a prime vocabulary. Every other position or configuration uses the
 ordinary causal Phasor. [Forward map and proofs](../../src/Transformer/Phasor/PairValues.lean)

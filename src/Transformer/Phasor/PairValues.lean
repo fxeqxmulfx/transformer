@@ -115,6 +115,37 @@ example (b c : Fin 97) (hcb : c ≠ b) :
   pair_zero_row_separates (TwoCopies.orthonormal_coordCodes _) (by decide) (by norm_num)
     (fun _ => by constructor <;> norm_num) b c hcb
 
+/-- In the full causal model, one right-operand table separates the entire
+zero row at every depth. The actual first-position softmax supplies the mass
+bounds in the pair-value decision rule. -/
+theorem Model.pairLogits_zero_left [NeZero p] (M : Model D d H F p)
+    (hp : Nat.Prime p) (hE : Orthonormal ℝ M.embedding) (hD : 0 < D)
+    {eps : ℝ} (heps : 0 < eps) (scale : ℝ) (tokens : ℕ → Fin p) (ha : tokens 0 = 0)
+    (L : ℕ) (c : Fin p) (hc : c ≠ tokens 1) :
+    let T : PairTables D p := ⟨fun b => (2 : ℝ) • M.embedding b, 0⟩
+    M.pairLogits T 2 eps scale tokens L 1 c <
+      M.pairLogits T 2 eps scale tokens L 1 (tokens 1) := by
+  let scores := M.logits eps scale tokens L 0
+  have hw (s : Fin p) : Perspective.softmaxWeight scores s ∈ Set.Icc 0 1 := by
+    refine ⟨Perspective.softmaxWeight_nonneg scores s, ?_⟩
+    rw [← Perspective.sum_softmaxWeight hp.pos scores]
+    exact Finset.single_le_sum (fun j _ => Perspective.softmaxWeight_nonneg scores j)
+      (Finset.mem_univ s)
+  simpa only [Model.pairLogits, hp, and_self, ite_true, ha] using
+    pair_zero_row_separates hE hD heps hw (tokens 1) c hc
+
+/-- Width-128 coordinate embeddings realize the full-model theorem with
+arbitrary attention and FFN parameters in every layer. -/
+example (M : Model 128 32 4 171 97) (L : ℕ) :
+    let A := { M with embedding := TwoCopies.coordCodes (by decide) }
+    let T : PairTables 128 97 := ⟨fun b => (2 : ℝ) • A.embedding b, 0⟩
+    let tokens : ℕ → Fin 97 := fun i => if i = 0 then 0 else 96
+    A.pairLogits T 2 1 1 tokens L 1 0 < A.pairLogits T 2 1 1 tokens L 1 (tokens 1) := by
+  let A : Model 128 32 4 171 97 := { M with embedding := TwoCopies.coordCodes (by decide) }
+  let tokens : ℕ → Fin 97 := fun i => if i = 0 then 0 else 96
+  exact A.pairLogits_zero_left (by norm_num) (TwoCopies.orthonormal_coordCodes _)
+    (by decide) (eps := 1) (by norm_num) 1 tokens rfl L 0 (by decide)
+
 /-- For every model, parameter value and sequence position outside the
 pair architecture's domain, the original causal readout is exact. -/
 theorem Model.pairLogits_of_inactive [NeZero p] (M : Model D d H F p) (T : PairTables D p)
