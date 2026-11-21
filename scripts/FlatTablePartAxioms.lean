@@ -45,6 +45,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.blindSys_mul_blindW
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.det_blindSys_ne_zero
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.blindSys_solve
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.cosLow_check
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.cosLow_le
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.re_stdAddChar_ge_cosLow
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate17
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate193
@@ -57,6 +60,7 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function17
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function193
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_of_pairing
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.certificate
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.shuffleFast_eq
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.marksFast_eq
@@ -76,6 +80,9 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.length_outside97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.outside97_valid
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.no_function_on_half
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.parityBlind_pair
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.parityBlind_seen
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_parityCubicBlind
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.nuclearNorm_ge_of_near
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_of_near
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.E6.not_returned_parityCubic

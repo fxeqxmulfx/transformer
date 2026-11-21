@@ -7267,6 +7267,18 @@ in every cell, `f − (a³ + a b)` is `0`, `1` or `−1`. The kernel `C` of `a³
 part of `tr(Cᴴ K)` is at least `0.9 · 97²`, which gives `‖K‖_S1 ≥ 0.9 · 97^{3/2} ≈ 860`. A minimum
 over half of the table has `‖K‖_S1 ≤ √(97 · 4704) ≈ 675`, so M does not return this table.
 
+Halve that table and round down, and the phases stop following `a³ + a b`. This is
+`parity-cubic-blind`, and what saves the argument is that its values lie in `0, …, 48`, on one half
+of the circle. Two things follow. The difference `f − (a³ + a b)` is close to `−(a³ + a b) / 2`, which also stays on a
+half circle, so after a turn by `ψ(24)` the kernel still correlates with `C`:
+`Re(ψ(24) tr(Cᴴ K)) ≥ 5900`, and so `‖K‖_S1 ≥ 5900 / √97 > 598`. And the seen cells lean towards one
+phase, with `Σ_Ω Re ψ(f − 23) ≥ 2950`. So fill the unseen cells with the constant `t = ψ(23) / 2`.
+This completion is `t J` plus a matrix `R` that lives on the seen cells, with
+`‖R‖²_F = 5880 − Σ_Ω Re ψ(f − 23) ≤ 2930`, so its nuclear norm is at most
+`97 / 2 + √(97 · 2930) < 582`. That is below 598, so `K` is not a minimum. Lean adds up both sums
+over certified lower bounds on `cos(2π r / 97)`, taken from a rational point within `3 · 10⁻⁶` of
+`ψ(1)` whose powers the kernel computes exactly.
+
 E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
 split. This is that statement without a learner: inside `H`, the half holds the whole table.
 
@@ -7311,6 +7323,7 @@ split. This is that statement without a learner: inside `H`, the half holds the 
 | PT6, the distance and the maximum, with a tridiagonal inverse | `gramSqrt`, `conjTranspose_mul_of_certificate`, `mul_gramSqrt_of_certificate`, `eq_of_certificates`, `smul_mul_eq_of_certificate`, `entry_eq_zero_of_peel`, `E6.forced`, `E6.PeelStep`, `E6.peel_chain`, `E6.Vanishes.step`, `E6.not_returned_of_peel`, `E6.tri`, `E6.sum_kms_tri`, `E6.kernel_mul_triMatrix`, `E6.not_returned_of_tri`, `E6.not_returned_absDiff`, `E6.not_returned_max` | The masks `peel1`, `peel2`, `peel3` are literals in `E6PeelMasks`, and `peel_chain` checks each step over `ℕ` in the kernel. The test `lean_tasks_are_tables_of_the_data` links the two formulas to the data. |
 | PT6, half the distance, with a closed block of four columns | `E6.blindTable`, `E6.det_blind_ne_zero`, `E6.certificate_symmetries`, `E6.block_dead`, `E6.block_eq`, `E6.blindSys`, `E6.det_blindSys_ne_zero`, `E6.blindSys_solve`, `E6.not_returned_absDiffBlind` | The inverse of the kernel over `ZMod 389` is a literal in `E6BlindInverse`, and the kernel multiplies it out in four theorems over ranges of rows. The test `lean_tasks_are_tables_of_the_data` links the formula to the data. |
 | PT6, a table one step away from `a³ + a b` | `nuclearNorm_sq_le_card_of_isMinOn`, `E6.isContraction_cubicLine`, `E6.nuclearNorm_ge_of_near`, `E6.not_returned_of_near`, `E6.parityTable`, `E6.not_returned_parityCubic` | The kernel checks that `parityTable` is within one step of `a³ + a b` in all 9409 cells. The test `lean_tasks_are_tables_of_the_data` links the formula to the data. |
+| PT6, a table on half of the circle, beaten by a constant fill | `E6.cosLow_check`, `E6.re_stdAddChar_ge_cosLow`, `E6.nuclearNorm_ge_pairing`, `E6.frobeniusSq_fill`, `E6.not_returned_of_pairing`, `E6.parityBlindTable`, `E6.parityBlind_pair`, `E6.parityBlind_seen`, `E6.not_returned_parityCubicBlind` | The kernel checks 97 lower bounds on `cos(2π r / 97)` against exact powers of a rational point, then both sums over the 9409 cells. `E6.parityBlindTable` is checked against the frozen data by the Rust test `lean_tasks_are_tables_of_the_data`. |
 | PT6, the eight tasks with `m = 0` | `rank_submatrix_bilinearKernel_zero`, `E6.tasks_uncoupled`, `E6.rank_uncoupled`, `E6.rank_constant_kernel` | Five are in `tasks`, with a kernel of rank one on the full table. The other three are the constant `(a / b)⁰`, whose kernel is taken on the table without the column `b = 0`. `rank_constant_kernel` holds for every prime `p`, so at `17`, `97` and `193` in particular. |
 
 Not in Lean. The measurements of `experiments/table_part` stay measurements: the table of random

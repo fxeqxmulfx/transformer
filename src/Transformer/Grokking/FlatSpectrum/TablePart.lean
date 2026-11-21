@@ -17,13 +17,17 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindBlock
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindDet
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindInverse
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindSystem
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6CosTable
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6DivParts
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Fill
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Mask
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Outside
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Pairing
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6ParityBlind
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6ParityCubic
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Peel
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6PeelMasks
@@ -124,4 +128,10 @@ a column of `Y` vanishes, and M does not return the table (`TablePart.E6AbsBlind
 The table of `parity-cubic` moves `a³ + a b` by at most one step in every cell. So its kernel stays
 close to the flat kernel of `a³ + a b`, and `‖K‖_S1 ≥ 0.9 · 97^{3/2}`, more than a minimum over half
 of the cells can have (`TablePart.E6ParityCubic`).
+
+The values of `parity-cubic-blind` lie in `0, …, 48`, on one half of the circle of phases. So its
+kernel still correlates with the flat kernel of `a³ + a b` after a turn by `ψ(24)`, and its seen
+cells lean towards `ψ(23)`. Filling the unseen cells with the constant `ψ(23) / 2` then gives a
+completion of smaller norm (`TablePart.E6Pairing`, `TablePart.E6Fill`). The kernel adds up both
+sums over certified lower bounds on the cosines (`TablePart.E6CosTable`, `TablePart.E6ParityBlind`).
 -/

@@ -368,11 +368,18 @@ mod tests {
     /// The formula of `blindTable` in `E6BlindDet.lean`.
     const BLIND_TASKS: [fn(u32, u32) -> u32; 1] = [|a, b| a.abs_diff(b) / 2];
 
-    /// The formula of `parityTable` in `E6ParityCubic.lean`.
-    const PARITY_TASKS: [fn(u32, u32) -> u32; 1] = [|a, b| {
-        let c = (a * a * a + a * b) % 97;
-        (2 * (c / 2) + (a + b) % 2) % 97
-    }];
+    /// The formulas of `parityTable` in `E6ParityCubic.lean` and `parityBlindTable` in
+    /// `E6ParityBlind.lean`.
+    const PARITY_TASKS: [fn(u32, u32) -> u32; 2] = [
+        |a, b| {
+            let c = (a * a * a + a * b) % 97;
+            (2 * (c / 2) + (a + b) % 2) % 97
+        },
+        |a, b| {
+            let c = (a * a * a + a * b) % 97;
+            ((2 * (c / 2) + (a + b) % 2) % 97) / 2
+        },
+    ];
 
     /// The tasks with the full table at `p = 97`, by name, on their frozen splits.
     fn full_tables() -> arithmetic::Result<Vec<(String, Dataset)>> {
