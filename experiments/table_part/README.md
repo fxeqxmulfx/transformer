@@ -88,7 +88,8 @@ cells, and the solve says so.
 
 ## What this does not show
 
-PT1 to PT4 are proved in Lean (`TablePart` of `src/Transformer/Grokking/FlatSpectrum/`). This check
-covers the tables listed, and its counts are measurements rather than proofs. The class is given to
+PT1 to PT4 and the first-moment bound of PT5 are proved in Lean (`TablePart` of
+`src/Transformer/Grokking/FlatSpectrum/`). This check covers the tables listed, and its counts,
+including the table of random parts, are measurements rather than proofs. The class is given to
 the solve: a part determines a task only against the alternatives the class allows, so the solve is
 not a learner, and this says nothing about whether a model finds `H`. Labels are exact.

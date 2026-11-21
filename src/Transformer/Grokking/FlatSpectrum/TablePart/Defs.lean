@@ -22,6 +22,15 @@ members of `H` that agree on `Ω` are equal. -/
 def Determines (H : Set (B → A)) (Ω : Set B) : Prop :=
   ∀ f ∈ H, ∀ f' ∈ H, (∀ x ∈ Ω, f x = f' x) → f = f'
 
+/-- A larger part determines whatever a smaller one does. -/
+lemma Determines.mono {H : Set (B → A)} {Ω Ω' : Set B} (h : Determines H Ω) (hs : Ω ⊆ Ω') :
+    Determines H Ω' :=
+  fun f hf f' hf' hag => h f hf f' hf' fun x hx => hag x (hs hx)
+
+example : Determines (Set.univ : Set (Fin 1 → Bool)) Set.univ :=
+  Determines.mono (Ω := Set.univ) (fun _ _ _ _ h => funext fun x => h x (Set.mem_univ x))
+    subset_rfl
+
 /-- `δ(H)` (`review/flat_spectrum.md`, PT1): the least number of cells on which two different
 members of `H` differ. -/
 noncomputable def minDistance [Fintype B] [DecidableEq A] (H : Set (B → A)) : ℕ :=

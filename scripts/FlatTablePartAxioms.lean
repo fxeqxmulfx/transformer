@@ -16,6 +16,12 @@ import Transformer
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_flatClass_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.finrank_map_restrict_flatClass
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.minDistance_degreeClass
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.not_determines_of_emptyLines
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.sum_emptyLines
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.sum_emptyLines_le
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.mul_log_194_mem
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.mul_exp_lt_one_iff
+#print axioms Transformer.Grokking.FlatSpectrum.TablePart.card_emptyLine_le_97
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.forall_determines_iff
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.ncard_le_pow_of_determines
 #print axioms Transformer.Grokking.FlatSpectrum.TablePart.determines_univ_iff
