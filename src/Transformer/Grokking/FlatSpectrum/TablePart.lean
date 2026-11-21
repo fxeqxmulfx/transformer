@@ -11,7 +11,12 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.DivDeficient
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivFlat
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivPart
 public import Transformer.Grokking.FlatSpectrum.TablePart.DivTasks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6AbsBlind
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6AbsMax
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindBlock
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindDet
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindInverse
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6BlindSystem
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Div
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6DivParts
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
@@ -26,6 +31,7 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.E6Shuffle
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6SumTasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6SumWitnesses
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Sums
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Symmetric
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tasks
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Tridiagonal
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6Witnesses
@@ -107,4 +113,10 @@ The kernels of `|a − b|` and `max(a, b)` have tridiagonal inverses up to a sca
 phase, so an entry of `Y T` with a single live term kills that term. Four rounds of this, checked
 by the kernel, empty all 4704 seen cells, so `Y = 0` and M returns neither table
 (`TablePart.E6PeelMasks`, `TablePart.E6Peel`, `TablePart.E6AbsMax`).
+
+The kernel of `⌊|a − b| / 2⌋` is invertible, by an inverse over `ZMod 389` (`TablePart.E6BlindDet`),
+so its certificate is symmetric and keeps its form under the flip (`TablePart.E6Symmetric`). Four
+columns then have two live rows each, and eight entries of `Kᴴ Y = Yᴴ K` close on their four
+unknowns (`TablePart.E6BlindBlock`). This system is invertible too (`TablePart.E6BlindSystem`), so
+a column of `Y` vanishes, and M does not return the table (`TablePart.E6AbsBlind`).
 -/

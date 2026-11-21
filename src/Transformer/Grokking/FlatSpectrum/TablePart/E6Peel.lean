@@ -1,9 +1,7 @@
 module
 
-public import Transformer.Grokking.FlatSpectrum.CertificateGram
-public import Transformer.Grokking.FlatSpectrum.CertificateTests
-public import Transformer.Grokking.FlatSpectrum.TablePart.E6Lines
 public import Transformer.Grokking.FlatSpectrum.TablePart.E6PeelMasks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Symmetric
 
 /-!
 # PT6: peeling a symmetric table with a tridiagonal inverse
@@ -64,11 +62,6 @@ theorem peel_chain : PeelStep halfMask peel1 ∧ PeelStep peel1 peel2 ∧ PeelSt
 def Vanishes (Y : Matrix (Fin 1 → ZMod 97) (Fin 1 → ZMod 97) ℂ) (S : ℕ) : Prop :=
   ∀ a b, a < 97 → b < 97 → S.testBit (97 * a + b) = false → Y (line 97 a) (line 97 b) = 0
 
-lemma line_val (u : Fin 1 → ZMod 97) : line 97 (u 0).val = u := by
-  funext t
-  rw [Subsingleton.elim t 0]
-  simp [line]
-
 /-- One step of the peeling keeps `Y` vanishing. -/
 theorem Vanishes.step {Y T : Matrix (Fin 1 → ZMod 97) (Fin 1 → ZMod 97) ℂ} {c : ℂ} (hc : c ≠ 0)
     (hrel : star c • (Y * T) = c • (Y * T)ᴴ) (hsymm : ∀ u v, Y v u = Y u v) {γ δ : ℕ → ℂ}
@@ -111,17 +104,6 @@ theorem Vanishes.step {Y T : Matrix (Fin 1 → ZMod 97) (Fin 1 → ZMod 97) ℂ}
     have hTne : T (line 97 (l' 0).val) (line 97 a) ≠ 0 := by rwa [hl']
     exact hmem (by rw [← hl']; exact hV j _ hjlt hx (h2 _ (hsupp _ _ hx ha hTne)))
 
-/-- The flip `x ↦ −1 − x` of the lines. -/
-def flipLine : Equiv.Perm (Fin 1 → ZMod 97) := Equiv.subLeft fun _ => -1
-
-lemma flipLine_line {a : ℕ} (ha : a < 97) : flipLine (line 97 a) = line 97 (96 - a) := by
-  funext t
-  have h : ((96 : ℕ) : ZMod 97) = -1 := by decide +kernel
-  simp only [flipLine, Equiv.subLeft_apply, Pi.sub_apply, line]
-  rw [Nat.cast_sub (by omega), h]
-
-example : flipLine (line 97 1) = line 97 95 := flipLine_line (by norm_num)
-
 /-- **M does not return a symmetric table with a tridiagonal inverse that keeps its form under the
 flip**, from the training half. -/
 theorem not_returned_of_peel {f : ZMod 97 → ZMod 97 → ZMod 97}
@@ -134,40 +116,12 @@ theorem not_returned_of_peel {f : ZMod 97 → ZMod 97 → ZMod 97}
       α a * ZMod.stdAddChar (f a b) * β b) : NotReturned f := by
   intro hmin
   obtain ⟨Y, hYΩ, hY, htr⟩ := exists_isContraction_of_isMinOn hmin
-  set K := tableKernel f with hKdef
-  have hdet : K.det ≠ 0 := by
+  have hdet : (tableKernel f).det ≠ 0 := by
     intro h0
     have h1 := congrArg Matrix.det hKT
     rw [det_mul, h0, zero_mul, det_smul, det_one, mul_one] at h1
     exact pow_ne_zero _ hc h1.symm
-  have hKt : Kᵀ = K := by
-    ext u v
-    simp [hKdef, tableKernel, hs (u 0) (v 0)]
-  have htrT : ((Yᵀ)ᴴ * K).trace = nuclearNorm K := by
-    have h := trace_transpose_certificate K Y
-    rw [hKt] at h
-    rw [h, htr]
-  have hYT : Y = Yᵀ := eq_of_certificates hdet hY htr hY.transpose htrT
-  have hsymm (u v : Fin 1 → ZMod 97) : Y v u = Y u v := by
-    have h : Y v u = Yᵀ v u := by rw [← hYT]
-    rwa [transpose_apply] at h
-  have hsym' (i j : Fin 1 → ZMod 97) :
-      K (flipLine i) (flipLine j) = α (i 0) * K i j * β (j 0) := by
-    simpa [hKdef, tableKernel, flipLine] using hF (i 0) (j 0)
-  have hZ := hY.phased flipLine flipLine (a := fun i => star (α (i 0)))
-    (b := fun j => star (β (j 0))) (fun i => by simp [hα]) (fun j => by simp [hβ])
-  have hZtr := trace_phased (Y := Y) hsym'
-  rw [htr] at hZtr
-  have hYZ := eq_of_certificates hdet hY htr hZ hZtr
-  have hflip (a b : ℕ) (ha : a < 97) (hb : b < 97) : Y (line 97 a) (line 97 b) =
-      star (α (a : ZMod 97)) * Y (line 97 (96 - a)) (line 97 (96 - b)) *
-        star (β (b : ZMod 97)) := by
-    have h : Y (line 97 a) (line 97 b) = star (α ((line 97 a) 0)) *
-        Y (flipLine (line 97 a)) (flipLine (line 97 b)) * star (β ((line 97 b) 0)) := by
-      conv_lhs => rw [hYZ]
-      rfl
-    rw [flipLine_line ha, flipLine_line hb] at h
-    exact h
+  obtain ⟨hsymm, hflip⟩ := certificate_symmetries hdet hs hα hβ hF hY htr
   have hrel := smul_mul_eq_of_certificate hY htr hKT
   have hstep {S S' : ℕ} (hV : Vanishes Y S) (h : PeelStep S S') : Vanishes Y S' :=
     hV.step hc hrel hsymm (γ := fun a => star (α (a : ZMod 97)))
@@ -185,7 +139,7 @@ theorem not_returned_of_peel {f : ZMod 97 → ZMod 97 → ZMod 97}
   have hK := mul_gramSqrt_of_certificate hY htr
   rw [hY0, Matrix.zero_mul] at hK
   have hne := tableKernel_ne_zero f 0 0
-  rw [← hKdef, ← hK] at hne
+  rw [← hK] at hne
   exact hne rfl
 
 end Transformer.Grokking.FlatSpectrum.TablePart.E6
