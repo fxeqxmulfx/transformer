@@ -36,6 +36,7 @@ public import Transformer.GainMatroid.Section2_DeltaYMatroids
 public import Transformer.GainMatroid.Section2_Representable
 public import Transformer.GainMatroid.Section2_RepresentationExchange
 public import Transformer.GainMatroid.Section2_ExchangeMatrices
+public import Transformer.GainMatroid.Section2_GainExchange
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -92,6 +93,8 @@ small graphs, and `Section2_DeltaYMatroids` states Proposition 2.8 and shows tha
 their projective classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed
 and states it for a coindependent triangle. `Section2_ExchangeMatrices` defines `I(K₄)` and the
 exchanges of matrices and proves Proposition 2.11 for identity gains on the exchanged edges.
+`Section2_GainExchange` refutes Proposition 2.10 (i) as printed and states it for gain functions
+that are the identity on the triangle.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
