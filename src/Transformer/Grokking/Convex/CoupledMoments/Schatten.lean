@@ -19,6 +19,9 @@ public import Transformer.Grokking.Convex.CoupledMoments.Schatten.PairedPhase
 public import Transformer.Grokking.Convex.CoupledMoments.Schatten.PairedCoding
 public import Transformer.Grokking.Convex.CoupledMoments.Schatten.PairedLimits
 public import Transformer.Grokking.Convex.CoupledMoments.Schatten.Shift
+public import Transformer.Grokking.Convex.CoupledMoments.Schatten.ShiftGradient
+public import Transformer.Grokking.Convex.CoupledMoments.Schatten.SplitStep
+public import Transformer.Grokking.Convex.CoupledMoments.Schatten.ShiftStep
 
 /-!
 # Shared complex moments with singular-value budgets
@@ -49,6 +52,7 @@ the folding decoder admits a table outside the permutation-phase constructions, 
 paired optima still disagree at an unseen cell.
 A class shift `c ↦ c + u i + v j` in every cell maps each budget set of character moments onto
 itself and observed CE to observed CE with the labels shifted alike.
+Each full-batch, minibatch and forward-only step of the splitting learner commutes with it.
 -/
 
 @[expose] public section

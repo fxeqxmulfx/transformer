@@ -45,6 +45,14 @@ open Lean Elab Command
 #print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.shift_image_budgetFeasible
 #print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.loss_shift
 #print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.shift_fit_iff
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.ceGrad_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.refresh_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.loss_first_order
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.SplitStep.map
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.shift_blend
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.fullStep_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.miniStep_shift
+#print axioms Transformer.Grokking.Convex.CoupledMoments.Schatten.forwardStep_shift
 
 run_cmd do
   let env ← getEnv

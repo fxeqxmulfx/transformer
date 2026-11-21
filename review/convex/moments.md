@@ -8387,3 +8387,52 @@ $$
 because the softmax denominator sums over all classes. So the observed loss
 and the exact observed fits of $y+u+v$ under $TP$ are those of $y$ under $P$.
 `CoupledMoments/Schatten/Shift.lean` proves these statements.
+
+The learner of `convex_stress_schatten` repeats the three-operator step
+
+$$
+x=P_A(z),\qquad y=P_B(2x-z-g),\qquad z'=z+y-x.
+$$
+
+Here $A$ is the set of probability rows, with the observed rows fixed to
+one-hot in the forward-only mode. $B$ is the moment ball: the two budgets
+without the row condition. And $g$ is the CE gradient at $x$, softmax minus
+one-hot in each observed cell. The forward-only mode has $g=0$, and the
+minibatch mode keeps a retained gradient and refreshes only the selected
+cells at $x$. The shift is a linear map that keeps the squared Euclidean
+distance between tables. It maps $A$ and $B$ onto the same sets for the
+labels $y+u+v$, and it moves the gradient:
+
+$$
+\nabla\operatorname{CE}_{y+u+v}(TP)=T\,\nabla\operatorname{CE}_y(P).
+$$
+
+So $T$ takes a step of the learner on $y$ to a step of the learner on
+$y+u+v$ in each of the three modes, and the retained gradient moves with it.
+`Schatten/SplitStep.lean` states this for any linear isometry.
+`Schatten/ShiftGradient.lean` proves the gradient identity and ties `ceGrad`
+to the loss by the first-order inequality. `Schatten/ShiftStep.lean` applies
+both to the three modes.
+
+Nearest points in closed convex sets are unique, and the start, the uniform
+table with a zero retained gradient, is fixed by $T$. By induction, in exact
+arithmetic, the run on $ab+u(a)+v(b)$ is $T$ applied to the run on $ab$, given
+the same training cells and minibatch order. E6 has both, because its split
+does not read labels. The stopping test reads observed CE and the mixture
+coefficient, which are unchanged, so it fires at the same update. The output
+is the image of multiplication's, since $T$ commutes with the mixture. A
+held-out cell's largest class moves by the cell's offset, so apart from ties
+it is correct for the shifted table exactly when it is correct for $ab$.
+
+Lean proves the step and leaves the rest of that paragraph to the argument
+above: uniqueness of projections is not restated, and the induction over a
+run is not formalized. The solver also works in floating point, with 64
+bisections for the nuclear shift, and stores one gradient per cell, which
+matches `refresh` because each training cell of E6 has one observation. E6's
+measured agreement of the shifted probabilities, to $1.4\times10^{-14}$, is a
+numerical check of the statement, not a consequence of it. The symmetry says
+nothing about other models. What it does show is that the main transformer's
+failure on $a^3+ab$ in E1 cannot come from the target's additive-character
+spectra or from too little information in the half split: this learner sees
+the same training rows through the same budgets and recovers $a^3+ab$ exactly
+as it recovers multiplication.
