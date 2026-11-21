@@ -6,7 +6,7 @@ public import Transformer.GainMatroid.Section4_Small
 /-!
 # Gain functions satisfying the hypotheses of Lemmas 4.3 to 4.10
 
-Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §4.2. Over the field `ZMod 3`, these gain functions
+Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §4.1. Over the field `ZMod 3`, these gain functions
 give `2C₃` and the tube no balanced 2-cycle and `K₄` no balanced triangle, so the hypotheses of
 Lemmas 4.3 to 4.10 and of the row theorems behind them can be met.
 -/

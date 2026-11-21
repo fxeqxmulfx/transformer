@@ -5,7 +5,7 @@ public import Transformer.GainMatroid.Section4_LiftRows
 /-!
 # Lemmas 4.3 to 4.10: `2C₃`, `K₄` and the tube
 
-Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §4.2. On these three graphs, a gain function with no
+Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §4.1. On these three graphs, a gain function with no
 balanced 2-cycle (no balanced triangle on `K₄`) determines its canonical matrix up to switching, and
 up to switching and scaling in the lift case, and no canonical frame matrix is projectively
 equivalent to a canonical lift matrix.
