@@ -27,6 +27,7 @@ public import Transformer.GainMatroid.Section4_SmallExamples
 public import Transformer.GainMatroid.Section3_Classes
 public import Transformer.GainMatroid.Section3_SmallGraphs
 public import Transformer.GainMatroid.Section3_SmallExamples
+public import Transformer.GainMatroid.Section5_ProperlyUnbalanced
 
 /-!
 # Matrix representations of frame and lifted-graphic matroids
@@ -52,5 +53,5 @@ defines balanced, almost-balanced, properly unbalanced and tangled biased graphs
 off the rows of `T`. `Section4_Small` deduces Lemmas 4.3 to 4.10, and `Section4_SmallExamples` meets
 their hypotheses. `Section3_Classes` reads off cycles of two and three edges, `Section3_SmallGraphs`
 decides which biased `2C₃`, tubes and `K₄` are properly unbalanced, and `Section3_SmallExamples`
-gives concrete ones.
+gives concrete ones. `Section5_ProperlyUnbalanced` proves Theorem 5.1 from the rows of `T`.
 -/
