@@ -18,6 +18,12 @@ public import Transformer.GainMatroid.Section2_Connectivity
 public import Transformer.GainMatroid.Section2_Classes
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
+public import Transformer.GainMatroid.Section4_Rows
+public import Transformer.GainMatroid.Section4_Graphs
+public import Transformer.GainMatroid.Section4_Relations
+public import Transformer.GainMatroid.Section4_LiftRows
+public import Transformer.GainMatroid.Section4_Small
+public import Transformer.GainMatroid.Section4_SmallExamples
 
 /-!
 # Matrix representations of frame and lifted-graphic matroids
@@ -38,4 +44,7 @@ contraction and induced gain functions and proves Proposition 2.3. `Section2_Con
 separations and `k`-connected graphs and extends forests to maximal ones. `Section2_Classes`
 defines balanced, almost-balanced, properly unbalanced and tangled biased graphs and joints.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
+`Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`, `K₄`
+and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence off the rows of `T`.
+`Section4_Small` deduces Lemmas 4.3 to 4.10, and `Section4_SmallExamples` meets their hypotheses.
 -/

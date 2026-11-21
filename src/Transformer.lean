@@ -364,8 +364,8 @@ probability bounds outside that coverage are not claimed as proved.
    Proposition 1.1; canonical matrices, switching and scaling; walks, cycles,
    thetas, biased graphs and the balanced cycles of a gain function; deletion,
    contraction and induced gains; connectivity and the balance classes of biased
-   graphs; Propositions 2.1, 2.2, 2.3 and 4.1 and Lemma 4.2; counterexamples to
-   Conjectures 1 and 2 as literally stated.
+   graphs; Propositions 2.1, 2.2, 2.3 and 4.1 and Lemmas 4.2 to 4.10;
+   counterexamples to Conjectures 1 and 2 as literally stated.
 
 The latest GLM-5.3-Flash residual is instantiated from its pinned official
 configuration and Transformers implementation. The older GLM-5 report
