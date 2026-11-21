@@ -307,3 +307,36 @@ fn main() -> arithmetic::Result<()> {
     check_extremes();
     check_frozen_splits()
 }
+
+#[cfg(test)]
+mod tests {
+    use serde_json::Value;
+
+    /// The order of the cells in the split E6 trains on, as FNV-1a over `97 a + b`. The Lean theorem
+    /// `TablePart.E6.fingerprint` proves the same value for its port of the shuffle.
+    #[test]
+    fn lean_port_of_the_e6_shuffle() -> arithmetic::Result<()> {
+        let cases: Vec<Value> = serde_json::from_str(arithmetic::CASES)?;
+        let mut tables = 0;
+        for row in &cases {
+            let Some(d) = arithmetic::dataset::build(row)? else {
+                continue;
+            };
+            if d.training.vocabulary != 97 || d.training.rows.len() != 4704 {
+                continue;
+            }
+            tables += 1;
+            let hash = d
+                .training
+                .rows
+                .iter()
+                .chain(&d.validation)
+                .fold(0xcbf2_9ce4_8422_2325_u64, |h, &[a, b, _]| {
+                    (h ^ u64::from(97 * a + b)).wrapping_mul(0x0100_0000_01b3)
+                });
+            assert_eq!(hash, 359_723_728_075_922_973, "{}", row["case"]["name"]);
+        }
+        assert_eq!(tables, 33);
+        Ok(())
+    }
+}

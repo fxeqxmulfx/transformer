@@ -4,6 +4,9 @@ public import Transformer.Grokking.FlatSpectrum.TablePart.AgainstM
 public import Transformer.Grokking.FlatSpectrum.TablePart.Defs
 public import Transformer.Grokking.FlatSpectrum.TablePart.Degree
 public import Transformer.Grokking.FlatSpectrum.TablePart.DegreeHalf
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Half
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Marks
+public import Transformer.Grokking.FlatSpectrum.TablePart.E6Shuffle
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatBest
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatClass
 public import Transformer.Grokking.FlatSpectrum.TablePart.FlatCount
@@ -46,5 +49,7 @@ from `m = 511` (PT5, `TablePart.RandomCount`, `TablePart.RandomFlat`).
 
 On a proper part with a connected graph and twists that span all matrices, the data leave one
 function `g + h + uᵀ M v` of the class, and for injective `w ↦ wᵀ M` the minimum of M does not return
-its kernel (PT6, `TablePart.AgainstM`).
+its kernel (PT6, `TablePart.AgainstM`). The training half of E6 at `p = 97` is such a part: the
+kernel runs the SplitMix64(1) shuffle of the 9409 cells (`TablePart.E6Shuffle`), and its first 4704
+entries are different cells (`TablePart.E6Marks`) that determine the class (`TablePart.E6Half`).
 -/
