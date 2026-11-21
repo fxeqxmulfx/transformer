@@ -6940,3 +6940,230 @@ and `SharedLayer`; for NV10, `UnitaryAverage`, `ProductCost`, `ProductCostSVD`,
 | NV8 | the stream: `Slot`, `card_slot`, `coordSlots`, `orthonormal_coordSlots`, `vec`, `inner_vec_vec`, `rmsNormEps_vec`; the states: `embC`, `sum_embC_sq`, `stateC`, `stateC_add`, `smul_stateC`, `sum_stateC_sq`, `sum_embC_mul_stateC`, `cos_angle_sub_le`; the attention: `dftAlpha`, `leropeFrequencies_dftAlpha`, `dftQuery`, `dftKey`, `attention0`, `dftScale_pos`, `oneHeads_attention0`, `readOut`, `readOut_heads`; the FFN: `ffnOf`, `plainFFN_ffnOf`, `ffn0`, `plainFFN_ffn0`, `ffn1`, `plainFFN_ffn1`; the model: `twoModel`, `apply_layer0`, `apply_layer1`, `states_add_two`, `states_twoModel`, `logits_twoModel`; the margin: `one_sub_cos_pos`, `three_kEmb_lt`, `bTwo`, `gTwo`, `logits_twoModel_lt`; the statements: `exists_oneModel_twoCopies`, `exists_model_twoCopies` | The model is R0's `OneModel D d 4 F p`, its vocabulary the `p` residues, and main's is its `withRouters` with plain routers. The context is `tokens : ℕ → Fin p`, read at the position `3`, and the answer is `q 0 (tokens 0) (tokens 1) + q 1 (tokens 2) (tokens 3)` in `Fin p`. The depth scale `s > 0` is free, so main's `α = 1/√(2L)` is a case; the phase-score coefficients are `0`. `logits_twoModel_lt` holds for any orthonormal slots and codes, and the existence statements use the coordinate directions. The projections are real-linear; the complex-linear count, `k` copies and the comparison with NV2 are by hand. The examples are at main's widths, `D = 128`, `d = 32`, `F = 171`, `ε = 2⁻²³` and `s = 1/√8`, with real-linear projections and `x³ + x y` over `ℤ/29`. |
 | NV9 | the count: `IsSharedTable`, `transpose_shared`, `mulVec_mem_of_shared`, `IsSharedTable.finrank_col_sup_row_le`, `not_isSharedTable_of_lt`, `not_isSharedTable_cubicKernel`; the code: `mulCharLogit`, `mulCharLogit_lt`, with `rank_cubicKernelMulChar`, `card_eigenvalues_cubicKernelMulChar` and `singularValues_cubicKernelMulChar_mem` of `MulCharSpectrum`; the layer: `IsSharedTable.add`, `IsSharedTable.smul`, `isSharedTable_left`, `isSharedTable_right`, `isSharedTable_const`, `isSharedTable_zero`, `isSharedTable_bilinear`, `isSharedTable_product`, `IsProductLayer.isSharedTable`; `k` copies: `copiesEmbedding`, `IsProductLayer.ne_bilinearKernel`, `IsProductLayer.ne_copies` | The count is over any field, for a matrix `E` whose rows are the tokens. The layer is NV7's `IsProductLayer` over `ℂ` at the state `A (E a) + B (E b) + z`, with `A`, `B` from the embedding's coordinates to the state's; that main's layer has this form, for positional heads without `R_D`, is by hand. For `k` copies the table is square over `Fin k → ZMod p`, and any invertible coupling `M` will do. The example of `ne_copies` is at `D_ℂ = 64`, `k = 2`, `p = 13`. The thresholds on `p`, the conjugate count `2 D_ℂ + 3`, Forster's bound and the experiment's numbers are by hand. |
 | NV10 | the bound: `productCost`, `sum_rpow_singularValues_mul_le`, `productCost_le`, with `rpow_one_third_le`, `sum_rpow_one_third_le`, `sum_norm_sq_col_eq_one`, `sum_norm_sq_row_eq_one`, `mul_diagonal_mul_apply_self`, `apply_eq_zero_of_gram`, `isContraction_conjTranspose_of_gram`; the minimum: `frobeniusSq_mul_diagonal_ofReal`, `exists_productFactorization`, `productCost_isLeast`; the scale: `frobeniusSq_smul_eq`, `productCost_smul_le`, `productCost_smul`; Theorem A: `rpow_two_thirds_le`, `productCost_lt_of_nuclearNorm_lt`, `not_isLocalMinOn_productCost`, `cubicKernel_apply_ne_zero`, `not_isLocalMinOn_productCost_cubicKernel`; the codes: `productCost_cubicKernel`, `productCost_vecMulVec_le`, `sqrt_rpow_two_thirds`, `productCost_cubicKernelMulChar`, `productCost_mulCode_le` | The layer is `M = G diag(o) Wᴴ`; `Wᵀ` is the case of a conjugated `W`, of the same norm. The proof does not use Hölder: it compares the eigenbases of `Mᴴ M` and `Yᴴ Y` for `Y = diag(o) Wᴴ`, whose squared overlaps are doubly stochastic, and averages `x^{1/3} ≤ x/(3t²) + 2t/3`. Theorem A is stated for a square `K` with equal singular values and no zero entry, as `¬ IsLocalMinOn`. For `χ(a b)` the statement is an upper bound. The gradient, the tangent-space test for codes of lower rank and the cost of the tree are by hand; the table is computed in Rust. That the network's layer has this form, and the choice of normalization, are by hand. |
+
+## What a part of the table determines (added)
+
+Theorem A says that M returns a flat kernel from no proper `Ω`. It does not say that `Ω` has lost
+the table. Hide half of the cells of `a³ + a b` over `ℤ/97`. Is the answer still in the other half,
+with M failing to read it, or is it gone?
+
+Without a class of functions the question has no answer, since a hidden cell can hold anything.
+Inside a class it has an exact one. This section gives it for the class of NV1,
+`g(u) + h(v) + uᵀ M v` (the matrix `M` is not the model M), which holds every flat table of that
+item. A part determines a function of this class exactly when the graph of its cells is connected
+and its cycles span the matrices `M` (PT3). At `p = 97` the least such part has 194 of the 9409
+cells, one more than `g(a) + h(b)` needs (PT4), and nearly every random part of 1000 cells is one
+(PT5). On the half that the experiment E6 trains on, one linear solve returns every held-out label
+of `a³ + a b`, while M, by Theorem A, does not return its kernel (PT6). The class is a prior, and
+nothing here says that a trained model has it (PT7).
+
+### PT1. A part determines a class
+
+Let `B` be a finite set of `N` cells, `A` a set of values, and `H ⊆ A^B` a class with at least two
+members. A part `Ω ⊆ B` *determines* `H` when two members of `H` that agree on `Ω` are equal. Let
+`δ(H)` be the least number of cells on which two different members differ. Then
+
+```
+every part of m cells determines H   ⟺   m > N − δ(H).
+```
+
+Two different members agree on at most `N − δ` cells, so a larger part tells them apart. Conversely,
+the `N − δ` cells where an extremal pair agrees do not tell it apart, and neither does any subset of
+them.
+
+The class carries all the content. For `H = A^B`, `δ = 1` and only the whole table determines it.
+A part must also be able to name a member, so `|A|^{|Ω|} ≥ |H|`. If `A` is a field and `H` a linear
+space, this reads `|Ω| ≥ dim H`, a part determines `H` exactly when no nonzero member vanishes on
+it, and `δ(H)` is the least number of nonzero cells of a nonzero member. So `H` is a linear code of
+length `N`, and a hidden cell is an erasure.
+
+### PT2. The classical case: bounded degree
+
+Take `A = F_q`, `B = F_q^k` and, for `d < q`, the class `H_d` of polynomial functions of total
+degree at most `d`. A nonzero one has at most `d q^{k−1}` zeros (Schwartz–Zippel), and
+`∏_{i<d} (x₁ − cᵢ)` with distinct `cᵢ` has exactly that many. So `δ(H_d) = (q − d) q^{k−1}`, the
+minimum distance of the generalized Reed–Muller code (Kasami, Lin and Peterson, IEEE Trans. Inform.
+Theory 14 (1968), 189–199). By PT1 every part of more than `d q^{k−1}` cells determines `H_d`, and
+some part of exactly that many does not.
+
+At `q = 97`, `k = 2`, a half of the table has 4704 cells, and
+`48 · 97 = 4656 < 4704 < 4753 = 49 · 97`. So every half determines every polynomial of degree at
+most 48, while at degree 49 some half lies inside the zero set of `∏_{c<49} (a − c)`. Inside `H₃`,
+any 292 cells determine `a³ + a b`. Division, as the polynomial `a b^{p−2}`, has degree 96, and
+degree guarantees nothing for it at a half.
+
+### PT3. The flat class: connected, with enough twist
+
+Let `p` be prime, `U = F_p^k`, `V = F_p^l`, `n = p^k + p^l`, and
+
+```
+H = { g(u) + h(v) + uᵀ M v  :  g : U → F_p,  h : V → F_p,  M ∈ F_p^{k×l} }.
+```
+
+Its dimension is `n − 1 + k l`: if such a function is zero, its mixed differences
+`(u − u')ᵀ M (v − v')` are zero, so `M = 0`, and then `g = t` and `h = −t` for a constant `t`.
+
+The graph of a part `Ω` has the rows and the columns as vertices and one edge for each cell. A
+closed walk `u₁ v₁ u₂ v₂ … u_r v_r u₁` in this graph has a *twist*
+
+```
+Z = Σᵢ (uᵢ − uᵢ₊₁) vᵢᵀ  ∈  F_p^{k×l},    with u_{r+1} = u₁.
+```
+
+Let `c` be the number of components of the graph, isolated vertices included, and `s` the dimension
+of the span of the twists of all closed walks.
+
+**Theorem.** The functions of `H` that vanish on `Ω` form a space of dimension
+`(c − 1) + (k l − s)`. So `Ω` puts `n − c + s` independent conditions on `H`, and `Ω` determines `H`
+exactly when its graph is connected and its twists span all `k × l` matrices.
+
+*Proof.* Let `(g, h, M)` give a function that vanishes on `Ω`. On a closed walk, subtract the
+equation at `(uᵢ₊₁, vᵢ)` from the one at `(uᵢ, vᵢ)`. The term `h(vᵢ)` cancels:
+
+```
+g(uᵢ) − g(uᵢ₊₁) + (uᵢ − uᵢ₊₁)ᵀ M vᵢ = 0.
+```
+
+Summed over `i`, `g` telescopes and leaves `⟨M, Z⟩ = Σ_{ij} M_ij Z_ij = 0`. So `M` lies in the
+annihilator of the twists, of dimension `k l − s`. Conversely, take `M` in the annihilator. In each
+component fix the value at one vertex and carry `g(u) + h(v) = −uᵀ M v` along a spanning tree.
+An edge off the tree closes a walk, and its equation holds because `⟨M, Z⟩ = 0`. Two solutions
+`(g, h)` for one `M` differ by a solution of `g(u) + h(v) = 0` on `Ω`, which is one free constant
+per component, as in *Rigidity is connectivity*. So the parameters that vanish on `Ω` have dimension
+`(k l − s) + c`, and dividing by the kernel `(t, −t, 0)` of the parametrization leaves
+`(c − 1) + (k l − s)`. ∎
+
+The two terms are two kinds of ignorance. `c − 1` is the one `g(a) + h(b)` already has: a component
+can shift against the others. `k l − s` is what the coupling adds: a matrix `M` that no cycle has
+seen. A four-cycle on the rows `u, u'` and the columns `v, v'` has the twist `(u − u')(v − v')ᵀ`, of
+rank one. So at `k = l = 1`, where `s` is `0` or `1`, every connected part with a four-cycle
+determines `H`.
+
+A cycle alone is not enough. At `p = 3`, the six cells off the line `a + b = 2` form one cycle,
+through the rows `0, 1, 2` and the columns `0, 2, 1`, with the twist
+`(0 − 1)·0 + (1 − 2)·2 + (2 − 0)·1 = 0`. Their graph is connected, and still the member
+`1[a + b = 2] = 2 (a + b)² + (a + b)` of `H`, whose coupling is `M = 1`, vanishes on all six.
+
+At `k = l = 1` the count is classical. With the sign of `1_b` flipped, the transpose of the
+evaluation matrix `[1_a | 1_b | a b]` of `Ω` is the canonical lift matrix of its graph, with gains
+`a b` in the additive group of `F_p`, and `n − c + s` is the rank of the lift matroid (Zaslavsky,
+*Biased graphs II* and *IV*, J. Combin. Theory Ser. B 51 (1991) and 89 (2003); for the matrix, Funk
+and Slilaty, arXiv:1609.05574). For larger `k` and `l` the gains are matrices, and the proof above
+covers them.
+
+The count agrees with the exact rank of the evaluation matrix on all 33.9 million parts tried, among
+them every subset of six tables of 4 to 25 cells (`experiments/table_part`).
+
+### PT4. The best part and the worst
+
+*The best.* By PT1 a part that determines `H` has at least `dim H = p^k + p^l − 1 + k l` cells. The
+cross `{(u, 0)} ∪ {(0, v)}` with the `k l` cells `(e_i, e_j)` has exactly that many. The cross is a
+spanning tree, and the four-cycle through `(0, 0)` and `(e_i, e_j)` has the twist `e_i e_jᵀ`. At
+`k = l = 1` this is `2p` cells, 194 of the 9409 at `p = 97`: one more than the 193 that determine
+`g(a) + h(b)` (*Rigidity is connectivity*). One cell pays for the coupling.
+
+*The worst.* Except at `p = 2`, `k = l = 1`,
+
+```
+δ(H) = min(p^k, p^l),
+```
+
+so every part of more than `p^{k+l} − min(p^k, p^l)` cells determines `H`, and the table without its
+shortest line does not. At `p = 97` every 9313 cells determine `H`, and the 9312 cells outside one
+row do not.
+
+*Proof.* The indicator of a row has `p^l` nonzero cells and that of a column `p^k`, so `δ` is at
+most their minimum. Let `f = g + h + uᵀ M v` be a nonzero member. If no row of `f` vanishes, `f` has
+at least `p^k` nonzero cells. If the row `u₀` vanishes, every row is
+
+```
+f(u, v) = f(u, v) − f(u₀, v) = g(u) − g(u₀) + (u − u₀)ᵀ M v,
+```
+
+an affine function of `v`. If `M = 0`, these are constants, one of them is nonzero, and `f` has a
+whole nonzero row, `p^l` cells. If `M` has rank `r ≥ 1`, at least `p^k − p^{k−1}` rows have
+`(u − u₀)ᵀ M ≠ 0`, and each of them is a nonconstant affine function with `p^l − p^{l−1}` nonzero
+cells. So `f` has at least `p^{k+l−2} (p − 1)²` nonzero cells, which is at least `min(p^k, p^l)`
+unless `p = 2` and `k = l = 1`. There `a b` has one nonzero cell. ∎
+
+An exhaustive count over all functions agrees on ten shapes up to `5^10` functions
+(`experiments/table_part`).
+
+### PT5. A random part
+
+The least part that works has 194 cells, and only from 9313 cells on does every part work. A random
+part sits near the first number. Over 5000 uniform parts of each size at `p = 97`, `k = l = 1`
+(`experiments/table_part`):
+
+| cells | determine `H` | no empty row or column |
+| ---: | ---: | ---: |
+| 194 | 0.0000 | 0.0000 |
+| 300 | 0.0000 | 0.0002 |
+| 400 | 0.0506 | 0.0572 |
+| 500 | 0.3694 | 0.3754 |
+| 600 | 0.7322 | 0.7336 |
+| 700 | 0.9070 | 0.9072 |
+| 800 | 0.9640 | 0.9640 |
+| 900 | 0.9894 | 0.9894 |
+| 1000 | 0.9964 | 0.9964 |
+| 1200 | 1.0000 | 1.0000 |
+| 4704 | 1.0000 | 1.0000 |
+
+Almost every failure is an empty row or column. A given line is empty with probability about
+`e^{−m/p}`, so the expected number of empty lines is about `2p e^{−m/p}`, which falls to 1 at
+`m = p ln 2p ≈ 511`. All 5000 random halves determine `H`.
+
+### PT6. The same half, against M
+
+Let `f = g(u) + h(v) + uᵀ M v` with `w ↦ wᵀ M` injective, and `K = [ψ(f)]`. By NV1, `K` is the
+minimum of M from no proper `Ω`. By PT3, every `Ω` whose graph is connected and whose twists span
+the `k × l` matrices leaves one function of `H` through the values of `f`. So on every proper part
+of this kind the data fix `f` inside `H`, and M does not return `K`.
+
+The experiment E6 (`experiments/convex_stress_schatten_mixed`) supplies a real half. It asks why
+the main transformer of DiffGPT fits the training half of `a³ + a b` mod 97 and stays at chance on
+the held-out half (its E1). Its split takes the first 4704 cells of a SplitMix64(1) shuffle of the
+9409, and this half is a part of the kind above. On it the class can be solved directly. A
+union-find whose offsets are affine in the unknown coupling `m` solves `g(a) + h(b) + m a b = y` on
+the training labels in `O(|Ω| log p)`, and finds the one function of `H` or shows that there is none
+(`experiments/table_part`).
+
+Of the 48 tasks with a table in the arithmetic data, 15 have such a function, and for all 15 it
+gives every held-out label. Twelve are at `p = 97` on the full table, 4705 of 4705 held-out cells
+each: `a + b`, `a − b`, `(a + b)/2`, `a b`, `a + a b`, `a² + a b`, `a² + a b + b²`,
+`a² + a b + b² + a`, `a² + b²`, `(a + b)²`, `a³ + b` and `a³ + a b`. The other three are the
+constant `(a/b)⁰` at `p = 17`, `97` and `193`, whose tables have no column `b = 0`. For the other
+33, such as `a² b`, `(a + b)³` and division, no function of `H` fits the training cells, and the
+solve says so.
+
+The contrast with M is in seven of the 15, those with `m ≠ 0`: the six tasks of E6 (`a b`,
+`a + a b`, `a² + a b`, `a³ + a b`, `a² + a b + b²`, `a² + a b + b² + a`) and `(a + b)²`. Their
+kernels are flat, so M returns none of them from this half, and the solve returns all seven. The
+other eight have `m = 0` and a kernel of rank one, and Theorem A does not speak about them.
+
+E6 concludes, from its own learner, that the barrier in E1 is not the information in the half
+split. This is that statement without a learner: inside `H`, the half holds the whole table.
+
+### PT7. Scope
+
+- *The class is the prior.* A part determines `f` only against the alternatives the class allows.
+  Change `a³ + a b` at one hidden cell: the new table agrees with it on every seen cell and lies
+  outside `H`, since by PT4 no nonzero member of `H` has a single nonzero cell when `p ≥ 3`. The
+  solve of PT6 is told `H`. A model is not, and nothing here says that training reaches this class.
+- *One code of the task.* PT6 is about `K = [ψ(f)]`. Through a multiplicative character the table
+  of `a b` has rank one and M recovers it (*The readout decides*). So the data hold `f` while M does
+  not return this code, which is not to say that M fails on the task through every code.
+- *Exact labels.* Hidden cells are erasures here. Wrong labels are not treated.
+- *Prime `p`.* NV1 holds over `ℤ/n`. The count here uses a field, through the annihilator of the
+  twists.
+- *Not new.* PT1 and PT2 are coding theory, and PT3 at `k = l = 1` is the rank of a lift matroid. No
+  novelty is claimed for PT1 to PT4. The point of the section is to set them against Theorem A.
+
+### Lean
+
+Nothing of this section is in Lean. PT1, PT3 and PT4 are proved by hand above, and
+`experiments/table_part` checks the count of PT3 and the `δ` of PT4 on small tables. PT2's bound on
+zeros is Mathlib's `MvPolynomial.schwartz_zippel_totalDegree`, and its minimum distance is cited.
+What PT3 and PT6 rest on is in Lean: `rigid_iff_connected` of `PatternGraph`, and
+`isFlat_bilinearKernel` and `not_isMinOn_bilinearKernel` of `BilinearKernel`, all in
+`src/Transformer/Grokking/FlatSpectrum/`.
