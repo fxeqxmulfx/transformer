@@ -76,6 +76,32 @@ At update 5,000 all three checkpoints again classified the complete
 modulus-97 table correctly, with minimum held-out margins of 10.9882,
 9.1783 and 11.6655 in seed order.
 
+## GPT stress results
+
+One architecture, `phasor-causal-value-residual-v2`, reached the original
+99% held-out exact-sequence threshold on every task in all three seeds.
+The table gives the range of first scheduled crossings across each tier.
+
+| Tier | Tasks | Passing task and seed runs | Updates to first crossing |
+| --- | ---: | ---: | ---: |
+| Short | 25 | 75/75 | 56–1,292 |
+| Long | 10 | 30/30 | 570–39,250 |
+
+Hard depth trains on lengths 32–64. At length 128 the three models got
+508, 512 and 512 of 512 sequences correct at updates 750, 1,250 and 1,000.
+The latest crossing was 24-bit parity seed 1, with 304/306 exact generated
+answers at update 39,250. Recall seed 2 reached 507/512 at update 7,500.
+The saved weights reproduce the exact held-out counts for all 105 GPT runs
+and the three separate NV11 runs.
+
+At the GPT stopping checkpoints, each addition seed classified 50/51
+held-out pairs with first operand zero correctly. Each absolute-difference
+seed got 51/51. Clearing the 17 learned tables gave addition 50/51 in all
+three seeds and absolute difference 50/51, 48/51 and 50/51.
+
+Every measured run used scalar FP32 affines on a GeForce GTX 1050. The
+upstream mixed-precision configuration received a separate compilation check.
+
 ## Training and replay
 
 Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` and Kernite at
@@ -98,7 +124,7 @@ bin=./target/release/phasor-value-transport
 "$bin" shared-check
 PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/shared-quarter
 ./run_stress.sh replay runs/shared-quarter
-"$bin" report runs/shared-quarter
+"$bin" report runs/shared-quarter > runs/shared-quarter/report.json
 "$bin" predict runs/shared-quarter/arithmetic-cubic-product/seed0/weights.f32 97 12 34
 for seed in 0 1 2
 do
