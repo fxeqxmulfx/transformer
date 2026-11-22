@@ -228,12 +228,28 @@ pub mod kernels {
         add.u32(s, s, stride);
         bra(col);
     }
-    pub unsafe extern "ptx-kernel" fn combine(
+    fn retrieval_factor(factor: f32, row: u32, tokens: u64, keys: u64, tables: u32) {
+        let (b, r, at): (u32, u32, u32);
+        let addr: u64;
+        mad.wide.u32(addr, row, 4, tokens);
+        ld.global.u32(b, [addr]);
+        mul.lo.u32(at, row, tables);
+        mad.wide.u32(addr, at, 4, keys);
+        ld.global.u32(r, [addr]);
+        let same: pred;
+        setp.eq.u32(same, r, b);
+        selp.f32(factor, 1.0, 2.0, same);
+    }
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn combine<const HIT_GAIN: bool>(
         out: *mut f32,
         scaled: *mut f32,
         context: *const f32,
         value: *const f32,
         gain: *const f32,
+        tokens: *const u32,
+        keys: *const u32,
+        tables: u32,
         width: u32,
     ) {
         let (row, col, at): (u32, u32, u32);
@@ -242,6 +258,11 @@ pub mod kernels {
         mad.lo.u32(at, row, width, col);
         let (v, g, x): (f32, f32, f32);
         ld.global.f32(g, [gain]);
+        if HIT_GAIN {
+            let factor: f32;
+            retrieval_factor(factor, row, tokens, keys, tables);
+            mul.rn.f32(g, g, factor);
+        }
         load(v, value, at);
         mul.rn.f32(v, v, g);
         store(scaled, at, v);
@@ -249,11 +270,15 @@ pub mod kernels {
         add.rn.f32(x, x, v);
         store(out, at, x);
     }
-    pub unsafe extern "ptx-kernel" fn gain_back(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn gain_back<const HIT_GAIN: bool>(
         partial: *mut f32,
         gradient: *mut f32,
         value: *const f32,
         gain: *const f32,
+        tokens: *const u32,
+        keys: *const u32,
+        tables: u32,
         width: u32,
     ) {
         let (row, col, at): (u32, u32, u32);
@@ -261,6 +286,11 @@ pub mod kernels {
         mov.u32(col, tid.x);
         let (v, g, x, sum): (f32, f32, f32, f32);
         ld.global.f32(g, [gain]);
+        let factor: f32;
+        if HIT_GAIN {
+            retrieval_factor(factor, row, tokens, keys, tables);
+            mul.rn.f32(g, g, factor);
+        }
         mov.f32(sum, 0.0);
         let done: pred;
         label(col_loop);
@@ -278,6 +308,9 @@ pub mod kernels {
         bra(col_loop);
         label(reduce);
         sum_warp(sum);
+        if HIT_GAIN {
+            mul.rn.f32(sum, sum, factor);
+        }
         mov.u32(col, tid.x);
         setp.ne.u32(done, col, 0);
         if done {

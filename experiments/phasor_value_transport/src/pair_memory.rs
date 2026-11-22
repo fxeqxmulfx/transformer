@@ -14,6 +14,7 @@ const DEFAULT_MODEL: bool = !cfg!(any(
 const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
+pub const HIT_GAIN: bool = cfg!(feature = "successor-hit-gain");
 pub const INITIAL_GAIN: f32 = if cfg!(feature = "successor-gain-three-quarters") {
     0.75
 } else if HALF_GAIN {
@@ -42,6 +43,7 @@ compile_error!("the successor trial uses the linear prefix sum");
     feature = "successor-gain-three-quarters",
     any(
         feature = "transition-count",
+        feature = "successor-hit-gain",
         feature = "successor-displacement-quarter"
     )
 ))]
@@ -49,7 +51,20 @@ compile_error!(
     "the three-quarter gain trial specifies full displacement and the original table addresses"
 );
 
-pub const MODEL: &str = if cfg!(feature = "successor-gain-three-quarters") {
+#[cfg(all(
+    feature = "successor-hit-gain",
+    any(
+        feature = "transition-count",
+        feature = "successor-displacement-quarter"
+    )
+))]
+compile_error!(
+    "the retrieval-dependent gain trial uses full displacement and the original table addresses"
+);
+
+pub const MODEL: &str = if HIT_GAIN {
+    "phasor-successor-hit-gain-v1"
+} else if cfg!(feature = "successor-gain-three-quarters") {
     "phasor-successor-displacement-gain075-v1"
 } else if cfg!(feature = "transition-count") {
     if cfg!(feature = "successor-displacement-quarter") {

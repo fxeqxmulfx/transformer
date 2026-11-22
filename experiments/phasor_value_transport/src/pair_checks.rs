@@ -97,12 +97,16 @@ fn profile(p: usize, length: usize) -> Result<()> {
         let a = tokens[prev];
         let prefix = &tokens[i - i % length..i];
         let mut v = residual(prefix, b, p as u32, d, &theta[start..gain_at]);
+        let mut gain = f64::from(theta[gain_at]);
         if cfg!(feature = "successor-displacement") {
             let r = prefix
                 .windows(2)
                 .rev()
                 .find(|pair| pair[0] == b)
                 .map_or(b, |pair| pair[1]);
+            if cfg!(feature = "successor-hit-gain") && r != b {
+                gain *= 2.;
+            }
             let strength = if cfg!(feature = "successor-displacement-quarter") {
                 0.25
             } else {
@@ -121,7 +125,7 @@ fn profile(p: usize, length: usize) -> Result<()> {
             (a * b) as usize % p,
         );
         for (c, increment) in read.into_iter().enumerate() {
-            let expected = f64::from(scores[i * p + c]) + f64::from(theta[gain_at]) * increment;
+            let expected = f64::from(scores[i * p + c]) + gain * increment;
             let difference = (expected - f64::from(actual[i * p + c])).abs();
             if !difference.is_finite() {
                 return Err("nonfinite shared-value logit".into());

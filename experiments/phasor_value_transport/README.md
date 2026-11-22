@@ -166,6 +166,28 @@ on the input prefix, and an injective token renaming preserves it. Lean
 bounds the change in the two-class margin at every position and proves
 exact score agreement on self-reads, including both positions of NV11.
 
+On Kernite v0.6.0, the doubled-gain model classified all 32 novel MQAR
+sequences at initialization in each of the three seeds. Each independently
+reloaded checkpoint scored 64/64 on the ordinary test, 64/64 at length 48
+and 64/64 at length 96. The slowest fresh cell took 0.25 seconds. Seed 0
+also reached 99% on easy recall and key/value binding at initialization.
+It scored 31/32 on Dyck at the 250-update retention cutoff. The incumbent
+keeps its place in the expanded suite.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.DisplacementGain
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,successor-hit-gain
+bin=./target/release/phasor-value-transport
+"$bin" shared-check
+export PHASOR_EVAL_BATCH_CAP=16
+for seed in 0 1 2; do
+    "$bin" cell suite-mqar "$seed" runs/kernite-060-hit-gain
+    "$bin" probes suite-mqar "$seed" runs/kernite-060-hit-gain
+done
+"$bin" screen suite-dyck 0 runs/kernite-060-hit-gain 250
+```
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
