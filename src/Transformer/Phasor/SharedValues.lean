@@ -156,4 +156,33 @@ example (M : Model 128 32 4 171 97) (L : ℕ) :
   exact A.exists_shared_zero_row (by norm_num) (TwoCopies.orthonormal_coordCodes _)
     (by decide) (eps := 1) (by norm_num) 1 L
 
+/-- The scalar, normalized value and residual addition can be evaluated in
+one pass over a row. Grouping the squared coordinates by any finite set of
+lanes yields the same real-valued result at each output coordinate.
+Source: the warp RMS and causal combine in the Phasor value transport experiment. -/
+theorem sharedRms_coordinate {lanes : ℕ} (lane : Fin D → Fin lanes)
+    (context raw : EucSpace D) (gain eps : ℝ) (hD : 0 < D) (heps : 0 ≤ eps) (j : Fin D) :
+    (context + gain • GPTMini.rmsNormEps eps raw) j =
+      context j + gain * (raw j *
+        (Real.sqrt ((∑ k, ∑ i : Fin D with lane i = k, raw i ^ 2) / (D : ℝ) + eps))⁻¹) := by
+  have energy : (∑ k, ∑ i : Fin D with lane i = k, raw i ^ 2) = ‖raw‖ ^ 2 := by
+    rw [Finset.sum_fiberwise, EuclideanSpace.norm_sq_eq]
+    simp only [Real.norm_eq_abs, sq_abs]
+  have hd : (0 : ℝ) < D := by exact_mod_cast hD
+  have scale : ‖raw‖ ^ 2 / (D : ℝ) + eps = (‖raw‖ ^ 2 + D * eps) / D := by
+    field_simp
+  rw [energy, scale, Real.sqrt_div (by positivity), inv_div]
+  simp only [GPTMini.rmsNormEps, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul]
+  ring
+
+/-- Four coordinates per lane give the same width-128 residual with FP32
+machine epsilon, including when the hidden row is identically zero. -/
+example (context raw : EucSpace 128) (gain : ℝ) (j : Fin 128) :
+    (context + gain • GPTMini.rmsNormEps (1/8388608) raw) j =
+      context j + gain * (raw j * (Real.sqrt
+        ((∑ k : Fin 32, ∑ i : Fin 128 with Fin.ofNat 32 i.val = k, raw i ^ 2) / 128 +
+          1/8388608))⁻¹) := by
+  simpa using sharedRms_coordinate (fun i : Fin 128 => Fin.ofNat 32 i.val) context raw gain
+    (1/8388608) (by decide) (by norm_num) j
+
 end Transformer.Phasor
