@@ -482,6 +482,15 @@ this identifies the unique transition and its destination at any prefix
 length and that an injective renaming of the input tokens preserves the
 gain. [Single-write proofs](../../src/Transformer/Phasor/SingleWrite.lean)
 
+The `single-write-gain` build passed 97 directional derivatives, including
+prefixes with one write, two identical writes and two conflicting writes.
+All three seeds scored 32/32 at initialization on both MQAR and lookup.
+Each of the six checkpoints then scored 64/64 on its original test and
+64/64 on both length-48 and length-96 tests. All three also scored 512/512
+at initialization on both easy recall and key/value binding. The Dyck
+crossings remained 500 / 250 / 500. Blocks took 750 / 500 / 500, and
+depth-one C-RASP took 1,250 / 1,000 / 500.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the

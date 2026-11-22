@@ -72,7 +72,16 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
             [0, p - 1, 9, 0, 6, 4][(i % length + if r == 1 { 2 } else { 0 }) % 6] as u32
         })
         .collect();
-    if cfg!(feature = "closed-relation") && length == 8 {
+    if cfg!(feature = "single-write-gain") && length == 9 {
+        let patterns = [
+            [1, 7, 2, 4, 5, 6, 8, 9, 1],
+            [1, 7, 2, 1, 7, 6, 8, 9, 1],
+            [1, 7, 2, 1, 8, 6, 8, 9, 1],
+        ];
+        for (row, pattern) in tokens.chunks_mut(length).zip(patterns) {
+            row.copy_from_slice(&pattern);
+        }
+    } else if cfg!(feature = "closed-relation") && length == 8 {
         let patterns = [
             [1, 0, 2, 0, 3, 0, 1, 1],
             [1, 0, 2, 0, 3, 0, 2, 1],
@@ -180,8 +189,11 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
                     .windows(2)
                     .filter(|edge| edge[0] == b)
                     .all(|edge| edge[1] == r);
+            let single = cfg!(feature = "single-write-gain")
+                && r != b
+                && prefix.windows(2).filter(|pair| pair[0] == b).count() == 1;
             if cfg!(feature = "closed-relation-boost")
-                && crate::closed_checks::reference(prefix, b, p as u32).is_some()
+                && (single || crate::closed_checks::reference(prefix, b, p as u32).is_some())
             {
                 gain *= 2.;
             } else if cfg!(feature = "successor-bonus") && r != b {
@@ -413,6 +425,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if pair_memory::SUCCESSOR {
         profile(36, 8, 128)?;
+    }
+    if cfg!(feature = "single-write-gain") {
+        profile(36, 9, 128)?;
     }
     if cfg!(feature = "relation-paths") {
         profile(36, 12, 128)?;

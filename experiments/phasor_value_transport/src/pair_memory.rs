@@ -102,6 +102,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     }
 } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
     "phasor-successor-hit-gain175-v1"
+} else if cfg!(feature = "single-write-gain") {
+    "phasor-single-write-or-closed-gain-v1"
 } else if cfg!(feature = "closed-relation-boost") {
     "phasor-closed-relation-gain-v1"
 } else if HIT_GAIN {
@@ -246,6 +248,7 @@ pub struct PairMemory {
     successors: Vec<Option<u32>>,
     closed: Option<crate::relation_support::ClosedRead>,
     ambiguous: Vec<bool>,
+    writes: Vec<u8>,
     evidence: Option<GainEvidence>,
 }
 
@@ -282,6 +285,14 @@ impl PairMemory {
             ambiguous: vec![
                 false;
                 if cfg!(feature = "successor-agreement") {
+                    cfg.vocab
+                } else {
+                    0
+                }
+            ],
+            writes: vec![
+                0;
+                if cfg!(feature = "single-write-gain") {
                     cfg.vocab
                 } else {
                     0
@@ -331,6 +342,7 @@ impl PairMemory {
                 if pos == 0 {
                     self.successors.fill(None);
                     self.ambiguous.fill(false);
+                    self.writes.fill(0);
                 } else if pos >= 2 {
                     let (key, value) = (tokens[row - 2] as usize, tokens[row - 1]);
                     if cfg!(feature = "successor-agreement")
@@ -339,6 +351,9 @@ impl PairMemory {
                         self.ambiguous[key] = true;
                     }
                     self.successors[key] = Some(value);
+                    if cfg!(feature = "single-write-gain") {
+                        self.writes[key] = (self.writes[key] + 1).min(2);
+                    }
                 }
                 keys[0] = self.successors[b].unwrap_or(token);
                 let closed_end = if let Some(closed) = &mut self.closed {
@@ -354,7 +369,11 @@ impl PairMemory {
                 keys[0] = closed_end.unwrap_or(keys[0]);
                 if let Some(evidence) = &mut self.evidence {
                     evidence.reads[row] = if cfg!(feature = "closed-relation-boost") {
-                        closed_end.unwrap_or(token)
+                        if cfg!(feature = "single-write-gain") && self.writes[b] == 1 {
+                            keys[0]
+                        } else {
+                            closed_end.unwrap_or(token)
+                        }
                     } else if self.ambiguous[b] {
                         token
                     } else {
