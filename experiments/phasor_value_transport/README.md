@@ -1010,6 +1010,9 @@ component. If that quantity separates candidates for the given anchors, every
 connected candidate is correct. Renaming the hidden slots transports the
 entire relation. These results specify when the read is sound. The network
 must learn reliable correspondences for its own input distribution.
+The confidence test uses a damped cosine. Cauchy–Schwarz gives a strict
+lower bound on the energy of every trusted hidden value. An open neighborhood
+of an unwritten value therefore supplies no edges.
 [Triple transport proofs](../../src/Transformer/Phasor/TripleTransport.lean)
 
 ## Single-coordinate frame orbit

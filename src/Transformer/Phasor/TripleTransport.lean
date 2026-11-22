@@ -99,6 +99,31 @@ example (y : Fin 4) (path : Connected identityBank ⟨0, 1, 3⟩ ⟨0, 1, y⟩) 
 example : Connected identityBank ((Triple.mk 0 1 3).map id) ((Triple.mk 0 1 3).map id) :=
   rename id (fun _ _ h => h) (P := identityBank) (fun _ _ => rfl) (.rel _ _ sampleEdge)
 
+section Confidence
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+/-- A damped cosine above one over the square root of two. The squared
+form also rejects a zero prototype without requiring division. -/
+def trusted (ε : ℝ) (x k : E) : Prop :=
+  0 < inner ℝ x k ∧ (‖x‖ ^ 2 + ε) * ‖k‖ ^ 2 < 2 * (inner ℝ x k) ^ 2
+
+/-- A trusted value has squared norm strictly above the damping energy.
+Consequently, for positive damping an open neighborhood of the unwritten
+value has no outgoing trusted edge, in every direction. -/
+theorem energy_of_trusted {ε : ℝ} {x k : E} (h : trusted ε x k) : ε < ‖x‖ ^ 2 := by
+  have cs := (sq_le_sq₀ (abs_nonneg _) (mul_nonneg (norm_nonneg x) (norm_nonneg k))).2
+    (abs_real_inner_le_norm x k)
+  rw [sq_abs, mul_pow] at cs
+  by_contra! he
+  have bound := mul_le_mul_of_nonneg_right he (sq_nonneg ‖k‖)
+  nlinarith [h.2]
+
+example : (1 / 4 : ℝ) < ‖(1 : ℝ)‖ ^ 2 :=
+  energy_of_trusted (k := (1 : ℝ)) (by norm_num [trusted, real_inner_self_eq_norm_sq])
+
+end Confidence
+
 /-- A learned gate reads the strict-prefix hidden vector. Its four values
 weight the current contextual feature, a direct association, a row prototype
 and the transported prototype, all in the same dense output space. -/
