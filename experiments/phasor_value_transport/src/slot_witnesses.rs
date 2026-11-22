@@ -56,8 +56,8 @@ pub fn fill_in_rounds(
         return;
     }
     let mut evidence = bank.to_vec();
-    let relative =
-        roles.is_some_and(|terms| symmetry::extend(slots, &mut evidence, constant, output, terms));
+    let relative = roles
+        .is_some_and(|terms| symmetry::extend(slots, bank, &mut evidence, constant, output, terms));
     for budget in [16, 32, 32] {
         read_round(
             slots, &evidence, priority, constant, output, budget, relative,

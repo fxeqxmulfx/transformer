@@ -72,25 +72,38 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         let mut single = Engine::new(single_cfg, &original)?;
         results.insert("one_round", score(&mut single, &original)?);
     }
-    if matches!(
-        cfg.head.peer_search(),
-        Some(head::PeerSearch::Iterated(Some(_)))
-    ) {
+    if let Some(head::PeerSearch::Iterated(Some(roles))) = cfg.head.peer_search() {
         use crate::head::PeerSearch;
         use crate::slot_orbits::RoleEvidence;
-        for (name, search) in [
+        let mut controls = vec![
             (
                 "without_role_proposals",
-                PeerSearch::Iterated(Some(RoleEvidence::WithoutProposals)),
+                Some(RoleEvidence {
+                    role_proposals: false,
+                    ..roles
+                }),
             ),
             (
                 "without_relative_overlap",
-                PeerSearch::Iterated(Some(RoleEvidence::AbsoluteOverlap)),
+                Some(RoleEvidence {
+                    relative_overlap: false,
+                    ..roles
+                }),
             ),
-            ("without_role_evidence", PeerSearch::Iterated(None)),
-        ] {
+            ("without_role_evidence", None),
+        ];
+        if roles.graph_layers {
+            controls.push((
+                "without_graph_layers",
+                Some(RoleEvidence {
+                    graph_layers: false,
+                    ..roles
+                }),
+            ));
+        }
+        for (name, terms) in controls {
             let mut control = cfg.clone();
-            control.head = head::Head::PeerTriplePhase(search);
+            control.head = head::Head::PeerTriplePhase(PeerSearch::Iterated(terms));
             results.insert(
                 name,
                 score(&mut Engine::new(control, &original)?, &original)?,

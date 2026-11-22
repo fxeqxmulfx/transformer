@@ -446,7 +446,7 @@ mod capacity_tests {
             PeerSearch::Aligned,
             PeerSearch::Witnesses,
             PeerSearch::Iterated(None),
-            PeerSearch::Iterated(Some(crate::slot_orbits::RoleEvidence::All)),
+            PeerSearch::Iterated(Some(crate::slot_orbits::RoleEvidence::OBSERVED_ROLES)),
         ] {
             for head in [Head::PeerTriple(search), Head::PeerTriplePhase(search)] {
                 assert_eq!(capacity(head, 64, 97), 97);

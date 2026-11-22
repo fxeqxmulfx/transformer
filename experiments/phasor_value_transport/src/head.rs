@@ -77,8 +77,11 @@ impl Head {
             "triple-peer-phase" => Ok(Self::PeerTriplePhase(PeerSearch::Aligned)),
             "triple-witness-phase" => Ok(Self::PeerTriplePhase(PeerSearch::Witnesses)),
             "triple-iterated-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(None))),
+            "triple-graph-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(Some(
+                crate::slot_orbits::RoleEvidence::WITH_GRAPH,
+            )))),
             "triple-role-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(Some(
-                crate::slot_orbits::RoleEvidence::All,
+                crate::slot_orbits::RoleEvidence::OBSERVED_ROLES,
             )))),
             "fourier-transport" => Ok(Self::FourierTransport),
             "reflection-phase" => Ok(Self::ReflectionPhase),
@@ -126,6 +129,12 @@ impl Head {
             Self::PeerTriplePhase(PeerSearch::Iterated(None)) => {
                 "phasor-triple-iterated-witness-32-v1"
             }
+            Self::PeerTriple(PeerSearch::Iterated(Some(
+                crate::slot_orbits::RoleEvidence::WITH_GRAPH,
+            ))) => "phasor-triple-graph-relations-trunk-v1",
+            Self::PeerTriplePhase(PeerSearch::Iterated(Some(
+                crate::slot_orbits::RoleEvidence::WITH_GRAPH,
+            ))) => "phasor-triple-graph-relations-32-v1",
             Self::PeerTriple(PeerSearch::Iterated(Some(_))) => {
                 "phasor-triple-role-overlap-trunk-v1"
             }

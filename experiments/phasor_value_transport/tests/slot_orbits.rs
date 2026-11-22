@@ -347,7 +347,7 @@ fn role_reads_follow_a_common_renaming_at_unseen_keys() {
     let constant = vec![ABSENT; bank.len()];
     let mut original = constant.clone();
     let mut after = constant.clone();
-    let terms = Some(slot_orbits::RoleEvidence::All);
+    let terms = Some(slot_orbits::RoleEvidence::OBSERVED_ROLES);
     slot_orbits::fill_in_rounds(slots, &bank, &priority, &constant, &mut original, terms);
     slot_orbits::fill_in_rounds(slots, &renamed, &new_order, &constant, &mut after, terms);
     let mut recovered = 0;

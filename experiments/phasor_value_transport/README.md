@@ -2203,6 +2203,59 @@ done
 "$bin" probes arithmetic-sum-square 0 "$out"
 ```
 
+### Hidden row agreement and graph distance
+
+The `triple-graph-witness` read builds a graph on the learned prototype
+rows when exchanging the context and key roles agrees with the observations.
+For two rows it counts the shared keys $N$, the matching outputs $M$
+and the output histograms $u_y, v_y$ on those keys. The rows are
+neighbours when $M ≥ 6$ and $NM > 2\sum_y u_y v_y$. This compares their
+agreement on the same keys with what their observed output frequencies predict.
+The graph uses the current learned correspondences and supported role proposals.
+
+For each finite shortest-path length, at least three other cells in the
+original learned bank must support the same output and every observation at
+that distance must agree. A supported output fills a missing read. Earlier
+constant, triple and role predictions keep their priority. The model learns
+the adjacency and its output for each distance from the hidden weights.
+Lean proves invariance under vertex renaming and conditional correctness
+when the graph preserves the latent adjacency and the response is constant
+at each distance. An example uses a star with a categorical output.
+[Row agreement and graph-distance proofs](../../src/Transformer/Phasor/TripleTransport/CorrespondenceLayers.lean)
+
+| Case | Seeds | First passing update | Correct after reloading |
+| --- | --- | --- | --- |
+| Blinded absolute difference, long | 0 / 1 / 2 | 171 / 171 / 171 | 4,705 / 4,705 / 4,669 of 4,705 |
+| NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
+
+All three NV11 checkpoints also recovered the 4,704 training pairs.
+The frozen blinded case supplies one held-out split. On its seed 0
+checkpoint, removing the graph-distance read reduced the score from
+4,705 to 2,207. Removing the role proposals while keeping the graph
+gave 2,407. Removing only the relative overlap threshold retained 4,705.
+The three-round read
+without the role and graph operations had scored 160 / 191 / 173 of 4,705
+at the 950-update screen. To reproduce the fresh runs and fixed-weight
+removals, use the following commands.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.CorrespondenceLayers
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-graph-witness
+bin=./target/release/phasor-value-transport
+out=runs/graph-witness
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    for task in arithmetic-cubic-product arithmetic-abs-diff-blind; do
+        "$bin" cell "$task" "$seed" "$out"
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" slot-ablate arithmetic-abs-diff-blind "$seed" "$out"
+done
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.
