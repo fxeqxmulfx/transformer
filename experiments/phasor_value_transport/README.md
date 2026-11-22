@@ -141,6 +141,12 @@ ranged from 68 updates on shifted AND to 2,014 on the modular square of
 the sum. The long tier ranged from 589 on associative division to 15,800
 on the Fibonacci recurrence.
 
+On the GTX 1050, median elapsed time to the first passing observation was
+10.25 seconds for short runs and 30.92 seconds for long runs. All 30 long
+runs finished within five minutes. The three hard-depth seeds were the
+only original short runs over one minute, taking 162 / 212 / 114 seconds.
+Tier membership follows the frozen suite.
+
 | Task | Held-out sequences | First crossing, seeds 0 / 1 / 2 | Correct at crossing, seeds 0 / 1 / 2 |
 | --- | ---: | --- | --- |
 | Hard depth, length 128 | 512 | 1,500 / 2,000 / 1,000 | 511 / 512 / 512 |
@@ -161,7 +167,7 @@ every first crossing, denominator and available test split.
 At length 256, all three hard-depth checkpoints still classified every
 prefix correctly on all 512 test sequences. Increasing hard depth to
 length 512 gave 341 / 342 / 348 correct sequences out of 512. Easy depth scored
-507 / 512 / 295 out of 512 at the same length. Both tasks trained on
+507 / 512 / 295 out of 512 at length 256. Both tasks trained on
 lengths 32–64. The depth probe rebuilds the original length-128 test and
 checks its tensor fingerprint before generating the requested length.
 On the long-tier easy recall task, inserting 64 filler tokens between the
