@@ -956,6 +956,18 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/toeplitz-nv11/seed0/nv11-train-3000.f32 rows
 ```
 
+## Tied Toeplitz read
+
+The same learned matrix projects the current embedding into complex
+channels and projects the transformed channels back by its transpose.
+The previous contextual vector still chooses the stencil, complex gains
+and biases. This removes the independent output matrix and makes the
+empty-prefix scores of normalized inputs a positive semidefinite Gram
+matrix. For every prefix, each class vector pairs with the transformed
+value through that same learned basis. Changing the shared matrix
+contributes two terms to its gradient, one from each use.
+[Tied read and gradient proofs](../../src/Transformer/Phasor/TiedToeplitz.lean)
+
 ## Scalar phase bottleneck
 
 The earlier shared bilinear model fit 4,701 of 4,704 training pairs on
