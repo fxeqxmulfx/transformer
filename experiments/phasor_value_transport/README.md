@@ -5,6 +5,10 @@ stress task and five additional catalog tasks in seeds 0, 1 and 2. Each
 task trained its own weights using the same architecture and original AdamW.
 Every NV11 seed classified all 9,409 pairs correctly at update 1,250.
 
+The GPT suite also includes the official eight-needle text evaluation at up
+to 128K and at 1M context. The result is a mean match ratio on each published
+split. [MRCR V2 stress test](../mrcr_v2/README.md)
+
 ## Selected prefix and successor model
 
 The default Phasor applies one causal update at every token. Its prefix state
