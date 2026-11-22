@@ -146,12 +146,15 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     e.backward(3, length)?;
     let gradients = e.gradients.read()?;
     let unmasked = labels.iter().filter(|&&v| v != u32::MAX).count();
-    let read_epsilon =
-        if architecture::BOUNDED || architecture::INPUT_PRODUCT || architecture::PHASE_MEMORY {
-            0.0003
-        } else {
-            0.003
-        };
+    let read_epsilon = if architecture::BOUNDED
+        || architecture::INPUT_PRODUCT
+        || architecture::PHASE_MEMORY
+        || architecture::CONTEXT_ROTATION
+    {
+        0.0003
+    } else {
+        0.003
+    };
     for (range, epsilon) in [(0..p * width, 0.0002), (start..end, read_epsilon)] {
         if range.is_empty() {
             continue;
@@ -287,6 +290,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if architecture::PHASE_MEMORY {
         crate::phase_checks::run()?;
+    }
+    if architecture::CONTEXT_ROTATION {
+        crate::context_rotation_checks::run()?;
     }
     crate::embedding_checks::run()
 }

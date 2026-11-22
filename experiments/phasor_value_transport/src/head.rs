@@ -19,6 +19,7 @@ pub enum Head {
     BilinearPhase,
     ReflectionPhase,
     SingleReflection,
+    ContextRotation,
 }
 
 impl Head {
@@ -40,6 +41,7 @@ impl Head {
             "bilinear-phase" => Ok(Self::BilinearPhase),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
+            "context-rotation" => Ok(Self::ContextRotation),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -60,6 +62,7 @@ impl Head {
             Self::BilinearPhase => "phasor-learned-bilinear-phase-32-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
+            Self::ContextRotation => "phasor-learned-context-rotation-v1",
         }
     }
 
@@ -83,6 +86,7 @@ impl Head {
                 | Self::BilinearPhase
                 | Self::ReflectionPhase
                 | Self::SingleReflection
+                | Self::ContextRotation
         )
     }
 
@@ -104,6 +108,7 @@ impl Head {
 
     pub fn parameters(self, cfg: &Config) -> usize {
         match self {
+            Self::ContextRotation => (4 + cfg.width / 2) * cfg.width,
             Self::Original => 0,
             Self::Stream | Self::CompactStream => 4 * cfg.width,
             Self::PhasePrefix
@@ -124,6 +129,11 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::ContextRotation => {
+                parameters[crate::architecture::memory_start(cfg)
+                    ..crate::architecture::start(cfg) + self.parameters(cfg)]
+                    .fill(0.);
+            }
             Self::Relations => pair_memory::initialize_gains(cfg, parameters),
             Self::Transition
             | Self::Recurrent

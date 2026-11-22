@@ -21,7 +21,13 @@ impl Engine {
         };
         self.forward_mhc(features, batch, length)?;
         self.rms(self.last.ptr(), self.shared.ptr(), rows)?;
-        if let Some(memory) = &self.hidden_layer {
+        self.transform_context(rows, length)
+    }
+
+    fn transform_context(&self, rows: usize, length: usize) -> Result<()> {
+        if let Some(rotation) = &self.context_rotation {
+            rotation.forward(self, rows, length)?;
+        } else if let Some(memory) = &self.hidden_layer {
             memory.forward_features(self, rows, length)?;
         }
         Ok(())
@@ -32,7 +38,9 @@ impl Engine {
             Some(layer) => layer.backward(self, rows, length)?,
             None => self.dx.ptr(),
         };
-        if self.config.head.projects_embeddings() {
+        if let Some(rotation) = &self.context_rotation {
+            rotation.add_input_gradient(self, gradient, rows)?;
+        } else if self.config.head.projects_embeddings() {
             self.hidden_layer.as_ref().ok_or("missing input phase read")?
                 .add_projection_gradient(self, gradient, rows)?;
         }
@@ -40,6 +48,9 @@ impl Engine {
     }
 
     fn encoded_features(&self) -> &F {
+        if let Some(rotation) = &self.context_rotation {
+            return rotation.features();
+        }
         self.hidden_layer
             .as_ref()
             .map_or(&self.last, |m| m.features())

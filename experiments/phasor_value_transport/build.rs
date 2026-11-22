@@ -167,11 +167,11 @@ fn main() {
         ),
         (
             "pub struct Engine {",
-            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    input_product: Option<product_layer::ProductLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,\n    supervised_shape: Option<(usize, usize)>,",
+            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    context_rotation: Option<context_rotation_layer::ContextRotation>,\n    input_product: Option<product_layer::ProductLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,\n    supervised_shape: Option<(usize, usize)>,",
         ),
         (
             "let mut engine = Self {",
-            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            input_product: None,\n            stream_read: None,\n            supervised_shape: None,",
+            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            context_rotation: None,\n            input_product: None,\n            stream_read: None,\n            supervised_shape: None,",
         ),
         (
             "        Ok(engine)",
@@ -236,7 +236,7 @@ fn main() {
         engine.push_str(&format!("\ninclude!({extension:?});\n"));
         println!("cargo:rerun-if-changed={file}");
     }
-    for name in ["hidden_layer", "product_layer"] {
+    for name in ["hidden_layer", "product_layer", "context_rotation_layer"] {
         let file = format!("src/{name}.rs");
         let path = Path::new(&file).canonicalize().unwrap();
         engine.push_str(&format!("#[path={path:?}] mod {name};\n"));

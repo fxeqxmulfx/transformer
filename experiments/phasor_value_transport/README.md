@@ -737,6 +737,32 @@ and the output gradient. Each increment receives angle gradients from the
 strictly later positions in its sequence.
 [Contextual rotation proofs](../../src/Transformer/Phasor/ContextRotation.lean)
 
+On three sequences of length 257 and width 256, the Kernite v0.6.0 scan
+agreed with a separate FP64 calculation within `6.22e-6` on 197,376
+coordinates. The largest direct hidden-gradient error was `5.05e-6`
+and the largest angle-increment gradient error was `1.12e-5`. At widths
+64 and 128, a fixture with nonzero rotation weights preserved each contextual
+vector's norm within `9.27e-7`, changed the hidden coordinates by up to
+5.17 and preserved the causal prefix exactly. Finite differences checked
+the tied embedding, backbone, stream read and rotation projection.
+The rebuilt input-phase control reproduced its seed-0 20-bit observations
+and checkpoint byte for byte.
+
+The first short multiplication run crossed 99% at update 950 on seed 0
+with 4,684/4,705 correct. On canonical NV11, the same architecture at
+3,000 updates scored 91/4,705 held out and 4,703/4,704 in training.
+The saved checkpoint passed 13,933/1,358,083 held-out shift rectangles.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,context-rotation-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-mul 0 runs/context-rotation 3800
+"$bin" nv11-train runs/context-nv11 0 3000
+"$bin" nv11-score runs/context-nv11/nv11-train-3000.f32 shifts
+```
+
 ## NV11 prediction shifts
 
 CM121 describes row and column translations of class labels. To see

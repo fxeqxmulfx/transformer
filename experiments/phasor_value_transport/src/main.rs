@@ -14,6 +14,8 @@ mod bilinear_phase;
 mod bilinear_phase_checks;
 mod causal_product;
 mod causal_values;
+mod context_rotation;
+mod context_rotation_checks;
 mod embedding_checks;
 mod frequency_read;
 mod head;
@@ -238,6 +240,7 @@ fn main() -> Result<()> {
         [op, width] if architecture::RAW && op == "shared-check" =>
             learned_checks::run(Some(width.parse()?)),
         [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
+        [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),
         [op, head, name, seed, updates, out] if op == "memory-bench" =>
             stress::benchmark::run(head, name, seed.parse()?, updates.parse()?, Path::new(out)),

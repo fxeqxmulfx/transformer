@@ -347,12 +347,14 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::ReflectionPhase | Head::SingleReflection => {
+            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }
                 self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
-                if self.config.head.is_phase() {
+                if self.config.head == Head::ContextRotation {
+                    self.context_rotation = Some(context_rotation_layer::ContextRotation::new(self)?);
+                } else if self.config.head.is_phase() {
                     self.hidden_layer = Some(hidden_layer::HiddenLayer::new(self)?);
                 }
             }
@@ -366,9 +368,7 @@ impl Engine {
     }
     fn project_output(&mut self, tokens: &[u32], batch: usize, length: usize) -> Result<()> {
         let rows = batch * length;
-        if let Some(memory) = &self.hidden_layer {
-            memory.forward_features(self, rows, length)?;
-        }
+        self.transform_context(rows, length)?;
         self.classify_features(rows)?;
         if let Some(layer) = &mut self.shared_layer {
             layer.memory.as_mut().unwrap().prepare(tokens, length)?;
@@ -384,9 +384,13 @@ impl Engine {
             return memory.backward(self, rows, length);
         }
         self.linear_back(
-            self.dlast.ptr(), self.dlogits.ptr(), self.last.ptr(), 0,
+            self.dlast.ptr(), self.dlogits.ptr(), self.encoded_features().ptr(), 0,
             rows, self.config.vocab, self.config.width,
-        )
+        )?;
+        if let Some(rotation) = &self.context_rotation {
+            rotation.backward(self, rows, length)?;
+        }
+        Ok(())
     }
     pub fn backward(&mut self, batch: usize, length: usize) -> Result<()> {
         if self.uses_embedding_backbone() && self.supervised_shape != Some((batch, length)) {
