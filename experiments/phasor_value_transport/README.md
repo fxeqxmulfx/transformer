@@ -761,6 +761,22 @@ the last edge from its predecessor, and a longer fixture checks the
 absorbing bucket. Reproduce with `shared-check`, `cell language-l2 SEED RUN_DIR`
 and `probes language-l2 SEED RUN_DIR` in the same build.
 
+On L3, the inclusive count passed **every prefix of every ten-letter word**
+and all 64 alternating-tail sequences at length 128 in all three seeds.
+All six checkpoints in the comparison also scored 512/512 on each of the
+original test splits.
+
+| L3 measure | Previous modular count, seeds 0 / 1 / 2 | Inclusive capped count, seeds 0 / 1 / 2 |
+| --- | ---: | ---: |
+| Updates to 99% on length-128 validation | 500 / 500 / 750 | 500 / 500 / 500 |
+| Every ten-letter word, out of 1,024 | 939 / 975 / 1,020 | 1,024 / 1,024 / 1,024 |
+| Alternating tails at length 128, out of 64 | 56 / 57 / 64 | 64 / 64 / 64 |
+
+Elapsed time fell by 10.30% as a geometric mean across the three L3 pairs.
+The slowest inclusive run took 65.24 seconds, within the long-tier limit.
+Use the same commands with `language-l3` and the two feature flags in the
+table comparison. The 153-run default uses the closed-relation architecture.
+
 The modulated transition-table trial reads a capped count entry `x` and a
 current-token entry `y` at every position. Each hidden coordinate contributes
 `x + y + x*y` before normalization. Initializing the token table to zero
