@@ -71,6 +71,55 @@ fn sequence_task(d: sequences::dataset::Dataset) -> Task {
     }
 }
 
+/// The reviewed GPT probe port validates both original tensor fingerprints
+/// before releasing the order-discrimination records to the stress harness.
+fn categorical_probe(case: &Value) -> basis::Result<(Task, Value)> {
+    let source = probes::cases()?
+        .into_iter()
+        .find(|r| r["case"] == *case)
+        .ok_or("probe configuration differs from the frozen GPT source")?;
+    let helper = env::var_os("PHASOR_GPT_PROBE_HELPER")
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| {
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../.lake/reproduction/gpt-probe-reference")
+        });
+    let original = probes::dataset::build(&source, &helper)?;
+    if original.numeric_step.is_some() || original.numeric_offset.is_some() {
+        return Err("expected a categorical sequence-accuracy probe".into());
+    }
+    let splits = original
+        .splits
+        .into_iter()
+        .map(|(split, data)| {
+            let examples = data
+                .records
+                .into_iter()
+                .map(|row| Example {
+                    task: row.task,
+                    tokens: row.tokens,
+                    targets: row.targets,
+                    changes: row.changes,
+                    prompt: row.prompt,
+                    answer: row.answer,
+                    limit: row.generation_limit,
+                    field: None,
+                    row_index: None,
+                })
+                .collect();
+            (split, examples)
+        })
+        .collect();
+    Ok((
+        Task {
+            splits,
+            vocab: original.vocabulary,
+            selection: original.selection,
+        },
+        source["history"]["data_fingerprints"].clone(),
+    ))
+}
+
 /// The official scratchpad-free parity catalog includes entirely unseen
 /// 32- and 64-bit prompts with the same bit, answer and EOS token IDs as Basis.
 /// Add them only after training, while loading the selected checkpoint.
@@ -147,6 +196,8 @@ pub(super) fn load(name: &str) -> Result<(Value, Task)> {
             arithmetic_task(data),
             entry["history"]["data_fingerprints"].clone(),
         )
+    } else if case["kind"] == "probe" {
+        categorical_probe(&case).map_err(|err| -> Box<dyn std::error::Error> { err })?
     } else {
         let d = if basis::CASES.contains(&name) {
             basis::dataset::build(name).map(|(d, _)| d)

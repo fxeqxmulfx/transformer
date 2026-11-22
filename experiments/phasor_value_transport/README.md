@@ -581,6 +581,31 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/bilinear-phase-nv11/seed0/nv11-train-3000.f32
 ```
 
+## GPT order discrimination
+
+The catalog adapter uses the native GPT mechanism-probe data port to load
+the original seed-1 partition. It verifies both tensor fingerprints. The
+496 training and 496 held-out examples cover all ordered pairs of distinct
+symbols from a set of 32. The model receives their learned embeddings and
+the outer classifier predicts the comparison label at the second position.
+The source provides two splits. On seed 0 at 5,000 updates the learned
+stream model scored 461/496 and the affine phase model scored 459/496.
+The short and long extension registry requires a three-seed 99% crossing.
+[Native GPT probe data](../convex_stress_probe_data/README.md)
+
+```sh
+# From the repository root, set PINNED_TORCH_ROOT to the native ATen installation.
+bash experiments/convex_stress_probe_data/native/build.sh "$PINNED_TORCH_ROOT" .lake/reproduction/gpt-probe-reference
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,affine-phase-read
+bin=./target/release/phasor-value-transport
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen gpt-probe-order-discrimination 0 runs/affine-phase 5000
+"$bin" catalog-report runs/affine-phase gpt-probe-order-discrimination
+```
+
+An existing native helper at a different path can be selected with
+`PHASOR_GPT_PROBE_HELPER`.
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

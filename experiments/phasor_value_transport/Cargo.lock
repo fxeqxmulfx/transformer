@@ -183,6 +183,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "convex-stress-probe-data"
+version = "0.1.0"
+dependencies = [
+ "convex-stress-repair",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "convex-stress-relabel"
 version = "0.1.0"
 dependencies = [
@@ -456,6 +466,7 @@ dependencies = [
  "convex-stress-basis-data",
  "convex-stress-frequency-data",
  "convex-stress-parity-data",
+ "convex-stress-probe-data",
  "kernite-cuda",
  "kernite-macros",
  "serde_json",

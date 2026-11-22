@@ -59,6 +59,7 @@ arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stre
 basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
 frequency = { package = "convex-stress-frequency-data", path = "../convex_stress_frequency_data" }
 parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
+probes = { package = "convex-stress-probe-data", path = "../convex_stress_probe_data" }
 kernite-cuda = "=0.6.0"
 kernite-macros = "=0.6.0"
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
