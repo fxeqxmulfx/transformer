@@ -55,6 +55,14 @@ were byte-identical. To reproduce, compare `cell arithmetic-add` and
 and `PHASOR_EVAL_BATCH_CAP=16` against commit `cafcd74c`. Use fresh directories
 for each build and alternate their order between seeds.
 
+A separate timing trial replaced the vocabulary remainder in the forward and
+backward transport kernels with a comparison against `p − offset`. Using
+`prefix-successor-half`, the same six task/seed pairs preserved every
+training observation and checkpoint byte.
+The comparison took 0.30% longer on the GTX 1050 as a geometric mean, with
+five of six runs slower. The selected kernel keeps the remainder instruction.
+[Circular address identity](../../src/Transformer/Phasor/TransportedValues.lean)
+
 ## Selected prefix and successor model
 
 The default Phasor applies one causal update at every token. Its prefix state
