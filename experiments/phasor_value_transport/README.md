@@ -67,8 +67,9 @@ for arm in half selected; do
     bin=./target/release/phasor-value-transport
     "$bin" shared-check
     ./run_stress.sh cell "runs/v060-$arm" runs/fourteen-extensions.tsv
-    ./run_stress.sh replay "runs/v060-$arm" runs/fourteen-extensions.tsv
     "$bin" extended-report "runs/v060-$arm" runs/fourteen-extensions.tsv > "runs/v060-$arm/report.json"
+    ./run_stress.sh replay "runs/v060-$arm" runs/fourteen-extensions.tsv > "runs/v060-$arm/replays.jsonl"
+    jq -es --slurpfile report "runs/v060-$arm/report.json" -f verify_replays.jq "runs/v060-$arm/replays.jsonl"
 done
 git show 849aa3be:experiments/phasor_value_transport/extensions.tsv > runs/seven-extensions.tsv
 jq -s --rawfile extensions runs/seven-extensions.tsv -f compare.jq \
@@ -83,6 +84,10 @@ The Phasor runner uses the published v0.6.0 CUDA and macro crates with
 Rust 1.100.0. The original DiffGPT trainer and AdamW are pinned to
 `5a37c515`. Fresh results record the Kernite version from Cargo.lock.
 Checkpoint replay reports both the training and scoring versions.
+The replay reloads the weights, verifies their SHA-256 digest and scores
+the original held-out split. The verifier matches the architecture, digest,
+training version and exact sequence count for all three seeds of every
+reported task.
 
 With a full successor displacement and initial gain 0.75, the v0.6.0
 GPU forward pass agreed with the independent FP64 oracle to within

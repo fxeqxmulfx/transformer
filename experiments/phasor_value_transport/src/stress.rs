@@ -311,6 +311,7 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) ->
         return Err("checkpoint failed to reproduce its held-out score".into());
     }
     let mut report = json!({"case":name,"seed":seed,"correct":correct,"total":held.len(),
+        "model":MODEL,"weights_sha256":result["weights_sha256"],
         "kernite_version":trained_with(&result)?,"scored_with_kernite":KERNITE_VERSION});
     if test_splits {
         let mut scores = BTreeMap::new();
