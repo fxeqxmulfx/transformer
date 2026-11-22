@@ -36,6 +36,22 @@ For an extended cohort, pass the same two-column tier and case TSV to
 both `run_stress.sh` commands and to `gpt-report` after the run directory.
 The report counts the original and additional tasks separately.
 
+The input-phase model passed all 25 original short tasks at seed 0.
+Independent reloads reproduced every primary held-out score. First crossings
+ranged from 68 updates on shifted Boolean AND to 1,957 on the modular
+square of the sum. On hard depth the first crossing was at update 1,500,
+with 511/512 exact sequences on novel length-128 validation inputs after
+training on lengths 32–64.
+
+Two long-tier arithmetic tasks first crossed after the 3,496-update
+seed-0 screen. All six runs used the original 100,000-update schedule.
+Each count below covers the 4,705 held-out pairs at the first crossing.
+
+| Long task | First crossing, seeds 0 / 1 / 2 | Held-out correct, seeds 0 / 1 / 2 |
+| --- | --- | --- |
+| Blinded absolute difference | 4,750 / 6,460 / 4,123 | 4,659 / 4,659 / 4,660 |
+| Fourth power of the modular sum | 3,648 / 4,275 / 3,743 | 4,659 / 4,663 / 4,665 |
+
 ## Learned stream readout
 
 The inner model takes a sequence of embedding vectors. For a tokenized
