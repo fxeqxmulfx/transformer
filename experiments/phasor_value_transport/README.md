@@ -968,6 +968,22 @@ validation and 506/512 independent test examples correct. The same model
 trained on canonical NV11 for 3,000 updates reached 4,701/4,704 in
 training and 78/4,705 on the held-out half.
 
+On the original Basis easy recall task, seeds 0 / 1 / 2 crossed 99%
+at updates 1,900 / 1,550 / 900. They solved 511 / 509 / 505 of the 512
+independent test sequences, with 4,095 / 4,093 / 4,089 correct answers
+among 4,096 queries. Adding 32 distractor values after the writes
+reduced the sequence scores to 477 / 505 / 500 and the query scores to
+4,060 / 4,089 / 4,084. All scores use the same saved checkpoints.
+
+The paired delay test retains every source write, query, original filler
+and target in its original order. Longer gaps extend the same random
+filler stream for each test example. The evaluator checks the extended
+targets with an independent last-write oracle, fingerprints the split and
+replays the original validation and test sets. A zero gap reproduces the
+published easy test fingerprint exactly. The same construction supports
+hard recall, which includes overwrites.
+[Recall gap proof](../../src/Transformer/Basis/RecallParsed.lean)
+
 ```sh
 cd experiments/phasor_value_transport
 cargo +stable build --release --locked --features fp32-affine-reference,associative-reflection-read
@@ -975,6 +991,9 @@ bin=./target/release/phasor-value-transport
 "$bin" check
 PHASOR_EVAL_BATCH_CAP=16 "$bin" screen gpt-probe-key-value-binding 0 runs/associative 2944
 PHASOR_EVAL_BATCH_CAP=16 "$bin" probes gpt-probe-key-value-binding 0 runs/associative
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-recall-easy 0 runs/associative 3500
+PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-recall-easy 0 runs/associative recall-gap 32
+cargo +stable test --release --locked --test recall_gap
 "$bin" nv11-train runs/associative-nv11 0 3000
 "$bin" nv11-score runs/associative-nv11/nv11-train-3000.f32 shifts
 ```

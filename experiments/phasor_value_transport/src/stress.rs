@@ -11,6 +11,7 @@ mod class_translation;
 pub mod compare_shifts;
 pub mod embedding;
 mod language_probes;
+mod recall_gap;
 pub mod report;
 
 fn cases() -> Result<Vec<Value>> {
@@ -333,6 +334,7 @@ pub enum ProbeSet {
     Parity1024,
     ParityNeighbors,
     ParityLength(usize),
+    RecallGap(usize),
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
@@ -343,6 +345,7 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
             | ProbeSet::Parity1024
             | ProbeSet::ParityNeighbors
             | ProbeSet::ParityLength(_)
+            | ProbeSet::RecallGap(_)
     );
     let parity_task = matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24");
     if matches!(
@@ -352,11 +355,40 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
     {
         return Err("long parity probes require a Basis parity checkpoint".into());
     }
-    if extended && !parity_task && !name.starts_with("language-l") {
+    if matches!(probes, ProbeSet::RecallGap(_))
+        && !matches!(name, "basis-recall-easy" | "basis-recall-hard")
+    {
+        return Err("recall-gap requires a Basis recall checkpoint".into());
+    }
+    if probes == ProbeSet::Extended && !parity_task && !name.starts_with("language-l") {
         return Err("extended probes require a source block language or Basis parity task".into());
     }
     let (row, mut task) = load(name)?;
     let mut probe_hashes = BTreeMap::new();
+    if let ProbeSet::RecallGap(gap) = probes {
+        let spec = recall_gap::source_spec(name).map_err(|e| e.to_string())?;
+        let original = task
+            .splits
+            .get("test")
+            .ok_or("missing original recall test split")?;
+        let rows =
+            basis::generator::generate(&spec, "test", original.len(), &Default::default(), false)
+                .map_err(|e| e.to_string())?;
+        if !rows
+            .iter()
+            .zip(original)
+            .all(|(a, b)| a.tokens == b.tokens && a.targets == b.targets && a.changes == b.changes)
+        {
+            return Err("MQAR generator differs from the checkpoint's source test inputs".into());
+        }
+        let (digest, delayed) = recall_gap::delay(name, &rows, gap).map_err(|e| e.to_string())?;
+        let key = format!("test/recall-gap-{gap}");
+        probe_hashes.insert(key.clone(), digest);
+        task.splits.insert(
+            key,
+            delayed.into_iter().map(catalog::sequence_example).collect(),
+        );
+    }
     if test_splits && parity_task {
         catalog::add_parity_probes(&mut task)?;
         if extended {
@@ -394,6 +426,10 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
         for (split, examples) in &task.splits {
             if split == "test" || split.starts_with("test/") {
                 let measured = metrics::evaluate(&mut e, examples, true)?;
+                if matches!(probes, ProbeSet::RecallGap(_)) {
+                    report["recall_queries"][split] =
+                        json!({"correct":measured["correct"],"total":measured["targets"]});
+                }
                 if matches!(probes, ProbeSet::ParityLength(_)) && probe_hashes.contains_key(split) {
                     report["generation_detail"] = json!({
                         "split":split, "generated_tokens":measured["generated_tokens"],
