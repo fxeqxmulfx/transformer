@@ -60,22 +60,27 @@ theorem relationEnd_of_writes [DecidableEq α] (xs : ℕ → α) (k h : α) (j l
   simp only [relationEnd, latestRelation_lookup xs k h j n hj hw hlast, Option.bind_some,
     latestRelation_lookup xs (xs (j+2)) h l n hl hw' hlast', Option.getD_some]
 
-/-- Every injective renaming of the alphabet preserves the two reads. -/
+/-- Every injective renaming of the alphabet carries the last completed
+write for a token pair to the renamed value. -/
+theorem latestRelation_map [DecidableEq α] [DecidableEq β] (f : α → β) (hf : Function.Injective f)
+    (xs : ℕ → α) (n : ℕ) (a h : α) :
+    latestRelation (fun j => f (xs j)) n (f a) (f h) = (latestRelation xs n a h).map f := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    by_cases hit : xs n = a ∧ xs (n+1) = h <;> simp [latestRelation, hf.eq_iff, hit, ih]
+
+/-- An injective renaming carries each composed path to the correspondingly
+renamed endpoint, including an unwritten first or second edge. -/
 theorem relationEnd_map [DecidableEq α] [DecidableEq β] (f : α → β) (hf : Function.Injective f)
     (xs : ℕ → α) (n : ℕ) (k h : α) :
     relationEnd (fun j => f (xs j)) n (f k) (f h) = f (relationEnd xs n k h) := by
-  have table (m : ℕ) (a : α) :
-      latestRelation (fun j => f (xs j)) m (f a) (f h) = (latestRelation xs m a h).map f := by
-    induction m with
-    | zero => rfl
-    | succ m ih =>
-      by_cases hit : xs m = a ∧ xs (m+1) = h <;> simp [latestRelation, hf.eq_iff, hit, ih]
   unfold relationEnd
-  rw [table]
+  rw [latestRelation_map f hf]
   cases hfirst : latestRelation xs n k h with
   | none => rfl
   | some mid =>
-    simp only [Option.map_some, Option.bind_some, table n mid]
+    simp only [Option.map_some, Option.bind_some, latestRelation_map f hf]
     cases latestRelation xs n mid h <;> rfl
 
 /-- Combined vocabulary coefficients for one shared scalar per relation.

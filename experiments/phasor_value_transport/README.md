@@ -511,6 +511,16 @@ at initialization on both easy recall and key/value binding. The Dyck
 crossings remained 500 / 250 / 500. Blocks took 750 / 500 / 500, and
 depth-one C-RASP took 1,250 / 1,000 / 500.
 
+The context-backoff trial reads the last completed triple starting with
+the previous and current tokens. A resolved closed relation has priority.
+If neither read supplies a value, the model uses the ordinary successor
+or, for an unwritten key, the current token. The same address selects the
+learned table row and the embedding displacement. Lean proves that each
+contextual value actually followed the current token in the prefix, that
+agreeing writes preserve the ordinary successor, and that injectively
+renaming the vocabulary preserves the read.
+[Causal context-backoff proofs](../../src/Transformer/Phasor/ContextBackoff.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
