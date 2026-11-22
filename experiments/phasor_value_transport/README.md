@@ -1085,6 +1085,21 @@ do
 done
 ```
 
+The separately trained original GPT short-tier task `arithmetic-add` reached
+4,704/4,704 training and 4,705/4,705 validation answers in every seed at
+update 171, its first passing observation. The original mean-stream reference
+first met the suite's 99% threshold at updates 893, 950 and 931. The source
+addition case supplies no separate length-transfer split.
+
+```sh
+for seed in 0 1 2
+do
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-add "$seed" runs/triple-gpt 380
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" replay arithmetic-add "$seed" runs/triple-gpt
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" probes arithmetic-add "$seed" runs/triple-gpt
+done
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.
