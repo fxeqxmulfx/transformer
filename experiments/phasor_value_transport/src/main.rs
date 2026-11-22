@@ -149,26 +149,35 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
                 .as_ref()
                 .map(|l| evaluate(&mut e, Some((l, false)), &data.validation))
                 .transpose()?;
-            let row = json!({"arm":arm,"step":completed,"seed":seed,"initial_sha256":digest,
+            let mut row = json!({"arm":arm,"step":completed,"seed":seed,"initial_sha256":digest,
                 "train":train,"held_out":held,"zero_offset_held_out":ablated,
                 "fp32_affines":precision::FP32_AFFINE_REFERENCE,"gpu":e.cuda.name(),
                 "kernite_version":KERNITE_VERSION});
-            writeln!(log, "{row}")?;
-            log.flush()?;
-            println!("{row}");
+            if e.config.shared_values {
+                row["model"] = json!(pair_memory::MODEL);
+            }
             if (layer.is_some() || e.config.shared_values)
                 && (completed == OBSERVE || completed == window)
             {
-                snapshot::save(&e, &out.join(format!("{arm}-{completed}.f32")))?;
+                row["weights_sha256"] = json!(snapshot::save(
+                    &e,
+                    &out.join(format!("{arm}-{completed}.f32"))
+                )?);
             }
             if e.config.shared_values
                 && !saved_exact
                 && row["train"]["correct"] == data.training.rows.len()
                 && row["held_out"]["correct"] == data.validation.len()
             {
-                snapshot::save(&e, &out.join(format!("{arm}-first-exact.f32")))?;
+                row["weights_sha256"] = json!(snapshot::save(
+                    &e,
+                    &out.join(format!("{arm}-first-exact.f32"))
+                )?);
                 saved_exact = true;
             }
+            writeln!(log, "{row}")?;
+            log.flush()?;
+            println!("{row}");
         }
         if completed == window {
             break;

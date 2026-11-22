@@ -1188,7 +1188,10 @@ On a memory-constrained GPU, `PHASOR_EVAL_BATCH_CAP=16` limits the scorer's
 chunk size down to the training batch size. Training still consumes the
 original minibatches, and each evaluation visits the entire split.
 Replay verifies the architecture identifier, weights digest, precision,
-suite identity and exact held-out count. The report verifies the full observation
+suite identity and exact held-out count. A replay of a previously completed
+screen includes its original observation, update and pass status. A cutoff
+before the first crossing returns the recorded score at that cutoff.
+The report verifies the full observation
 history, update cadence and examples consumed before counting a task and seed.
 It lists budget misses and pending runs separately. For two-token validation examples
 with first operand zero it also scores the fitted weights with the value
@@ -1197,7 +1200,12 @@ in that ablation. The two-token prediction command takes a weights file,
 vocabulary size and two operands.
 
 The optional final argument of `shared-values` sets the observation window
-within the original 100,000-step schedule. It saves the first checkpoint
+within the original 100,000-step schedule. Each saved observation records
+the SHA-256 of its exact weight bytes and the shared architecture identifier.
+`nv11-score` returns the file digest, scoring architecture and Kernite
+version alongside the exhaustive scores. Match these fields against the
+training observation to verify a saved checkpoint. The trainer also saves
+the first checkpoint
 that classifies the entire NV11 table correctly. `nv11-score` takes a
 shared-value checkpoint, masks all training targets in the forward pass
 and measures the minimum correct-class margin on each split.

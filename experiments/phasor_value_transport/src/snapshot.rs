@@ -1,23 +1,17 @@
 //! Replay trained weights and evaluate the sufficient margin in TransportedValues.lean.
 use super::*;
 
-pub fn save(e: &Engine, path: &Path) -> Result<()> {
+pub fn save(e: &Engine, path: &Path) -> Result<String> {
     let weights = e.parameters.read()?;
     layout::validate(&e.config, &weights)?;
     let pending = path.with_extension("f32.tmp");
-    fs::write(
-        &pending,
-        weights
-            .iter()
-            .flat_map(|v| v.to_le_bytes())
-            .collect::<Vec<_>>(),
-    )?;
+    let bytes: Vec<_> = weights.iter().flat_map(|v| v.to_le_bytes()).collect();
+    fs::write(&pending, &bytes)?;
     fs::rename(pending, path)?;
-    Ok(())
+    Ok(hash(&bytes))
 }
 
-fn load(path: &Path, cfg: Config) -> Result<Engine> {
-    let bytes = fs::read(path)?;
+fn load(bytes: &[u8], cfg: Config) -> Result<Engine> {
     if bytes.len() != 4 * layout::total_count(&cfg) {
         return Err("wrong checkpoint length".into());
     }
@@ -43,7 +37,7 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
         cfg.vocab = vocab;
         cfg.shared_values = true;
     }
-    let mut e = load(path, cfg)?;
+    let mut e = load(&fs::read(path)?, cfg)?;
     e.forward(&[a, b], &[u32::MAX, u32::MAX], 1, 2)?;
     if vocabulary.is_some() {
         println!(
@@ -69,7 +63,8 @@ pub fn nv11_scores(path: &Path) -> Result<()> {
     let mut cfg = config(BATCH)?;
     cfg.shared_values = true;
     let p = cfg.vocab;
-    let mut e = load(path, cfg)?;
+    let bytes = fs::read(path)?;
+    let mut e = load(&bytes, cfg)?;
     let mut split = |rows: &[[u32; 3]]| -> Result<Value> {
         let mut correct = 0usize;
         let mut minimum = f64::INFINITY;
@@ -104,7 +99,9 @@ pub fn nv11_scores(path: &Path) -> Result<()> {
     };
     println!(
         "{}",
-        json!({"training":split(&data.training.rows)?,"held_out":split(&data.validation)?})
+        json!({"training":split(&data.training.rows)?,"held_out":split(&data.validation)?,
+            "weights_sha256":hash(&bytes),"scored_with_model":pair_memory::MODEL,
+            "scored_with_kernite":KERNITE_VERSION})
     );
     Ok(())
 }
@@ -146,7 +143,7 @@ fn gram_gaps(e: &[f32], p: usize, d: usize) -> Vec<Vec<(f64, f64)>> {
 
 pub fn inspect(path: &Path) -> Result<()> {
     let data = cubic_data()?;
-    let mut e = load(path, config(BATCH)?)?;
+    let mut e = load(&fs::read(path)?, config(BATCH)?)?;
     let (p, d) = (e.config.vocab, e.config.width);
     let layer = ValueLayer::new(&e)?;
     let metrics = evaluate(&mut e, Some((&layer, true)), &data.validation)?;
