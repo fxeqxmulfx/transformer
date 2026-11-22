@@ -21,6 +21,8 @@ mod context_rotation_checks;
 mod embedding_checks;
 mod frequency_read;
 mod head;
+mod householder;
+mod householder_checks;
 mod learned_checks;
 mod learned_read;
 mod pair_checks;
@@ -244,6 +246,7 @@ fn main() -> Result<()> {
         [op, width] if architecture::RAW && op == "shared-check" =>
             learned_checks::run(Some(width.parse()?)),
         [op] if op == "memory-check" && architecture::ASSOCIATIVE_REFLECTION => associative_checks::run(),
+        [op] if op == "memory-check" && architecture::HOUSEHOLDER => householder_checks::run(),
         [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
         [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),

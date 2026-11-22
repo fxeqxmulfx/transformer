@@ -135,15 +135,24 @@ pub mod kernels {
         store(partial, at, dgate);
     }
 
-    // A single lane sums the partials for one gate in stable batch order.
-    pub unsafe extern "ptx-kernel" fn gate_sum(out: *mut f32, partial: *const f32, batch: u32) {
+    // One lane per learned parameter reduces in stable batch order.
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn sum_partials<const WIDE: bool>(
+        out: *mut f32,
+        partial: *const f32,
+        batch: u32,
+    ) {
         let (lane, seq, at): (u32, u32, u32);
         mov.u32(lane, tid.x);
         mov.u32(seq, 0);
         let (sum, value): (f32, f32);
         mov.f32(sum, 0.0);
         label(scan);
-        mad.lo.u32(at, seq, 32, lane);
+        if WIDE {
+            mad.lo.u32(at, seq, 64, lane);
+        } else {
+            mad.lo.u32(at, seq, 32, lane);
+        }
         load(value, partial, at);
         add.rn.f32(sum, sum, value);
         add.u32(seq, seq, 1);

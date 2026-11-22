@@ -347,14 +347,14 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::SharedBilinear | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::CrossedContext | Head::AssociativeReflection | Head::PeriodicReflection => {
+            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::SharedBilinear | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::CrossedContext | Head::Householder | Head::AssociativeReflection | Head::PeriodicReflection => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }
                 self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
                 if self.config.head.context_stages() > 0 {
                     self.context_rotation = Some(context_rotation_layer::ContextRotation::new(self)?);
-                } else if self.config.head.is_phase() {
+                } else if self.config.head.has_stream_memory() {
                     self.hidden_layer = Some(hidden_layer::HiddenLayer::new(self)?);
                 }
             }

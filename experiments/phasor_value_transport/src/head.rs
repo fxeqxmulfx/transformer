@@ -23,6 +23,7 @@ pub enum Head {
     SingleReflection,
     ContextRotation,
     CrossedContext,
+    Householder,
     AssociativeReflection,
     PeriodicReflection,
 }
@@ -49,6 +50,7 @@ impl Head {
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
             "crossed-context" => Ok(Self::CrossedContext),
+            "householder" => Ok(Self::Householder),
             "associative-reflection" => Ok(Self::AssociativeReflection),
             "periodic-reflection" => Ok(Self::PeriodicReflection),
             _ => Err(format!("unknown head {name}").into()),
@@ -74,6 +76,7 @@ impl Head {
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
             Self::CrossedContext => "phasor-learned-crossed-context-rotation-v1",
+            Self::Householder => "phasor-learned-householder-16x4-v1",
             Self::AssociativeReflection => "phasor-learned-associative-reflection-8x4-v1",
             Self::PeriodicReflection => "phasor-learned-periodic-reflection-32-v1",
         }
@@ -105,9 +108,14 @@ impl Head {
                 | Self::SingleReflection
                 | Self::ContextRotation
                 | Self::CrossedContext
+                | Self::Householder
                 | Self::AssociativeReflection
                 | Self::PeriodicReflection
         )
+    }
+
+    pub const fn has_stream_memory(self) -> bool {
+        self.is_phase() || matches!(self, Self::Householder)
     }
 
     pub const fn phase_inputs(self) -> usize {
@@ -143,6 +151,7 @@ impl Head {
             Self::PeriodicReflection => {
                 Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
             }
+            Self::Householder => crate::householder::parameter_count(cfg.width),
             Self::ContextRotation | Self::CrossedContext => {
                 (4 + self.context_stages() * (cfg.width / 2)) * cfg.width
             }
@@ -189,6 +198,20 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::Householder => {
+                let first = crate::architecture::memory_start(cfg);
+                let output = first + crate::householder::INPUTS * cfg.width;
+                let initial = output + crate::householder::FEATURES * cfg.width;
+                let mut rng = Random::new(seed.wrapping_add(30_000));
+                let scale = (cfg.width as f64).sqrt().recip();
+                for w in &mut parameters[first..output] {
+                    *w = rng.gauss(0., scale) as f32;
+                }
+                parameters[output..initial].fill(0.);
+                for w in &mut parameters[initial..initial + crate::householder::FEATURES] {
+                    *w = rng.gauss(0., 0.5) as f32;
+                }
+            }
             Self::PeriodicReflection => {
                 Self::ReflectionPhase.initialize(cfg, seed, parameters);
                 let start = crate::architecture::start(cfg) + Self::ReflectionPhase.parameters(cfg);

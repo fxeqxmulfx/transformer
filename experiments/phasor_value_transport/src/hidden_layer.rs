@@ -11,6 +11,13 @@ enum Memory {
     AffinePhase(affine_phase::kernels::Kernels),
     BilinearPhase(bilinear_phase::kernels::Kernels),
     SharedBilinear(SharedBilinearPhase),
+    Householder {
+        scan: crate::householder::kernels::Kernels,
+        reduction: reflection_phase::kernels::Kernels,
+        previous: F,
+        partial_initial: F,
+        initial_weights: usize,
+    },
     Reflection {
         kernels: reflection_phase::kernels::Kernels,
         angles: F,
@@ -60,6 +67,13 @@ impl HiddenLayer {
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::SharedBilinear => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
+            Head::Householder => Memory::Householder {
+                scan: crate::householder::kernels::Kernels::load(&e.cuda)?,
+                reduction: reflection_phase::kernels::Kernels::load(&e.cuda)?,
+                previous: e.cuda.alloc(rows * crate::householder::FEATURES)?,
+                partial_initial: e.cuda.alloc(cfg.max_batch * crate::householder::FEATURES)?,
+                initial_weights: crate::architecture::start(cfg) + cfg.head.parameters(cfg) - crate::householder::FEATURES,
+            },
             Head::ReflectionPhase | Head::AssociativeReflection | Head::PeriodicReflection => Memory::Reflection {
                 kernels: reflection_phase::kernels::Kernels::load(&e.cuda)?,
                 angles: e.cuda.alloc(rows * M)?,
@@ -87,6 +101,8 @@ impl HiddenLayer {
         let input_weights = crate::architecture::memory_start(cfg);
         let (projected_channels, read_channels) = if cfg.head.is_phase() {
             (cfg.head.phase_inputs(), 2 * M)
+        } else if cfg.head == Head::Householder {
+            (crate::householder::INPUTS, crate::householder::FEATURES)
         } else {
             (3 * M, M)
         };
@@ -139,6 +155,10 @@ impl HiddenLayer {
                     a.raw.ptr(), e.parameters.at(a.weights).ok_or("missing periodic weights")?)?;
             }
             match &self.memory {
+                Memory::Householder { scan, previous, initial_weights, .. } => scan.forward(
+                    Grid::new((rows / length) as u32, crate::householder::FEATURES as u32),
+                    self.read.ptr(), previous.ptr(), self.projected.ptr(),
+                    e.parameters.at(*initial_weights).ok_or("missing initial reflection states")?, length as u32)?,
                 Memory::Reflection { kernels, angles, gate_offset, .. } => kernels.forward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.read.ptr(), self.projected.ptr(), angles.ptr(),
@@ -238,6 +258,15 @@ impl HiddenLayer {
         )?;
         unsafe {
             match &self.memory {
+                Memory::Householder { scan, reduction, previous, partial_initial, initial_weights } => {
+                    let batch = (rows / length) as u32;
+                    let features = crate::householder::FEATURES as u32;
+                    scan.backward(Grid::new(batch, features), self.dprojected.ptr(), partial_initial.ptr(),
+                        previous.ptr(), self.projected.ptr(), self.dread.ptr(), length as u32)?;
+                    reduction.sum_partials::<true>(Grid::new(1,features),
+                        e.gradients.at(*initial_weights).ok_or("missing initial reflection gradients")?,
+                        partial_initial.ptr(), batch)?;
+                }
                 Memory::Reflection { kernels, angles, gate_partials, gate_offset } => {
                     let batch = (rows / length) as u32;
                     kernels.backward(
@@ -245,7 +274,7 @@ impl HiddenLayer {
                         self.projected.ptr(), angles.ptr(), self.dread.ptr(),
                         e.parameters.at(*gate_offset).ok_or("reflection gates outside parameters")?, length as u32,
                     )?;
-                    kernels.gate_sum(Grid::new(1,M as u32),
+                    kernels.sum_partials::<false>(Grid::new(1,M as u32),
                         e.gradients.at(*gate_offset).ok_or("reflection gates outside gradients")?,
                         gate_partials.ptr(), batch)?;
                 }

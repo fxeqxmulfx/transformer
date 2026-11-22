@@ -47,7 +47,7 @@ pub(super) fn scan(length: usize) -> Result<()> {
             mixing.ptr(),
             length as u32,
         )?;
-        kernels.gate_sum(
+        kernels.sum_partials::<false>(
             Grid::new(1, M as u32),
             gate_grad.ptr(),
             partial.ptr(),

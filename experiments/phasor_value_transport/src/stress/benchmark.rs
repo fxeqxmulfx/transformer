@@ -45,6 +45,7 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
             | Head::SingleReflection
             | Head::ContextRotation
             | Head::CrossedContext
+            | Head::Householder
             | Head::AssociativeReflection
             | Head::PeriodicReflection
     ) {

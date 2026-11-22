@@ -952,6 +952,27 @@ reverse order. Lean also gives the transpose on the state and the full
 gradient with respect to the normal, including its denominator.
 [Householder memory proofs](../../src/Transformer/Phasor/HouseholderMemory.lean)
 
+The Kernite implementation uses 16 four-dimensional channels. At length
+257 its 49,344 reflected coordinates agreed with independently formed
+FP64 reflection matrices to within `2.23e-6`. The largest squared-norm
+drift was `6.36e-6`. At widths 64 and 128 the full network agreed with
+the FP64 logit reference to within `3.68e-7`. Off-table embedding
+pullbacks and masked-loss derivatives also passed.
+
+At update 3,000 the three canonical NV11 checkpoints reproduced training
+scores of 4,703 / 4,703 / 4,702 out of 4,704 and held-out scores of
+91 / 82 / 77 out of 4,705. This improved two seeds over the learned
+stream's 86 / 74 / 84 and lost seven predictions on seed 2. It gives
+no repeatable gain across these seeds.
+
+```sh
+cargo +stable build --release --locked --features fp32-affine-reference,householder-memory
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/householder-nv11/seed0 0 3000
+"$bin" nv11-score runs/householder-nv11/seed0/nv11-train-3000.f32 rows
+```
+
 ## Associative write memory
 
 Every pair of consecutive embeddings contributes to a learned matrix.

@@ -150,6 +150,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         || architecture::INPUT_PRODUCT
         || architecture::PHASE_MEMORY
         || architecture::CONTEXT_ROTATION
+        || architecture::HOUSEHOLDER
     {
         0.0003
     } else {
@@ -187,6 +188,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
             let finite = if architecture::BILINEAR_PHASE
                 || architecture::CROSSED_CONTEXT
                 || architecture::SHARED_BILINEAR
+                || architecture::HOUSEHOLDER
             {
                 let fine = difference(epsilon / 2.)?;
                 let finer = difference(epsilon / 4.)?;
@@ -298,6 +300,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if architecture::CONTEXT_ROTATION {
         crate::context_rotation_checks::run()?;
+    }
+    if architecture::HOUSEHOLDER {
+        crate::householder_checks::run()?;
     }
     crate::embedding_checks::run()
 }

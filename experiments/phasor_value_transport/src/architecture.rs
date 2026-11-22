@@ -18,6 +18,7 @@ pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const CROSSED_CONTEXT: bool = cfg!(feature = "crossed-context-rotation");
+pub const HOUSEHOLDER: bool = cfg!(feature = "householder-memory");
 pub const CONTEXT_ROTATION: bool = cfg!(feature = "context-rotation-read") || CROSSED_CONTEXT;
 pub const ASSOCIATIVE_REFLECTION: bool = cfg!(feature = "associative-reflection-read");
 pub const PERIODIC_REFLECTION: bool = cfg!(feature = "periodic-reflection-read");
@@ -43,6 +44,7 @@ const _: () = {
         + SINGLE_REFLECTION as u8
         + cfg!(feature = "context-rotation-read") as u8
         + CROSSED_CONTEXT as u8
+        + HOUSEHOLDER as u8
         + ASSOCIATIVE_REFLECTION as u8
         + PERIODIC_REFLECTION as u8;
     assert!(
@@ -52,7 +54,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if CROSSED_CONTEXT {
+pub const HEAD: Head = if HOUSEHOLDER {
+    Head::Householder
+} else if CROSSED_CONTEXT {
     Head::CrossedContext
 } else if PERIODIC_REFLECTION {
     Head::PeriodicReflection
@@ -101,7 +105,7 @@ pub fn start(cfg: &Config) -> usize {
 /// Other hidden memories project the fixed-mean contextual vectors directly.
 pub fn memory_start(cfg: &Config) -> usize {
     start(cfg)
-        + if cfg.head.is_phase() || cfg.head.context_stages() > 0 {
+        + if cfg.head.has_stream_memory() || cfg.head.context_stages() > 0 {
             4 * cfg.width
         } else {
             0
@@ -138,6 +142,11 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             && result.get("readout_parameters").is_none();
     }
     if RAW {
+        if HOUSEHOLDER {
+            return result["readout_parameters"]
+                == crate::householder::parameter_count(width as usize)
+                && result.get("pair_parameters").is_none();
+        }
         let per_channel = if ASSOCIATIVE_REFLECTION {
             4 + HEAD.phase_inputs() as u64
                 + 2 * crate::head::MEMORY_WIDTH as u64
