@@ -142,7 +142,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         .create(true)
         .truncate(false)
         .open(dest.join("cell.lock"))?;
-    lock.try_lock()
+    lock.lock()
         .map_err(|err| format!("cannot lock {}: {err}", dest.display()))?;
     if dest.join("result.json").exists() {
         return replay(name, seed, out);

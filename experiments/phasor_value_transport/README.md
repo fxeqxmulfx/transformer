@@ -31,8 +31,10 @@ all use this update.
 The tables start at zero and the gain at 0.25 for every task. This adds `17 × V × width + 1`
 real parameters, all in Phasor's ordinary AdamW coordinate group. The
 original encoder, tied embeddings, cross-entropy, clipping, parameter
-groups and WSD schedule train together. Only the shape and training budget
-vary as specified in the benchmark.
+groups and WSD schedule train together. Phasor uses a peak learning rate
+of 0.001 and a warmup lasting 2% of each task's update budget. The GPT suite
+specifies the width, head count, depth, minibatch, budget and observation
+cadence for each task.
 
 Lean gives the exact decision margin at every position. For an arbitrary
 fixed-depth backbone with orthonormal embeddings it proves that one gain
@@ -94,7 +96,7 @@ cd experiments/phasor_value_transport
 cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
-./run_stress.sh cell runs/shared-quarter
+PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/shared-quarter
 ./run_stress.sh replay runs/shared-quarter
 "$bin" report runs/shared-quarter
 "$bin" predict runs/shared-quarter/arithmetic-cubic-product/seed0/weights.f32 97 12 34
@@ -106,6 +108,8 @@ done
 ```
 
 For one case, use `cell CASE SEED RUN_DIR` and `replay CASE SEED RUN_DIR`.
+Concurrent requests for the same cell wait for its training process and
+verify the saved checkpoint when it finishes.
 On a memory-constrained GPU, `PHASOR_EVAL_BATCH_CAP=16` limits the scorer's
 chunk size down to the training batch size. Training still consumes the
 original minibatches, and each evaluation visits the entire split.
