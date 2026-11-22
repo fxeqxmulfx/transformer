@@ -16,6 +16,10 @@ bf16-forward = []
 tiled-transpose = []
 fused-attention = []
 fp32-affine-reference = []
+prefix-xor = []
+prefix-xor-cubic = ["prefix-xor"]
+prefix-successor = ["prefix-xor"]
+prefix-sum = []
 
 [[bin]]
 name = "phasor-value-transport"
@@ -24,6 +28,8 @@ test = false
 
 [dependencies]
 arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
+basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
+parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
 kernite-cuda = { path = "../../.lake/reproduction/kgen/crates/cuda" }
 kernite-macros = { path = "../../.lake/reproduction/kgen/crates/macros" }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }

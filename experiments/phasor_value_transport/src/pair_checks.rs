@@ -7,11 +7,31 @@ fn mean_loss(e: &Engine, rows: usize, targets: usize) -> Result<f64> {
 
 // Independent transcription of PairKey.address, using the reference field
 // exponentiation and reading the stored tables directly in double precision.
-fn residual(a: u32, b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64> {
+fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64> {
+    let a = prefix.last().copied().unwrap_or(b);
     let power = |x, i| arithmetic_data::power(x, i, p);
     let inverse = if b == 0 { 0 } else { power(b, p - 2) };
     let mut keys = vec![b, (a + p - b) % p, a.abs_diff(b), a * inverse % p];
+    if cfg!(feature = "prefix-successor") {
+        keys[0] = prefix
+            .windows(2)
+            .rev()
+            .find(|pair| pair[0] == b)
+            .map_or(b, |pair| pair[1]);
+    }
     keys.extend((1..=3).flat_map(|i| (1..=3).map(move |j| (power(a, i) + power(b, j)) % p)));
+    if !prefix.is_empty() {
+        if cfg!(feature = "prefix-xor") {
+            let left = prefix.iter().fold(0, |x, y| x ^ y);
+            if cfg!(feature = "prefix-xor-cubic") {
+                keys[12] = (power(left, 3) + power(b, 3)) % p;
+            } else {
+                keys[4] = (left + b) % p;
+            }
+        } else if cfg!(feature = "prefix-sum") {
+            keys[4] = (prefix.iter().sum::<u32>() + b) % p;
+        }
+    }
     keys.extend((1..=2).flat_map(|i| (1..=2).map(move |j| power(a, i) * power(b, j) % p)));
     let mut result = vec![0.; d];
     for (table, key) in keys.into_iter().enumerate() {
@@ -61,7 +81,13 @@ fn profile(p: usize, length: usize) -> Result<()> {
     for (i, &b) in tokens.iter().enumerate() {
         let prev = if i % length == 0 { i } else { i - 1 };
         let a = tokens[prev];
-        let v = residual(a, b, p as u32, d, &theta[start..gain_at]);
+        let v = residual(
+            &tokens[i - i % length..i],
+            b,
+            p as u32,
+            d,
+            &theta[start..gain_at],
+        );
         let read = checks::reference(
             &scores[prev * p..(prev + 1) * p],
             &theta[..p * d],
@@ -136,6 +162,9 @@ pub fn run() -> Result<()> {
     // sequence, repeated histories and supervised initial positions.
     for (p, l) in [(97, 2), (100, 4), (36, 1)] {
         profile(p, l)?;
+    }
+    if cfg!(feature = "prefix-successor") {
+        profile(36, 8)?;
     }
     let mut cfg = config(8)?;
     cfg.shared_values = true;

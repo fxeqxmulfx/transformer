@@ -81,6 +81,35 @@ to the first scheduled 99% crossing separately for short and long, retaining
 the individual crossings so regressions are visible. An improvement must
 retain or improve both tier averages. Catalog additions are measured separately.
 
+Use Cargo features to compile each trial as one fixed architecture. The
+`prefix-xor` and `prefix-sum` trials change the linear sum table.
+`prefix-xor-cubic` uses the sum of cubes and `prefix-successor` combines
+the linear XOR-prefix table with the successor read. Use a fresh result
+directory for each compiled architecture. The runner verifies the model
+identity before accepting a saved result.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorValues
+cd experiments/phasor_value_transport
+cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference,prefix-xor
+bin=./target/release/phasor-value-transport
+"$bin" shared-check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity24 1 runs/prefix-xor 2000
+PHASOR_EVAL_BATCH_CAP=16 "$bin" cell suite-blocks 1 runs/prefix-xor
+"$bin" probes suite-blocks 1 runs/prefix-xor
+```
+
+A screen stops at its stated scheduled observation. A successful screen
+saves the usual first-crossing checkpoint. An unfinished screen keeps its
+observation log and a full cell restarts it from the original seed. The
+catalog adapter checks the original plan digest, uses native source splits,
+and evaluates novel validation prompts where supplied. `probes` replays
+the selected checkpoint and scores the additional source test splits.
+The tier admission rule is 99% held-out exact sequences in each of seeds
+0, 1 and 2. The slowest fresh run, including setup and scoring, places a new
+case in short at up to 60 seconds or long at up to 300 seconds on the
+measuring GPU. Historical membership of the original 35 stays fixed.
+
 ### Choice of initial gain
 
 The first uniform architecture used an initial gain of one. Hard depth seed 0

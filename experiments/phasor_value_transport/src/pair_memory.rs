@@ -7,6 +7,23 @@ use kernite_cuda::{Buffer, Cuda};
 pub const TABLES: usize = 17;
 pub const INITIAL_GAIN: f32 = 0.25;
 
+#[cfg(all(feature = "prefix-xor", feature = "prefix-sum"))]
+compile_error!("choose one prefix architecture per binary");
+#[cfg(all(feature = "prefix-xor-cubic", feature = "prefix-successor"))]
+compile_error!("the successor trial uses the linear prefix sum");
+
+pub const MODEL: &str = if cfg!(feature = "prefix-successor") {
+    "phasor-prefix-successor-v1"
+} else if cfg!(feature = "prefix-xor-cubic") {
+    "phasor-prefix-xor-cubic-v1"
+} else if cfg!(feature = "prefix-xor") {
+    "phasor-prefix-xor-v1"
+} else if cfg!(feature = "prefix-sum") {
+    "phasor-prefix-sum-v1"
+} else {
+    "phasor-causal-value-residual-v2"
+};
+
 pub fn parameters(cfg: &Config) -> usize {
     if cfg.shared_values {
         TABLES * cfg.vocab * cfg.width + 1
@@ -78,6 +95,7 @@ pub struct PairMemory {
     cursor: Vec<u32>,
     rows: Vec<u32>,
     factors: Vec<usize>,
+    successors: Vec<Option<u32>>,
 }
 
 impl PairMemory {
@@ -100,6 +118,14 @@ impl PairMemory {
             cursor: vec![0; words],
             rows: vec![0; entries],
             factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
+            successors: vec![
+                None;
+                if cfg!(feature = "prefix-successor") {
+                    cfg.vocab
+                } else {
+                    0
+                }
+            ],
         })
     }
 
@@ -107,6 +133,7 @@ impl PairMemory {
         let p = self.factors.len();
         let used = tokens.len() * TABLES;
         self.starts.fill(0);
+        let mut prefix = 0;
         for (row, (&token, keys)) in tokens
             .iter()
             .zip(self.indices.as_chunks_mut::<TABLES>().0)
@@ -119,6 +146,30 @@ impl PairMemory {
             };
             let (a, b) = (tokens[prev] as usize, token as usize);
             keys.copy_from_slice(&addresses(a, b, p, self.factors[b]));
+            if cfg!(feature = "prefix-successor") {
+                let pos = row % length;
+                if pos == 0 {
+                    self.successors.fill(None);
+                } else if pos >= 2 {
+                    self.successors[tokens[row - 2] as usize] = Some(tokens[row - 1]);
+                }
+                keys[0] = self.successors[b].unwrap_or(token);
+            }
+            if cfg!(any(feature = "prefix-xor", feature = "prefix-sum")) {
+                let left = if prev == row { b } else { prefix };
+                if cfg!(feature = "prefix-xor-cubic") {
+                    let cube = |x: usize| x * x % p * x % p;
+                    keys[12] = (12 * p + (cube(left) + cube(b)) % p) as u32;
+                } else {
+                    keys[4] = (4 * p + (left + b) % p) as u32;
+                }
+                let earlier = if prev == row { 0 } else { prefix };
+                prefix = if cfg!(feature = "prefix-xor") {
+                    earlier ^ b
+                } else {
+                    (earlier + b) % p
+                };
+            }
             for &k in keys.iter() {
                 self.starts[k as usize + 1] += 1;
             }

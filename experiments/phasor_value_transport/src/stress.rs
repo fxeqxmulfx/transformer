@@ -4,6 +4,7 @@ use super::*;
 use data::{Example, Task};
 use std::collections::BTreeMap;
 
+mod catalog;
 pub mod report;
 
 fn cases() -> Result<Vec<Value>> {
@@ -56,7 +57,10 @@ fn nv11_case() -> Value {
 }
 
 fn nv11() -> Result<(Value, Task)> {
-    let d = cubic_data()?;
+    Ok((nv11_case(), arithmetic_task(cubic_data()?)))
+}
+
+fn arithmetic_task(d: dataset::Dataset) -> Task {
     let examples = |rows: Vec<[u32; 3]>| {
         rows.into_iter()
             .map(|[a, b, y]| Example {
@@ -72,20 +76,17 @@ fn nv11() -> Result<(Value, Task)> {
             })
             .collect()
     };
-    Ok((
-        nv11_case(),
-        Task {
-            vocab: d.training.vocabulary,
-            selection: "validation".into(),
-            splits: BTreeMap::from([
-                ("train".into(), examples(d.training.rows)),
-                ("validation".into(), examples(d.validation)),
-            ]),
-        },
-    ))
+    Task {
+        vocab: d.training.vocabulary,
+        selection: "validation".into(),
+        splits: BTreeMap::from([
+            ("train".into(), examples(d.training.rows)),
+            ("validation".into(), examples(d.validation)),
+        ]),
+    }
 }
 
-const MODEL: &str = "phasor-causal-value-residual-v2";
+use pair_memory::MODEL;
 
 pub fn routes() -> Result<()> {
     for row in cases()? {
@@ -107,12 +108,17 @@ fn load(name: &str) -> Result<(Value, Task)> {
     if name == "arithmetic-cubic-product" {
         return nv11();
     }
-    let row = cases()?
-        .into_iter()
-        .find(|r| r["name"] == name)
-        .ok_or("unknown suite case")?;
-    let task = data::build(&row)?;
-    Ok((row, task))
+    if let Some(row) = cases()?.into_iter().find(|r| r["name"] == name) {
+        let task = data::build(&row)?;
+        return Ok((row, task));
+    }
+    catalog::load(name)
+}
+
+fn suite_hash(row: &Value) -> String {
+    row["catalog_sha256"]
+        .as_str()
+        .map_or_else(|| hash(arithmetic::ORIGINAL35.as_bytes()), str::to_owned)
 }
 
 fn publish(dir: &Path, name: &str, bytes: &[u8]) -> Result<()> {
@@ -125,13 +131,19 @@ fn publish(dir: &Path, name: &str, bytes: &[u8]) -> Result<()> {
     Ok(())
 }
 
-pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
+pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<()> {
+    let started = std::time::Instant::now();
     let (row, task) = load(name)?;
     let cfg = task_config(&row, &task)?;
     let extra = pair_memory::parameters(&cfg);
     let batch = row["case"]["batch"].as_u64().unwrap() as usize;
     let budget = row["case"]["max_updates"].as_u64().unwrap() as usize;
     let observe = row["case"]["observe"].as_u64().unwrap() as usize;
+    if cutoff.is_some_and(|n| n == 0 || n > budget || (n != budget && !n.is_multiple_of(observe))) {
+        return Err(
+            "screen cutoff must be a scheduled observation within the original budget".into(),
+        );
+    }
     let train = &task.splits["train"];
     let held = &task.splits[&task.selection];
     let dest = out.join(name).join(format!("seed{seed}"));
@@ -142,9 +154,31 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         .create(true)
         .truncate(false)
         .open(dest.join("cell.lock"))?;
+    let waiting = std::time::Instant::now();
     lock.lock()
         .map_err(|err| format!("cannot lock {}: {err}", dest.display()))?;
+    let waited = waiting.elapsed();
     if dest.join("result.json").exists() {
+        if let Some(limit) = cutoff {
+            let saved: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;
+            report::validate(&row, seed, &dest, &saved)?;
+            if saved["observation"]["step"].as_u64().unwrap() > limit as u64 {
+                use std::io::{BufRead, BufReader};
+                let lines =
+                    BufReader::new(fs::File::open(dest.join("observations.jsonl"))?).lines();
+                for line in lines {
+                    let point: Value = serde_json::from_str(&line?)?;
+                    if point["step"] == limit {
+                        println!(
+                            "{}",
+                            json!({"model":MODEL,"status":"screen cutoff","observation":point})
+                        );
+                        return Ok(());
+                    }
+                }
+                return Err("scheduled cutoff missing from saved observation log".into());
+            }
+        }
         return replay(name, seed, out);
     }
     let parameters = layout::initialize_model(&cfg, seed);
@@ -180,9 +214,17 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
                 let result = json!({"model":MODEL,"initial_gain":pair_memory::INITIAL_GAIN,"gain":values[pair_memory::gain(&e.config)],"observation":point,"previous_step":previous,"train_correct":training["exact"],
                     "train_total":train.len(),"selection":task.selection,"pair_parameters":extra,
                     "parameters":values.len(),"weights_sha256":hash(&bytes),"gpu":e.cuda.name(),
-                    "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":hash(arithmetic::ORIGINAL35.as_bytes())});
+                    "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":suite_hash(&row),
+                    "elapsed_seconds":(started.elapsed()-waited).as_secs_f64()});
                 publish(&dest, "result.json", &serde_json::to_vec_pretty(&result)?)?;
                 println!("{result}");
+                return Ok(());
+            }
+            if cutoff == Some(step) {
+                println!(
+                    "{}",
+                    json!({"model":MODEL,"status":"screen cutoff","observation":point})
+                );
                 return Ok(());
             }
             previous = step;
@@ -207,6 +249,10 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
 /// Re-score a saved model using the pinned split and decoder. For pair tasks
 /// also evaluate the zero row with the fitted tables, then with all tables reset.
 pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
+    score_checkpoint(name, seed, out, false)
+}
+
+pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) -> Result<()> {
     let (row, task) = load(name)?;
     let cfg = task_config(&row, &task)?;
     let dest = out.join(name).join(format!("seed{seed}"));
@@ -215,7 +261,7 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
     let bytes = fs::read(dest.join("weights.f32"))?;
     if result["model"] != MODEL
         || result["weights_sha256"] != hash(&bytes)
-        || result["suite_sha256"] != hash(arithmetic::ORIGINAL35.as_bytes())
+        || result["suite_sha256"] != suite_hash(&row)
         || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
         || result["observation"]["case"] != name
         || result["observation"]["seed"] != seed
@@ -236,6 +282,19 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
         return Err("checkpoint failed to reproduce its held-out score".into());
     }
     let mut report = json!({"case":name,"seed":seed,"correct":correct,"total":held.len()});
+    if test_splits {
+        let mut scores = BTreeMap::new();
+        for (split, examples) in &task.splits {
+            if split == "test" || split.starts_with("test/") {
+                let measured = metrics::evaluate(&mut e, examples, true)?;
+                scores.insert(
+                    split,
+                    json!({"correct":measured["exact"],"total":examples.len()}),
+                );
+            }
+        }
+        report["test_splits"] = json!(scores);
+    }
     let zeros: Vec<_> = held
         .iter()
         .filter(|e| e.tokens.len() == 2 && e.prompt.is_empty() && e.tokens[0] == 0)
