@@ -238,6 +238,7 @@ fn main() {
     }
     for name in [
         "hidden_layer",
+        "shared_bilinear_layer",
         "product_layer",
         "context_rotation_layer",
         "associative_layer",

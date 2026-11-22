@@ -183,6 +183,7 @@ pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Re
         cfg.head,
         head::Head::AffinePhase
             | head::Head::BilinearPhase
+            | head::Head::SharedBilinear
             | head::Head::ReflectionPhase
             | head::Head::SingleReflection
             | head::Head::PeriodicReflection

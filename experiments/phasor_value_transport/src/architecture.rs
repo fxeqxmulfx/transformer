@@ -14,6 +14,7 @@ pub const COMPACT: bool = cfg!(feature = "compact-ffn");
 pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
 pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
 pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
+pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const CROSSED_CONTEXT: bool = cfg!(feature = "crossed-context-rotation");
@@ -24,6 +25,7 @@ pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read")
     || INPUT_PHASE
     || AFFINE_PHASE
     || BILINEAR_PHASE
+    || SHARED_BILINEAR
     || REFLECTION_PHASE
     || SINGLE_REFLECTION
     || ASSOCIATIVE_REFLECTION
@@ -36,6 +38,7 @@ const _: () = {
         + INPUT_PHASE as u8
         + AFFINE_PHASE as u8
         + BILINEAR_PHASE as u8
+        + SHARED_BILINEAR as u8
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
         + cfg!(feature = "context-rotation-read") as u8
@@ -63,6 +66,8 @@ pub const HEAD: Head = if CROSSED_CONTEXT {
     Head::ReflectionPhase
 } else if BILINEAR_PHASE {
     Head::BilinearPhase
+} else if SHARED_BILINEAR {
+    Head::SharedBilinear
 } else if AFFINE_PHASE {
     Head::AffinePhase
 } else if INPUT_PHASE {
@@ -151,7 +156,9 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
         return (!COMPACT || result["ffn_complex_units"] == width)
             && result["readout_parameters"]
                 == per_channel * width
-                    + (HEAD.phase_gates() + HEAD.activation_parameters()) as u64
+                    + (HEAD.phase_gates()
+                        + HEAD.activation_parameters()
+                        + HEAD.frequency_parameters()) as u64
             && result.get("pair_parameters").is_none();
     }
     result["initial_gain"] == json!(pair_memory::INITIAL_GAIN)

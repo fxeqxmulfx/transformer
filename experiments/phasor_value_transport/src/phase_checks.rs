@@ -107,9 +107,11 @@ fn network(width: usize) -> Result<()> {
     let mut weights = layout::initialize_model(&cfg, 3);
     let first = architecture::start(&cfg);
     let increments = architecture::memory_start(&cfg);
-    let writes = increments + M * width;
     let affine = cfg.head == head::Head::AffinePhase;
     let bilinear = cfg.head == head::Head::BilinearPhase;
+    let shared = cfg.head == head::Head::SharedBilinear;
+    let channels = if shared { head::SHARED_LATENTS } else { M };
+    let writes = increments + channels * width;
     let periodic = cfg.head == head::Head::PeriodicReflection;
     let reflecting = cfg.head == head::Head::ReflectionPhase || periodic;
     let single = cfg.head == head::Head::SingleReflection;
@@ -122,7 +124,10 @@ fn network(width: usize) -> Result<()> {
     let output_indices =
         |half: usize| (output..end).filter(move |&i| (i - output) % (2 * M) / M == half);
     if grad[increments..output].iter().any(|&g| g != 0.)
-        || grad[end..end + cfg.head.phase_gates() + cfg.head.activation_parameters()]
+        || grad[end..end
+            + cfg.head.phase_gates()
+            + cfg.head.activation_parameters()
+            + cfg.head.frequency_parameters()]
             .iter()
             .any(|&g| g != 0.)
         || (0..2).any(|half| !output_indices(half).any(|i| grad[i].abs() > 1e-7))
@@ -135,6 +140,18 @@ fn network(width: usize) -> Result<()> {
     }
     for w in &mut weights[output..end] {
         *w = rng.gauss(0., 0.08) as f32;
+    }
+    if shared {
+        let inactive = writes + channels * width;
+        if weights[inactive..output].iter().any(|&w| w != 0.) {
+            return Err(
+                "ordered right and local latent projections must initialize at zero".into(),
+            );
+        }
+        for w in &mut weights[inactive..output] {
+            *w = rng.gauss(0., 0.05) as f32;
+        }
+        shared_latent_permutation(&cfg, &weights, &mut e)?;
     }
     if affine || bilinear || reflecting {
         phase_controls::zero_extension(&cfg, &weights, &mut e)?;
@@ -187,35 +204,50 @@ fn network(width: usize) -> Result<()> {
                 }
             }
             let mut pair = [0.; 2 * M];
-            for k in 0..M {
-                if affine {
-                    let (s, c) = step[k].sin_cos();
-                    let (u, v) = ordered[k];
-                    ordered[k] = (c * u - s * v + step[M + k], s * u + c * v);
-                    pair[k] = ordered[k].1;
-                    pair[M + k] = ordered[k].0 - 1.;
-                } else if single {
-                    reflection[k] = step[k] - reflection[k];
-                    let (s, c) = reflection[k].sin_cos();
-                    pair[k] = s;
-                    pair[M + k] = c - 1.;
-                } else {
-                    angles[k] += step[k];
-                    let mut angle = angles[k];
-                    if bilinear {
-                        angles[k] += left_sum[k] * step[2 * M + k];
-                        angle = angles[k] + step[3 * M + k];
-                        left_sum[k] += step[M + k];
-                    }
-                    let (s, c) = angle.sin_cos();
-                    pair[k] = s;
-                    pair[M + k] = c - 1.;
-                    if reflecting {
+            if shared {
+                let mut state = [0.0; head::SHARED_LATENTS];
+                for (k, current) in state.iter_mut().enumerate() {
+                    angles[k] += step[k] + left_sum[k] * step[2 * channels + k];
+                    *current = angles[k] + step[3 * channels + k];
+                    left_sum[k] += step[channels + k];
+                }
+                let mixed = linear(&weights[end..end + cfg.head.frequency_parameters()], &state);
+                for (j, angle) in mixed.into_iter().enumerate() {
+                    let (sine, cosine) = angle.sin_cos();
+                    pair[j] = sine;
+                    pair[M + j] = cosine - 1.;
+                }
+            } else {
+                for k in 0..M {
+                    if affine {
+                        let (s, c) = step[k].sin_cos();
+                        let (u, v) = ordered[k];
+                        ordered[k] = (c * u - s * v + step[M + k], s * u + c * v);
+                        pair[k] = ordered[k].1;
+                        pair[M + k] = ordered[k].0 - 1.;
+                    } else if single {
                         reflection[k] = step[k] - reflection[k];
-                        let (rs, rc) = reflection[k].sin_cos();
-                        let gate = f64::from(weights[end + k]);
-                        pair[k] += gate * (rs - s);
-                        pair[M + k] += gate * (rc - c);
+                        let (s, c) = reflection[k].sin_cos();
+                        pair[k] = s;
+                        pair[M + k] = c - 1.;
+                    } else {
+                        angles[k] += step[k];
+                        let mut angle = angles[k];
+                        if bilinear {
+                            angles[k] += left_sum[k] * step[2 * M + k];
+                            angle = angles[k] + step[3 * M + k];
+                            left_sum[k] += step[M + k];
+                        }
+                        let (s, c) = angle.sin_cos();
+                        pair[k] = s;
+                        pair[M + k] = c - 1.;
+                        if reflecting {
+                            reflection[k] = step[k] - reflection[k];
+                            let (rs, rc) = reflection[k].sin_cos();
+                            let gate = f64::from(weights[end + k]);
+                            pair[k] += gate * (rs - s);
+                            pair[M + k] += gate * (rc - c);
+                        }
                     }
                 }
             }
@@ -246,13 +278,19 @@ fn network(width: usize) -> Result<()> {
             groups.push(("periodic strength", (end + M..end + 2 * M).collect()));
             groups.push(("periodic center", (end + 2 * M..end + 3 * M).collect()));
         }
-    } else if bilinear {
+    } else if bilinear || shared {
         for (j, name) in ["ordered left", "ordered right", "local phase"]
             .into_iter()
             .enumerate()
         {
-            let start = writes + j * M * width;
-            groups.push((name, (start..start + M * width).collect()));
+            let start = writes + j * channels * width;
+            groups.push((name, (start..start + channels * width).collect()));
+        }
+        if shared {
+            groups.push((
+                "learned frequency matrix",
+                (end..end + cfg.head.frequency_parameters()).collect(),
+            ));
         }
     }
     println!("phase network width={width} max_absolute_logits={logits:.3e} prefix={prefix:.3e}");
@@ -266,6 +304,24 @@ fn network(width: usize) -> Result<()> {
     Ok(())
 }
 
+// Relabel all recurrent coordinates while preserving every periodic observation.
+fn shared_latent_permutation(cfg: &Config, weights: &[f32], engine: &mut Engine) -> Result<()> {
+    let r = head::SHARED_LATENTS;
+    let d = cfg.width;
+    let input = architecture::memory_start(cfg);
+    let frequency = layout::frequency_offset(cfg) - cfg.head.frequency_parameters();
+    let mut renamed = weights.to_vec();
+    for group in 0..4 {
+        renamed[input + group * r * d..input + (group + 1) * r * d].rotate_left(d);
+    }
+    for row in renamed[frequency..frequency + M * r].chunks_exact_mut(r) {
+        row.rotate_left(1);
+    }
+    engine.parameters.write(weights)?;
+    let mut other = Engine::new(cfg.clone(), &renamed)?;
+    phase_controls::compare_dense(cfg, engine, &mut other, "cyclic latent reindexing")
+}
+
 pub fn run() -> Result<()> {
     if !precision::FP32_AFFINE_REFERENCE {
         return Err("phase memory checks require --features fp32-affine-reference".into());
@@ -276,8 +332,8 @@ pub fn run() -> Result<()> {
             reflection_phase_checks::scan(length)?;
         } else if architecture::REFLECTION_PHASE {
             reflection_phase_checks::scan(length)?;
-        } else if architecture::BILINEAR_PHASE {
-            bilinear_phase_checks::scan(length)?;
+        } else if architecture::BILINEAR_PHASE || architecture::SHARED_BILINEAR {
+            bilinear_phase_checks::scan::<{ architecture::SHARED_BILINEAR }>(length)?;
         } else if architecture::AFFINE_PHASE {
             affine_phase_checks::scan(length)?;
         } else {

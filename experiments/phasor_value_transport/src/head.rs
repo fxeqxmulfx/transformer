@@ -2,6 +2,7 @@
 use crate::{Config, Result, pair_memory, random::Random};
 
 pub const MEMORY_WIDTH: usize = 32;
+pub const SHARED_LATENTS: usize = 8;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Head {
@@ -17,6 +18,7 @@ pub enum Head {
     InputPhase,
     AffinePhase,
     BilinearPhase,
+    SharedBilinear,
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
@@ -42,6 +44,7 @@ impl Head {
             "input-phase" => Ok(Self::InputPhase),
             "affine-phase" => Ok(Self::AffinePhase),
             "bilinear-phase" => Ok(Self::BilinearPhase),
+            "shared-bilinear" => Ok(Self::SharedBilinear),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
@@ -66,6 +69,7 @@ impl Head {
             Self::InputPhase => "phasor-learned-input-phase-32-v1",
             Self::AffinePhase => "phasor-learned-affine-phase-32-v1",
             Self::BilinearPhase => "phasor-learned-bilinear-phase-32-v1",
+            Self::SharedBilinear => "phasor-learned-shared-bilinear-8x32-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
@@ -82,6 +86,7 @@ impl Head {
                 | Self::InputPhase
                 | Self::AffinePhase
                 | Self::BilinearPhase
+                | Self::SharedBilinear
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::AssociativeReflection
@@ -95,6 +100,7 @@ impl Head {
             Self::InputPhase
                 | Self::AffinePhase
                 | Self::BilinearPhase
+                | Self::SharedBilinear
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::ContextRotation
@@ -108,6 +114,7 @@ impl Head {
         match self {
             Self::AffinePhase => 2 * MEMORY_WIDTH,
             Self::BilinearPhase => 4 * MEMORY_WIDTH,
+            Self::SharedBilinear => 4 * SHARED_LATENTS,
             _ => MEMORY_WIDTH,
         }
     }
@@ -118,6 +125,14 @@ impl Head {
             Self::ReflectionPhase | Self::AssociativeReflection | Self::PeriodicReflection
         ) {
             MEMORY_WIDTH
+        } else {
+            0
+        }
+    }
+
+    pub const fn frequency_parameters(self) -> usize {
+        if matches!(self, Self::SharedBilinear) {
+            SHARED_LATENTS * MEMORY_WIDTH
         } else {
             0
         }
@@ -141,9 +156,12 @@ impl Head {
             | Self::InputPhase
             | Self::AffinePhase
             | Self::BilinearPhase
+            | Self::SharedBilinear
             | Self::ReflectionPhase
             | Self::SingleReflection => {
-                (4 + self.phase_inputs() + 2 * MEMORY_WIDTH) * cfg.width + self.phase_gates()
+                (4 + self.phase_inputs() + 2 * MEMORY_WIDTH) * cfg.width
+                    + self.phase_gates()
+                    + self.frequency_parameters()
             }
             Self::Relations => pair_memory::parameters(cfg),
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
@@ -202,6 +220,7 @@ impl Head {
             | Self::InputPhase
             | Self::AffinePhase
             | Self::BilinearPhase
+            | Self::SharedBilinear
             | Self::ReflectionPhase
             | Self::SingleReflection => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
@@ -222,6 +241,7 @@ impl Head {
                 let active_rows = match self {
                     Self::AffinePhase => MEMORY_WIDTH,
                     Self::BilinearPhase => 2 * MEMORY_WIDTH,
+                    Self::SharedBilinear => 2 * SHARED_LATENTS,
                     _ => rows,
                 };
                 let (active, inactive) = input.split_at_mut(active_rows * cfg.width);
@@ -231,6 +251,8 @@ impl Head {
                     output.fill(0.);
                     if self == Self::ReflectionPhase {
                         output[2 * MEMORY_WIDTH * cfg.width..].fill(0.5);
+                    } else if self == Self::SharedBilinear {
+                        initialize(&mut output[2 * MEMORY_WIDTH * cfg.width..], SHARED_LATENTS);
                     }
                 } else {
                     initialize(output, MEMORY_WIDTH);

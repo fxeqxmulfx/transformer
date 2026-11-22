@@ -850,6 +850,29 @@ on arbitrary dense vectors. Zero output projections recover the learned
 stream model for every input.
 [Shared bilinear phase proofs](../../src/Transformer/Phasor/SharedBilinearPhase.lean)
 
+At length 257, the eight-coordinate Kernite scan agreed with separate
+FP64 prefix sums within `1.81e-5` on 6,168 latent reads and `1.36e-5`
+on 24,672 input gradients. Relabeling all eight coordinates in the input
+and frequency matrices preserved arbitrary-vector logits within `1.79e-7`
+and input gradients within `1.20e-7` at widths 64 and 128. Complete
+network logits agreed with FP64 within `4.89e-7`, and perturbing a later
+embedding left the checked prefixes identical. The full gradient check
+also varied the frequency matrix independently of the four input maps.
+
+Seed 0 crossed 99% on short addition at update 893, with 4,687/4,705
+held-out pairs correct. On canonical NV11 at 3,000 updates it scored
+4,701/4,704 on training and 88/4,705 held out.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,shared-bilinear-phase
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-add 0 runs/shared-bilinear 3496
+"$bin" nv11-train runs/shared-bilinear-nv11 0 3000
+"$bin" nv11-score runs/shared-bilinear-nv11/nv11-train-3000.f32 shifts
+```
+
 ## Crossed contextual rotations
 
 Two learned projections of every normalized embedding supply two sets

@@ -1,5 +1,6 @@
 // Included as a child of the pinned engine to use its affine and tied-readout adjoints.
 use super::*;
+use super::shared_bilinear_layer::SharedBilinearPhase;
 use crate::{
     head::{Head, MEMORY_WIDTH as M},
     affine_phase, bilinear_phase, phase_prefix, recurrent, reflection_phase, transition,
@@ -9,6 +10,7 @@ enum Memory {
     Phase(phase_prefix::kernels::Kernels),
     AffinePhase(affine_phase::kernels::Kernels),
     BilinearPhase(bilinear_phase::kernels::Kernels),
+    SharedBilinear(SharedBilinearPhase),
     Reflection {
         kernels: reflection_phase::kernels::Kernels,
         angles: F,
@@ -57,6 +59,7 @@ impl HiddenLayer {
             Head::PhasePrefix | Head::InputPhase | Head::SingleReflection => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
+            Head::SharedBilinear => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
             Head::ReflectionPhase | Head::AssociativeReflection | Head::PeriodicReflection => Memory::Reflection {
                 kernels: reflection_phase::kernels::Kernels::load(&e.cuda)?,
                 angles: e.cuda.alloc(rows * M)?,
@@ -142,7 +145,9 @@ impl HiddenLayer {
                     e.parameters.at(*gate_offset).ok_or("reflection gates outside parameters")?,
                     length as u32,
                 )?,
-                Memory::BilinearPhase(kernels) => kernels.forward(
+                Memory::SharedBilinear(memory) => memory.forward(e, self.read.ptr(),
+                    self.projected.ptr(), rows, length)?,
+                Memory::BilinearPhase(kernels) => kernels.forward::<false>(
                     Grid::new((rows / length) as u32, M as u32),
                     self.read.ptr(), self.projected.ptr(), length as u32,
                 )?,
@@ -244,7 +249,9 @@ impl HiddenLayer {
                         e.gradients.at(*gate_offset).ok_or("reflection gates outside gradients")?,
                         gate_partials.ptr(), batch)?;
                 }
-                Memory::BilinearPhase(kernels) => kernels.backward(
+                Memory::SharedBilinear(memory) => memory.backward(e, self.dprojected.ptr(),
+                    self.projected.ptr(), self.dread.ptr(), rows, length)?,
+                Memory::BilinearPhase(kernels) => kernels.backward::<false>(
                     Grid::new((rows / length) as u32, M as u32),
                     self.dprojected.ptr(), self.projected.ptr(), self.dread.ptr(), length as u32,
                 )?,
