@@ -89,8 +89,10 @@ fn arithmetic_task(d: dataset::Dataset) -> Task {
 
 use pair_memory::MODEL;
 
-pub fn extensions() -> Result<()> {
-    for (name, tier) in catalog::registered()? {
+pub const EXTENSIONS: &str = include_str!("../extensions.tsv");
+
+pub fn extensions(registry: &str) -> Result<()> {
+    for (name, tier) in catalog::registered(registry)? {
         println!("{name}\t{tier}");
     }
     Ok(())

@@ -6,10 +6,10 @@ use basis::{generative, previous as remaining_synthetic, sequences};
 const PLAN: &str =
     include_str!("../../../../.lake/reproduction/gpt/research/current_grokking/plan.json");
 
-pub(super) fn registered() -> Result<Vec<(&'static str, &'static str)>> {
+pub(super) fn registered(contents: &str) -> Result<Vec<(&str, &str)>> {
     let original = cases()?;
     let mut registry = Vec::new();
-    for line in include_str!("../../extensions.tsv").lines() {
+    for line in contents.lines() {
         let (tier, name) = line.split_once('\t').ok_or("invalid extension row")?;
         if !matches!(tier, "short" | "long")
             || name.is_empty()
@@ -19,6 +19,7 @@ pub(super) fn registered() -> Result<Vec<(&'static str, &'static str)>> {
         {
             return Err("invalid or duplicate extension membership".into());
         }
+        source_case(name)?;
         registry.push((name, tier));
     }
     Ok(registry)

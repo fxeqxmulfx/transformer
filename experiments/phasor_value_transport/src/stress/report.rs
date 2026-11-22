@@ -136,7 +136,7 @@ pub fn catalog(out: &Path, names: &[String]) -> Result<()> {
     Ok(())
 }
 
-pub fn run(out: &Path, extended: bool) -> Result<()> {
+pub fn run(out: &Path, extensions: Option<&str>) -> Result<()> {
     if !out.is_dir() {
         return Err(format!("missing cohort directory {}", out.display()).into());
     }
@@ -144,8 +144,8 @@ pub fn run(out: &Path, extended: bool) -> Result<()> {
     let mut tasks = Vec::new();
     let mut rows = cases()?;
     rows.push(nv11_case());
-    if extended {
-        for (name, tier) in super::catalog::registered()? {
+    if let Some(extensions) = extensions {
+        for (name, tier) in super::catalog::registered(extensions)? {
             let (mut row, _) = super::catalog::load(name)?;
             row["report_tier"] = json!(format!("{tier}-extension"));
             rows.push(row);

@@ -50,28 +50,30 @@ Easy recall took 15.15–15.28 seconds with the selected build and
 alternated across the six pairs. Each timed cell reproduced its model's
 earlier weights and observation history byte for byte.
 
-For a paired comparison, use a fresh directory for each model. The plain
-FP32 build selects the 0.75-gain model. The baseline build uses
-`fp32-affine-reference,prefix-successor-half`.
+For a paired comparison, use a fresh directory for each model. The
+following commands reproduce the 147 GPT runs and three NV11 runs from
+the fourteen-extension comparison.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorDisplacement
 cd experiments/phasor_value_transport
 export PHASOR_EVAL_BATCH_CAP=16
+mkdir -p runs
+git show 6bc2b20c:experiments/phasor_value_transport/extensions.tsv > runs/fourteen-extensions.tsv
 for arm in half selected; do
-    features=fp32-affine-reference
-    if [ "$arm" = half ]; then features=$features,prefix-successor-half; fi
+    features=fp32-affine-reference,successor-gain-three-quarters
+    if [ "$arm" = half ]; then features=fp32-affine-reference,prefix-successor-half; fi
     cargo +stable build --release --locked --features "$features"
     bin=./target/release/phasor-value-transport
     "$bin" shared-check
-    ./run_stress.sh cell "runs/v060-$arm" extended
-    ./run_stress.sh replay "runs/v060-$arm" extended
-    "$bin" extended-report "runs/v060-$arm" > "runs/v060-$arm/report.json"
+    ./run_stress.sh cell "runs/v060-$arm" runs/fourteen-extensions.tsv
+    ./run_stress.sh replay "runs/v060-$arm" runs/fourteen-extensions.tsv
+    "$bin" extended-report "runs/v060-$arm" runs/fourteen-extensions.tsv > "runs/v060-$arm/report.json"
 done
 git show 849aa3be:experiments/phasor_value_transport/extensions.tsv > runs/seven-extensions.tsv
 jq -s --rawfile extensions runs/seven-extensions.tsv -f compare.jq \
     runs/v060-half/report.json runs/v060-selected/report.json
-jq -s --rawfile extensions extensions.tsv -f compare.jq \
+jq -s --rawfile extensions runs/fourteen-extensions.tsv -f compare.jq \
     runs/v060-half/report.json runs/v060-selected/report.json
 ```
 
