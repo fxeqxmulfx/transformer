@@ -438,6 +438,28 @@ Each catalog probe has 64 examples, so seed 0's 51/64 misses the 99% target.
 | 1 | 1,000 | 64 | 64 | 34 |
 | 2 | 1,000 | 64 | 64 | 32 |
 
+Training the same architecture separately on the original long-tier 20-
+and 24-bit tasks gave perfect validation, source test and 32- and 64-bit
+catalog scores on all three seeds. The catalog probes are the same 64
+fixed prompts at each length for every checkpoint.
+
+| Training task | First passing updates, seeds 0 / 1 / 2 | Validation per seed | Source test per seed | 32-bit / 64-bit per seed |
+| --- | --- | ---: | ---: | ---: |
+| Basis parity, 20 bits | 1,000 / 1,250 / 1,000 | 284/284 | 512/512 | 64/64 and 64/64 |
+| Basis parity, 24 bits | 1,000 / 1,000 / 1,000 | 306/306 | 512/512 | 64/64 and 64/64 |
+
+The contextual phase control on 24-bit parity crossed at updates 500 and
+750 on seeds 1 and 2. Seed 0 scored 184/306 even at 8,000 updates.
+The input-phase model also passed two original short tasks on all seeds.
+Modular addition crossed at updates 874/950/893 with 4,677/4,689/4,665
+correct out of 4,705. Key–value binding crossed at 704/576/576 with
+507/508/507 correct out of 512 validation examples. Each binding
+checkpoint scored 506/512 on the independent test.
+
+Depth-one C-RASP reached 30/32, 32/32 and 32/32 through update 1,500.
+On NV11 at 3,000 updates, exact checkpoint replay gave 4,704/4,704/4,701
+correct training pairs out of 4,704 and 83/90/89 held out of 4,705.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.InputPhaseRead
 cd experiments/phasor_value_transport
