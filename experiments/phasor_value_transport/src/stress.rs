@@ -129,6 +129,17 @@ fn suite_hash(row: &Value) -> String {
         .map_or_else(|| hash(arithmetic::ORIGINAL35.as_bytes()), str::to_owned)
 }
 
+// All checkpoints predating this field used the original pinned Kernite 0.3.2.
+fn trained_with(result: &Value) -> Result<&str> {
+    result
+        .get("kernite_version")
+        .map_or(Ok("0.3.2"), |version| {
+            version
+                .as_str()
+                .ok_or_else(|| "invalid recorded Kernite version".into())
+        })
+}
+
 fn publish(dir: &Path, name: &str, bytes: &[u8]) -> Result<()> {
     let pending = dir.join(format!("{name}.pending"));
     let mut file = fs::File::create(&pending)?;
@@ -179,7 +190,8 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
                     if point["step"] == limit {
                         println!(
                             "{}",
-                            json!({"model":MODEL,"status":"screen cutoff","observation":point})
+                            json!({"model":MODEL,"status":"screen cutoff","observation":point,
+                                "kernite_version":trained_with(&saved)?})
                         );
                         return Ok(());
                     }
@@ -222,7 +234,7 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
                 let result = json!({"model":MODEL,"initial_gain":pair_memory::INITIAL_GAIN,"gain":values[pair_memory::gain(&e.config)],"observation":point,"previous_step":previous,"train_correct":training["exact"],
                     "train_total":train.len(),"selection":task.selection,"pair_parameters":extra,
                     "parameters":values.len(),"weights_sha256":hash(&bytes),"gpu":e.cuda.name(),
-                    "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":suite_hash(&row),
+                    "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":suite_hash(&row),"kernite_version":KERNITE_VERSION,
                     "elapsed_seconds":(started.elapsed()-waited).as_secs_f64()});
                 publish(&dest, "result.json", &serde_json::to_vec_pretty(&result)?)?;
                 println!("{result}");
@@ -231,7 +243,7 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
             if cutoff == Some(step) {
                 println!(
                     "{}",
-                    json!({"model":MODEL,"status":"screen cutoff","observation":point})
+                    json!({"model":MODEL,"status":"screen cutoff","observation":point,"kernite_version":KERNITE_VERSION})
                 );
                 return Ok(());
             }
@@ -292,7 +304,8 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) ->
     if correct != result["observation"]["correct"] || result["observation"]["total"] != held.len() {
         return Err("checkpoint failed to reproduce its held-out score".into());
     }
-    let mut report = json!({"case":name,"seed":seed,"correct":correct,"total":held.len()});
+    let mut report = json!({"case":name,"seed":seed,"correct":correct,"total":held.len(),
+        "kernite_version":trained_with(&result)?,"scored_with_kernite":KERNITE_VERSION});
     if test_splits {
         let mut scores = BTreeMap::new();
         for (split, examples) in &task.splits {

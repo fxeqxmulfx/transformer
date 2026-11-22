@@ -22,6 +22,7 @@ const BUDGET: usize = 100_000;
 const BATCH: usize = 256;
 const OBSERVE: usize = 250;
 const WINDOW: usize = 2000;
+const KERNITE_VERSION: &str = env!("KERNITE_CUDA_VERSION");
 
 fn config(batch: usize) -> Result<Config> {
     Ok(Config {
@@ -146,7 +147,8 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
                 .transpose()?;
             let row = json!({"arm":arm,"step":completed,"seed":seed,"initial_sha256":digest,
                 "train":train,"held_out":held,"zero_offset_held_out":ablated,
-                "fp32_affines":precision::FP32_AFFINE_REFERENCE,"gpu":e.cuda.name()});
+                "fp32_affines":precision::FP32_AFFINE_REFERENCE,"gpu":e.cuda.name(),
+                "kernite_version":KERNITE_VERSION});
             writeln!(log, "{row}")?;
             log.flush()?;
             println!("{row}");

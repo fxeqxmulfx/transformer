@@ -2,6 +2,7 @@
 name = "phasor-value-transport"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.100"
 publish = false
 
 [workspace]
@@ -36,7 +37,7 @@ test = false
 arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
 basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
 parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
-kernite-cuda = { path = "../../.lake/reproduction/kgen/crates/cuda" }
-kernite-macros = { path = "../../.lake/reproduction/kgen/crates/macros" }
+kernite-cuda = "=0.6.0"
+kernite-macros = "=0.6.0"
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"

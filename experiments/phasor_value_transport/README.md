@@ -9,6 +9,33 @@ The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
 split. [MRCR V2 stress test](../mrcr_v2/README.md)
 
+## Kernite v0.6.0
+
+The Phasor runner uses the published v0.6.0 CUDA and macro crates with
+Rust 1.100.0. The original DiffGPT trainer and AdamW are pinned to
+`5a37c515`. Fresh results record the Kernite version from Cargo.lock.
+Checkpoint replay reports both the training and scoring versions.
+
+With a full successor displacement and initial gain 0.75, the v0.6.0
+GPU forward pass agreed with the independent FP64 oracle to within
+8.23 × 10⁻⁷ across all four tested shapes. All 76 directional derivatives
+passed. The same compiler and architecture on Kernite 0.3.2 printed
+identical oracle results. In a fresh v0.6.0 run, seed 0 reached exact NV11
+at update 750. A separate process reloaded the weights and scored all 4,704
+training pairs and all 4,705 held-out pairs correctly.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.DisplacementGain
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,successor-gain-three-quarters
+bin=./target/release/phasor-value-transport
+"$bin" shared-check
+"$bin" shared-values runs/kernite-060-exact/seed0 0 3000
+"$bin" nv11-score runs/kernite-060-exact/seed0/shared-values-first-exact.f32
+PHASOR_EVAL_BATCH_CAP=16 "$bin" cell gpt-probe-key-value-binding 0 runs/kernite-060-gain075
+"$bin" replay gpt-probe-key-value-binding 0 runs/kernite-060-gain075
+```
+
 ## Selected prefix and successor model
 
 The default Phasor applies one causal update at every token. Its prefix state
@@ -50,7 +77,7 @@ the baseline reproduction commands below.
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorValues
 cd experiments/phasor_value_transport
-cargo +1.99.1 build --release --offline --locked --features fp32-affine-reference
+cargo +stable build --release --locked --features fp32-affine-reference
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
 PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor-half extended
@@ -117,7 +144,7 @@ including the input and output paths through the tied embedding.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorDisplacement
 cd experiments/phasor_value_transport
 for arm in successor-displacement successor-displacement-quarter; do
-    cargo +1.99.1 build --release --locked --features "fp32-affine-reference,$arm"
+    cargo +stable build --release --locked --features "fp32-affine-reference,$arm"
     ./target/release/phasor-value-transport shared-check
     PHASOR_EVAL_BATCH_CAP=16 ./target/release/phasor-value-transport screen suite-mqar 0 "runs/$arm" 1000
 done
@@ -241,7 +268,7 @@ identity before accepting a saved result.
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorValues
 cd experiments/phasor_value_transport
-cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference,prefix-xor
+cargo +stable build --locked --release --features fp32-affine-reference,prefix-xor
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
 PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity24 1 runs/prefix-xor 2000
@@ -390,10 +417,11 @@ upstream mixed-precision configuration received a separate compilation check.
 
 ## Reproducing the pair-address baseline
 
-Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` and Kernite at
-`a1b6bc2c956e1a5f35960e26b209e1b6c213096c` under
-`.lake/reproduction/{gpt,kgen}`. The Rust build checks their revisions and
-the relevant source trees. [Checkout instructions](../rerope/README.md#build-and-commands)
+Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` under
+`.lake/reproduction/gpt`. The build checks the historical trainer revision
+and its source tree. Cargo locks the published Kernite v0.6.0 crates. The
+commands below use stable Rust 1.100.0. Run `cargo fetch --locked` once for
+offline builds. [DiffGPT checkout instructions](../rerope/README.md#build-and-commands)
 
 The native runner reconstructs the fingerprinted splits and uses the complete
 DiffGPT scorer, including greedy generation from the model's own tokens.
@@ -405,7 +433,7 @@ weights. NV11 uses its original 4,704/4,705 half-table split and separate
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SharedValues
 cd experiments/phasor_value_transport
-cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference,pair-v2
+cargo +stable build --locked --release --features fp32-affine-reference,pair-v2
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
 PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/shared-quarter
@@ -524,19 +552,20 @@ for a matched comparison on Pascal. All arms use the same precision.
 
 ### Reproducing the transport-only runs
 
-Use the DiffGPT checkout at `5a37c515639f23037d191b0659a5a0853984328d` and
-Kernite at `a1b6bc2c956e1a5f35960e26b209e1b6c213096c` in the repository's
-`.lake/reproduction/{gpt,kgen}`. The existing ReRoPE setup uses the same
-checkouts. The Rust build verifies the revisions and reads the optimizer,
-optimizer kernels, schedule, initialization, Phasor blocks and loss from
-those sources. [Checkout instructions](../rerope/README.md#build-and-commands)
+The historical experiment used DiffGPT at
+`5a37c515639f23037d191b0659a5a0853984328d` and Kernite 0.3.2 at
+`a1b6bc2c956e1a5f35960e26b209e1b6c213096c`. To repeat it with that
+backend, use transformer commit `18cda3d8` and the two local checkouts.
+The current build reads the original optimizer, schedule, initialization,
+Phasor blocks and loss from the same DiffGPT sources and uses Kernite v0.6.0.
+[Historical checkout instructions](../rerope/README.md#build-and-commands)
 
 From the repository root, check Lean before running the experiment.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TransportedValues
 cd experiments/phasor_value_transport
-cargo +1.99.1 build --locked --release --features fp32-affine-reference
+cargo +stable build --locked --release --features fp32-affine-reference
 bin=./target/release/phasor-value-transport
 "$bin" check
 for seed in 1 2 3

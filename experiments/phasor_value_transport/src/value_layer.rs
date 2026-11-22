@@ -110,7 +110,9 @@ impl ValueLayer {
                 m.kernels.read(
                     Grid::new(rows as u32, d as u32),
                     self.hidden.ptr(),
-                    e.parameters.at(crate::pair_memory::start(&e.config)),
+                    e.parameters
+                        .at(crate::pair_memory::start(&e.config))
+                        .ok_or("value table outside parameter buffer")?,
                     m.keys.ptr(),
                     d as u32,
                     crate::pair_memory::TABLES as u32,
@@ -126,7 +128,9 @@ impl ValueLayer {
                     m.scaled.ptr(),
                     e.last.ptr(),
                     self.normalized.ptr(),
-                    e.parameters.at(crate::pair_memory::gain(&e.config)),
+                    e.parameters
+                        .at(crate::pair_memory::gain(&e.config))
+                        .ok_or("value gain outside parameter buffer")?,
                     d as u32,
                 )?;
             }
@@ -180,12 +184,16 @@ impl ValueLayer {
                     m.partial.ptr(),
                     self.dnormalized.ptr(),
                     self.normalized.ptr(),
-                    e.parameters.at(gain),
+                    e.parameters
+                        .at(gain)
+                        .ok_or("value gain outside parameter buffer")?,
                     d as u32,
                 )?;
                 m.causal.gain_sum(
                     Grid::new(1, 32),
-                    e.gradients.at(gain),
+                    e.gradients
+                        .at(gain)
+                        .ok_or("value gain outside gradient buffer")?,
                     m.partial.ptr(),
                     rows as u32,
                 )?;
@@ -231,7 +239,9 @@ impl ValueLayer {
             unsafe {
                 m.kernels.backward(
                     Grid::new((p * crate::pair_memory::TABLES) as u32, d as u32),
-                    e.gradients.at(crate::pair_memory::start(&e.config)),
+                    e.gradients
+                        .at(crate::pair_memory::start(&e.config))
+                        .ok_or("value table outside gradient buffer")?,
                     self.dhidden.ptr(),
                     m.offsets.ptr(),
                     m.owners.ptr(),

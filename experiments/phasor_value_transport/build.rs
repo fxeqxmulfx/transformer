@@ -25,18 +25,41 @@ fn pin(dir: &Path, revision: &str, tree: &str) {
     println!("cargo:rerun-if-changed={}", dir.join(tree).display());
 }
 
+// Kernite 0.6 makes device pointer offsets fallible. The pinned engine only
+// takes offsets into its parameter, gradient and optimizer-state buffers.
+fn check_device_offsets(mut source: String) -> String {
+    let offsets = source.matches(".at(").count();
+    let checked = ".ok_or(\"CUDA parameter layout exceeds buffer\")?";
+    for argument in [
+        "offset",
+        "layer.score_offset",
+        "layer.offset + 3 * w * w",
+        "layout::frequency_offset(&self.config)",
+        "router.offset",
+        "router.phase_offset",
+    ] {
+        let call = format!(".at({argument})");
+        source = source.replace(&call, &format!("{call}{checked}"));
+    }
+    assert_eq!(source.matches(checked).count(), offsets);
+    source
+}
+
 fn main() {
+    let lock = include_str!("Cargo.lock");
+    let version = lock
+        .split_once("name = \"kernite-cuda\"\nversion = \"")
+        .and_then(|(_, rest)| rest.split_once('"'))
+        .expect("missing kernite-cuda version in Cargo.lock")
+        .0;
+    println!("cargo:rustc-env=KERNITE_CUDA_VERSION={version}");
     let gpt = Path::new("../../.lake/reproduction/gpt")
         .canonicalize()
         .unwrap();
-    let kgen = Path::new("../../.lake/reproduction/kgen")
-        .canonicalize()
-        .unwrap();
     pin(&gpt, "5a37c515639f23037d191b0659a5a0853984328d", "research");
-    pin(&kgen, "a1b6bc2c956e1a5f35960e26b209e1b6c213096c", "crates");
     let out = std::path::PathBuf::from(env::var_os("OUT_DIR").unwrap());
     let src = gpt.join("research/main_model/phase_score_native/src");
-    let mut engine = fs::read_to_string(src.join("engine.rs")).unwrap();
+    let mut engine = check_device_offsets(fs::read_to_string(src.join("engine.rs")).unwrap());
     // Only the FP32 reference dispatches entirely to the upstream SGEMM.
     // Do not load unused Ampere tensor modules on a Pascal GPU in that mode.
     for (from, to) in [
@@ -125,11 +148,11 @@ fn main() {
         ),
     )
     .unwrap();
-    let mhc = src.join("engine_mhc.rs");
-    engine = engine.replace(
-        "include!(\"engine_mhc.rs\");",
-        &format!("include!({mhc:?});"),
-    );
+    fs::write(
+        out.join("engine_mhc.rs"),
+        check_device_offsets(fs::read_to_string(src.join("engine_mhc.rs")).unwrap()),
+    )
+    .unwrap();
     let extension = Path::new("src/value_layer.rs").canonicalize().unwrap();
     engine.push_str(&format!("\ninclude!({extension:?});\n"));
     println!("cargo:rerun-if-changed=src/value_layer.rs");

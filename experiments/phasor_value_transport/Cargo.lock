@@ -329,7 +329,9 @@ checksum = "3bd1574e617a9a6c1f8f8181bd7e841e1f20e4277607ef28945765188d6284d4"
 
 [[package]]
 name = "kernite"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67347d02cb2115c8fa65691b90adc085d76956f671c7470cd6b0e10a4dfc364b"
 dependencies = [
  "kernite-build",
  "kernite-lang",
@@ -339,40 +341,54 @@ dependencies = [
 
 [[package]]
 name = "kernite-build"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "78a9705117512453e233881c1ece9e485768dd140e520e6149d72ec3ab3087c0"
 dependencies = [
  "kernite-lang",
 ]
 
 [[package]]
 name = "kernite-compile"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a5af62eadc7be3672c50cccd0044aa497ca709fd6d4072915e3c28eaff6f5289"
 dependencies = [
  "kernite-core",
 ]
 
 [[package]]
 name = "kernite-core"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9015c1587fbb5c94de48e62935eb4d2c2d0dd2cbd52fd683e627fd99d36d2d94"
 
 [[package]]
 name = "kernite-cuda"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a8328f16bb227d0eebc0df7b7e80f027792040fda121d40775608180f0b73ca"
 
 [[package]]
 name = "kernite-lang"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "84e1599aa27573ac53289e0b3c40f05f9db2af7273c0e23a08de08702e7da825"
 
 [[package]]
 name = "kernite-macros"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "da666360949338e3b5fd2ec1670a5ab52d54d502402e851c05cea1ebf518ac3d"
 dependencies = [
  "kernite",
 ]
 
 [[package]]
 name = "kernite-ptx"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1c276a5cdb9ff777d1b7b48415abe6bb47dd99094f1f705e5b5c05e476d5d04"
 dependencies = [
  "kernite-build",
  "kernite-compile",
@@ -382,7 +398,9 @@ dependencies = [
 
 [[package]]
 name = "kernite-x86"
-version = "0.3.2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "590f2922af0243d6c133f2637a6a25f18facf55814eaa8df033dacefe9b130f3"
 dependencies = [
  "kernite-build",
  "kernite-compile",
