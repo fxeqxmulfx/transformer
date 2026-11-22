@@ -918,6 +918,23 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/crossed-nv11/nv11-train-3000.f32 shifts
 ```
 
+## Prefix-conditioned Toeplitz read
+
+The strict prefix produces one linear operator on the learned channels
+of the current embedding. Phasor projects its previous contextual vector
+to a real Toeplitz stencil, a complex gain per channel and a complex bias.
+The stencil mixes the current channels, the gain scales and rotates them,
+and a learned output projection feeds the external classifier. At the
+start of every sequence the read reduces to the value and output
+projections. Internal channels have no assigned token or class meaning.
+
+For a fixed prefix the action on the projected current embedding is
+affine. The same stencil coefficient applies along each matrix diagonal.
+Two such diagonals suffice to shift a supported interval of channels
+cyclically, even when it occupies only part of the bank. All coefficients
+can be learned, and the prefix can choose a different operator at every
+position. [Prefix-conditioned operator proofs](../../src/Transformer/Phasor/PrefixToeplitz.lean)
+
 ## Scalar phase bottleneck
 
 The earlier shared bilinear model fit 4,701 of 4,704 training pairs on
