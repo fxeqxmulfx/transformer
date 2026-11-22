@@ -42,9 +42,17 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
         }
     }
     keys.extend((1..=2).flat_map(|i| (1..=2).map(move |j| power(a, i) * power(b, j) % p)));
-    if cfg!(feature = "transition-count") {
+    if cfg!(any(
+        feature = "transition-count",
+        feature = "transition-table"
+    )) {
         let transitions = prefix.windows(2).filter(|edge| edge[0] != edge[1]).count();
-        keys[16] = (keys[16] + (transitions % p as usize) as u32) % p;
+        let bucket = (transitions % p as usize) as u32;
+        if cfg!(feature = "transition-table") {
+            keys.push(bucket);
+        } else {
+            keys[16] = (keys[16] + bucket) % p;
+        }
     }
     let mut result = vec![0.; d];
     for (table, key) in keys.into_iter().enumerate() {
@@ -72,7 +80,17 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
             [0, p - 1, 9, 0, 6, 4][(i % length + if r == 1 { 2 } else { 0 }) % 6] as u32
         })
         .collect();
-    if cfg!(feature = "single-write-gain") && length == 9 {
+    if cfg!(feature = "transition-table") && length == 17 {
+        for (row, sequence) in tokens.chunks_mut(length).enumerate() {
+            for (i, token) in sequence.iter_mut().enumerate() {
+                *token = if row == 0 || (row == 1 && i < 5) {
+                    (i % 2) as u32
+                } else {
+                    0
+                };
+            }
+        }
+    } else if cfg!(feature = "single-write-gain") && length == 9 {
         let patterns = [
             [1, 7, 2, 4, 5, 6, 8, 9, 1],
             [1, 7, 2, 1, 7, 6, 8, 9, 1],
@@ -113,6 +131,10 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         .map(|i| ((7 * i + 3) % p) as u32)
         .collect();
     labels[1] = u32::MAX;
+    if cfg!(feature = "transition-table") && length == 17 {
+        labels.fill(u32::MAX);
+        labels[length - 1] = 7;
+    }
     if cfg!(feature = "closed-relation") && length == 8 {
         // This prefix has ordinary successor 0 and unique closed endpoint 3.
         labels.fill(u32::MAX);
@@ -290,6 +312,19 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         ("tied embedding".to_owned(), 0..p * d),
         ("residual gain".to_owned(), gain_at..gain_at + 1),
     ];
+    if cfg!(feature = "transition-table") && length == 17 {
+        // There are 15 completed changes at the labelled row, or 3 modulo 12.
+        let offset = start + (pair_memory::TABLES - 1) * p * d;
+        let wrapped = offset + 3 * d..offset + 4 * d;
+        let unused = offset + 4 * d..offset + 5 * d;
+        if gradients[wrapped.clone()].iter().all(|&g| g == 0.)
+            || gradients[unused.clone()].iter().any(|&g| g != 0.)
+        {
+            return Err("transition table gradient reached the wrong count bucket".into());
+        }
+        directions.push(("wrapped transition count".to_owned(), wrapped));
+        directions.push(("unused transition count".to_owned(), unused));
+    }
     if cfg!(feature = "closed-relation") && length == 8 {
         let endpoint = start + 3 * d..start + 4 * d;
         let ordinary = start..start + d;
@@ -428,6 +463,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if cfg!(feature = "single-write-gain") {
         profile(36, 9, 128)?;
+    }
+    if cfg!(feature = "transition-table") {
+        profile(12, 17, 128)?;
     }
     if cfg!(feature = "relation-paths") {
         profile(36, 12, 128)?;

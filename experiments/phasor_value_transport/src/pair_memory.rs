@@ -4,7 +4,8 @@
 use crate::engine::{Config, Result};
 use kernite_cuda::{Buffer, Cuda};
 
-pub const TABLES: usize = 17;
+const PAIR_TABLES: usize = 17;
+pub const TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
 // With no experiment selector a binary contains the selected successor model.
 const DEFAULT_MODEL: bool = !cfg!(any(
     feature = "pair-v2",
@@ -102,6 +103,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     }
 } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
     "phasor-successor-hit-gain175-v1"
+} else if cfg!(feature = "transition-table") {
+    "phasor-independent-transition-table-v1"
 } else if cfg!(feature = "single-write-gain") {
     "phasor-single-write-or-closed-gain-v1"
 } else if cfg!(feature = "closed-relation-boost") {
@@ -380,16 +383,24 @@ impl PairMemory {
                         keys[0]
                     };
                 }
-                if cfg!(feature = "transition-count") {
+                if cfg!(any(
+                    feature = "transition-count",
+                    feature = "transition-table"
+                )) {
                     if pos == 0 {
                         transitions = 0;
                     } else if pos >= 2 && tokens[row - 2] != tokens[row - 1] {
                         transitions += 1;
                     }
-                    let squared_product = TABLES - 1;
-                    let base = squared_product * p;
-                    let address = keys[squared_product] as usize - base;
-                    keys[squared_product] = (base + (address + transitions) % p) as u32;
+                    if cfg!(feature = "transition-table") {
+                        let count_table = TABLES - 1;
+                        keys[count_table] = (count_table * p + transitions % p) as u32;
+                    } else {
+                        let squared_product = PAIR_TABLES - 1;
+                        let base = squared_product * p;
+                        let address = keys[squared_product] as usize - base;
+                        keys[squared_product] = (base + (address + transitions) % p) as u32;
+                    }
                 }
             }
             if XOR_PREFIX || cfg!(feature = "prefix-sum") {

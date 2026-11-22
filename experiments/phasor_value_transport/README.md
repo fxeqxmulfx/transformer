@@ -607,6 +607,15 @@ correction. Its gradient sums the upstream vectors for every row that
 read that bucket, including after the count wraps.
 [Transition table representation and adjoint](../../src/Transformer/Phasor/TransitionTable.lean)
 
+With `fp32-affine-reference,transition-table`, all three language-L2 seeds
+reached 512/512 on validation at update 250. Each reloaded checkpoint
+scored 512/512 both on the separate original-length test and at length
+128. The slowest cell took 40.53 seconds. On the identical seed-2 screen
+the selected 0.75-gain successor and the closed-gain model each scored
+341/512 at update 750. The transition-table GPU passed 124 directional
+checks. At a prefix with 15 completed changes and 12 buckets, only bucket
+3 of the new table received a gradient.
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
