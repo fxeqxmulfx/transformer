@@ -409,6 +409,24 @@ The tier admission rule is 99% held-out exact sequences in each of seeds
 case in short at up to 60 seconds or long at up to 300 seconds on the
 measuring GPU. Historical membership of the original 35 stays fixed.
 
+The native catalog runner also reads the frozen copy, reverse, sort,
+typed-Dyck, counting, addition, frequency and remaining synthetic datasets.
+The data crates supply the original selection split and generation limits.
+On v0.6.0 the half-gain model scored 0/32 on unique-token copy at update
+1,000, 22/32 on two-type Dyck at 250 and 1/31 on counting at 250 (seed 0).
+Copy used greedy generation from the model's own previous tokens. All three
+fell below the admission threshold.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference,prefix-successor-half
+bin=./target/release/phasor-value-transport
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" screen suite-copy-unique 0 runs/catalog-half 1000
+"$bin" screen suite-dyck-2 0 runs/catalog-half 250
+"$bin" screen suite-count 0 runs/catalog-half 250
+"$bin" catalog-report runs/catalog-half suite-histogram-bos suite-mode-none suite-most_freq
+```
+
 ### Additions from the 165-case GPT catalog
 
 The quarter-gain successor model qualified three new short tasks on the

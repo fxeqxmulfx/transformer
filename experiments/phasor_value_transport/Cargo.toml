@@ -40,6 +40,7 @@ test = false
 [dependencies]
 arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
 basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
+frequency = { package = "convex-stress-frequency-data", path = "../convex_stress_frequency_data" }
 parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
 kernite-cuda = "=0.6.0"
 kernite-macros = "=0.6.0"

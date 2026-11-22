@@ -1,7 +1,7 @@
 //! Pinned GPT catalog configurations and held-out splits for extension trials.
 //! Only this data adapter sees the catalog case name or answer records.
 use super::*;
-use basis::sequences;
+use basis::{generative, previous as remaining_synthetic, sequences};
 
 const PLAN: &str =
     include_str!("../../../../.lake/reproduction/gpt/research/current_grokking/plan.json");
@@ -119,6 +119,14 @@ pub(super) fn load(name: &str) -> Result<(Value, Task)> {
             basis::dataset::build(name).map(|(d, _)| d)
         } else if parity::CASES.contains(&name) {
             parity::dataset::build(name)
+        } else if frequency::CASES.contains(&name) {
+            frequency::dataset::build(name)
+        } else if generative::CASES.contains(&name) {
+            generative::dataset::build(name)
+        } else if generative::typed::CASES.contains(&name) {
+            generative::typed::dataset::build(name)
+        } else if remaining_synthetic::CASES.contains(&name) {
+            remaining_synthetic::dataset::build(name)
         } else {
             sequences::dataset::build(name)
         }
