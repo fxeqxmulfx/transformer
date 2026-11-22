@@ -573,6 +573,16 @@ To repeat the measurement, build with `fp32-affine-reference,transition-count`
 and run `cell language-l2 SEED RUN_DIR` followed by `probes language-l2 SEED RUN_DIR`
 for seeds 0, 1 and 2 with `PHASOR_EVAL_BATCH_CAP=16`.
 
+The independent transition-table trial adds an eighteenth learned vector
+table to the single-write model. At each position it reads the number of
+completed changes of token identity modulo vocabulary size. The table
+starts at zero and is added to the hidden value before RMS. Lean
+characterizes exactly which residuals it can fit on any finite collection
+of prefixes. Prefixes in the same bucket must require the same additive
+correction. Its gradient sums the upstream vectors for every row that
+read that bucket, including after the count wraps.
+[Transition table representation and adjoint](../../src/Transformer/Phasor/TransitionTable.lean)
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.

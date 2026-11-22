@@ -13,6 +13,7 @@ public import Transformer.Phasor.PrefixValues
 public import Transformer.Phasor.SuccessorValues
 public import Transformer.Phasor.SuccessorDisplacement
 public import Transformer.Phasor.TransitionValues
+public import Transformer.Phasor.TransitionTable
 public import Transformer.Phasor.DisplacementGain
 public import Transformer.Phasor.SuccessorAgreement
 public import Transformer.Phasor.PrefixFrequency
