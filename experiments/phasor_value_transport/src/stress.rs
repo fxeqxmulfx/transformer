@@ -332,16 +332,24 @@ pub enum ProbeSet {
     Extended,
     Parity1024,
     ParityNeighbors,
+    ParityLength(usize),
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
     let test_splits = probes != ProbeSet::Validation;
     let extended = matches!(
         probes,
-        ProbeSet::Extended | ProbeSet::Parity1024 | ProbeSet::ParityNeighbors
+        ProbeSet::Extended
+            | ProbeSet::Parity1024
+            | ProbeSet::ParityNeighbors
+            | ProbeSet::ParityLength(_)
     );
     let parity_task = matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24");
-    if matches!(probes, ProbeSet::Parity1024 | ProbeSet::ParityNeighbors) && !parity_task {
+    if matches!(
+        probes,
+        ProbeSet::Parity1024 | ProbeSet::ParityNeighbors | ProbeSet::ParityLength(_)
+    ) && !parity_task
+    {
         return Err("long parity probes require a Basis parity checkpoint".into());
     }
     if extended && !parity_task && !name.starts_with("language-l") {
@@ -355,6 +363,7 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
             let lengths: &[usize] = match probes {
                 ProbeSet::Parity1024 => &[128, 256, 512, 1024],
                 ProbeSet::ParityNeighbors => &[63, 65, 255, 257, 1023, 1025, 2047, 2048, 2049],
+                ProbeSet::ParityLength(ref bits) => std::slice::from_ref(bits),
                 _ => &[128, 256],
             };
             probe_hashes = catalog::add_extended_parity_probes(&mut task, lengths)
@@ -385,6 +394,14 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
         for (split, examples) in &task.splits {
             if split == "test" || split.starts_with("test/") {
                 let measured = metrics::evaluate(&mut e, examples, true)?;
+                if matches!(probes, ProbeSet::ParityLength(_)) && probe_hashes.contains_key(split) {
+                    report["generation_detail"] = json!({
+                        "split":split, "generated_tokens":measured["generated_tokens"],
+                        "eos_rate":measured["eos_rate"], "classes":measured["classes"],
+                        "teacher_forced_classes":measured["teacher_forced"]["classes"],
+                        "teacher_forced_exact":measured["teacher_forced"]["exact"]
+                    });
+                }
                 if split == language_probes::STUTTER {
                     report["first_stutter_error"] = if measured["exact"] == examples.len() {
                         Value::Null

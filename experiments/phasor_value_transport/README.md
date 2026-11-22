@@ -666,6 +666,27 @@ the perfect three-seed score at 1,024 bits.
 | 2,048 | 256 / 221 / 253 |
 | 2,049 | 253 / 255 / 256 |
 
+Across all nine mixed checkpoints, all 256 prompts passed at 65, 255
+and 257 bits. At 63 bits, the 16-bit seed-0 model dropped to 132/256.
+A single-length replay separated answer classes from the end token. It
+produced the correct end token 256/256 times and the correct bit on
+132/132 even and 0/124 odd prompts. At 65 bits the identical checkpoint
+got both bit classes right, 128/128 each. For the 24-bit seed-1 model
+at 1,023 bits, the end token was again correct on all 256. Its bit scores
+were 131/135 even and 115/121 odd. Teacher-forced exact counts matched
+free generation on all three replays.
+
+The input-phase control trained on 24 bits scored 37 / 246 / 205 of
+256 at 255 bits and 59 / 247 / 226 at 257 bits on the identical prompts.
+The corresponding mixed-reflection checkpoints scored 256/256 throughout.
+Every single-length replay retains the original source validation and
+test checks and fingerprints the 256 independently recounted prompts.
+
+```sh
+# With the reflection-phase binary and its existing checkpoint directory.
+PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity16 0 runs/reflection-phase parity-length 63
+```
+
 On original short tasks, the same mixed reflection architecture crossed
 99% for modular addition at 874 / 950 / 931 updates, scoring 4,667 /
 4,674 / 4,690 of 4,705 held-out pairs. GPT key–value binding crossed at
