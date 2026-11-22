@@ -434,6 +434,15 @@ vote or a disagreement leaves the ordinary successor address in place.
 The model has the same 17 tables and learned gain as the selected model.
 [Closed relation and address proofs](../../src/Transformer/Phasor/ClosedRelations.lean)
 
+With `fp32-affine-reference,closed-relation`, the two-step address matched
+all 64 labelled positions on the 32 novel lookup sequences. The full model
+scored 31 / 30 / 30 sequences at 5,000 updates. Its 78 directional
+derivatives included the winning table row (0.549078 analytically,
+0.548959 numerically) and the replaced row (zero by both methods).
+`closed-alignment suite-lookup` reports address matches on every source split.
+The same command on MQAR found no closed reads on novel validation. Its
+ordinary successor matched all 64 labelled positions.
+
 The gain trial doubles the common residual gain only when the closed
 relations resolve one moving endpoint. Lean gives the exact change in the
 endpoint's logit margin. If the normalized read points toward the endpoint

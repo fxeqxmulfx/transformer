@@ -5,6 +5,19 @@ fn mean_loss(e: &Engine, rows: usize, targets: usize) -> Result<f64> {
     Ok(e.losses(rows)?.iter().map(|&x| f64::from(x)).sum::<f64>() / targets as f64)
 }
 
+fn successor(prefix: &[u32], query: u32, vocab: u32) -> u32 {
+    if cfg!(feature = "closed-relation")
+        && let Some(end) = crate::closed_checks::reference(prefix, query, vocab)
+    {
+        return end;
+    }
+    prefix
+        .windows(2)
+        .rev()
+        .find(|pair| pair[0] == query)
+        .map_or(query, |pair| pair[1])
+}
+
 // Independent transcription of PairKey.address, using the reference field
 // exponentiation and reading the stored tables directly in double precision.
 fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64> {
@@ -13,11 +26,7 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
     let inverse = if b == 0 { 0 } else { power(b, p - 2) };
     let mut keys = vec![b, (a + p - b) % p, a.abs_diff(b), a * inverse % p];
     if pair_memory::SUCCESSOR {
-        keys[0] = prefix
-            .windows(2)
-            .rev()
-            .find(|pair| pair[0] == b)
-            .map_or(b, |pair| pair[1]);
+        keys[0] = successor(prefix, b, p);
     }
     keys.extend((1..=3).flat_map(|i| (1..=3).map(move |j| (power(a, i) + power(b, j)) % p)));
     if !prefix.is_empty() {
@@ -63,7 +72,16 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
             [0, p - 1, 9, 0, 6, 4][(i % length + if r == 1 { 2 } else { 0 }) % 6] as u32
         })
         .collect();
-    if cfg!(feature = "relation-support") && length == 18 {
+    if cfg!(feature = "closed-relation") && length == 8 {
+        let patterns = [
+            [1, 0, 2, 0, 3, 0, 1, 1],
+            [1, 0, 2, 0, 3, 0, 2, 1],
+            [3, 0, 1, 0, 2, 0, 3, 3],
+        ];
+        for (row, pattern) in tokens.chunks_mut(length).zip(patterns) {
+            row.copy_from_slice(&pattern);
+        }
+    } else if cfg!(feature = "relation-support") && length == 18 {
         let patterns = [
             [2, 0, 3, 4, 1, 0, 2, 1, 1, 0, 2, 1, 7, 0, 8, 7, 0, 7],
             [1, 0, 2, 0, 3, 0, 4, 0, 5, 9, 1, 6, 7, 6, 8, 9, 9, 1],
@@ -86,6 +104,11 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         .map(|i| ((7 * i + 3) % p) as u32)
         .collect();
     labels[1] = u32::MAX;
+    if cfg!(feature = "closed-relation") && length == 8 {
+        // This prefix has ordinary successor 0 and unique closed endpoint 3.
+        labels.fill(u32::MAX);
+        labels[length - 1] = 3;
+    }
     if cfg!(feature = "relation-paths") && matches!(length, 12 | 18) {
         // Isolate a tie at length 12 and a strict support winner at length 18.
         labels.fill(u32::MAX);
@@ -151,11 +174,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         let mut v = residual(prefix, b, p as u32, d, &theta[start..gain_at]);
         let mut gain = f64::from(theta[gain_at]);
         if selected || cfg!(feature = "successor-displacement") {
-            let r = prefix
-                .windows(2)
-                .rev()
-                .find(|pair| pair[0] == b)
-                .map_or(b, |pair| pair[1]);
+            let r = successor(prefix, b, p as u32);
             let agreed = !cfg!(feature = "successor-agreement")
                 || prefix
                     .windows(2)
@@ -255,6 +274,19 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         ("tied embedding".to_owned(), 0..p * d),
         ("residual gain".to_owned(), gain_at..gain_at + 1),
     ];
+    if cfg!(feature = "closed-relation") && length == 8 {
+        let endpoint = start + 3 * d..start + 4 * d;
+        let ordinary = start..start + d;
+        if gradients[endpoint.clone()].iter().all(|&v| v == 0.)
+            || gradients[ordinary.clone()].iter().any(|&v| v != 0.)
+        {
+            return Err(
+                "address replacement sent a gradient to the wrong successor table row".into(),
+            );
+        }
+        directions.push(("closed endpoint table row".to_owned(), endpoint));
+        directions.push(("ordinary successor table row".to_owned(), ordinary));
+    }
     if cfg!(feature = "successor-bonus") {
         directions.push(("successor bonus".to_owned(), gain_at + 1..gain_at + 2));
     }
@@ -353,8 +385,14 @@ pub fn run(width: Option<usize>) -> Result<()> {
     if !precision::FP32_AFFINE_REFERENCE {
         return Err("finite differences require FP32 affines".into());
     }
-    if cfg!(feature = "relation-support") {
+    if cfg!(any(
+        feature = "relation-support",
+        feature = "closed-relation"
+    )) {
         crate::relation_support::check_counts()?;
+    }
+    if cfg!(feature = "closed-relation") {
+        crate::closed_checks::run()?;
     }
     if let Some(width) = width {
         if ![64, 128, 256].contains(&width) {

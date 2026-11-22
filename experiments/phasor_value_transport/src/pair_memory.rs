@@ -13,6 +13,11 @@ const DEFAULT_MODEL: bool = !cfg!(any(
 ));
 #[cfg(all(feature = "relation-paths", feature = "prefix-frequency"))]
 compile_error!("choose one additional prefix read per trial");
+#[cfg(all(
+    feature = "closed-relation",
+    any(feature = "relation-paths", feature = "prefix-frequency")
+))]
+compile_error!("choose one relation read per trial");
 const THREE_QUARTER_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "successor-gain-three-quarters");
 const HALF_GAIN: bool = cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor");
@@ -95,6 +100,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-successor-hit-gain175-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
+} else if cfg!(feature = "closed-relation") {
+    "phasor-closed-relation-address-v1"
 } else if cfg!(feature = "relation-support") {
     "phasor-composable-relation-support-v1"
 } else if cfg!(feature = "relation-path-mean") {
@@ -232,6 +239,7 @@ pub struct PairMemory {
     rows: Vec<u32>,
     factors: Vec<usize>,
     successors: Vec<Option<u32>>,
+    closed: Option<crate::relation_support::ClosedRead>,
     agreement: Option<SuccessorAgreement>,
 }
 
@@ -263,6 +271,8 @@ impl PairMemory {
             rows: vec![0; entries],
             factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
             successors: vec![None; if SUCCESSOR { cfg.vocab } else { 0 }],
+            closed: cfg!(feature = "closed-relation")
+                .then(|| crate::relation_support::ClosedRead::new(cfg.vocab)),
             agreement: if cfg!(feature = "successor-agreement") {
                 Some(SuccessorAgreement {
                     ambiguous: vec![false; cfg.vocab],
@@ -317,6 +327,14 @@ impl PairMemory {
                     self.successors[key] = Some(value);
                 }
                 keys[0] = self.successors[b].unwrap_or(token);
+                if let Some(closed) = &mut self.closed {
+                    if pos == 0 {
+                        closed.clear();
+                    } else if pos >= 3 {
+                        closed.write(tokens[row - 3], tokens[row - 2], tokens[row - 1]);
+                    }
+                    keys[0] = closed.address(token).unwrap_or(keys[0]);
+                }
                 if let Some(a) = &mut self.agreement {
                     a.reads[row] = if a.ambiguous[b] { token } else { keys[0] };
                 }

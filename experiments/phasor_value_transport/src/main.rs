@@ -17,6 +17,7 @@ mod relation_support;
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
 mod checks;
+mod closed_checks;
 mod snapshot;
 mod stress;
 
@@ -203,8 +204,9 @@ fn main() -> Result<()> {
         [op, width] if op == "shared-check" => pair_checks::run(Some(width.parse()?)),
         [op] if op == "routes" => stress::routes(),
         [op] if op == "extensions" => stress::extensions(),
-        [op, name] if op == "successor-alignment" => stress::alignment::run(name, 1),
-        [op, name, hops] if op == "successor-alignment" => stress::alignment::run(name, hops.parse()?),
+        [op, name] if op == "successor-alignment" => stress::alignment::run(name, 1, false),
+        [op, name, hops] if op == "successor-alignment" => stress::alignment::run(name, hops.parse()?, false),
+        [op, name] if op == "closed-alignment" => stress::alignment::run(name, 1, true),
         [op, dest] if matches!(op.as_str(), "report" | "extended-report") =>
             stress::report::run(Path::new(dest), op == "extended-report"),
         [op, dest, names @ ..] if op == "catalog-report" && !names.is_empty() =>
@@ -227,6 +229,6 @@ fn main() -> Result<()> {
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|extensions} | shared-check [WIDTH] | successor-alignment CASE [HOPS] | {report|extended-report} RUN_DIR | catalog-report RUN_DIR CASE... | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|extensions} | shared-check [WIDTH] | successor-alignment CASE [HOPS] | closed-alignment CASE | {report|extended-report} RUN_DIR | catalog-report RUN_DIR CASE... | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
     }
 }
