@@ -42,6 +42,9 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     ] {
         weights.copy_from_slice(&original);
         crate::slot_checks::disable_reads(&cfg, &mut weights, removed);
+        if cfg.head.has_triple_phase() && matches!(name, "context_only" | "structural_only") {
+            weights[crate::slot_memory::phase_outputs(&cfg)].fill(0.);
+        }
         results.insert(name, score(&weights)?);
     }
     println!(

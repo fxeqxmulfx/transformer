@@ -1672,6 +1672,89 @@ for seed in 0 1 2; do
 done
 ```
 
+### Learned phase residual
+
+The `triple-phase-read` model projects each normalized dense input into
+32 learned increments and sums them over the causal prefix. A learned
+matrix maps the sine and centered cosine of those angles back to the
+hidden width. It adds this vector to the four gated triple-transport
+reads before the tied classifier. One backbone and one cross-entropy
+train the whole model from the original random embeddings. The projection
+matrices add `96 × width` weights. Their output columns start at zero,
+which recovers the original triple read for every dense prefix.
+The `triple-lookup-phase` build uses the same read with the lookup-sized
+dictionary. Each build has a distinct checkpoint identifier.
+[Causality, zero projection and matched removals](../../src/Transformer/Phasor/TripleTransport/PhaseResidual.lean)
+
+With the default dictionary size, all three NV11 checkpoints independently
+recovered 4,704/4,704 training and 4,705/4,705 held-out pairs at update
+250. The smallest held-out margins were 2.574, 3.004 and 2.842. Seed 0
+also passed modular addition at update 171 with 4,705/4,705 held-out.
+With the lookup-sized dictionary, three fresh NV11 runs also reached
+4,704/4,704 training and 4,705/4,705 held-out at update 250. Independent
+reloads checked each of those lookup-sized checkpoints. On modulo-193
+division, seed 0 with that same architecture scored 18,528/18,528 at
+update 292 and reproduced the score from its saved weights.
+The following parity scores were independently reproduced from the
+first passing weights with the default dictionary size. Each sequence
+must match in full.
+
+| Long case | Seed | First passing update | Novel validation | Source test | 32-bit transfer | 64-bit transfer |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 16-bit parity | 0 | 1,250 | 157/157 | 512/512 | 64/64 | 64/64 |
+| 16-bit parity | 1 | 750 | 157/157 | 512/512 | 64/64 | 64/64 |
+| 16-bit parity | 2 | 750 | 157/157 | 512/512 | 64/64 | 52/64 |
+| 20-bit parity | 0 | 1,000 | 284/284 | 512/512 | 64/64 | 64/64 |
+| 24-bit parity | 0 | 750 | 306/306 | 512/512 | 64/64 | 64/64 |
+
+At update 3,000 the default triple model scored 117, 95 and 97 out of
+157 on 16-bit parity. To measure the trained phase residual, we zeroed
+each output projection in turn and re-scored the same checkpoints with
+the original scorer. All columns below give correct novel sequences.
+
+| Case and seed | Full | Remove sine | Remove cosine | Remove both | Phase alone |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 16 bits, seed 0 | 157/157 | 144 | 157 | 83 | 0 |
+| 16 bits, seed 1 | 157/157 | 82 | 82 | 72 | 54 |
+| 20 bits, seed 0 | 284/284 | 223 | 225 | 151 | 0 |
+| 24 bits, seed 0 | 306/306 | 305 | 279 | 153 | 0 |
+
+The cosine removal preserved seed 0's full 16-bit score and cost seed 1
+75 sequences. Removing both projections reduced the score on all four
+parity checkpoints. On NV11 seed 0, removing both projections preserved
+4,705/4,705 held-out answers. The phase projection alone scored 99/4,705.
+The ablation command also checks the additive identity of
+the two projections on arbitrary dense inputs and compares the
+zero-projection hidden states and logits with a separately instantiated
+triple trunk carrying the same trained weights.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.PhaseResidual
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,triple-phase-read
+bin=./target/release/phasor-value-transport
+out=runs/triple-phase-read
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    "$bin" screen arithmetic-cubic-product "$seed" "$out" 250
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" screen basis-parity16 "$seed" "$out" 3000
+    "$bin" probes basis-parity16 "$seed" "$out"
+    "$bin" slot-phase-ablate basis-parity16 "$seed" "$out"
+done
+for task in basis-parity20 basis-parity24; do
+    "$bin" screen "$task" 0 "$out" 3000
+    "$bin" probes "$task" 0 "$out"
+    "$bin" slot-phase-ablate "$task" 0 "$out"
+done
+```
+
+To repeat the lookup-sized phase results, use the same build and NV11
+commands with `triple-lookup-phase` and a fresh run directory. Then run
+`"$bin" screen division-p193 0 "$out" 438` and
+`"$bin" probes division-p193 0 "$out"`.
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.

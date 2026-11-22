@@ -79,7 +79,7 @@ fn observations(out: &Path, row: &Value) -> Result<(Vec<Value>, [usize; 3])> {
             continue;
         }
         let result: Value = serde_json::from_slice(&fs::read(file)?)?;
-        if architecture::HEAD == crate::head::Head::LookupTripleTransport && vocab.is_none() {
+        if architecture::HEAD.uses_lookup_capacity() && vocab.is_none() {
             vocab = Some(load(name)?.1.vocab);
         }
         validate(row, seed, &dir, &result, vocab)?;

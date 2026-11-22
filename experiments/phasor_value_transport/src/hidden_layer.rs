@@ -65,7 +65,7 @@ impl HiddenLayer {
         let cfg = &e.config;
         let rows = cfg.max_batch * cfg.max_length;
         let memory = match cfg.head {
-            Head::PhasePrefix | Head::InputPhase | Head::SingleReflection => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
+            Head::PhasePrefix | Head::InputPhase | Head::SingleReflection | Head::TriplePhase | Head::LookupTriplePhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::SharedBilinear | Head::ScalarPhase => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
@@ -101,8 +101,12 @@ impl HiddenLayer {
                 weights: crate::architecture::start(cfg) + Head::ReflectionPhase.parameters(cfg),
             })
         } else { None };
-        let input_weights = crate::architecture::memory_start(cfg);
-        let (projected_channels, read_channels) = if cfg.head.is_phase() {
+        let input_weights = if cfg.head.has_triple_phase() {
+            crate::slot_memory::phase_start(cfg)
+        } else {
+            crate::architecture::memory_start(cfg)
+        };
+        let (projected_channels, read_channels) = if cfg.head.is_phase() || cfg.head.has_triple_phase() {
             (cfg.head.phase_inputs(), 2 * M)
         } else if cfg.head.is_toeplitz() {
             (2 * cfg.width, 2 * cfg.width)

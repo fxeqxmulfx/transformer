@@ -53,6 +53,8 @@ const _: () = {
         + TWO_FRAME as u8
         + cfg!(feature = "triple-transport") as u8
         + cfg!(feature = "triple-lookup-prototypes") as u8
+        + cfg!(feature = "triple-phase-read") as u8
+        + cfg!(feature = "triple-lookup-phase") as u8
         + cfg!(feature = "learned-stream-read") as u8
         + FOURIER as u8
         + REFLECTION_PHASE as u8
@@ -73,6 +75,10 @@ pub const HEAD: Head = if FOURIER {
     Head::FourierTransport
 } else if cfg!(feature = "triple-lookup-prototypes") {
     Head::LookupTripleTransport
+} else if cfg!(feature = "triple-phase-read") {
+    Head::TriplePhase
+} else if cfg!(feature = "triple-lookup-phase") {
+    Head::LookupTriplePhase
 } else if cfg!(feature = "triple-transport") {
     Head::TripleTransport
 } else if TWO_FRAME {
@@ -148,7 +154,7 @@ pub fn parameters(cfg: &Config) -> usize {
 }
 
 pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {
-    if cfg.head == Head::LookupTripleTransport {
+    if cfg.head.uses_lookup_capacity() {
         result["prototype_slots"] =
             json!(crate::slot_memory::capacity(cfg.head, cfg.width, cfg.vocab));
     }
@@ -182,7 +188,7 @@ pub fn valid_record(result: &Value, width: u64, vocab: Option<usize>) -> bool {
                 && result.get("pair_parameters").is_none();
         }
         if TRIPLE_TRANSPORT {
-            let slots = if HEAD == Head::LookupTripleTransport {
+            let slots = if HEAD.uses_lookup_capacity() {
                 let Some(vocab) = vocab else { return false };
                 let slots = crate::slot_memory::capacity(HEAD, width as usize, vocab);
                 if result["prototype_slots"] != slots {
@@ -193,7 +199,7 @@ pub fn valid_record(result: &Value, width: u64, vocab: Option<usize>) -> bool {
                 width.min(128) as usize
             };
             return result["readout_parameters"]
-                == crate::slot_memory::parameter_count(width as usize, slots)
+                == crate::slot_memory::parameter_count(HEAD, width as usize, slots)
                 && result.get("pair_parameters").is_none();
         }
         if TWO_FRAME {

@@ -25,6 +25,8 @@ pub enum Head {
     TwoFrame,
     TripleTransport,
     LookupTripleTransport,
+    TriplePhase,
+    LookupTriplePhase,
     FourierTransport,
     ReflectionPhase,
     SingleReflection,
@@ -59,6 +61,8 @@ impl Head {
             "two-frame" => Ok(Self::TwoFrame),
             "triple-transport" => Ok(Self::TripleTransport),
             "triple-lookup-prototypes" => Ok(Self::LookupTripleTransport),
+            "triple-phase-read" => Ok(Self::TriplePhase),
+            "triple-lookup-phase" => Ok(Self::LookupTriplePhase),
             "fourier-transport" => Ok(Self::FourierTransport),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
@@ -92,6 +96,8 @@ impl Head {
             Self::TwoFrame => "phasor-learned-two-sided-frame-v1",
             Self::TripleTransport => "phasor-learned-triple-transport-v1",
             Self::LookupTripleTransport => "phasor-triple-prototype-capacity-v1",
+            Self::TriplePhase => "phasor-triple-phase-residual-32-v1",
+            Self::LookupTriplePhase => "phasor-triple-lookup-phase-32-v1",
             Self::FourierTransport => "phasor-learned-fourier-transport-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
@@ -120,23 +126,24 @@ impl Head {
     }
 
     pub const fn projects_embeddings(self) -> bool {
-        matches!(
-            self,
-            Self::PrefixToeplitz
-                | Self::TiedToeplitz
-                | Self::InputPhase
-                | Self::AffinePhase
-                | Self::BilinearPhase
-                | Self::SharedBilinear
-                | Self::ScalarPhase
-                | Self::ReflectionPhase
-                | Self::SingleReflection
-                | Self::ContextRotation
-                | Self::CrossedContext
-                | Self::Householder
-                | Self::AssociativeReflection
-                | Self::PeriodicReflection
-        )
+        self.has_triple_phase()
+            || matches!(
+                self,
+                Self::PrefixToeplitz
+                    | Self::TiedToeplitz
+                    | Self::InputPhase
+                    | Self::AffinePhase
+                    | Self::BilinearPhase
+                    | Self::SharedBilinear
+                    | Self::ScalarPhase
+                    | Self::ReflectionPhase
+                    | Self::SingleReflection
+                    | Self::ContextRotation
+                    | Self::CrossedContext
+                    | Self::Householder
+                    | Self::AssociativeReflection
+                    | Self::PeriodicReflection
+            )
     }
 
     pub const fn has_stream_memory(self) -> bool {
@@ -164,6 +171,15 @@ impl Head {
 
     pub const fn is_triple(self) -> bool {
         matches!(self, Self::TripleTransport | Self::LookupTripleTransport)
+            || self.has_triple_phase()
+    }
+
+    pub const fn has_triple_phase(self) -> bool {
+        matches!(self, Self::TriplePhase | Self::LookupTriplePhase)
+    }
+
+    pub const fn uses_lookup_capacity(self) -> bool {
+        matches!(self, Self::LookupTripleTransport | Self::LookupTriplePhase)
     }
 
     pub const fn phase_inputs(self) -> usize {
@@ -202,12 +218,14 @@ impl Head {
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
             Self::TwoFrame => (2 * cfg.width + 8) * cfg.width,
-            Self::TripleTransport | Self::LookupTripleTransport => {
-                crate::slot_memory::parameter_count(
-                    cfg.width,
-                    crate::slot_memory::capacity(self, cfg.width, cfg.vocab),
-                )
-            }
+            Self::TripleTransport
+            | Self::LookupTripleTransport
+            | Self::TriplePhase
+            | Self::LookupTriplePhase => crate::slot_memory::parameter_count(
+                self,
+                cfg.width,
+                crate::slot_memory::capacity(self, cfg.width, cfg.vocab),
+            ),
             Self::FourierTransport => crate::fourier::parameters(cfg.width),
             Self::PrefixToeplitz | Self::TiedToeplitz => {
                 crate::toeplitz::parameter_count(cfg.width, self == Self::TiedToeplitz)
@@ -259,7 +277,10 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
-            Self::TripleTransport | Self::LookupTripleTransport => {
+            Self::TripleTransport
+            | Self::LookupTripleTransport
+            | Self::TriplePhase
+            | Self::LookupTriplePhase => {
                 crate::slot_memory::initialize(cfg, seed, parameters);
             }
             Self::FourierTransport => crate::fourier::initialize(cfg, seed, parameters),

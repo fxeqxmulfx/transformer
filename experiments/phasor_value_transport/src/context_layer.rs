@@ -51,7 +51,7 @@ impl ContextLayer {
         match self {
             Self::Rotation(x) => x.add_input_gradient(e, target, rows),
             Self::Frames(x) => x.add_input_gradient(e, target, rows),
-            Self::Slots(_) => Ok(()), // Nearest-slot addresses are locally constant.
+            Self::Slots(x) => x.add_input_gradient(e, target, rows),
             Self::Fourier(x) => x.add_input_gradient(e, target, rows),
         }
     }

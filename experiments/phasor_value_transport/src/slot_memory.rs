@@ -16,15 +16,30 @@ pub struct Layout {
 }
 
 pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
-    if head == crate::head::Head::LookupTripleTransport {
+    if head.uses_lookup_capacity() {
         vocab.min(256)
     } else {
         width.min(128)
     }
 }
 
-pub fn parameter_count(d: usize, k: usize) -> usize {
-    4 * d + (k + k * k + 4) * d + 4
+pub fn parameter_count(head: crate::head::Head, d: usize, k: usize) -> usize {
+    let phase = if head.has_triple_phase() {
+        3 * crate::head::MEMORY_WIDTH * d
+    } else {
+        0
+    };
+    4 * d + (k + k * k + 4) * d + 4 + phase
+}
+
+pub fn phase_start(cfg: &Config) -> usize {
+    architecture::memory_start(cfg) + Layout::new(cfg).bias + 4
+}
+
+pub fn phase_outputs(cfg: &Config) -> std::ops::Range<usize> {
+    let channels = crate::head::MEMORY_WIDTH * cfg.width;
+    let start = phase_start(cfg) + channels;
+    start..start + 2 * channels
 }
 
 impl Layout {
@@ -90,6 +105,17 @@ pub fn initialize(cfg: &Config, seed: u32, w: &mut [f32]) {
         dst.copy_from_slice(&a);
     }
     w[l.values..l.bias + 4].fill(0.);
+    if cfg.head.has_triple_phase() {
+        let channels = crate::head::MEMORY_WIDTH * l.d;
+        let phase = &mut w[l.bias + 4..l.bias + 4 + 3 * channels];
+        let (increments, readout) = phase.split_at_mut(channels);
+        let mut rng = Random::new(seed.wrapping_add(30_000));
+        let scale = (l.d as f64).sqrt().recip();
+        for weight in increments {
+            *weight = rng.gauss(0., scale) as f32;
+        }
+        readout.fill(0.);
+    }
 }
 
 pub fn dot(x: &[f32], y: &[f32]) -> f32 {

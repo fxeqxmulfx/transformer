@@ -29,6 +29,7 @@ impl Engine {
 }
 
 pub(super) struct SlotLayer {
+    phase: Option<super::hidden_layer::HiddenLayer>,
     layout: Layout,
     offset: usize,
     copier: crate::slot_copy::kernels::Kernels,
@@ -47,6 +48,12 @@ impl SlotLayer {
         let layout = Layout::new(&e.config);
         let count = layout.bias + 4;
         Ok(Self {
+            phase: e
+                .config
+                .head
+                .has_triple_phase()
+                .then(|| super::hidden_layer::HiddenLayer::new(e))
+                .transpose()?,
             offset: crate::architecture::memory_start(&e.config),
             products: e.cuda.alloc(layout.slots.pow(3))?,
             dictionary_t: e.cuda.alloc(layout.slots * layout.d)?,
@@ -137,6 +144,18 @@ impl SlotLayer {
         let (choices, out) = slot_memory::forward(l, &w, &tape.routing, &cells[..rows], &h, length);
         let device = e.cuda.upload(&out)?;
         self.copy(self.output.ptr(), device.ptr(), out.len())?;
+        if let Some(phase) = &self.phase {
+            phase.forward_features(e, rows, length)?;
+            unsafe {
+                e.ops.add(
+                    grid(out.len()),
+                    self.output.ptr(),
+                    self.output.ptr(),
+                    phase.features().ptr(),
+                    out.len() as u32,
+                )?;
+            }
+        }
         tape.weights = w;
         tape.hidden = h;
         tape.rows = choices;
@@ -148,6 +167,9 @@ impl SlotLayer {
         let tape = self.tape.borrow();
         if tape.rows.len() != rows || tape.length != length {
             return Err("slot backward needs a matching dense forward".into());
+        }
+        if let Some(phase) = &self.phase {
+            phase.backward(e, rows, length)?;
         }
         let mut buffer = self.parameters.borrow_mut();
         let mut dw = vec![0.; buffer.len()];
@@ -171,5 +193,12 @@ impl SlotLayer {
         )?;
         let device = e.cuda.upload(&dh)?;
         self.copy(e.dlast.ptr(), device.ptr(), dh.len())
+    }
+
+    pub(super) fn add_input_gradient(&self, e: &Engine, target: P, rows: usize) -> Result<()> {
+        if let Some(phase) = &self.phase {
+            phase.add_projection_gradient(e, target, rows)?;
+        }
+        Ok(())
     }
 }

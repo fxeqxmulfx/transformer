@@ -19,13 +19,18 @@ pub(crate) fn disable_reads(cfg: &Config, weights: &mut [f32], disabled: &[usize
 pub(super) fn fixture(cfg: &Config, w: &mut [f32]) {
     slot_memory::initialize(cfg, 907, w);
     let l = slot_memory::Layout::new(cfg);
-    let w = &mut w[architecture::memory_start(cfg)..];
+    let memory = &mut w[architecture::memory_start(cfg)..];
     let mut rng = random::Random::new(137);
-    for x in &mut w[l.values..l.gates] {
+    for x in &mut memory[l.values..l.gates] {
         *x = rng.gauss(0., 0.002) as f32;
     }
-    for x in &mut w[l.gates..l.bias + 4] {
+    for x in &mut memory[l.gates..l.bias + 4] {
         *x = rng.gauss(0., 0.08) as f32;
+    }
+    if cfg.head.has_triple_phase() {
+        for x in &mut w[slot_memory::phase_outputs(cfg)] {
+            *x = rng.gauss(0., 0.01) as f32;
+        }
     }
 }
 
@@ -132,6 +137,9 @@ pub(super) fn audit(path: &Path) -> Result<()> {
     ] {
         let mut changed = w.clone();
         disable_reads(&cfg, &mut changed, disabled);
+        if cfg.head.has_triple_phase() && name == "only_structural_reads" {
+            changed[slot_memory::phase_outputs(&cfg)].fill(0.);
+        }
         engine.parameters.write(&changed)?;
         results.insert(name.into(), json!(counts(&mut engine, splits, &names)?));
     }

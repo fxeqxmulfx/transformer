@@ -14,6 +14,7 @@ mod language_probes;
 pub mod numeric_probe;
 pub mod phase_ablation;
 pub mod slot_ablation;
+pub mod triple_phase_ablation;
 mod recall_gap;
 pub mod report;
 mod source_target;
