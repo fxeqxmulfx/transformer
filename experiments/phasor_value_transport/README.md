@@ -997,6 +997,21 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/two-frame-nv11/seed0/nv11-train-3000.f32 rows
 ```
 
+## Triple transport
+
+A context can learn a partial map between a dictionary of hidden vectors.
+Three distinct correspondences from one map relate two ordered triples.
+Joining these relations across contexts gives a graph of triples. Given two
+anchor correspondences, a third candidate can be read from the same connected
+component. A missing connection leaves the read undecided.
+
+Any quantity preserved by each individual match is constant on a connected
+component. If that quantity separates candidates for the given anchors, every
+connected candidate is correct. Renaming the hidden slots transports the
+entire relation. These results specify when the read is sound. The network
+must learn reliable correspondences for its own input distribution.
+[Triple transport proofs](../../src/Transformer/Phasor/TripleTransport.lean)
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.
