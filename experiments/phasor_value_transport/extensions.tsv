@@ -8,3 +8,5 @@ short	arithmetic-sum-pow12
 short	suite-parity-none
 short	arithmetic-sum-pow16
 long	suite-crasp-depth-1
+short	basis-parity-noise20
+short	arithmetic-sum-pow24
