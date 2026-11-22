@@ -18,6 +18,7 @@ pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
 pub const SCALAR_PHASE: bool = cfg!(feature = "scalar-phase-bottleneck");
 pub const TIED_TOEPLITZ: bool = cfg!(feature = "tied-toeplitz");
 pub const TWO_FRAME: bool = cfg!(feature = "two-sided-frame");
+pub const TRIPLE_TRANSPORT: bool = cfg!(feature = "triple-transport");
 pub const TOEPLITZ: bool = cfg!(feature = "prefix-toeplitz") || TIED_TOEPLITZ;
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
@@ -49,6 +50,7 @@ const _: () = {
         + cfg!(feature = "prefix-toeplitz") as u8
         + TIED_TOEPLITZ as u8
         + TWO_FRAME as u8
+        + TRIPLE_TRANSPORT as u8
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
         + cfg!(feature = "context-rotation-read") as u8
@@ -63,7 +65,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if TWO_FRAME {
+pub const HEAD: Head = if TRIPLE_TRANSPORT {
+    Head::TripleTransport
+} else if TWO_FRAME {
     Head::TwoFrame
 } else if TIED_TOEPLITZ {
     Head::TiedToeplitz
@@ -159,6 +163,11 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             && result.get("readout_parameters").is_none();
     }
     if RAW {
+        if TRIPLE_TRANSPORT {
+            return result["readout_parameters"]
+                == crate::slot_memory::parameter_count(width as usize)
+                && result.get("pair_parameters").is_none();
+        }
         if TWO_FRAME {
             return result["readout_parameters"] == (2 * width + 8) * width
                 && result.get("pair_parameters").is_none();

@@ -1,5 +1,9 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
+Phasor with triple transport solved all 9,409 canonical NV11 pairs for
+three random initializations at update 250. The tied external lookup starts
+with the original random embedding vectors. [Architecture, controls and reproduction](#triple-transport)
+
 ## Learned stream readout
 
 The inner model takes a sequence of embedding vectors. For a tokenized
@@ -1014,6 +1018,72 @@ The confidence test uses a damped cosine. Cauchy–Schwarz gives a strict
 lower bound on the energy of every trusted hidden value. An open neighborhood
 of an unwritten value therefore supplies no edges.
 [Triple transport proofs](../../src/Transformer/Phasor/TripleTransport.lean)
+
+At each position, the memory addresses its current input by the nearest
+prototype direction. It addresses its prefix by matching the previous
+normalized input plus the previous Phasor context divided by `√D`.
+The previous context also drives four learned affine coefficients that mix
+the current contextual vector, a direct memory value, a constant-row
+prototype and a transported prototype. Both structural coefficients start
+at zero. The first position uses the contextual read. The same functions
+operate at every sequence length.
+
+The dictionary starts from the unordered values of the original random
+lookup. Its capacity is `K = min(D, 128)`. Dense vector ordering selects up
+to `K` initial directions, and independent random vectors fill vacant slots.
+The learned memory contains a zero-initialized dense vector for each ordered
+pair of slots. The original cross-entropy and AdamW update these vectors,
+the prototypes, gates, backbone and external classifier. Only dense inputs,
+hidden states and the read's own weights enter its forward pass. The class
+projection follows the read.
+
+The confidence test uses damping energy `D × f32::EPSILON`. For a
+constant read, at least two other trusted inputs must agree on the same
+prototype, with every trusted image in that row equal. Rows with distinct
+trusted images supply triple edges. For a transport read the implementation
+takes up to four other anchors in prototype-vector order. An anchor pair
+can identify a candidate when a single available image shares its source
+component. All pairs that identify a candidate must agree. The graph is
+reconstructed from the weights when a checkpoint is loaded. At width 128,
+the read adds 2,114,564 parameters, including the four-stream readout, and
+its graph has at most 2,097,152 ordered triples.
+
+Each seed used the same original split of `a³ + ab mod 97`, with independently
+initialized random embeddings and a different training order. The first
+scheduled observation after initialization was update 250. A fresh process
+verified each checkpoint digest and scored every pair.
+
+| Seed | Training correct | Held-out correct | Lowest held-out logit margin | Held-out correct with triple transport disabled | Held-out correct with both structural reads disabled |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 4,704 / 4,704 | 4,705 / 4,705 | 2.711 | 97 | 47 |
+| 1 | 4,704 / 4,704 | 4,705 / 4,705 | 3.003 | 96 | 46 |
+| 2 | 4,704 / 4,704 | 4,705 / 4,705 | 2.936 | 98 | 48 |
+
+Every training pair addressed a written direct value. Every held-out pair
+addressed an unwritten value. Keeping just the gated constant and transport
+reads reproduced all 9,409 answers in each checkpoint. Independently shuffling
+the external vocabulary or the internal slots preserved all 912,673 class
+logits bit for bit. NV11's nonconstant rows act as affine permutations of
+the second operand, which explains why triples can transfer between rows.
+These trials establish performance on the canonical split. Each 250-update
+training command, including its scheduled evaluations and checkpoint writes,
+took 17.3–18.3 seconds on the GTX 1050 with the Rust host graph and Kernite
+v0.6.0 FP32 kernels.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,triple-transport
+bin=./target/release/phasor-value-transport
+"$bin" check
+for seed in 0 1 2
+do
+    trial="runs/triple-transport-nv11/seed$seed"
+    "$bin" nv11-train "$trial" "$seed" 250
+    "$bin" nv11-score "$trial/nv11-train-250.f32" rows
+    "$bin" nv11-slot-audit "$trial/nv11-train-250.f32"
+done
+```
 
 ## Single-coordinate frame orbit
 

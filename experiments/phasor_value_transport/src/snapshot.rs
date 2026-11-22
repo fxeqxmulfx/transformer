@@ -59,7 +59,7 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
 
 // Bind a named training checkpoint to the observation that saved it. Several
 // learned architectures have the same weight count and distinct forward maps.
-fn recorded_nv11(path: &Path, digest: &str) -> Result<Option<Value>> {
+pub(super) fn recorded_nv11(path: &Path, digest: &str) -> Result<Option<Value>> {
     let stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("");
     let Some((arm, slot)) = ["nv11-train", "shared-values"]
         .into_iter()

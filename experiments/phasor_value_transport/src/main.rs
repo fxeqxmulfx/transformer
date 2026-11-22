@@ -39,6 +39,11 @@ mod reflection_phase_checks;
 mod relation_paths;
 mod relation_support;
 mod scalar_phase_checks;
+mod slot_checks;
+mod slot_copy;
+mod slot_gradients;
+mod slot_memory;
+mod slot_orbits;
 mod toeplitz;
 mod toeplitz_checks;
 mod transition;
@@ -255,6 +260,7 @@ fn main() -> Result<()> {
         [op] if op == "memory-check" && architecture::SCALAR_PHASE => scalar_phase_checks::run(),
         [op] if op == "memory-check" && architecture::TOEPLITZ => toeplitz_checks::run(),
         [op] if op == "memory-check" && architecture::TWO_FRAME => two_frame_checks::run(),
+        [op] if op == "memory-check" && architecture::TRIPLE_TRANSPORT => slot_gradients::run(),
         [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
         [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),
@@ -306,6 +312,7 @@ fn main() -> Result<()> {
         [arm, dest, seed, steps] if matches!(arm.as_str(), "nv11-train" | "shared-values") =>
             cell(arm, Path::new(dest), seed.parse()?, steps.parse()?),
         [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
+        [op, file] if op == "nv11-slot-audit" => slot_checks::audit(Path::new(file)),
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Margins),
         [op, file, mode] if op == "nv11-score" && mode == "shifts" =>
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Shifts),
@@ -313,6 +320,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Rows),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }

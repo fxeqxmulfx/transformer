@@ -144,6 +144,9 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     for w in &mut parameters[start..end] {
         *w = rng.gauss(0., 0.15) as f32;
     }
+    if architecture::TRIPLE_TRANSPORT {
+        crate::slot_checks::fixture(&cfg, &mut parameters);
+    }
     e.parameters.write(&parameters)?;
     e.forward(&tokens, &labels, 3, length)?;
     let logits = e.logits.read()?;
@@ -157,6 +160,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         || architecture::HOUSEHOLDER
         || architecture::TOEPLITZ
         || architecture::TWO_FRAME
+        || architecture::TRIPLE_TRANSPORT
     {
         0.0003
     } else {
@@ -309,6 +313,8 @@ pub fn run(width: Option<usize>) -> Result<()> {
         crate::toeplitz_checks::run()?;
     } else if architecture::TWO_FRAME {
         crate::two_frame_checks::run()?;
+    } else if architecture::TRIPLE_TRANSPORT {
+        crate::slot_gradients::run()?;
     } else if architecture::PHASE_MEMORY {
         crate::phase_checks::run()?;
     }

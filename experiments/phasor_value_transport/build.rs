@@ -245,6 +245,7 @@ fn main() {
         "context_rotation_layer",
         "context_layer",
         "two_frame_layer",
+        "slot_layer",
         "associative_layer",
     ] {
         let file = format!("src/{name}.rs");

@@ -23,6 +23,7 @@ pub enum Head {
     PrefixToeplitz,
     TiedToeplitz,
     TwoFrame,
+    TripleTransport,
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
@@ -54,6 +55,7 @@ impl Head {
             "prefix-toeplitz" => Ok(Self::PrefixToeplitz),
             "tied-toeplitz" => Ok(Self::TiedToeplitz),
             "two-frame" => Ok(Self::TwoFrame),
+            "triple-transport" => Ok(Self::TripleTransport),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
@@ -84,6 +86,7 @@ impl Head {
             Self::PrefixToeplitz => "phasor-learned-prefix-toeplitz-v1",
             Self::TiedToeplitz => "phasor-learned-tied-toeplitz-v1",
             Self::TwoFrame => "phasor-learned-two-sided-frame-v1",
+            Self::TripleTransport => "phasor-learned-triple-transport-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
@@ -135,11 +138,15 @@ impl Head {
     }
 
     pub const fn replaces_context(self) -> bool {
-        self.is_toeplitz() || matches!(self, Self::ScalarPhase | Self::TwoFrame)
+        self.is_toeplitz()
+            || matches!(
+                self,
+                Self::ScalarPhase | Self::TwoFrame | Self::TripleTransport
+            )
     }
 
     pub const fn transforms_context(self) -> bool {
-        self.context_stages() > 0 || matches!(self, Self::TwoFrame)
+        self.context_stages() > 0 || matches!(self, Self::TwoFrame | Self::TripleTransport)
     }
 
     pub const fn is_toeplitz(self) -> bool {
@@ -182,6 +189,7 @@ impl Head {
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
             Self::TwoFrame => (2 * cfg.width + 8) * cfg.width,
+            Self::TripleTransport => crate::slot_memory::parameter_count(cfg.width),
             Self::PrefixToeplitz | Self::TiedToeplitz => {
                 crate::toeplitz::parameter_count(cfg.width, self == Self::TiedToeplitz)
             }
@@ -232,6 +240,7 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::TripleTransport => crate::slot_memory::initialize(cfg, seed, parameters),
             Self::TwoFrame => {
                 let d = cfg.width;
                 let first = crate::architecture::memory_start(cfg);

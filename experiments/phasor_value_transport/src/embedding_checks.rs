@@ -18,6 +18,9 @@ pub fn run() -> Result<()> {
     for x in &mut parameters[start..start + count] {
         *x = rng.gauss(0., 0.17) as f32;
     }
+    if architecture::TRIPLE_TRANSPORT {
+        crate::slot_checks::fixture(&cfg, &mut parameters);
+    }
     let mut e = Engine::new(cfg, &parameters)?;
     let tokens = [4, 16, 4, 11, 22, 29, 7, 9, 14, 18];
     let embedded: Vec<_> = tokens
@@ -42,9 +45,20 @@ pub fn run() -> Result<()> {
             "vector input differs from lookup or reused a stale supervised gradient".into(),
         );
     }
-    let vectors: Vec<_> = (0..rows * width)
+    let mut vectors: Vec<_> = (0..rows * width)
         .map(|_| rng.gauss(0., 0.27) as f32)
         .collect();
+    if architecture::TRIPLE_TRANSPORT {
+        // Sample off-table vectors inside well-separated routing cells. A
+        // finite difference crossing a nearest-neighbor tie measures a jump.
+        let l = slot_memory::Layout::new(&e.config);
+        let w = &parameters[architecture::memory_start(&e.config)..];
+        for (i, v) in vectors.chunks_exact_mut(width).enumerate() {
+            for (x, k) in v.iter_mut().zip(l.prototype(w, i % l.slots)) {
+                *x += 0.5 * k;
+            }
+        }
+    }
     if vectors.chunks_exact(width).any(|v| {
         parameters[..vocab * width]
             .chunks_exact(width)
