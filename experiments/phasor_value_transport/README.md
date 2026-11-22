@@ -1216,12 +1216,33 @@ update 171, its first passing observation. The original mean-stream reference
 first met the suite's 99% threshold at updates 893, 950 and 931. The source
 addition case supplies no separate length-transfer split.
 
+We screened eleven further original GPT cases through update 380 with seed 0.
+All eight crossings occurred at update 171 and reproduced from the saved
+weights. Subtraction, multiplication, half-sum, cube-plus, square-times
+and affine-product each scored 4,705/4,705 on validation.
+Division scored 4,656/4,656 and fifth-power division modulo 97 scored
+4,622/4,656. Permuted addition scored 41/4,705 at the cutoff.
+The two long-tier screens, absolute difference and sum cubed, scored
+394/4,705 and 132/4,705. Those three counts are observations at update
+380 within the original 100,000-update schedules.
+
 ```sh
 for seed in 0 1 2
 do
     PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-add "$seed" runs/triple-gpt 380
     PHASOR_EVAL_BATCH_CAP=16 "$bin" replay arithmetic-add "$seed" runs/triple-gpt
     PHASOR_EVAL_BATCH_CAP=16 "$bin" probes arithmetic-add "$seed" runs/triple-gpt
+done
+
+export PHASOR_EVAL_BATCH_CAP=16
+for task in arithmetic-sub arithmetic-mul arithmetic-half-sum arithmetic-cube-plus \
+    arithmetic-square-times arithmetic-affine-product arithmetic-div arithmetic-perm-add \
+    arithmetic-abs-diff arithmetic-sum-cube power-division-p97-k5
+do
+    "$bin" screen "$task" 0 runs/triple-gpt 380
+    if test -f "runs/triple-gpt/$task/seed0/result.json"; then
+        "$bin" replay "$task" 0 runs/triple-gpt
+    fi
 done
 ```
 
