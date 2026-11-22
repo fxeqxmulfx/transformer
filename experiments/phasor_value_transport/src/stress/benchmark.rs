@@ -41,6 +41,7 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
             | Head::AffinePhase
             | Head::BilinearPhase
             | Head::SharedBilinear
+            | Head::ScalarPhase
             | Head::ReflectionPhase
             | Head::SingleReflection
             | Head::ContextRotation

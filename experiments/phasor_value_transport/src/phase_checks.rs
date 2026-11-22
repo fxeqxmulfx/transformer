@@ -333,7 +333,12 @@ pub fn run() -> Result<()> {
         } else if architecture::REFLECTION_PHASE {
             reflection_phase_checks::scan(length)?;
         } else if architecture::BILINEAR_PHASE || architecture::SHARED_BILINEAR {
-            bilinear_phase_checks::scan::<{ architecture::SHARED_BILINEAR }>(length)?;
+            let channels = if architecture::SHARED_BILINEAR {
+                head::SHARED_LATENTS
+            } else {
+                M
+            };
+            bilinear_phase_checks::scan::<{ architecture::SHARED_BILINEAR }>(length, channels)?;
         } else if architecture::AFFINE_PHASE {
             affine_phase_checks::scan(length)?;
         } else {

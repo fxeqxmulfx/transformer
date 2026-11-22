@@ -19,6 +19,7 @@ pub enum Head {
     AffinePhase,
     BilinearPhase,
     SharedBilinear,
+    ScalarPhase,
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
@@ -46,6 +47,7 @@ impl Head {
             "affine-phase" => Ok(Self::AffinePhase),
             "bilinear-phase" => Ok(Self::BilinearPhase),
             "shared-bilinear" => Ok(Self::SharedBilinear),
+            "scalar-phase" => Ok(Self::ScalarPhase),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
@@ -72,6 +74,7 @@ impl Head {
             Self::AffinePhase => "phasor-learned-affine-phase-32-v1",
             Self::BilinearPhase => "phasor-learned-bilinear-phase-32-v1",
             Self::SharedBilinear => "phasor-learned-shared-bilinear-8x32-v1",
+            Self::ScalarPhase => "phasor-learned-scalar-phase-bottleneck-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
@@ -90,6 +93,7 @@ impl Head {
                 | Self::AffinePhase
                 | Self::BilinearPhase
                 | Self::SharedBilinear
+                | Self::ScalarPhase
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::AssociativeReflection
@@ -104,6 +108,7 @@ impl Head {
                 | Self::AffinePhase
                 | Self::BilinearPhase
                 | Self::SharedBilinear
+                | Self::ScalarPhase
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::ContextRotation
@@ -123,6 +128,7 @@ impl Head {
             Self::AffinePhase => 2 * MEMORY_WIDTH,
             Self::BilinearPhase => 4 * MEMORY_WIDTH,
             Self::SharedBilinear => 4 * SHARED_LATENTS,
+            Self::ScalarPhase => 4,
             _ => MEMORY_WIDTH,
         }
     }
@@ -139,10 +145,10 @@ impl Head {
     }
 
     pub const fn frequency_parameters(self) -> usize {
-        if matches!(self, Self::SharedBilinear) {
-            SHARED_LATENTS * MEMORY_WIDTH
-        } else {
-            0
+        match self {
+            Self::SharedBilinear => SHARED_LATENTS * MEMORY_WIDTH,
+            Self::ScalarPhase => MEMORY_WIDTH,
+            _ => 0,
         }
     }
 
@@ -152,6 +158,7 @@ impl Head {
                 Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
+            Self::ScalarPhase => (4 + 4 + 2 * MEMORY_WIDTH + 1) * cfg.width + MEMORY_WIDTH,
             Self::ContextRotation | Self::CrossedContext => {
                 (4 + self.context_stages() * (cfg.width / 2)) * cfg.width
             }
@@ -198,6 +205,24 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::ScalarPhase => {
+                let first = crate::architecture::memory_start(cfg);
+                let output = first + self.phase_inputs() * cfg.width;
+                let frequency = output + 2 * MEMORY_WIDTH * cfg.width;
+                let context = frequency + MEMORY_WIDTH;
+                let mut rng = Random::new(seed.wrapping_add(30_000));
+                for (range, fan_in) in [
+                    (first..output, cfg.width),
+                    (output..frequency, 2 * MEMORY_WIDTH),
+                    (frequency..context, 1),
+                    (context..context + cfg.width, cfg.width),
+                ] {
+                    let scale = (fan_in as f64).sqrt().recip();
+                    for w in &mut parameters[range] {
+                        *w = rng.gauss(0., scale) as f32;
+                    }
+                }
+            }
             Self::Householder => {
                 let first = crate::architecture::memory_start(cfg);
                 let output = first + crate::householder::INPUTS * cfg.width;

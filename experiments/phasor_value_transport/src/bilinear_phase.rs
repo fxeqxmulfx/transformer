@@ -37,7 +37,7 @@ pub mod kernels {
         mov.u32(lane, tid.x);
         let (channels, stride): (u32, u32);
         if SHARED {
-            mov.u32(channels, 8);
+            mov.u32(channels, ntid.x);
         } else {
             mov.u32(channels, 32);
         }
@@ -113,7 +113,7 @@ pub mod kernels {
         mov.u32(lane, tid.x);
         let (channels, stride): (u32, u32);
         if SHARED {
-            mov.u32(channels, 8);
+            mov.u32(channels, ntid.x);
         } else {
             mov.u32(channels, 32);
         }

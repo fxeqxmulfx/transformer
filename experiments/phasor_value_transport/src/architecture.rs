@@ -15,6 +15,7 @@ pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
 pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
 pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
 pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
+pub const SCALAR_PHASE: bool = cfg!(feature = "scalar-phase-bottleneck");
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const CROSSED_CONTEXT: bool = cfg!(feature = "crossed-context-rotation");
@@ -27,6 +28,7 @@ pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read")
     || AFFINE_PHASE
     || BILINEAR_PHASE
     || SHARED_BILINEAR
+    || SCALAR_PHASE
     || REFLECTION_PHASE
     || SINGLE_REFLECTION
     || ASSOCIATIVE_REFLECTION
@@ -40,6 +42,7 @@ const _: () = {
         + AFFINE_PHASE as u8
         + BILINEAR_PHASE as u8
         + SHARED_BILINEAR as u8
+        + SCALAR_PHASE as u8
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
         + cfg!(feature = "context-rotation-read") as u8
@@ -72,6 +75,8 @@ pub const HEAD: Head = if HOUSEHOLDER {
     Head::BilinearPhase
 } else if SHARED_BILINEAR {
     Head::SharedBilinear
+} else if SCALAR_PHASE {
+    Head::ScalarPhase
 } else if AFFINE_PHASE {
     Head::AffinePhase
 } else if INPUT_PHASE {
@@ -154,7 +159,9 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
         } else if CONTEXT_ROTATION {
             4 + HEAD.context_stages() as u64 * (width / 2)
         } else if PHASE_MEMORY {
-            4 + HEAD.phase_inputs() as u64 + 2 * crate::head::MEMORY_WIDTH as u64
+            4 + HEAD.phase_inputs() as u64
+                + 2 * crate::head::MEMORY_WIDTH as u64
+                + u64::from(SCALAR_PHASE)
         } else if BOUNDED {
             4 * crate::head::MEMORY_WIDTH as u64
         } else if STREAM_READ {

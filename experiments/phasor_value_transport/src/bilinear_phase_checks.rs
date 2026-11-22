@@ -3,7 +3,7 @@ use super::*;
 use head::MEMORY_WIDTH as M;
 use kernite_cuda::{Cuda, Grid};
 
-pub(super) fn scan<const SHARED: bool>(length: usize) -> Result<()> {
+pub(super) fn scan<const SHARED: bool>(length: usize, channels: usize) -> Result<()> {
     let batch = 3;
     let rows = batch * length;
     let cuda = Cuda::new()?;
@@ -14,7 +14,6 @@ pub(super) fn scan<const SHARED: bool>(length: usize) -> Result<()> {
             .map(|_| rng.gauss(0., 0.27) as f32)
             .collect::<Vec<_>>()
     };
-    let channels = if SHARED { head::SHARED_LATENTS } else { M };
     let observed = if SHARED { channels } else { 2 * channels };
     let inputs = samples(rows * 4 * channels);
     let upstream = samples(rows * observed);

@@ -14,12 +14,15 @@ pub(super) struct SharedBilinearPhase {
     angles: F,
     angle_grad: F,
     frequencies: usize,
+    latent_width: usize,
+    context: Option<F>,
 }
 
 impl SharedBilinearPhase {
     pub(super) fn new(e: &Engine, rows: usize) -> Result<Self> {
         let cfg = &e.config;
-        let r = SHARED_LATENTS;
+        let bottleneck = cfg.head == crate::head::Head::ScalarPhase;
+        let r = if bottleneck { 1 } else { SHARED_LATENTS };
         Ok(Self {
             scan: bilinear_phase::kernels::Kernels::load(&e.cuda)?,
             observations: phase_prefix::kernels::Kernels::load(&e.cuda)?,
@@ -29,6 +32,8 @@ impl SharedBilinearPhase {
             angle_grad: e.cuda.alloc(rows * M)?,
             frequencies: crate::architecture::memory_start(cfg)
                 + (cfg.head.phase_inputs() + 2 * M) * cfg.width,
+            latent_width: r,
+            context: bottleneck.then(|| e.cuda.alloc(rows)).transpose()?,
         })
     }
 
@@ -40,7 +45,7 @@ impl SharedBilinearPhase {
         rows: usize,
         length: usize,
     ) -> Result<()> {
-        let r = SHARED_LATENTS;
+        let r = self.latent_width;
         unsafe {
             self.scan.forward::<true>(
                 Grid::new((rows / length) as u32, r as u32),
@@ -49,9 +54,28 @@ impl SharedBilinearPhase {
                 length as u32,
             )?;
         }
+        if let Some(combined) = &self.context {
+            e.linear(
+                combined.ptr(),
+                e.last.ptr(),
+                self.frequencies + M,
+                rows,
+                1,
+                e.config.width,
+            )?;
+            unsafe {
+                e.ops.add(
+                    grid(rows),
+                    combined.ptr(),
+                    combined.ptr(),
+                    self.latent.ptr(),
+                    rows as u32,
+                )?;
+            }
+        }
         e.linear(
             self.angles.ptr(),
-            self.latent.ptr(),
+            self.context.as_ref().unwrap_or(&self.latent).ptr(),
             self.frequencies,
             rows,
             M,
@@ -78,7 +102,7 @@ impl SharedBilinearPhase {
         rows: usize,
         length: usize,
     ) -> Result<()> {
-        let r = SHARED_LATENTS;
+        let r = self.latent_width;
         unsafe {
             self.observations.backward::<false>(
                 Grid::new(rows as u32, M as u32),
@@ -91,12 +115,25 @@ impl SharedBilinearPhase {
         e.linear_back(
             self.latent_grad.ptr(),
             self.angle_grad.ptr(),
-            self.latent.ptr(),
+            self.context.as_ref().unwrap_or(&self.latent).ptr(),
             self.frequencies,
             rows,
             M,
             r,
         )?;
+        if self.context.is_some() {
+            // The external feature gradient has already entered the decoder.
+            // Replace it with the scalar projection's contextual adjoint.
+            e.linear_back(
+                e.dlast.ptr(),
+                self.latent_grad.ptr(),
+                e.last.ptr(),
+                self.frequencies + M,
+                rows,
+                1,
+                e.config.width,
+            )?;
+        }
         unsafe {
             self.scan.backward::<true>(
                 Grid::new((rows / length) as u32, r as u32),

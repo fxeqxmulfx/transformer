@@ -66,7 +66,7 @@ impl HiddenLayer {
             Head::PhasePrefix | Head::InputPhase | Head::SingleReflection => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
-            Head::SharedBilinear => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
+            Head::SharedBilinear | Head::ScalarPhase => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
             Head::Householder => Memory::Householder {
                 scan: crate::householder::kernels::Kernels::load(&e.cuda)?,
                 reduction: reflection_phase::kernels::Kernels::load(&e.cuda)?,
@@ -223,7 +223,7 @@ impl HiddenLayer {
             d,
             self.read_channels,
         )?;
-        unsafe {
+        if e.config.head != Head::ScalarPhase { unsafe {
             e.ops.add(
                 grid(rows * d),
                 self.merged.ptr(),
@@ -231,7 +231,7 @@ impl HiddenLayer {
                 e.last.ptr(),
                 (rows * d) as u32,
             )?;
-        }
+        } }
         if let Some(a) = &self.associative {
             a.forward(e, self.merged.ptr(), rows, length)?;
         }

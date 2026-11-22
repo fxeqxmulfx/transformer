@@ -935,6 +935,27 @@ output projections are arbitrary in both statements. These are
 constraints on the representation that training can learn.
 [Scalar phase bottleneck proofs](../../src/Transformer/Phasor/ScalarPhaseBottleneck.lean)
 
+At widths 64 and 128, the native logits agreed with independent FP64
+evaluation to within `1.14e-6`. Two unrelated classifier cotangents
+at the same position produced input derivatives collinear to within
+`2.0e-7` relative error. Prefixes with equal additive coordinates
+gave identical final hidden vectors. Zeroing the coordinate gave zero
+hidden vectors, logits and embedding derivatives.
+
+At 3,000 updates the three NV11 seeds fit 467 / 386 / 445 of 4,704
+training pairs and classified 58 / 62 / 50 of 4,705 held-out pairs.
+Independent checkpoint replay reproduced all six counts. Constraining
+the whole read to one scalar reduced training fit and held-out accuracy
+on all three seeds compared with the eight-coordinate residual model.
+
+```sh
+cargo +stable build --release --locked --features fp32-affine-reference,scalar-phase-bottleneck
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/scalar-nv11/seed0 0 3000
+"$bin" nv11-score runs/scalar-nv11/seed0/nv11-train-3000.f32 rows
+```
+
 ## Householder memory
 
 Each embedding supplies three learned slopes per channel. With a leading
