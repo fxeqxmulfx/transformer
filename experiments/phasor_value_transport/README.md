@@ -162,6 +162,15 @@ the combined gradient gives the directional derivative of both uses of
 the embedding on every finite set of active rows.
 [Tied embedding adjoint](../../src/Transformer/Phasor/TiedGradients.lean)
 
+The fused backward launch reproduced all 97 directional checks and every
+checkpoint and observation byte in twelve matched cells. Four cells ran
+faster. The geometric mean elapsed time rose by 0.18% on the short tier
+and 0.34% on the long tier. The selected implementation keeps the two
+additions in separate launches. To reproduce, apply the patch at
+`2e58f96b`, use `fp32-affine-reference,single-write-gain`, and run
+`time_cells.sh` on addition, 20-bit parity, language L1 and depth-one C-RASP.
+[Tied gradient source change](trials/tied-embedding-gradients.patch)
+
 The RMS and power-address timing trials can be rebuilt from their archived
 source changes. Build and save the FP32 control at `58bd7352` for RMS or
 `8f7ca6ef` for cached powers. In that checkout apply the corresponding

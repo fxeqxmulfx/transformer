@@ -1,0 +1,129 @@
+diff --git a/experiments/phasor_value_transport/src/addresses.rs b/experiments/phasor_value_transport/src/addresses.rs
+index 74972a2b..ad29011e 100644
+--- a/experiments/phasor_value_transport/src/addresses.rs
++++ b/experiments/phasor_value_transport/src/addresses.rs
+@@ -1,5 +1,6 @@
+ //! Translation acts on value addresses. The adjoint returns a gradient to the
+ //! first-token attention scores and clears the unused second-token gradient.
++//! Its tied embedding receives both the value and output-projection pullbacks.
+ #[kernite_macros::kernels]
+ pub mod kernels {
+     fn load(x: f32, ptr: u64, i: u32) {
+@@ -12,6 +13,33 @@ pub mod kernels {
+         mad.wide.u32(addr, i, 4, ptr);
+         st.global.f32([addr], x);
+     }
++    // Preserve the original two FP32 additions, in order, for every word and
++    // hidden coordinate. Transformer.Phasor.tiedGradient_adjoint gives their
++    // pairing with any simultaneous perturbation of the shared embeddings.
++    pub unsafe extern "ptx-kernel" fn add_tied_gradients(
++        gradient: *mut f32,
++        projection: *const f32,
++        value_read: *const f32,
++        count: u32,
++    ) {
++        let (block, width, lane, i): (u32, u32, u32, u32);
++        mov.u32(block, ctaid.x);
++        mov.u32(width, ntid.x);
++        mov.u32(lane, tid.x);
++        mad.lo.u32(i, block, width, lane);
++        let outside: pred;
++        setp.ge.u32(outside, i, count);
++        if outside {
++            ret();
++        }
++        let (sum, a, b): (f32, f32, f32);
++        load(sum, gradient, i);
++        load(a, projection, i);
++        load(b, value_read, i);
++        add.rn.f32(sum, sum, a);
++        add.rn.f32(sum, sum, b);
++        store(gradient, i, sum);
++    }
+     fn argument(row: u32, offset: u32, tokens: u64, p: u32, route: u32, batch: u32) {
+         let (block, thread, size, a, b): (u32, u32, u32, u32, u32);
+         mov.u32(block, ctaid.x);
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index a6189583..1ecc8a11 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -368,6 +368,42 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+     Ok(())
+ }
+
++// The first triple detects regrouping at the FP32 precision boundary.
++// The last four elements detect writes past an incomplete final block.
++fn check_tied_accumulation(cuda: &kernite_cuda::Cuda) -> Result<()> {
++    let triples = [
++        (16_777_216.0_f32, 1., -16_777_216.),
++        (1., -16_777_216., 16_777_216.),
++        (-0., -0., -0.),
++        (-0.125, 1.25, -4.5),
++    ];
++    let rows: Vec<_> = triples.into_iter().cycle().take(263).collect();
++    let initial: Vec<_> = rows.iter().map(|&(x, _, _)| x).collect();
++    let g = cuda.upload(&initial)?;
++    let a = cuda.upload(&rows.iter().map(|&(_, y, _)| y).collect::<Vec<_>>())?;
++    let b = cuda.upload(&rows.iter().map(|&(_, _, z)| z).collect::<Vec<_>>())?;
++    let active = 259;
++    let kernels = crate::addresses::kernels::Kernels::load(cuda)?;
++    unsafe {
++        kernels.add_tied_gradients(
++            kernite_cuda::Grid::new(2, 256),
++            g.ptr(),
++            a.ptr(),
++            b.ptr(),
++            active,
++        )?;
++    }
++    for (i, (&value, &(x, y, z))) in g.read()?.iter().zip(&rows).enumerate() {
++        let expected = if i < active as usize { (x + y) + z } else { x };
++        if value.to_bits() != expected.to_bits() {
++            return Err(
++                "tied embedding pullback changed the FP32 order or an inactive coordinate".into(),
++            );
++        }
++    }
++    Ok(())
++}
++
+ // Rebuild the adjoint after intervening inference at a different batch shape.
+ fn check_table_transpose() -> Result<()> {
+     let mut cfg = config(2)?;
+@@ -376,6 +412,7 @@ fn check_table_transpose() -> Result<()> {
+     let (start, gain) = (pair_memory::start(&cfg), pair_memory::gain(&cfg));
+     let weights = layout::initialize_model(&cfg, 0);
+     let mut engine = Engine::new(cfg, &weights)?;
++    check_tied_accumulation(&engine.cuda)?;
+     if engine.backward(2, 2).is_ok() {
+         return Err("table adjoint accepted a batch before its forward pass".into());
+     }
+diff --git a/experiments/phasor_value_transport/src/value_layer.rs b/experiments/phasor_value_transport/src/value_layer.rs
+index 3a4e82b5..d3e876e0 100644
+--- a/experiments/phasor_value_transport/src/value_layer.rs
++++ b/experiments/phasor_value_transport/src/value_layer.rs
+@@ -329,16 +329,14 @@ impl ValueLayer {
+             }
+         }
+         e.backward_original(batch, length)?;
+-        for extra in [&self.read_gradient, &self.value_gradient] {
+-            unsafe {
+-                e.ops.add(
+-                    grid(p * d),
+-                    e.gradients.ptr(),
+-                    e.gradients.ptr(),
+-                    extra.ptr(),
+-                    (p * d) as u32,
+-                )?;
+-            }
++        unsafe {
++            self.addresses.add_tied_gradients(
++                grid(p * d),
++                e.gradients.ptr(),
++                self.read_gradient.ptr(),
++                self.value_gradient.ptr(),
++                (p * d) as u32,
++            )?;
+         }
+         Ok(())
+     }
