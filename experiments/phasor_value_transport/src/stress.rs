@@ -13,6 +13,7 @@ pub mod embedding;
 mod language_probes;
 pub mod numeric_probe;
 pub mod phase_ablation;
+pub mod slot_ablation;
 mod recall_gap;
 pub mod report;
 mod source_target;

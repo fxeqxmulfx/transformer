@@ -1,6 +1,18 @@
 //! Gradient fixtures and independent ablations of saved slot-memory weights.
 use super::*;
 
+/// Cancel both the learned gate and its fixed initial offset for each read.
+/// The external classifier, backbone, dictionary and individual reads stay fixed.
+pub(crate) fn disable_reads(cfg: &Config, weights: &mut [f32], disabled: &[usize]) {
+    let l = slot_memory::Layout::new(cfg);
+    let memory = &mut weights[architecture::memory_start(cfg)..];
+    for &i in disabled {
+        let g = l.gates + i * l.d;
+        memory[g..g + l.d].fill(0.);
+        memory[l.bias + i] = if i < 2 { -1. } else { 0. };
+    }
+}
+
 // Keep the content dictionaries separated while exercising the continuous
 // read parameters. Random directions across a hard routing boundary do not
 // estimate the local adjoint on either side.
@@ -119,11 +131,7 @@ pub(super) fn audit(path: &Path) -> Result<()> {
         ("only_structural_reads", &[0, 1][..]),
     ] {
         let mut changed = w.clone();
-        for &i in disabled {
-            let g = offset + l.gates + i * l.d;
-            changed[g..g + l.d].fill(0.);
-            changed[offset + l.bias + i] = if i < 2 { -1. } else { 0. };
-        }
+        disable_reads(&cfg, &mut changed, disabled);
         engine.parameters.write(&changed)?;
         results.insert(name.into(), json!(counts(&mut engine, splits, &names)?));
     }

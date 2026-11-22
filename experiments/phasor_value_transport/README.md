@@ -5,7 +5,7 @@
 250. The same model is trained separately on each GPT task, starting from
 the original random embeddings with ordinary AdamW. [Triple transport](#triple-transport) · [Model and scoring rules](../../rule.md)
 
-A partial audit of the default verified **33/75 short runs and 2/30 long
+A partial audit of the default verified **35/75 short runs and 3/30 long
 runs** alongside all three exact NV11 checkpoints. [Default GPT results](#triple-transport-on-the-canonical-gpt-tiers)
 
 The input-phase comparison reached 75/75 short and 30/30 long runs. Its
@@ -1527,15 +1527,15 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" memory-bench triple-transport basis-parity16 0 2
 
 ### Triple transport on the canonical GPT tiers
 
-The November 22 partial audit independently reloaded 38 checkpoints from
-Kernite v0.6.0. Triple transport passed 33/75 short runs and 2/30 long
+The November 22 partial audit independently reloaded 41 checkpoints from
+Kernite v0.6.0. Triple transport passed 35/75 short runs and 3/30 long
 runs. All three NV11 checkpoints recovered 4,704 training and 4,705
-held-out pairs. Ten short cases crossed on all three seeds. Thirteen
-other short runs and 15 other long runs have a recorded cutoff below
-budget in this snapshot. The remaining 29 short and 13 long runs have
-no completed observation in the snapshot. No run exhausted its source budget.
+held-out pairs. Ten short cases and one long case crossed on all three
+seeds. Thirteen other short runs and 14 other long runs have a recorded
+cutoff below budget in this snapshot. The remaining 27 short and 13 long
+runs have no completed run or screen in the snapshot. No run exhausted its source budget.
 
-Both easy key–value recall crossings reproduced on the novel validation
+All three easy key–value recall crossings reproduced on the novel validation
 split. The original test split contains eight queries per sequence.
 The delay probe inserts 64 filler tokens between the writes and reads
 of those same examples and scores the full sequence.
@@ -1544,14 +1544,28 @@ of those same examples and scores the full sequence.
 | --- | ---: | ---: | ---: | ---: |
 | 0 | 4,200 | 507/512 | 497/512 | 360/512 |
 | 1 | 4,700 | 507/512 | 500/512 | 499/512 |
+| 2 | 5,050 | 507/512 | 496/512 | 178/512 |
 
-Seed 2 reached 506/512 at update 3,650 and scored 503/512 at the
-5,000-update cutoff. Its source budget is 20,000 updates. On the short
-GPT linear-transport probe, seed 0 first scored 254/256 at update 704
-and reproduced 251/256 on the source test. On shifted Boolean AND all
+Seed 2 reached 506/512 at update 3,650 and 503/512 at update 5,000.
+The next scheduled observation passed. On the short GPT linear-transport
+probe, seeds 0 and 1 reached 254/256 at update 704 and 255/256 at update
+576. Their independent tests scored 251/256 and 255/256. On GPT branch
+amplitudes, seed 0 scored 256/256 at update 576 and 256/256 on the
+independent test. On shifted Boolean AND all
 three seeds reached 7/7, at updates 84, 60 and 68. Their independent
 test scores were 64, 27 and 27 out of 64. At length 64 they scored
 29, 35 and 35 out of 64.
+
+Matched gate removals show how the same four reads serve different tasks.
+On recall seeds 0 and 1, removing the contextual read dropped both novel
+validation and the independent test to 0/512. Keeping just that read
+preserved 507/512 on novel validation for both and scored 499/512 and
+500/512 on the independent tests. On NV11 the two structural reads alone
+recovered all 9,409 pairs on every seed. The ablation zeros each removed
+gate's coefficient at every prefix, reloads the original weights for each
+intervention and uses the original sequence scorer. The dense contributions
+of any partition of the gates add to the original output at a fixed prefix.
+[Read partition proof](../../src/Transformer/Phasor/TripleTransport.lean)
 
 To reproduce a partial audit, use the default binary and run directory
 from the opening commands. Each replay records the first passing update,
@@ -1565,8 +1579,11 @@ jq -r '.tasks[] as $t | $t.seeds[] | select(.status=="pass") | [$t.case,.seed] |
 done > "$out/passing-tests.jsonl"
 jq -es --argjson passing_only true --slurpfile report "$out/report.json" \
     --slurpfile nv11 "$out/nv11-scores.jsonl" -f verify_replays.jq "$out/passing-tests.jsonl"
-"$bin" probes basis-recall-easy 0 "$out" recall-gap 64
-"$bin" probes basis-recall-easy 1 "$out" recall-gap 64
+for seed in 0 1 2; do
+    "$bin" probes basis-recall-easy "$seed" "$out" recall-gap 64
+    "$bin" slot-ablate basis-recall-easy "$seed" "$out"
+    "$bin" slot-ablate arithmetic-cubic-product "$seed" "$out"
+done
 ```
 
 ## Single-coordinate frame orbit

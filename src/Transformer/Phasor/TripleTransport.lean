@@ -164,4 +164,17 @@ theorem scanAddresses_eq_zip {D : ℕ} (nearest : EucSpace D → Option X) (scal
     simp only [scanAddresses, List.map_cons, List.zipWith_cons_cons]
     rw [ih]
 
+/-- Source: the matched read removals in the experiment's “Triple transport”
+section. At a fixed prefix and fixed reads, the original dense output splits
+exactly into the contribution of any chosen gates and that of the other gates. -/
+theorem mix_partition {D : ℕ} (gate : EucSpace D → Fin 4 → ℝ) (h : EucSpace D)
+    (reads : Fin 4 → EucSpace D) (chosen : Finset (Fin 4)) :
+    mix (fun p i => if i ∈ chosen then gate p i else 0) h reads +
+        mix (fun p i => if i ∈ chosen then 0 else gate p i) h reads = mix gate h reads := by
+  unfold mix
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  by_cases hi : i ∈ chosen <;> simp [hi]
+
 end Transformer.Phasor.TripleTransport
