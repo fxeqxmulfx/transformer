@@ -1,6 +1,24 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all **159 GPT task/seed runs** across 41 short
+## Learned stream readout
+
+The current experiment trains from raw token IDs. Each ID selects its
+embedding. Phasor's causal backbone produces four hidden streams at each
+position. Each hidden coordinate learns four weights for reading those
+streams before the original RMS normalization and tied output projection.
+The weights start at one quarter, with zero trainable offsets. At width
+128 the readout adds 512 parameters shared across all positions. Token
+arithmetic, occurrence counts and symbolic lookup tables are excluded.
+
+Lean proves that permuting the vocabulary and its embedding rows permutes
+every output logit at every depth. It also gives the exact gradient of the
+readout and shows that opposite stream contents, which cancel in the
+original mean, can become visible to the classifier.
+[Learned stream readout](../../src/Transformer/Phasor/LearnedStreamRead.lean)
+
+## Historical benchmark with hand-written features
+
+The closed-relation Phasor passed all **159 GPT task/seed runs** across 41 short
 and twelve long tasks on Kernite v0.6.0. Each task used its own weights and
 the original AdamW. The same architecture classified all 9,409 NV11 pairs
 correctly at update 750 in every seed. The newest short task is
@@ -11,7 +29,7 @@ The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
 split. [MRCR V2 stress test](../mrcr_v2/README.md)
 
-## Selected architecture on Kernite v0.6.0
+### Closed-relation architecture on Kernite v0.6.0
 
 Each completed triple writes its first token and third token as an edge
 labelled by the middle token. At any position, relations that form a
