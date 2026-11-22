@@ -1,6 +1,10 @@
 //! Equivalence closure on ordered triples of unnamed prototype slots.
 //! The caller supplies partial maps extracted from learned hidden vectors.
 //! Retained edges follow TripleTransport.connected_growing_bank.
+#[path = "slot_candidates.rs"]
+mod candidates;
+use candidates::RowCandidates;
+
 pub const ABSENT: u32 = u32::MAX;
 
 struct Components {
@@ -190,10 +194,7 @@ impl TripleGraph {
         let pair = |x, y| (x * slots + y) * slots;
         for (r, points) in maps {
             let row = &bank[r * slots..(r + 1) * slots];
-            let mut owner = vec![usize::MAX; slots];
-            for &(x, y) in &points {
-                owner[y] = x;
-            }
+            let mut available = RowCandidates::new(slots, &points);
             for (x, output) in reads.transport[r * slots..(r + 1) * slots]
                 .iter_mut()
                 .enumerate()
@@ -215,14 +216,8 @@ impl TripleGraph {
                     for &(v, t) in &anchors[i + 1..count] {
                         let key = component[pair(u, v) + x];
                         let dst = image_offset + pair(s, t);
-                        let mut candidates = (0..slots).filter(|&y| {
-                            y != s
-                                && y != t
-                                && (owner[y] == usize::MAX || row[x] == y as u32)
-                                && component[dst + y] == key
-                        });
-                        if let Some(y) = candidates.next()
-                            && candidates.next().is_none()
+                        if let Some(y) =
+                            available.unique(dst, &component[dst..dst + slots], key, row[x], (s, t))
                         {
                             if answer.is_some_and(|z| z != y) {
                                 answer = None;
@@ -233,7 +228,7 @@ impl TripleGraph {
                     }
                 }
                 if let Some(y) = answer {
-                    *output = y as u32;
+                    *output = y;
                 }
             }
         }

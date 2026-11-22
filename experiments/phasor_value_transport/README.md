@@ -1798,6 +1798,40 @@ commands with `triple-lookup-phase` and a fresh run directory. Then run
 `"$bin" screen division-p193 0 "$out" 438` and
 `"$bin" probes division-p193 0 "$out"`.
 
+### Indexing the unowned images
+
+For a fixed row and two ordered anchors, every query shares the same
+set of unowned output slots. The triple search groups these slots by their
+connected component on first use. A query can also admit its own stored
+image when it belongs to that component and differs from both anchors.
+The read returns the unique admissible image. For at most eight unowned
+slots it scans that short list directly. Lean proves that restoring the
+query's own image gives exactly the candidates of the original scan.
+[Candidate index proof](../../src/Transformer/Phasor/TripleTransport/CandidateIndex.lean)
+
+On the default NV11 run, wall time to update 250 fell on every seed.
+The table includes process startup and training on the same GTX 1050.
+All three pairs produced byte-identical checkpoints. Independent scoring
+recovered 4,704/4,704 training and 4,705/4,705 held-out pairs for both
+implementations on each seed.
+
+| Seed | Full scan | Indexed search |
+| --- | ---: | ---: |
+| 0 | 7.21 s | 5.64 s |
+| 1 | 7.25 s | 5.71 s |
+| 2 | 7.49 s | 6.07 s |
+
+Build the control from `fb7aa6db` and the indexed binary from this
+revision with `fp32-affine-reference,triple-transport`. To check the
+candidate scan and repeat the timings in both orders for each seed, run
+the following from the experiment directory.
+
+```sh
+cargo +stable test --locked --release --features fp32-affine-reference,triple-transport --test slot_orbits
+export PHASOR_EVAL_BATCH_CAP=16
+./time_screens.sh --first-pass "$control" "$bin" runs/indexed-nv11 250 arithmetic-cubic-product
+```
+
 ### Separate input and image roles
 
 The `triple-bipartite` model uses two copies of the ordered prototype
