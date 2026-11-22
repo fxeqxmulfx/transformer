@@ -101,6 +101,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     }
 } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
     "phasor-successor-hit-gain175-v1"
+} else if cfg!(feature = "inclusive-transitions") {
+    "phasor-inclusive-transition-table-v1"
 } else if cfg!(feature = "transition-table") {
     "phasor-independent-transition-table-v1"
 } else if cfg!(feature = "single-write-gain") {
@@ -381,14 +383,24 @@ impl PairMemory {
                     feature = "transition-count",
                     feature = "transition-table"
                 )) {
+                    let changed = if cfg!(feature = "inclusive-transitions") {
+                        a != b
+                    } else {
+                        pos >= 2 && tokens[row - 2] != tokens[row - 1]
+                    };
                     if pos == 0 {
                         transitions = 0;
-                    } else if pos >= 2 && tokens[row - 2] != tokens[row - 1] {
+                    } else if changed {
                         transitions += 1;
                     }
                     if cfg!(feature = "transition-table") {
                         let count_table = TABLES - 1;
-                        keys[count_table] = (count_table * p + transitions % p) as u32;
+                        let bucket = if cfg!(feature = "inclusive-transitions") {
+                            transitions.min(p - 1)
+                        } else {
+                            transitions % p
+                        };
+                        keys[count_table] = (count_table * p + bucket) as u32;
                     } else {
                         let squared_product = PAIR_TABLES - 1;
                         let base = squared_product * p;

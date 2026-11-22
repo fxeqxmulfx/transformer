@@ -47,7 +47,12 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
         feature = "transition-table"
     )) {
         let transitions = prefix.windows(2).filter(|edge| edge[0] != edge[1]).count();
-        let bucket = (transitions % p as usize) as u32;
+        let bucket = if cfg!(feature = "inclusive-transitions") {
+            let last_edge = usize::from(prefix.last().is_some_and(|&a| a != b));
+            (transitions + last_edge).min(p as usize - 1)
+        } else {
+            transitions % p as usize
+        } as u32;
         if cfg!(feature = "transition-table") {
             keys.push(bucket);
         } else {
@@ -90,6 +95,10 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
                 };
             }
         }
+    } else if cfg!(feature = "inclusive-transitions") && length == 6 {
+        for row in tokens.chunks_exact_mut(length) {
+            row.copy_from_slice(&[0, 1, 1, 2, 2, 0]);
+        }
     } else if cfg!(feature = "single-write-gain") && length == 9 {
         let patterns = [
             [1, 7, 2, 4, 5, 6, 8, 9, 1],
@@ -131,7 +140,9 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         .map(|i| ((7 * i + 3) % p) as u32)
         .collect();
     labels[1] = u32::MAX;
-    if cfg!(feature = "transition-table") && length == 17 {
+    let check_count_bucket = (cfg!(feature = "transition-table") && length == 17)
+        || (cfg!(feature = "inclusive-transitions") && length == 6);
+    if check_count_bucket {
         labels.fill(u32::MAX);
         labels[length - 1] = 7;
     }
@@ -312,17 +323,25 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         ("tied embedding".to_owned(), 0..p * d),
         ("residual gain".to_owned(), gain_at..gain_at + 1),
     ];
-    if cfg!(feature = "transition-table") && length == 17 {
-        // There are 15 completed changes at the labelled row, or 3 modulo 12.
+    if check_count_bucket {
+        // The six-token fixture has three changes including the final edge.
+        // In twelve buckets the alternating fixture either wraps to 3 or caps at 11.
         let offset = start + (pair_memory::TABLES - 1) * p * d;
-        let wrapped = offset + 3 * d..offset + 4 * d;
+        let bucket = if cfg!(feature = "inclusive-transitions") && length == 17 {
+            11
+        } else {
+            3
+        };
+        let active = offset + bucket * d..offset + (bucket + 1) * d;
         let unused = offset + 4 * d..offset + 5 * d;
-        if gradients[wrapped.clone()].iter().all(|&g| g == 0.)
-            || gradients[unused.clone()].iter().any(|&g| g != 0.)
+        if gradients[offset..offset + p * d]
+            .chunks_exact(d)
+            .enumerate()
+            .any(|(i, row)| row.iter().any(|&g| g != 0.) != (i == bucket))
         {
             return Err("transition table gradient reached the wrong count bucket".into());
         }
-        directions.push(("wrapped transition count".to_owned(), wrapped));
+        directions.push(("active transition count".to_owned(), active));
         directions.push(("unused transition count".to_owned(), unused));
     }
     if pair_memory::CLOSED_RELATION && length == 8 {
@@ -463,6 +482,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if cfg!(feature = "transition-table") {
         profile(12, 17, 128)?;
+    }
+    if cfg!(feature = "inclusive-transitions") {
+        profile(12, 6, 128)?;
     }
     if cfg!(feature = "relation-paths") {
         profile(36, 12, 128)?;

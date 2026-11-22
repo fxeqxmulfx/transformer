@@ -726,6 +726,24 @@ that one learned scalar per count and one per current token can then
 separate each binary block language with its target below the cap.
 [Inclusive counts and additive readout](../../src/Transformer/Phasor/InclusiveTransitions.lean)
 
+With `fp32-affine-reference,inclusive-transitions`, all three L2 seeds
+reached 512/512 at update 250 and repeated that score on both source test
+splits. Counting the current edge improved the two additional whole-sequence
+tests in every seed.
+
+| L2 test | Previous modular count, seeds 0 / 1 / 2 | Inclusive capped count, seeds 0 / 1 / 2 |
+| --- | ---: | ---: |
+| Every ten-letter word, out of 1,024 | 1,008 / 992 / 992 | 1,022 / 1,016 / 1,008 |
+| Alternating tails at length 128, out of 64 | 63 / 62 / 62 | 64 / 64 / 63 |
+
+The two extra tests crossed 99% in seeds 0 and 1. Elapsed training time
+rose by 0.43% as a geometric mean across these three L2 pairs. The
+FP32 forward agreed with the scalar reference within 8.77 × 10⁻⁷, and
+all 146 directional derivatives passed. A six-token fixture distinguishes
+the last edge from its predecessor, and a longer fixture checks the
+absorbing bucket. Reproduce with `shared-check`, `cell language-l2 SEED RUN_DIR`
+and `probes language-l2 SEED RUN_DIR` in the same build.
+
 The geometric-memory trial learns one additional value for each token and
 hidden coordinate. It scans every input sequence in order. Each coordinate
 retains a fixed fraction of its preceding state and adds the current learned
