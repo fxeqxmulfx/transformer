@@ -1,0 +1,166 @@
+diff --git a/experiments/phasor_value_transport/src/main.rs b/experiments/phasor_value_transport/src/main.rs
+index 1b2a4957..b97224ec 100644
+--- a/experiments/phasor_value_transport/src/main.rs
++++ b/experiments/phasor_value_transport/src/main.rs
+@@ -13,6 +13,7 @@ mod pair_checks;
+ mod pair_memory;
+ mod pair_ops;
+ mod relation_paths;
++mod relation_rows;
+ mod relation_support;
+ include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
+ use engine::{Config, Engine, Result, ValueLayer};
+diff --git a/experiments/phasor_value_transport/src/relation_paths.rs b/experiments/phasor_value_transport/src/relation_paths.rs
+index b1ab6d78..0d90819f 100644
+--- a/experiments/phasor_value_transport/src/relation_paths.rs
++++ b/experiments/phasor_value_transport/src/relation_paths.rs
+@@ -32,7 +32,7 @@ impl RelationRead {
+         if length <= 2 {
+             return Ok(());
+         }
+-        let mut edges = Edges::new();
++        let mut edges = Edges::new(self.vocab);
+         let mut support = cfg!(feature = "relation-support").then(|| Support::new(self.vocab));
+         let batches = self.host.chunks_exact_mut(length * self.vocab);
+         for (example, (prompt, batch)) in tokens.chunks_exact(length).zip(batches).enumerate() {
+@@ -54,7 +54,7 @@ impl RelationRead {
+                 }
+                 row.fill(source);
+                 let mut moving = 0;
+-                for (&(_, relation), &middle) in edges.range((source, 0)..=(source, u32::MAX)) {
++                for &(relation, middle) in edges.outgoing(source) {
+                     if let Some(&end) = edges.get(&(middle, relation))
+                         && end != source
+                     {
+diff --git a/experiments/phasor_value_transport/src/relation_rows.rs b/experiments/phasor_value_transport/src/relation_rows.rs
+new file mode 100644
+index 00000000..1027e0f3
+--- /dev/null
++++ b/experiments/phasor_value_transport/src/relation_rows.rs
+@@ -0,0 +1,49 @@
++//! Sparse source rows for causal triples, as in Phasor.readRelationRows_fold.
++//! Relation labels stay sorted within each row across writes and overwrites.
++pub struct Edges {
++    rows: Vec<Vec<(u32, u32)>>,
++    written: Vec<u32>,
++}
++
++impl Edges {
++    pub fn new(vocab: usize) -> Self {
++        Self {
++            rows: vec![Vec::new(); vocab],
++            written: Vec::new(),
++        }
++    }
++
++    pub fn clear(&mut self) {
++        for source in self.written.drain(..) {
++            self.rows[source as usize] = Vec::new();
++        }
++    }
++
++    pub fn outgoing(&self, source: u32) -> &[(u32, u32)] {
++        &self.rows[source as usize]
++    }
++
++    pub fn get(&self, &(source, relation): &(u32, u32)) -> Option<&u32> {
++        let row = self.outgoing(source);
++        row.binary_search_by_key(&relation, |&(h, _)| h)
++            .ok()
++            .map(|at| &row[at].1)
++    }
++
++    pub fn contains_key(&self, key: &(u32, u32)) -> bool {
++        self.get(key).is_some()
++    }
++
++    pub fn insert(&mut self, (source, relation): (u32, u32), end: u32) {
++        let row = &mut self.rows[source as usize];
++        match row.binary_search_by_key(&relation, |&(h, _)| h) {
++            Ok(at) => row[at].1 = end,
++            Err(at) => {
++                if row.is_empty() {
++                    self.written.push(source);
++                }
++                row.insert(at, (relation, end));
++            }
++        }
++    }
++}
+diff --git a/experiments/phasor_value_transport/src/relation_support.rs b/experiments/phasor_value_transport/src/relation_support.rs
+index dde7cf83..a7731d3a 100644
+--- a/experiments/phasor_value_transport/src/relation_support.rs
++++ b/experiments/phasor_value_transport/src/relation_support.rs
+@@ -4,7 +4,7 @@
+ use crate::engine::Result;
+ use std::collections::BTreeMap;
+
+-pub type Edges = BTreeMap<(u32, u32), u32>;
++pub use crate::relation_rows::Edges;
+
+ #[derive(Clone, Copy, Default)]
+ struct Size {
+@@ -93,7 +93,7 @@ pub struct ClosedRead {
+ impl ClosedRead {
+     pub fn new(vocab: usize) -> Self {
+         Self {
+-            edges: Edges::new(),
++            edges: Edges::new(vocab),
+             support: Support::new(vocab),
+         }
+     }
+@@ -112,13 +112,16 @@ impl ClosedRead {
+     pub fn address(&self, source: u32) -> Option<u32> {
+         let mut largest = 0;
+         let mut answer = None;
+-        for (&(_, h), &middle) in self.edges.range((source, 0)..=(source, u32::MAX)) {
++        for &(h, middle) in self.edges.outgoing(source) {
+             let size = self.support.sizes[h as usize];
+             if self.support.scores[h as usize] != size.sources || size.destinations != size.sources
+             {
+                 continue;
+             }
+-            let end = self.edges[&(middle, h)];
++            let end = *self
++                .edges
++                .get(&(middle, h))
++                .expect("a closed relation contains its destinations");
+             if end == source {
+                 continue;
+             }
+@@ -136,7 +139,8 @@ impl ClosedRead {
+ // Independently recount every two-edge source after each write on all
+ // eight-token prompts over three symbols, including resets and overwrites.
+ pub fn check_counts() -> Result<()> {
+-    let mut edges = Edges::new();
++    let mut edges = Edges::new(3);
++    let mut flat = BTreeMap::new();
+     let mut support = Support::new(3);
+     for mut code in 0..3u32.pow(8) {
+         let mut tokens = [0; 8];
+@@ -145,10 +149,25 @@ pub fn check_counts() -> Result<()> {
+             code /= 3;
+         }
+         edges.clear();
++        flat.clear();
+         support.clear();
++        if (0..3).any(|a| !edges.outgoing(a).is_empty()) {
++            return Err("a source row survived a sequence boundary".into());
++        }
+         for t in tokens.windows(3) {
+             support.before_write(&edges, t[0], t[1], t[2]);
+             edges.insert((t[0], t[1]), t[2]);
++            flat.insert((t[0], t[1]), t[2]);
++            for a in 0..3 {
++                let expected = flat
++                    .range((a, 0)..=(a, u32::MAX))
++                    .map(|(&(_, h), &b)| (h, b));
++                if edges.outgoing(a).iter().copied().ne(expected)
++                    || (0..3).any(|h| edges.get(&(a, h)) != flat.get(&(a, h)))
++                {
++                    return Err("source rows differed from the flat reference relation".into());
++                }
++            }
+             for h in 0..3 {
+                 let sources = (0..3).filter(|&a| edges.contains_key(&(a, h))).count();
+                 let destinations = (0..3)

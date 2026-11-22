@@ -599,6 +599,15 @@ or inserting a new label preserves strict order, and that the resulting
 lookup matches the flat table after every finite write stream.
 [Sorted relation rows](../../src/Transformer/Phasor/RelationRows.lean)
 
+Sorted rows reproduced all 78 directional checks and the weights and
+observation histories of twelve fresh matched cells on Kernite v0.6.0.
+Six cells ran faster. Across all seeds the geometric mean time rose by
+0.14% on the short tier and 0.24% on the long tier. The default keeps the
+flat table. To reproduce, apply the patch at `4ff019bf` and run
+`time_cells.sh` on Dyck, 20-bit parity, language L1 and depth-one C-RASP
+with the default FP32 build on both sides.
+[Sorted relation row source](trials/sorted-relation-rows.patch)
+
 The query, the first endpoint and the second endpoint are distinct whenever
 a closed two-step read moves. Thus fewer than three distinct stored edges
 force the fallback for every relation and every query. The same argument
