@@ -13,7 +13,8 @@ pub mod kernels {
         st.global.f32([p], x);
     }
 
-    pub unsafe extern "ptx-kernel" fn forward(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn forward<const ADJACENT: bool>(
         rotated: *mut f32,
         angles: *mut f32,
         context: *const f32,
@@ -30,8 +31,14 @@ pub mod kernels {
         mov.f32(a, 0.0);
         label(scan);
         mad.lo.u32(k, row, pairs, lane);
-        mad.lo.u32(lo, row, width, lane);
-        add.u32(hi, lo, pairs);
+        if ADJACENT {
+            shl.b32(lo, lane, 1);
+            mad.lo.u32(lo, row, width, lo);
+            add.u32(hi, lo, 1);
+        } else {
+            mad.lo.u32(lo, row, width, lane);
+            add.u32(hi, lo, pairs);
+        }
         load(step, angles, k);
         store(angles, k, a);
         sin.approx.f32(s, a);
@@ -56,7 +63,8 @@ pub mod kernels {
 
     // The cotangent of the rotated vector is replaced in place by R(-a)g.
     // Store the suffix sum before adding this row's angle derivative.
-    pub unsafe extern "ptx-kernel" fn backward(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn backward<const ADJACENT: bool>(
         direct: *mut f32,
         dsteps: *mut f32,
         rotated: *const f32,
@@ -87,8 +95,14 @@ pub mod kernels {
         label(scan);
         sub.u32(row, row, 1);
         mad.lo.u32(k, row, pairs, lane);
-        mad.lo.u32(lo, row, width, lane);
-        add.u32(hi, lo, pairs);
+        if ADJACENT {
+            shl.b32(lo, lane, 1);
+            mad.lo.u32(lo, row, width, lo);
+            add.u32(hi, lo, 1);
+        } else {
+            mad.lo.u32(lo, row, width, lane);
+            add.u32(hi, lo, pairs);
+        }
         load(a, angles, k);
         sin.approx.f32(s, a);
         cos.approx.f32(c, a);

@@ -867,6 +867,26 @@ The proof also gives the contribution of four output gradients to a first-
 stage angle and establishes prefix causality.
 [Crossed rotation proofs](../../src/Transformer/Phasor/CrossedContextRotation.lean)
 
+On the length-257, width-256 fixture, the adjacent stage agreed with a
+separate FP64 calculation within `4.37e-6` across 197,376 outputs. The
+largest hidden and increment gradient errors were `5.06e-6` and
+`1.01e-5`. With an active first stage and a zero second stage, both test
+widths reproduced the one-stage hidden vectors, logits and input
+gradients exactly. With both stages active, the causal prefix was exact
+and the largest norm difference on arbitrary vectors was `1.98e-6`.
+The width-four GPU test reproduced both coordinate transfers in the
+Lean example. At 3,000 updates on canonical NV11, seed 0 scored
+4,702/4,704 on training and 80/4,705 held out.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,crossed-context-rotation
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/crossed-nv11 0 3000
+"$bin" nv11-score runs/crossed-nv11/nv11-train-3000.f32 shifts
+```
+
 ## Associative write memory
 
 Every pair of consecutive embeddings contributes to a learned matrix.

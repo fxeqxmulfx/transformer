@@ -184,7 +184,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
                 Ok((loss[1] - loss[0]) / (2. * step))
             };
             let coarse = difference(epsilon)?;
-            let finite = if architecture::BILINEAR_PHASE {
+            let finite = if architecture::BILINEAR_PHASE || architecture::CROSSED_CONTEXT {
                 let fine = difference(epsilon / 2.)?;
                 let finer = difference(epsilon / 4.)?;
                 memory_checks::refined_difference(

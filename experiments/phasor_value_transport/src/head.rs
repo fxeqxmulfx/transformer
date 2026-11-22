@@ -20,6 +20,7 @@ pub enum Head {
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
+    CrossedContext,
     AssociativeReflection,
     PeriodicReflection,
 }
@@ -44,6 +45,7 @@ impl Head {
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
+            "crossed-context" => Ok(Self::CrossedContext),
             "associative-reflection" => Ok(Self::AssociativeReflection),
             "periodic-reflection" => Ok(Self::PeriodicReflection),
             _ => Err(format!("unknown head {name}").into()),
@@ -67,6 +69,7 @@ impl Head {
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
+            Self::CrossedContext => "phasor-learned-crossed-context-rotation-v1",
             Self::AssociativeReflection => "phasor-learned-associative-reflection-8x4-v1",
             Self::PeriodicReflection => "phasor-learned-periodic-reflection-32-v1",
         }
@@ -95,6 +98,7 @@ impl Head {
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::ContextRotation
+                | Self::CrossedContext
                 | Self::AssociativeReflection
                 | Self::PeriodicReflection
         )
@@ -124,7 +128,9 @@ impl Head {
             Self::PeriodicReflection => {
                 Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
             }
-            Self::ContextRotation => (4 + cfg.width / 2) * cfg.width,
+            Self::ContextRotation | Self::CrossedContext => {
+                (4 + self.context_stages() * (cfg.width / 2)) * cfg.width
+            }
             Self::AssociativeReflection => {
                 Self::ReflectionPhase.parameters(cfg)
                     + (crate::associative::PROJECTED + crate::associative::VALUES) * cfg.width
@@ -143,6 +149,14 @@ impl Head {
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 4 * MEMORY_WIDTH * cfg.width
             }
+        }
+    }
+
+    pub const fn context_stages(self) -> usize {
+        match self {
+            Self::ContextRotation => 1,
+            Self::CrossedContext => 2,
+            _ => 0,
         }
     }
 
@@ -174,7 +188,7 @@ impl Head {
                 }
                 parameters[output..output + crate::associative::VALUES * cfg.width].fill(0.);
             }
-            Self::ContextRotation => {
+            Self::ContextRotation | Self::CrossedContext => {
                 parameters[crate::architecture::memory_start(cfg)
                     ..crate::architecture::start(cfg) + self.parameters(cfg)]
                     .fill(0.);

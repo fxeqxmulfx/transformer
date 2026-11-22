@@ -75,7 +75,12 @@ pub(super) fn one_gate(
     )
 }
 
-fn compare_dense(cfg: &Config, ordered: &mut Engine, base: &mut Engine, name: &str) -> Result<()> {
+pub(super) fn compare_dense(
+    cfg: &Config,
+    ordered: &mut Engine,
+    base: &mut Engine,
+    name: &str,
+) -> Result<()> {
     let rows = cfg.max_length * 2;
     let mut rng = random::Random::new(101);
     let mut samples = |n| {
