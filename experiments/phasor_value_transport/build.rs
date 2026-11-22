@@ -164,11 +164,11 @@ fn main() {
         ),
         (
             "pub struct Engine {",
-            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,\n    supervised_shape: Option<(usize, usize)>,",
+            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    input_product: Option<product_layer::ProductLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,\n    supervised_shape: Option<(usize, usize)>,",
         ),
         (
             "let mut engine = Self {",
-            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            stream_read: None,\n            supervised_shape: None,",
+            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            input_product: None,\n            stream_read: None,\n            supervised_shape: None,",
         ),
         (
             "        Ok(engine)",
@@ -232,9 +232,12 @@ fn main() {
         engine.push_str(&format!("\ninclude!({extension:?});\n"));
         println!("cargo:rerun-if-changed={file}");
     }
-    let hidden = Path::new("src/hidden_layer.rs").canonicalize().unwrap();
-    engine.push_str(&format!("#[path={hidden:?}] mod hidden_layer;\n"));
-    println!("cargo:rerun-if-changed=src/hidden_layer.rs");
+    for name in ["hidden_layer", "product_layer"] {
+        let file = format!("src/{name}.rs");
+        let path = Path::new(&file).canonicalize().unwrap();
+        engine.push_str(&format!("#[path={path:?}] mod {name};\n"));
+        println!("cargo:rerun-if-changed={file}");
+    }
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
     let mut mods = String::new();

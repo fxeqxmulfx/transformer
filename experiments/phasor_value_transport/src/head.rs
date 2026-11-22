@@ -11,6 +11,7 @@ pub enum Head {
     Transition,
     Recurrent,
     Bounded,
+    InputProduct,
 }
 
 impl Head {
@@ -24,11 +25,12 @@ impl Head {
             "transition" => Ok(Self::Transition),
             "recurrent" => Ok(Self::Recurrent),
             "bounded" => Ok(Self::Bounded),
+            "input-product" => Ok(Self::InputProduct),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
 
-    pub fn id(self) -> &'static str {
+    pub const fn id(self) -> &'static str {
         match self {
             Self::Original => "complex-phase-score-lerope",
             Self::Stream => "phasor-learned-stream-read-v1",
@@ -36,6 +38,7 @@ impl Head {
             Self::Transition => "phasor-hidden-transition-32-v1",
             Self::Recurrent => "phasor-hidden-recurrent-32-v1",
             Self::Bounded => "phasor-bounded-memory-32-v1",
+            Self::InputProduct => "phasor-causal-product-input-32-v1",
         }
     }
 
@@ -44,7 +47,9 @@ impl Head {
             Self::Original => 0,
             Self::Stream => 4 * cfg.width,
             Self::Relations => pair_memory::parameters(cfg),
-            Self::Transition | Self::Recurrent | Self::Bounded => 4 * MEMORY_WIDTH * cfg.width,
+            Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
+                4 * MEMORY_WIDTH * cfg.width
+            }
         }
     }
 
@@ -52,7 +57,7 @@ impl Head {
         match self {
             Self::Original | Self::Stream => {}
             Self::Relations => pair_memory::initialize_gains(cfg, parameters),
-            Self::Transition | Self::Recurrent | Self::Bounded => {
+            Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
                 let start = crate::architecture::start(cfg);
                 let end = start + self.parameters(cfg);
@@ -65,7 +70,7 @@ impl Head {
                     }
                 };
                 initialize(input, cfg.width);
-                if self == Self::Bounded {
+                if matches!(self, Self::Bounded | Self::InputProduct) {
                     output.fill(0.);
                 } else {
                     initialize(output, MEMORY_WIDTH);

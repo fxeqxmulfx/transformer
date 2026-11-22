@@ -15,12 +15,24 @@ impl Engine {
         let rows = batch * length;
         self.prepare_positions(length)?;
         self.rms(self.embed_norm.ptr(), input, rows)?;
-        self.forward_mhc(self.embed_norm.ptr(), batch, length)?;
+        let features = match &self.input_product {
+            Some(layer) => layer.forward(self, rows, length)?,
+            None => self.embed_norm.ptr(),
+        };
+        self.forward_mhc(features, batch, length)?;
         self.rms(self.last.ptr(), self.shared.ptr(), rows)?;
         if let Some(memory) = &self.hidden_layer {
             memory.forward_features(self, rows, length)?;
         }
         Ok(())
+    }
+
+    fn backward_input_rms(&self, input: P, rows: usize, length: usize) -> Result<()> {
+        let gradient = match &self.input_product {
+            Some(layer) => layer.backward(self, rows, length)?,
+            None => self.dx.ptr(),
+        };
+        self.rms_back(self.dembed.ptr(), input, gradient, rows)
     }
 
     fn encoded_features(&self) -> &F {

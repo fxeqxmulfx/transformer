@@ -9,6 +9,35 @@ fn linear(weights: &[f32], x: &[f64]) -> Vec<f64> {
         .collect()
 }
 
+fn input_product_reference(
+    cfg: &Config,
+    weights: &[f32],
+    normalized: &[f32],
+    length: usize,
+) -> Vec<f64> {
+    let width = cfg.width;
+    let start = architecture::start(cfg);
+    let (input, output) = weights[start..].split_at(3 * M * width);
+    let mut features = Vec::with_capacity(normalized.len());
+    for sequence in normalized.chunks_exact(length * width) {
+        let mut previous = [0.; M];
+        for row in sequence.chunks_exact(width) {
+            let row: Vec<_> = row.iter().copied().map(f64::from).collect();
+            let projected = linear(input, &row);
+            let product: Vec<_> = (0..M)
+                .map(|j| projected[j] * (projected[M + j] + previous[j]))
+                .collect();
+            features.extend(
+                row.into_iter()
+                    .zip(linear(output, &product))
+                    .map(|(x, y)| x + y),
+            );
+            previous.copy_from_slice(&projected[2 * M..]);
+        }
+    }
+    features
+}
+
 fn reference(cfg: &Config, weights: &[f32], hidden: &[f32], length: usize) -> Vec<f64> {
     let d = cfg.width;
     let start = crate::architecture::start(cfg);
@@ -236,18 +265,20 @@ pub fn run() -> Result<()> {
         cfg.gain = cfg.heads as f32 / width as f32;
         let mut base = Engine::new(cfg.clone(), &layout::initialize_model(&cfg, 1))?;
         base.forward(&tokens, &labels, 2, length)?;
-        let hidden = base
-            .diagnostic_snapshot(tokens.len())?
-            .remove("readout_input")
-            .unwrap();
-        for head in [Head::Transition, Head::Recurrent, Head::Bounded] {
+        let diagnostic = base.diagnostic_snapshot(tokens.len())?;
+        for head in [
+            Head::Transition,
+            Head::Recurrent,
+            Head::Bounded,
+            Head::InputProduct,
+        ] {
             cfg.head = head;
             let mut weights = layout::initialize_model(&cfg, 1);
             let mut engine = Engine::new(cfg.clone(), &weights)?;
-            if head == Head::Bounded {
+            if matches!(head, Head::Bounded | Head::InputProduct) {
                 engine.forward(&tokens, &labels, 2, length)?;
                 if engine.logits.read()? != base.logits.read()? {
-                    return Err("zero-output recurrent head changed the backbone logits".into());
+                    return Err("zero residual changed the backbone logits".into());
                 }
                 engine.backward(2, length)?;
                 let grad = engine.gradients.read()?;
@@ -257,7 +288,7 @@ pub fn run() -> Result<()> {
                 if grad[start..output].iter().any(|&x| x != 0.)
                     || !grad[output..end].iter().any(|g| g.abs() > 1e-7)
                 {
-                    return Err("incorrect zero-output recurrence gradient".into());
+                    return Err("incorrect gradient through a zero output map".into());
                 }
                 let mut rng = random::Random::new(3407);
                 for w in &mut weights[output..end] {
@@ -266,19 +297,38 @@ pub fn run() -> Result<()> {
                 engine.parameters.write(&weights)?;
             }
             engine.forward(&tokens, &labels, 2, length)?;
-            let actual = engine.logits.read()?;
-            let expected = reference(&cfg, &weights, &hidden, length);
+            let (quantity, actual, expected) = if head == Head::InputProduct {
+                (
+                    "input feature",
+                    engine.input_product_snapshot(tokens.len())?,
+                    input_product_reference(
+                        &cfg,
+                        &weights,
+                        &diagnostic["embedding_normalized"],
+                        length,
+                    ),
+                )
+            } else {
+                (
+                    "logit",
+                    engine.logits.read()?,
+                    reference(&cfg, &weights, &diagnostic["readout_input"], length),
+                )
+            };
+            if actual.len() != expected.len() {
+                return Err("FP64 reference and GPU output shapes differ".into());
+            }
             let mut worst = 0_f64;
             for (&a, b) in actual.iter().zip(expected) {
                 let delta = (f64::from(a) - b).abs();
                 if !delta.is_finite() {
-                    return Err("nonfinite reference logit".into());
+                    return Err("nonfinite forward value".into());
                 }
                 worst = worst.max(delta);
             }
             let prefix = prefix_error(&mut engine, &tokens[..length])?;
             println!(
-                "{head:?} width={width} max FP64 logit error={worst:.3e} max prefix logit change={prefix:.3e}"
+                "{head:?} width={width} max FP64 {quantity} error={worst:.3e} max prefix logit change={prefix:.3e}"
             );
             if worst > 2e-5 || prefix > 2e-5 {
                 return Err("hidden forward or causality check failed".into());

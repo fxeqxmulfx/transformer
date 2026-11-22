@@ -149,6 +149,26 @@ every original layer state and that suffix changes preserve every
 earlier state at any depth.
 [Causal product input](../../src/Transformer/Phasor/CausalProductInput.lean)
 
+On two six-position sequences an independent FP64 calculation agreed with
+the GPU input residual within `1.25e-6` at widths 64 and 128. All twelve
+finite differences across the embedding, router and four projections
+passed. Isolating each prefix produced identical logits. Three additional
+directions checked gradients with respect to dense vectors outside the
+embedding table.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.CausalProductInput
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,causal-product-input
+bin=./target/release/phasor-value-transport
+"$bin" memory-check
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen suite-blocks 0 runs/causal-product 1500
+"$bin" probes suite-blocks 0 runs/causal-product
+"$bin" nv11-train runs/product-nv11/seed0 0 3000
+"$bin" nv11-score runs/product-nv11/seed0/nv11-train-3000.f32
+```
+
 ## Compact complex feed-forward branch
 
 This candidate keeps the embedding width, attention heads, depth, four

@@ -8,6 +8,7 @@ use std::{env, fs, io::Write, path::Path};
 
 mod addresses;
 mod architecture;
+mod causal_product;
 mod causal_values;
 mod embedding_checks;
 mod frequency_read;

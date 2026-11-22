@@ -49,5 +49,5 @@ pub fn separate_input_gradient(engine: &mut String) {
     let final_rms =
         "        self.rms_back(self.dembed.ptr(), self.embed.ptr(), self.dx.ptr(), r)?;";
     assert_eq!(engine.matches(final_rms).count(), 1);
-    *engine = engine.replace(final_rms, "        self.rms_back(self.dembed.ptr(), input, self.dx.ptr(), r)\n    }\n    fn backward_mhc(&self, batch: usize, length: usize) -> Result<()> {\n        self.backward_embedding_layers(self.embed.ptr(), batch, length)?;\n        let (r, w) = (batch * length, self.config.width);");
+    *engine = engine.replace(final_rms, "        self.backward_input_rms(input, r, length)\n    }\n    fn backward_mhc(&self, batch: usize, length: usize) -> Result<()> {\n        self.backward_embedding_layers(self.embed.ptr(), batch, length)?;\n        let (r, w) = (batch * length, self.config.width);");
 }

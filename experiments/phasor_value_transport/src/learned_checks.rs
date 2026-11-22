@@ -138,7 +138,11 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     e.backward(3, length)?;
     let gradients = e.gradients.read()?;
     let unmasked = labels.iter().filter(|&&v| v != u32::MAX).count();
-    let read_epsilon = if architecture::BOUNDED { 0.0003 } else { 0.003 };
+    let read_epsilon = if architecture::BOUNDED || architecture::INPUT_PRODUCT {
+        0.0003
+    } else {
+        0.003
+    };
     for (range, epsilon) in [(0..p * width, 0.0002), (start..end, read_epsilon)] {
         if range.is_empty() {
             continue;
@@ -216,7 +220,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         }
     }
     println!(
-        "stream model length={length} width={width} unchanged_initial_logits={} permuted_logits={} readout_parameters={}",
+        "embedding model length={length} width={width} unchanged_initial_logits={} permuted_logits={} additional_parameters={}",
         rows * p,
         rows * p,
         end - start

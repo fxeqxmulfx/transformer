@@ -354,6 +354,8 @@ impl Engine {
                 self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
             }
             Head::Relations => self.shared_layer = Some(ValueLayer::new(self)?),
+            Head::InputProduct =>
+                self.input_product = Some(product_layer::ProductLayer::new(self)?),
             Head::Transition | Head::Recurrent | Head::Bounded =>
                 self.hidden_layer = Some(hidden_layer::HiddenLayer::new(self)?),
         }
