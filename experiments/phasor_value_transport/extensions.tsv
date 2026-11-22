@@ -15,3 +15,4 @@ short	arithmetic-sum-squares
 short	suite-lookup
 short	arithmetic-sum-pow32
 short	arithmetic-sum-pow48
+long	language-l3

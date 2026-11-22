@@ -1,10 +1,11 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all **156 GPT task/seed runs** across 41 short
-and eleven long tasks on Kernite v0.6.0. Each task used its own weights and
+One Phasor architecture passed all **159 GPT task/seed runs** across 41 short
+and twelve long tasks on Kernite v0.6.0. Each task used its own weights and
 the original AdamW. The same architecture classified all 9,409 NV11 pairs
 correctly at update 750 in every seed. The newest short task is
-`(a + b)^48 mod 97`, which all three seeds passed at update 250.
+`(a + b)^48 mod 97`, which all three seeds passed at update 250. The newest
+long task is the binary block language L3.
 
 The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
@@ -44,13 +45,22 @@ both 750 and 3,000 updates.
 Both power-of-sum source tasks passed at update 250 in every seed. The
 longest cell took 2.37 seconds. The predecessor produced byte-identical
 weights on all six runs. The checkpoint replay audit covers 123 short
-and 33 long GPT runs and three NV11 runs, for 159 verified checkpoints.
+and 36 long GPT runs and three NV11 runs, for 162 verified checkpoints.
 [Source case definitions](../convex_stress_arithmetic_data/references/definitions.json)
 
 | Function modulo 97 | Held-out pairs, out of 4,705, seeds 0 / 1 / 2 | Held-out first operand zero, out of 51, seeds 0 / 1 / 2 |
 | --- | ---: | ---: |
 | `(a + b)^32` | 4,703 / 4,698 / 4,704 | 51 / 51 / 51 |
 | `(a + b)^48` | 4,684 / 4,672 / 4,698 | 50 / 50 / 50 |
+
+The closed-relation model reached 99% on the source L3 length-128 novel
+validation split at updates 750 / 1,000 / 500. The slowest run took
+114.73 seconds. Each checkpoint passed 512/512 on the original-length test.
+The independent length-128 test scored 509 / 512 / 509 out of 512.
+For all 4,096 twelve-letter words, the whole-sequence scores were
+4,096 / 4,096 / 4,023. The 257-token repeated-letter probe scored
+256 / 256 / 255 out of 256. Reproduce these four tests with
+`PHASOR_EVAL_BATCH_CAP=4 "$bin" probes language-l3 "$seed" "$out" extended`.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ClosedRelations
@@ -800,6 +810,8 @@ original test splits.
 
 Elapsed time fell by 10.30% as a geometric mean across the three L3 pairs.
 The slowest inclusive run took 65.23 seconds, within the long-tier limit.
+Against the closed-relation default on L3, the inclusive runs used
+30.66% fewer updates and 25.59% less elapsed time as geometric means.
 Use the same commands with `language-l3` and the two feature flags in the
 table comparison. The full-suite default uses the closed-relation architecture.
 
