@@ -66,7 +66,9 @@ fn profile(p: usize, length: usize) -> Result<()> {
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
-    let expected_gain = if pair_memory::MODEL == "phasor-prefix-successor-half-v1" {
+    let expected_gain = if pair_memory::MODEL == "phasor-prefix-successor-half-v1"
+        || cfg!(feature = "successor-displacement")
+    {
         0.5
     } else {
         0.25
@@ -86,13 +88,25 @@ fn profile(p: usize, length: usize) -> Result<()> {
     for (i, &b) in tokens.iter().enumerate() {
         let prev = if i % length == 0 { i } else { i - 1 };
         let a = tokens[prev];
-        let v = residual(
-            &tokens[i - i % length..i],
-            b,
-            p as u32,
-            d,
-            &theta[start..gain_at],
-        );
+        let prefix = &tokens[i - i % length..i];
+        let mut v = residual(prefix, b, p as u32, d, &theta[start..gain_at]);
+        if cfg!(feature = "successor-displacement") {
+            let r = prefix
+                .windows(2)
+                .rev()
+                .find(|pair| pair[0] == b)
+                .map_or(b, |pair| pair[1]);
+            let strength = if cfg!(feature = "successor-displacement-quarter") {
+                0.25
+            } else {
+                1.0
+            };
+            for (col, x) in v.iter_mut().enumerate() {
+                *x += strength
+                    * (f64::from(theta[r as usize * d + col])
+                        - f64::from(theta[b as usize * d + col]));
+            }
+        }
         let read = checks::reference(
             &scores[prev * p..(prev + 1) * p],
             &theta[..p * d],

@@ -15,6 +15,13 @@ const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half")
 pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
 pub const INITIAL_GAIN: f32 = if HALF_GAIN { 0.5 } else { 0.25 };
+pub const DISPLACEMENT: f32 = if cfg!(feature = "successor-displacement-quarter") {
+    0.25
+} else if cfg!(feature = "successor-displacement") {
+    1.0
+} else {
+    0.0
+};
 
 #[cfg(all(feature = "prefix-xor", feature = "prefix-sum"))]
 compile_error!("choose one prefix architecture per binary");
@@ -26,7 +33,11 @@ compile_error!("pair-v2 replays the original pair-address control");
 #[cfg(all(feature = "prefix-xor-cubic", feature = "prefix-successor"))]
 compile_error!("the successor trial uses the linear prefix sum");
 
-pub const MODEL: &str = if HALF_GAIN {
+pub const MODEL: &str = if cfg!(feature = "successor-displacement-quarter") {
+    "phasor-successor-displacement-quarter-v1"
+} else if cfg!(feature = "successor-displacement") {
+    "phasor-successor-displacement-v1"
+} else if HALF_GAIN {
     "phasor-prefix-successor-half-v1"
 } else if cfg!(feature = "prefix-successor") {
     "phasor-prefix-successor-v1"

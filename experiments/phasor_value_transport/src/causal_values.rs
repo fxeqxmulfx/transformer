@@ -102,6 +102,53 @@ pub mod kernels {
         add.u32(s, s, 32);
         bra(normalize);
     }
+    // Move two coefficients of the tied embedding read. Leave the softmax
+    // masses in their own buffer for the derivative with respect to scores.
+    pub unsafe extern "ptx-kernel" fn displace(
+        effective: *mut f32,
+        masses: *const f32,
+        tokens: *const u32,
+        keys: *const u32,
+        p: u32,
+        tables: u32,
+        strength: f32,
+    ) {
+        let (row, col, stride, at, b, r): (u32, u32, u32, u32, u32, u32);
+        let addr: u64;
+        mov.u32(row, ctaid.x);
+        mad.wide.u32(addr, row, 4, tokens);
+        ld.global.u32(b, [addr]);
+        mul.lo.u32(at, row, tables);
+        mad.wide.u32(addr, at, 4, keys);
+        ld.global.u32(r, [addr]);
+        mov.u32(col, tid.x);
+        mov.u32(stride, ntid.x);
+        let (done, same, add_value, sub_key): (pred, pred, pred, pred);
+        setp.eq.u32(same, b, r);
+        let x: f32;
+        label(column);
+        setp.ge.u32(done, col, p);
+        if done {
+            ret();
+        }
+        mad.lo.u32(at, row, p, col);
+        load(x, masses, at);
+        if same {
+            bra(write);
+        }
+        setp.eq.u32(add_value, col, r);
+        if add_value {
+            add.rn.f32(x, x, strength);
+        }
+        setp.eq.u32(sub_key, col, b);
+        if sub_key {
+            sub.rn.f32(x, x, strength);
+        }
+        label(write);
+        store(effective, at, x);
+        add.u32(col, col, stride);
+        bra(column);
+    }
     pub unsafe extern "ptx-kernel" fn pullback(
         unshifted: *mut f32,
         masses: *const f32,

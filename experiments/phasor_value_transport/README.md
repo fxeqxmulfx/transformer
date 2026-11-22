@@ -78,6 +78,20 @@ candidate that takes longer on a retention screen is set aside. A surviving
 candidate needs all existing task/seed pairs, a per-tier geometric mean
 epoch ratio at most one, and a verified gain to become the default.
 
+Build each arm separately. The native oracle compares the logits with an
+independent scalar FP64 computation and checks 76 directional derivatives,
+including the input and output paths through the tied embedding.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorDisplacement
+cd experiments/phasor_value_transport
+for arm in successor-displacement successor-displacement-quarter; do
+    cargo +1.99.1 build --release --locked --features "fp32-affine-reference,$arm"
+    ./target/release/phasor-value-transport shared-check
+    PHASOR_EVAL_BATCH_CAP=16 ./target/release/phasor-value-transport screen suite-mqar 0 "runs/$arm" 1000
+done
+```
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.

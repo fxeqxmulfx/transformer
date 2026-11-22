@@ -34,6 +34,19 @@ impl ValueLayer {
         })
     }
 
+    // The score-gradient buffer is free until after the embedding pullback.
+    // At length <= 2 the causal displacement is identically zero.
+    fn value_weights(&self, length: usize) -> &F {
+        if crate::pair_memory::DISPLACEMENT != 0.0
+            && length > 2
+            && let Some(m) = &self.memory
+        {
+            &m.dscores
+        } else {
+            &self.weights
+        }
+    }
+
     fn project(&self, e: &Engine, batch: usize, length: usize, product: bool) -> Result<()> {
         let (rows, p, d) = (batch * length, e.config.vocab, e.config.width);
         if let Some(m) = &self.memory {
@@ -46,6 +59,18 @@ impl ValueLayer {
                     p as u32,
                     length as u32,
                 )?;
+                if crate::pair_memory::DISPLACEMENT != 0.0 && length > 2 {
+                    m.causal.displace(
+                        Grid::new(rows as u32, 128),
+                        m.dscores.ptr(),
+                        self.weights.ptr(),
+                        e.tokens.ptr(),
+                        m.keys.ptr(),
+                        p as u32,
+                        crate::pair_memory::TABLES as u32,
+                        crate::pair_memory::DISPLACEMENT,
+                    )?;
+                }
             }
         } else {
             // The historical two-token transport control is a separate experiment.
@@ -64,7 +89,7 @@ impl ValueLayer {
         if let Some(pipeline) = &e.pipeline {
             pipeline.multiply::<{ crate::precision::BF16 }>(
                 self.hidden.ptr(),
-                self.weights.ptr(),
+                self.value_weights(length).ptr(),
                 e.parameters.ptr(),
                 rows,
                 d,
@@ -73,7 +98,7 @@ impl ValueLayer {
         } else {
             e.mm_backward(
                 self.hidden.ptr(),
-                self.weights.ptr(),
+                self.value_weights(length).ptr(),
                 e.parameters.ptr(),
                 rows,
                 d,
@@ -193,7 +218,7 @@ impl ValueLayer {
             p,
             d,
         )?;
-        e.transpose(self.weights.ptr(), rows, p)?;
+        e.transpose(self.value_weights(length).ptr(), rows, p)?;
         e.mm_backward(
             self.value_gradient.ptr(),
             e.scratch.ptr(),
