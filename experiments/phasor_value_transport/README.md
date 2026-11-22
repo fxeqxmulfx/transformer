@@ -95,6 +95,24 @@ data adapter is unavailable. The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
 
+To report measured source coverage, replay each saved search with the same
+executable. The summary counts the longest measured search for each case
+and seed. It includes first and final scores on every available split and
+distinguishes retention, loss of the target, a full-budget miss and an
+earlier cutoff. Available cases with no measurements remain visible.
+
+```sh
+model=phasor-learned-input-phase-32-v1
+rg --files --no-ignore --hidden -g result.json "$out/$model" |
+    rg '/declared-target/result\.json$' | sort |
+    while IFS= read -r record; do
+        read -r task seed limit < <(jq -r '[.protocol.case,.protocol.seed,.protocol.updates] | @tsv' "$record")
+        "$bin" catalog-target "$task" "$seed" "$limit" "$out"
+    done > "$out/catalog-replays.jsonl"
+jq -es --slurpfile inventory "$out/catalog-source-inventory.json" \
+    -f catalog_results.jq "$out/catalog-replays.jsonl" > "$out/catalog-results.json"
+```
+
 On branch amplitudes at seed 0, the first MSE crossing came at update
 1,000. Free generation produced 255/256 exact validation sequences and
 MSE 0.0004882813 on 8,192 components. At update 1,500 the independent
