@@ -193,10 +193,40 @@ fn profile(p: usize, length: usize) -> Result<()> {
     Ok(())
 }
 
+// Rebuild the adjoint after intervening inference at a different batch shape.
+fn check_table_transpose() -> Result<()> {
+    let mut cfg = config(2)?;
+    cfg.shared_values = true;
+    cfg.max_length = 4;
+    let (start, gain) = (pair_memory::start(&cfg), pair_memory::gain(&cfg));
+    let weights = layout::initialize_model(&cfg, 0);
+    let mut engine = Engine::new(cfg, &weights)?;
+    if engine.backward(2, 2).is_ok() {
+        return Err("table adjoint accepted a batch before its forward pass".into());
+    }
+    let tokens = [2, 3, 2, 3];
+    let labels = [u32::MAX, 9, u32::MAX, 11];
+    engine.forward(&tokens, &labels, 2, 2)?;
+    if engine.backward(1, 4).is_ok() {
+        return Err("table adjoint accepted a different sequence boundary".into());
+    }
+    engine.backward(2, 2)?;
+    let first = engine.gradients.read()?;
+    engine.forward(&[4, 1, 4, 1], &labels, 1, 4)?;
+    engine.forward(&tokens, &labels, 2, 2)?;
+    engine.backward(2, 2)?;
+    let repeated = engine.gradients.read()?;
+    if first[start..gain] != repeated[start..gain] || !first[start..gain].iter().any(|&x| x != 0.) {
+        return Err("table adjoint changed after intervening inference".into());
+    }
+    Ok(())
+}
+
 pub fn run() -> Result<()> {
     if !precision::FP32_AFFINE_REFERENCE {
         return Err("finite differences require FP32 affines".into());
     }
+    check_table_transpose()?;
     // Include a composite vocabulary, multi-position batches, a one-token
     // sequence, repeated histories and supervised initial positions.
     for (p, l) in [(97, 2), (100, 4), (36, 1)] {

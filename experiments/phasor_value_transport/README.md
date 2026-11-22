@@ -42,6 +42,19 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" cell gpt-probe-key-value-binding 0 runs/kernite-
 "$bin" replay gpt-probe-key-value-binding 0 runs/kernite-060-gain075
 ```
 
+The runner now builds the list of rows that use each table entry during
+backpropagation. Forward-only scoring reads the table addresses directly.
+Lean proves that summing gradients over these rows gives the adjoint for
+any set of active rows, including repeated addresses. [Table read adjoint](../../src/Transformer/Phasor/PairValues.lean)
+
+On the GTX 1050 this reduced fresh cell time by 0.56% as a geometric mean
+over modular addition and 20-bit parity, three seeds each. All six elapsed
+times fell, by 0.19–0.95%. The observation histories and checkpoint weights
+were byte-identical. To reproduce, compare `cell arithmetic-add` and
+`cell basis-parity20` with `successor-hit-gain-seven-quarters`, FP32 affines
+and `PHASOR_EVAL_BATCH_CAP=16` against commit `cafcd74c`. Use fresh directories
+for each build and alternate their order between seeds.
+
 ## Selected prefix and successor model
 
 The default Phasor applies one causal update at every token. Its prefix state

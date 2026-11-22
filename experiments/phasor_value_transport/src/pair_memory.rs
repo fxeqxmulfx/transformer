@@ -178,6 +178,7 @@ pub struct PairMemory {
     pub scaled: Buffer<f32>,
     pub partial: Buffer<f32>,
     indices: Vec<u32>,
+    active_shape: Option<(usize, usize)>,
     starts: Vec<u32>,
     cursor: Vec<u32>,
     rows: Vec<u32>,
@@ -202,6 +203,7 @@ impl PairMemory {
             scaled: cuda.alloc(rows * cfg.width)?,
             partial: cuda.alloc(rows)?,
             indices: vec![0; entries],
+            active_shape: None,
             starts: vec![0; words + 1],
             cursor: vec![0; words],
             rows: vec![0; entries],
@@ -229,8 +231,7 @@ impl PairMemory {
 
     pub fn prepare(&mut self, tokens: &[u32], length: usize) -> Result<()> {
         let p = self.factors.len();
-        let used = tokens.len() * TABLES;
-        self.starts.fill(0);
+        self.active_shape = None;
         let mut prefix = 0;
         let mut transitions = 0;
         for (row, (&token, keys)) in tokens
@@ -292,22 +293,35 @@ impl PairMemory {
                     (earlier + b) % p
                 };
             }
-            for &k in keys.iter() {
-                self.starts[k as usize + 1] += 1;
-            }
-        }
-        for i in 1..self.starts.len() {
-            self.starts[i] += self.starts[i - 1];
-        }
-        self.cursor.copy_from_slice(&self.starts[..TABLES * p]);
-        for (i, &k) in self.indices[..used].iter().enumerate() {
-            let offset = &mut self.cursor[k as usize];
-            self.rows[*offset as usize] = (i / TABLES) as u32;
-            *offset += 1;
         }
         self.keys.write(&self.indices)?;
         if let Some(a) = &mut self.agreement {
             a.device.write(&a.reads)?;
+        }
+        self.active_shape = Some((tokens.len() / length, length));
+        Ok(())
+    }
+
+    // Only differentiation needs the transpose of the forward gather.
+    // Build it in row order for the exact batch that produced the logits.
+    pub fn prepare_transpose(&mut self, batch: usize, length: usize) -> Result<()> {
+        if self.active_shape != Some((batch, length)) {
+            return Err("table gradients require a forward pass of the same shape".into());
+        }
+        let active = &self.indices[..batch * length * TABLES];
+        self.starts.fill(0);
+        for &key in active {
+            self.starts[key as usize + 1] += 1;
+        }
+        for i in 1..self.starts.len() {
+            self.starts[i] += self.starts[i - 1];
+        }
+        self.cursor
+            .copy_from_slice(&self.starts[..self.starts.len() - 1]);
+        for (i, &k) in active.iter().enumerate() {
+            let offset = &mut self.cursor[k as usize];
+            self.rows[*offset as usize] = (i / TABLES) as u32;
+            *offset += 1;
         }
         self.offsets.write(&self.starts)?;
         self.owners.write(&self.rows)?;

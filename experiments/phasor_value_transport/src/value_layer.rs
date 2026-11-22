@@ -321,8 +321,8 @@ impl Engine {
         }
         Ok(())
     }
-    pub fn backward(&self, batch: usize, length: usize) -> Result<()> {
-        if let Some(layer) = &self.shared_layer {
+    pub fn backward(&mut self, batch: usize, length: usize) -> Result<()> {
+        if let Some(layer) = &mut self.shared_layer {
             if batch == 0
                 || batch > self.config.max_batch
                 || length == 0
@@ -330,7 +330,16 @@ impl Engine {
             {
                 return Err("batch or length outside allocated bounds".into());
             }
-            return layer.pull_back(self, batch, length, true);
+            layer
+                .memory
+                .as_mut()
+                .unwrap()
+                .prepare_transpose(batch, length)?;
+            return self
+                .shared_layer
+                .as_ref()
+                .unwrap()
+                .pull_back(self, batch, length, true);
         }
         self.backward_original(batch, length)
     }
