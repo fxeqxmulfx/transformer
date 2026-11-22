@@ -1674,6 +1674,55 @@ for seed in 0 1 2; do
 done
 ```
 
+### Fixed-weight evaluation
+
+Triple transport prepares its slot weights and learned correspondence table
+at the first forward pass of each scoring call. Further batches and generated
+prefixes reuse that preparation while computing their own addresses, hidden
+vectors and logits. The next scoring call reads the current weights again.
+Lean proves that this gives the same greedy output through termination when
+the prepared weights agree throughout the scoring window. [Fixed-weight evaluation proof](../../src/Transformer/Phasor/TripleTransport/FixedEvaluation.lean)
+
+On a GTX 1050 with Kernite v0.6.0, six alternating-order pairs timed the
+complete `probes` command, including startup and the supplied test splits.
+All paired score records matched byte for byte.
+
+| Default model | Mean seconds before | Mean seconds with reuse |
+| --- | ---: | ---: |
+| NV11 | 0.535 | 0.465 |
+| GPT linear transport | 2.580 | 2.335 |
+| Easy key–value recall | 1.208 | 1.217 |
+
+With the engine already loaded, eight alternating pairs on the seed 0
+NV11 checkpoint averaged 0.086 seconds per primary split before reuse and
+0.031 seconds with reuse. Both paths used a capacity of 256 and scored
+all 4,705 held-out pairs correctly.
+
+Fresh NV11 and GPT linear-transport runs produced byte-identical weights
+and observation histories for seeds 0, 1 and 2. NV11 remained exact at
+update 250. Linear transport first crossed at updates 704 / 576 / 576
+with 254 / 255 / 256 of 256 held-out sequences correct.
+
+The process measurements used the indexed default from `96de165e`. To
+repeat the comparison, build that default and this revision,
+then time `probes CASE SEED RUN_DIR` with each binary on the same
+checkpoint. The native `time-score` command also measures eight alternating
+pairs on one warmed engine. It checks the full metrics on each pass and
+emits the checkpoint digest, batch capacity and individual times in seconds.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.FixedEvaluation
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+out=runs/main-triple
+export PHASOR_EVAL_BATCH_CAP=16
+for task in arithmetic-cubic-product gpt-probe-linear-transport basis-recall-easy; do
+    "$bin" cell "$task" 0 "$out"
+    "$bin" time-score "$task" 0 "$out"
+done
+```
+
 ### Learning a dictionary from the whole lookup table
 
 The `triple-lookup-prototypes` build sizes its learned dictionary from

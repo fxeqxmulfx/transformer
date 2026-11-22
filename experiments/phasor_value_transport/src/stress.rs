@@ -17,6 +17,7 @@ pub mod slot_ablation;
 pub mod triple_phase_ablation;
 mod recall_gap;
 pub mod report;
+pub mod score_timing;
 mod source_target;
 
 fn cases() -> Result<Vec<Value>> {

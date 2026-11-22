@@ -21,7 +21,55 @@ pub(super) fn run() -> Result<()> {
     // Both perturbation sizes must agree and keep every discrete read fixed.
     mixture(0.001)?;
     mixture(0.002)?;
-    initialization()
+    initialization()?;
+    fixed_evaluation()
+}
+
+fn fixed_evaluation() -> Result<()> {
+    let mut cfg = config(2)?;
+    cfg.head = architecture::HEAD;
+    let mut weights = layout::initialize_model(&cfg, 13);
+    crate::slot_checks::fixture(&cfg, &mut weights);
+    let mut muted = weights.clone();
+    crate::slot_checks::disable_reads(&cfg, &mut muted, &[0, 1, 2, 3]);
+    let input = &weights[..2 * cfg.width];
+    let mut e = Engine::new(cfg.clone(), &weights)?;
+    let reference = e.infer_embeddings(input, 1, 2)?;
+    let prefix = e.infer_embeddings(&input[..cfg.width], 1, 1)?;
+    let interrupted: Result<()> = e.with_fixed_slot_weights(|e| {
+        let actual = e.infer_embeddings(input, 1, 2)?;
+        let shorter = e.infer_embeddings(&input[..cfg.width], 1, 1)?;
+        if actual.logits != reference.logits
+            || actual.hidden != reference.hidden
+            || shorter.logits != prefix.logits
+            || shorter.hidden != prefix.hidden
+        {
+            return Err("fixed-weight prefix differs from ordinary inference".into());
+        }
+        Err("end of cache fixture".into())
+    });
+    if !matches!(interrupted, Err(ref err) if err.to_string() == "end of cache fixture") {
+        return Err("fixed-weight error path failed".into());
+    }
+    e.parameters.write(&muted)?;
+    let after = e.infer_embeddings(input, 1, 2)?;
+    let expected = Engine::new(cfg, &muted)?.infer_embeddings(input, 1, 2)?;
+    if after.logits == reference.logits
+        || after.logits != expected.logits
+        || after.hidden != expected.hidden
+    {
+        return Err("changed weights after scoring did not match fresh inference".into());
+    }
+    e.parameters.write(&weights)?;
+    let restored = e.with_fixed_slot_weights(|e| e.infer_embeddings(input, 1, 2))?;
+    if restored.logits != reference.logits || restored.hidden != reference.hidden {
+        return Err("new scoring scope reused a previous set of weights".into());
+    }
+    println!(
+        "fixed scoring prefixes=2 weights=2 matched_logits={}",
+        reference.logits.len()
+    );
+    Ok(())
 }
 
 fn mixture(delta: f64) -> Result<()> {

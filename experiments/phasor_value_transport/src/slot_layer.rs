@@ -1,7 +1,36 @@
 //! Bridge from the Phasor dense backbone to its trainable slot memory.
 use super::*;
 use crate::slot_memory::{self, Layout, Routing, Row};
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
+use std::rc::Rc;
+
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
+enum WeightAccess {
+    #[default]
+    Dynamic,
+    FirstRead,
+    Reuse,
+}
+
+struct EvaluationScope {
+    access: Rc<Cell<WeightAccess>>,
+    previous: WeightAccess,
+}
+
+impl EvaluationScope {
+    fn enter(access: &Rc<Cell<WeightAccess>>) -> Self {
+        Self {
+            access: Rc::clone(access),
+            previous: access.replace(WeightAccess::FirstRead),
+        }
+    }
+}
+
+impl Drop for EvaluationScope {
+    fn drop(&mut self) {
+        self.access.set(self.previous);
+    }
+}
 
 struct Tape {
     weights: Vec<f32>,
@@ -12,6 +41,22 @@ struct Tape {
 }
 
 impl Engine {
+    /// The frozen scorer reads the same weights for all its batches and generated
+    /// prefixes. Reading once on entry to each scoring pass also observes any
+    /// optimizer update or checkpoint replacement since the previous pass.
+    pub(crate) fn with_fixed_slot_weights<T>(
+        &mut self,
+        score: impl FnOnce(&mut Self) -> Result<T>,
+    ) -> Result<T> {
+        let _scope = match &self.context_layer {
+            Some(context_layer::ContextLayer::Slots(layer)) => {
+                Some(EvaluationScope::enter(&layer.access))
+            }
+            _ => None,
+        };
+        score(self)
+    }
+
     /// Count visited dense memory vectors with nonzero learned coordinates
     /// in the latest forward. Used solely by the independent checkpoint audit.
     pub(crate) fn written_slot_reads(&self) -> Result<usize> {
@@ -29,6 +74,7 @@ impl Engine {
 }
 
 pub(super) struct SlotLayer {
+    access: Rc<Cell<WeightAccess>>,
     phase: Option<super::hidden_layer::HiddenLayer>,
     layout: Layout,
     offset: usize,
@@ -50,6 +96,7 @@ impl SlotLayer {
         let layout = Layout::new(&e.config);
         let count = layout.bias + 4;
         Ok(Self {
+            access: Rc::default(),
             phase: e
                 .config
                 .head
@@ -92,14 +139,13 @@ impl SlotLayer {
         &self.output
     }
 
-    pub(super) fn forward(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
+    fn prepare_weights(&self, e: &Engine, tape: &mut Tape) -> Result<()> {
         let l = &self.layout;
         let n = l.bias + 4;
         let p = e.parameters.at(self.offset).ok_or("missing slot weights")?;
         let buffer = self.parameters.borrow();
         self.copy(buffer.ptr(), p, n)?;
         let w = buffer.read()?;
-        let mut tape = self.tape.borrow_mut();
         if tape.weights.get(..l.gates) != Some(&w[..l.gates]) {
             // The dictionary transpose is at most width². This dedicated
             // FP32 dot product also serves the lower-precision backbone.
@@ -145,6 +191,19 @@ impl SlotLayer {
             tape.routing
                 .install(l, self.bank.read()?, geometry.priority);
         }
+        tape.weights = w;
+        Ok(())
+    }
+
+    pub(super) fn forward(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
+        let l = &self.layout;
+        let mut tape = self.tape.borrow_mut();
+        if self.access.get() != WeightAccess::Reuse {
+            self.prepare_weights(e, &mut tape)?;
+            if self.access.get() == WeightAccess::FirstRead {
+                self.access.set(WeightAccess::Reuse);
+            }
+        }
         // A block sees just its row and the preceding row of this sequence.
         // Both score arrays fit in shared memory.
         unsafe {
@@ -163,7 +222,8 @@ impl SlotLayer {
         let cells = self.cells.read()?;
         let mut h = e.last.read()?;
         h.truncate(rows * l.d);
-        let (choices, out) = slot_memory::forward(l, &w, &tape.routing, &cells[..rows], &h, length);
+        let (choices, out) =
+            slot_memory::forward(l, &tape.weights, &tape.routing, &cells[..rows], &h, length);
         let device = e.cuda.upload(&out)?;
         self.copy(self.output.ptr(), device.ptr(), out.len())?;
         if let Some(phase) = &self.phase {
@@ -178,7 +238,6 @@ impl SlotLayer {
                 )?;
             }
         }
-        tape.weights = w;
         tape.hidden = h;
         tape.rows = choices;
         tape.length = length;

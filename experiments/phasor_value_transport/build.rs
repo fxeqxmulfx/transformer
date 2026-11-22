@@ -14,6 +14,9 @@ fn export_completions(source: &Path, out: &Path) {
     let scorer = original.replace(entry, &format!(
         "{entry}\n    evaluate_with_completions(engine, examples, generate, |_, _| Ok(()))\n}}\n\n\
          pub(crate) fn evaluate_with_completions(engine: &mut Engine, examples: &[Example], generate: bool, \
+         emitted: impl FnMut(usize, &[u32]) -> Result<()>) -> Result<Value> {{\n\
+             engine.with_fixed_slot_weights(|engine| evaluate_batches(engine, examples, generate, emitted))\n}}\n\n\
+         pub(crate) fn evaluate_batches(engine: &mut Engine, examples: &[Example], generate: bool, \
          mut emitted: impl FnMut(usize, &[u32]) -> Result<()>) -> Result<Value> {{"
     )).replace(emitted, &format!("{emitted}\n            emitted(start + i, tokens)?;"));
     fs::write(out.join("metrics.rs"), scorer).unwrap();
