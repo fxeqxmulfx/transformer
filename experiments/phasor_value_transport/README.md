@@ -276,6 +276,17 @@ coefficients of the embedding read. Constant histories contribute zero
 when they equal the current token, and all logits on two-token inputs
 agree with the 0.75-gain model. [Centered-frequency derivation](../../src/Transformer/Phasor/PrefixFrequency.lean)
 
+## Two reads through a shared relation
+
+The relation-path trial treats every completed triple `(key, relation, value)`
+as a write. At each position it follows two edges with the same relation
+from the current token, using the latest completed writes in the prefix.
+Each relation has one learned scalar, initially zero. A complete path adds
+that scalar times the difference between the endpoint and current embeddings
+inside the existing residual. A missing edge contributes zero. At
+initialization the trial has the same logits as the 0.75-gain model.
+[Causal path and derivative proofs](../../src/Transformer/Phasor/RelationalPaths.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
