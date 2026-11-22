@@ -195,7 +195,7 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
     if dest.join("result.json").exists() {
         if let Some(limit) = cutoff {
             let saved: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;
-            report::validate(&row, seed, &dest, &saved)?;
+            report::validate(&row, seed, &dest, &saved, Some(task.vocab))?;
             if saved["observation"]["step"].as_u64().unwrap() > limit as u64 {
                 use std::io::{BufRead, BufReader};
                 let lines =

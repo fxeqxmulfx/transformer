@@ -24,6 +24,7 @@ pub enum Head {
     TiedToeplitz,
     TwoFrame,
     TripleTransport,
+    LookupTripleTransport,
     FourierTransport,
     ReflectionPhase,
     SingleReflection,
@@ -57,6 +58,7 @@ impl Head {
             "tied-toeplitz" => Ok(Self::TiedToeplitz),
             "two-frame" => Ok(Self::TwoFrame),
             "triple-transport" => Ok(Self::TripleTransport),
+            "triple-lookup-prototypes" => Ok(Self::LookupTripleTransport),
             "fourier-transport" => Ok(Self::FourierTransport),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
@@ -89,6 +91,7 @@ impl Head {
             Self::TiedToeplitz => "phasor-learned-tied-toeplitz-v1",
             Self::TwoFrame => "phasor-learned-two-sided-frame-v1",
             Self::TripleTransport => "phasor-learned-triple-transport-v1",
+            Self::LookupTripleTransport => "phasor-triple-prototype-capacity-v1",
             Self::FourierTransport => "phasor-learned-fourier-transport-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
@@ -142,22 +145,25 @@ impl Head {
 
     pub const fn replaces_context(self) -> bool {
         self.is_toeplitz()
+            || self.is_triple()
             || matches!(
                 self,
-                Self::ScalarPhase | Self::TwoFrame | Self::TripleTransport | Self::FourierTransport
+                Self::ScalarPhase | Self::TwoFrame | Self::FourierTransport
             )
     }
 
     pub const fn transforms_context(self) -> bool {
         self.context_stages() > 0
-            || matches!(
-                self,
-                Self::TwoFrame | Self::TripleTransport | Self::FourierTransport
-            )
+            || self.is_triple()
+            || matches!(self, Self::TwoFrame | Self::FourierTransport)
     }
 
     pub const fn is_toeplitz(self) -> bool {
         matches!(self, Self::PrefixToeplitz | Self::TiedToeplitz)
+    }
+
+    pub const fn is_triple(self) -> bool {
+        matches!(self, Self::TripleTransport | Self::LookupTripleTransport)
     }
 
     pub const fn phase_inputs(self) -> usize {
@@ -196,7 +202,12 @@ impl Head {
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
             Self::TwoFrame => (2 * cfg.width + 8) * cfg.width,
-            Self::TripleTransport => crate::slot_memory::parameter_count(cfg.width),
+            Self::TripleTransport | Self::LookupTripleTransport => {
+                crate::slot_memory::parameter_count(
+                    cfg.width,
+                    crate::slot_memory::capacity(self, cfg.width, cfg.vocab),
+                )
+            }
             Self::FourierTransport => crate::fourier::parameters(cfg.width),
             Self::PrefixToeplitz | Self::TiedToeplitz => {
                 crate::toeplitz::parameter_count(cfg.width, self == Self::TiedToeplitz)
@@ -248,7 +259,9 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
-            Self::TripleTransport => crate::slot_memory::initialize(cfg, seed, parameters),
+            Self::TripleTransport | Self::LookupTripleTransport => {
+                crate::slot_memory::initialize(cfg, seed, parameters);
+            }
             Self::FourierTransport => crate::fourier::initialize(cfg, seed, parameters),
             Self::TwoFrame => {
                 let d = cfg.width;

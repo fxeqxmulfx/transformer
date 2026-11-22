@@ -29,7 +29,7 @@ pub mod kernels {
         length: u32,
         units: f32,
     ) {
-        let pairs: shared<[f32; 256], 8>;
+        let pairs: shared<[f32; 512], 8>;
         let (row, slot, slots, position): (u32, u32, u32, u32);
         mov.u32(row, ctaid.x);
         mov.u32(slot, tid.x);

@@ -128,9 +128,17 @@ fn check_addresses() -> Result<()> {
     let cuda = kernite_cuda::Cuda::new()?;
     let kernels = crate::slot_addresses::kernels::Kernels::load(&cuda)?;
     let mut rng = random::Random::new(7293);
-    for (d, length) in [(7, 1), (7, 9), (64, 11), (128, 5), (256, 4)] {
+    for (d, length, vocab) in [
+        (7, 1, 5),
+        (7, 9, 11),
+        (64, 11, 37),
+        (128, 5, 193),
+        (256, 4, 320),
+    ] {
         let mut cfg = config(3)?;
+        cfg.head = architecture::HEAD;
         cfg.width = d;
+        cfg.vocab = vocab;
         let l = Layout::new(&cfg);
         let rows = 3 * length;
         let mut w = vec![0.; l.bias + 4];
@@ -187,7 +195,7 @@ fn initialization() -> Result<()> {
     let mut cfg = config(2)?;
     let seed = 19;
     let plain = layout::initialize_model(&cfg, seed);
-    cfg.head = head::Head::TripleTransport;
+    cfg.head = architecture::HEAD;
     let w = layout::initialize_model(&cfg, seed);
     let external = cfg.width * cfg.vocab;
     if w[..external] != plain[..external] {

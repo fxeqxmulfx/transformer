@@ -18,7 +18,7 @@ pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
 pub const SCALAR_PHASE: bool = cfg!(feature = "scalar-phase-bottleneck");
 pub const TIED_TOEPLITZ: bool = cfg!(feature = "tied-toeplitz");
 pub const TWO_FRAME: bool = cfg!(feature = "two-sided-frame");
-pub const TRIPLE_TRANSPORT: bool = matches!(HEAD, Head::TripleTransport);
+pub const TRIPLE_TRANSPORT: bool = HEAD.is_triple();
 pub const FOURIER: bool = cfg!(feature = "fourier-transport");
 pub const TOEPLITZ: bool = cfg!(feature = "prefix-toeplitz") || TIED_TOEPLITZ;
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
@@ -52,6 +52,7 @@ const _: () = {
         + TIED_TOEPLITZ as u8
         + TWO_FRAME as u8
         + cfg!(feature = "triple-transport") as u8
+        + cfg!(feature = "triple-lookup-prototypes") as u8
         + cfg!(feature = "learned-stream-read") as u8
         + FOURIER as u8
         + REFLECTION_PHASE as u8
@@ -70,6 +71,8 @@ pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
 pub const HEAD: Head = if FOURIER {
     Head::FourierTransport
+} else if cfg!(feature = "triple-lookup-prototypes") {
+    Head::LookupTripleTransport
 } else if cfg!(feature = "triple-transport") {
     Head::TripleTransport
 } else if TWO_FRAME {
@@ -145,6 +148,10 @@ pub fn parameters(cfg: &Config) -> usize {
 }
 
 pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {
+    if cfg.head == Head::LookupTripleTransport {
+        result["prototype_slots"] =
+            json!(crate::slot_memory::capacity(cfg.head, cfg.width, cfg.vocab));
+    }
     if INPUT_PRODUCT {
         result["input_product_parameters"] = json!(parameters(cfg));
     } else if RAW {
@@ -163,7 +170,7 @@ pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {
     }
 }
 
-pub fn valid_record(result: &Value, width: u64) -> bool {
+pub fn valid_record(result: &Value, width: u64, vocab: Option<usize>) -> bool {
     if INPUT_PRODUCT {
         return result["input_product_parameters"] == 4 * crate::head::MEMORY_WIDTH as u64 * width
             && result.get("pair_parameters").is_none()
@@ -175,8 +182,18 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
                 && result.get("pair_parameters").is_none();
         }
         if TRIPLE_TRANSPORT {
+            let slots = if HEAD == Head::LookupTripleTransport {
+                let Some(vocab) = vocab else { return false };
+                let slots = crate::slot_memory::capacity(HEAD, width as usize, vocab);
+                if result["prototype_slots"] != slots {
+                    return false;
+                }
+                slots
+            } else {
+                width.min(128) as usize
+            };
             return result["readout_parameters"]
-                == crate::slot_memory::parameter_count(width as usize)
+                == crate::slot_memory::parameter_count(width as usize, slots)
                 && result.get("pair_parameters").is_none();
         }
         if TWO_FRAME {

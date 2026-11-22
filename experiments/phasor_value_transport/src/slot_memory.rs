@@ -15,15 +15,22 @@ pub struct Layout {
     pub bias: usize,
 }
 
-pub fn parameter_count(d: usize) -> usize {
-    let k = d.min(128);
+pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
+    if head == crate::head::Head::LookupTripleTransport {
+        vocab.min(256)
+    } else {
+        width.min(128)
+    }
+}
+
+pub fn parameter_count(d: usize, k: usize) -> usize {
     4 * d + (k + k * k + 4) * d + 4
 }
 
 impl Layout {
     pub fn new(cfg: &Config) -> Self {
         let d = cfg.width;
-        let slots = d.min(128);
+        let slots = capacity(cfg.head, d, cfg.vocab);
         let dictionary = 0;
         let values = dictionary + slots * d;
         let gates = values + slots * slots * d;

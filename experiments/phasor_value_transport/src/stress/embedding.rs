@@ -8,7 +8,7 @@ pub(super) fn verified_weights(
     dir: &Path,
 ) -> Result<(Value, Vec<f32>)> {
     let result: Value = serde_json::from_slice(&fs::read(dir.join("result.json"))?)?;
-    report::validate(row, seed, dir, &result)?;
+    report::validate(row, seed, dir, &result, Some(cfg.vocab))?;
     let bytes = fs::read(dir.join("weights.f32"))?;
     if result["model"] != MODEL
         || result["weights_sha256"] != hash(&bytes)

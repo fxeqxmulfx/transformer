@@ -117,7 +117,7 @@ impl SlotLayer {
                 .write(tape.routing.inverse_norms())?;
         }
         // A block sees just its row and the preceding row of this sequence.
-        // There are at most 128 slots and both score arrays fit in shared memory.
+        // Both scores for every slot fit in the block's shared memory.
         unsafe {
             self.addresses.cells(
                 Grid::new(rows as u32, l.slots as u32),

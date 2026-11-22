@@ -15,7 +15,7 @@ impl ContextLayer {
             Ok(Self::Fourier(Box::new(
                 super::fourier_layer::FourierLayer::new(e)?,
             )))
-        } else if e.config.head == crate::head::Head::TripleTransport {
+        } else if e.config.head.is_triple() {
             Ok(Self::Slots(Box::new(super::slot_layer::SlotLayer::new(e)?)))
         } else if e.config.head == crate::head::Head::TwoFrame {
             Ok(Self::Frames(TwoFrame::new(e)?))

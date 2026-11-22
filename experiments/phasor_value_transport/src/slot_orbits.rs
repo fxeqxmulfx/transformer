@@ -55,7 +55,7 @@ pub struct Reads {
 /// under slot renaming. Four distinct observed anchors supply up to six
 /// unordered anchor pairs. Each pair is used in its priority orientation.
 pub fn complete(slots: usize, bank: &[u32], priority: &[usize]) -> Reads {
-    assert!(slots > 0 && slots <= 128 && bank.len().is_multiple_of(slots));
+    assert!(slots > 0 && slots <= 256 && bank.len().is_multiple_of(slots));
     assert_eq!(priority.len(), slots);
     let mut reads = Reads {
         constant: vec![ABSENT; bank.len()],

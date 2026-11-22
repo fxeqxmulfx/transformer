@@ -2,7 +2,13 @@
 use super::*;
 use std::io::{BufRead, BufReader};
 
-pub(super) fn validate(row: &Value, seed: u32, dir: &Path, result: &Value) -> Result<()> {
+pub(super) fn validate(
+    row: &Value,
+    seed: u32,
+    dir: &Path,
+    result: &Value,
+    vocab: Option<usize>,
+) -> Result<()> {
     let train = row["train_examples"]
         .as_u64()
         .ok_or("missing training size")?;
@@ -20,7 +26,7 @@ pub(super) fn validate(row: &Value, seed: u32, dir: &Path, result: &Value) -> Re
         )
     };
     if result["model"] != MODEL
-        || !architecture::valid_record(result, number("width")?)
+        || !architecture::valid_record(result, number("width")?, vocab)
         || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
         || result["suite_sha256"] != suite_hash(row)
         || result["selection"] != row["selection"]
@@ -63,6 +69,7 @@ fn observations(out: &Path, row: &Value) -> Result<(Vec<Value>, [usize; 3])> {
     let name = row["name"].as_str().ok_or("missing case name")?;
     let mut count = [0; 3];
     let mut seeds = Vec::new();
+    let mut vocab = None;
     for seed in 0..3 {
         let dir = out.join(name).join(format!("seed{seed}"));
         let file = dir.join("result.json");
@@ -72,7 +79,10 @@ fn observations(out: &Path, row: &Value) -> Result<(Vec<Value>, [usize; 3])> {
             continue;
         }
         let result: Value = serde_json::from_slice(&fs::read(file)?)?;
-        validate(row, seed, &dir, &result)?;
+        if architecture::HEAD == crate::head::Head::LookupTripleTransport && vocab.is_none() {
+            vocab = Some(load(name)?.1.vocab);
+        }
+        validate(row, seed, &dir, &result, vocab)?;
         let point = &result["observation"];
         let pass = point["pass"] == true;
         count[usize::from(!pass)] += 1;

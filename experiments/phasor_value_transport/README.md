@@ -1586,6 +1586,47 @@ for seed in 0 1 2; do
 done
 ```
 
+### Learning a dictionary from the whole lookup table
+
+The `triple-lookup-prototypes` build sizes its learned dictionary from
+the external embedding table, with a limit of 256 directions. It takes
+the unordered values of the original random vectors and uses the same
+trainable gates, four reads and tied classifier at every position. The
+inner block receives dense vectors and accepts inputs outside the lookup
+table. For a fixed bank, adding directions that participate in no trusted
+match preserves and reflects connectivity between the original triples.
+Training determines which matches each dictionary acquires.
+[Dictionary capacity proof](../../src/Transformer/Phasor/TripleTransport/Capacity.lean)
+
+| Case | Width | Default slots | Lookup-sized slots | Default read parameters | Lookup-sized read parameters |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| NV11 | 128 | 128 | 97 | 2,114,564 | 1,217,796 |
+| Modulo-193 division | 128 | 128 | 193 | 2,114,564 | 4,793,604 |
+
+The lookup-sized variant recovered all 4,704 training and 4,705 held-out
+NV11 pairs at update 250 on each seed. On the original short-tier
+`division-p193` case, its first passing observation was update 292 on
+all three seeds. Independent checkpoint reloads reproduced 18,528/18,528
+held-out answers for each seed. The source supplies one validation split
+for this task. At the same update, the default scored 110, 85 and 107 out
+of 18,528. Seed 0 scored 90/18,528 at update 730.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.Capacity
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,triple-lookup-prototypes
+bin=./target/release/phasor-value-transport
+out=runs/triple-lookup-prototypes
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    "$bin" screen arithmetic-cubic-product "$seed" "$out" 250
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" screen division-p193 "$seed" "$out" 730
+    "$bin" probes division-p193 "$seed" "$out"
+done
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.
