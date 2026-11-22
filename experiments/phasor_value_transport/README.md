@@ -581,6 +581,23 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/bilinear-phase-nv11/seed0/nv11-train-3000.f32
 ```
 
+## Rotation and reflection memory
+
+Both states in a channel use one learned projection of the normalized
+embedding. A rotation adds its angle to the previous angle. A reflection
+subtracts the previous angle from the new angle. Both states start at zero.
+One learned scalar per channel mixes the two sine coordinates and the two
+centered cosines before the ordinary output maps. The gate starts at one
+half. The model adds 32 scalars to the input-phase model at every width.
+
+Any two adjacent copies of an arbitrary embedding cancel in the reflected
+state, including after an arbitrary common suffix. The rotation state
+continues to accumulate the same two inputs. Lean proves this insertion
+identity, the signed derivative through a suffix, prefix causality, and
+the derivatives for both angles and the shared gate. Zero gates recover
+the input-phase model for all embeddings and all output weights.
+[Rotation and reflection proofs](../../src/Transformer/Phasor/ReflectionPhaseRead.lean)
+
 ## GPT order discrimination
 
 The catalog adapter uses the native GPT mechanism-probe data port to load
