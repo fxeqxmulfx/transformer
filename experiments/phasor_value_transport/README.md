@@ -448,6 +448,21 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/input-phase 3500
 "$bin" probes basis-parity16 0 runs/input-phase
 ```
 
+## Affine phase memory
+
+Each normalized input embedding supplies two learned scalars per channel,
+an angle and a write. The channel starts at the complex value one. It
+rotates the previous value by the angle, adds the write to the real
+coordinate, and exposes the imaginary and centered real coordinates to
+the same two learned output maps. The projected residual joins the final
+contextual stream. The write matrix starts at zero.
+
+Lean derives an equivalent prefix-sum algorithm and the derivative with
+respect to angle, write and previous state. Zero writes recover the input
+phase feature for arbitrary embeddings. Active writes can distinguish the
+order of two inputs, and the distance between two states survives any
+common suffix. [Affine phase proofs](../../src/Transformer/Phasor/AffinePhaseRead.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can
