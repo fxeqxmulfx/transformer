@@ -16,6 +16,9 @@ Otherwise it uses the ordinary successor. Both cases have one tied value read.
 
 namespace Transformer.Phasor
 
+open scoped RealInnerProductSpace
+open Transformer
+
 variable {α : Type*} {p D : ℕ}
 
 /-- Count every written source of a partial prefix relation, including loops. -/
@@ -116,5 +119,69 @@ example :
     let f := fun (_ : Fin 3) (k : Fin 3) => k + 1
     closedRelationAddress 0 1 s f = 2 := by
   decide
+
+/-- Apply the common multiplier only when all winning relations select one
+distinct address. Source: the closed-relation gain trial in the experiment README. -/
+def consensusGain (gain factor : ℝ) (ends : Finset (Fin p)) : ℝ :=
+  if ends.card = 1 then factor * gain else gain
+
+/-- Score the normalized hidden read at the selected address through the
+original tied output projection. The same address and gain apply to all classes. -/
+noncomputable def consensusLogit (E : Fin p → EucSpace D) (base : EucSpace D)
+    (read : Fin p → EucSpace D) (gain factor : ℝ) (ends : Finset (Fin p))
+    (fallback c : Fin p) : ℝ :=
+  ⟪E c, base + consensusGain gain factor ends • read (consensusAddress fallback ends)⟫
+
+/-- On disagreement or an empty vote, the entire score vector equals the
+ordinary successor read for every value of every parameter. -/
+theorem consensusLogit_fallback (E : Fin p → EucSpace D) (base : EucSpace D)
+    (read : Fin p → EucSpace D) (gain factor : ℝ) (ends : Finset (Fin p))
+    (fallback c : Fin p) (h : ends.card ≠ 1) :
+    consensusLogit E base read gain factor ends fallback c = ⟪E c, base + gain • read fallback⟫ := by
+  rw [consensusLogit, consensusAddress_fallback _ _ h]
+  simp [consensusGain, h]
+
+/-- For a unique endpoint, increasing the multiplier changes its margin
+over a rival by precisely the projection of the normalized read onto the
+two tied codes' difference. The contribution can have either sign. -/
+theorem consensusLogit_margin_change (E : Fin p → EucSpace D) (base : EucSpace D)
+    (read : Fin p → EucSpace D) (gain a b : ℝ) (fallback r c : Fin p) :
+    let logit := fun factor => consensusLogit E base read gain factor {r} fallback
+    (logit b r - logit b c) - (logit a r - logit a c) =
+      (b-a) * gain * ⟪E r - E c, read r⟫ := by
+  simp [consensusLogit, consensusGain, consensusAddress_singleton, inner_add_right,
+    real_inner_smul_right, inner_sub_left]
+  ring
+
+/-- One multiplier suffices on a finite collection of queries and rivals
+when singleton reads favor their target and the ordinary gain already wins
+the remaining comparisons. No common positive advantage is needed off the gate. -/
+theorem exists_consensus_factor {ι : Type*} [Fintype ι] (ends : ι → Finset (Fin p))
+    (gap advantage : ι → ℝ) (gain : ℝ)
+    (hit : ∀ j, (ends j).card = 1 → 0 < gain * advantage j)
+    (ordinary : ∀ j, (ends j).card ≠ 1 → gap j < gain * advantage j) :
+    ∃ factor : ℝ, 0 < factor ∧ ∀ j, gap j < consensusGain gain factor (ends j) * advantage j := by
+  let κ := {j : ι // (ends j).card = 1}
+  obtain ⟨factor, pos, wins⟩ := exists_shared_gain (ι := κ) (fun j => gap j.val)
+    (fun j => gain * advantage j.val) (fun j => hit j.val j.property)
+  refine ⟨factor, pos, fun j => ?_⟩
+  by_cases h : (ends j).card = 1
+  · simpa [consensusGain, h, mul_assoc] using wins ⟨j, h⟩
+  · simpa [consensusGain, h] using ordinary j h
+
+example (E : Fin 3 → EucSpace 4) (base : EucSpace 4) (read : Fin 3 → EucSpace 4) :
+    consensusLogit E base read (3/4) 2 {0, 2} 1 0 = ⟪E 0, base + (3/4 : ℝ) • read 1⟫ :=
+  consensusLogit_fallback _ _ _ _ _ _ _ _ (by decide)
+
+/-- The second query has a negative read advantage but already wins.
+The first can overcome a positive gap using the same base gain. -/
+example : ∃ t : ℝ, 0 < t ∧ ∀ j : Fin 2, (if j = 0 then 3 else -2 : ℝ) <
+    consensusGain 1 t (if j = 0 then {0} else ∅ : Finset (Fin 2)) *
+      (if j = 0 then 1 else -1) := by
+  apply exists_consensus_factor
+  · intro j
+    fin_cases j <;> norm_num
+  · intro j
+    fin_cases j <;> norm_num
 
 end Transformer.Phasor

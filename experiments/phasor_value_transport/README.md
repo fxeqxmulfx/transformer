@@ -434,6 +434,12 @@ vote or a disagreement leaves the ordinary successor address in place.
 The model has the same 17 tables and learned gain as the selected model.
 [Closed relation and address proofs](../../src/Transformer/Phasor/ClosedRelations.lean)
 
+The gain trial doubles the common residual gain only when the closed
+relations resolve one moving endpoint. Lean gives the exact change in the
+endpoint's logit margin. If the normalized read points toward the endpoint
+over every rival, one shared multiplier can overcome a finite set of
+adverse gaps while retaining comparisons already won on ordinary reads.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
