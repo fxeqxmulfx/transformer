@@ -31,6 +31,15 @@ hard depth seed 2 and branch amplitudes seeds 1 and 2.
 The expanded benchmark has 29 short tasks and ten long tasks. All 87 short
 and 30 long task/seed runs reached 99% and replayed independently.
 
+Fresh key/value-binding runs on the GTX 1050 took 5.41, 5.32 and 3.95 s
+for the incumbent, and 3.51, 3.50 and 3.50 s for the selected model.
+The models reached 99% at 704 / 704 / 512 and 448 / 448 / 448 updates,
+respectively. Each timing included setup, training and scoring on an
+otherwise idle compute device. The arm run first alternated by seed.
+Every timed run reproduced its earlier checkpoint byte for byte. To repeat
+the timing, run `cell gpt-probe-key-value-binding SEED FRESH_DIR` with
+each build and `PHASOR_EVAL_BATCH_CAP=16`.
+
 For the epoch comparison, first generate the incumbent's paired report with
 the baseline reproduction commands below.
 
