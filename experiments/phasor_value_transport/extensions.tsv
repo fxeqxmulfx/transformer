@@ -13,3 +13,4 @@ short	arithmetic-sum-pow24
 short	arithmetic-square-product
 short	arithmetic-sum-squares
 short	suite-lookup
+short	arithmetic-sum-pow32

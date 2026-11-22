@@ -1,10 +1,10 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all **150 GPT task/seed runs** across 39 short
+One Phasor architecture passed all **153 GPT task/seed runs** across 40 short
 and eleven long tasks on Kernite v0.6.0. Each task used its own weights and
 the original AdamW. The same architecture classified all 9,409 NV11 pairs
-correctly at update 750 in every seed. Its newest short task is two-hop
-lookup, which all three seeds solved at initialization.
+correctly at update 750 in every seed. The newest short task is
+`(a + b)^32 mod 97`, which all three seeds passed at update 250.
 
 The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
@@ -33,12 +33,22 @@ to 250 / 1,000 / 250. Three short runs took longer in updates. Hard-depth
 seed 2 rose from 1,000 to 1,250, branch-amplitudes seed 0 from 416 to 512,
 and blocks seed 0 from 500 to 750.
 
-Two-hop lookup adds three short runs beyond this matched comparison.
+Two-hop lookup adds three short runs beyond the comparison on the
+fourteen-extension registry at `6bc2b20c`.
 Every checkpoint scored 32/32 whole sequences on novel validation inputs
 at initialization, then 64/64 on each of the ordinary, length-48 and
 length-96 test sets. On NV11 all three seeds reached 99% at update 500
 and classified all 4,704 training and 4,705 held-out pairs correctly at
 both 750 and 3,000 updates.
+
+On the source task `arithmetic-sum-pow32`, the three closed-relation
+checkpoints scored 4,703 / 4,698 / 4,704 out of 4,705 held-out pairs at
+update 250. Each scored 51/51 on the held-out zero-first-operand pairs;
+the longest cell took 2.37 seconds. The predecessor reached the same
+scores with byte-identical weights in all three seeds. This admission
+extends coverage to 120 short and 33 long GPT runs. The checkpoint
+replay audit also covers the three NV11 runs, for 156 verified files.
+[Source case definitions](../convex_stress_arithmetic_data/references/definitions.json)
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ClosedRelations
