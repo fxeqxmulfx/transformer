@@ -2,7 +2,7 @@
 use super::*;
 use head::{Head, MEMORY_WIDTH as M};
 
-fn linear(weights: &[f32], x: &[f64]) -> Vec<f64> {
+pub(super) fn linear(weights: &[f32], x: &[f64]) -> Vec<f64> {
     weights
         .chunks_exact(x.len())
         .map(|row| row.iter().zip(x).map(|(&w, &v)| f64::from(w) * v).sum())
@@ -136,7 +136,7 @@ pub(crate) fn trained_prefixes(engine: &mut Engine, seq: &[u32]) -> Result<Value
     Ok(json!({"sequence_length":length, "cuts":length-1, "max_logit_change":worst}))
 }
 
-fn prefix_error(engine: &mut Engine, seq: &[u32]) -> Result<f32> {
+pub(super) fn prefix_error(engine: &mut Engine, seq: &[u32]) -> Result<f32> {
     let p = engine.config.vocab;
     let length = seq.len();
     let masked = vec![u32::MAX; 2 * length];
@@ -169,10 +169,6 @@ fn gradients(
     labels: &[u32],
     length: usize,
 ) -> Result<()> {
-    let batch = tokens.len() / length;
-    e.forward(tokens, labels, batch, length)?;
-    e.backward(batch, length)?;
-    let gradients = e.gradients.read()?;
     let start = crate::architecture::start(&e.config);
     let width = e.config.width;
     let block = width * M;
@@ -189,39 +185,81 @@ fn gradients(
     {
         groups.push((label, start + i * block..start + (i + 1) * block));
     }
+    check_directions(
+        e,
+        theta,
+        tokens,
+        labels,
+        length,
+        groups
+            .into_iter()
+            .map(|(name, range)| (name, range.collect()))
+            .collect(),
+    )
+}
+
+pub(super) fn check_directions(
+    e: &mut Engine,
+    theta: &[f32],
+    tokens: &[u32],
+    labels: &[u32],
+    length: usize,
+    groups: Vec<(&str, Vec<usize>)>,
+) -> Result<()> {
+    let batch = tokens.len() / length;
+    e.forward(tokens, labels, batch, length)?;
+    e.backward(batch, length)?;
+    let gradients = e.gradients.read()?;
+    let phase = e.config.head == Head::PhasePrefix;
+    let count = labels.iter().filter(|&&y| y != u32::MAX).count();
     let mut rng = random::Random::new(142);
-    for (name, range) in groups {
-        let direction: Vec<_> = range
-            .clone()
+    for (name, indices) in groups {
+        let direction: Vec<_> = indices
+            .iter()
             .map(|_| if rng.random() < 0.5 { -1_f32 } else { 1. })
             .collect();
-        let grad = &gradients[range.clone()];
-        if !grad.iter().any(|g| g.abs() > 1e-7) {
+        if !indices.iter().any(|&i| gradients[i].abs() > 1e-7) {
             return Err(format!("inactive {name} gradient").into());
         }
-        let analytic: f64 = grad
+        let analytic: f64 = indices
             .iter()
             .zip(&direction)
-            .map(|(&g, &s)| f64::from(g) * f64::from(s))
+            .map(|(&i, &s)| f64::from(gradients[i]) * f64::from(s))
             .sum();
-        let mut losses = [0.; 2];
-        let epsilon = 2e-4;
-        for (loss, sign) in losses.iter_mut().zip([-1., 1.]) {
-            let mut perturbed = theta.to_vec();
-            for (w, s) in perturbed[range.clone()].iter_mut().zip(&direction) {
-                *w += sign * epsilon * s;
+        let mut difference = |epsilon: f32| -> Result<f64> {
+            let mut losses = [0.; 2];
+            for (loss, sign) in losses.iter_mut().zip([-1., 1.]) {
+                let mut perturbed = theta.to_vec();
+                for (&i, s) in indices.iter().zip(&direction) {
+                    perturbed[i] += sign * epsilon * s;
+                }
+                e.parameters.write(&perturbed)?;
+                e.forward(tokens, labels, batch, length)?;
+                *loss = e
+                    .losses(tokens.len())?
+                    .iter()
+                    .map(|&v| f64::from(v))
+                    .sum::<f64>()
+                    / count as f64;
             }
-            e.parameters.write(&perturbed)?;
-            e.forward(tokens, labels, batch, length)?;
-            let count = labels.iter().filter(|&&y| y != u32::MAX).count();
-            *loss = e
-                .losses(tokens.len())?
-                .iter()
-                .map(|&v| f64::from(v))
-                .sum::<f64>()
-                / count as f64;
-        }
-        let numeric = (losses[1] - losses[0]) / (2. * f64::from(epsilon));
+            Ok((losses[1] - losses[0]) / (2. * f64::from(epsilon)))
+        };
+        let coarse = difference(2e-4)?;
+        let numeric = if phase {
+            let fine = difference(1e-4)?;
+            let finer = difference(5e-5)?;
+            let first = (4. * fine - coarse) / 3.;
+            let second = (4. * finer - fine) / 3.;
+            println!(
+                "phase difference {name}: h={coarse:.6} h/2={fine:.6} h/4={finer:.6} extrapolated={first:.6}/{second:.6}"
+            );
+            if (first - second).abs() > 0.004 * (1. + analytic.abs()) {
+                return Err(format!("phase finite differences did not converge for {name}").into());
+            }
+            first
+        } else {
+            coarse
+        };
         println!(
             "{:?} {name}: analytic={analytic:.6} numeric={numeric:.6}",
             e.config.head

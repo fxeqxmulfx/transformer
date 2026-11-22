@@ -284,6 +284,27 @@ that sends each read's gradient to earlier increments. The entire
 embedding-input backbone remains causal at every depth.
 [Phase memory proofs](../../src/Transformer/Phasor/PhasePrefixRead.lean)
 
+At width 128 the phase projections add 12,288 learned weights to the
+stream model. On three sequences of length 257, independent scalar FP64
+sums checked 49,344 output values and 24,672 increment gradients. The
+largest errors were `4.54e-6` and `2.38e-5`. Starting from the backbone's
+contextual vectors, the FP64 phase read and classifier reproduced the GPU
+logits within `4.22e-7` at widths 64 and 128.
+All twelve masked-loss gradient checks passed, including separate directions
+for the sine and cosine output matrices. Finite differences used three step
+sizes to check convergence. Isolated prefixes matched exactly. Three further
+directions checked derivatives with respect to arbitrary input vectors.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.PhasePrefixRead
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,phase-prefix-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/phase-streams 3500
+"$bin" probes basis-parity16 0 runs/phase-streams
+```
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

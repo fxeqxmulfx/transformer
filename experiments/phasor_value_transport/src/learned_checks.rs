@@ -1,4 +1,4 @@
-//! Independent FP64 and vocabulary-permutation checks for the raw-token model.
+//! Independent FP64 and vocabulary-permutation checks for the embedding-input models.
 use super::*;
 use kernite_cuda::{Cuda, Grid};
 
@@ -146,11 +146,12 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     e.backward(3, length)?;
     let gradients = e.gradients.read()?;
     let unmasked = labels.iter().filter(|&&v| v != u32::MAX).count();
-    let read_epsilon = if architecture::BOUNDED || architecture::INPUT_PRODUCT {
-        0.0003
-    } else {
-        0.003
-    };
+    let read_epsilon =
+        if architecture::BOUNDED || architecture::INPUT_PRODUCT || architecture::PHASE_MEMORY {
+            0.0003
+        } else {
+            0.003
+        };
     for (range, epsilon) in [(0..p * width, 0.0002), (start..end, read_epsilon)] {
         if range.is_empty() {
             continue;
@@ -263,6 +264,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if architecture::COMPACT {
         compact_checks::run()?;
+    }
+    if architecture::PHASE_MEMORY {
+        crate::phase_checks::run()?;
     }
     crate::embedding_checks::run()
 }

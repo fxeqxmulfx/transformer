@@ -18,6 +18,8 @@ mod learned_read;
 mod pair_checks;
 mod pair_memory;
 mod pair_ops;
+mod phase_checks;
+mod phase_prefix;
 mod recurrent;
 mod relation_paths;
 mod relation_support;
@@ -227,6 +229,7 @@ fn main() -> Result<()> {
             Err("this historical command requires an explicit historical architecture".into()),
         [op, width] if architecture::RAW && op == "shared-check" =>
             learned_checks::run(Some(width.parse()?)),
+        [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),
         [op, head, name, seed, updates, out] if op == "memory-bench" =>
             stress::benchmark::run(head, name, seed.parse()?, updates.parse()?, Path::new(out)),

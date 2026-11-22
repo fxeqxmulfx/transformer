@@ -13,6 +13,7 @@ pub enum Head {
     Bounded,
     InputProduct,
     CompactStream,
+    PhasePrefix,
 }
 
 impl Head {
@@ -28,6 +29,7 @@ impl Head {
             "bounded" => Ok(Self::Bounded),
             "input-product" => Ok(Self::InputProduct),
             "compact" => Ok(Self::CompactStream),
+            "phase" => Ok(Self::PhasePrefix),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -42,6 +44,7 @@ impl Head {
             Self::Bounded => "phasor-bounded-memory-32-v1",
             Self::InputProduct => "phasor-causal-product-input-32-v1",
             Self::CompactStream => "phasor-compact-ffn-stream-v1",
+            Self::PhasePrefix => "phasor-learned-phase-prefix-32-v1",
         }
     }
 
@@ -49,6 +52,7 @@ impl Head {
         match self {
             Self::Original => 0,
             Self::Stream | Self::CompactStream => 4 * cfg.width,
+            Self::PhasePrefix => (4 + 3 * MEMORY_WIDTH) * cfg.width,
             Self::Relations => pair_memory::parameters(cfg),
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 4 * MEMORY_WIDTH * cfg.width
@@ -60,12 +64,20 @@ impl Head {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
             Self::Relations => pair_memory::initialize_gains(cfg, parameters),
-            Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
+            Self::Transition
+            | Self::Recurrent
+            | Self::Bounded
+            | Self::InputProduct
+            | Self::PhasePrefix => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
-                let start = crate::architecture::start(cfg);
-                let end = start + self.parameters(cfg);
-                let (input, output) =
-                    parameters[start..end].split_at_mut(3 * MEMORY_WIDTH * cfg.width);
+                let start = crate::architecture::memory_start(cfg);
+                let end = crate::architecture::start(cfg) + self.parameters(cfg);
+                let rows = if self == Self::PhasePrefix {
+                    MEMORY_WIDTH
+                } else {
+                    3 * MEMORY_WIDTH
+                };
+                let (input, output) = parameters[start..end].split_at_mut(rows * cfg.width);
                 let mut initialize = |matrix: &mut [f32], fan_in: usize| {
                     let scale = (fan_in as f64).sqrt().recip();
                     for w in matrix {
@@ -73,7 +85,7 @@ impl Head {
                     }
                 };
                 initialize(input, cfg.width);
-                if matches!(self, Self::Bounded | Self::InputProduct) {
+                if matches!(self, Self::Bounded | Self::InputProduct | Self::PhasePrefix) {
                     output.fill(0.);
                 } else {
                     initialize(output, MEMORY_WIDTH);

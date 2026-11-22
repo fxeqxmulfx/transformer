@@ -8,33 +8,22 @@ pub const RAW: bool = !cfg!(any(
     feature = "prefix-xor",
     feature = "prefix-sum"
 ));
-#[cfg(any(
-    all(feature = "bounded-memory-read", feature = "causal-product-input"),
-    all(
-        feature = "compact-ffn",
-        any(feature = "bounded-memory-read", feature = "causal-product-input")
-    ),
-    all(
-        any(
-            feature = "bounded-memory-read",
-            feature = "causal-product-input",
-            feature = "compact-ffn"
-        ),
-        any(
-            feature = "original-stream-mean",
-            feature = "prefix-xor",
-            feature = "prefix-sum",
-            feature = "pair-v2"
-        )
-    )
-))]
-compile_error!("choose one architecture per stress binary");
 pub const BOUNDED: bool = cfg!(feature = "bounded-memory-read");
 pub const INPUT_PRODUCT: bool = cfg!(feature = "causal-product-input");
 pub const COMPACT: bool = cfg!(feature = "compact-ffn");
+pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read");
+const _: () = {
+    let variants = BOUNDED as u8 + INPUT_PRODUCT as u8 + COMPACT as u8 + PHASE_MEMORY as u8;
+    assert!(
+        variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
+        "choose one architecture per stress binary"
+    );
+};
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if COMPACT {
+pub const HEAD: Head = if PHASE_MEMORY {
+    Head::PhasePrefix
+} else if COMPACT {
     Head::CompactStream
 } else if INPUT_PRODUCT {
     Head::InputProduct
@@ -55,6 +44,17 @@ pub const MODEL: &str = if matches!(HEAD, Head::Original) {
 
 pub fn start(cfg: &Config) -> usize {
     layout::score_offset(cfg) + layout::score_count(cfg)
+}
+
+/// The phase read follows the original four learned stream coefficients.
+/// Other hidden memories project the fixed-mean contextual vectors directly.
+pub fn memory_start(cfg: &Config) -> usize {
+    start(cfg)
+        + if cfg.head == Head::PhasePrefix {
+            4 * cfg.width
+        } else {
+            0
+        }
 }
 
 pub fn parameters(cfg: &Config) -> usize {
@@ -87,7 +87,9 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             && result.get("readout_parameters").is_none();
     }
     if RAW {
-        let per_channel = if BOUNDED {
+        let per_channel = if PHASE_MEMORY {
+            4 + 3 * crate::head::MEMORY_WIDTH as u64
+        } else if BOUNDED {
             4 * crate::head::MEMORY_WIDTH as u64
         } else if STREAM_READ {
             4

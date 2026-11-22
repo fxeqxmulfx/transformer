@@ -2,10 +2,11 @@
 use super::*;
 use crate::{
     head::{Head, MEMORY_WIDTH as M},
-    recurrent, transition,
+    phase_prefix, recurrent, transition,
 };
 
 enum Memory {
+    Phase(phase_prefix::kernels::Kernels),
     Transitions {
         kernels: transition::kernels::Kernels,
         probabilities: F,
@@ -27,6 +28,8 @@ pub(super) struct HiddenLayer {
     dhidden: F,
     input_weights: usize,
     output_weights: usize,
+    projected_channels: usize,
+    read_channels: usize,
     forward_shape: std::cell::Cell<Option<(usize, usize)>>,
 }
 
@@ -35,6 +38,7 @@ impl HiddenLayer {
         let cfg = &e.config;
         let rows = cfg.max_batch * cfg.max_length;
         let memory = match cfg.head {
+            Head::PhasePrefix => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::Transition => Memory::Transitions {
                 kernels: transition::kernels::Kernels::load(&e.cuda)?,
                 probabilities: e.cuda.alloc(rows * cfg.max_length)?,
@@ -46,22 +50,29 @@ impl HiddenLayer {
             },
             _ => return Err("expected a learned hidden memory".into()),
         };
-        let input_weights = crate::architecture::start(cfg);
+        let input_weights = crate::architecture::memory_start(cfg);
+        let (projected_channels, read_channels) = if cfg.head == Head::PhasePrefix {
+            (M, 2 * M)
+        } else {
+            (3 * M, M)
+        };
         Ok(Self {
             memory,
-            projected: e.cuda.alloc(rows * 3 * M)?,
-            dprojected: e.cuda.alloc(rows * 3 * M)?,
-            read: e.cuda.alloc(rows * M)?,
-            dread: e.cuda.alloc(rows * M)?,
+            projected: e.cuda.alloc(rows * projected_channels)?,
+            dprojected: e.cuda.alloc(rows * projected_channels)?,
+            read: e.cuda.alloc(rows * read_channels)?,
+            dread: e.cuda.alloc(rows * read_channels)?,
             merged: e.cuda.alloc(rows * cfg.width)?,
             dhidden: e.cuda.alloc(rows * cfg.width)?,
             input_weights,
-            output_weights: input_weights + 3 * M * cfg.width,
+            output_weights: input_weights + projected_channels * cfg.width,
+            projected_channels,
+            read_channels,
             forward_shape: std::cell::Cell::new(None),
         })
     }
 
-    // The only input activations are the backbone's final RMS-normalized stream means.
+    // The only input activations are the backbone's contextual embedding features.
     pub(super) fn features(&self) -> &F {
         &self.merged
     }
@@ -74,12 +85,18 @@ impl HiddenLayer {
             e.last.ptr(),
             self.input_weights,
             rows,
-            3 * M,
+            self.projected_channels,
             d,
         )?;
         // Each launch owns its sequence slice, with length and rows checked by Engine::forward.
         unsafe {
             match &self.memory {
+                Memory::Phase(kernels) => kernels.forward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.read.ptr(),
+                    self.projected.ptr(),
+                    length as u32,
+                )?,
                 Memory::Transitions {
                     kernels,
                     probabilities,
@@ -115,7 +132,7 @@ impl HiddenLayer {
             self.output_weights,
             rows,
             d,
-            M,
+            self.read_channels,
         )?;
         unsafe {
             e.ops.add(
@@ -152,10 +169,17 @@ impl HiddenLayer {
             self.output_weights,
             rows,
             d,
-            M,
+            self.read_channels,
         )?;
         unsafe {
             match &self.memory {
+                Memory::Phase(kernels) => kernels.backward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.dprojected.ptr(),
+                    self.projected.ptr(),
+                    self.dread.ptr(),
+                    length as u32,
+                )?,
                 Memory::Transitions {
                     kernels,
                     probabilities,
@@ -206,7 +230,7 @@ impl HiddenLayer {
             e.last.ptr(),
             self.input_weights,
             rows,
-            3 * M,
+            self.projected_channels,
             d,
         )?;
         unsafe {
