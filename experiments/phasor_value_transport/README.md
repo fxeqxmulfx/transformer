@@ -1003,6 +1003,12 @@ of 0.001 and a warmup lasting 2% of each task's update budget. The GPT suite
 specifies the width, head count, depth, minibatch, budget and observation
 cadence for each task.
 
+The native build reads the update budgets from the pinned GPT catalog. Its
+3,000- and 10,000-update cases use the same schedule as the original 35-task
+cohort. On hard recall, warmup lasts 60 updates and cooldown starts at
+2,400. A comparison at every step of all five declared budgets reproduced
+all 163,010 learning rates bit for bit, including the step after each budget.
+
 Lean gives the exact decision margin at every position. For an arbitrary
 fixed-depth backbone with orthonormal embeddings it proves that one gain
 and one right-operand table can distinguish every second operand on the

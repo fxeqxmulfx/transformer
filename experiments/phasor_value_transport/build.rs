@@ -1,5 +1,5 @@
 //! Compile the upstream trainer at the same revision as the Phasor CPU oracle.
-use std::{env, fs, path::Path, process::Command};
+use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
 fn pin(dir: &Path, revision: &str, tree: &str) {
     let git = |args: &[&str]| {
@@ -45,6 +45,40 @@ fn check_device_offsets(mut source: String) -> String {
     source
 }
 
+// The pinned trainer lists only the budgets in its 35-task cohort. The
+// larger authenticated GPT catalog declares additional horizons for the
+// same update rule. Keep the pinned rate function and percentage cutoffs.
+fn catalog_schedule(gpt: &Path, out: &Path) {
+    let plan = fs::read(gpt.join("research/current_grokking/plan.json")).unwrap();
+    let plan: serde_json::Value = serde_json::from_slice(&plan).unwrap();
+    let budgets: BTreeSet<_> = plan["cases"]
+        .as_array()
+        .expect("missing GPT catalog cases")
+        .iter()
+        .map(|case| case["max_updates"].as_u64().expect("missing GPT budget"))
+        .collect();
+    assert!(
+        [20_000, 30_000, 100_000]
+            .iter()
+            .all(|b| budgets.contains(b))
+    );
+    let budgets: Vec<_> = budgets.into_iter().collect();
+    let source =
+        fs::read_to_string(gpt.join("research/main_model/wsd_suite_native/src/schedule.rs"))
+            .unwrap();
+    let original = "[20_000, 30_000, 100_000]";
+    assert_eq!(
+        source.matches(original).count(),
+        1,
+        "unexpected pinned budget guard"
+    );
+    fs::write(
+        out.join("schedule.rs"),
+        source.replace(original, &format!("{budgets:?}")),
+    )
+    .unwrap();
+}
+
 fn main() {
     let lock = include_str!("Cargo.lock");
     let version = lock
@@ -58,6 +92,7 @@ fn main() {
         .unwrap();
     pin(&gpt, "5a37c515639f23037d191b0659a5a0853984328d", "research");
     let out = std::path::PathBuf::from(env::var_os("OUT_DIR").unwrap());
+    catalog_schedule(&gpt, &out);
     let src = gpt.join("research/main_model/phase_score_native/src");
     let mut engine = check_device_offsets(fs::read_to_string(src.join("engine.rs")).unwrap());
     // Only the FP32 reference dispatches entirely to the upstream SGEMM.
@@ -172,11 +207,7 @@ fn main() {
             "blake complex data gemm metrics pcg random sequence_ops",
         ),
         (geometry.join("diagnostic/src"), "plain_product"),
-        (
-            gpt.join("research/main_model/wsd_suite_native/src"),
-            "schedule",
-        ),
-        (out.clone(), "engine layout"),
+        (out.clone(), "engine layout schedule"),
     ] {
         for name in names.split_whitespace() {
             let path = dir.join(format!("{name}.rs"));
