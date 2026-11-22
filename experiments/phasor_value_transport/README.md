@@ -238,6 +238,23 @@ passed. Isolating each prefix produced identical logits. Three additional
 directions checked gradients with respect to dense vectors outside the
 embedding table.
 
+Five seed-0 comparisons reproduced the first validation pass after
+checkpoint reload. The causal product used fewer updates on blocks and
+absolute difference, and more on addition, binding and depth-one C-RASP.
+
+| Task | Causal product, first ≥99% update | Learned stream control |
+| --- | ---: | ---: |
+| Blocks | 750 | 1,500 |
+| Absolute difference | 2,926 | 3,116 |
+| Modular addition | 912 | 874 |
+| Key/value binding | 512 | 448 |
+| Depth-one C-RASP | 1,250 | 750 |
+
+At length 64 the product scored 24/64 on blocks and 58/64 on C-RASP.
+The stream control scored 15/64 and 60/64. Three independently reloaded
+product checkpoints on NV11 at update 3,000 scored 99 / 79 / 86 out of
+4,705 held-out pairs. The broader trial stopped after the mixed results.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.CausalProductInput
 cd experiments/phasor_value_transport
