@@ -199,7 +199,9 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
                         println!(
                             "{}",
                             json!({"model":MODEL,"status":"screen cutoff","observation":point,
-                                "kernite_version":trained_with(&saved)?})
+                                "kernite_version":trained_with(&saved)?,"gpu":saved["gpu"],
+                                "fp32_affines":saved["fp32_affines"],"bf16":saved["bf16"],
+                                "tf32_backward":saved["tf32_backward"],"suite_sha256":saved["suite_sha256"]})
                         );
                         return Ok(());
                     }
@@ -239,7 +241,8 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
                 let mut result = json!({"model":MODEL,"observation":point,"previous_step":previous,"train_correct":training["exact"],
                     "train_total":train.len(),"selection":task.selection,
                     "parameters":values.len(),"weights_sha256":hash(&bytes),"gpu":e.cuda.name(),
-                    "fp32_affines":precision::FP32_AFFINE_REFERENCE,"suite_sha256":suite_hash(&row),"kernite_version":KERNITE_VERSION,
+                    "fp32_affines":precision::FP32_AFFINE_REFERENCE,"bf16":precision::BF16,
+                    "tf32_backward":precision::TF32_BACKWARD,"suite_sha256":suite_hash(&row),"kernite_version":KERNITE_VERSION,
                     "elapsed_seconds":(started.elapsed()-waited).as_secs_f64()});
                 architecture::record(&mut result, &e.config, &values);
                 publish(&dest, "result.json", &serde_json::to_vec_pretty(&result)?)?;
@@ -249,7 +252,10 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
             if cutoff == Some(step) {
                 println!(
                     "{}",
-                    json!({"model":MODEL,"status":"screen cutoff","observation":point,"kernite_version":KERNITE_VERSION})
+                    json!({"model":MODEL,"status":"screen cutoff","observation":point,
+                        "kernite_version":KERNITE_VERSION,"gpu":e.cuda.name(),"suite_sha256":suite_hash(&row),
+                        "fp32_affines":precision::FP32_AFFINE_REFERENCE,"bf16":precision::BF16,
+                        "tf32_backward":precision::TF32_BACKWARD})
                 );
                 return Ok(());
             }

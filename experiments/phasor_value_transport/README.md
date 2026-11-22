@@ -285,6 +285,38 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" cell arithmetic-add 0 runs/compact-streams
 "$bin" probes arithmetic-add 0 runs/compact-streams
 ```
 
+For a fixed-work timing comparison, build each executable from the same
+checkout and run six pairs per task. Each seed runs twice, with the
+execution order reversed. The timer includes process startup, training
+and scheduled validation. It checks the source fingerprint, GPU, precision
+settings, Kernite version and number of examples at every observation.
+Choose a cutoff before either architecture reaches the target.
+
+At 380 updates, two independently started series each compared six pairs
+per task on the GTX 1050. Compact took less elapsed time in all 24 pairs.
+At a 19-update cutoff on addition, the six-pair ratio was 1.0001.
+
+| Task | Compact / full elapsed time, first series | Second series |
+| --- | ---: | ---: |
+| Modular addition | 0.9755 | 0.9750 |
+| Absolute difference | 0.9764 | 0.9755 |
+
+The ratios are geometric means of paired elapsed times. Addition reached
+its first pass at 912 / 950 / 969 updates with compact and 874 / 950 / 931
+with the full model. On depth-one
+C-RASP all six checkpoints independently replayed at 32/32. Compact
+crossed at updates 250 / 1,250 / 250 and the full model at 750 / 1,500 / 250.
+At length 64 they scored 55 / 56 / 40 and 60 / 61 / 41 out of 64,
+respectively.
+
+```sh
+# From experiments/phasor_value_transport
+CARGO_TARGET_DIR=target/wide cargo +stable build --release --locked --features fp32-affine-reference
+CARGO_TARGET_DIR=target/compact cargo +stable build --release --locked --features fp32-affine-reference,compact-ffn
+PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh target/wide/release/phasor-value-transport \
+    target/compact/release/phasor-value-transport runs/compact-timing 380 arithmetic-add arithmetic-abs-diff
+```
+
 ## Learned phase memory
 
 At each position the backbone produces a contextual hidden vector `h[t]`
