@@ -2522,6 +2522,35 @@ for arm in triple-pair-classes triple-current-graph; do
 done
 ```
 
+### Indexing the pair-class images
+
+Given one observed prototype and a pair class, the search asks which
+other prototypes are possible. The index numbers the classes that occur
+among observed outputs. Each prototype has a bitmap of those classes
+and stores a candidate set for each set bit. Counting the set bits
+before a present class gives the position of its candidate set. A prefix
+count per 64-bit word makes a lookup independent of the number of
+preceding words. Lean proves the lookup returns the original optional
+value, including at absent keys. [Packed lookup proof](../../src/Transformer/Phasor/TripleTransport/MaskRank.lean)
+
+Fresh Fibonacci training on a GTX 1050 took 57.13, 55.66 and 58.78
+seconds with the hash index on seeds 0, 1 and 2. The bitmap index took
+52.05, 50.24 and 52.65 seconds. The first crossings were at updates 240,
+240 and 250. Each pair had identical weights, scheduled observations
+and reloaded scores. These timings use dense gradient transfer in both
+arms.
+
+Build `BEFORE_BIN` from `1ef96fd4` with the same features
+to measure the index with addressed gradient transfer in both arms.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.MaskRank
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,triple-pair-classes
+PHASOR_EVAL_BATCH_CAP=16 bash time_screens.sh --first-pass "$BEFORE_BIN" \
+    ./target/release/phasor-value-transport runs/pair-index-timing 250 recurrence-fibonacci-k1-c2-lgt
+```
+
 ### Addressed row gradients
 
 Each backward tape identifies the dense rows it read from the dictionary

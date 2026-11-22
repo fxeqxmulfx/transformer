@@ -13,6 +13,8 @@ pub use witnesses::{RoleEvidence, fill_from_witnesses, fill_in_rounds};
 
 #[path = "slot_pair_classes.rs"]
 mod pair_classes;
+#[path = "slot_pair_index.rs"]
+mod pair_index;
 #[path = "slot_values.rs"]
 mod values;
 pub use pair_classes::{PairRead, extend as fill_from_pair_classes};

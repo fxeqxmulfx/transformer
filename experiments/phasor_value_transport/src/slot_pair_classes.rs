@@ -1,7 +1,7 @@
 //! Complete missing reads by matching ordered pairs of hidden slots in
 //! separate key, context and output roles. See PairClasses.row_candidate.
+use super::pair_index::ImageIndex;
 use super::{ABSENT, Components, values::Values};
-use std::collections::HashMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PairRead {
@@ -80,13 +80,7 @@ pub fn extend(
         return;
     }
     let classes = representatives(n, &rows, &columns);
-    let mut images = vec![HashMap::<u32, Values>::new(); n];
-    for u in observed.members() {
-        for v in observed.members() {
-            let root = classes[(2 * n + u) * n + v];
-            images[u].entry(root).or_default().insert(v);
-        }
-    }
+    let images = ImageIndex::new(n, &classes, observed);
     let mut rank = vec![0; n];
     for (i, &v) in priority.iter().enumerate() {
         rank[v] = i;
@@ -109,7 +103,7 @@ pub fn extend(
                     continue;
                 }
                 let root = classes[(axis * n + key) * n + query];
-                if let Some(&allowed) = images[u].get(&root)
+                if let Some(allowed) = images.get(u, root)
                     && allowed != observed
                 {
                     options.intersect(allowed);
