@@ -11,6 +11,8 @@ const DEFAULT_MODEL: bool = !cfg!(any(
     feature = "prefix-xor",
     feature = "prefix-sum"
 ));
+#[cfg(all(feature = "relation-paths", feature = "prefix-frequency"))]
+compile_error!("choose one additional prefix read per trial");
 const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
@@ -92,6 +94,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-successor-hit-gain175-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
+} else if cfg!(feature = "relation-paths") {
+    "phasor-two-hop-relation-values-v1"
 } else if cfg!(feature = "prefix-frequency") {
     "phasor-centered-prefix-frequency-v1"
 } else if cfg!(feature = "successor-gain-three-quarters") {
@@ -124,7 +128,14 @@ pub const MODEL: &str = if LEARN_BONUS {
 
 pub fn parameters(cfg: &Config) -> usize {
     if cfg.shared_values {
-        TABLES * cfg.vocab * cfg.width + 1 + usize::from(LEARN_BONUS)
+        TABLES * cfg.vocab * cfg.width
+            + 1
+            + usize::from(LEARN_BONUS)
+            + if cfg!(feature = "relation-paths") {
+                cfg.vocab
+            } else {
+                0
+            }
     } else {
         0
     }
@@ -201,6 +212,7 @@ pub struct PairMemory {
     pub owners: Buffer<u32>,
     pub causal: crate::causal_values::kernels::Kernels,
     pub frequency: Option<crate::frequency_read::kernels::Kernels>,
+    pub relations: Option<crate::relation_paths::RelationRead>,
     pub dscores: Buffer<f32>,
     pub merged: Buffer<f32>,
     pub scaled: Buffer<f32>,
@@ -228,6 +240,9 @@ impl PairMemory {
             causal: crate::causal_values::kernels::Kernels::load(cuda)?,
             frequency: cfg!(feature = "prefix-frequency")
                 .then(|| crate::frequency_read::kernels::Kernels::load(cuda))
+                .transpose()?,
+            relations: cfg!(feature = "relation-paths")
+                .then(|| crate::relation_paths::RelationRead::new(cuda, rows, cfg.vocab))
                 .transpose()?,
             dscores: cuda.alloc(rows * cfg.vocab)?,
             merged: cuda.alloc(rows * cfg.width)?,
@@ -328,6 +343,9 @@ impl PairMemory {
         self.keys.write(&self.indices)?;
         if let Some(a) = &mut self.agreement {
             a.device.write(&a.reads)?;
+        }
+        if let Some(relations) = &mut self.relations {
+            relations.prepare(tokens, length)?;
         }
         self.active_shape = Some((tokens.len() / length, length));
         Ok(())

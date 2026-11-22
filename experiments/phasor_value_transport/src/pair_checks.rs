@@ -54,12 +54,22 @@ fn profile(p: usize, length: usize) -> Result<()> {
     cfg.vocab = p;
     let d = cfg.width;
     let mut base = Engine::new(cfg.clone(), &layout::initialize_model(&cfg, 0))?;
-    let tokens: Vec<_> = (0..batch * length)
+    let mut tokens: Vec<_> = (0..batch * length)
         .map(|i| {
             let r = i / length;
             [0, p - 1, 9, 0, 6, 4][(i % length + if r == 1 { 2 } else { 0 }) % 6] as u32
         })
         .collect();
+    if cfg!(feature = "relation-paths") && length >= 8 {
+        let patterns = [
+            [2, 0, 3, 4, 1, 0, 2, 1, 1, 0, 2, 1],
+            [1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 5, 1],
+            [1, 0, 2, 4, 1, 0, 5, 1, 5, 0, 3, 1],
+        ];
+        for (row, pattern) in tokens.chunks_mut(length).zip(patterns) {
+            row.copy_from_slice(&pattern[..length]);
+        }
+    }
     let mut labels: Vec<_> = (0..tokens.len())
         .map(|i| ((7 * i + 3) % p) as u32)
         .collect();
@@ -91,6 +101,15 @@ fn profile(p: usize, length: usize) -> Result<()> {
         }
         // Exercise an independently signed bonus in the reference and adjoint.
         theta[gain_at + 1] = -0.2;
+    }
+    if cfg!(feature = "relation-paths") {
+        let amplitudes = &mut theta[gain_at + 1..layout::frequency_offset(&cfg)];
+        if amplitudes.len() != p || amplitudes.iter().any(|&x| x != 0.) {
+            return Err("relation amplitudes must start at zero".into());
+        }
+        for (h, x) in amplitudes.iter_mut().enumerate() {
+            *x = 0.09 * ((h % 7) as f32 - 2.);
+        }
     }
     let mut rng = random::Random::new(301);
     for x in &mut theta[start..gain_at] {
@@ -149,6 +168,24 @@ fn profile(p: usize, length: usize) -> Result<()> {
                 *value += 0.5 * offset / history.len() as f64;
             }
         }
+        if cfg!(feature = "relation-paths") {
+            for (h, &amplitude) in theta[gain_at + 1..gain_at + 1 + p].iter().enumerate() {
+                let next = |key| {
+                    prefix
+                        .windows(3)
+                        .rev()
+                        .find(|triple| triple[0] == key && triple[1] == h as u32)
+                        .map(|triple| triple[2])
+                };
+                if let Some(end) = next(b).and_then(next) {
+                    for (col, value) in v.iter_mut().enumerate() {
+                        *value += f64::from(amplitude)
+                            * (f64::from(theta[end as usize * d + col])
+                                - f64::from(theta[b as usize * d + col]));
+                    }
+                }
+            }
+        }
         let read = checks::reference(
             &scores[prev * p..(prev + 1) * p],
             &theta[..p * d],
@@ -176,6 +213,14 @@ fn profile(p: usize, length: usize) -> Result<()> {
     ];
     if cfg!(feature = "successor-bonus") {
         directions.push(("successor bonus".to_owned(), gain_at + 1..gain_at + 2));
+    }
+    if cfg!(feature = "relation-paths") {
+        let range = gain_at + 1..gain_at + 1 + p;
+        let active = gradients[range.clone()].iter().any(|&x| x.abs() > 1e-6);
+        if active != (length >= 8) {
+            return Err("relation gradient disagrees with the exercised paths".into());
+        }
+        directions.push(("relation amplitudes".to_owned(), range));
     }
     for k in 0..pair_memory::TABLES {
         directions.push((
@@ -259,6 +304,9 @@ pub fn run() -> Result<()> {
     }
     if pair_memory::SUCCESSOR {
         profile(36, 8)?;
+    }
+    if cfg!(feature = "relation-paths") {
+        profile(36, 12)?;
     }
     let mut cfg = config(8)?;
     cfg.shared_values = true;

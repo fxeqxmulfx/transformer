@@ -303,6 +303,14 @@ inside the existing residual. A missing edge contributes zero. At
 initialization the trial has the same logits as the 0.75-gain model.
 [Causal path and derivative proofs](../../src/Transformer/Phasor/RelationalPaths.lean)
 
+The v0.6.0 build with `fp32-affine-reference,relation-paths` passed 100
+directional derivatives and matched the independent FP64 logits to within
+8.51 × 10⁻⁷. The length-12 check includes two relations that reach the
+same endpoint. On two-hop lookup at 1,000 updates, seed 0 scored 21/32
+with learned relations and 1/32 with the 0.75-gain control. The relation
+model scored 32/32 on Dyck at 250 updates and 31/32 on MQAR at 1,000.
+Reproduce with `shared-check` followed by `screen TASK 0 FRESH_DIR CUTOFF`.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
