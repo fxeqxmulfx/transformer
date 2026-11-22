@@ -858,7 +858,10 @@ The scorer emits the SHA-256 of the saved weights alongside the results.
 On the source L4 task, the same inclusive architecture reached 512/512 on
 length-128 validation at update 250 in every seed. The slowest run took
 40.53 seconds, within the short-tier limit. The checkpoints were trained
-separately on L4 using the original optimizer.
+separately on L4 using the original optimizer. At the same update the
+closed-relation default scored 109 / 116 / 124 out of 512. Training it to
+update 750 gave 230 / 153 / 447. Every scheduled default observation
+through that cutoff was below the source's 99% threshold.
 
 | L4 whole sequences correct | Total | Seed 0 | Seed 1 | Seed 2 |
 | --- | ---: | ---: | ---: | ---: |
