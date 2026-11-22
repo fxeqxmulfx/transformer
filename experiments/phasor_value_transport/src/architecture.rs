@@ -52,6 +52,7 @@ const _: () = {
         + TIED_TOEPLITZ as u8
         + TWO_FRAME as u8
         + cfg!(feature = "triple-transport") as u8
+        + cfg!(feature = "triple-bipartite") as u8
         + cfg!(feature = "triple-lookup-prototypes") as u8
         + cfg!(feature = "triple-phase-read") as u8
         + cfg!(feature = "triple-lookup-phase") as u8
@@ -81,6 +82,8 @@ pub const HEAD: Head = if FOURIER {
     Head::LookupTriplePhase
 } else if cfg!(feature = "triple-transport") {
     Head::TripleTransport
+} else if cfg!(feature = "triple-bipartite") {
+    Head::BipartiteTriple
 } else if TWO_FRAME {
     Head::TwoFrame
 } else if TIED_TOEPLITZ {

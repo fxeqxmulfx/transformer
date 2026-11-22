@@ -10,12 +10,12 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     let dir = out.join(name).join(format!("seed{seed}"));
     let (saved, original) = embedding::verified_weights(&row, seed, &cfg, &dir)?;
     let mut engine = Engine::new(cfg.clone(), &original)?;
-    let mut score = |weights: &[f32]| -> Result<Value> {
+    let score = |engine: &mut Engine, weights: &[f32]| -> Result<Value> {
         engine.parameters.write(weights)?;
         let mut splits = BTreeMap::new();
         for (split, examples) in &task.splits {
             if split == &task.selection || split == "test" || split.starts_with("test/") {
-                let counts = metrics::evaluate(&mut engine, examples, true)?;
+                let counts = metrics::evaluate(engine, examples, true)?;
                 splits.insert(
                     split,
                     json!({"correct":counts["exact"],"total":examples.len()}),
@@ -24,7 +24,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         }
         Ok(json!(splits))
     };
-    let baseline = score(&original)?;
+    let baseline = score(&mut engine, &original)?;
     if baseline[&task.selection]["correct"] != saved["observation"]["correct"]
         || baseline[&task.selection]["total"] != saved["observation"]["total"]
     {
@@ -45,7 +45,13 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         if cfg.head.has_triple_phase() && matches!(name, "context_only" | "structural_only") {
             weights[crate::slot_memory::phase_outputs(&cfg)].fill(0.);
         }
-        results.insert(name, score(&weights)?);
+        results.insert(name, score(&mut engine, &weights)?);
+    }
+    if cfg.head == head::Head::BipartiteTriple {
+        let mut shared_cfg = cfg.clone();
+        shared_cfg.head = head::Head::TripleTransport;
+        let mut shared = Engine::new(shared_cfg, &original)?;
+        results.insert("shared_roles", score(&mut shared, &original)?);
     }
     println!(
         "{}",

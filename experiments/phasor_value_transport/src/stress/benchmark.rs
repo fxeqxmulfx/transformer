@@ -66,6 +66,7 @@ fn score_checkpoint_with(
             | Head::TiedToeplitz
             | Head::TwoFrame
             | Head::TripleTransport
+            | Head::BipartiteTriple
             | Head::LookupTripleTransport
             | Head::TriplePhase
             | Head::LookupTriplePhase

@@ -72,14 +72,20 @@ fn constant_consensus_excludes_the_current_query() {
 
 #[test]
 fn growing_and_replaced_banks_match_fresh_components() {
-    let mut cache = TripleGraph::default();
+    for separate_images in [false, true] {
+        compare_updates(separate_images);
+    }
+}
+
+fn compare_updates(separate_images: bool) {
+    let mut cache = TripleGraph::new(separate_images);
     for k in [7_usize, 5, 7] {
         let mut bank = vec![ABSENT; k * k];
         let mut priority: Vec<_> = (0..k).collect();
         let compare = |cache: &mut TripleGraph, bank: &[u32], priority: &[usize]| {
             assert_eq!(
                 cache.complete(k, bank, priority),
-                complete(k, bank, priority)
+                TripleGraph::new(separate_images).complete(k, bank, priority)
             );
         };
         compare(&mut cache, &bank, &priority);
@@ -106,5 +112,37 @@ fn growing_and_replaced_banks_match_fresh_components() {
             row.reverse();
         }
         compare(&mut cache, &bank, &priority);
+    }
+}
+
+#[test]
+fn completions_allow_independent_renaming_of_images() {
+    let k = 7;
+    let permutation = [2, 5, 0, 6, 3, 1, 4];
+    let priority: Vec<_> = (0..k).collect();
+    let mut bank = Vec::new();
+    for shift in [0, 1, 4] {
+        bank.extend((0..k).map(|x| ((x + shift) % k) as u32));
+    }
+    bank.extend([2, 3, ABSENT, ABSENT, ABSENT, ABSENT, ABSENT]);
+    let original = TripleGraph::new(true).complete(k, &bank, &priority);
+    for (x, &y) in original.transport[3 * k..].iter().enumerate().skip(2) {
+        assert_eq!(y, ((x + 2) % k) as u32);
+    }
+    for y in &mut bank {
+        if *y != ABSENT {
+            *y = permutation[*y as usize];
+        }
+    }
+    let renamed = TripleGraph::new(true).complete(k, &bank, &priority);
+    for (&a, &b) in original.transport.iter().zip(&renamed.transport) {
+        assert_eq!(
+            b,
+            if a == ABSENT {
+                ABSENT
+            } else {
+                permutation[a as usize]
+            }
+        );
     }
 }

@@ -75,7 +75,7 @@ impl SlotLayer {
                 hidden: vec![],
                 rows: vec![],
                 length: 0,
-                routing: Routing::default(),
+                routing: Routing::new(e.config.head.separates_triple_roles()),
             }),
         })
     }

@@ -24,6 +24,7 @@ pub enum Head {
     TiedToeplitz,
     TwoFrame,
     TripleTransport,
+    BipartiteTriple,
     LookupTripleTransport,
     TriplePhase,
     LookupTriplePhase,
@@ -60,6 +61,7 @@ impl Head {
             "tied-toeplitz" => Ok(Self::TiedToeplitz),
             "two-frame" => Ok(Self::TwoFrame),
             "triple-transport" => Ok(Self::TripleTransport),
+            "triple-bipartite" => Ok(Self::BipartiteTriple),
             "triple-lookup-prototypes" => Ok(Self::LookupTripleTransport),
             "triple-phase-read" => Ok(Self::TriplePhase),
             "triple-lookup-phase" => Ok(Self::LookupTriplePhase),
@@ -95,6 +97,7 @@ impl Head {
             Self::TiedToeplitz => "phasor-learned-tied-toeplitz-v1",
             Self::TwoFrame => "phasor-learned-two-sided-frame-v1",
             Self::TripleTransport => "phasor-learned-triple-transport-v1",
+            Self::BipartiteTriple => "phasor-triple-bipartite-v1",
             Self::LookupTripleTransport => "phasor-triple-prototype-capacity-v1",
             Self::TriplePhase => "phasor-triple-phase-residual-32-v1",
             Self::LookupTriplePhase => "phasor-triple-lookup-phase-32-v1",
@@ -170,8 +173,14 @@ impl Head {
     }
 
     pub const fn is_triple(self) -> bool {
-        matches!(self, Self::TripleTransport | Self::LookupTripleTransport)
-            || self.has_triple_phase()
+        matches!(
+            self,
+            Self::TripleTransport | Self::BipartiteTriple | Self::LookupTripleTransport
+        ) || self.has_triple_phase()
+    }
+
+    pub const fn separates_triple_roles(self) -> bool {
+        matches!(self, Self::BipartiteTriple)
     }
 
     pub const fn has_triple_phase(self) -> bool {
@@ -219,6 +228,7 @@ impl Head {
             Self::Householder => crate::householder::parameter_count(cfg.width),
             Self::TwoFrame => (2 * cfg.width + 8) * cfg.width,
             Self::TripleTransport
+            | Self::BipartiteTriple
             | Self::LookupTripleTransport
             | Self::TriplePhase
             | Self::LookupTriplePhase => crate::slot_memory::parameter_count(
@@ -278,6 +288,7 @@ impl Head {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
             Self::TripleTransport
+            | Self::BipartiteTriple
             | Self::LookupTripleTransport
             | Self::TriplePhase
             | Self::LookupTriplePhase => {

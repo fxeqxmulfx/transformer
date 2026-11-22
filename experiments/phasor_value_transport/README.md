@@ -1789,6 +1789,67 @@ commands with `triple-lookup-phase` and a fresh run directory. Then run
 `"$bin" screen division-p193 0 "$out" 438` and
 `"$bin" probes division-p193 0 "$out"`.
 
+### Separate input and image roles
+
+The `triple-bipartite` model uses two copies of the ordered prototype
+triples. Each trusted map connects a triple of input slots to the
+corresponding triple of image slots. A chain can switch contexts at a shared
+input triple or a shared image triple. The model uses the same learned
+prototypes, dense values, four gates and tied classifier on every task.
+At width 128 the read has 2,114,564 learned parameters and the host graph
+has space for twice as many triples as the shared graph.
+
+Lean proves that the search and its unique candidate are equivariant under
+an arbitrary permutation of the image names. It also gives a five-slot
+example where identifying the two roles admits a path to an incorrect
+third image. The native check measures derivatives of all four reads while
+holding the discrete routing decisions fixed.
+[Role separation and renaming proof](../../src/Transformer/Phasor/TripleTransport/SeparateRoles.lean)
+
+Three fresh runs on permuted modular addition crossed the source's 99%
+threshold. Each checkpoint was independently reloaded and scored on all
+4,705 held-out pairs. The source supplies one validation split for this
+case. With the default shared graph, seed 0 scored 45/4,705 at update
+1,520. The role-separated model reached the following first crossings.
+
+| Seed | Update | Held-out correct | Training time on GTX 1050 |
+| --- | ---: | ---: | ---: |
+| 0 | 190 | 4,705/4,705 | 6.87 s |
+| 1 | 171 | 4,661/4,705 | 5.78 s |
+| 2 | 228 | 4,705/4,705 | 8.39 s |
+
+Repeating the three runs reproduced the checkpoint bytes. The same
+architecture recovered all 4,704 training and all 4,705 held-out
+NV11 pairs on every seed at update 250. Its minimum held-out margins were
+2.663, 3.004 and 2.934. On ordinary modular addition its independently
+verified first crossings were updates 171, 209 and 209 with 4,703,
+4,705 and 4,704 correct out of 4,705.
+
+To measure the role distinction, `slot-ablate` loads the same trained
+weights into a fresh engine with shared roles. On permuted addition that
+intervention scored 47/4,705 on each seed. Removing the transport read
+also gave 47/4,705 on all three. Keeping only the two structural reads
+scored 4,705, 4,660 and 4,705 out of 4,705.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.SeparateRoles
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-bipartite
+bin=./target/release/phasor-value-transport
+out=runs/separate-triple-roles
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    "$bin" screen arithmetic-cubic-product "$seed" "$out" 250
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    for task in arithmetic-perm-add arithmetic-add; do
+        "$bin" screen "$task" "$seed" "$out" 380
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" slot-ablate arithmetic-perm-add "$seed" "$out"
+done
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.

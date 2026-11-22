@@ -24,6 +24,7 @@ public import Transformer.Phasor.TripleTransport.Capacity
 public import Transformer.Phasor.TripleTransport.ConfidenceSelection
 public import Transformer.Phasor.TripleTransport.Incremental
 public import Transformer.Phasor.TripleTransport.PhaseResidual
+public import Transformer.Phasor.TripleTransport.SeparateRoles
 public import Transformer.Phasor.FourierTransport
 public import Transformer.Phasor.ReflectionPhaseRead
 public import Transformer.Phasor.HouseholderMemory

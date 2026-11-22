@@ -142,6 +142,13 @@ pub struct BankGeometry {
 }
 
 impl Routing {
+    pub fn new(separate_images: bool) -> Self {
+        Self {
+            graph: slot_orbits::TripleGraph::new(separate_images),
+            ..Self::default()
+        }
+    }
+
     pub fn inverse_norms(&self) -> &[f32] {
         &self.inverse
     }

@@ -56,12 +56,28 @@ type RowMap = (usize, Vec<(usize, usize)>);
 /// Slot order only chooses the anchors at read time.
 #[derive(Default)]
 pub struct TripleGraph {
+    separate_images: bool,
     slots: usize,
     supported: Vec<u32>,
     components: Option<Components>,
 }
 
 impl TripleGraph {
+    pub fn new(separate_images: bool) -> Self {
+        Self {
+            separate_images,
+            ..Self::default()
+        }
+    }
+
+    fn image_offset(&self, slots: usize) -> usize {
+        if self.separate_images {
+            slots.pow(3)
+        } else {
+            0
+        }
+    }
+
     fn update(&mut self, slots: usize, bank: &[u32], maps: &[RowMap]) -> Option<&[u32]> {
         if maps.iter().all(|(_, points)| points.len() < 3) {
             self.components = None;
@@ -87,6 +103,8 @@ impl TripleGraph {
                 self.components = None;
                 self.supported = vec![ABSENT; supported.len()];
             }
+            let role_size = slots.pow(3);
+            let image_offset = self.image_offset(slots);
             let triple = |a, b, c| (a * slots + b) * slots + c;
             for (r, points) in maps.iter().filter(|(_, p)| p.len() >= 3) {
                 let old = &self.supported[r * slots..(r + 1) * slots];
@@ -100,7 +118,7 @@ impl TripleGraph {
                 }
                 let components = self
                     .components
-                    .get_or_insert_with(|| Components::new(slots.pow(3)));
+                    .get_or_insert_with(|| Components::new(image_offset + role_size));
                 for &(u, s) in points {
                     for &(v, t) in points {
                         if u == v {
@@ -114,7 +132,7 @@ impl TripleGraph {
                         };
                         for &(x, y) in thirds {
                             if x != u && x != v {
-                                components.join(triple(u, v, x), triple(s, t, y));
+                                components.join(triple(u, v, x), image_offset + triple(s, t, y));
                             }
                         }
                     }
@@ -165,6 +183,7 @@ impl TripleGraph {
                 maps.push((r, points));
             }
         }
+        let image_offset = self.image_offset(slots);
         let Some(component) = self.update(slots, bank, &maps) else {
             return reads;
         };
@@ -195,7 +214,7 @@ impl TripleGraph {
                     let (u, s) = anchors[i];
                     for &(v, t) in &anchors[i + 1..count] {
                         let key = component[pair(u, v) + x];
-                        let dst = pair(s, t);
+                        let dst = image_offset + pair(s, t);
                         let mut candidates = (0..slots).filter(|&y| {
                             y != s
                                 && y != t

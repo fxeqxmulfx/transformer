@@ -9,7 +9,7 @@ fn route(l: &Layout, w: &[f32]) -> Routing {
             products.push(slot_memory::dot(m, l.prototype(w, i)));
         }
     }
-    let mut routing = Routing::default();
+    let mut routing = Routing::new(architecture::HEAD.separates_triple_roles());
     routing.refresh(l, w, &products);
     routing
 }
@@ -17,6 +17,14 @@ fn route(l: &Layout, w: &[f32]) -> Routing {
 pub(super) fn run() -> Result<()> {
     crate::slot_bank_checks::run()?;
     check_addresses()?;
+    // The actual FP32 mixture can lose the smallest secant to rounding.
+    // Both perturbation sizes must agree and keep every discrete read fixed.
+    mixture(0.001)?;
+    mixture(0.002)?;
+    initialization()
+}
+
+fn mixture(delta: f64) -> Result<()> {
     let d = 32;
     let k = 7;
     let l = Layout {
@@ -43,6 +51,7 @@ pub(super) fn run() -> Result<()> {
     for (a, b, y) in (0..k)
         .map(|b| (0, b, (b + 1) % k))
         .chain((0..k).map(|b| (1, b, (3 * b) % k)))
+        .chain((0..k).map(|b| (4, b, b)))
         .chain([(2, 0, 3), (2, 1, 5), (3, 0, 2), (3, 1, 2), (3, 2, 2)])
     {
         for j in 0..d {
@@ -83,7 +92,6 @@ pub(super) fn run() -> Result<()> {
             .zip(&gradient[range.clone()])
             .map(|(&v, &g)| f64::from(v) * f64::from(g))
             .sum();
-        let delta = 0.0002;
         let mut measured = [0.; 2];
         for (i, sign) in [-1., 1.].into_iter().enumerate() {
             let (mut p, mut state) = (w.clone(), h.clone());
@@ -120,7 +128,7 @@ pub(super) fn run() -> Result<()> {
         }
         println!("slot mixture {name} analytic={analytic:.7} numeric={numeric:.7}");
     }
-    initialization()
+    Ok(())
 }
 
 // Compare the real device kernel with the carried scalar search on arbitrary
@@ -155,7 +163,7 @@ fn check_addresses() -> Result<()> {
             h[row * d..(row + 1) * d].fill(0.);
         }
         x[d..2 * d].fill(0.);
-        let mut routing = Routing::default();
+        let mut routing = Routing::new(architecture::HEAD.separates_triple_roles());
         routing.refresh(&l, &w, &vec![0.; l.slots.pow(3)]);
         let expected = slot_memory::scalar_cells(&l, &w, &routing, &x, &h, length);
         let transposed: Vec<_> = (0..l.slots * d)
