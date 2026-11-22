@@ -151,4 +151,43 @@ example (M : Model 64 16 4 86 68) (T : PairTables 64 68)
     |(read u - read v) - (base u - base v)| ≤
       (|(2:ℝ)-1| * |(1/2:ℝ)|) * (‖M.embedding u - M.embedding v‖ * Real.sqrt 64) :=
   M.retrievalGain_margin_bound T _ _ _ (by norm_num) (by decide) _ xs L i u v
+
+/-- An independent learned increment on changed successor reads; both
+coefficients are shared by all positions and sequences. The bonus is added
+to the amplitude of the normalized hidden residual before the tied readout. -/
+def successorBonus {α : Type*} [DecidableEq α] (base bonus : ℝ) (xs : ℕ → α) (i : ℕ) : ℝ :=
+  if successorAddress xs i = xs i then base else base + bonus
+
+/-- Any two prescribed amplitudes, for a self-read and a changed successor,
+determine exactly one base gain and bonus. Source: the independent-gain
+experiment in `experiments/phasor_value_transport/README.md`. -/
+theorem existsUnique_successorBonus {α : Type*} [DecidableEq α] (xs : ℕ → α) (miss hit : ℕ)
+    (hm : successorAddress xs miss = xs miss) (hh : successorAddress xs hit ≠ xs hit)
+    (a b : ℝ) : ∃! θ : ℝ × ℝ,
+      successorBonus θ.1 θ.2 xs miss = a ∧ successorBonus θ.1 θ.2 xs hit = b := by
+  refine ⟨(a, b-a), ?_, ?_⟩
+  · simp [successorBonus, hm, hh]
+  · rintro ⟨u,v⟩ huv
+    simp only [successorBonus, ite_eq_left hm, ite_eq_right hh] at huv
+    apply Prod.ext
+    · exact huv.1
+    · change v = b-a
+      linarith [huv.1, huv.2]
+
+/-- Initializing the bonus to the excess multiplier times the base
+recovers every score of the fixed-multiplier architecture. -/
+theorem Model.successorBonusLogit_eq (M : Model D d H F p) (T : PairTables D p)
+    (strength gain factor eps scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ) (c : Fin p) :
+    M.displacedSuccessorLogit T strength (successorBonus gain ((factor-1)*gain) xs i) eps scale xs L i c =
+      M.retrievalGainLogit T strength gain factor eps scale xs L i c := by
+  by_cases h : successorAddress xs i = xs i
+  · simp [successorBonus, retrievalGainLogit, retrievalGain, h]
+  · have eq : gain + (factor-1)*gain = factor*gain := by ring
+    simp [successorBonus, retrievalGainLogit, retrievalGain, h, eq]
+
+example (a b : ℝ) :
+    let xs := fun i => (![0,1,0] : Fin 3 → Fin 2) (Fin.ofNat 3 i)
+    ∃! θ : ℝ × ℝ, successorBonus θ.1 θ.2 xs 0 = a ∧ successorBonus θ.1 θ.2 xs 2 = b :=
+  existsUnique_successorBonus _ 0 2 (by decide) (by decide) a b
+
 end Transformer.Phasor

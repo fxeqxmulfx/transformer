@@ -240,6 +240,15 @@ the ordinary, length-48 and length-96 tests after reload. Seed 0 again
 scored 31/32 on Dyck at 250 updates. Changing the ambiguity rule preserved
 recall and left the Dyck deficit at one sequence.
 
+## Independent gain on changed successor reads
+
+This trial trains a base gain and a separate scalar increment. A self-read
+uses the base. A changed successor uses the sum. Both scalars start at 0.5,
+so at initialization every logit matches the doubled-multiplier trial.
+AdamW can then adjust the two amplitudes independently. Lean proves that
+any prescribed pair of amplitudes has unique parameters whenever the input
+contains both kinds of read. [Independent-gain theorem](../../src/Transformer/Phasor/DisplacementGain.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
