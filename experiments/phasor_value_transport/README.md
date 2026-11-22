@@ -64,6 +64,17 @@ Lean also proves exact logit agreement with the pair residual at the first
 two positions for every setting of the weights and all nine power-sum slots.
 [Prefix representation and logit theorems](../../src/Transformer/Phasor/PrefixValues.lean)
 
+The successor-read trial combines the XOR-prefix sum with a causal
+key/value memory. After seeing a transition `x → y`, the memory associates
+`x` with `y`. At each position the current token queries the most recent
+matching transition whose two endpoints precede that position. An unwritten
+key reads itself. This token addresses the existing right-operand table.
+Lean proves exact latest-write retrieval at any distance, even after
+overwrites, and proves that the lookup commutes with every injective token
+renaming. These are properties of the internal address. Learned logits and
+held-out accuracy are measured separately.
+[Successor read and lookup theorems](../../src/Transformer/Phasor/SuccessorValues.lean)
+
 For promotion we compare all three seeds with the incumbent. Every original
 pass must survive. We compare the geometric mean of paired training epochs
 to the first scheduled 99% crossing separately for short and long, retaining

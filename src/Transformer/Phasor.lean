@@ -8,6 +8,7 @@ public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.PairValues
 public import Transformer.Phasor.SharedValues
 public import Transformer.Phasor.PrefixValues
+public import Transformer.Phasor.SuccessorValues
 public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream
