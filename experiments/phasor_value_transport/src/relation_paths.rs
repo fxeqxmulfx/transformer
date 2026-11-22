@@ -5,10 +5,14 @@ use crate::engine::Result;
 use kernite_cuda::{Buffer, Cuda};
 use std::collections::BTreeMap;
 
+pub const MEAN: bool = cfg!(feature = "relation-path-mean");
+
 pub struct RelationRead {
     pub kernels: kernels::Kernels,
     pub endpoints: Buffer<u32>,
+    pub scales: Buffer<f32>,
     host: Vec<u32>,
+    host_scales: Vec<f32>,
     vocab: usize,
 }
 
@@ -17,7 +21,9 @@ impl RelationRead {
         Ok(Self {
             kernels: kernels::Kernels::load(cuda)?,
             endpoints: cuda.alloc(rows * vocab)?,
+            scales: cuda.alloc(if MEAN { rows } else { 1 })?,
             host: vec![0; rows * vocab],
+            host_scales: vec![0.; if MEAN { rows } else { 0 }],
             vocab,
         })
     }
@@ -28,7 +34,7 @@ impl RelationRead {
         }
         let mut edges = BTreeMap::new();
         let batches = self.host.chunks_exact_mut(length * self.vocab);
-        for (prompt, batch) in tokens.chunks_exact(length).zip(batches) {
+        for (example, (prompt, batch)) in tokens.chunks_exact(length).zip(batches).enumerate() {
             edges.clear();
             for (i, (&source, row)) in prompt
                 .iter()
@@ -39,14 +45,25 @@ impl RelationRead {
                     edges.insert((prompt[i - 3], prompt[i - 2]), prompt[i - 1]);
                 }
                 row.fill(source);
+                let mut moving = 0;
                 for (&(_, relation), &middle) in edges.range((source, 0)..=(source, u32::MAX)) {
-                    if let Some(&end) = edges.get(&(middle, relation)) {
+                    if let Some(&end) = edges.get(&(middle, relation))
+                        && end != source
+                    {
                         row[relation as usize] = end;
+                        moving += 1;
                     }
+                }
+                if MEAN {
+                    self.host_scales[example * length + i] =
+                        if moving == 0 { 0. } else { 1. / moving as f32 };
                 }
             }
         }
         self.endpoints.write(&self.host)?;
+        if MEAN {
+            self.scales.write(&self.host_scales)?;
+        }
         Ok(())
     }
 }
@@ -55,11 +72,13 @@ impl RelationRead {
 pub mod kernels {
     // One lane owns every coefficient of a row. Relations sharing an
     // endpoint accumulate in vocabulary order, including signed amplitudes.
-    pub unsafe extern "ptx-kernel" fn add(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn add<const MEAN: bool>(
         weights: *mut f32,
         endpoints: *const u32,
         tokens: *const u32,
         amplitude: *const f32,
+        scales: *const f32,
         vocab: u32,
         rows: u32,
     ) {
@@ -83,7 +102,11 @@ pub mod kernels {
             ret();
         }
         let (ptr, source_ptr): (u64, u64);
-        let (current, value, a): (f32, f32, f32);
+        let (current, value, a, scale): (f32, f32, f32, f32);
+        if MEAN {
+            mad.wide.u32(ptr, row, 4, scales);
+            ld.global.f32(scale, [ptr]);
+        }
         mad.wide.u32(ptr, row, 4, tokens);
         ld.global.u32(source, [ptr]);
         mul.lo.u32(base, row, vocab);
@@ -105,6 +128,9 @@ pub mod kernels {
         }
         mad.wide.u32(ptr, relation, 4, amplitude);
         ld.global.f32(a, [ptr]);
+        if MEAN {
+            mul.rn.f32(a, a, scale);
+        }
         setp.eq.f32(skip, a, 0.0);
         if skip {
             bra(next);
@@ -124,11 +150,13 @@ pub mod kernels {
 
     // One warp reduces each relation across positions. An empty active
     // prefix overwrites all amplitudes' derivatives with zero.
-    pub unsafe extern "ptx-kernel" fn adjoint(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn adjoint<const MEAN: bool>(
         gradient: *mut f32,
         dweights: *const f32,
         endpoints: *const u32,
         tokens: *const u32,
+        scales: *const f32,
         vocab: u32,
         rows: u32,
     ) {
@@ -162,6 +190,11 @@ pub mod kernels {
         mad.wide.u32(ptr, at, 4, dweights);
         ld.global.f32(y, [ptr]);
         sub.rn.f32(x, x, y);
+        if MEAN {
+            mad.wide.u32(ptr, row, 4, scales);
+            ld.global.f32(y, [ptr]);
+            mul.rn.f32(x, x, y);
+        }
         add.rn.f32(sum, sum, x);
         label(next);
         add.u32(row, row, 32);

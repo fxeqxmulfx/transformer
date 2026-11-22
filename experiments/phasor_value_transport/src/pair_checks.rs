@@ -74,6 +74,12 @@ fn profile(p: usize, length: usize) -> Result<()> {
         .map(|i| ((7 * i + 3) % p) as u32)
         .collect();
     labels[1] = u32::MAX;
+    if cfg!(feature = "relation-paths") && length == 12 {
+        // Only this prediction reads two relations pointing to the same token.
+        labels.fill(u32::MAX);
+        labels[2 * length - 1] = 3;
+    }
+    let targets = labels.iter().filter(|&&label| label != u32::MAX).count();
     base.forward(&tokens, &labels, batch, length)?;
     let scores = base.logits.read()?;
     cfg.shared_values = true;
@@ -105,11 +111,16 @@ fn profile(p: usize, length: usize) -> Result<()> {
     }
     if cfg!(feature = "relation-paths") {
         let amplitudes = &mut theta[gain_at + 1..layout::frequency_offset(&cfg)];
-        if amplitudes.len() != p || amplitudes.iter().any(|&x| x != 0.) {
-            return Err("relation amplitudes must start at zero".into());
+        let initial = if cfg!(feature = "relation-path-mean") {
+            1.
+        } else {
+            0.
+        };
+        if amplitudes.len() != p || amplitudes.iter().any(|&x| x != initial) {
+            return Err("relation amplitude initialization differs from specification".into());
         }
         for (h, x) in amplitudes.iter_mut().enumerate() {
-            *x = 0.09 * ((h % 7) as f32 - 2.);
+            *x = 0.07 * ((h % 5) as f32 - 1.25);
         }
     }
     let mut rng = random::Random::new(301);
@@ -170,20 +181,28 @@ fn profile(p: usize, length: usize) -> Result<()> {
             }
         }
         if cfg!(feature = "relation-paths") {
-            for (h, &amplitude) in theta[gain_at + 1..gain_at + 1 + p].iter().enumerate() {
-                let next = |key| {
-                    prefix
-                        .windows(3)
-                        .rev()
-                        .find(|triple| triple[0] == key && triple[1] == h as u32)
-                        .map(|triple| triple[2])
-                };
-                if let Some(end) = next(b).and_then(next) {
-                    for (col, value) in v.iter_mut().enumerate() {
-                        *value += f64::from(amplitude)
-                            * (f64::from(theta[end as usize * d + col])
-                                - f64::from(theta[b as usize * d + col]));
-                    }
+            let ends: Vec<_> = (0..p)
+                .map(|h| {
+                    let next = |key| {
+                        prefix
+                            .windows(3)
+                            .rev()
+                            .find(|triple| triple[0] == key && triple[1] == h as u32)
+                            .map(|triple| triple[2])
+                    };
+                    next(b).and_then(next).unwrap_or(b)
+                })
+                .collect();
+            let divisor = if cfg!(feature = "relation-path-mean") {
+                ends.iter().filter(|&&end| end != b).count().max(1) as f64
+            } else {
+                1.
+            };
+            for (end, &amplitude) in ends.into_iter().zip(&theta[gain_at + 1..gain_at + 1 + p]) {
+                for (col, value) in v.iter_mut().enumerate() {
+                    *value += f64::from(amplitude) / divisor
+                        * (f64::from(theta[end as usize * d + col])
+                            - f64::from(theta[b as usize * d + col]));
                 }
             }
         }
@@ -222,6 +241,12 @@ fn profile(p: usize, length: usize) -> Result<()> {
             return Err("relation gradient disagrees with the exercised paths".into());
         }
         directions.push(("relation amplitudes".to_owned(), range));
+        if length == 12 {
+            directions.push((
+                "one of two agreeing relations".to_owned(),
+                gain_at + 1..gain_at + 2,
+            ));
+        }
     }
     for k in 0..pair_memory::TABLES {
         directions.push((
@@ -248,7 +273,7 @@ fn profile(p: usize, length: usize) -> Result<()> {
             }
             e.parameters.write(&v)?;
             e.forward(&tokens, &labels, batch, length)?;
-            losses[i] = mean_loss(&e, tokens.len(), tokens.len() - 1)?;
+            losses[i] = mean_loss(&e, tokens.len(), targets)?;
         }
         let numerical = (losses[1] - losses[0]) / (2. * f64::from(delta));
         println!(

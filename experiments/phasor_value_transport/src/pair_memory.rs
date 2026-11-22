@@ -95,6 +95,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-successor-hit-gain175-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
+} else if cfg!(feature = "relation-path-mean") {
+    "phasor-mean-two-hop-relation-values-v1"
 } else if cfg!(feature = "relation-paths") {
     "phasor-two-hop-relation-values-v1"
 } else if cfg!(feature = "prefix-frequency") {
@@ -156,6 +158,9 @@ pub fn initialize_gains(cfg: &Config, parameters: &mut [f32]) {
         parameters[index] = INITIAL_GAIN;
         if LEARN_BONUS {
             parameters[index + 1] = INITIAL_BONUS;
+        }
+        if cfg!(feature = "relation-path-mean") {
+            parameters[index + 1..index + 1 + cfg.vocab].fill(1.);
         }
     }
 }

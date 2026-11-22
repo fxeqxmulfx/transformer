@@ -82,7 +82,7 @@ impl ValueLayer {
                         )?;
                     }
                     if let Some(paths) = &m.relations {
-                        paths.kernels.add(
+                        paths.kernels.add::<{ crate::relation_paths::MEAN }>(
                             grid(rows),
                             m.dscores.ptr(),
                             paths.endpoints.ptr(),
@@ -90,6 +90,7 @@ impl ValueLayer {
                             e.parameters
                                 .at(crate::pair_memory::gain(&e.config) + 1)
                                 .ok_or("relation amplitudes outside parameter buffer")?,
+                            paths.scales.ptr(),
                             p as u32,
                             rows as u32,
                         )?;
@@ -273,7 +274,7 @@ impl ValueLayer {
         if let Some(m) = &self.memory {
             unsafe {
                 if let Some(paths) = &m.relations {
-                    paths.kernels.adjoint(
+                    paths.kernels.adjoint::<{ crate::relation_paths::MEAN }>(
                         Grid::new(p as u32, 32),
                         e.gradients
                             .at(crate::pair_memory::gain(&e.config) + 1)
@@ -281,6 +282,7 @@ impl ValueLayer {
                         self.dweights.ptr(),
                         paths.endpoints.ptr(),
                         e.tokens.ptr(),
+                        paths.scales.ptr(),
                         p as u32,
                         if length > 2 { rows as u32 } else { 0 },
                     )?;

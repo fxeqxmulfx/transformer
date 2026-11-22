@@ -383,6 +383,13 @@ endpoint. Lean bounds the mean by the largest individual weighted
 displacement, regardless of how many paths the prefix contains.
 [Mean relation read](../../src/Transformer/Phasor/RelationalPaths.lean)
 
+The `relation-path-mean` build passed all 101 numerical derivatives,
+including an individually perturbed relation in a two-relation read.
+Its derivative was 0.741261 analytically and 0.741482 by centered finite
+differences. Seed 0 scored 23/32 on lookup and 30/32 on MQAR at update
+1,000, and 31/32 on Dyck at update 250. This variant missed the threshold
+on all three screens.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
