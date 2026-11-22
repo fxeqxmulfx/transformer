@@ -149,6 +149,21 @@ every original layer state and that suffix changes preserve every
 earlier state at any depth.
 [Causal product input](../../src/Transformer/Phasor/CausalProductInput.lean)
 
+## Compact complex feed-forward branch
+
+This candidate keeps the embedding width, attention heads, depth, four
+streams and learned stream readout. Inside each transformer layer the
+complex-product feed-forward branch uses one complex unit per real input
+channel. At model widths 64, 128 and 256 the original branch has 86, 171
+and 342 complex units. The width-128 candidate therefore saves 33,024
+expanded weights and the same number of real multiply-accumulates per
+token in the three feed-forward projections of each layer.
+
+Lean proves that the raw contribution of any group of units is additive
+before normalization. Zero-padding the compact branch reproduces its
+states in the wider model for every layer, position and embedding input.
+[Compact feed-forward proofs](../../src/Transformer/Phasor/CompactFFN.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can
