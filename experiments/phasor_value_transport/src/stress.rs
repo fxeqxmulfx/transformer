@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 
 pub mod alignment;
 mod catalog;
+mod language_probes;
 pub mod report;
 
 fn cases() -> Result<Vec<Value>> {
@@ -282,6 +283,9 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) ->
     let (row, mut task) = load(name)?;
     if test_splits && matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
         catalog::add_parity_probes(&mut task)?;
+    }
+    if test_splits && name.starts_with("language-l") {
+        language_probes::add(&mut task, name).map_err(|err| err.to_string())?;
     }
     let cfg = task_config(&row, &task)?;
     let dest = out.join(name).join(format!("seed{seed}"));

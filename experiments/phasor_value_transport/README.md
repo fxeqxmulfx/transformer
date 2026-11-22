@@ -624,13 +624,24 @@ read that bucket, including after the count wraps.
 [Transition table representation and adjoint](../../src/Transformer/Phasor/TransitionTable.lean)
 
 With `fp32-affine-reference,transition-table`, all three language-L2 seeds
-reached 512/512 on validation at update 250. Each reloaded checkpoint
-scored 512/512 both on the separate original-length test and at length
-128. The slowest cell took 40.53 seconds. On the identical seed-2 screen
+reached 512/512 on length-128 validation at update 250 after training on
+lengths 32–64. Each reloaded checkpoint scored 512/512 on the separate
+original-length and length-128 tests. The slowest cell took 40.53 seconds.
+On the identical seed-2 screen
 the selected 0.75-gain successor and the closed-gain model each scored
 341/512 at update 750. The transition-table GPU passed 124 directional
 checks. At a prefix with 15 completed changes and 12 buckets, only bucket
 3 of the new table received a gradient.
+
+Across all 1,024 binary words of ten letters, the same checkpoints
+classified every prefix correctly on 1,008 / 992 / 992 words. A second
+probe starts with each of the 64 six-letter words and appends alternating
+letters up to 128 tokens including the start symbol. It scored
+63 / 62 / 62 whole sequences. Both probes run after training through
+`probes language-l2 SEED RUN_DIR`. Every label was checked against the
+source prefix oracle. On NV11 this architecture first reached 9,409/9,409
+at update 750 and scored identically at update 3,000 in each seed,
+including independent reloads of all six checkpoints.
 
 The saturated transition-table trial gives the last address to all change
 counts at or above that address. It uses the same number of parameters.

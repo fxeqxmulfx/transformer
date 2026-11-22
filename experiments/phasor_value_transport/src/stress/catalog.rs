@@ -43,28 +43,26 @@ fn source_case(name: &str) -> Result<Value> {
     Ok(case.clone())
 }
 
+pub(super) fn sequence_example(e: basis::data::Example) -> Example {
+    Example {
+        task: e.task,
+        tokens: e.tokens,
+        targets: e.targets,
+        changes: e.changes,
+        prompt: e.prompt,
+        answer: e.answer,
+        limit: e.limit,
+        field: e.field,
+        row_index: e.row_index,
+    }
+}
+
 fn sequence_task(d: sequences::dataset::Dataset) -> Task {
     let source = d.task;
     let splits = source
         .splits
         .into_iter()
-        .map(|(name, rows)| {
-            let rows = rows
-                .into_iter()
-                .map(|e| Example {
-                    task: e.task,
-                    tokens: e.tokens,
-                    targets: e.targets,
-                    changes: e.changes,
-                    prompt: e.prompt,
-                    answer: e.answer,
-                    limit: e.limit,
-                    field: e.field,
-                    row_index: e.row_index,
-                })
-                .collect();
-            (name, rows)
-        })
+        .map(|(name, rows)| (name, rows.into_iter().map(sequence_example).collect()))
         .collect();
     Task {
         splits,
