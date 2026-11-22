@@ -1,4 +1,5 @@
-//! Fixed-budget comparisons. Crossing the target records an observation and training continues.
+//! Fixed-budget comparisons and the catalog's declared target-and-retention protocol.
+use super::source_target::SourceTarget;
 use super::*;
 use crate::head::Head;
 use std::io::{BufRead, BufReader};
@@ -70,6 +71,7 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
 pub enum Source<'a> {
     ComparedHead(&'a str),
     Catalog,
+    DeclaredTarget,
 }
 
 /// Hash the ordered input sequences alone. For generative tasks use each
@@ -109,6 +111,12 @@ fn directory(out: &Path, arm: &str, name: &str, seed: u32, updates: usize) -> st
         .join(format!("seed{seed}-{updates}"))
 }
 
+fn weight_bytes(e: &Engine) -> Result<Vec<u8>> {
+    let values = e.parameters.read()?;
+    layout::validate(&e.config, &values)?;
+    Ok(values.iter().flat_map(|v| v.to_le_bytes()).collect())
+}
+
 /// Replay the frozen catalog record and return the very bytes it authenticates.
 pub(super) fn replay_catalog(
     name: &str,
@@ -137,11 +145,16 @@ fn measure(
             let head = Head::parse(arm)?;
             (head, head.id(), arm, load(name)?)
         }
-        Source::Catalog => (architecture::HEAD, MODEL, MODEL, catalog::load(name)?),
+        Source::Catalog | Source::DeclaredTarget => {
+            (architecture::HEAD, MODEL, MODEL, catalog::load(name)?)
+        }
     };
     let schedule = row["case"]["max_updates"].as_u64().unwrap() as usize;
     let observe = row["case"]["observe"].as_u64().unwrap() as usize;
     let batch = row["case"]["batch"].as_u64().unwrap() as usize;
+    let target = matches!(source, Source::DeclaredTarget)
+        .then(|| SourceTarget::from_case(&row["case"]))
+        .transpose()?;
     if updates == 0
         || updates > schedule
         || (updates != schedule && !updates.is_multiple_of(observe))
@@ -158,7 +171,11 @@ fn measure(
         "tf32_backward":precision::TF32_BACKWARD, "parameters":layout::independent_count(&cfg),
         "stored_parameters":layout::total_count(&cfg), "head_parameters":head.parameters(&cfg)});
     let mut initialization = None;
-    if matches!(source, Source::Catalog) {
+    if let Some(rule) = target {
+        protocol["source_target"] = json!({"metric":"sequence_accuracy","threshold":rule.threshold,
+            "after_target":rule.after_target,"search_updates":updates});
+    }
+    if matches!(source, Source::Catalog | Source::DeclaredTarget) {
         let weights = layout::initialize_model(&cfg, seed);
         let bytes: Vec<_> = weights.iter().flat_map(|w| w.to_le_bytes()).collect();
         protocol["initial_weights_sha256"] = json!(hash(&bytes));
@@ -170,7 +187,10 @@ fn measure(
         });
         initialization = Some(weights);
     }
-    let dir = directory(out, arm, name, seed, updates);
+    let mut dir = directory(out, arm, name, seed, updates);
+    if target.is_some() {
+        dir.push("declared-target");
+    }
     let result_file = dir.join("result.json");
     if train_missing {
         fs::create_dir_all(&dir)?;
@@ -197,29 +217,50 @@ fn measure(
     } else {
         return Err("catalog result disappeared before replay".into());
     };
-    let gpu = if let Some(result) = &saved {
-        result["gpu"].clone()
+    let (gpu, final_step) = if let Some(result) = &saved {
+        let step = if target.is_some() {
+            result["source_target"]["final_step"]
+                .as_u64()
+                .and_then(|n| usize::try_from(n).ok())
+                .filter(|&n| n <= schedule)
+                .ok_or("source target checkpoint has an invalid final step")?
+        } else {
+            updates
+        };
+        (result["gpu"].clone(), step)
     } else {
         let weights = initialization.unwrap_or_else(|| layout::initialize_model(&cfg, seed));
         let mut e = Engine::new(cfg, &weights)?;
         let mut training = Training::new(&e, seed, schedule)?;
         let held = &task.splits[&task.selection];
         let mut history = fs::File::create(&history_file)?;
-        for step in 0..=updates {
-            if step.is_multiple_of(observe) || step == updates {
-                let point = json!({"step":step,"correct":exact(&mut e, held)?,"examples_seen":training.seen});
+        let mut stop = updates;
+        let mut first_hit = false;
+        for step in 0..=schedule {
+            if step.is_multiple_of(observe) || step == stop {
+                let correct = exact(&mut e, held)?;
+                let mut point =
+                    json!({"step":step,"correct":correct,"examples_seen":training.seen});
+                if let Some(rule) = target
+                    && !first_hit
+                    && rule.met(correct, held.len() as u64)
+                {
+                    first_hit = true;
+                    stop = rule.stop_after_crossing(step, observe, schedule);
+                    let bytes = weight_bytes(&e)?;
+                    publish(&dir, "first-target.f32", &bytes)?;
+                    point["target_weights_sha256"] = json!(hash(&bytes));
+                }
                 writeln!(history, "{point}")?;
             }
-            if step < updates {
-                training.update(&mut e, &task.splits["train"], batch, step)?;
+            if step == stop {
+                break;
             }
+            training.update(&mut e, &task.splits["train"], batch, step)?;
         }
         history.sync_all()?;
-        let values = e.parameters.read()?;
-        layout::validate(&e.config, &values)?;
-        let bytes: Vec<_> = values.iter().flat_map(|v| v.to_le_bytes()).collect();
-        publish(&dir, "weights.f32", &bytes)?;
-        json!(e.cuda.name())
+        publish(&dir, "weights.f32", &weight_bytes(&e)?)?;
+        (json!(e.cuda.name()), stop)
     };
     if matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
         catalog::add_parity_probes(&mut task)?;
@@ -227,15 +268,16 @@ fn measure(
     let mut cfg = task_config(&row, &task, false)?;
     cfg.head = head;
     let bytes = fs::read(weights_file)?;
-    let (scores, causality) = score_checkpoint(cfg, &task, &bytes)?;
+    let (scores, causality) = score_checkpoint(cfg.clone(), &task, &bytes)?;
     let train = task.splits["train"].len();
     let held = task.splits[&task.selection].len() as u64;
     let epoch = train.div_ceil(batch);
-    let steps = (0..updates)
+    let steps = (0..final_step)
         .step_by(observe)
-        .chain(std::iter::once(updates));
+        .chain(std::iter::once(final_step));
     let mut history = BufReader::new(fs::File::open(history_file)?).lines();
     let (mut first_99, mut initial, mut last) = (None, 0, 0);
+    let mut crossing = None;
     for step in steps {
         let point: Value = serde_json::from_str(&history.next().ok_or("missing observation")??)?;
         last = point["correct"]
@@ -253,12 +295,47 @@ fn measure(
         if last * 100 >= 99 * held {
             first_99.get_or_insert(step);
         }
+        if let Some(rule) = target
+            && crossing.is_none()
+            && rule.met(last, held)
+        {
+            if step > updates {
+                return Err("first source target lies beyond the search window".into());
+            }
+            let digest = point["target_weights_sha256"]
+                .as_str()
+                .ok_or("first source target is missing its recorded weights digest")?;
+            crossing = Some((step, last, digest.to_owned()));
+        }
     }
     if history.next().is_some() || scores[&task.selection]["correct"] != last {
         return Err("history failed final held-out checkpoint replay".into());
     }
     let mut result = json!({"protocol":protocol, "initial_correct":initial, "first_99":first_99,
         "scores":scores, "weights_sha256":hash(&bytes), "gpu":gpu});
+    if let Some(rule) = target {
+        let expected = crossing.as_ref().map_or(updates, |(step, _, _)| {
+            rule.stop_after_crossing(*step, observe, schedule)
+        });
+        if final_step != expected {
+            return Err("checkpoint did not stop at the declared observation".into());
+        }
+        let first = if let Some((step, count, digest)) = crossing {
+            let first_bytes = fs::read(dir.join("first-target.f32"))?;
+            if hash(&first_bytes) != digest {
+                return Err("first source target checkpoint digest mismatch".into());
+            }
+            let (scores, _) = score_checkpoint(cfg, &task, &first_bytes)?;
+            if scores[&task.selection]["correct"] != count {
+                return Err("first source target checkpoint score mismatch".into());
+            }
+            json!({"step":step,"weights_sha256":digest,"scores":scores})
+        } else {
+            Value::Null
+        };
+        result["source_target"] = json!({"first":first,"final_step":final_step,
+            "final_target_met":rule.met(last,held),"budget_exhausted":final_step == schedule});
+    }
     if let Some(probe) = causality {
         result["causality"] = probe;
     }

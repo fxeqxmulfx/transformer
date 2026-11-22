@@ -41,6 +41,22 @@ The report counts the original and additional tasks separately. Each
 and its primary score. Its `test_splits` object gives exact counts and
 denominators for the available independent test and transfer splits.
 
+For a broader catalog case scored by exact sequence accuracy,
+`catalog-target CASE SEED SEARCH_UPDATES RUN_DIR` uses the target and
+post-crossing window from the frozen source plan. For example, a case with
+a 95% target and 500 additional updates saves the first 95% checkpoint
+and continues to the first scheduled observation at least 500 updates
+later, capped by the source budget. A search window can end before the
+full budget if no crossing has occurred. Repeating the command reloads
+and scores the first and final weights, including available test splits.
+Training uses Phasor's original WSD AdamW throughout.
+
+On modular addition at seed 0, the broader plan's 250-update cadence
+first observed 99% at update 1,000 (4,704/4,705). The retention checkpoint
+at 1,500 scored 4,705/4,705. Both weight digests matched independently
+trained fixed-budget runs ending at the respective update. The canonical
+addition case observes every 19 updates.
+
 The input-phase model passed all 25 original short tasks at seed 0.
 Independent reloads reproduced every primary held-out score. First crossings
 ranged from 68 updates on shifted Boolean AND to 1,957 on the modular

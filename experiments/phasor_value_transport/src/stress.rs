@@ -13,6 +13,7 @@ pub mod embedding;
 mod language_probes;
 mod recall_gap;
 pub mod report;
+mod source_target;
 
 fn cases() -> Result<Vec<Value>> {
     let suite: Value = serde_json::from_str(arithmetic::ORIGINAL35)?;
