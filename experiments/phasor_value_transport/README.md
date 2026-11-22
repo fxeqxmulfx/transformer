@@ -528,6 +528,14 @@ at initialization on both easy recall and key/value binding. The Dyck
 crossings remained 500 / 250 / 500. Blocks took 750 / 500 / 500, and
 depth-one C-RASP took 1,250 / 1,000 / 500.
 
+On NV11, the closed-gain and single-write models both first classified
+all 9,409 pairs at update 750 in each seed. At 750 and 3,000, all twelve
+snapshots were byte-identical to the corresponding 0.75-gain successor
+snapshot. Reloading each file independently reproduced 4,704/4,704 on
+training and 4,705/4,705 on held-out pairs. The `shared-values` and
+`nv11-score` commands in the Kernite v0.6.0 section reproduce the result
+with `closed-relation-boost` or `single-write-gain`.
+
 The context-backoff trial reads the last completed triple starting with
 the previous and current tokens. A resolved closed relation has priority.
 If neither read supplies a value, the model uses the ordinary successor
