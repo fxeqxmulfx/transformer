@@ -137,4 +137,28 @@ example (φ : Fin 3 → ℚ) (η : Fin 2 → ℚ) :
     (pumpkin.addGainBiased φ).AddRealizes (addSwitch pumpkin η φ) :=
   BiasedGraph.AddRealizes.addSwitch (Ω := pumpkin.addGainBiased φ) rfl η
 
+/-- The three parallel links connect the two vertices. -/
+theorem pumpkin_connected (x y : Fin 2) : Nonempty (pumpkin.Walk x y) := by
+  have h2 : ∀ u : Fin 2, u = 0 ∨ u = 1 := by decide
+  rcases h2 x with rfl | rfl <;> rcases h2 y with rfl | rfl
+  · exact ⟨.nil _⟩
+  · exact ⟨.cons 0 (show pumpkin.Joins 0 0 1 from Or.inl ⟨rfl, rfl⟩) (.nil _)⟩
+  · exact ⟨.cons 0 (show pumpkin.Joins 0 1 0 from Or.inr ⟨rfl, rfl⟩) (.nil _)⟩
+  · exact ⟨.nil _⟩
+
+/-- The first two links of `pumpkin` form a cycle. -/
+theorem pumpkin_pair_isCycle : pumpkin.IsCycle ({0, 1} : Set (Fin 3)) :=
+  ⟨0, _, pumpkin_cycleWalk (i := 0) (j := 1) (by decide), by
+    rw [Walk.edgeSet_append_reverse]
+    ext f
+    simp [pumpkinWalk, Walk.edgeSet, Walk.edges, or_comm]⟩
+
+/-- That cycle is unbalanced for the additive gain `(1, 0, 0)`. -/
+theorem pumpkin_pair_unbalanced :
+    ({0, 1} : Set (Fin 3)) ∉ pumpkin.addBalancedCycles (![1, 0, 0] : Fin 3 → ℚ) := fun h => by
+  obtain ⟨-, η, hη⟩ := mem_addBalancedCycles_iff.1 h
+  have h0 : -η 0 + 1 + η 1 = 0 := hη 0 (by simp)
+  have h1 : -η 0 + 0 + η 1 = 0 := hη 1 (by simp)
+  exact one_ne_zero (add_left_cancel (add_right_cancel (h0.trans h1.symm)))
+
 end Transformer.GainMatroid
