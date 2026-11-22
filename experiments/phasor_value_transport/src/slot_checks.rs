@@ -6,7 +6,15 @@ use super::*;
 pub(crate) fn disable_reads(cfg: &Config, weights: &mut [f32], disabled: &[usize]) {
     let l = slot_memory::Layout::new(cfg);
     let memory = &mut weights[architecture::memory_start(cfg)..];
-    for &i in disabled {
+    for i in 0..l.gate_mode.count() {
+        let cancel = if l.gate_mode.shared() && i == 2 {
+            disabled.contains(&2) && disabled.contains(&3)
+        } else {
+            disabled.contains(&i)
+        };
+        if !cancel {
+            continue;
+        }
         let g = l.gates + i * l.d;
         memory[g..g + l.d].fill(0.);
         memory[l.bias + i] = if i < 2 { -1. } else { 0. };
@@ -24,7 +32,7 @@ pub(super) fn fixture(cfg: &Config, w: &mut [f32]) {
     for x in &mut memory[l.values..l.gates] {
         *x = rng.gauss(0., 0.002) as f32;
     }
-    for x in &mut memory[l.gates..l.bias + 4] {
+    for x in &mut memory[l.gates..l.end()] {
         *x = rng.gauss(0., 0.08) as f32;
     }
     if cfg.head.has_triple_phase() {
@@ -137,6 +145,7 @@ pub(super) fn audit(path: &Path) -> Result<()> {
     ] {
         let mut changed = w.clone();
         disable_reads(&cfg, &mut changed, disabled);
+        engine.mute_slot_proposals(disabled)?;
         if cfg.head.has_triple_phase() && name == "only_structural_reads" {
             changed[slot_memory::phase_outputs(&cfg)].fill(0.);
         }

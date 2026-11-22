@@ -57,6 +57,16 @@ impl Engine {
         score(self)
     }
 
+    /// Disable an individual structural proposal for a fixed-weight measurement.
+    pub(crate) fn mute_slot_proposals(&self, disabled: &[usize]) -> Result<()> {
+        let Some(context_layer::ContextLayer::Slots(layer)) = &self.context_layer else {
+            return Err("proposal removal requires a dense slot layer".into());
+        };
+        layer.tape.borrow_mut().routing.mute_proposals =
+            [disabled.contains(&2), disabled.contains(&3)];
+        Ok(())
+    }
+
     /// Count visited dense memory vectors with nonzero learned coordinates
     /// in the latest forward. Used solely by the independent checkpoint audit.
     pub(crate) fn written_slot_reads(&self) -> Result<usize> {
@@ -94,7 +104,7 @@ pub(super) struct SlotLayer {
 impl SlotLayer {
     pub(super) fn new(e: &Engine) -> Result<Self> {
         let layout = Layout::new(&e.config);
-        let count = layout.bias + 4;
+        let count = layout.end();
         Ok(Self {
             access: Rc::default(),
             phase: e
@@ -141,7 +151,7 @@ impl SlotLayer {
 
     fn prepare_weights(&self, e: &Engine, tape: &mut Tape) -> Result<()> {
         let l = &self.layout;
-        let n = l.bias + 4;
+        let n = l.end();
         let p = e.parameters.at(self.offset).ok_or("missing slot weights")?;
         let buffer = self.parameters.borrow();
         self.copy(buffer.ptr(), p, n)?;

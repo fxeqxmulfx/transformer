@@ -9,6 +9,7 @@ use crate::{
 pub struct Layout {
     pub d: usize,
     pub slots: usize,
+    pub gate_mode: crate::head::ReadGates,
     pub gate_scales: [f32; 4],
     pub dictionary: usize,
     pub values: usize,
@@ -31,11 +32,12 @@ pub fn parameter_count(head: crate::head::Head, d: usize, k: usize) -> usize {
     } else {
         0
     };
-    4 * d + (k + k * k + 4) * d + 4 + phase
+    let gates = head.read_gates().count();
+    4 * d + (k + k * k + gates) * d + gates + phase
 }
 
 pub fn phase_start(cfg: &Config) -> usize {
-    architecture::memory_start(cfg) + Layout::new(cfg).bias + 4
+    architecture::memory_start(cfg) + Layout::new(cfg).end()
 }
 
 pub fn phase_outputs(cfg: &Config) -> std::ops::Range<usize> {
@@ -51,15 +53,21 @@ impl Layout {
         let dictionary = 0;
         let values = dictionary + slots * d;
         let gates = values + slots * slots * d;
+        let gate_mode = cfg.head.read_gates();
         Self {
             d,
             slots,
+            gate_mode,
             gate_scales: scales(d, cfg.head.unit_read_gates()),
             dictionary,
             values,
             gates,
-            bias: gates + 4 * d,
+            bias: gates + gate_mode.count() * d,
         }
+    }
+
+    pub fn end(&self) -> usize {
+        self.bias + self.gate_mode.count()
     }
 
     pub fn prototype<'a>(&self, w: &'a [f32], slot: usize) -> &'a [f32] {
@@ -107,10 +115,10 @@ pub fn initialize(cfg: &Config, seed: u32, w: &mut [f32]) {
     {
         dst.copy_from_slice(&a);
     }
-    w[l.values..l.bias + 4].fill(0.);
+    w[l.values..l.end()].fill(0.);
     if cfg.head.has_triple_phase() {
         let channels = crate::head::MEMORY_WIDTH * l.d;
-        let phase = &mut w[l.bias + 4..l.bias + 4 + 3 * channels];
+        let phase = &mut w[l.end()..l.end() + 3 * channels];
         let (increments, readout) = phase.split_at_mut(channels);
         let mut rng = Random::new(seed.wrapping_add(30_000));
         let scale = (l.d as f64).sqrt().recip();
@@ -137,6 +145,7 @@ pub struct Routing {
     reads: Option<slot_orbits::Reads>,
     graph: slot_orbits::TripleGraph,
     peer_search: Option<crate::head::PeerSearch>,
+    pub(crate) mute_proposals: [bool; 2],
     inverse: Vec<f32>,
 }
 
@@ -288,6 +297,15 @@ pub fn scales(d: usize, unit_gates: bool) -> [f32; 4] {
 }
 
 impl Row {
+    fn structural(&self, branch: usize, shared: bool) -> Option<usize> {
+        match branch {
+            2 if shared => self.constant.or(self.transport),
+            2 => self.constant,
+            3 => self.transport,
+            _ => unreachable!(),
+        }
+    }
+
     pub fn read<'a>(
         &self,
         branch: usize,
@@ -298,8 +316,9 @@ impl Row {
         match branch {
             0 => Some(h),
             1 => self.cell.map(|i| l.row(w, i)),
-            2 => self.constant.map(|i| l.prototype(w, i)),
-            3 => self.transport.map(|i| l.prototype(w, i)),
+            2 | 3 => self
+                .structural(branch, l.gate_mode.shared())
+                .map(|i| l.prototype(w, i)),
             _ => unreachable!(),
         }
     }
@@ -362,11 +381,15 @@ pub fn forward(
             coefficients: [scale[0], scale[1], 0., 0.],
             ..Row::default()
         };
-        for (i, g) in row.coefficients.iter_mut().enumerate() {
+        let position = l.gate_mode.position(r, length);
+        for (i, g) in row.coefficients[..l.gate_mode.count()]
+            .iter_mut()
+            .enumerate()
+        {
             let mut value = w[l.bias + i];
-            if !r.is_multiple_of(length) {
+            if let Some(position) = position {
                 let weight = l.gates + i * d;
-                value += units * dot(&w[weight..weight + d], &hidden[(r - 1) * d..r * d]);
+                value += units * dot(&w[weight..weight + d], &hidden[position * d..][..d]);
             }
             *g += scale[i] * value;
         }
@@ -374,12 +397,12 @@ pub fn forward(
             let cell = cell as usize;
             let reads = route.reads.as_ref().expect("routing was refreshed");
             row.cell = Some(cell);
-            row.constant =
-                (reads.constant[cell] != ABSENT).then_some(reads.constant[cell] as usize);
-            row.transport =
-                (reads.transport[cell] != ABSENT).then_some(reads.transport[cell] as usize);
+            row.constant = (!route.mute_proposals[0] && reads.constant[cell] != ABSENT)
+                .then_some(reads.constant[cell] as usize);
+            row.transport = (!route.mute_proposals[1] && reads.transport[cell] != ABSENT)
+                .then_some(reads.transport[cell] as usize);
         }
-        for (i, &c) in row.coefficients.iter().enumerate() {
+        for (i, &c) in row.coefficients[..l.gate_mode.count()].iter().enumerate() {
             if let Some(value) = row.read(i, l, w, h) {
                 for (y, &v) in dst.iter_mut().zip(value) {
                     *y += c * v;
@@ -404,28 +427,30 @@ pub fn backward(
     let scale = l.gate_scales;
     let units = (d as f32).sqrt().recip();
     let mut dh = vec![0.; rows.len() * d];
-    dw[l.dictionary..l.bias + 4].fill(0.);
+    dw[l.dictionary..l.end()].fill(0.);
     for (r, row) in rows.iter().enumerate() {
         let v = &dy[r * d..(r + 1) * d];
         let h = &hidden[r * d..(r + 1) * d];
-        for (i, &c) in row.coefficients.iter().enumerate() {
+        for (i, &c) in row.coefficients[..l.gate_mode.count()].iter().enumerate() {
             let Some(value) = row.read(i, l, w, h) else {
                 continue;
             };
             let dg = scale[i] * dot(value, v);
             dw[l.bias + i] += dg;
-            if !r.is_multiple_of(length) {
+            if let Some(position) = l.gate_mode.position(r, length) {
                 for j in 0..d {
                     let k = l.gates + i * d + j;
-                    dw[k] += units * dg * hidden[(r - 1) * d + j];
-                    dh[(r - 1) * d + j] += units * dg * w[k];
+                    dw[k] += units * dg * hidden[position * d + j];
+                    dh[position * d + j] += units * dg * w[k];
                 }
             }
             let dst = match i {
                 0 => &mut dh[r * d..(r + 1) * d],
                 1 => &mut dw[l.values + row.cell.unwrap() * d..][..d],
-                2 => &mut dw[l.dictionary + row.constant.unwrap() * d..][..d],
-                3 => &mut dw[l.dictionary + row.transport.unwrap() * d..][..d],
+                2 | 3 => {
+                    let slot = row.structural(i, l.gate_mode.shared()).unwrap();
+                    &mut dw[l.dictionary + slot * d..][..d]
+                }
                 _ => unreachable!(),
             };
             for (g, &z) in dst.iter_mut().zip(v) {
@@ -442,23 +467,47 @@ mod capacity_tests {
 
     #[test]
     fn removing_search_preserves_dictionary_and_unit_gates() {
-        let full = PeerRead::UNIT_GRAPH;
-        let removed = PeerRead {
-            search: None,
-            ..full
-        };
-        for read in [full, removed] {
-            for head in [Head::PeerTriple(read), Head::PeerTriplePhase(read)] {
-                assert_eq!(super::scales(64, head.unit_read_gates()), [1., 1., 8., 8.]);
-                assert_eq!(capacity(head, 64, 97), 97);
-                assert_eq!(capacity(head, 64, 300), 64);
+        for full in [
+            PeerRead::UNIT_GRAPH,
+            PeerRead::SHARED_GRAPH,
+            PeerRead::CURRENT_GRAPH,
+        ] {
+            let removed = PeerRead {
+                search: None,
+                ..full
+            };
+            for read in [full, removed] {
+                for head in [Head::PeerTriple(read), Head::PeerTriplePhase(read)] {
+                    assert_eq!(head.read_gates(), full.gates);
+                    assert_eq!(super::scales(64, head.unit_read_gates()), [1., 1., 8., 8.]);
+                    assert_eq!(capacity(head, 64, 97), 97);
+                    assert_eq!(capacity(head, 64, 300), 64);
+                }
             }
         }
-        let original = Head::peer_phase(full.search.unwrap());
+        let original = Head::peer_phase(PeerRead::UNIT_GRAPH.search.unwrap());
         assert_eq!(
             super::scales(64, original.unit_read_gates()),
             [0.125, 64., 8., 8.]
         );
+    }
+
+    #[test]
+    fn shared_gates_remove_one_affine_map_and_respect_sequence_boundaries() {
+        use crate::head::ReadGates;
+        for read in [PeerRead::SHARED_GRAPH, PeerRead::CURRENT_GRAPH] {
+            let width = 64;
+            let count = |r| super::parameter_count(Head::PeerTriplePhase(r), width, 97);
+            assert_eq!(count(PeerRead::UNIT_GRAPH) - count(read), width + 1);
+        }
+        for position in 0..6 {
+            let prior = (position % 3 != 0).then(|| position - 1);
+            assert_eq!(ReadGates::SharedPrevious.position(position, 3), prior);
+            assert_eq!(
+                ReadGates::SharedCurrent.position(position, 3),
+                Some(position)
+            );
+        }
     }
 
     #[test]

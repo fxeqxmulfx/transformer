@@ -2393,6 +2393,67 @@ for seed in 0 1 2; do
 done
 ```
 
+### One gate for the two structural reads
+
+The constant and transport searches each return a learned dictionary vector
+or abstain. Only one can return a vector at the same position. The model can
+therefore select the available vector before applying one learned affine
+gate. This removes one weight vector and one bias, taking NV11 from
+1,464,020 to 1,463,891 trainable parameters. Both three-gate models use the
+same operation on every prefix. Their gates read either the previous hidden
+state or the current causal hidden state.
+
+Lean gives the condition under which a shared gate recovers the two original
+coefficients on their respective supports. A counterexample gives the same
+gate input in two roles that require different coefficients. A second result
+shows that a current-state affine gate can reproduce a previous-state gate
+whenever the previous state is an affine function of the current one.
+[Exclusive reads and causal gate inputs](../../src/Transformer/Phasor/TripleTransport/StructuralGate.lean)
+
+Each row uses fresh models for seeds 0, 1 and 2. Key–value scores count
+exact generated sequences including termination. Each of the two splits
+contains 512 prompts. The blinded-difference counts are out of 4,705 at
+update 228, the first primary crossing for all nine runs.
+
+| Gates and input state | GPT key–value first update | Reloaded primary | Independent test | Blinded absolute difference |
+| --- | --- | --- | --- | --- |
+| Four, previous | 1,088 / 960 / 768 | 508 / 509 / 509 | 507 / 507 / 506 | 4,663 / 4,699 / 4,692 |
+| Three, previous | 896 / 896 / 896 | 508 / 509 / 509 | 500 / 507 / 509 | 4,662 / 4,699 / 4,692 |
+| Three, current | 640 / 768 / 640 | 511 / 508 / 510 | 499 / 506 / 507 | 4,702 / 4,705 / 4,705 |
+
+The current-state gates reached the primary key–value target sooner on every
+seed. Their independent scores decreased on seeds 0 and 1 and increased on
+seed 2 relative to the four-gate model. Both three-gate models solved all
+4,704 training and 4,705 held-out NV11 pairs on every seed at update 250.
+On the four-gate key–value checkpoints, removing the context vector reduced
+the primary counts to 16, 16 and 17. Keeping only the context vector gave
+507, 508 and 509. Keeping only the structural reads gave 1, 0 and 0.
+The three-gate previous-state model also reached 4,610/4,656 on the
+associative-divisor long case at update 1,216 on seed 0.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.StructuralGate
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+for arm in triple-unit-graph triple-shared-graph triple-current-graph; do
+    cargo +stable build --release --locked --features "fp32-affine-reference,$arm"
+    bin=./target/release/phasor-value-transport
+    "$bin" check
+    for seed in 0 1 2; do
+        for task in gpt-probe-key-value-binding arithmetic-abs-diff-blind arithmetic-cubic-product; do
+            "$bin" cell "$task" "$seed" "runs/$arm"
+            "$bin" probes "$task" "$seed" "runs/$arm"
+        done
+        "$bin" nv11-score "runs/$arm/arithmetic-cubic-product/seed$seed/weights.f32"
+        "$bin" slot-ablate gpt-probe-key-value-binding "$seed" "runs/$arm"
+    done
+    if [ "$arm" = triple-shared-graph ]; then
+        "$bin" cell associative-divisor-n2-l1-w0 0 "runs/$arm"
+        "$bin" probes associative-divisor-n2-l1-w0 0 "runs/$arm"
+    fi
+done
+```
+
 ### Sharing exact witness signatures
 
 In later witness rounds, several pairs of contexts can supply the same

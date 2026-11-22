@@ -78,13 +78,14 @@ fn mixture(delta: f64) -> Result<()> {
     let l = Layout {
         d,
         slots: k,
+        gate_mode: architecture::HEAD.read_gates(),
         gate_scales: slot_memory::scales(d, architecture::HEAD.unit_read_gates()),
         dictionary: 0,
         values: k * d,
         gates: (k + k * k) * d,
-        bias: (k + k * k + 4) * d,
+        bias: (k + k * k + architecture::HEAD.read_gates().count()) * d,
     };
-    let mut w = vec![0.; l.bias + 4];
+    let mut w = vec![0.; l.end()];
     let mut rng = random::Random::new(4147);
     for i in 0..k {
         for j in 0..d {
@@ -130,7 +131,7 @@ fn mixture(delta: f64) -> Result<()> {
         ("prototypes", 0..l.values),
         ("direct_values", l.values..l.gates),
         ("prefix_gates", l.gates..l.bias),
-        ("biases", l.bias..l.bias + 4),
+        ("biases", l.bias..l.end()),
         ("prefix_hidden", 0..h.len()),
     ] {
         let on_hidden = name == "prefix_hidden";
@@ -199,7 +200,7 @@ fn check_addresses() -> Result<()> {
         cfg.vocab = vocab;
         let l = Layout::new(&cfg);
         let rows = 3 * length;
-        let mut w = vec![0.; l.bias + 4];
+        let mut w = vec![0.; l.end()];
         for coordinate in &mut w[..l.values] {
             *coordinate = rng.gauss(0., 1.) as f32;
         }

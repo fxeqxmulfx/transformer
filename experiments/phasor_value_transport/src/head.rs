@@ -11,19 +11,47 @@ pub enum PeerSearch {
     Iterated(Option<crate::slot_orbits::RoleEvidence>),
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ReadGates {
+    WidthScaled,
+    Unit,
+    SharedPrevious,
+    SharedCurrent,
+}
+
+impl ReadGates {
+    pub const fn shared(self) -> bool {
+        matches!(self, Self::SharedPrevious | Self::SharedCurrent)
+    }
+
+    pub const fn count(self) -> usize {
+        if self.shared() { 3 } else { 4 }
+    }
+
+    pub fn position(self, row: usize, length: usize) -> Option<usize> {
+        if self == Self::SharedCurrent {
+            Some(row)
+        } else if row.is_multiple_of(length) {
+            None
+        } else {
+            Some(row - 1)
+        }
+    }
+}
+
 /// The search and gate scales are independent so a fixed-weight ablation
 /// can remove proposals while retaining the trained affine coordinates.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PeerRead {
     pub search: Option<PeerSearch>,
-    pub unit_gates: bool,
+    pub gates: ReadGates,
 }
 
 impl PeerRead {
     const fn new(search: PeerSearch) -> Self {
         Self {
             search: Some(search),
-            unit_gates: false,
+            gates: ReadGates::WidthScaled,
         }
     }
 
@@ -31,33 +59,62 @@ impl PeerRead {
         search: Some(PeerSearch::Iterated(Some(
             crate::slot_orbits::RoleEvidence::WITH_GRAPH,
         ))),
-        unit_gates: true,
+        gates: ReadGates::Unit,
+    };
+
+    pub const SHARED_GRAPH: Self = Self {
+        gates: ReadGates::SharedPrevious,
+        ..Self::UNIT_GRAPH
+    };
+    pub const CURRENT_GRAPH: Self = Self {
+        gates: ReadGates::SharedCurrent,
+        ..Self::UNIT_GRAPH
     };
 
     const fn id(self, with_phase: bool) -> &'static str {
         use crate::slot_orbits::RoleEvidence;
-        let (trunk, phase) = match (self.unit_gates, self.search) {
-            (true, Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH)))) => (
+        let (trunk, phase) = match (self.gates, self.search) {
+            (
+                ReadGates::SharedCurrent,
+                Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH))),
+            ) => (
+                "phasor-triple-graph-current-gate-trunk-v1",
+                "phasor-triple-graph-current-gate-32-v1",
+            ),
+            (
+                ReadGates::SharedPrevious,
+                Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH))),
+            ) => (
+                "phasor-triple-graph-shared-gate-trunk-v1",
+                "phasor-triple-graph-shared-gate-32-v1",
+            ),
+            (ReadGates::Unit, Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH)))) => (
                 "phasor-triple-graph-unit-gates-trunk-v1",
                 "phasor-triple-graph-unit-gates-32-v1",
             ),
-            (false, Some(PeerSearch::Aligned)) => (
+            (ReadGates::WidthScaled, Some(PeerSearch::Aligned)) => (
                 "phasor-triple-peer-trunk-v1",
                 "phasor-triple-peer-phase-32-v1",
             ),
-            (false, Some(PeerSearch::Witnesses)) => (
+            (ReadGates::WidthScaled, Some(PeerSearch::Witnesses)) => (
                 "phasor-triple-witness-trunk-v1",
                 "phasor-triple-witness-phase-32-v1",
             ),
-            (false, Some(PeerSearch::Iterated(None))) => (
+            (ReadGates::WidthScaled, Some(PeerSearch::Iterated(None))) => (
                 "phasor-triple-iterated-witness-trunk-v1",
                 "phasor-triple-iterated-witness-32-v1",
             ),
-            (false, Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH)))) => (
+            (
+                ReadGates::WidthScaled,
+                Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH))),
+            ) => (
                 "phasor-triple-graph-relations-trunk-v1",
                 "phasor-triple-graph-relations-32-v1",
             ),
-            (false, Some(PeerSearch::Iterated(Some(RoleEvidence::OBSERVED_ROLES)))) => (
+            (
+                ReadGates::WidthScaled,
+                Some(PeerSearch::Iterated(Some(RoleEvidence::OBSERVED_ROLES))),
+            ) => (
                 "phasor-triple-role-overlap-trunk-v1",
                 "phasor-triple-role-overlap-32-v1",
             ),
@@ -137,6 +194,8 @@ impl Head {
             "triple-witness-phase" => Ok(Self::peer_phase(PeerSearch::Witnesses)),
             "triple-iterated-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(None))),
             "triple-unit-graph" => Ok(Self::PeerTriplePhase(PeerRead::UNIT_GRAPH)),
+            "triple-shared-graph" => Ok(Self::PeerTriplePhase(PeerRead::SHARED_GRAPH)),
+            "triple-current-graph" => Ok(Self::PeerTriplePhase(PeerRead::CURRENT_GRAPH)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,
             )))),
@@ -289,14 +348,15 @@ impl Head {
         }
     }
 
+    pub const fn read_gates(self) -> ReadGates {
+        match self.peer_read() {
+            Some(read) => read.gates,
+            None => ReadGates::WidthScaled,
+        }
+    }
+
     pub const fn unit_read_gates(self) -> bool {
-        matches!(
-            self.peer_read(),
-            Some(PeerRead {
-                unit_gates: true,
-                ..
-            })
-        )
+        !matches!(self.read_gates(), ReadGates::WidthScaled)
     }
 
     pub fn peer_search(self) -> Option<PeerSearch> {
