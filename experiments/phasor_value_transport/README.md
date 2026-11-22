@@ -256,6 +256,20 @@ AdamW can then adjust the two amplitudes independently. Lean proves that
 any prescribed pair of amplitudes has unique parameters whenever the input
 contains both kinds of read. [Independent-gain theorem](../../src/Transformer/Phasor/DisplacementGain.lean)
 
+## Centered prefix frequencies
+
+The separate centered-frequency trial reads the average tied embedding of
+all tokens strictly before the previous position and subtracts the current
+token's embedding. It adds half this vector before the residual RMS of the
+full-displacement model with base gain 0.75. Empty histories contribute
+zero. The rule uses every earlier occurrence, including repetitions, and
+introduces no trained parameters.
+
+Lean proves that the same update can be applied to the vocabulary
+coefficients of the embedding read. Constant histories contribute zero
+when they equal the current token, and all logits on two-token inputs
+agree with the 0.75-gain model. [Centered-frequency derivation](../../src/Transformer/Phasor/PrefixFrequency.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
