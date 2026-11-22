@@ -918,6 +918,23 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/crossed-nv11/nv11-train-3000.f32 shifts
 ```
 
+## Householder memory
+
+Each embedding supplies three learned slopes per channel. With a leading
+one these form a four-dimensional normal `n`. The recurrent update
+reflects the state `s` across the plane perpendicular to `n` by subtracting
+`2 * dot(n,s) * n / dot(n,n)`. The denominator is at least one. A learned
+projection returns the difference between the current and initial states
+to the contextual feature. The initial state is also learned.
+
+Each prefix preserves its initial state norm. Two identical consecutive
+embeddings cancel exactly in this memory at any insertion point and
+after any suffix. Other pairs can depend on order. Two attainable planes
+send the same starting vector to opposite endpoints when applied in
+reverse order. Lean also gives the transpose on the state and the full
+gradient with respect to the normal, including its denominator.
+[Householder memory proofs](../../src/Transformer/Phasor/HouseholderMemory.lean)
+
 ## Associative write memory
 
 Every pair of consecutive embeddings contributes to a learned matrix.
