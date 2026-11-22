@@ -1,10 +1,10 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all **153 GPT task/seed runs** across 40 short
+One Phasor architecture passed all **156 GPT task/seed runs** across 41 short
 and eleven long tasks on Kernite v0.6.0. Each task used its own weights and
 the original AdamW. The same architecture classified all 9,409 NV11 pairs
 correctly at update 750 in every seed. The newest short task is
-`(a + b)^32 mod 97`, which all three seeds passed at update 250.
+`(a + b)^48 mod 97`, which all three seeds passed at update 250.
 
 The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
@@ -41,14 +41,16 @@ length-96 test sets. On NV11 all three seeds reached 99% at update 500
 and classified all 4,704 training and 4,705 held-out pairs correctly at
 both 750 and 3,000 updates.
 
-On the source task `arithmetic-sum-pow32`, the three closed-relation
-checkpoints scored 4,703 / 4,698 / 4,704 out of 4,705 held-out pairs at
-update 250. Each scored 51/51 on the held-out zero-first-operand pairs.
-The longest cell took 2.37 seconds. The predecessor reached the same
-scores with byte-identical weights in all three seeds. This admission
-extends coverage to 120 short and 33 long GPT runs. The checkpoint
-replay audit also covers the three NV11 runs, for 156 verified files.
+Both power-of-sum source tasks passed at update 250 in every seed. The
+longest cell took 2.37 seconds. The predecessor produced byte-identical
+weights on all six runs. The checkpoint replay audit covers 123 short
+and 33 long GPT runs and three NV11 runs, for 159 verified checkpoints.
 [Source case definitions](../convex_stress_arithmetic_data/references/definitions.json)
+
+| Function modulo 97 | Held-out pairs, out of 4,705, seeds 0 / 1 / 2 | Held-out first operand zero, out of 51, seeds 0 / 1 / 2 |
+| --- | ---: | ---: |
+| `(a + b)^32` | 4,703 / 4,698 / 4,704 | 51 / 51 / 51 |
+| `(a + b)^48` | 4,684 / 4,672 / 4,698 | 50 / 50 / 50 |
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ClosedRelations
@@ -775,7 +777,7 @@ original test splits.
 Elapsed time fell by 10.30% as a geometric mean across the three L3 pairs.
 The slowest inclusive run took 65.23 seconds, within the long-tier limit.
 Use the same commands with `language-l3` and the two feature flags in the
-table comparison. The 153-run default uses the closed-relation architecture.
+table comparison. The full-suite default uses the closed-relation architecture.
 
 The longer transfer test evaluates every twelve-letter binary word and
 all 256 eight-letter words after repeating each letter 32 times. The
