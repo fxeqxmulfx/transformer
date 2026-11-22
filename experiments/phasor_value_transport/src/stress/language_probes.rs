@@ -31,18 +31,22 @@ fn labeled(spec: &Value, letters: Vec<i64>, blocks: usize) -> basis::Result<Exam
     Ok(catalog::sequence_example(row))
 }
 
-pub(super) fn add(task: &mut Task, name: &str) -> basis::Result<()> {
+fn exhaustive(spec: &mut Value, blocks: usize, width: usize) -> basis::Result<Vec<Example>> {
+    spec["length"] = json!(width + 1);
+    (0..1 << width)
+        .map(|bits| labeled(spec, word(bits, width), blocks))
+        .collect()
+}
+
+pub(super) fn add(task: &mut Task, name: &str, extended: bool) -> basis::Result<()> {
     let mut spec = basis::dataset::specification(name)?;
     if spec["task"] != "blocks" || spec["neutral_fraction"] != 0.0 {
         return Err("expected the neutral-free binary block language".into());
     }
     let blocks = basis::generator::number(&spec, "blocks")?;
     spec["min_length"] = Value::Null;
-    spec["length"] = json!(LETTERS + 1);
-    let exhaustive = (0..1 << LETTERS)
-        .map(|bits| labeled(&spec, word(bits, LETTERS), blocks))
-        .collect::<basis::Result<Vec<_>>>()?;
-    task.splits.insert(EXHAUSTIVE.into(), exhaustive);
+    task.splits
+        .insert(EXHAUSTIVE.into(), exhaustive(&mut spec, blocks, LETTERS)?);
 
     spec["length"] = json!(128);
     let mut alternating = Vec::new();
@@ -57,6 +61,32 @@ pub(super) fn add(task: &mut Task, name: &str) -> basis::Result<()> {
     }
     task.splits
         .insert("test/alternating-tail-128".into(), alternating);
+    if extended {
+        task.splits.insert(
+            "test/exhaustive-12-letters".into(),
+            exhaustive(&mut spec, blocks, 12)?,
+        );
+        let seeds = exhaustive(&mut spec, blocks, 8)?;
+        let repeats = 32;
+        spec["length"] = json!(1 + 8 * repeats);
+        let mut stretched = Vec::with_capacity(seeds.len());
+        for seed in seeds {
+            let letters = seed.tokens[1..]
+                .iter()
+                .flat_map(|&t| std::iter::repeat_n(t, repeats))
+                .collect();
+            let long = labeled(&spec, letters, blocks)?;
+            if !long.targets[1..]
+                .chunks_exact(repeats)
+                .zip(&seed.targets[1..])
+                .all(|(copies, label)| copies.iter().all(|t| t == label))
+            {
+                return Err("stretched prefix labels differ from the original word".into());
+            }
+            stretched.push(long);
+        }
+        task.splits.insert("test/stutter-8x32".into(), stretched);
+    }
     Ok(())
 }
 

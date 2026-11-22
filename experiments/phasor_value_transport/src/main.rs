@@ -219,7 +219,9 @@ fn main() -> Result<()> {
             stress::run(name, seed.parse()?, Path::new(out), Some(steps.parse()?)),
         [op, name, seed, out] if op == "replay" => stress::replay(name, seed.parse()?, Path::new(out)),
         [op, name, seed, out] if op == "probes" =>
-            stress::score_checkpoint(name, seed.parse()?, Path::new(out), true),
+            stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::Tests),
+        [op, name, seed, out, mode] if op == "probes" && mode == "extended" =>
+            stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::ExtendedLanguage),
         [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values") => {
             cell(arm, Path::new(dest), SEED, WINDOW)
         }
@@ -232,6 +234,6 @@ fn main() -> Result<()> {
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes} | extensions [REGISTRY.tsv] | shared-check [WIDTH] | successor-alignment CASE [HOPS] | closed-alignment CASE | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes} | extensions [REGISTRY.tsv] | shared-check [WIDTH] | successor-alignment CASE [HOPS] | closed-alignment CASE | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
     }
 }

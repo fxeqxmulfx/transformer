@@ -14,7 +14,7 @@ fn cases() -> Result<Vec<Value>> {
     Ok(suite["tasks"].as_array().ok_or("missing tasks")?.clone())
 }
 
-fn task_config(row: &Value, task: &Task) -> Result<Config> {
+fn task_config(row: &Value, task: &Task, reserve_training_batch: bool) -> Result<Config> {
     let c = &row["case"];
     let number = |key: &str| c[key].as_u64().map(|x| x as usize).ok_or("missing shape");
     let mut cfg = config(number("batch")?)?;
@@ -33,7 +33,11 @@ fn task_config(row: &Value, task: &Task) -> Result<Config> {
         .map(|s| s.parse::<std::num::NonZeroUsize>())
         .transpose()?
         .map_or(evaluation, |n| n.get().min(evaluation));
-    cfg.max_batch = cfg.max_batch.max(cap);
+    cfg.max_batch = if reserve_training_batch {
+        cfg.max_batch.max(cap)
+    } else {
+        cap
+    };
     cfg.gain = cfg.heads as f32 / cfg.width as f32;
     cfg.warmup = schedule::Schedule::new(number("max_updates")?)?.warmup;
     cfg.vocab = task.vocab;
@@ -102,7 +106,7 @@ pub fn extensions(registry: &str) -> Result<()> {
 pub fn routes() -> Result<()> {
     for row in cases()? {
         let task = data::build(&row)?;
-        let cfg = task_config(&row, &task)?;
+        let cfg = task_config(&row, &task, true)?;
         println!(
             "{}\t{}\t{}\t{}\t{}",
             row["name"].as_str().unwrap(),
@@ -156,7 +160,7 @@ fn publish(dir: &Path, name: &str, bytes: &[u8]) -> Result<()> {
 pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<()> {
     let started = std::time::Instant::now();
     let (row, task) = load(name)?;
-    let cfg = task_config(&row, &task)?;
+    let cfg = task_config(&row, &task, true)?;
     let extra = pair_memory::parameters(&cfg);
     let batch = row["case"]["batch"].as_u64().unwrap() as usize;
     let budget = row["case"]["max_updates"].as_u64().unwrap() as usize;
@@ -276,18 +280,30 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
 /// Re-score a saved model using the pinned split and decoder. For pair tasks
 /// also evaluate the zero row with the fitted tables, then with all tables reset.
 pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
-    score_checkpoint(name, seed, out, false)
+    score_checkpoint(name, seed, out, ProbeSet::Validation)
 }
 
-pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) -> Result<()> {
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum ProbeSet {
+    Validation,
+    Tests,
+    ExtendedLanguage,
+}
+
+pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
+    let test_splits = probes != ProbeSet::Validation;
+    let extended = probes == ProbeSet::ExtendedLanguage;
+    if extended && !name.starts_with("language-l") {
+        return Err("extended probes require a source block language".into());
+    }
     let (row, mut task) = load(name)?;
     if test_splits && matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
         catalog::add_parity_probes(&mut task)?;
     }
     if test_splits && name.starts_with("language-l") {
-        language_probes::add(&mut task, name).map_err(|err| err.to_string())?;
+        language_probes::add(&mut task, name, extended).map_err(|err| err.to_string())?;
     }
-    let cfg = task_config(&row, &task)?;
+    let cfg = task_config(&row, &task, !extended)?;
     let dest = out.join(name).join(format!("seed{seed}"));
     let result: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;
     report::validate(&row, seed, &dest, &result)?;
