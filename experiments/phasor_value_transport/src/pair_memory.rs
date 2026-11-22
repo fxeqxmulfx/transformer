@@ -13,8 +13,9 @@ const DEFAULT_MODEL: bool = !cfg!(any(
 ));
 #[cfg(all(feature = "relation-paths", feature = "prefix-frequency"))]
 compile_error!("choose one additional prefix read per trial");
-const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half");
-pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
+const THREE_QUARTER_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "successor-gain-three-quarters");
+const HALF_GAIN: bool = cfg!(feature = "prefix-successor-half");
+pub const SUCCESSOR: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
 pub const LEARN_BONUS: bool = cfg!(feature = "successor-bonus");
 pub const HIT_GAIN: bool = LEARN_BONUS || cfg!(feature = "successor-hit-gain");
@@ -24,7 +25,7 @@ pub const HIT_FACTOR: f32 = if cfg!(feature = "successor-hit-gain-seven-quarters
 } else {
     2.0
 };
-pub const INITIAL_GAIN: f32 = if cfg!(feature = "successor-gain-three-quarters") {
+pub const INITIAL_GAIN: f32 = if THREE_QUARTER_GAIN {
     0.75
 } else if HALF_GAIN {
     0.5
@@ -33,7 +34,7 @@ pub const INITIAL_GAIN: f32 = if cfg!(feature = "successor-gain-three-quarters")
 };
 pub const DISPLACEMENT: f32 = if cfg!(feature = "successor-displacement-quarter") {
     0.25
-} else if cfg!(feature = "successor-displacement") {
+} else if DEFAULT_MODEL || cfg!(feature = "successor-displacement") {
     1.0
 } else {
     0.0
@@ -98,7 +99,7 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-two-hop-relation-values-v1"
 } else if cfg!(feature = "prefix-frequency") {
     "phasor-centered-prefix-frequency-v1"
-} else if cfg!(feature = "successor-gain-three-quarters") {
+} else if THREE_QUARTER_GAIN {
     "phasor-successor-displacement-gain075-v1"
 } else if cfg!(feature = "transition-count") {
     if cfg!(feature = "successor-displacement-quarter") {

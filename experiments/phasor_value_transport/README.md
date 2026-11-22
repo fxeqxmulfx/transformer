@@ -1,13 +1,72 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One prefix-and-successor Phasor passed every original short and long GPT
-stress task and seven additional catalog tasks in seeds 0, 1 and 2. Each
-task trained its own weights using the same architecture and original AdamW.
-Every NV11 seed classified all 9,409 pairs correctly at update 1,250.
+One Phasor architecture passed all 126 GPT task/seed runs in the matched
+suite and classified all 9,409 NV11 pairs correctly at update 750 in every
+seed. Each task trained its own weights with the original AdamW. The model
+uses a causal successor read, full tied embedding displacement and a learned
+residual gain initialized to 0.75.
 
 The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
 split. [MRCR V2 stress test](../mrcr_v2/README.md)
+
+## Selected architecture on Kernite v0.6.0
+
+Every position uses the same causal prefix scan and the same 17 learned
+tables. Let `b` be the current token and `r` its most recently observed
+successor in the completed prefix, with `r = b` for an unwritten key.
+The residual adds `E[r] − E[b]` before RMS normalization, scales the
+normalized vector by the learned gain and adds it to the backbone feature.
+The half-gain predecessor and this model have the same parameter count.
+[Tied read and score identities](../../src/Transformer/Phasor/SuccessorDisplacement.lean)
+
+| Matched tier | Passing task/seed runs | Epoch ratio to half-gain predecessor | Faster / tied / slower |
+| --- | ---: | ---: | ---: |
+| Short, including seven catalog additions | 96/96 | 0.6223 | 67 / 23 / 6 |
+| Long | 30/30 | 0.7550 | 17 / 9 / 4 |
+
+Each ratio is the geometric mean of examples consumed to the first 99%
+crossing for pairs that required training on both models. Key/value binding
+seed 1 newly passed at initialization. The other two binding seeds took 64
+updates, down from 448. Easy recall fell from 400 to 150 in all seeds.
+NV11 first crossed 99% at 500 updates in each seed, then became exhaustive
+at 750. All three were still exhaustive at 3,000.
+
+Ten pairs needed more updates. Hard depth rose from 750 to 1,000 in seed 0
+and 1,250 to 1,750 in seed 1. Branch amplitudes rose from 352 to 416 and
+320 to 352 in those seeds. Dyck seeds 0 and 2 rose from 250 to 500.
+Associative divisor went from 646 / 684 / 570 to 988 / 1,064 / 627.
+Fibonacci seed 1 went from 7,480 to 12,920.
+
+Fresh v0.6.0 training on the same GTX 1050 also reduced elapsed time.
+Easy recall took 15.15–15.28 seconds with the selected build and
+33.96–34.06 seconds with the half-gain build. Key/value binding took
+0.32–0.77 seconds and 3.49–3.52 seconds respectively. The build run first
+alternated across the six pairs. Each timed cell reproduced its model's
+earlier weights and observation history byte for byte.
+
+For a paired comparison, use a fresh directory for each model. The plain
+FP32 build selects the 0.75-gain model. The baseline build uses
+`fp32-affine-reference,prefix-successor-half`.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorDisplacement
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+for arm in half selected; do
+    features=fp32-affine-reference
+    if [ "$arm" = half ]; then features=$features,prefix-successor-half; fi
+    cargo +stable build --release --locked --features "$features"
+    bin=./target/release/phasor-value-transport
+    "$bin" shared-check
+    ./run_stress.sh cell "runs/v060-$arm" extended
+    ./run_stress.sh replay "runs/v060-$arm" extended
+    "$bin" extended-report "runs/v060-$arm" > "runs/v060-$arm/report.json"
+done
+git show 849aa3be:experiments/phasor_value_transport/extensions.tsv > runs/seven-extensions.tsv
+jq -s --rawfile extensions runs/seven-extensions.tsv -f compare.jq \
+    runs/v060-half/report.json runs/v060-selected/report.json
+```
 
 ## Kernite v0.6.0
 
@@ -27,7 +86,7 @@ Elapsed times for each matched NV11 run were within 0.02 seconds.
 
 Under v0.6.0 every seed reached exact NV11 at update 750 and retained it at
 3,000. Independent reloads of all six snapshots classified every one of
-the 4,704 training pairs and 4,705 held-out pairs correctly. The selected
+the 4,704 training pairs and 4,705 held-out pairs correctly. The previous
 half-gain architecture first reached this score at 1,250 updates.
 
 ```sh
@@ -63,9 +122,9 @@ The comparison took 0.30% longer on the GTX 1050 as a geometric mean, with
 five of six runs slower. The selected kernel keeps the remainder instruction.
 [Circular address identity](../../src/Transformer/Phasor/TransportedValues.lean)
 
-## Selected prefix and successor model
+## Half-gain prefix and successor model
 
-The default Phasor applies one causal update at every token. Its prefix state
+The half-gain predecessor applies one causal update at every token. Its prefix state
 is the XOR of preceding token IDs. Its key/value memory records the latest
 completed successor of each token. The linear-sum table reads the prefix
 state plus the current token modulo the vocabulary size, and the original
@@ -90,7 +149,7 @@ The expanded benchmark has 32 short tasks and ten long tasks. All 96 short
 and 30 long task/seed runs reached 99% and replayed independently.
 
 Fresh key/value-binding runs on the GTX 1050 took 5.41, 5.32 and 3.95 s
-for the incumbent, and 3.51, 3.50 and 3.50 s for the selected model.
+for the incumbent, and 3.51, 3.50 and 3.50 s for the half-gain model.
 The models reached 99% at 704 / 704 / 512 and 448 / 448 / 448 updates,
 respectively. Each timing included setup, training and scoring on an
 otherwise idle compute device. The arm run first alternated by seed.
@@ -104,7 +163,7 @@ the baseline reproduction commands below.
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorValues
 cd experiments/phasor_value_transport
-cargo +stable build --release --locked --features fp32-affine-reference
+cargo +stable build --release --locked --features fp32-affine-reference,prefix-successor-half
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
 PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor-half extended
@@ -164,8 +223,8 @@ epoch ratio at most one, and a verified gain to become the default.
 The full displacement retained all 120 GPT passes on the cohort with five
 extensions. The geometric-mean epoch ratio to the incumbent was 1.0122
 across the 90 short runs and 0.9906 across the 30 long runs. Blocks seed 2
-rose from 1,250 to 9,750 updates. The short-tier result kept the incumbent
-as the default. All three full-displacement NV11 seeds reached exact
+rose from 1,250 to 9,750 updates. The half-gain model without displacement
+won that comparison. All three full-displacement NV11 seeds reached exact
 classification at update 1,250 and remained exact at 3,000.
 
 At 5,000 MQAR
@@ -480,7 +539,7 @@ sequences. On length 64 it scored 19, 15 and 17 of 64. Dyck scored 64/64
 on the ordinary test in all seeds and 19, 18 and 18 of 64 at length 64.
 The admissions describe the declared held-out selection split.
 
-The selected half-gain model added `language-l1`, the one-block language
+The half-gain model added `language-l1`, the one-block language
 with no neutral tokens. It trained on lengths 32–64. At update 250 each
 seed classified all 512 length-128 validation sequences and all 512 separate
 length-128 test sequences correctly. The slowest fresh cell took 40.64 s,

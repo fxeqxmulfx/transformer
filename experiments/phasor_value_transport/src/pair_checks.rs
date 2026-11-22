@@ -80,7 +80,8 @@ fn profile(p: usize, length: usize) -> Result<()> {
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
-    let expected_gain = if cfg!(feature = "successor-gain-three-quarters") {
+    let selected = pair_memory::MODEL == "phasor-successor-displacement-gain075-v1";
+    let expected_gain = if selected || cfg!(feature = "successor-gain-three-quarters") {
         0.75
     } else if pair_memory::MODEL == "phasor-prefix-successor-half-v1"
         || cfg!(feature = "successor-displacement")
@@ -126,7 +127,7 @@ fn profile(p: usize, length: usize) -> Result<()> {
         let prefix = &tokens[i - i % length..i];
         let mut v = residual(prefix, b, p as u32, d, &theta[start..gain_at]);
         let mut gain = f64::from(theta[gain_at]);
-        if cfg!(feature = "successor-displacement") {
+        if selected || cfg!(feature = "successor-displacement") {
             let r = prefix
                 .windows(2)
                 .rev()
