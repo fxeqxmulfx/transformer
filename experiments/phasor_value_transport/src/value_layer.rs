@@ -347,12 +347,12 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream | Head::CompactStream | Head::PhasePrefix => {
+            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }
                 self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
-                if self.config.head == Head::PhasePrefix {
+                if self.config.head.is_phase() {
                     self.hidden_layer = Some(hidden_layer::HiddenLayer::new(self)?);
                 }
             }

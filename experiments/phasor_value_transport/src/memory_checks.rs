@@ -210,7 +210,7 @@ pub(super) fn check_directions(
     e.forward(tokens, labels, batch, length)?;
     e.backward(batch, length)?;
     let gradients = e.gradients.read()?;
-    let phase = e.config.head == Head::PhasePrefix;
+    let phase = e.config.head.is_phase();
     let count = labels.iter().filter(|&&y| y != u32::MAX).count();
     let mut rng = random::Random::new(142);
     for (name, indices) in groups {

@@ -14,6 +14,7 @@ pub enum Head {
     InputProduct,
     CompactStream,
     PhasePrefix,
+    InputPhase,
 }
 
 impl Head {
@@ -30,6 +31,7 @@ impl Head {
             "input-product" => Ok(Self::InputProduct),
             "compact" => Ok(Self::CompactStream),
             "phase" => Ok(Self::PhasePrefix),
+            "input-phase" => Ok(Self::InputPhase),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -45,14 +47,19 @@ impl Head {
             Self::InputProduct => "phasor-causal-product-input-32-v1",
             Self::CompactStream => "phasor-compact-ffn-stream-v1",
             Self::PhasePrefix => "phasor-learned-phase-prefix-32-v1",
+            Self::InputPhase => "phasor-learned-input-phase-32-v1",
         }
+    }
+
+    pub const fn is_phase(self) -> bool {
+        matches!(self, Self::PhasePrefix | Self::InputPhase)
     }
 
     pub fn parameters(self, cfg: &Config) -> usize {
         match self {
             Self::Original => 0,
             Self::Stream | Self::CompactStream => 4 * cfg.width,
-            Self::PhasePrefix => (4 + 3 * MEMORY_WIDTH) * cfg.width,
+            Self::PhasePrefix | Self::InputPhase => (4 + 3 * MEMORY_WIDTH) * cfg.width,
             Self::Relations => pair_memory::parameters(cfg),
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 4 * MEMORY_WIDTH * cfg.width
@@ -68,11 +75,12 @@ impl Head {
             | Self::Recurrent
             | Self::Bounded
             | Self::InputProduct
-            | Self::PhasePrefix => {
+            | Self::PhasePrefix
+            | Self::InputPhase => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
                 let start = crate::architecture::memory_start(cfg);
                 let end = crate::architecture::start(cfg) + self.parameters(cfg);
-                let rows = if self == Self::PhasePrefix {
+                let rows = if self.is_phase() {
                     MEMORY_WIDTH
                 } else {
                     3 * MEMORY_WIDTH
@@ -85,7 +93,7 @@ impl Head {
                     }
                 };
                 initialize(input, cfg.width);
-                if matches!(self, Self::Bounded | Self::InputProduct | Self::PhasePrefix) {
+                if self.is_phase() || matches!(self, Self::Bounded | Self::InputProduct) {
                     output.fill(0.);
                 } else {
                     initialize(output, MEMORY_WIDTH);

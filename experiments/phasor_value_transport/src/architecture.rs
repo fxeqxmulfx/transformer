@@ -11,9 +11,14 @@ pub const RAW: bool = !cfg!(any(
 pub const BOUNDED: bool = cfg!(feature = "bounded-memory-read");
 pub const INPUT_PRODUCT: bool = cfg!(feature = "causal-product-input");
 pub const COMPACT: bool = cfg!(feature = "compact-ffn");
-pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read");
+pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
+pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read") || INPUT_PHASE;
 const _: () = {
-    let variants = BOUNDED as u8 + INPUT_PRODUCT as u8 + COMPACT as u8 + PHASE_MEMORY as u8;
+    let variants = BOUNDED as u8
+        + INPUT_PRODUCT as u8
+        + COMPACT as u8
+        + cfg!(feature = "phase-prefix-read") as u8
+        + INPUT_PHASE as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -21,7 +26,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if PHASE_MEMORY {
+pub const HEAD: Head = if INPUT_PHASE {
+    Head::InputPhase
+} else if PHASE_MEMORY {
     Head::PhasePrefix
 } else if COMPACT {
     Head::CompactStream
@@ -50,7 +57,7 @@ pub fn start(cfg: &Config) -> usize {
 /// Other hidden memories project the fixed-mean contextual vectors directly.
 pub fn memory_start(cfg: &Config) -> usize {
     start(cfg)
-        + if cfg.head == Head::PhasePrefix {
+        + if cfg.head.is_phase() {
             4 * cfg.width
         } else {
             0

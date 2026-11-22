@@ -402,6 +402,25 @@ The contextual branch retains its sensitivity to sequence order. Both
 branches are causal, and their gradient contributions add at the input.
 [Input phase proofs](../../src/Transformer/Phasor/InputPhaseRead.lean)
 
+The native forward projects the input RMS once per position. Its reverse
+pass adds the phase gradient to the backbone gradient before differentiating
+that RMS. At widths 64 and 128, an independent FP64 calculation starting
+from the normalized inputs and contextual vectors reproduced the GPU logits
+within `8.31e-7`. All twelve directional checks passed. Swapping two
+unequal segments of arbitrary dense vectors changed the isolated endpoint
+phase read by at most `2.99e-7` and its reordered input gradient by at
+most `2.99e-8`.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.InputPhaseRead
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,input-phase-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/input-phase 3500
+"$bin" probes basis-parity16 0 runs/input-phase
+```
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

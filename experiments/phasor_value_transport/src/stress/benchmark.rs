@@ -32,7 +32,12 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
     }
     let causality = if matches!(
         engine.config.head,
-        Head::Transition | Head::Recurrent | Head::Bounded | Head::InputProduct | Head::PhasePrefix
+        Head::Transition
+            | Head::Recurrent
+            | Head::Bounded
+            | Head::InputProduct
+            | Head::PhasePrefix
+            | Head::InputPhase
     ) {
         let sample = task.splits[&task.selection]
             .iter()

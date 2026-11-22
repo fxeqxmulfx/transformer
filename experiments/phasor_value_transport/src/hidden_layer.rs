@@ -38,7 +38,7 @@ impl HiddenLayer {
         let cfg = &e.config;
         let rows = cfg.max_batch * cfg.max_length;
         let memory = match cfg.head {
-            Head::PhasePrefix => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
+            Head::PhasePrefix | Head::InputPhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::Transition => Memory::Transitions {
                 kernels: transition::kernels::Kernels::load(&e.cuda)?,
                 probabilities: e.cuda.alloc(rows * cfg.max_length)?,
@@ -51,7 +51,7 @@ impl HiddenLayer {
             _ => return Err("expected a learned hidden memory".into()),
         };
         let input_weights = crate::architecture::memory_start(cfg);
-        let (projected_channels, read_channels) = if cfg.head == Head::PhasePrefix {
+        let (projected_channels, read_channels) = if cfg.head.is_phase() {
             (M, 2 * M)
         } else {
             (3 * M, M)
@@ -72,7 +72,14 @@ impl HiddenLayer {
         })
     }
 
-    // The only input activations are the backbone's contextual embedding features.
+    fn projection_input(e: &Engine) -> P {
+        if e.config.head == Head::InputPhase {
+            e.embed_norm.ptr()
+        } else {
+            e.last.ptr()
+        }
+    }
+
     pub(super) fn features(&self) -> &F {
         &self.merged
     }
@@ -82,7 +89,7 @@ impl HiddenLayer {
         let d = e.config.width;
         e.linear(
             self.projected.ptr(),
-            e.last.ptr(),
+            Self::projection_input(e),
             self.input_weights,
             rows,
             self.projected_channels,
@@ -227,17 +234,26 @@ impl HiddenLayer {
         e.linear_back(
             self.dhidden.ptr(),
             self.dprojected.ptr(),
-            e.last.ptr(),
+            Self::projection_input(e),
             self.input_weights,
             rows,
             self.projected_channels,
             d,
         )?;
+        if e.config.head != Head::InputPhase {
+            self.add_projection_gradient(e, e.dlast.ptr(), rows)?;
+        }
+        Ok(())
+    }
+
+    // Add the VJP at the same activation that supplied the forward projection.
+    pub(super) fn add_projection_gradient(&self, e: &Engine, target: P, rows: usize) -> Result<()> {
+        let d = e.config.width;
         unsafe {
             e.ops.add(
                 grid(rows * d),
-                e.dlast.ptr(),
-                e.dlast.ptr(),
+                target,
+                target,
                 self.dhidden.ptr(),
                 (rows * d) as u32,
             )?;
