@@ -347,7 +347,7 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::SharedBilinear | Head::ScalarPhase | Head::PrefixToeplitz | Head::TiedToeplitz | Head::TwoFrame | Head::TripleTransport | Head::BipartiteTriple | Head::LookupTripleTransport | Head::TriplePhase | Head::LookupTriplePhase | Head::PeerTriple | Head::PeerTriplePhase | Head::FourierTransport | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::CrossedContext | Head::Householder | Head::AssociativeReflection | Head::PeriodicReflection => {
+            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::SharedBilinear | Head::ScalarPhase | Head::PrefixToeplitz | Head::TiedToeplitz | Head::TwoFrame | Head::TripleTransport | Head::BipartiteTriple | Head::LookupTripleTransport | Head::TriplePhase | Head::LookupTriplePhase | Head::PeerTriple(_) | Head::PeerTriplePhase(_) | Head::FourierTransport | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::CrossedContext | Head::Householder | Head::AssociativeReflection | Head::PeriodicReflection => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }

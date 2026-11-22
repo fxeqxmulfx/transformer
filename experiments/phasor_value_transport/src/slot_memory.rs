@@ -17,7 +17,7 @@ pub struct Layout {
 
 pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
     const LIMIT: usize = 256;
-    if head.uses_lookup_capacity() && (!head.uses_peer_reads() || vocab <= LIMIT) {
+    if head.uses_lookup_capacity() && (head.peer_search().is_none() || vocab <= LIMIT) {
         vocab.min(LIMIT)
     } else {
         width.min(128)
@@ -134,7 +134,7 @@ pub struct Routing {
     priority: Vec<usize>,
     reads: Option<slot_orbits::Reads>,
     graph: slot_orbits::TripleGraph,
-    peer_reads: bool,
+    peer_search: Option<crate::head::PeerSearch>,
     inverse: Vec<f32>,
 }
 
@@ -147,7 +147,7 @@ impl Routing {
     pub fn new(head: crate::head::Head) -> Self {
         Self {
             graph: slot_orbits::TripleGraph::new(head.separates_triple_roles()),
-            peer_reads: head.uses_peer_reads(),
+            peer_search: head.peer_search(),
             ..Self::default()
         }
     }
@@ -196,8 +196,18 @@ impl Routing {
     pub fn install(&mut self, l: &Layout, bank: Vec<u32>, priority: Vec<usize>) {
         if self.bank != bank || self.priority != priority {
             let mut reads = self.graph.complete(l.slots, &bank, &priority);
-            if self.peer_reads {
-                slot_orbits::fill_from_peers(l.slots, &bank, &mut reads.transport);
+            match self.peer_search {
+                Some(crate::head::PeerSearch::Aligned) => {
+                    slot_orbits::fill_from_peers(l.slots, &bank, &mut reads.transport)
+                }
+                Some(crate::head::PeerSearch::Witnesses) => slot_orbits::fill_from_witnesses(
+                    l.slots,
+                    &bank,
+                    &priority,
+                    &reads.constant,
+                    &mut reads.transport,
+                ),
+                None => {}
             }
             self.reads = Some(reads);
             self.bank = bank;
@@ -420,15 +430,17 @@ pub fn backward(
 #[cfg(test)]
 mod capacity_tests {
     use super::capacity;
-    use crate::head::Head;
+    use crate::head::{Head, PeerSearch};
 
     #[test]
     fn peer_trunk_and_phase_share_the_same_bounded_dictionary() {
-        for head in [Head::PeerTriple, Head::PeerTriplePhase] {
-            assert_eq!(capacity(head, 64, 97), 97);
-            assert_eq!(capacity(head, 64, 256), 256);
-            assert_eq!(capacity(head, 64, 257), 64);
-            assert_eq!(capacity(head, 192, 257), 128);
+        for search in [PeerSearch::Aligned, PeerSearch::Witnesses] {
+            for head in [Head::PeerTriple(search), Head::PeerTriplePhase(search)] {
+                assert_eq!(capacity(head, 64, 97), 97);
+                assert_eq!(capacity(head, 64, 256), 256);
+                assert_eq!(capacity(head, 64, 257), 64);
+                assert_eq!(capacity(head, 192, 257), 128);
+            }
         }
     }
 }

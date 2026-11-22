@@ -63,7 +63,10 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         if arm == "phase_only" {
             crate::slot_checks::disable_reads(&cfg, &mut weights, &[0, 1, 2, 3]);
         } else {
-            for outputs in weights[span.clone()].as_chunks_mut::<{ 2 * MEMORY_WIDTH }>().0 {
+            for outputs in weights[span.clone()]
+                .as_chunks_mut::<{ 2 * MEMORY_WIDTH }>()
+                .0
+            {
                 if matches!(arm, "without_sine" | "without_phase") {
                     outputs[..MEMORY_WIDTH].fill(0.);
                 }
@@ -113,8 +116,8 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     drop(dense_model);
     // Remove the entire phase parameter block. The remaining weights belong
     // to the corresponding original trunk, including its learned frequencies.
-    let base_head = if cfg.head.uses_peer_reads() {
-        Head::PeerTriple
+    let base_head = if let Some(search) = cfg.head.peer_search() {
+        Head::PeerTriple(search)
     } else if cfg.head.uses_lookup_capacity() {
         Head::LookupTripleTransport
     } else {

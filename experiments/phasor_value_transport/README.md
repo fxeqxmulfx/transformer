@@ -1967,6 +1967,65 @@ done
 "$bin" slot-phase-ablate basis-parity16 0 "$out"
 ```
 
+### Shared witnesses across contexts
+
+The `triple-witness-phase` model reads pairs of outputs observed at the
+same hidden key in two contexts. It joins two context pairs when they
+share six distinct ordered output pairs. Each connected group pools the
+outputs it has observed for each source value. At a missing key, the
+model intersects the nonempty candidate sets supplied by other contexts.
+It uses a singleton supported by at least two contexts wherever the
+constant and triple reads have abstained. The same search runs on every
+task. It adds no weights and visits up to 16 reference rows ordered by
+learned support, breaking ties by the learned prototype order.
+
+Lean proves that pooling preserves relation membership when observations
+are sound and six shared pairs distinguish different relations. If every
+active candidate set contains the true output, their intersection singles
+it out exactly when every competing output is excluded by some active
+context. For squared shifts over a field of characteristic other than two,
+three distinct shared pairs already identify the squared shift. The search
+uses only learned output pairs. [Shared-witness proofs](../../src/Transformer/Phasor/TripleTransport/OverlappingEvidence.lean)
+
+| Case | Seed | First passing update | Correct on reloaded primary split |
+| --- | --- | --- | --- |
+| Sum-square, short | 0 / 1 / 2 | 171 / 190 / 228 | 4,705 / 4,686 / 4,705 of 4,705 |
+| Square-sum, short | 0 / 1 / 2 | 171 / 171 / 190 | 4,687 / 4,668 / 4,661 of 4,705 |
+| Sum-cube, long | 0 / 1 / 2 | 171 / 171 / 228 | 4,705 / 4,705 / 4,686 of 4,705 |
+| 16-bit parity, long | 0 | 1,000 | 157/157 |
+| NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
+
+All three NV11 checkpoints also classified all 4,704 training pairs
+correctly. The parity checkpoint scored 504/512 on the independent test,
+58/64 at 32 bits and 64/64 at 64 bits. The arithmetic cases supply one
+evaluation split. Disabling only the witness search on the seed 0
+checkpoints reduced sum-square to 58/4,705 and sum-cube to 104/4,705.
+Absolute difference scored 4,306/4,705 at the seed 0 screen cutoff of
+950 updates.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.OverlappingEvidence
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-witness-phase
+bin=./target/release/phasor-value-transport
+out=runs/shared-witness-phase
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    for task in arithmetic-sum-square arithmetic-square-sum arithmetic-sum-cube; do
+        "$bin" cell "$task" "$seed" "$out"
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" cell arithmetic-cubic-product "$seed" "$out"
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done
+"$bin" cell basis-parity16 0 "$out"
+"$bin" probes basis-parity16 0 "$out"
+"$bin" slot-ablate arithmetic-sum-square 0 "$out"
+"$bin" slot-ablate arithmetic-sum-cube 0 "$out"
+"$bin" screen arithmetic-abs-diff 0 "$out" 950
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.

@@ -65,7 +65,7 @@ impl HiddenLayer {
         let cfg = &e.config;
         let rows = cfg.max_batch * cfg.max_length;
         let memory = match cfg.head {
-            Head::PhasePrefix | Head::InputPhase | Head::SingleReflection | Head::TriplePhase | Head::LookupTriplePhase | Head::PeerTriplePhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
+            Head::PhasePrefix | Head::InputPhase | Head::SingleReflection | Head::TriplePhase | Head::LookupTriplePhase | Head::PeerTriplePhase(_) => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::SharedBilinear | Head::ScalarPhase => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),

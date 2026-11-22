@@ -57,6 +57,7 @@ const _: () = {
         + cfg!(feature = "triple-phase-read") as u8
         + cfg!(feature = "triple-lookup-phase") as u8
         + cfg!(feature = "triple-peer-phase") as u8
+        + cfg!(feature = "triple-witness-phase") as u8
         + cfg!(feature = "learned-stream-read") as u8
         + FOURIER as u8
         + REFLECTION_PHASE as u8
@@ -82,7 +83,9 @@ pub const HEAD: Head = if FOURIER {
 } else if cfg!(feature = "triple-lookup-phase") {
     Head::LookupTriplePhase
 } else if cfg!(feature = "triple-peer-phase") {
-    Head::PeerTriplePhase
+    Head::PeerTriplePhase(crate::head::PeerSearch::Aligned)
+} else if cfg!(feature = "triple-witness-phase") {
+    Head::PeerTriplePhase(crate::head::PeerSearch::Witnesses)
 } else if cfg!(feature = "triple-transport") {
     Head::TripleTransport
 } else if cfg!(feature = "triple-bipartite") {

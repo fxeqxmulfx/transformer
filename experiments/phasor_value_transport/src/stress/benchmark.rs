@@ -70,8 +70,8 @@ fn score_checkpoint_with(
             | Head::LookupTripleTransport
             | Head::TriplePhase
             | Head::LookupTriplePhase
-            | Head::PeerTriple
-            | Head::PeerTriplePhase
+            | Head::PeerTriple(_)
+            | Head::PeerTriplePhase(_)
             | Head::FourierTransport
             | Head::ReflectionPhase
             | Head::SingleReflection

@@ -53,7 +53,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         let mut shared = Engine::new(shared_cfg, &original)?;
         results.insert("shared_roles", score(&mut shared, &original)?);
     }
-    if cfg.head == head::Head::PeerTriplePhase {
+    if cfg.head.peer_search().is_some() {
         let mut cfg = cfg.clone();
         let slots = crate::slot_memory::capacity(cfg.head, cfg.width, cfg.vocab);
         cfg.head = if slots

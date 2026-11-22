@@ -202,3 +202,92 @@ fn insufficient_peer_evidence_preserves_existing_reads() {
     fill_from_peers(5, &bank, &mut read);
     assert_eq!(read, old);
 }
+#[test]
+fn independent_witnesses_recover_ambiguous_outputs_and_preserve_known_reads() {
+    let n = 67;
+    let gold = |i: usize, x: usize| -> u32 {
+        let z = (3 * i + 7 * x + 4) % n;
+        ((11 * z * z + 9) % n) as u32
+    };
+    let mut bank = vec![ABSENT; n * n];
+    let mut rng = 16991_u64;
+    for i in 0..n {
+        for x in 0..n {
+            rng = rng.wrapping_mul(6364136223846793005).wrapping_add(17);
+            if (rng >> 32) % 8 < 5 {
+                bank[i * n + x] = gold(i, x);
+            }
+        }
+    }
+    let mut read = vec![ABSENT; n * n];
+    let constant = vec![ABSENT; n * n];
+    let priority: Vec<_> = (0..n).rev().collect();
+    read[0] = n as u32 - 1;
+    slot_orbits::fill_from_witnesses(n, &bank, &priority, &constant, &mut read);
+    assert_eq!(read[0], n as u32 - 1);
+    let (mut resolved, mut missing) = (0, 0);
+    for i in 0..n {
+        for x in 0..n {
+            let at = i * n + x;
+            if at == 0 || bank[at] != ABSENT {
+                continue;
+            }
+            missing += 1;
+            if read[at] != ABSENT {
+                assert_eq!(read[at], gold(i, x));
+                resolved += 1;
+            }
+        }
+    }
+    assert!(resolved * 100 >= missing * 99, "{resolved}/{missing}");
+
+    let row_name = |i: usize| (3 * i + 4) % n;
+    let key_name = |x: usize| (11 * x + 2) % n;
+    let image_name = |v: u32| {
+        if v == ABSENT {
+            v
+        } else {
+            (19 * v + 5) % n as u32
+        }
+    };
+    let mut renamed_bank = vec![ABSENT; n * n];
+    let mut expected = vec![ABSENT; n * n];
+    for i in 0..n {
+        for x in 0..n {
+            let at = row_name(i) * n + key_name(x);
+            renamed_bank[at] = image_name(bank[i * n + x]);
+            expected[at] = image_name(read[i * n + x]);
+        }
+    }
+    let mut renamed_read = vec![ABSENT; n * n];
+    renamed_read[row_name(0) * n + key_name(0)] = image_name(n as u32 - 1);
+    let renamed_priority: Vec<_> = priority.iter().copied().map(row_name).collect();
+    slot_orbits::fill_from_witnesses(
+        n,
+        &renamed_bank,
+        &renamed_priority,
+        &constant,
+        &mut renamed_read,
+    );
+    assert_eq!(renamed_read, expected);
+}
+
+#[test]
+fn few_observations_produce_no_peer_read() {
+    let n = 13;
+    let mut bank = vec![ABSENT; n * n];
+    for (i, row) in bank.chunks_exact_mut(n).enumerate() {
+        row[i] = i as u32;
+    }
+    let mut output = vec![ABSENT; n * n];
+    output[4] = 3;
+    let old = output.clone();
+    slot_orbits::fill_from_witnesses(
+        n,
+        &bank,
+        &(0..n).collect::<Vec<_>>(),
+        &vec![ABSENT; n * n],
+        &mut output,
+    );
+    assert_eq!(old, output);
+}
