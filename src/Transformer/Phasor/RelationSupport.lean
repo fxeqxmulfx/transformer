@@ -31,6 +31,54 @@ theorem mem_continuingSources [Fintype α] [DecidableEq α] (R : α → Option �
   | none => simp [continuingSources, hb]
   | some b => simp [continuingSources, hb, Option.isSome_iff_exists]
 
+/-- Updating a single edge changes the old source's own continuation and,
+when the source is new, promotes all earlier edges into it. This gives a
+streaming support counter from incoming multiplicities and the latest table. -/
+theorem continuingSources_update [Fintype α] [DecidableEq α] (R : α → Option α) (k v : α) :
+    let S := Function.update R k (some v)
+    (continuingSources S).card + (if k ∈ continuingSources R then 1 else 0) =
+      (continuingSources R).card +
+        (if R k = none then (Finset.univ.filter (fun a => R a = some k)).card else 0) +
+        (if k ∈ continuingSources S then 1 else 0) := by
+  let S := Function.update R k (some v)
+  let hit (T : α → Option α) (a : α) : ℕ := if ((T a).bind T).isSome then 1 else 0
+  have point (a : α) : hit S a + (if a = k then hit R k else 0) =
+      hit R a + (if R k = none ∧ R a = some k then 1 else 0) + (if a = k then hit S k else 0) := by
+    by_cases ha : a = k
+    · subst a
+      have impossible : ¬(R k = none ∧ R k = some k) := by
+        rintro ⟨hk, hs⟩
+        simp [hk] at hs
+      simp [impossible, Nat.add_comm]
+    · cases hr : R a with
+      | none => simp [hit, S, ha, hr]
+      | some b =>
+        by_cases hb : b = k
+        · subst b
+          cases hk : R k <;> simp [hit, S, ha, hr, hk]
+        · simp [hit, S, ha, hb, hr]
+  have total := Finset.sum_congr (s₁ := Finset.univ) rfl (fun a _ => point a)
+  simp only [Finset.sum_add_distrib, Fintype.sum_ite_eq'] at total
+  have count (T : α → Option α) : (continuingSources T).card = ∑ a, hit T a :=
+    Finset.card_filter _ _
+  have member (T : α → Option α) : (if k ∈ continuingSources T then 1 else 0) = hit T k := by
+    simp [continuingSources, hit]
+  have incoming : (∑ a, if R k = none ∧ R a = some k then 1 else 0) =
+      (if R k = none then (Finset.univ.filter (fun a => R a = some k)).card else 0) := by
+    by_cases hk : R k = none
+    · rw [ite_eq_left hk, Finset.card_filter]
+      apply Finset.sum_congr rfl
+      intro a _
+      simp [hk]
+    · simp [hk]
+  simpa only [count, member, incoming, S] using total
+
+/-- Adding a self-loop to a previously unwritten key completes two paths,
+one from the new source and one from its existing predecessor. -/
+example :
+    let R := fun k : Fin 3 => if k = 0 then some (1 : Fin 3) else none
+    (continuingSources (Function.update R 1 (some 1))).card = 2 := by decide
+
 /-- Renaming the vocabulary transports the set of starting points exactly,
 so relabeling preserves the cardinality used to rank relations. -/
 theorem continuingSources_relabel [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
