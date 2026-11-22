@@ -194,7 +194,8 @@ fn network(d: usize) -> Result<()> {
     let first = architecture::start(&cfg);
     let input = architecture::memory_start(&cfg);
     let output = input + 2 * d * d;
-    let stencil = output + 2 * d * d;
+    let tied = cfg.head == head::Head::TiedToeplitz;
+    let stencil = if tied { output } else { output + 2 * d * d };
     let gain = stencil + (2 * d - 1) * d;
     let bias = gain + 2 * d * d;
     let end = layout::frequency_offset(&cfg);
@@ -224,10 +225,18 @@ fn network(d: usize) -> Result<()> {
         project("readout_input", gain, bias),
         project("readout_input", bias, end),
     ];
+    let decoder = if tied {
+        (0..d)
+            .flat_map(|i| (0..2 * d).map(move |j| input + j * d + i))
+            .map(|pos| weights[pos])
+            .collect()
+    } else {
+        weights[output..stencil].to_vec()
+    };
     let expected: Vec<_> = reference(&parts, d, 5)
         .chunks_exact(2 * d)
         .flat_map(|x| {
-            let h = linear(&weights[output..stencil], x);
+            let h = linear(&decoder, x);
             linear(&weights[..cfg.vocab * d], &h)
         })
         .collect();
@@ -237,6 +246,9 @@ fn network(d: usize) -> Result<()> {
         return Err("future embedding changed a Toeplitz prefix".into());
     }
     println!("Toeplitz network width={d} max_logit_error={forward:.3e} prefix={causal:.3e}");
+    if tied {
+        tied_control(&mut e, &weights, &decoder, &tokens, &labels)?;
+    }
     let router = layout::router_offset(&cfg, 0);
     memory_checks::check_directions(
         &mut e,
@@ -255,9 +267,55 @@ fn network(d: usize) -> Result<()> {
             ("context bias", bias..end),
         ]
         .into_iter()
+        .filter(|(_, range)| !range.is_empty())
         .map(|(name, range)| (name, range.collect()))
         .collect(),
     )
+}
+
+// Expand one parameter into two ordinary projections. Every common gradient
+// must agree, including the sum of the two independent matrix gradients.
+fn tied_control(
+    e: &mut Engine,
+    weights: &[f32],
+    decoder: &[f32],
+    tokens: &[u32],
+    labels: &[u32],
+) -> Result<()> {
+    let mut cfg = e.config.clone();
+    let d = cfg.width;
+    let input = architecture::memory_start(&cfg);
+    let output = input + 2 * d * d;
+    let controls = output + decoder.len();
+    cfg.head = head::Head::PrefixToeplitz;
+    let mut expanded = layout::initialize_model(&cfg, 54);
+    if expanded[..output] != weights[..output] || expanded[controls..] != weights[output..] {
+        return Err("shared parameters differ between the paired initializations".into());
+    }
+    expanded[output..controls].copy_from_slice(decoder);
+    let mut control = Engine::new(cfg, &expanded)?;
+    phase_controls::compare_dense(
+        &e.config.clone(),
+        e,
+        &mut control,
+        "tied matrix and expanded transpose",
+    )?;
+    for net in [&mut *e, &mut control] {
+        net.forward(tokens, labels, 2, 5)?;
+        net.backward(2, 5)?;
+    }
+    let g = e.gradients.read()?;
+    let g2 = control.gradients.read()?;
+    let mut expected: Vec<_> = g2[..output].iter().copied().map(f64::from).collect();
+    for j in 0..2 * d {
+        for i in 0..d {
+            expected[input + j * d + i] += f64::from(g2[output + i * 2 * d + j]);
+        }
+    }
+    expected.extend(g2[controls..].iter().copied().map(f64::from));
+    let error = phase_checks::error(&g, &expected, 2e-5)?;
+    println!("shared Toeplitz matrix width={d} expanded_gradient_error={error:.3e}");
+    Ok(())
 }
 
 pub fn run() -> Result<()> {

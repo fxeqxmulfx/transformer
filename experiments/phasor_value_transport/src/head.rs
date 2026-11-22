@@ -21,6 +21,7 @@ pub enum Head {
     SharedBilinear,
     ScalarPhase,
     PrefixToeplitz,
+    TiedToeplitz,
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
@@ -50,6 +51,7 @@ impl Head {
             "shared-bilinear" => Ok(Self::SharedBilinear),
             "scalar-phase" => Ok(Self::ScalarPhase),
             "prefix-toeplitz" => Ok(Self::PrefixToeplitz),
+            "tied-toeplitz" => Ok(Self::TiedToeplitz),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
@@ -78,6 +80,7 @@ impl Head {
             Self::SharedBilinear => "phasor-learned-shared-bilinear-8x32-v1",
             Self::ScalarPhase => "phasor-learned-scalar-phase-bottleneck-v1",
             Self::PrefixToeplitz => "phasor-learned-prefix-toeplitz-v1",
+            Self::TiedToeplitz => "phasor-learned-tied-toeplitz-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
@@ -108,6 +111,7 @@ impl Head {
         matches!(
             self,
             Self::PrefixToeplitz
+                | Self::TiedToeplitz
                 | Self::InputPhase
                 | Self::AffinePhase
                 | Self::BilinearPhase
@@ -124,11 +128,15 @@ impl Head {
     }
 
     pub const fn has_stream_memory(self) -> bool {
-        self.is_phase() || matches!(self, Self::Householder | Self::PrefixToeplitz)
+        self.is_phase() || self.is_toeplitz() || matches!(self, Self::Householder)
     }
 
     pub const fn replaces_context(self) -> bool {
-        matches!(self, Self::ScalarPhase | Self::PrefixToeplitz)
+        self.is_toeplitz() || matches!(self, Self::ScalarPhase)
+    }
+
+    pub const fn is_toeplitz(self) -> bool {
+        matches!(self, Self::PrefixToeplitz | Self::TiedToeplitz)
     }
 
     pub const fn phase_inputs(self) -> usize {
@@ -166,7 +174,9 @@ impl Head {
                 Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
-            Self::PrefixToeplitz => crate::toeplitz::parameter_count(cfg.width),
+            Self::PrefixToeplitz | Self::TiedToeplitz => {
+                crate::toeplitz::parameter_count(cfg.width, self == Self::TiedToeplitz)
+            }
             Self::ScalarPhase => (4 + 4 + 2 * MEMORY_WIDTH + 1) * cfg.width + MEMORY_WIDTH,
             Self::ContextRotation | Self::CrossedContext => {
                 (4 + self.context_stages() * (cfg.width / 2)) * cfg.width
@@ -214,18 +224,28 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
-            Self::PrefixToeplitz => {
+            Self::PrefixToeplitz | Self::TiedToeplitz => {
                 let d = cfg.width;
                 let mut offset = crate::architecture::memory_start(cfg);
                 let scale = (d as f64).sqrt().recip();
                 let mut rng = Random::new(seed.wrapping_add(30_000));
-                for (count, stddev) in [
+                for (i, (count, stddev)) in [
                     (2 * d * d, scale),
                     (2 * d * d, scale / 2f64.sqrt()),
                     ((2 * d - 1) * d, 1. / d as f64),
                     (2 * d * d, scale),
                     (2 * d * d, scale),
-                ] {
+                ]
+                .into_iter()
+                .enumerate()
+                {
+                    if self == Self::TiedToeplitz && i == 1 {
+                        // Preserve the untied model's random stream for all shared controls.
+                        for _ in 0..count {
+                            rng.gauss(0., stddev);
+                        }
+                        continue;
+                    }
                     for w in &mut parameters[offset..offset + count] {
                         *w = rng.gauss(0., stddev) as f32;
                     }

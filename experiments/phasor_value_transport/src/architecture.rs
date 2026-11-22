@@ -16,7 +16,8 @@ pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
 pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
 pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
 pub const SCALAR_PHASE: bool = cfg!(feature = "scalar-phase-bottleneck");
-pub const TOEPLITZ: bool = cfg!(feature = "prefix-toeplitz");
+pub const TIED_TOEPLITZ: bool = cfg!(feature = "tied-toeplitz");
+pub const TOEPLITZ: bool = cfg!(feature = "prefix-toeplitz") || TIED_TOEPLITZ;
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const CROSSED_CONTEXT: bool = cfg!(feature = "crossed-context-rotation");
@@ -44,7 +45,8 @@ const _: () = {
         + BILINEAR_PHASE as u8
         + SHARED_BILINEAR as u8
         + SCALAR_PHASE as u8
-        + TOEPLITZ as u8
+        + cfg!(feature = "prefix-toeplitz") as u8
+        + TIED_TOEPLITZ as u8
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
         + cfg!(feature = "context-rotation-read") as u8
@@ -59,7 +61,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if TOEPLITZ {
+pub const HEAD: Head = if TIED_TOEPLITZ {
+    Head::TiedToeplitz
+} else if TOEPLITZ {
     Head::PrefixToeplitz
 } else if HOUSEHOLDER {
     Head::Householder
@@ -153,7 +157,7 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
     if RAW {
         if TOEPLITZ {
             return result["readout_parameters"]
-                == crate::toeplitz::parameter_count(width as usize)
+                == crate::toeplitz::parameter_count(width as usize, TIED_TOEPLITZ)
                 && result.get("pair_parameters").is_none();
         }
         if HOUSEHOLDER {

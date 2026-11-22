@@ -1,8 +1,9 @@
 //! Learned diagonal-scaled Toeplitz operators on complex feature channels.
 //! Every row reads its own value and the preceding row's controls in its sequence.
-pub fn parameter_count(width: usize) -> usize {
+pub fn parameter_count(width: usize, tied: bool) -> usize {
     // Stream read, value and output projections, real stencil, complex gain and bias.
-    4 * width + (10 * width - 1) * width
+    let matrices = if tied { 8 } else { 10 };
+    4 * width + (matrices * width - 1) * width
 }
 
 #[kernite_macros::kernels]

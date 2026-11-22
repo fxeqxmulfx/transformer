@@ -38,6 +38,7 @@ enum Memory {
 
 pub(super) struct HiddenLayer {
     memory: Memory,
+    tied: Option<super::tied_projection::TiedProjection>,
     periodic: Option<PeriodicActivation>,
     associative: Option<super::associative_layer::AssociativeLayer>,
     projected: F,
@@ -68,7 +69,7 @@ impl HiddenLayer {
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::SharedBilinear | Head::ScalarPhase => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
-            Head::PrefixToeplitz => Memory::Toeplitz(super::toeplitz_layer::ToeplitzLayer::new(e, rows)?),
+            Head::PrefixToeplitz | Head::TiedToeplitz => Memory::Toeplitz(super::toeplitz_layer::ToeplitzLayer::new(e, rows)?),
             Head::Householder => Memory::Householder {
                 scan: crate::householder::kernels::Kernels::load(&e.cuda)?,
                 reduction: reflection_phase::kernels::Kernels::load(&e.cuda)?,
@@ -103,7 +104,7 @@ impl HiddenLayer {
         let input_weights = crate::architecture::memory_start(cfg);
         let (projected_channels, read_channels) = if cfg.head.is_phase() {
             (cfg.head.phase_inputs(), 2 * M)
-        } else if cfg.head == Head::PrefixToeplitz {
+        } else if cfg.head.is_toeplitz() {
             (2 * cfg.width, 2 * cfg.width)
         } else if cfg.head == Head::Householder {
             (crate::householder::INPUTS, crate::householder::FEATURES)
@@ -112,6 +113,7 @@ impl HiddenLayer {
         };
         Ok(Self {
             memory,
+            tied: (cfg.head == Head::TiedToeplitz).then(|| super::tied_projection::TiedProjection::new(e, input_weights)).transpose()?,
             periodic,
             associative: (cfg.head == Head::AssociativeReflection)
                 .then(|| super::associative_layer::AssociativeLayer::new(e)).transpose()?,
@@ -220,14 +222,16 @@ impl HiddenLayer {
                 }
             }
         }
-        e.linear(
+        if let Some(tied) = &self.tied {
+            tied.forward(e, self.merged.ptr(), self.read.ptr(), rows)?;
+        } else { e.linear(
             self.merged.ptr(),
             self.read.ptr(),
             self.output_weights,
             rows,
             d,
             self.read_channels,
-        )?;
+        )?; }
         if !e.config.head.replaces_context() { unsafe {
             e.ops.add(
                 grid(rows * d),
@@ -252,7 +256,9 @@ impl HiddenLayer {
         if let Some(a) = &self.associative {
             a.backward(e, rows, length)?;
         }
-        e.linear_back(
+        if let Some(tied) = &self.tied {
+            tied.backward(e, self.dread.ptr(), self.read.ptr(), rows)?;
+        } else { e.linear_back(
             self.dread.ptr(),
             e.dlast.ptr(),
             self.read.ptr(),
@@ -260,7 +266,7 @@ impl HiddenLayer {
             rows,
             d,
             self.read_channels,
-        )?;
+        )?; }
         unsafe {
             match &self.memory {
                 Memory::Householder { scan, reduction, previous, partial_initial, initial_weights } => {
@@ -370,6 +376,7 @@ impl HiddenLayer {
         if !e.config.head.projects_embeddings() {
             self.add_projection_gradient(e, e.dlast.ptr(), rows)?;
         }
+        if let Some(tied) = &self.tied { tied.accumulate(e)?; }
         Ok(())
     }
 

@@ -968,6 +968,28 @@ value through that same learned basis. Changing the shared matrix
 contributes two terms to its gradient, one from each use.
 [Tied read and gradient proofs](../../src/Transformer/Phasor/TiedToeplitz.lean)
 
+Expanding the shared matrix into two independent matrices initialized
+as transposes reproduced the same hidden states, logits and arbitrary
+input gradients at widths 64 and 128. At width 128 the two matrix
+gradients added to the actual shared gradient within `7.46e-9`.
+The matched models used identical initial values for the embedding,
+context backbone, value matrix, stencil, gain and bias.
+
+After 3,000 updates, the tied model reproduced 4,680 / 4,685 / 4,675
+of 4,704 training pairs and 88 / 89 / 79 of 4,705 held-out pairs.
+Excluding the constant zero row gave 40 / 43 / 32 of 4,654, compared
+with 34 / 43 / 47 for the untied run. At 20,000 updates the untied
+seed-0 checkpoint still got only 45 of the nonzero-row pairs and 96
+overall. Each reported final score was reproduced from saved weights.
+
+```sh
+cargo +stable build --release --locked --features fp32-affine-reference,tied-toeplitz
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/tied-toeplitz-nv11/seed0 0 3000
+"$bin" nv11-score runs/tied-toeplitz-nv11/seed0/nv11-train-3000.f32 rows
+```
+
 ## Scalar phase bottleneck
 
 The earlier shared bilinear model fit 4,701 of 4,704 training pairs on

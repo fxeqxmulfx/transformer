@@ -240,6 +240,7 @@ fn main() {
         "hidden_layer",
         "shared_bilinear_layer",
         "toeplitz_layer",
+        "tied_projection",
         "product_layer",
         "context_rotation_layer",
         "associative_layer",

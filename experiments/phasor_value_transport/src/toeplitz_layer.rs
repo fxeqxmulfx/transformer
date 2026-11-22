@@ -54,7 +54,12 @@ pub(super) struct ToeplitzLayer {
 impl ToeplitzLayer {
     pub(super) fn new(e: &Engine, rows: usize) -> Result<Self> {
         let d = e.config.width;
-        let controls = crate::architecture::memory_start(&e.config) + 4 * d * d;
+        let projections = if e.config.head == crate::head::Head::TiedToeplitz {
+            2
+        } else {
+            4
+        };
+        let controls = crate::architecture::memory_start(&e.config) + projections * d * d;
         let gain = controls + (2 * d - 1) * d;
         let bias = gain + 2 * d * d;
         Ok(Self {
