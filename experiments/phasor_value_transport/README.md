@@ -668,6 +668,20 @@ PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-parity20 0 runs/reflection extended
 PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity20 0 runs/reflection parity-1024
 ```
 
+## Single reflection memory
+
+One learned projection per channel supplies the direction of a reflection
+at each position. The state update subtracts the previous phase from this
+direction. Its sine and centered cosine join the general contextual read.
+The backbone uses one state per channel and learns both output projections.
+
+Lean proves that this feature equals the mixed rotation and reflection
+model with every gate set to one, for arbitrary input embeddings and
+output maps. Over an even number of positions the state displacement
+is the sum of the adjacent projected differences. A simultaneous change
+in all directions propagates through the same signed recurrence.
+[Single-state derivation](../../src/Transformer/Phasor/SingleReflection.lean)
+
 ## NV11 prediction shifts
 
 CM121 describes row and column translations of class labels. To see
