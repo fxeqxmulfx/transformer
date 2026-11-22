@@ -160,4 +160,32 @@ example (M : Model D d H F 97) (T : PairTables D 97) (tokens : ℕ → Fin 97) (
     M.pairLogits T 64 1 1 tokens L 1 = M.logits 1 1 tokens L 1 :=
   M.pairLogits_of_inactive T (by decide) _ _ _ _
 
+/-- The value-table gather and its transpose agree on every finite set of
+active rows. The backward pass can group the upstream gradients by address
+after the forward read, counting each use of a repeated table entry.
+Source: the table read and transpose in `experiments/phasor_value_transport/src/pair_ops.rs`. -/
+theorem tableRead_adjoint {ι : Type*} {tables words : ℕ} (active : Finset ι)
+    (address : ι → Fin tables → Fin words) (gradient : ι → EucSpace D)
+    (variation : Fin tables → Fin words → EucSpace D) :
+    ∑ i ∈ active, ⟪gradient i, ∑ t, variation t (address i t)⟫ =
+      ∑ t, ∑ w, ⟪∑ i ∈ active with address i t = w, gradient i, variation t w⟫ := by
+  simp only [inner_sum]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro t ht
+  rw [← Finset.sum_fiberwise active (fun i => address i t)
+    (fun i => ⟪gradient i, variation t (address i t)⟫)]
+  apply Finset.sum_congr rfl
+  intro w hw
+  rw [sum_inner]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [(Finset.mem_filter.mp hi).2]
+
+/-- Three reads of one address all contribute to its gradient. -/
+example (variation : EucSpace D) (gradient : Fin 3 → EucSpace D) :
+    ∑ i, ⟪gradient i, variation⟫ = ⟪∑ i, gradient i, variation⟫ := by
+  simpa using tableRead_adjoint (tables := 1) (words := 1) Finset.univ
+    (fun (_ : Fin 3) _ => 0) gradient (fun _ _ => variation)
+
 end Transformer.Phasor
