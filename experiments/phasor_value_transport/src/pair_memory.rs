@@ -6,8 +6,8 @@ use kernite_cuda::{Buffer, Cuda};
 
 const PAIR_TABLES: usize = 17;
 pub const TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
-// With no experiment selector a binary contains the selected successor model.
-const DEFAULT_MODEL: bool = !cfg!(any(
+// A build without a historical selector uses the promoted closed-relation reader.
+pub const DEFAULT_MODEL: bool = !cfg!(any(
     feature = "pair-v2",
     feature = "prefix-xor",
     feature = "prefix-sum"
@@ -23,12 +23,10 @@ const THREE_QUARTER_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "successor-gain
 const HALF_GAIN: bool = cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
+pub const CLOSED_RELATION: bool = DEFAULT_MODEL || cfg!(feature = "closed-relation");
+pub const CLOSED_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "closed-relation-boost");
 pub const LEARN_BONUS: bool = cfg!(feature = "successor-bonus");
-pub const HIT_GAIN: bool = LEARN_BONUS
-    || cfg!(any(
-        feature = "successor-hit-gain",
-        feature = "closed-relation-boost"
-    ));
+pub const HIT_GAIN: bool = LEARN_BONUS || CLOSED_GAIN || cfg!(feature = "successor-hit-gain");
 pub const INITIAL_BONUS: f32 = 0.5;
 pub const HIT_FACTOR: f32 = if cfg!(feature = "successor-hit-gain-seven-quarters") {
     1.75
@@ -107,11 +105,11 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-independent-transition-table-v1"
 } else if cfg!(feature = "single-write-gain") {
     "phasor-single-write-or-closed-gain-v1"
-} else if cfg!(feature = "closed-relation-boost") {
+} else if CLOSED_GAIN {
     "phasor-closed-relation-gain-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
-} else if cfg!(feature = "closed-relation") {
+} else if CLOSED_RELATION {
     "phasor-closed-relation-address-v1"
 } else if cfg!(feature = "relation-support") {
     "phasor-composable-relation-support-v1"
@@ -283,8 +281,7 @@ impl PairMemory {
             rows: vec![0; entries],
             factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
             successors: vec![None; if SUCCESSOR { cfg.vocab } else { 0 }],
-            closed: cfg!(feature = "closed-relation")
-                .then(|| crate::relation_support::ClosedRead::new(cfg.vocab)),
+            closed: CLOSED_RELATION.then(|| crate::relation_support::ClosedRead::new(cfg.vocab)),
             ambiguous: vec![
                 false;
                 if cfg!(feature = "successor-agreement") {
@@ -301,10 +298,7 @@ impl PairMemory {
                     0
                 }
             ],
-            evidence: if cfg!(any(
-                feature = "successor-agreement",
-                feature = "closed-relation-boost"
-            )) {
+            evidence: if CLOSED_GAIN || cfg!(feature = "successor-agreement") {
                 Some(GainEvidence {
                     reads: vec![0; rows],
                     device: cuda.alloc(rows)?,
@@ -371,7 +365,7 @@ impl PairMemory {
                 };
                 keys[0] = closed_end.unwrap_or(keys[0]);
                 if let Some(evidence) = &mut self.evidence {
-                    evidence.reads[row] = if cfg!(feature = "closed-relation-boost") {
+                    evidence.reads[row] = if CLOSED_GAIN {
                         if cfg!(feature = "single-write-gain") && self.writes[b] == 1 {
                             keys[0]
                         } else {

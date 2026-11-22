@@ -1,10 +1,10 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all 147 GPT task/seed runs across 38 short
-and eleven long tasks. It classified all 9,409 NV11 pairs correctly at update
-750 in every seed. Each task trained its own weights with the original AdamW. The model
-uses a causal successor read, full tied embedding displacement and a learned
-residual gain initialized to 0.75.
+One Phasor architecture passed all **150 GPT task/seed runs** across 39 short
+and eleven long tasks on Kernite v0.6.0. Each task used its own weights and
+the original AdamW. The same architecture classified all 9,409 NV11 pairs
+correctly at update 750 in every seed. Its newest short task is two-hop
+lookup, which all three seeds solved at initialization.
 
 The GPT suite also includes the official eight-needle text evaluation at up
 to 128K and at 1M context. The result is a mean match ratio on each published
@@ -12,12 +12,57 @@ split. [MRCR V2 stress test](../mrcr_v2/README.md)
 
 ## Selected architecture on Kernite v0.6.0
 
+Each completed triple writes its first token and third token as an edge
+labelled by the middle token. At any position, relations that form a
+permutation of their written tokens can propose a two-step destination.
+When the largest relations with a moving destination agree, their common
+destination supplies the read address and doubles the learned residual gain.
+Other positions use the latest ordinary successor and the ordinary gain.
+The same rule runs at every position of every task and uses the predecessor's
+17 tables and tied embedding. [Closed-relation read and gain](../../src/Transformer/Phasor/ClosedRelations.lean)
+
+| Matched runs against the 0.75-gain successor | Passes | Epoch ratio to 99% | Elapsed-time ratio | Fewer / equal / more updates |
+| --- | ---: | ---: | ---: | ---: |
+| Short | 114/114 | 0.9835 | 0.9862 | 5 / 106 / 3 |
+| Long | 33/33 | 0.9035 | 0.9038 | 2 / 31 / 0 |
+
+These ratios are geometric means on the same GPU, Kernite release and
+FP32 affine configuration. The short tier retained the one existing pass
+at initialization. Depth-one C-RASP fell from 750 / 9,500 / 250 updates
+to 250 / 1,000 / 250. Three short runs took longer in updates. Hard-depth
+seed 2 rose from 1,000 to 1,250, branch-amplitudes seed 0 from 416 to 512,
+and blocks seed 0 from 500 to 750.
+
+Two-hop lookup adds three short runs beyond this matched comparison.
+Every checkpoint scored 32/32 whole sequences on novel validation inputs
+at initialization, then 64/64 on each of the ordinary, length-48 and
+length-96 test sets. On NV11 all three seeds reached 99% at update 500
+and classified all 4,704 training and 4,705 held-out pairs correctly at
+both 750 and 3,000 updates.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ClosedRelations
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference
+export PHASOR_EVAL_BATCH_CAP=16
+bin=./target/release/phasor-value-transport
+out=runs/v060-closed
+"$bin" shared-check
+./run_stress.sh cell "$out" extended
+"$bin" extended-report "$out" > "$out/report.json"
+./run_stress.sh replay "$out" extended > "$out/replays.jsonl"
+jq -es --slurpfile report "$out/report.json" -f verify_replays.jq "$out/replays.jsonl"
+for seed in 0 1 2; do "$bin" probes suite-lookup "$seed" "$out"; done
+```
+
+## Predecessor with successor displacement and gain 0.75
+
 Every position uses the same causal prefix scan and the same 17 learned
 tables. Let `b` be the current token and `r` its most recently observed
 successor in the completed prefix, with `r = b` for an unwritten key.
 The residual adds `E[r] − E[b]` before RMS normalization, scales the
 normalized vector by the learned gain and adds it to the backbone feature.
-The half-gain predecessor and this model have the same parameter count.
+The half-gain model and this model have the same parameter count.
 [Tied read and score identities](../../src/Transformer/Phasor/SuccessorDisplacement.lean)
 
 | Matched tier | Passing task/seed runs | Epoch ratio to half-gain predecessor | Faster / tied / slower |

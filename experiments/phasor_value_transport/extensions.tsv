@@ -12,3 +12,4 @@ short	basis-parity-noise20
 short	arithmetic-sum-pow24
 short	arithmetic-square-product
 short	arithmetic-sum-squares
+short	suite-lookup

@@ -6,7 +6,7 @@ fn mean_loss(e: &Engine, rows: usize, targets: usize) -> Result<f64> {
 }
 
 fn successor(prefix: &[u32], query: u32, vocab: u32) -> u32 {
-    if cfg!(feature = "closed-relation")
+    if pair_memory::CLOSED_RELATION
         && let Some(end) = crate::closed_checks::reference(prefix, query, vocab)
     {
         return end;
@@ -99,7 +99,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         for (row, pattern) in tokens.chunks_mut(length).zip(patterns) {
             row.copy_from_slice(&pattern);
         }
-    } else if cfg!(feature = "closed-relation") && length == 8 {
+    } else if pair_memory::CLOSED_RELATION && length == 8 {
         let patterns = [
             [1, 0, 2, 0, 3, 0, 1, 1],
             [1, 0, 2, 0, 3, 0, 2, 1],
@@ -135,7 +135,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         labels.fill(u32::MAX);
         labels[length - 1] = 7;
     }
-    if cfg!(feature = "closed-relation") && length == 8 {
+    if pair_memory::CLOSED_RELATION && length == 8 {
         // This prefix has ordinary successor 0 and unique closed endpoint 3.
         labels.fill(u32::MAX);
         labels[length - 1] = 3;
@@ -152,7 +152,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
-    let selected = pair_memory::MODEL == "phasor-successor-displacement-gain075-v1";
+    let selected = pair_memory::DEFAULT_MODEL;
     let expected_gain = if selected || cfg!(feature = "successor-gain-three-quarters") {
         0.75
     } else if pair_memory::MODEL == "phasor-prefix-successor-half-v1"
@@ -214,7 +214,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
             let single = cfg!(feature = "single-write-gain")
                 && r != b
                 && prefix.windows(2).filter(|pair| pair[0] == b).count() == 1;
-            if cfg!(feature = "closed-relation-boost")
+            if pair_memory::CLOSED_GAIN
                 && (single || crate::closed_checks::reference(prefix, b, p as u32).is_some())
             {
                 gain *= 2.;
@@ -325,7 +325,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         directions.push(("wrapped transition count".to_owned(), wrapped));
         directions.push(("unused transition count".to_owned(), unused));
     }
-    if cfg!(feature = "closed-relation") && length == 8 {
+    if pair_memory::CLOSED_RELATION && length == 8 {
         let endpoint = start + 3 * d..start + 4 * d;
         let ordinary = start..start + d;
         if gradients[endpoint.clone()].iter().all(|&v| v == 0.)
@@ -436,13 +436,10 @@ pub fn run(width: Option<usize>) -> Result<()> {
     if !precision::FP32_AFFINE_REFERENCE {
         return Err("finite differences require FP32 affines".into());
     }
-    if cfg!(any(
-        feature = "relation-support",
-        feature = "closed-relation"
-    )) {
+    if cfg!(feature = "relation-support") || pair_memory::CLOSED_RELATION {
         crate::relation_support::check_counts()?;
     }
-    if cfg!(feature = "closed-relation") {
+    if pair_memory::CLOSED_RELATION {
         crate::closed_checks::run()?;
     }
     if let Some(width) = width {
