@@ -763,6 +763,23 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-mul 0 runs/context-rotation 38
 "$bin" nv11-score runs/context-nv11/nv11-train-3000.f32 shifts
 ```
 
+## Associative write memory
+
+Every pair of consecutive embeddings contributes to a learned matrix.
+The previous embedding supplies the key, the current embedding supplies
+the value, and the current query reads the updated matrix. The three
+input projections use the same RMS-normalized vectors as the phase read.
+A fourth learned projection adds the retrieved values to the mixed
+reflection output. The projections are shared across all positions.
+
+For a row of state `s`, the write adds `(v - dot(s,k)) * k`. Keys
+and queries use `x / sqrt(1 + dot(x,x))`. At the updated key the error
+shrinks by exactly `1 / (1 + dot(x,x))`. Lean derives the directional
+derivative and its transpose when the key, value and state all move.
+It proves prefix causality for arbitrary embeddings and exact recovery
+of the mixed reflection backbone when the output matrix is zero.
+[Associative write proofs](../../src/Transformer/Phasor/AssociativeWrite.lean)
+
 ## NV11 prediction shifts
 
 CM121 describes row and column translations of class labels. To see
