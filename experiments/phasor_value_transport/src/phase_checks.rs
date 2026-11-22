@@ -5,7 +5,7 @@ use head::MEMORY_WIDTH as M;
 use kernite_cuda::{Cuda, Grid};
 use memory_checks::linear;
 
-fn error(native: &[f32], expected: &[f64], tolerance: f64) -> Result<f64> {
+pub(super) fn error(native: &[f32], expected: &[f64], tolerance: f64) -> Result<f64> {
     if native.is_empty() || native.len() != expected.len() {
         return Err("phase reference shapes differ".into());
     }
@@ -100,7 +100,9 @@ fn network(width: usize) -> Result<()> {
     let mut weights = layout::initialize_model(&cfg, 3);
     let first = architecture::start(&cfg);
     let increments = architecture::memory_start(&cfg);
-    let output = increments + M * width;
+    let writes = increments + M * width;
+    let affine = cfg.head == head::Head::AffinePhase;
+    let output = increments + cfg.head.phase_inputs() * width;
     let end = first + cfg.head.parameters(&cfg);
     let mut e = Engine::new(cfg.clone(), &weights)?;
     e.forward(&tokens, &labels, 2, length)?;
@@ -120,12 +122,18 @@ fn network(width: usize) -> Result<()> {
     for w in &mut weights[output..end] {
         *w = rng.gauss(0., 0.08) as f32;
     }
+    if affine {
+        affine_phase_checks::zero_write(&cfg, &weights, &mut e)?;
+        for w in &mut weights[writes..output] {
+            *w = rng.gauss(0., 0.05) as f32;
+        }
+    }
     e.parameters.write(&weights)?;
     e.forward(&tokens, &labels, 2, length)?;
     let actual = e.logits.read()?;
     let hidden = e.diagnostic_snapshot(tokens.len())?;
     let mut expected = Vec::new();
-    let source = if cfg.head == head::Head::InputPhase {
+    let source = if cfg.head.projects_embeddings() {
         "embedding_normalized"
     } else {
         "readout_input"
@@ -133,16 +141,25 @@ fn network(width: usize) -> Result<()> {
     let contextual = hidden["readout_input"].chunks_exact(width * length);
     for (seq, source) in contextual.zip(hidden[source].chunks_exact(width * length)) {
         let mut angles = [0.; M];
+        let mut ordered = [(1., 0.); M];
         for (h, x) in seq.chunks_exact(width).zip(source.chunks_exact(width)) {
             let h: Vec<_> = h.iter().copied().map(f64::from).collect();
             let x: Vec<_> = x.iter().copied().map(f64::from).collect();
             let step = linear(&weights[increments..output], &x);
             let mut pair = [0.; 2 * M];
             for k in 0..M {
-                angles[k] += step[k];
-                let (s, c) = angles[k].sin_cos();
-                pair[k] = s;
-                pair[M + k] = c - 1.;
+                if affine {
+                    let (s, c) = step[k].sin_cos();
+                    let (u, v) = ordered[k];
+                    ordered[k] = (c * u - s * v + step[M + k], s * u + c * v);
+                    pair[k] = ordered[k].1;
+                    pair[M + k] = ordered[k].0 - 1.;
+                } else {
+                    angles[k] += step[k];
+                    let (s, c) = angles[k].sin_cos();
+                    pair[k] = s;
+                    pair[M + k] = c - 1.;
+                }
             }
             let residual = linear(&weights[output..end], &pair);
             let merged: Vec<_> = h.iter().zip(residual).map(|(x, y)| x + y).collect();
@@ -155,17 +172,20 @@ fn network(width: usize) -> Result<()> {
         return Err("prefix changed a phase-model logit".into());
     }
     let router = layout::router_offset(&cfg, 0);
-    let groups = vec![
+    let mut groups = vec![
         ("tied embedding", (0..cfg.vocab * width).collect()),
         ("backbone router", (router..router + 96 * width).collect()),
         ("stream read", (first..increments).collect()),
-        ("phase increment", (increments..output).collect()),
+        ("phase increment", (increments..writes).collect()),
         ("sine output", output_indices(0).collect()),
         ("cosine output", output_indices(1).collect()),
     ];
+    if affine {
+        groups.push(("affine phase write", (writes..output).collect()));
+    }
     println!("phase network width={width} max_absolute_logits={logits:.3e} prefix={prefix:.3e}");
     memory_checks::check_directions(&mut e, &weights, &tokens, &labels, length, groups)?;
-    if cfg.head == head::Head::InputPhase {
+    if cfg.head.projects_embeddings() {
         input_segment(&cfg, &weights, &mut e)?;
     }
     Ok(())
@@ -215,6 +235,25 @@ fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Result<()> {
     if !ab.iter().any(|x| x.abs() > 0.01) || !gba[..width].iter().any(|x| x.abs() > 0.001) {
         return Err("segment check requires active phase outputs and early input gradients".into());
     }
+    if cfg.head == head::Head::AffinePhase {
+        let changed = |a: &[f32], b: &[f32]| {
+            a.iter()
+                .zip(b)
+                .map(|(x, y)| (x - y).abs())
+                .fold(0_f32, f32::max)
+        };
+        let forward = changed(&ab, &ba);
+        let gradient = changed(&gab, &gba);
+        if forward < 0.01 || gradient < 0.001 {
+            return Err(
+                "learned affine writes failed to distinguish ordered off-table segments".into(),
+            );
+        }
+        println!(
+            "ordered phase segment width={width} hidden_difference={forward:.3e} input_gradient_difference={gradient:.3e}"
+        );
+        return Ok(());
+    }
     let forward = compact_checks::close("phase segment exchange", &ab, &ba, 8e-6)?;
     let grad = compact_checks::close("phase segment VJP exchange", &gab, &gba, 3e-5)?;
     println!(
@@ -228,7 +267,11 @@ pub fn run() -> Result<()> {
         return Err("phase memory checks require --features fp32-affine-reference".into());
     }
     for length in [1, 7, 257] {
-        scan(length)?;
+        if architecture::AFFINE_PHASE {
+            affine_phase_checks::scan(length)?;
+        } else {
+            scan(length)?;
+        }
     }
     for width in [64, 128] {
         network(width)?;

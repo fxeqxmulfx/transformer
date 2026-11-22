@@ -485,6 +485,27 @@ phase feature for arbitrary embeddings. Active writes can distinguish the
 order of two inputs, and the distance between two states survives any
 common suffix. [Affine phase proofs](../../src/Transformer/Phasor/AffinePhaseRead.lean)
 
+The native scan uses three real accumulators per channel. A separate FP64
+oracle applies each rotation and write directly, and differentiates each
+output separately through every earlier step. At length 257 the largest
+errors over 49,344 reads and 49,344 derivatives were `2.20e-5` and
+`7.16e-5`. With zero writes and active output projections, the input-phase
+control reproduced every hidden value and logit exactly at widths 64 and
+128. Its embedding gradients agreed within `5.97e-8`. With active writes,
+swapping unequal dense input segments changed the isolated endpoint read
+by 1.31 and 1.95 at the two widths. All fourteen masked-loss parameter
+directions passed, including separate angle and write directions.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.AffinePhaseRead
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,affine-phase-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen suite-crasp-depth-1 0 runs/affine-phase 1500
+"$bin" probes suite-crasp-depth-1 0 runs/affine-phase
+```
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

@@ -2,11 +2,12 @@
 use super::*;
 use crate::{
     head::{Head, MEMORY_WIDTH as M},
-    phase_prefix, recurrent, transition,
+    affine_phase, phase_prefix, recurrent, transition,
 };
 
 enum Memory {
     Phase(phase_prefix::kernels::Kernels),
+    AffinePhase(affine_phase::kernels::Kernels),
     Transitions {
         kernels: transition::kernels::Kernels,
         probabilities: F,
@@ -39,6 +40,7 @@ impl HiddenLayer {
         let rows = cfg.max_batch * cfg.max_length;
         let memory = match cfg.head {
             Head::PhasePrefix | Head::InputPhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
+            Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::Transition => Memory::Transitions {
                 kernels: transition::kernels::Kernels::load(&e.cuda)?,
                 probabilities: e.cuda.alloc(rows * cfg.max_length)?,
@@ -52,7 +54,7 @@ impl HiddenLayer {
         };
         let input_weights = crate::architecture::memory_start(cfg);
         let (projected_channels, read_channels) = if cfg.head.is_phase() {
-            (M, 2 * M)
+            (cfg.head.phase_inputs(), 2 * M)
         } else {
             (3 * M, M)
         };
@@ -73,7 +75,7 @@ impl HiddenLayer {
     }
 
     fn projection_input(e: &Engine) -> P {
-        if e.config.head == Head::InputPhase {
+        if e.config.head.projects_embeddings() {
             e.embed_norm.ptr()
         } else {
             e.last.ptr()
@@ -98,6 +100,12 @@ impl HiddenLayer {
         // Each launch owns its sequence slice, with length and rows checked by Engine::forward.
         unsafe {
             match &self.memory {
+                Memory::AffinePhase(kernels) => kernels.forward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.read.ptr(),
+                    self.projected.ptr(),
+                    length as u32,
+                )?,
                 Memory::Phase(kernels) => kernels.forward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.read.ptr(),
@@ -180,6 +188,14 @@ impl HiddenLayer {
         )?;
         unsafe {
             match &self.memory {
+                Memory::AffinePhase(kernels) => kernels.backward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.dprojected.ptr(),
+                    self.projected.ptr(),
+                    self.read.ptr(),
+                    self.dread.ptr(),
+                    length as u32,
+                )?,
                 Memory::Phase(kernels) => kernels.backward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.dprojected.ptr(),
@@ -240,7 +256,7 @@ impl HiddenLayer {
             self.projected_channels,
             d,
         )?;
-        if e.config.head != Head::InputPhase {
+        if !e.config.head.projects_embeddings() {
             self.add_projection_gradient(e, e.dlast.ptr(), rows)?;
         }
         Ok(())

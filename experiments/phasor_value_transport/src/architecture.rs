@@ -12,13 +12,15 @@ pub const BOUNDED: bool = cfg!(feature = "bounded-memory-read");
 pub const INPUT_PRODUCT: bool = cfg!(feature = "causal-product-input");
 pub const COMPACT: bool = cfg!(feature = "compact-ffn");
 pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
-pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read") || INPUT_PHASE;
+pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
+pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read") || INPUT_PHASE || AFFINE_PHASE;
 const _: () = {
     let variants = BOUNDED as u8
         + INPUT_PRODUCT as u8
         + COMPACT as u8
         + cfg!(feature = "phase-prefix-read") as u8
-        + INPUT_PHASE as u8;
+        + INPUT_PHASE as u8
+        + AFFINE_PHASE as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -26,7 +28,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if INPUT_PHASE {
+pub const HEAD: Head = if AFFINE_PHASE {
+    Head::AffinePhase
+} else if INPUT_PHASE {
     Head::InputPhase
 } else if PHASE_MEMORY {
     Head::PhasePrefix
@@ -95,7 +99,7 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
     }
     if RAW {
         let per_channel = if PHASE_MEMORY {
-            4 + 3 * crate::head::MEMORY_WIDTH as u64
+            4 + HEAD.phase_inputs() as u64 + 2 * crate::head::MEMORY_WIDTH as u64
         } else if BOUNDED {
             4 * crate::head::MEMORY_WIDTH as u64
         } else if STREAM_READ {

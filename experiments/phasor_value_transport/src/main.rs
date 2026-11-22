@@ -7,6 +7,8 @@ use serde_json::{Value, json};
 use std::{env, fs, io::Write, path::Path};
 
 mod addresses;
+mod affine_phase;
+mod affine_phase_checks;
 mod architecture;
 mod causal_product;
 mod causal_values;

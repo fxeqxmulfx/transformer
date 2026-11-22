@@ -38,6 +38,7 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
             | Head::InputProduct
             | Head::PhasePrefix
             | Head::InputPhase
+            | Head::AffinePhase
     ) {
         let sample = task.splits[&task.selection]
             .iter()

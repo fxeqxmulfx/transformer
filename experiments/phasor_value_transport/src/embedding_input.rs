@@ -32,7 +32,7 @@ impl Engine {
             Some(layer) => layer.backward(self, rows, length)?,
             None => self.dx.ptr(),
         };
-        if self.config.head == crate::head::Head::InputPhase {
+        if self.config.head.projects_embeddings() {
             self.hidden_layer.as_ref().ok_or("missing input phase read")?
                 .add_projection_gradient(self, gradient, rows)?;
         }

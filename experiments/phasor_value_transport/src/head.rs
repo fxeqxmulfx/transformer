@@ -15,6 +15,7 @@ pub enum Head {
     CompactStream,
     PhasePrefix,
     InputPhase,
+    AffinePhase,
 }
 
 impl Head {
@@ -32,6 +33,7 @@ impl Head {
             "compact" => Ok(Self::CompactStream),
             "phase" => Ok(Self::PhasePrefix),
             "input-phase" => Ok(Self::InputPhase),
+            "affine-phase" => Ok(Self::AffinePhase),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -48,18 +50,36 @@ impl Head {
             Self::CompactStream => "phasor-compact-ffn-stream-v1",
             Self::PhasePrefix => "phasor-learned-phase-prefix-32-v1",
             Self::InputPhase => "phasor-learned-input-phase-32-v1",
+            Self::AffinePhase => "phasor-learned-affine-phase-32-v1",
         }
     }
 
     pub const fn is_phase(self) -> bool {
-        matches!(self, Self::PhasePrefix | Self::InputPhase)
+        matches!(
+            self,
+            Self::PhasePrefix | Self::InputPhase | Self::AffinePhase
+        )
+    }
+
+    pub const fn projects_embeddings(self) -> bool {
+        matches!(self, Self::InputPhase | Self::AffinePhase)
+    }
+
+    pub const fn phase_inputs(self) -> usize {
+        if matches!(self, Self::AffinePhase) {
+            2 * MEMORY_WIDTH
+        } else {
+            MEMORY_WIDTH
+        }
     }
 
     pub fn parameters(self, cfg: &Config) -> usize {
         match self {
             Self::Original => 0,
             Self::Stream | Self::CompactStream => 4 * cfg.width,
-            Self::PhasePrefix | Self::InputPhase => (4 + 3 * MEMORY_WIDTH) * cfg.width,
+            Self::PhasePrefix | Self::InputPhase | Self::AffinePhase => {
+                (4 + self.phase_inputs() + 2 * MEMORY_WIDTH) * cfg.width
+            }
             Self::Relations => pair_memory::parameters(cfg),
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 4 * MEMORY_WIDTH * cfg.width
@@ -76,12 +96,13 @@ impl Head {
             | Self::Bounded
             | Self::InputProduct
             | Self::PhasePrefix
-            | Self::InputPhase => {
+            | Self::InputPhase
+            | Self::AffinePhase => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
                 let start = crate::architecture::memory_start(cfg);
                 let end = crate::architecture::start(cfg) + self.parameters(cfg);
                 let rows = if self.is_phase() {
-                    MEMORY_WIDTH
+                    self.phase_inputs()
                 } else {
                     3 * MEMORY_WIDTH
                 };
@@ -92,7 +113,13 @@ impl Head {
                         *w = rng.gauss(0., scale) as f32;
                     }
                 };
-                initialize(input, cfg.width);
+                if self == Self::AffinePhase {
+                    let (angles, writes) = input.split_at_mut(MEMORY_WIDTH * cfg.width);
+                    initialize(angles, cfg.width);
+                    writes.fill(0.);
+                } else {
+                    initialize(input, cfg.width);
+                }
                 if self.is_phase() || matches!(self, Self::Bounded | Self::InputProduct) {
                     output.fill(0.);
                 } else {
