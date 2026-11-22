@@ -16,3 +16,4 @@ short	suite-lookup
 short	arithmetic-sum-pow32
 short	arithmetic-sum-pow48
 long	language-l3
+long	language-l2

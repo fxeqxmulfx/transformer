@@ -68,6 +68,33 @@ test, 56/64 at length 32 and 41/64 at length 64. On NV11 the learned
 readout reached 4,696/4,704 training pairs but only 86/4,705 held-out
 pairs at update 3,000 in seed 0.
 
+### Long-tier addition from the embedding-input model
+
+All three independently trained stream-read checkpoints solved the GPT
+language-L2 source validation at length 128. Each checkpoint also scored
+512/512 on both the original-length test and the independent length-128
+test after reload. Training used lengths 32–64. The slowest training run
+took 66.44 seconds on the GTX 1050, which places L2 in the long tier.
+The original fixed-mean control passed in the same numbers of updates.
+
+| Seed | First 512/512 validation update | All twelve-letter words, out of 4,096 | Eight letters repeated 32 times, out of 256 |
+| ---: | ---: | ---: | ---: |
+| 0 | 250 | 3,840 | 255 |
+| 1 | 500 | 4,096 | 239 |
+| 2 | 250 | 3,838 | 222 |
+
+On the stretched inputs the mean control scored 255 / 229 / 222.
+Use the learned-stream binary above to reproduce the first crossings
+and the separate whole-sequence transfer scores.
+
+```sh
+for seed in 0 1 2; do
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" cell language-l2 "$seed" runs/learned-streams
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" probes language-l2 "$seed" runs/learned-streams extended
+done
+"$bin" catalog-report runs/learned-streams language-l2
+```
+
 ## Bounded recurrent readout
 
 Each position supplies its contextual embedding features to three learned
@@ -314,10 +341,12 @@ cargo +stable build --release --locked --features fp32-affine-reference,closed-r
 export PHASOR_EVAL_BATCH_CAP=16
 bin=./target/release/phasor-value-transport
 out=runs/v060-closed
+mkdir -p "$out"
+git show 6000fa8e:experiments/phasor_value_transport/extensions.tsv > "$out/extensions.tsv"
 "$bin" shared-check
-./run_stress.sh cell "$out" extended
-"$bin" extended-report "$out" > "$out/report.json"
-./run_stress.sh replay "$out" extended > "$out/replays.jsonl"
+./run_stress.sh cell "$out" "$out/extensions.tsv"
+"$bin" extended-report "$out" "$out/extensions.tsv" > "$out/report.json"
+./run_stress.sh replay "$out" "$out/extensions.tsv" > "$out/replays.jsonl"
 jq -es --slurpfile report "$out/report.json" -f verify_replays.jq "$out/replays.jsonl"
 for seed in 0 1 2; do "$bin" probes suite-lookup "$seed" "$out"; done
 ```
