@@ -8,6 +8,34 @@ A compact Fourier read used 49,985 read parameters and reached at most
 100/4,705 held-out NV11 answers over three 10,000-update trials.
 [Fourier measurements and ablations](#learned-fourier-transport)
 
+## Canonical GPT stress tiers
+
+The original suite has 25 short and ten long tasks. Each task trains fresh
+weights for seeds 0, 1 and 2. A run passes at the first scheduled
+observation with at least 99% exact sequences on the primary held-out
+split. An independent process then reloads the weights and scores the same
+split. The following commands run the input-phase Phasor on all 105 cells.
+It learns its phase increments from normalized random input embeddings
+and uses the same causal read and AdamW schedule rules on every task.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.InputPhaseRead
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,input-phase-read
+export PHASOR_EVAL_BATCH_CAP=16
+out=runs/input-phase-gpt
+bin=./target/release/phasor-value-transport
+"$bin" check
+./run_stress.sh --gpt-only cell "$out"
+"$bin" gpt-report "$out" > "$out/gpt-report.json"
+./run_stress.sh --gpt-only replay "$out" > "$out/gpt-replays.jsonl"
+jq -es --slurpfile report "$out/gpt-report.json" -f verify_replays.jq "$out/gpt-replays.jsonl"
+```
+
+For an extended cohort, pass the same two-column tier and case TSV to
+both `run_stress.sh` commands and to `gpt-report` after the run directory.
+The report counts the original and additional tasks separately.
+
 ## Learned stream readout
 
 The inner model takes a sequence of embedding vectors. For a tokenized

@@ -130,14 +130,16 @@ pub fn catalog(out: &Path, names: &[String]) -> Result<()> {
     Ok(())
 }
 
-pub fn run(out: &Path, extensions: Option<&str>) -> Result<()> {
+pub fn run(out: &Path, extensions: Option<&str>, include_nv11: bool) -> Result<()> {
     if !out.is_dir() {
         return Err(format!("missing cohort directory {}", out.display()).into());
     }
     let mut totals = BTreeMap::<String, [usize; 3]>::new();
     let mut tasks = Vec::new();
     let mut rows = cases()?;
-    rows.push(nv11_case());
+    if include_nv11 {
+        rows.push(nv11_case());
+    }
     if let Some(extensions) = extensions {
         for (name, tier) in super::catalog::registered(extensions)? {
             let (mut row, _) = super::catalog::load(name)?;

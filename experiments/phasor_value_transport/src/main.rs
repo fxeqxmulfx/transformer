@@ -286,10 +286,12 @@ fn main() -> Result<()> {
         [op, name] if op == "successor-alignment" => stress::alignment::run(name, 1, false),
         [op, name, hops] if op == "successor-alignment" => stress::alignment::run(name, hops.parse()?, false),
         [op, name] if op == "closed-alignment" => stress::alignment::run(name, 1, true),
-        [op, dest] if op == "report" => stress::report::run(Path::new(dest), None),
-        [op, dest] if op == "extended-report" => stress::report::run(Path::new(dest), Some(stress::EXTENSIONS)),
-        [op, dest, registry] if op == "extended-report" =>
-            stress::report::run(Path::new(dest), Some(&fs::read_to_string(registry)?)),
+        [op, dest] if matches!(op.as_str(), "report" | "gpt-report") =>
+            stress::report::run(Path::new(dest), None, op == "report"),
+        [op, dest] if op == "extended-report" =>
+            stress::report::run(Path::new(dest), Some(stress::EXTENSIONS), true),
+        [op, dest, registry] if matches!(op.as_str(), "extended-report" | "gpt-report") =>
+            stress::report::run(Path::new(dest), Some(&fs::read_to_string(registry)?), op == "extended-report"),
         [op, dest, names @ ..] if op == "catalog-report" && !names.is_empty() =>
             stress::report::catalog(Path::new(dest), names),
         [op, name, seed, out] if op == "cell" => stress::run(name, seed.parse()?, Path::new(out), None),
@@ -328,6 +330,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Rows),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }
