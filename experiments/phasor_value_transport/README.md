@@ -30,11 +30,16 @@ bin=./target/release/phasor-value-transport
 "$bin" gpt-report "$out" > "$out/gpt-report.json"
 ./run_stress.sh --gpt-only replay "$out" > "$out/gpt-replays.jsonl"
 jq -es --slurpfile report "$out/gpt-report.json" -f verify_replays.jq "$out/gpt-replays.jsonl"
+./run_stress.sh --gpt-only probes "$out" > "$out/gpt-tests.jsonl"
+jq -es --slurpfile report "$out/gpt-report.json" -f verify_replays.jq "$out/gpt-tests.jsonl"
 ```
 
 For an extended cohort, pass the same two-column tier and case TSV to
-both `run_stress.sh` commands and to `gpt-report` after the run directory.
-The report counts the original and additional tasks separately.
+the `run_stress.sh` commands and to `gpt-report` after the run directory.
+The report counts the original and additional tasks separately. Each
+`gpt-tests.jsonl` row identifies the checkpoint, its first passing update
+and its primary score. Its `test_splits` object gives exact counts and
+denominators for the available independent test and transfer splits.
 
 The input-phase model passed all 25 original short tasks at seed 0.
 Independent reloads reproduced every primary held-out score. First crossings

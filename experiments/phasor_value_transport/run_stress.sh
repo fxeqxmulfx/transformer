@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Train or independently replay NV11, the original tiers and optional additions.
+# Train, replay or score source test splits for NV11, the GPT tiers and additions.
 set -euo pipefail
 
 nv11=(arithmetic-cubic-product)
@@ -7,8 +7,8 @@ if [[ ${1:-} == --gpt-only ]]; then
     nv11=()
     shift
 fi
-if [[ $# -lt 2 || $# -gt 3 || ( $1 != cell && $1 != replay ) ]]; then
-    echo 'usage: run_stress.sh [--gpt-only] {cell|replay} RUN_DIR [extended|EXTENSIONS.tsv]' >&2
+if [[ $# -lt 2 || $# -gt 3 || ( $1 != cell && $1 != replay && $1 != probes ) ]]; then
+    echo 'usage: run_stress.sh [--gpt-only] {cell|replay|probes} RUN_DIR [extended|EXTENSIONS.tsv]' >&2
     exit 2
 fi
 dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
