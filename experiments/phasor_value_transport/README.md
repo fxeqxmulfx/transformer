@@ -390,6 +390,13 @@ differences. Seed 0 scored 23/32 on lookup and 30/32 on MQAR at update
 1,000, and 31/32 on Dyck at update 250. This variant missed the threshold
 on all three screens.
 
+The support-ranked trial counts, for each relation, the distinct source
+tokens from which the prefix table allows two consecutive reads. At a
+query it averages the moving paths with the highest count. Ties share
+the update. This rank uses only completed triples and treats every token
+as a possible relation or endpoint. A unique maximizer supplies one full
+tied displacement at initialization. [Relation support proofs](../../src/Transformer/Phasor/RelationSupport.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
