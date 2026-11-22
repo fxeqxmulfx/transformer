@@ -7,3 +7,4 @@ short	arithmetic-sum-interval
 short	arithmetic-sum-pow12
 short	suite-parity-none
 short	arithmetic-sum-pow16
+long	suite-crasp-depth-1

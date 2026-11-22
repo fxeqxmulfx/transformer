@@ -1,7 +1,7 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all 132 GPT task/seed runs across 34 short
-and ten long tasks. It classified all 9,409 NV11 pairs correctly at update
+One Phasor architecture passed all 135 GPT task/seed runs across 34 short
+and eleven long tasks. It classified all 9,409 NV11 pairs correctly at update
 750 in every seed. Each task trained its own weights with the original AdamW. The model
 uses a causal successor read, full tied embedding displacement and a learned
 residual gain initialized to 0.75.
@@ -23,8 +23,9 @@ The half-gain predecessor and this model have the same parameter count.
 | Matched tier | Passing task/seed runs | Epoch ratio to half-gain predecessor | Faster / tied / slower |
 | --- | ---: | ---: | ---: |
 | Short, including seven catalog additions | 96/96 | 0.6223 | 67 / 23 / 6 |
-| Short, including all nine catalog additions | 102/102 | 0.6144 | 70 / 26 / 6 |
-| Long | 30/30 | 0.7550 | 17 / 9 / 4 |
+| Short, including all nine short catalog additions | 102/102 | 0.6144 | 70 / 26 / 6 |
+| Original long tasks | 30/30 | 0.7550 | 17 / 9 / 4 |
+| Long, including depth-one C-RASP | 33/33 | 0.8049 | 18 / 9 / 6 |
 
 Each ratio is the geometric mean of examples consumed to the first 99%
 crossing for pairs that required training on both models. Key/value binding
@@ -33,11 +34,12 @@ updates, down from 448. Easy recall fell from 400 to 150 in all seeds.
 NV11 first crossed 99% at 500 updates in each seed, then became exhaustive
 at 750. All three were still exhaustive at 3,000.
 
-Ten pairs needed more updates. Hard depth rose from 750 to 1,000 in seed 0
+Twelve pairs needed more updates. Hard depth rose from 750 to 1,000 in seed 0
 and 1,250 to 1,750 in seed 1. Branch amplitudes rose from 352 to 416 and
 320 to 352 in those seeds. Dyck seeds 0 and 2 rose from 250 to 500.
 Associative divisor went from 646 / 684 / 570 to 988 / 1,064 / 627.
-Fibonacci seed 1 went from 7,480 to 12,920.
+Fibonacci seed 1 went from 7,480 to 12,920. Depth-one C-RASP seeds 0 and 1
+went from 500 to 750 and 1,000 to 9,500. Its third seed fell from 1,000 to 250.
 
 Fresh v0.6.0 training on the same GTX 1050 also reduced elapsed time.
 Easy recall took 15.15–15.28 seconds with the selected build and
@@ -614,11 +616,20 @@ seed reached 99% at update 250. The saved checkpoints replayed at 4,705 /
 4,703 / 4,705 of 4,705 held-out pairs, including all 51 zero-row pairs per
 seed. The slowest selected-model cell took 2.35 seconds.
 
-The selected binary lists all nine additions and reports each seed.
+Depth-one C-RASP is the first long catalog addition. Each of the 32 novel
+validation sequences requires a correct label at every supervised prefix.
+The selected model passed all 32 at updates 750 / 9,500 / 250, and every
+checkpoint reproduced that score in a fresh process. The slowest run took
+84.68 seconds. Training lengths were 8–16 tokens. On separate 64-sequence
+splits the checkpoints scored 61 / 64 / 62 at the original lengths,
+60 / 63 / 54 at length 32 and 59 / 60 / 37 at length 64.
+[C-RASP source protocol](../convex_stress_remaining_synthetic_data/README.md)
+
+The selected binary lists all ten additions and reports each seed.
 
 ```sh
 "$bin" extensions
-"$bin" catalog-report runs/v060-selected suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval arithmetic-sum-pow12 suite-parity-none arithmetic-sum-pow16
+"$bin" catalog-report runs/v060-selected suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval arithmetic-sum-pow12 suite-parity-none arithmetic-sum-pow16 suite-crasp-depth-1
 ```
 
 The runner lists the frozen original tiers and the extension tiers
