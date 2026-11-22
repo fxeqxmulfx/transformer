@@ -55,6 +55,29 @@ PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor-half extende
 jq -s -f compare.jq runs/shared-quarter/paired-report.json runs/prefix-successor-half/report.json
 ```
 
+## Tied successor displacement
+
+Can a successor read carry the identity of a retrieved token before the
+network has learned that token's value table? For every position, let `b`
+be the current token and `r` its latest completed successor, falling back
+to `b`. Add `s × (E[r] − E[b])` inside the residual RMS using the trained
+tied embedding `E`. The two trial strengths are 1 and 0.25. Each applies
+the same rule at all lengths with the incumbent's parameters and AdamW.
+
+Lean proves that moving the two coefficients of the embedding read implements
+this hidden update exactly. Before normalization the retrieved-versus-key
+score margin increases by `s × ‖E[r] − E[b]‖²`. Whenever the read returns its
+key, including the first two positions of every prompt, all logits agree with
+the incumbent for every parameter setting. These identities do not imply a
+held-out accuracy gain. [Forward map and proofs](../../src/Transformer/Phasor/SuccessorDisplacement.lean)
+
+The seed-0 screen uses the incumbent's first 99% crossing as the cutoff for
+easy recall, key/value binding, blocks, Dyck and 20-bit parity. The two fresh
+recall probes use 1,000 updates for MQAR and 750 for two-hop lookup. A
+candidate that takes longer on a retention screen is set aside. A surviving
+candidate needs all existing task/seed pairs, a per-tier geometric mean
+epoch ratio at most one, and a verified gain to become the default.
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
