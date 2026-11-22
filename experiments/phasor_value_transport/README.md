@@ -106,6 +106,22 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen suite-blocks 0 runs/bounded-memory 2000
 "$bin" nv11-score runs/bounded-nv11/seed0/nv11-train-3000.f32
 ```
 
+## Causal product at the embedding input
+
+This candidate changes the input to the first transformer layer. Let
+`z[t]` be the RMS-normalized input embedding and let the preceding
+vector at the start of a sequence be zero. Four learned matrices give
+`u[t] = z[t] + O ((A z[t]) ⊙ (B z[t] + C z[t−1]))`. The four Phasor
+streams start from copies of `u[t]`. All positions use the same maps,
+with 32 product coordinates and a zero-initialized output projection.
+
+Lean gives the exact cross-position interaction when two neighboring
+vectors change and the gradient that the next position contributes to
+the preceding input. It also proves that zero initialization preserves
+every original layer state and that suffix changes preserve every
+earlier state at any depth.
+[Causal product input](../../src/Transformer/Phasor/CausalProductInput.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can
