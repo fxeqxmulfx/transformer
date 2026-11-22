@@ -26,6 +26,8 @@ include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
 mod checks;
 mod closed_checks;
+mod compact;
+mod compact_checks;
 mod memory_checks;
 mod snapshot;
 mod stress;

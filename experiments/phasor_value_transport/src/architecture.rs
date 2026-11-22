@@ -11,7 +11,15 @@ pub const RAW: bool = !cfg!(any(
 #[cfg(any(
     all(feature = "bounded-memory-read", feature = "causal-product-input"),
     all(
-        any(feature = "bounded-memory-read", feature = "causal-product-input"),
+        feature = "compact-ffn",
+        any(feature = "bounded-memory-read", feature = "causal-product-input")
+    ),
+    all(
+        any(
+            feature = "bounded-memory-read",
+            feature = "causal-product-input",
+            feature = "compact-ffn"
+        ),
         any(
             feature = "original-stream-mean",
             feature = "prefix-xor",
@@ -23,9 +31,12 @@ pub const RAW: bool = !cfg!(any(
 compile_error!("choose one architecture per stress binary");
 pub const BOUNDED: bool = cfg!(feature = "bounded-memory-read");
 pub const INPUT_PRODUCT: bool = cfg!(feature = "causal-product-input");
+pub const COMPACT: bool = cfg!(feature = "compact-ffn");
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if INPUT_PRODUCT {
+pub const HEAD: Head = if COMPACT {
+    Head::CompactStream
+} else if INPUT_PRODUCT {
     Head::InputProduct
 } else if BOUNDED {
     Head::Bounded
@@ -55,6 +66,9 @@ pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {
         result["input_product_parameters"] = json!(parameters(cfg));
     } else if RAW {
         result["readout_parameters"] = json!(parameters(cfg));
+        if COMPACT {
+            result["ffn_complex_units"] = json!(crate::compact::hidden(cfg) / 2);
+        }
     } else {
         result["pair_parameters"] = json!(parameters(cfg));
         result["initial_gain"] = json!(pair_memory::INITIAL_GAIN);
@@ -80,7 +94,8 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
         } else {
             0
         };
-        return result["readout_parameters"] == per_channel * width
+        return (!COMPACT || result["ffn_complex_units"] == width)
+            && result["readout_parameters"] == per_channel * width
             && result.get("pair_parameters").is_none();
     }
     result["initial_gain"] == json!(pair_memory::INITIAL_GAIN)

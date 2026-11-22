@@ -101,8 +101,15 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     cfg.max_length = length;
     cfg.vocab = 37;
     let mut rng = random::Random::new(179);
-    let plain = layout::initialize_model(&cfg, 2);
-    let mut control = Engine::new(cfg.clone(), &plain)?;
+    let original_cfg = cfg.clone();
+    cfg.head = architecture::HEAD;
+    let mut parameters = layout::initialize_model(&cfg, 2);
+    let mut control = if architecture::COMPACT {
+        Engine::new(compact::wide_config(&cfg), &compact::pad(&cfg, &parameters))?
+    } else {
+        let plain = layout::initialize_model(&original_cfg, 2);
+        Engine::new(original_cfg, &plain)?
+    };
     let p = cfg.vocab;
     let rows = 3 * length;
     let tokens: Vec<_> = (0..rows)
@@ -120,13 +127,14 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     control.forward(&tokens, &labels, 3, length)?;
     let original = control.logits.read()?;
     drop(control);
-    cfg.head = architecture::HEAD;
-    let mut parameters = layout::initialize_model(&cfg, 2);
     let start = architecture::start(&cfg);
     let end = start + architecture::parameters(&cfg);
     let mut e = Engine::new(cfg.clone(), &parameters)?;
     e.forward(&tokens, &labels, 3, length)?;
-    if e.logits.read()? != original {
+    let initial = e.logits.read()?;
+    if architecture::COMPACT {
+        compact_checks::close("initial padded logits", &initial, &original, 2e-5)?;
+    } else if initial != original {
         return Err("zero read offsets failed the pinned stream mean comparison".into());
     }
     for w in &mut parameters[start..end] {
@@ -220,8 +228,12 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         }
     }
     println!(
-        "embedding model length={length} width={width} unchanged_initial_logits={} permuted_logits={} additional_parameters={}",
-        rows * p,
+        "embedding model length={length} width={width} bit_identical_initial_logits={} permuted_logits={} additional_parameters={}",
+        initial
+            .iter()
+            .zip(&original)
+            .filter(|(x, y)| x.to_bits() == y.to_bits())
+            .count(),
         rows * p,
         end - start
     );
@@ -248,6 +260,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     for (length, width) in [(1, 256), (2, 128), (9, 64)] {
         end_to_end(length, width)?;
+    }
+    if architecture::COMPACT {
+        compact_checks::run()?;
     }
     crate::embedding_checks::run()
 }

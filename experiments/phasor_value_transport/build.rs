@@ -1,4 +1,5 @@
 //! Compile the upstream trainer at the same revision as the Phasor CPU oracle.
+mod build_compact;
 mod build_embedding;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
@@ -97,6 +98,7 @@ fn stream_engine(src: &Path) -> String {
         source = source.replace(from, to);
     }
     build_embedding::separate_input_gradient(&mut source);
+    build_compact::hidden_dimensions(&mut source, false);
     source
 }
 
@@ -116,6 +118,7 @@ fn main() {
     catalog_schedule(&gpt, &out);
     let src = gpt.join("research/main_model/phase_score_native/src");
     let mut engine = check_device_offsets(fs::read_to_string(src.join("engine.rs")).unwrap());
+    build_compact::hidden_dimensions(&mut engine, true);
     let embedding_helpers = build_embedding::extract(&mut engine);
     // Only the FP32 reference dispatches entirely to the upstream SGEMM.
     // Do not load unused Ampere tensor modules on a Pascal GPU in that mode.
@@ -205,6 +208,7 @@ fn main() {
         engine = engine.replace(from, to);
     }
     let layout = fs::read_to_string(src.join("layout.rs")).unwrap();
+    let layout = build_compact::layout(layout);
     let initialize = "p.resize(total_count(cfg), 0.);";
     assert_eq!(layout.matches(initialize).count(), 1);
     let layout = layout.replace(

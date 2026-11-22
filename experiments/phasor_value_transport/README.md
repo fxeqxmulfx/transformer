@@ -216,6 +216,25 @@ before normalization. Zero-padding the compact branch reproduces its
 states in the wider model for every layer, position and embedding input.
 [Compact feed-forward proofs](../../src/Transformer/Phasor/CompactFFN.lean)
 
+The compact initializer draws the same full-width weights and retains the
+corresponding complex coordinates in every layer. On two-layer models
+of widths 64, 128 and 256, the compact executable and its zero-padded
+full-width counterpart produced bit-identical final hidden states and
+logits on arbitrary embedding vectors. Their input gradients and every
+parameter gradient of masked cross-entropy also matched exactly. At
+width 128 the two-layer model removes 33,024 independently optimized
+weights. The optimizer and its schedule are shared with the full model.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.CompactFFN
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,compact-ffn
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" cell arithmetic-add 0 runs/compact-streams
+"$bin" probes arithmetic-add 0 runs/compact-streams
+```
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

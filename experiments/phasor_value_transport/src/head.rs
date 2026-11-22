@@ -1,4 +1,4 @@
-//! Output heads share the backbone, the tied vocabulary matrix and its optimizer.
+//! Model variants share the tied vocabulary matrix and the pinned optimizer.
 use crate::{Config, Result, pair_memory, random::Random};
 
 pub const MEMORY_WIDTH: usize = 32;
@@ -12,6 +12,7 @@ pub enum Head {
     Recurrent,
     Bounded,
     InputProduct,
+    CompactStream,
 }
 
 impl Head {
@@ -26,6 +27,7 @@ impl Head {
             "recurrent" => Ok(Self::Recurrent),
             "bounded" => Ok(Self::Bounded),
             "input-product" => Ok(Self::InputProduct),
+            "compact" => Ok(Self::CompactStream),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -39,13 +41,14 @@ impl Head {
             Self::Recurrent => "phasor-hidden-recurrent-32-v1",
             Self::Bounded => "phasor-bounded-memory-32-v1",
             Self::InputProduct => "phasor-causal-product-input-32-v1",
+            Self::CompactStream => "phasor-compact-ffn-stream-v1",
         }
     }
 
     pub fn parameters(self, cfg: &Config) -> usize {
         match self {
             Self::Original => 0,
-            Self::Stream => 4 * cfg.width,
+            Self::Stream | Self::CompactStream => 4 * cfg.width,
             Self::Relations => pair_memory::parameters(cfg),
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 4 * MEMORY_WIDTH * cfg.width
@@ -55,7 +58,7 @@ impl Head {
 
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
-            Self::Original | Self::Stream => {}
+            Self::Original | Self::Stream | Self::CompactStream => {}
             Self::Relations => pair_memory::initialize_gains(cfg, parameters),
             Self::Transition | Self::Recurrent | Self::Bounded | Self::InputProduct => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));

@@ -347,7 +347,7 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream => {
+            Head::Stream | Head::CompactStream => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }
