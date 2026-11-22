@@ -235,6 +235,22 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" cell arithmetic-add 0 runs/compact-streams
 "$bin" probes arithmetic-add 0 runs/compact-streams
 ```
 
+## Learned phase memory
+
+At each position the backbone produces a contextual hidden vector `h[t]`
+with the learned stream readout. A shared learned matrix maps this vector
+to 32 phase increments. Each sequence starts at zero phase and adds its
+increments through the current position. Two learned matrices project the
+sine and the centered cosine of these phases back into the hidden vector.
+Both output matrices start at zero. The tied classifier reads the resulting
+vector. The projection dimensions and operations are the same on every task.
+
+Lean shows that an earlier phase difference keeps the same chord length
+after any common sequence of increments. It also derives the reverse sum
+that sends each read's gradient to earlier increments. The entire
+embedding-input backbone remains causal at every depth.
+[Phase memory proofs](../../src/Transformer/Phasor/PhasePrefixRead.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

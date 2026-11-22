@@ -9,6 +9,7 @@ public import Transformer.Phasor.EmbeddingInput
 public import Transformer.Phasor.BoundedMemoryRead
 public import Transformer.Phasor.CausalProductInput
 public import Transformer.Phasor.CompactFFN
+public import Transformer.Phasor.PhasePrefixRead
 public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.PairValues
 public import Transformer.Phasor.PackedReadBuffers
