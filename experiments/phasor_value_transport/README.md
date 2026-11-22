@@ -232,6 +232,18 @@ all vocabularies. Lean proves the chunk-composition law, invariance under
 injective relabeling, and exact agreement of all logits whenever the observed
 prefix is constant. [Transition-count proofs](../../src/Transformer/Phasor/TransitionValues.lean)
 
+With this counter and the half-gain successor, each seed reached 512/512
+on the language-L2 validation split at 250 updates. The training lengths
+were 32–64. Each reloaded checkpoint scored 512/512 on the separate
+length-128 test. The slowest fresh cell took 40.63 seconds on Kernite 0.3.2.
+The incumbent's seed 2 scored 341/512 at update 1,750. This result belongs
+to the transition-count trial and awaits a full comparison on the existing
+short and long tasks before admission.
+
+To repeat the measurement, build with `fp32-affine-reference,transition-count`
+and run `cell language-l2 SEED RUN_DIR` followed by `probes language-l2 SEED RUN_DIR`
+for seeds 0, 1 and 2 with `PHASOR_EVAL_BATCH_CAP=16`.
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
