@@ -5,7 +5,7 @@
 250. The same model is trained separately on each GPT task, starting from
 the original random embeddings with ordinary AdamW. [Triple transport](#triple-transport) · [Model and scoring rules](../../rule.md)
 
-A partial audit of the default verified **45/75 short runs and 6/30 long
+A partial audit of the default verified **46/75 short runs and 6/30 long
 runs** alongside all three exact NV11 checkpoints. [Default GPT results](#triple-transport-on-the-canonical-gpt-tiers)
 
 The input-phase comparison reached 75/75 short and 30/30 long runs. Its
@@ -1599,11 +1599,11 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" memory-bench triple-transport basis-parity16 0 2
 
 ### Triple transport on the canonical GPT tiers
 
-The November 22 partial audit independently reloaded 54 checkpoints from
-Kernite v0.6.0. Triple transport passed 45/75 short runs and 6/30 long
+The November 22 partial audit independently reloaded 55 checkpoints from
+Kernite v0.6.0. Triple transport passed 46/75 short runs and 6/30 long
 runs. All three NV11 checkpoints recovered 4,704 training and 4,705
 held-out pairs. Fourteen short cases and two long cases crossed on all three
-seeds. The other 30 short runs and 24 long runs reached recorded cutoffs
+seeds. The other 29 short runs and 24 long runs reached recorded cutoffs
 below their source budgets.
 
 On associative division (`associative-divisor-n2-l1-w0`), seed 0 first
@@ -1629,8 +1629,8 @@ seed passed key–value binding and linear transport. Easy depth reached
 512/512 on its independent source test for every seed. At length 128,
 the same depth checkpoints scored 512, 326 and 512 out of 512.
 
-On hard depth, seed 1 reached 512/512 at update 750. Its independent
-test and length-128 transfer also scored 512/512. Seed 0 scored
+On hard depth, seeds 1 and 2 reached 512/512 at updates 750 and 1,000.
+Both scored 512/512 on the independent test and at length 128. Seed 0 scored
 319/512 on novel validation at update 2,250.
 
 | Short case | First passing update, seeds 0 / 1 / 2 | Correct on primary | Correct on independent test |
