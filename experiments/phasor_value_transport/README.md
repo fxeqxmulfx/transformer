@@ -763,6 +763,19 @@ the last edge from its predecessor, and a longer fixture checks the
 absorbing bucket. Reproduce with `shared-check`, `cell language-l2 SEED RUN_DIR`
 and `probes language-l2 SEED RUN_DIR` in the same build.
 
+Enumerating all nonempty words through ten letters identified the shortest
+L2 mistakes in seeds 0 / 1 / 2. With the lagged table they were
+`abbbbb` / `abbbb` / `abbbb`. With the inclusive table they were
+`abbbbbbbb` / `abbbbbb` / `abbbbb`. Each word was independently rejected
+when it was the entire input and all output labels were masked.
+
+The inclusive architecture also first classified all 9,409 NV11 pairs
+correctly at update 750 in all three seeds. Independent reloads of those
+checkpoints and the three update-3,000 checkpoints reproduced 4,704/4,704
+training and 4,705/4,705 held-out pairs. The smallest held-out logit
+margin across seeds was 0.578 at update 750 and 10.024 at update 3,000.
+Use `shared-values` and `nv11-score` with the inclusive feature flag.
+
 On L3, the inclusive count passed **every prefix of every ten-letter word**
 and all 64 alternating-tail sequences at length 128 in all three seeds.
 All six checkpoints in the comparison also scored 512/512 on each of the
