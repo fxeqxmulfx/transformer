@@ -146,6 +146,14 @@ the difference it compares the two operands. Lean proves that the resulting
 word indices agree with the original formulas for every vocabulary size.
 [Power and difference address identities](../../src/Transformer/Phasor/PowerAddresses.lean)
 
+The trial matched the direct formulas for 991,457 table addresses across
+nine vocabulary sizes. Twelve fresh paired cells reproduced the selected
+weights and training histories byte for byte. Relative to direct evaluation,
+short runs were 0.33% faster and long runs 0.35% slower as geometric
+means. Addition was 0.62% faster in all three seeds, while 20-bit parity
+was 0.96% slower across its three seeds. The selected host implementation
+continues to evaluate the per-pair formulas.
+
 ## Half-gain prefix and successor model
 
 The half-gain predecessor applies one causal update at every token. Its prefix state
