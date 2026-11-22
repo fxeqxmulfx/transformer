@@ -100,6 +100,40 @@ pub(super) fn add_parity_probes(task: &mut Task) -> Result<()> {
     Ok(())
 }
 
+/// Extend the catalog's scratchpad-free test generator past its published
+/// 64-bit split. A second oracle recounts every source bit and EOS target.
+/// These sets enter evaluation only after a checkpoint has been selected.
+pub(super) fn add_extended_parity_probes(
+    task: &mut Task,
+) -> basis::Result<BTreeMap<String, String>> {
+    let protocol: Value = serde_json::from_str(parity::PROTOCOL)?;
+    let mut spec = protocol["definitions"]["suite-parity-none"].clone();
+    spec.as_object_mut()
+        .and_then(|s| s.remove("longer_lengths"))
+        .filter(|lengths| lengths == &json!([32, 64]))
+        .ok_or("unexpected source parity probe lengths")?;
+    spec["min_length"] = Value::Null;
+    let mut hashes = BTreeMap::new();
+    for length in [128, 256] {
+        spec["length"] = json!(length);
+        // The source generator validates this bound even without index hints.
+        spec["number_limit"] = json!(length);
+        let rows = parity::dataset::generate(&spec, "test", 256)?;
+        for row in &rows {
+            basis::independent::check(&spec, row)?;
+        }
+        let distinct: std::collections::BTreeSet<_> = rows.iter().map(|r| &r.prompt).collect();
+        if distinct.len() != rows.len() {
+            return Err("duplicate extended parity test prompt".into());
+        }
+        let split = format!("test/extended-parity-{length}");
+        hashes.insert(split.clone(), basis::wire::split_hash(&spec, "test", &rows));
+        task.splits
+            .insert(split, rows.into_iter().map(sequence_example).collect());
+    }
+    Ok(hashes)
+}
+
 pub(super) fn load(name: &str) -> Result<(Value, Task)> {
     let case = source_case(name)?;
     let (task, fingerprints) = if case["kind"] == "arithmetic" {

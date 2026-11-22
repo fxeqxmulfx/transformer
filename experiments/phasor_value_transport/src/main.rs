@@ -259,7 +259,7 @@ fn main() -> Result<()> {
         [op, name, seed, out] if op == "probes" =>
             stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::Tests),
         [op, name, seed, out, mode] if op == "probes" && mode == "extended" =>
-            stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::ExtendedLanguage),
+            stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::Extended),
         [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values" | "nv11-train") => {
             cell(arm, Path::new(dest), SEED, WINDOW)
         }

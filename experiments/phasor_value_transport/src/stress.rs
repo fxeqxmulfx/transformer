@@ -327,18 +327,24 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
 pub enum ProbeSet {
     Validation,
     Tests,
-    ExtendedLanguage,
+    Extended,
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
     let test_splits = probes != ProbeSet::Validation;
-    let extended = probes == ProbeSet::ExtendedLanguage;
-    if extended && !name.starts_with("language-l") {
-        return Err("extended probes require a source block language".into());
+    let extended = probes == ProbeSet::Extended;
+    let parity_task = matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24");
+    if extended && !parity_task && !name.starts_with("language-l") {
+        return Err("extended probes require a source block language or Basis parity task".into());
     }
     let (row, mut task) = load(name)?;
-    if test_splits && matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
+    let mut probe_hashes = BTreeMap::new();
+    if test_splits && parity_task {
         catalog::add_parity_probes(&mut task)?;
+        if extended {
+            probe_hashes = catalog::add_extended_parity_probes(&mut task)
+                .map_err(|err| -> Box<dyn std::error::Error> { err })?;
+        }
     }
     if test_splits && name.starts_with("language-l") {
         language_probes::add(&mut task, name, extended).map_err(|err| err.to_string())?;
@@ -356,6 +362,9 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
         "observation":result["observation"],
         "model":MODEL,"weights_sha256":result["weights_sha256"],
         "kernite_version":trained_with(&result)?,"scored_with_kernite":KERNITE_VERSION});
+    if !probe_hashes.is_empty() {
+        report["probe_fingerprints"] = json!(probe_hashes);
+    }
     if test_splits {
         let mut scores = BTreeMap::new();
         for (split, examples) in &task.splits {

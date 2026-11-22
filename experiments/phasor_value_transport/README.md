@@ -460,6 +460,22 @@ Depth-one C-RASP reached 30/32, 32/32 and 32/32 through update 1,500.
 On NV11 at 3,000 updates, exact checkpoint replay gave 4,704/4,704/4,701
 correct training pairs out of 4,704 and 83/90/89 held out of 4,705.
 
+The optional length extension generates 256 distinct test prompts each
+at 128 and 256 bits using the pinned scratchpad-free parity generator.
+A separate implementation counts the bits and checks every answer and
+end token. The scorer includes a fingerprint for each split. These two
+supplementary splits are outside the published 32- and 64-bit catalog.
+The first-crossing checkpoints below are the same ones used above.
+
+| Training length | 128-bit correct, seeds 0 / 1 / 2 | 256-bit correct, seeds 0 / 1 / 2 |
+| ---: | ---: | ---: |
+| 16 | 0 / 256 / 256 | 248 / 148 / 240 |
+| 20 | 198 / 256 / 255 | 3 / 0 / 256 |
+| 24 | 126 / 41 / 256 | 55 / 250 / 238 |
+
+All rows have 256 examples per seed and length. None of these training
+lengths achieved a three-seed 99% crossing on either longer test.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.InputPhaseRead
 cd experiments/phasor_value_transport
@@ -468,6 +484,7 @@ bin=./target/release/phasor-value-transport
 "$bin" check
 PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/input-phase 3500
 "$bin" probes basis-parity16 0 runs/input-phase
+PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-parity16 0 runs/input-phase extended
 ```
 
 ## Affine phase memory
