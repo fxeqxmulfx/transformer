@@ -479,6 +479,13 @@ vote or a disagreement leaves the ordinary successor address in place.
 The model has the same 17 tables and learned gain as the selected model.
 [Closed relation and address proofs](../../src/Transformer/Phasor/ClosedRelations.lean)
 
+The query, the first endpoint and the second endpoint are distinct whenever
+a closed two-step read moves. Thus fewer than three distinct stored edges
+force the fallback for every relation and every query. The same argument
+applies to a single relation with at most two written sources. A three-cycle
+attains the bound.
+[Minimum support of a closed read](../../src/Transformer/Phasor/ClosedReadBounds.lean)
+
 With `fp32-affine-reference,closed-relation`, the two-step address matched
 all 64 labelled positions on the 32 novel lookup sequences. The full model
 scored 31 / 30 / 30 sequences at 5,000 updates. Its 78 directional
