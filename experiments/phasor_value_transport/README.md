@@ -83,6 +83,18 @@ test, 56/64 at length 32 and 41/64 at length 64. On NV11 the learned
 readout reached 4,696 / 4,692 / 4,703 of 4,704 training pairs at update
 3,000. Reloading those weights gave 86 / 74 / 84 of 4,705 held-out pairs.
 
+Seed 0 also ran the full original 100,000-update AdamW schedule on
+`a³ + ab mod 97`. It first fit all 4,704 training pairs at update 3,250.
+The best held-out count among 401 observations was 96/4,705 at update
+15,250. Reloading the final checkpoint reproduced all 4,704 training
+pairs and 90/4,705 held-out pairs (1.91%). This run failed the exact NV11
+test.
+
+```sh
+"$bin" nv11-train runs/learned-nv11-full/seed0 0 100000
+"$bin" nv11-score runs/learned-nv11-full/seed0/nv11-train-100000.f32
+```
+
 ### Long-tier addition from the embedding-input model
 
 All three independently trained stream-read checkpoints solved the GPT
