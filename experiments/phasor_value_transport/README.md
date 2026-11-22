@@ -125,6 +125,18 @@ The comparison took 0.30% longer on the GTX 1050 as a geometric mean, with
 five of six runs slower. The selected kernel keeps the remainder instruction.
 [Circular address identity](../../src/Transformer/Phasor/TransportedValues.lean)
 
+Fusing the residual's RMS normalization and addition gave byte-identical
+weights and observation histories in 18 fresh, matched v0.6.0 pairs. The
+geometric mean time ratio was 0.9967 across nine short pairs and 1.0001
+across nine long pairs. Addition ran 0.65% faster, 20-bit parity 0.04%
+faster, language L1 0.31% slower and easy associative recall 0.12% slower.
+Eight of the 18 pairs ran faster. The selected implementation keeps the
+two launches. The timing used alternating run order, three seeds per task,
+two rounds for addition and parity, and one for language and recall.
+`shared-check 64`, `shared-check 128` and `shared-check 256` exercise the
+vocabulary-tied residual and its adjoint at each supported width.
+[Coordinate identity for RMS normalization](../../src/Transformer/Phasor/SharedValues.lean)
+
 ## Half-gain prefix and successor model
 
 The half-gain predecessor applies one causal update at every token. Its prefix state
