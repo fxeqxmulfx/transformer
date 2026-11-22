@@ -244,5 +244,5 @@ pub fn run(width: Option<usize>) -> Result<()> {
     for (length, width) in [(1, 256), (2, 128), (9, 64)] {
         end_to_end(length, width)?;
     }
-    Ok(())
+    crate::embedding_checks::run()
 }

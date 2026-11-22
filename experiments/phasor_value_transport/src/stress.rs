@@ -7,6 +7,7 @@ use std::collections::BTreeMap;
 pub mod alignment;
 pub mod benchmark;
 mod catalog;
+pub mod embedding;
 mod language_probes;
 pub mod report;
 
@@ -338,25 +339,7 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
     }
     let cfg = task_config(&row, &task, !extended)?;
     let dest = out.join(name).join(format!("seed{seed}"));
-    let result: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;
-    report::validate(&row, seed, &dest, &result)?;
-    let bytes = fs::read(dest.join("weights.f32"))?;
-    if result["model"] != MODEL
-        || result["weights_sha256"] != hash(&bytes)
-        || result["suite_sha256"] != suite_hash(&row)
-        || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
-        || result["observation"]["case"] != name
-        || result["observation"]["seed"] != seed
-        || bytes.len() != 4 * layout::total_count(&cfg)
-    {
-        return Err("checkpoint identity, shape, or precision mismatch".into());
-    }
-    let mut values: Vec<_> = bytes
-        .as_chunks::<4>()
-        .0
-        .iter()
-        .map(|word| f32::from_le_bytes(*word))
-        .collect();
+    let (result, mut values) = embedding::verified_weights(&row, seed, &cfg, &dest)?;
     let mut e = Engine::new(cfg, &values)?;
     let held = &task.splits[&task.selection];
     let correct = metrics::evaluate(&mut e, held, true)?["exact"].clone();

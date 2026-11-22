@@ -4,8 +4,7 @@
 
 The inner model takes a sequence of embedding vectors. For a tokenized
 benchmark, an input adapter looks up the vectors. Phasor's causal backbone
-produces four hidden streams at each
-position. Each hidden coordinate learns four weights for reading those
+produces four hidden streams at each position. Each hidden coordinate learns four weights for reading those
 streams before the original RMS normalization and tied output projection.
 The weights start at one quarter, with zero trainable offsets. At width
 128 the readout adds 512 parameters shared across all positions. Token
@@ -34,6 +33,8 @@ bin=./target/release/phasor-value-transport
 "$bin" check
 "$bin" cell suite-boolean-and-shift 0 runs/learned-streams
 "$bin" probes suite-boolean-and-shift 0 runs/learned-streams
+jq -nc '[range(3) as $i | [range(64) as $j | (($i + $j) / 64)]]' > vectors.json
+"$bin" embedding-forward suite-boolean-and-shift 0 runs/learned-streams vectors.json
 "$bin" nv11-train runs/learned-nv11/seed0 0 3000
 "$bin" nv11-score runs/learned-nv11/seed0/nv11-train-3000.f32
 ```
@@ -42,6 +43,18 @@ For the original fixed-mean Phasor control, add `original-stream-mean` to
 the Cargo features and use a separate run directory. Both executables
 use the same initialization for the backbone, per-task AdamW schedule,
 training split and checkpoint selection rule.
+
+`vectors.json` is a JSON array with one finite width-dimensional vector per
+position. The command returns the hidden vectors and the tied classifier's
+logits for each position. The case, seed and run directory identify the
+trained checkpoint. The example supplies three width-64 vectors.
+
+Changing targets altered the loss and left all 370 test logits bit-identical.
+Two token IDs assigned the same vector also gave identical logits. On a
+trained depth-one C-RASP checkpoint, eight vectors outside the embedding
+table produced the same first three hidden rows and logits as the three-row
+input alone. The training path reproduced the original checkpoint and
+observation bytes on shifted AND, depth-one C-RASP and modular addition.
 
 The FP32 kernels agreed with an independent FP64 calculation on 24,304
 forward values and gradient components to within `2.3e-7` absolute error.
@@ -65,8 +78,9 @@ current hidden vector before the tied classifier. All four maps are
 shared across positions and tasks are trained separately.
 
 Lean proves that the magnitude of every memory coordinate stays at most
-one at any sequence length. Two initial states converge by the product of
-the intervening retention gates. The output map starts at zero, so the
+one at any sequence length. The difference between two states equals their
+initial difference times the product of the intervening retention gates.
+The output map starts at zero, so the
 untrained model reproduces the original Phasor features for every embedding
 sequence. The proof also gives the gradient from a current read and all
 later reads. [Bounded recurrent readout](../../src/Transformer/Phasor/BoundedMemoryRead.lean)

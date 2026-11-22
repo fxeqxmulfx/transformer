@@ -9,6 +9,7 @@ use std::{env, fs, io::Write, path::Path};
 mod addresses;
 mod architecture;
 mod causal_values;
+mod embedding_checks;
 mod frequency_read;
 mod head;
 mod learned_checks;
@@ -245,6 +246,8 @@ fn main() -> Result<()> {
         [op, name, seed, out, steps] if op == "screen" =>
             stress::run(name, seed.parse()?, Path::new(out), Some(steps.parse()?)),
         [op, name, seed, out] if op == "replay" => stress::replay(name, seed.parse()?, Path::new(out)),
+        [op, name, seed, out, vectors] if op == "embedding-forward" =>
+            stress::embedding::run(name, seed.parse()?, Path::new(out), Path::new(vectors)),
         [op, name, seed, out] if op == "probes" =>
             stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::Tests),
         [op, name, seed, out, mode] if op == "probes" && mode == "extended" =>
@@ -261,6 +264,6 @@ fn main() -> Result<()> {
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }

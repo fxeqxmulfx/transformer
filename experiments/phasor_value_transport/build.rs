@@ -1,4 +1,5 @@
 //! Compile the upstream trainer at the same revision as the Phasor CPU oracle.
+mod build_embedding;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
 fn pin(dir: &Path, revision: &str, tree: &str) {
@@ -95,6 +96,7 @@ fn stream_engine(src: &Path) -> String {
         );
         source = source.replace(from, to);
     }
+    build_embedding::separate_input_gradient(&mut source);
     source
 }
 
@@ -114,6 +116,7 @@ fn main() {
     catalog_schedule(&gpt, &out);
     let src = gpt.join("research/main_model/phase_score_native/src");
     let mut engine = check_device_offsets(fs::read_to_string(src.join("engine.rs")).unwrap());
+    let embedding_helpers = build_embedding::extract(&mut engine);
     // Only the FP32 reference dispatches entirely to the upstream SGEMM.
     // Do not load unused Ampere tensor modules on a Pascal GPU in that mode.
     for (from, to) in [
@@ -161,11 +164,11 @@ fn main() {
         ),
         (
             "pub struct Engine {",
-            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,",
+            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,\n    supervised_shape: Option<(usize, usize)>,",
         ),
         (
             "let mut engine = Self {",
-            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            stream_read: None,",
+            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            stream_read: None,\n            supervised_shape: None,",
         ),
         (
             "        Ok(engine)",
@@ -187,7 +190,7 @@ fn main() {
         // backbone never reads it, and the raw-token model never computes it.
         (
             "            self.seq.prefix(\n                grid(r),\n                self.flags.ptr(),",
-            "            if !crate::architecture::RAW || self.mhc.is_none() { self.seq.prefix(\n                grid(r),\n                self.flags.ptr(),",
+            "            if !self.uses_embedding_backbone() { self.seq.prefix(\n                grid(r),\n                self.flags.ptr(),",
         ),
         (
             "            self.ops.embed(",
@@ -219,7 +222,12 @@ fn main() {
     )
     .unwrap();
     fs::write(out.join("engine_mhc.rs"), stream_engine(&src)).unwrap();
-    for file in ["src/value_layer.rs", "src/stream_layer.rs"] {
+    engine.push_str(&embedding_helpers);
+    for file in [
+        "src/value_layer.rs",
+        "src/stream_layer.rs",
+        "src/embedding_input.rs",
+    ] {
         let extension = Path::new(file).canonicalize().unwrap();
         engine.push_str(&format!("\ninclude!({extension:?});\n"));
         println!("cargo:rerun-if-changed={file}");

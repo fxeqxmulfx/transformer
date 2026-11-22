@@ -362,9 +362,9 @@ impl Engine {
     fn project_output(&mut self, tokens: &[u32], batch: usize, length: usize) -> Result<()> {
         let rows = batch * length;
         if let Some(memory) = &self.hidden_layer {
-            return memory.forward(self, rows, length);
+            memory.forward_features(self, rows, length)?;
         }
-        self.linear(self.logits.ptr(), self.last.ptr(), 0, rows, self.config.vocab, self.config.width)?;
+        self.classify_features(rows)?;
         if let Some(layer) = &mut self.shared_layer {
             layer.memory.as_mut().unwrap().prepare(tokens, length)?;
             self.shared_layer
@@ -384,6 +384,9 @@ impl Engine {
         )
     }
     pub fn backward(&mut self, batch: usize, length: usize) -> Result<()> {
+        if self.uses_embedding_backbone() && self.supervised_shape != Some((batch, length)) {
+            return Err("supervised backward needs the latest labeled forward with the same shape".into());
+        }
         if let Some(layer) = &mut self.shared_layer {
             if batch == 0
                 || batch > self.config.max_batch

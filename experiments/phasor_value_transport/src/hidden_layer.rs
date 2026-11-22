@@ -62,7 +62,11 @@ impl HiddenLayer {
     }
 
     // The only input activations are the backbone's final RMS-normalized stream means.
-    pub(super) fn forward(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
+    pub(super) fn features(&self) -> &F {
+        &self.merged
+    }
+
+    pub(super) fn forward_features(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
         self.forward_shape.set(None);
         let d = e.config.width;
         e.linear(
@@ -114,14 +118,6 @@ impl HiddenLayer {
                 (rows * d) as u32,
             )?;
         }
-        e.linear(
-            e.logits.ptr(),
-            self.merged.ptr(),
-            0,
-            rows,
-            e.config.vocab,
-            d,
-        )?;
         self.forward_shape.set(Some((rows, length)));
         Ok(())
     }
