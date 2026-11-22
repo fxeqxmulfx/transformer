@@ -1,0 +1,159 @@
+diff --git a/experiments/phasor_value_transport/src/causal_values.rs b/experiments/phasor_value_transport/src/causal_values.rs
+index 07633126..8790f2f8 100644
+--- a/experiments/phasor_value_transport/src/causal_values.rs
++++ b/experiments/phasor_value_transport/src/causal_values.rs
+@@ -42,12 +42,19 @@ pub mod kernels {
+         rem.u32(at, at, p);
+         mad.lo.u32(at, row, p, at);
+     }
+-    pub unsafe extern "ptx-kernel" fn weights(
++    // Each normalized coordinate has one writer. Preserve its softmax mass
++    // for the pullback and emit the displaced coefficient at the same address.
++    #[instances(false, true)]
++    pub unsafe extern "ptx-kernel" fn weights<const DISPLACE: bool>(
+         out: *mut f32,
++        effective: *mut f32,
+         scores: *const f32,
+         tokens: *const u32,
++        keys: *const u32,
+         p: u32,
+         length: u32,
++        tables: u32,
++        strength: f32,
+     ) {
+         let (row, prev, off, s, at): (u32, u32, u32, u32, u32);
+         pair(row, prev, off, tokens, p, length);
+@@ -89,6 +96,19 @@ pub mod kernels {
+         bra(exponents);
+         label(reduce_mass);
+         sum_warp(z);
++        let (source_at, dest_at): (u32, u32);
++        let moves: pred;
++        if DISPLACE {
++            let ptr: u64;
++            mad.wide.u32(ptr, row, 4, tokens);
++            ld.global.u32(source_at, [ptr]);
++            mul.lo.u32(at, row, tables);
++            mad.wide.u32(ptr, at, 4, keys);
++            ld.global.u32(dest_at, [ptr]);
++            setp.ne.u32(moves, source_at, dest_at);
++            mad.lo.u32(source_at, row, p, source_at);
++            mad.lo.u32(dest_at, row, p, dest_at);
++        }
+         mov.u32(s, tid.x);
+         label(normalize);
+         setp.ge.u32(done, s, p);
+@@ -99,56 +119,23 @@ pub mod kernels {
+         load(x, out, at);
+         div.rn.f32(x, x, z);
+         store(out, at, x);
++        if DISPLACE {
++            let hit: pred;
++            setp.eq.u32(hit, at, dest_at);
++            and.pred(hit, hit, moves);
++            if hit {
++                add.rn.f32(x, x, strength);
++            }
++            setp.eq.u32(hit, at, source_at);
++            and.pred(hit, hit, moves);
++            if hit {
++                sub.rn.f32(x, x, strength);
++            }
++            store(effective, at, x);
++        }
+         add.u32(s, s, 32);
+         bra(normalize);
+     }
+-    // Move two coefficients of the tied embedding read. Leave the softmax
+-    // masses in their own buffer for the derivative with respect to scores.
+-    pub unsafe extern "ptx-kernel" fn displace(
+-        effective: *mut f32,
+-        masses: *const f32,
+-        tokens: *const u32,
+-        keys: *const u32,
+-        p: u32,
+-        tables: u32,
+-        strength: f32,
+-    ) {
+-        let (row, col, stride, at, b, r): (u32, u32, u32, u32, u32, u32);
+-        let addr: u64;
+-        mov.u32(row, ctaid.x);
+-        mad.wide.u32(addr, row, 4, tokens);
+-        ld.global.u32(b, [addr]);
+-        mul.lo.u32(at, row, tables);
+-        mad.wide.u32(addr, at, 4, keys);
+-        ld.global.u32(r, [addr]);
+-        mov.u32(col, tid.x);
+-        mov.u32(stride, ntid.x);
+-        let (done, same, add_value, sub_key): (pred, pred, pred, pred);
+-        setp.eq.u32(same, b, r);
+-        let x: f32;
+-        label(column);
+-        setp.ge.u32(done, col, p);
+-        if done {
+-            ret();
+-        }
+-        mad.lo.u32(at, row, p, col);
+-        load(x, masses, at);
+-        if same {
+-            bra(write);
+-        }
+-        setp.eq.u32(add_value, col, r);
+-        if add_value {
+-            add.rn.f32(x, x, strength);
+-        }
+-        setp.eq.u32(sub_key, col, b);
+-        if sub_key {
+-            sub.rn.f32(x, x, strength);
+-        }
+-        label(write);
+-        store(effective, at, x);
+-        add.u32(col, col, stride);
+-        bra(column);
+-    }
+     pub unsafe extern "ptx-kernel" fn pullback(
+         unshifted: *mut f32,
+         masses: *const f32,
+diff --git a/experiments/phasor_value_transport/src/value_layer.rs b/experiments/phasor_value_transport/src/value_layer.rs
+index 3a4e82b5..2f2d3196 100644
+--- a/experiments/phasor_value_transport/src/value_layer.rs
++++ b/experiments/phasor_value_transport/src/value_layer.rs
+@@ -51,25 +51,26 @@ impl ValueLayer {
+         let (rows, p, d) = (batch * length, e.config.vocab, e.config.width);
+         if let Some(m) = &self.memory {
+             unsafe {
+-                m.causal.weights(
++                let displace = crate::pair_memory::DISPLACEMENT != 0.0 && length > 2;
++                let weights = if displace {
++                    crate::causal_values::kernels::Kernels::weights::<true>
++                } else {
++                    crate::causal_values::kernels::Kernels::weights::<false>
++                };
++                weights(
++                    &m.causal,
+                     Grid::new(rows as u32, 32),
+                     self.weights.ptr(),
++                    m.dscores.ptr(),
+                     e.logits.ptr(),
+                     e.tokens.ptr(),
++                    m.keys.ptr(),
+                     p as u32,
+                     length as u32,
++                    crate::pair_memory::TABLES as u32,
++                    crate::pair_memory::DISPLACEMENT,
+                 )?;
+-                if crate::pair_memory::DISPLACEMENT != 0.0 && length > 2 {
+-                    m.causal.displace(
+-                        Grid::new(rows as u32, 128),
+-                        m.dscores.ptr(),
+-                        self.weights.ptr(),
+-                        e.tokens.ptr(),
+-                        m.keys.ptr(),
+-                        p as u32,
+-                        crate::pair_memory::TABLES as u32,
+-                        crate::pair_memory::DISPLACEMENT,
+-                    )?;
++                if displace {
+                     if let Some(frequency) = &m.frequency {
+                         frequency.center(
+                             grid(batch * p),

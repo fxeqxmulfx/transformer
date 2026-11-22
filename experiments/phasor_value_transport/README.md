@@ -233,6 +233,14 @@ or a self read, and that changes in the normalized mass pass through the
 displacement unchanged.
 [Transport coefficient identities](../../src/Transformer/Phasor/TransportCoefficients.lean)
 
+The combined kernel reproduced all 97 directional checks and every
+checkpoint and observation byte in twelve fresh v0.6.0 pairs. Five cells
+ran faster. The short-tier elapsed-time ratio was 0.9999 and the long-tier
+ratio was 1.0044. The default keeps the two-pass computation. To repeat,
+apply the patch at `47e0ca4d`, use `fp32-affine-reference,single-write-gain`,
+and run `time_cells.sh` on Dyck, 20-bit parity, language L1 and depth-one
+C-RASP. [Coefficient timing source](trials/emit-transport-coefficients.patch)
+
 The RMS and power-address timing trials can be rebuilt from their archived
 source changes. Build and save the FP32 control at `58bd7352` for RMS or
 `8f7ca6ef` for cached powers. In that checkout apply the corresponding
