@@ -4,6 +4,7 @@ use super::*;
 use data::{Example, Task};
 use std::collections::BTreeMap;
 
+pub mod alignment;
 mod catalog;
 pub mod report;
 

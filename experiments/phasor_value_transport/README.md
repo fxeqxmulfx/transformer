@@ -91,6 +91,24 @@ candidate that takes longer on a retention screen is set aside. A surviving
 candidate needs all existing task/seed pairs, a per-tier geometric mean
 epoch ratio at most one, and a verified gain to become the default.
 
+| Seed-0 held-out screen | Incumbent | Quarter displacement | Full displacement |
+| --- | ---: | ---: | ---: |
+| Easy recall, first 99% update | 400 | 400 | 350 |
+| Key/value binding, first 99% update | 448 | 448 | 384 |
+| Blocks, first 99% update | 750 | 500 | 500 |
+| Dyck and 20-bit parity, first 99% update each | 250 | 250 | 250 |
+| MQAR, exact sequences at 1,000 updates | 0/32 | 3/32 | 25/32 |
+| Two-hop lookup, exact sequences at 750 updates | 0/32 | 0/32 | 0/32 |
+
+The full displacement advanced to the complete comparison. At 5,000 MQAR
+updates it scored 31, 30 and 31 of 32 sequences in seeds 0, 1 and 2. Seed 0
+still scored 31/32 at 15,000. The frozen successor address itself matched
+all 64 MQAR targets and all 4,096 easy-recall targets on their novel validation
+splits. For two-hop lookup one address matched 0/64 targets, and following
+it twice matched 21/64, or 4/32 whole sequences. To reproduce these address
+counts, run `successor-alignment CASE 1` and `successor-alignment CASE 2`
+using the binary built below. This diagnostic uses no model weights.
+
 Build each arm separately. The native oracle compares the logits with an
 independent scalar FP64 computation and checks 76 directional derivatives,
 including the input and output paths through the tied embedding.
