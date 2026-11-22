@@ -1,0 +1,450 @@
+diff --git a/experiments/phasor_value_transport/Cargo.toml b/experiments/phasor_value_transport/Cargo.toml
+index 8fda76cf..603400b6 100644
+--- a/experiments/phasor_value_transport/Cargo.toml
++++ b/experiments/phasor_value_transport/Cargo.toml
+@@ -34,6 +34,7 @@ closed-relation-boost = ["closed-relation"]
+ single-write-gain = ["closed-relation-boost"]
+ transition-table = ["single-write-gain"]
+ inclusive-transitions = ["transition-table"]
++affine-projection-memory = ["inclusive-transitions"]
+ successor-hit-gain = ["successor-displacement"]
+ successor-hit-gain-seven-quarters = ["successor-hit-gain"]
+ successor-agreement = ["successor-hit-gain"]
+diff --git a/experiments/phasor_value_transport/src/main.rs b/experiments/phasor_value_transport/src/main.rs
+index 0f661b29..e70d6491 100644
+--- a/experiments/phasor_value_transport/src/main.rs
++++ b/experiments/phasor_value_transport/src/main.rs
+@@ -7,6 +7,7 @@ use serde_json::{Value, json};
+ use std::{env, fs, io::Write, path::Path};
+
+ mod addresses;
++mod affine_memory;
+ mod causal_values;
+ mod frequency_read;
+ mod pair_checks;
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index 83ef4996..5125c92c 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -60,6 +60,24 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
+         }
+     }
+     let mut result = vec![0.; d];
++    if pair_memory::AFFINE {
++        let lines = &tables[keys.len() * p as usize * d..];
++        for &token in prefix.iter().chain([&b]) {
++            let start = token as usize * d;
++            for (state, line) in result
++                .as_chunks_mut::<2>()
++                .0
++                .iter_mut()
++                .zip(lines[start..start + d].as_chunks::<2>().0)
++            {
++                let (s, bias) = (f64::from(line[0]), f64::from(line[1]));
++                let (x, y) = (state[0], state[1]);
++                // Solve the line constraint and orthogonality independently of the CUDA shift.
++                state[0] = (s * s * x - s * y + bias) / (1. + s * s);
++                state[1] = (y - s * x + s * bias) / (1. + s * s);
++            }
++        }
++    }
+     for (table, key) in keys.into_iter().enumerate() {
+         let offset = (table * p as usize + key as usize) * d;
+         for (x, &v) in result.iter_mut().zip(&tables[offset..offset + d]) {
+@@ -204,6 +222,15 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+     for x in &mut theta[start..gain_at] {
+         *x = rng.gauss(0., 0.005) as f32;
+     }
++    if pair_memory::AFFINE && length == 6 {
++        let lines = start + pair_memory::DIRECT_TABLES * p * d;
++        for (token, line) in theta[lines..gain_at].chunks_exact_mut(d).enumerate() {
++            for (j, pair) in line.as_chunks_mut::<2>().0.iter_mut().enumerate() {
++                pair[0] = ((token + j) % 5) as f32 * 0.4 - 0.8;
++                pair[1] = ((3 * token + j) % 7) as f32 * 0.1 - 0.3;
++            }
++        }
++    }
+     theta[gain_at] = 0.7;
+     let mut e = Engine::new(cfg, &theta)?;
+     e.forward(&tokens, &labels, batch, length)?;
+@@ -326,7 +353,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+     if check_count_bucket {
+         // The six-token fixture has three changes including the final edge.
+         // In twelve buckets the alternating fixture either wraps to 3 or caps at 11.
+-        let offset = start + (pair_memory::TABLES - 1) * p * d;
++        let offset = start + (pair_memory::DIRECT_TABLES - 1) * p * d;
+         let bucket = if cfg!(feature = "inclusive-transitions") && length == 17 {
+             11
+         } else {
+@@ -344,6 +371,24 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+         directions.push(("active transition count".to_owned(), active));
+         directions.push(("unused transition count".to_owned(), unused));
+     }
++    if pair_memory::AFFINE && length == 6 {
++        let lines = start + pair_memory::DIRECT_TABLES * p * d;
++        for token in 0..=2 {
++            let row = lines + token * d;
++            for (j, label) in ["slope", "intercept"].iter().enumerate() {
++                let col = (j..d)
++                    .step_by(2)
++                    .find(|&c| gradients[row + c].abs() > 1e-5)
++                    .ok_or("missing affine gradient on the supervised prefix")?;
++                directions.push((format!("token {token} {label}"), row + col..row + col + 1));
++            }
++        }
++        if gradients[lines + 3 * d..gain_at].iter().any(|&g| g != 0.) {
++            return Err(
++                "a token absent from the supervised prefix received an affine gradient".into(),
++            );
++        }
++    }
+     if pair_memory::CLOSED_RELATION && length == 8 {
+         let endpoint = start + 3 * d..start + 4 * d;
+         let ordinary = start..start + d;
+@@ -455,6 +500,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
+     if !precision::FP32_AFFINE_REFERENCE {
+         return Err("finite differences require FP32 affines".into());
+     }
++    if pair_memory::AFFINE {
++        crate::affine_memory::check_stutter()?;
++    }
+     if cfg!(feature = "relation-support") || pair_memory::CLOSED_RELATION {
+         crate::relation_support::check_counts()?;
+     }
+diff --git a/experiments/phasor_value_transport/src/pair_memory.rs b/experiments/phasor_value_transport/src/pair_memory.rs
+index 381b35e2..aa8d0150 100644
+--- a/experiments/phasor_value_transport/src/pair_memory.rs
++++ b/experiments/phasor_value_transport/src/pair_memory.rs
+@@ -5,7 +5,9 @@ use crate::engine::{Config, Result};
+ use kernite_cuda::{Buffer, Cuda};
+
+ const PAIR_TABLES: usize = 17;
+-pub const TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
++pub const DIRECT_TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
++pub const AFFINE: bool = cfg!(feature = "affine-projection-memory");
++pub const TABLES: usize = DIRECT_TABLES + AFFINE as usize;
+ // A build without a historical selector uses the promoted closed-relation reader.
+ pub const DEFAULT_MODEL: bool = !cfg!(any(
+     feature = "pair-v2",
+@@ -101,6 +103,8 @@ pub const MODEL: &str = if LEARN_BONUS {
+     }
+ } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
+     "phasor-successor-hit-gain175-v1"
++} else if AFFINE {
++    "phasor-affine-projection-memory-v1"
+ } else if cfg!(feature = "inclusive-transitions") {
+     "phasor-inclusive-transition-table-v1"
+ } else if cfg!(feature = "transition-table") {
+@@ -230,6 +234,11 @@ struct GainEvidence {
+     device: Buffer<u32>,
+ }
+
++pub struct AffineMemory {
++    pub kernels: crate::affine_memory::kernels::Kernels,
++    pub prior: Buffer<f32>,
++}
++
+ pub struct PairMemory {
+     pub kernels: crate::pair_ops::kernels::Kernels,
+     pub keys: Buffer<u32>,
+@@ -238,6 +247,7 @@ pub struct PairMemory {
+     pub causal: crate::causal_values::kernels::Kernels,
+     pub frequency: Option<crate::frequency_read::kernels::Kernels>,
+     pub relations: Option<crate::relation_paths::RelationRead>,
++    pub affine: Option<AffineMemory>,
+     pub dscores: Buffer<f32>,
+     pub merged: Buffer<f32>,
+     pub scaled: Buffer<f32>,
+@@ -272,6 +282,14 @@ impl PairMemory {
+             relations: cfg!(feature = "relation-paths")
+                 .then(|| crate::relation_paths::RelationRead::new(cuda, rows, cfg.vocab))
+                 .transpose()?,
++            affine: if AFFINE {
++                Some(AffineMemory {
++                    kernels: crate::affine_memory::kernels::Kernels::load(cuda)?,
++                    prior: cuda.alloc(rows * cfg.width)?,
++                })
++            } else {
++                None
++            },
+             dscores: cuda.alloc(rows * cfg.vocab)?,
+             merged: cuda.alloc(rows * cfg.width)?,
+             scaled: cuda.alloc(rows * cfg.width)?,
+@@ -336,6 +354,9 @@ impl PairMemory {
+             };
+             let (a, b) = (tokens[prev] as usize, token as usize);
+             keys.copy_from_slice(&addresses(a, b, p, self.factors[b]));
++            if AFFINE {
++                keys[TABLES - 1] = (DIRECT_TABLES * p + b) as u32;
++            }
+             if SUCCESSOR {
+                 let pos = row % length;
+                 if pos == 0 {
+@@ -394,7 +415,7 @@ impl PairMemory {
+                         transitions += 1;
+                     }
+                     if cfg!(feature = "transition-table") {
+-                        let count_table = TABLES - 1;
++                        let count_table = DIRECT_TABLES - 1;
+                         let bucket = if cfg!(feature = "inclusive-transitions") {
+                             transitions.min(p - 1)
+                         } else {
+diff --git a/experiments/phasor_value_transport/src/pair_ops.rs b/experiments/phasor_value_transport/src/pair_ops.rs
+index 01e08f47..bceb9960 100644
+--- a/experiments/phasor_value_transport/src/pair_ops.rs
++++ b/experiments/phasor_value_transport/src/pair_ops.rs
+@@ -7,7 +7,8 @@ pub mod kernels {
+         mad.wide.u32(address, i, 4, ptr);
+         ld.global.u32(v, [address]);
+     }
+-    pub unsafe extern "ptx-kernel" fn read(
++    #[instances(false, true)]
++    pub unsafe extern "ptx-kernel" fn read<const SEPARATE_LAST: bool>(
+         hidden: *mut f32,
+         values: *const f32,
+         keys: *const u32,
+@@ -24,6 +25,9 @@ pub mod kernels {
+         ld.global.f32(sum, [dest]);
+         mul.lo.u32(ix, row, tables);
+         add.u32(end, ix, tables);
++        if SEPARATE_LAST {
++            sub.u32(end, end, 1);
++        }
+         let more: pred;
+         label(next);
+         word(key, keys, ix);
+diff --git a/experiments/phasor_value_transport/src/value_layer.rs b/experiments/phasor_value_transport/src/value_layer.rs
+index 3a4e82b5..dda07ee1 100644
+--- a/experiments/phasor_value_transport/src/value_layer.rs
++++ b/experiments/phasor_value_transport/src/value_layer.rs
+@@ -132,7 +132,7 @@ impl ValueLayer {
+         }
+         if let Some(m) = &self.memory {
+             unsafe {
+-                m.kernels.read(
++                m.kernels.read::<{ crate::pair_memory::AFFINE }>(
+                     Grid::new(rows as u32, d as u32),
+                     self.hidden.ptr(),
+                     e.parameters
+@@ -142,6 +142,16 @@ impl ValueLayer {
+                     d as u32,
+                     crate::pair_memory::TABLES as u32,
+                 )?;
++                if let Some(memory) = &m.affine {
++                    let start = crate::pair_memory::start(&e.config) + crate::pair_memory::DIRECT_TABLES * p * d;
++                    memory.kernels.forward(
++                        Grid::new(batch as u32, (d / 2) as u32),
++                        self.hidden.ptr(),
++                        memory.prior.ptr(),
++                        e.parameters.at(start).ok_or("affine token lines outside parameters")?,
++                        e.tokens.ptr(), d as u32, length as u32,
++                    )?;
++                }
+             }
+         }
+         e.rms(self.normalized.ptr(), self.hidden.ptr(), rows)?;
+@@ -288,7 +298,7 @@ impl ValueLayer {
+                     )?;
+                 }
+                 m.kernels.backward(
+-                    Grid::new((p * crate::pair_memory::TABLES) as u32, d as u32),
++                    Grid::new((p * crate::pair_memory::DIRECT_TABLES) as u32, d as u32),
+                     e.gradients
+                         .at(crate::pair_memory::start(&e.config))
+                         .ok_or("value table outside gradient buffer")?,
+@@ -297,6 +307,25 @@ impl ValueLayer {
+                     m.owners.ptr(),
+                     d as u32,
+                 )?;
++                if let Some(memory) = &m.affine {
++                    let words = crate::pair_memory::DIRECT_TABLES * p;
++                    let start = crate::pair_memory::start(&e.config) + words * d;
++                    // The projection has consumed the scaled features, so their
++                    // buffer now holds the slope and intercept derivatives per row.
++                    memory.kernels.reverse(
++                        Grid::new(batch as u32, (d / 2) as u32),
++                        m.scaled.ptr(), self.dhidden.ptr(), memory.prior.ptr(),
++                        e.parameters.at(start).ok_or("affine token lines outside parameters")?,
++                        e.tokens.ptr(), d as u32, length as u32,
++                    )?;
++                    m.kernels.backward(
++                        Grid::new(p as u32, d as u32),
++                        e.gradients.at(start).ok_or("affine token lines outside gradients")?,
++                        m.scaled.ptr(),
++                        m.offsets.at(words).ok_or("affine token incidence offsets missing")?,
++                        m.owners.ptr(), d as u32,
++                    )?;
++                }
+                 m.causal.pullback(
+                     Grid::new(rows as u32, 32),
+                     m.dscores.ptr(),
+diff --git a/experiments/phasor_value_transport/src/affine_memory.rs b/experiments/phasor_value_transport/src/affine_memory.rs
+new file mode 100644
+index 00000000..70f59879
+--- /dev/null
++++ b/experiments/phasor_value_transport/src/affine_memory.rs
+@@ -0,0 +1,164 @@
++//! One thread scans a coordinate pair. A token selects a learned line
++//! x + slope*y = intercept. The reverse sweep implements affineMemoryWrite_adjoint.
++use crate::engine::Result;
++use kernite_cuda::{Cuda, Grid};
++
++/// Two arrangements of positive run lengths have the same final state.
++/// Reversing the two distinct writes gives a different state.
++pub fn check_stutter() -> Result<()> {
++    let cuda = Cuda::new()?;
++    let kernels = kernels::Kernels::load(&cuda)?;
++    let tokens = cuda.upload(&[0u32, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0])?;
++    let lines = cuda.upload(&[0.0f32, 1.0, 1.0, 0.0])?;
++    let hidden = cuda.upload(&[0.0f32; 30])?;
++    let prior = cuda.alloc(30)?;
++    unsafe {
++        kernels.forward(
++            Grid::new(3, 1),
++            hidden.ptr(),
++            prior.ptr(),
++            lines.ptr(),
++            tokens.ptr(),
++            2,
++            5,
++        )?;
++    }
++    let states = hidden.read()?;
++    if states[8..10] != [0.5, -0.5] || states[18..20] != states[8..10] || states[28..30] != [1., 0.]
++    {
++        return Err("affine memory changed across repetitions or lost token order".into());
++    }
++    println!("affine GPU states: repeated A then B gives (0.5, -0.5), reversed gives (1, 0)");
++    Ok(())
++}
++
++#[kernite_macros::kernels]
++pub mod kernels {
++    fn read(v: f32, data: u64, at: u32) {
++        let ptr: u64;
++        mad.wide.u32(ptr, at, 4, data);
++        ld.global.f32(v, [ptr]);
++    }
++    fn write(data: u64, at: u32, v: f32) {
++        let ptr: u64;
++        mad.wide.u32(ptr, at, 4, data);
++        st.global.f32([ptr], v);
++    }
++    fn line(slope: f32, bias: f32, lines: u64, tokens: u64, row: u32, width: u32, col: u32) {
++        let ptr: u64;
++        let (token, at): (u32, u32);
++        mad.wide.u32(ptr, row, 4, tokens);
++        ld.global.u32(token, [ptr]);
++        mad.lo.u32(at, token, width, col);
++        read(slope, lines, at);
++        add.u32(at, at, 1);
++        read(bias, lines, at);
++    }
++    fn coefficient(shift: f32, denom: f32, slope: f32, bias: f32, x: f32, y: f32) {
++        let neg_slope: f32;
++        neg.f32(neg_slope, slope);
++        sub.rn.f32(shift, bias, x);
++        fma.rn.f32(shift, neg_slope, y, shift);
++        fma.rn.f32(denom, slope, slope, 1.0);
++        div.rn.f32(shift, shift, denom);
++    }
++    pub unsafe extern "ptx-kernel" fn forward(
++        hidden: *mut f32,
++        prior: *mut f32,
++        lines: *const f32,
++        tokens: *const u32,
++        width: u32,
++        length: u32,
++    ) {
++        let (seq, lane, col, row, end, at, next): (u32, u32, u32, u32, u32, u32, u32);
++        mov.u32(seq, ctaid.x);
++        mov.u32(lane, tid.x);
++        mul.lo.u32(col, lane, 2);
++        mul.lo.u32(row, seq, length);
++        add.u32(end, row, length);
++        let (x, y, slope, bias, shift, denom, val): (f32, f32, f32, f32, f32, f32, f32);
++        mov.f32(x, 0.0);
++        mov.f32(y, 0.0);
++        let more: pred;
++        label(position);
++        line(slope, bias, lines, tokens, row, width, col);
++        mad.lo.u32(at, row, width, col);
++        add.u32(next, at, 1);
++        write(prior, at, x);
++        write(prior, next, y);
++        coefficient(shift, denom, slope, bias, x, y);
++        add.rn.f32(x, x, shift);
++        fma.rn.f32(y, slope, shift, y);
++        read(val, hidden, at);
++        add.rn.f32(val, val, x);
++        write(hidden, at, val);
++        read(val, hidden, next);
++        add.rn.f32(val, val, y);
++        write(hidden, next, val);
++        add.u32(row, row, 1);
++        setp.lt.u32(more, row, end);
++        if more {
++            bra(position);
++        }
++    }
++    pub unsafe extern "ptx-kernel" fn reverse(
++        out: *mut f32,
++        upstream: *const f32,
++        prior: *const f32,
++        lines: *const f32,
++        tokens: *const u32,
++        width: u32,
++        length: u32,
++    ) {
++        let (seq, lane, col, row, start, at, next): (u32, u32, u32, u32, u32, u32, u32);
++        mov.u32(seq, ctaid.x);
++        mov.u32(lane, tid.x);
++        mul.lo.u32(col, lane, 2);
++        mul.lo.u32(start, seq, length);
++        add.u32(row, start, length);
++        let (qx, qy, x, y, slope, bias, shift, denom, k, ds, val): (
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++            f32,
++        );
++        mov.f32(qx, 0.0);
++        mov.f32(qy, 0.0);
++        let more: pred;
++        label(position);
++        sub.u32(row, row, 1);
++        mad.lo.u32(at, row, width, col);
++        add.u32(next, at, 1);
++        read(x, prior, at);
++        read(y, prior, next);
++        line(slope, bias, lines, tokens, row, width, col);
++        coefficient(shift, denom, slope, bias, x, y);
++        read(val, upstream, at);
++        add.rn.f32(qx, qx, val);
++        read(val, upstream, next);
++        add.rn.f32(qy, qy, val);
++        fma.rn.f32(k, slope, qy, qx);
++        div.rn.f32(k, k, denom);
++        add.rn.f32(val, slope, slope);
++        fma.rn.f32(val, val, shift, y);
++        neg.f32(val, val);
++        mul.rn.f32(ds, shift, qy);
++        fma.rn.f32(ds, k, val, ds);
++        write(out, at, ds);
++        write(out, next, k);
++        sub.rn.f32(qx, qx, k);
++        neg.f32(val, slope);
++        fma.rn.f32(qy, val, k, qy);
++        setp.gt.u32(more, row, start);
++        if more {
++            bra(position);
++        }
++    }
++}

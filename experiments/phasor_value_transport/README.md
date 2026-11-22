@@ -943,6 +943,20 @@ every input. The proof also derives the reverse update for the slopes,
 intercepts and states.
 [Affine projection memory](../../src/Transformer/Phasor/AffineProjectionMemory.lean)
 
+The GPU passed 159 gradient checks and agreed with the independent FP64
+forward within 1.10 × 10⁻⁶. Two differently ordered prompts produced
+hidden states (0.5, −0.5) and (1, 0). Each L2 seed reached 512/512 at
+update 250 and repeated that score on both official test splits. The
+three checkpoints passed 1,016 / 1,008 / 992 of the 1,024 ten-letter
+words and 64 / 63 / 62 of the 64 alternating tails. The inclusive
+table scored higher on the ten-letter test in every seed. Affine training
+was 0.40% faster as a geometric mean on L2. On typed Dyck, seed 0
+scored 26/32 at the 2,500-update cutoff. We set this trial aside.
+To reproduce, apply the patch at `462565fa`, build with
+`fp32-affine-reference,affine-projection-memory` and use `shared-check`,
+`cell language-l2`, `probes language-l2` and `screen suite-dyck-2`.
+[Affine projection source](trials/affine-projection-memory.patch)
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
