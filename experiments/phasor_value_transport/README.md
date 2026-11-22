@@ -153,7 +153,14 @@ epoch ratio at most one, and a verified gain to become the default.
 | MQAR, exact sequences at 1,000 updates | 0/32 | 3/32 | 25/32 |
 | Two-hop lookup, exact sequences at 750 updates | 0/32 | 0/32 | 0/32 |
 
-The full displacement advanced to the complete comparison. At 5,000 MQAR
+The full displacement retained all 120 GPT passes on the cohort with five
+extensions. The geometric-mean epoch ratio to the incumbent was 1.0122
+across the 90 short runs and 0.9906 across the 30 long runs. Blocks seed 2
+rose from 1,250 to 9,750 updates. The short-tier result kept the incumbent
+as the default. All three full-displacement NV11 seeds reached exact
+classification at update 1,250 and remained exact at 3,000.
+
+At 5,000 MQAR
 updates it scored 31, 30 and 31 of 32 sequences in seeds 0, 1 and 2. Seed 0
 still scored 31/32 at 15,000. The frozen successor address itself matched
 all 64 MQAR targets and all 4,096 easy-recall targets on their novel validation
@@ -264,9 +271,9 @@ With this counter and the half-gain successor, each seed reached 512/512
 on the language-L2 validation split at 250 updates. The training lengths
 were 32–64. Each reloaded checkpoint scored 512/512 on the separate
 length-128 test. The slowest fresh cell took 40.63 seconds on Kernite 0.3.2.
-The incumbent's seed 2 scored 341/512 at update 1,750. This result belongs
-to the transition-count trial and awaits a full comparison on the existing
-short and long tasks before admission.
+The incumbent's seed 2 scored 341/512 at update 1,750. The transition-count
+model scored 31/32 on Dyck seed 0 at the incumbent's 250-update cutoff in
+a v0.6.0 rerun, so language-L2 stays outside the selected suite.
 
 To repeat the measurement, build with `fp32-affine-reference,transition-count`
 and run `cell language-l2 SEED RUN_DIR` followed by `probes language-l2 SEED RUN_DIR`
