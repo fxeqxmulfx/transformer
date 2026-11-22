@@ -20,9 +20,15 @@ With a full successor displacement and initial gain 0.75, the v0.6.0
 GPU forward pass agreed with the independent FP64 oracle to within
 8.23 × 10⁻⁷ across all four tested shapes. All 76 directional derivatives
 passed. The same compiler and architecture on Kernite 0.3.2 printed
-identical oracle results. In a fresh v0.6.0 run, seed 0 reached exact NV11
-at update 750. A separate process reloaded the weights and scored all 4,704
-training pairs and all 4,705 held-out pairs correctly.
+identical oracle results. The six matched training runs produced byte-identical
+observation histories and weights across the two versions. Key/value binding
+crossed 99% at updates 64, 0 and 64. NV11 crossed at 500 in every seed.
+Elapsed times for each matched NV11 run were within 0.02 seconds.
+
+Under v0.6.0 every seed reached exact NV11 at update 750 and retained it at
+3,000. Independent reloads of all six snapshots classified every one of
+the 4,704 training pairs and 4,705 held-out pairs correctly. The selected
+half-gain architecture first reached this score at 1,250 updates.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.DisplacementGain
