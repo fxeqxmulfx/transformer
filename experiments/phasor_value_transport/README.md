@@ -40,6 +40,15 @@ The report counts the original and additional tasks separately. Each
 `gpt-tests.jsonl` row identifies the checkpoint, its first passing update
 and its primary score. Its `test_splits` object gives exact counts and
 denominators for the available independent test and transfer splits.
+For a partially completed extension cohort, the following command requires
+a replay for every reported passing seed and reports pending and exhausted
+seeds separately. It checks the first passing update as well as the model,
+weights and exact counts.
+
+```sh
+jq -es --argjson passing_only true --slurpfile report "$out/gpt-report.json" \
+    -f verify_replays.jq "$out/gpt-tests.jsonl"
+```
 
 For a broader catalog case scored by exact sequence accuracy,
 `catalog-target CASE SEED SEARCH_UPDATES RUN_DIR` uses the target and
