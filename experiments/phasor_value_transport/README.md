@@ -155,6 +155,13 @@ means. Addition was 0.62% faster in all three seeds, while 20-bit parity
 was 0.96% slower across its three seeds. The selected host implementation
 continues to evaluate the per-pair formulas.
 
+The tied-gradient trial combines the backbone, output-projection and value
+contributions to each embedding coordinate in one GPU launch. It retains
+the two original FP32 additions in their original order. Lean proves that
+the combined gradient gives the directional derivative of both uses of
+the embedding on every finite set of active rows.
+[Tied embedding adjoint](../../src/Transformer/Phasor/TiedGradients.lean)
+
 ## Half-gain prefix and successor model
 
 The half-gain predecessor applies one causal update at every token. Its prefix state
