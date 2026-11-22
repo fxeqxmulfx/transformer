@@ -97,6 +97,24 @@ The independent test scores were 64 / 27 / 64 of 64 and length-64 scores
 were 0 / 35 / 64 of 64. The per-seed `gpt-tests.jsonl` above includes
 every first crossing, denominator and available test split.
 
+At length 256, all three hard-depth checkpoints still classified every
+prefix correctly on all 512 test sequences. Easy depth scored
+507 / 512 / 295 out of 512 at the same length. Both tasks trained on
+lengths 32–64. The depth probe rebuilds the original length-128 test and
+checks its tensor fingerprint before generating the requested length.
+On the long-tier easy recall task, inserting 64 filler tokens between the
+writes and reads reduced exact sequences to 230 / 280 / 171 of 512.
+The same checkpoints answered 3,722 / 3,813 / 3,603 of the 4,096
+individual queries correctly.
+
+```sh
+for seed in 0 1 2; do
+    PHASOR_EVAL_BATCH_CAP=2 "$bin" probes basis-depth-hard "$seed" "$out" depth-length 256
+    PHASOR_EVAL_BATCH_CAP=2 "$bin" probes basis-depth-easy "$seed" "$out" depth-length 256
+    PHASOR_EVAL_BATCH_CAP=2 "$bin" probes basis-recall-easy "$seed" "$out" recall-gap 64
+done
+```
+
 On the separate NV11 regression, the same input-phase architecture
 scored 52 / 50 / 53 of 4,705 held-out pairs at update 250 and
 83 / 90 / 89 at update 3,000. The triple-transport reference solved

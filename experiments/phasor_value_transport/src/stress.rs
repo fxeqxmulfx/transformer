@@ -337,6 +337,7 @@ pub enum ProbeSet {
     ParityNeighbors,
     ParityLength(usize),
     RecallGap(usize),
+    DepthLength(usize),
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
@@ -348,6 +349,7 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
             | ProbeSet::ParityNeighbors
             | ProbeSet::ParityLength(_)
             | ProbeSet::RecallGap(_)
+            | ProbeSet::DepthLength(_)
     );
     let parity_task = matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24");
     if matches!(
@@ -367,6 +369,11 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
     }
     let (row, mut task) = load(name)?;
     let mut probe_hashes = BTreeMap::new();
+    if let ProbeSet::DepthLength(length) = probes {
+        let (split, digest) =
+            language_probes::depth_length(&mut task, &row, length).map_err(|e| e.to_string())?;
+        probe_hashes.insert(split, digest);
+    }
     if let ProbeSet::RecallGap(gap) = probes {
         let spec = recall_gap::source_spec(name).map_err(|e| e.to_string())?;
         let original = task

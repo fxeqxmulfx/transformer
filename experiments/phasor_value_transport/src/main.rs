@@ -316,6 +316,8 @@ fn main() -> Result<()> {
             stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::ParityLength(bits.parse()?)),
         [op, name, seed, out, mode, gap] if op == "probes" && mode == "recall-gap" =>
             stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::RecallGap(gap.parse()?)),
+        [op, name, seed, out, mode, len] if op == "probes" && mode == "depth-length" =>
+            stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::DepthLength(len.parse()?)),
         [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values" | "nv11-train") => {
             cell(arm, Path::new(dest), SEED, WINDOW)
         }
@@ -334,6 +336,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Rows),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }
