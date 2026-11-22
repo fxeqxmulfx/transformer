@@ -773,9 +773,16 @@ original test splits.
 | Alternating tails at length 128, out of 64 | 56 / 57 / 64 | 64 / 64 / 64 |
 
 Elapsed time fell by 10.30% as a geometric mean across the three L3 pairs.
-The slowest inclusive run took 65.24 seconds, within the long-tier limit.
+The slowest inclusive run took 65.23 seconds, within the long-tier limit.
 Use the same commands with `language-l3` and the two feature flags in the
 table comparison. The 153-run default uses the closed-relation architecture.
+
+The longer transfer test evaluates every twelve-letter binary word and
+all 256 eight-letter words after repeating each letter 32 times. The
+second set has 256 payload letters per prompt. Lean proves that every
+copy has the same target as the corresponding original prefix, even when
+the repetition counts differ across letters.
+[Prefix labels under repetitions](../../src/Transformer/Phasor/StutterTransfer.lean)
 
 The modulated transition-table trial reads a capped count entry `x` and a
 current-token entry `y` at every position. Each hidden coordinate contributes

@@ -19,6 +19,7 @@ public import Transformer.Phasor.TransitionValues
 public import Transformer.Phasor.TransitionTable
 public import Transformer.Phasor.SaturatedTransitions
 public import Transformer.Phasor.InclusiveTransitions
+public import Transformer.Phasor.StutterTransfer
 public import Transformer.Phasor.ModulatedTransitions
 public import Transformer.Phasor.DisplacementGain
 public import Transformer.Phasor.SuccessorAgreement
