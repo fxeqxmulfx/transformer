@@ -1,30 +1,9 @@
 //! Pool distinct ordered output pairs observed across common hidden keys.
-use super::{ABSENT, Components};
+use super::{ABSENT, Components, values::Values};
 use std::collections::HashMap;
 #[path = "slot_symmetry.rs"]
 mod symmetry;
 pub use symmetry::RoleEvidence;
-
-#[derive(Clone, Copy, Default)]
-struct Values([u64; 4]);
-
-impl Values {
-    fn insert(&mut self, y: usize) {
-        self.0[y / 64] |= 1 << (y % 64);
-    }
-    fn intersect(&mut self, other: &Self) {
-        for (a, b) in self.0.iter_mut().zip(other.0) {
-            *a &= b;
-        }
-    }
-    fn unique(&self) -> Option<u32> {
-        if self.0.iter().map(|word| word.count_ones()).sum::<u32>() != 1 {
-            return None;
-        }
-        let (i, word) = self.0.iter().enumerate().find(|(_, word)| **word != 0)?;
-        Some((64 * i) as u32 + word.trailing_zeros())
-    }
-}
 
 /// Pool signatures supported by six distinct learned output pairs and read
 /// their common admissible image from at most sixteen learned reference rows.
@@ -209,7 +188,7 @@ fn read_round(
             if *read != ABSENT || constant != ABSENT {
                 continue;
             }
-            let mut candidates = Values([u64::MAX; 4]);
+            let mut candidates = Values::ALL;
             let mut supporting_rows = 0;
             for (index, &(source, _)) in peers.iter().enumerate() {
                 let source_value = rows[source][key];
@@ -218,10 +197,10 @@ fn read_round(
                 }
                 if let Some(table) = pooled.get(&(roots[index * contexts + target] as usize)) {
                     let options = table[source_value as usize];
-                    if options.0 != [0; 4] {
-                        candidates.intersect(&options);
+                    if !options.is_empty() {
+                        candidates.intersect(options);
                         supporting_rows += 1;
-                        if candidates.0 == [0; 4] {
+                        if candidates.is_empty() {
                             break;
                         }
                     }

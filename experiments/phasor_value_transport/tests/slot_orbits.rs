@@ -367,3 +367,86 @@ fn role_reads_follow_a_common_renaming_at_unseen_keys() {
     }
     assert!(recovered > slots);
 }
+
+#[test]
+fn pair_paths_select_between_hidden_aliases_by_learned_priority() {
+    let slots = 14_usize;
+    let raw = |r: usize, k: usize| {
+        let alias = ((53 * r + 19 * k + r * k) % 11) % 2;
+        ((r + k) % 7 + 7 * alias) as u32
+    };
+    let missing = 4 * slots + 9;
+    let protected = 3 * slots + 8;
+    let mut bank: Vec<_> = (0..slots * slots)
+        .map(|i| raw(i / slots, i % slots))
+        .collect();
+    bank[missing] = ABSENT;
+    bank[protected] = ABSENT;
+    let order: Vec<_> = (0..slots).rev().collect();
+    let mut constant = vec![ABSENT; bank.len()];
+    constant[protected] = 4;
+    let mut original = vec![ABSENT; bank.len()];
+    slot_orbits::fill_from_pair_classes(
+        slots,
+        &bank,
+        &order,
+        &constant,
+        &mut original,
+        slot_orbits::PairRead::FirstOfTwo,
+    );
+    assert_eq!(original[missing], 13);
+    assert_eq!(original[protected], ABSENT);
+    let mut unique = vec![ABSENT; bank.len()];
+    slot_orbits::fill_from_pair_classes(
+        slots,
+        &bank,
+        &order,
+        &constant,
+        &mut unique,
+        slot_orbits::PairRead::Unique,
+    );
+    assert_eq!(unique[missing], ABSENT);
+    let mut inconsistent = constant.clone();
+    inconsistent[protected] = 2;
+    let mut abstain = vec![ABSENT; bank.len()];
+    slot_orbits::fill_from_pair_classes(
+        slots,
+        &bank,
+        &order,
+        &inconsistent,
+        &mut abstain,
+        slot_orbits::PairRead::FirstOfTwo,
+    );
+    assert_eq!(abstain[missing], ABSENT);
+    let rename = |i: usize| (3 * i + 1) % slots;
+    let translate = |v: u32| {
+        if v == ABSENT {
+            ABSENT
+        } else {
+            rename(v as usize) as u32
+        }
+    };
+    let mut shuffled = vec![ABSENT; bank.len()];
+    let mut fixed = shuffled.clone();
+    for i in 0..bank.len() {
+        let dst = rename(i / slots) * slots + rename(i % slots);
+        shuffled[dst] = translate(bank[i]);
+        fixed[dst] = translate(constant[i]);
+    }
+    let priority: Vec<_> = order.into_iter().map(rename).collect();
+    let mut result = vec![ABSENT; bank.len()];
+    slot_orbits::fill_from_pair_classes(
+        slots,
+        &shuffled,
+        &priority,
+        &fixed,
+        &mut result,
+        slot_orbits::PairRead::FirstOfTwo,
+    );
+    for (i, &v) in original.iter().enumerate() {
+        assert_eq!(
+            result[rename(i / slots) * slots + rename(i % slots)],
+            translate(v)
+        );
+    }
+}

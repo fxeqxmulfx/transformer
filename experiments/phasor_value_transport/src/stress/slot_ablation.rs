@@ -55,6 +55,22 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         results.insert("shared_roles", score(&mut shared, &original)?);
     }
     if let Some(read) = cfg.head.peer_read() {
+        if read.pairs.is_some() {
+            for (name, pairs) in [
+                ("without_pair_classes", None),
+                (
+                    "unique_pair_candidate",
+                    Some(crate::slot_orbits::PairRead::Unique),
+                ),
+            ] {
+                let mut control = cfg.clone();
+                control.head = head::Head::PeerTriplePhase(head::PeerRead { pairs, ..read });
+                results.insert(
+                    name,
+                    score(&mut Engine::new(control, &original)?, &original)?,
+                );
+            }
+        }
         let mut control = cfg.clone();
         control.head = head::Head::PeerTriplePhase(head::PeerRead {
             search: None,

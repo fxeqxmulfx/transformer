@@ -11,6 +11,12 @@ pub use aligned::fill_from_peers;
 mod witnesses;
 pub use witnesses::{RoleEvidence, fill_from_witnesses, fill_in_rounds};
 
+#[path = "slot_pair_classes.rs"]
+mod pair_classes;
+#[path = "slot_values.rs"]
+mod values;
+pub use pair_classes::{PairRead, extend as fill_from_pair_classes};
+
 pub const ABSENT: u32 = u32::MAX;
 
 struct Components {

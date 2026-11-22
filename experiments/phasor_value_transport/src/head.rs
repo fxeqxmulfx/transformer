@@ -45,6 +45,7 @@ impl ReadGates {
 pub struct PeerRead {
     pub search: Option<PeerSearch>,
     pub gates: ReadGates,
+    pub pairs: Option<crate::slot_orbits::PairRead>,
 }
 
 impl PeerRead {
@@ -52,6 +53,7 @@ impl PeerRead {
         Self {
             search: Some(search),
             gates: ReadGates::WidthScaled,
+            pairs: None,
         }
     }
 
@@ -60,6 +62,7 @@ impl PeerRead {
             crate::slot_orbits::RoleEvidence::WITH_GRAPH,
         ))),
         gates: ReadGates::Unit,
+        pairs: None,
     };
 
     pub const SHARED_GRAPH: Self = Self {
@@ -71,8 +74,22 @@ impl PeerRead {
         ..Self::UNIT_GRAPH
     };
 
+    pub const PAIR_GRAPH: Self = Self {
+        pairs: Some(crate::slot_orbits::PairRead::FirstOfTwo),
+        ..Self::CURRENT_GRAPH
+    };
+
     const fn id(self, with_phase: bool) -> &'static str {
         use crate::slot_orbits::RoleEvidence;
+        if self.pairs.is_some() {
+            let full = matches!(self, Self::PAIR_GRAPH);
+            return match (full, with_phase) {
+                (true, true) => "phasor-triple-pair-classes-current-32-v1",
+                (true, false) => "phasor-triple-pair-classes-current-trunk-v1",
+                (false, true) => "phasor-triple-pair-ablation-32",
+                (false, false) => "phasor-triple-pair-ablation-trunk",
+            };
+        }
         let (trunk, phase) = match (self.gates, self.search) {
             (
                 ReadGates::SharedCurrent,
@@ -196,6 +213,7 @@ impl Head {
             "triple-unit-graph" => Ok(Self::PeerTriplePhase(PeerRead::UNIT_GRAPH)),
             "triple-shared-graph" => Ok(Self::PeerTriplePhase(PeerRead::SHARED_GRAPH)),
             "triple-current-graph" => Ok(Self::PeerTriplePhase(PeerRead::CURRENT_GRAPH)),
+            "triple-pair-classes" => Ok(Self::PeerTriplePhase(PeerRead::PAIR_GRAPH)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,
             )))),

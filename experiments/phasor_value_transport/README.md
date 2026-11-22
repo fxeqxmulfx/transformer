@@ -2454,6 +2454,74 @@ for arm in triple-unit-graph triple-shared-graph triple-current-graph; do
 done
 ```
 
+### Pair classes on the Fibonacci orbit split
+
+`triple-pair-classes` adds one search to the three-gate current-state model.
+Two entries in a learned row link an ordered pair of keys to an ordered
+pair of output slots. Two entries in a column give a corresponding link
+for a pair of contexts. The search takes the equivalence closure of these
+links, keeping the three roles distinct. For an unresolved cell, each
+available anchor restricts its possible outputs. After at least three
+informative constraints, a set of one or two slots supplies the
+highest-priority prototype under the existing learned dictionary ordering.
+The same structural gate weights the selected vector on every task.
+
+Different prototypes can express the same value. Lean shows that a
+candidate connected to an anchor has the correct abstract value whenever
+the observed bank respects a common pair invariant and the anchor separates
+abstract images. The proof permits both members of an admissible pair to
+have different slot names and the same meaning. The model observes the
+learned bank, prefix and prototypes. The meaning map is a hypothesis in
+the proof. [Pair-class soundness and alias example](../../src/Transformer/Phasor/TripleTransport/PairClasses.lean)
+
+| Seed | First Fibonacci update | Reloaded validation, out of 4,704 | Previous search at the same update | NV11 train / held-out at update 250 |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 240 | 4,660 | 4,421 | 4,704 / 4,705 |
+| 1 | 240 | 4,660 | 4,442 | 4,704 / 4,705 |
+| 2 | 250 | 4,659 | 4,409 | 4,704 / 4,705 |
+
+The Fibonacci scorer sums token probabilities for each possible next field
+value. The frozen case has one validation split. Both architectures trained
+from fresh weights with the original optimizer, split and schedule. NV11
+uses exact tied-classifier predictions on both splits. Its smallest held-out
+margins were 0.762, 1.074 and 1.319. The new search adds no parameters.
+
+At the three Fibonacci crossings, removing the pair search from each
+checkpoint gave 4,422, 4,443 and 4,409 correct. Requiring a unique
+candidate gave 4,433, 4,463 and 4,432. Keeping only the structural reads
+gave 4,680, 4,678 and 4,672. Removing the earlier peer search while
+retaining pair completion gave 4,660, 4,658 and 4,659.
+
+On GPT key/value binding, the same architecture first crossed at updates
+640, 768 and 640. Reloaded primary scores were 510, 507 and 508 out of
+512. The independent test scores were 500, 502 and 504 out of 512.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.PairClasses
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+t=recurrence-fibonacci-k1-c2-lgt
+for arm in triple-pair-classes triple-current-graph; do
+    cargo +stable build --release --locked --features "fp32-affine-reference,$arm"
+    bin=./target/release/phasor-value-transport
+    "$bin" check
+    for seed in 0 1 2; do
+        if [ "$arm" = triple-pair-classes ]; then
+            for task in "$t" arithmetic-cubic-product gpt-probe-key-value-binding; do
+                "$bin" cell "$task" "$seed" "runs/$arm"
+                "$bin" probes "$task" "$seed" "runs/$arm"
+            done
+            "$bin" nv11-score "runs/$arm/arithmetic-cubic-product/seed$seed/weights.f32"
+            "$bin" slot-ablate "$t" "$seed" "runs/$arm"
+        else
+            step=240
+            if [ "$seed" = 2 ]; then step=250; fi
+            "$bin" advance "$t" "$seed" "runs/$arm" "$step"
+        fi
+    done
+done
+```
+
 ### Sharing exact witness signatures
 
 In later witness rounds, several pairs of contexts can supply the same
