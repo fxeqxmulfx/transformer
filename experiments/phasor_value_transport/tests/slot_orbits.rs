@@ -1,6 +1,10 @@
 #[path = "../src/slot_orbits.rs"]
 mod slot_orbits;
-use slot_orbits::{ABSENT, complete};
+use slot_orbits::{ABSENT, Reads, TripleGraph};
+
+fn complete(slots: usize, bank: &[u32], priority: &[usize]) -> Reads {
+    TripleGraph::default().complete(slots, bank, priority)
+}
 
 #[test]
 fn transported_slots_follow_arbitrary_renamings() {
@@ -64,4 +68,43 @@ fn constant_consensus_excludes_the_current_query() {
         ]
     );
     assert!(result.transport.iter().all(|&v| v == ABSENT));
+}
+
+#[test]
+fn growing_and_replaced_banks_match_fresh_components() {
+    let mut cache = TripleGraph::default();
+    for k in [7_usize, 5, 7] {
+        let mut bank = vec![ABSENT; k * k];
+        let mut priority: Vec<_> = (0..k).collect();
+        let compare = |cache: &mut TripleGraph, bank: &[u32], priority: &[usize]| {
+            assert_eq!(
+                cache.complete(k, bank, priority),
+                complete(k, bank, priority)
+            );
+        };
+        compare(&mut cache, &bank, &priority);
+        for x in 0..k {
+            // The first two rows grow into injective maps, the third supplies only anchors.
+            bank[x] = ((x + 1) % k) as u32;
+            bank[k + x] = ((3 * x + 1) % k) as u32;
+            if x < 2 {
+                bank[2 * k + x] = ((2 * x + 3) % k) as u32;
+            }
+            compare(&mut cache, &bank, &priority);
+            priority.rotate_left(1);
+            compare(&mut cache, &bank, &priority);
+        }
+        let mut rewritten = bank.clone();
+        rewritten[k] = rewritten[k + 1]; // A previously eligible row becomes noninjective.
+        compare(&mut cache, &rewritten, &priority);
+        compare(&mut cache, &bank, &priority);
+        rewritten[..k].fill(0); // Switch a graph row to a constant read.
+        compare(&mut cache, &rewritten, &priority);
+        rewritten.fill(ABSENT);
+        compare(&mut cache, &rewritten, &priority);
+        for row in bank.chunks_exact_mut(k) {
+            row.reverse();
+        }
+        compare(&mut cache, &bank, &priority);
+    }
 }

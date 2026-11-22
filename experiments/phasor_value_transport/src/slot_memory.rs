@@ -106,6 +106,7 @@ pub struct Routing {
     bank: Vec<u32>,
     priority: Vec<usize>,
     reads: Option<slot_orbits::Reads>,
+    graph: slot_orbits::TripleGraph,
     inverse: Vec<f32>,
 }
 
@@ -154,7 +155,7 @@ impl Routing {
             }
         }
         if self.bank != bank || self.priority != priority {
-            self.reads = Some(slot_orbits::complete(l.slots, &bank, &priority));
+            self.reads = Some(self.graph.complete(l.slots, &bank, &priority));
             self.bank = bank;
             self.priority = priority;
         }

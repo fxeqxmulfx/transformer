@@ -1451,9 +1451,46 @@ Elapsed time fell from 2.89–3.08 seconds to 2.43–2.63 seconds, with a
 geometric mean time ratio of 0.850. Every held-out observation matched
 between the two implementations throughout each paired run.
 
-To reproduce the paired comparison, set `control` to the release binary
-from commit `63cbae95` built with `fp32-affine-reference` and `bin` to
-the current binary built with the same feature.
+The host now keeps the connected components between optimizer updates.
+When every previous trusted correspondence survives, it adds the triples
+that contain at least one new correspondence. If a correspondence disappears
+or changes, or a previously injective row becomes ineligible, it rebuilds
+the components. It recomputes the read with the current anchor order in
+both cases. Lean proves that retaining the old connections and adding these
+edges gives exactly the new graph's equivalence relation.
+[Incremental graph proof](../../src/Transformer/Phasor/TripleTransport/Incremental.lean)
+
+On modulo-193 division with 193 learned prototypes, the 292 updates to
+the first perfect held-out score took 143.68 / 159.47 / 142.68 seconds
+with full graph rebuilds and 30.53 / 31.93 / 30.78 seconds with incremental
+updates on the same GTX 1050. The two implementations produced identical
+checkpoint bytes for each seed. On NV11 with the default 128 prototypes,
+seed 0 took 15.31 seconds with full rebuilds and 7.99 seconds with the
+incremental graph. The independently reloaded weights recovered all 9,409
+pairs. These times cover training and scheduled observations.
+
+To reproduce the modulo-193 comparison, build the control from
+`174cec4c` and the candidate from this revision, both with
+`fp32-affine-reference,triple-lookup-prototypes`. Set `control` and
+`bin` to those release executables and use fresh output directories.
+
+```sh
+export PHASOR_EVAL_BATCH_CAP=16
+for seed in 0 1 2; do
+    for arm in control candidate; do
+        exe="$control"
+        if [ "$arm" = candidate ]; then exe="$bin"; fi
+        dest="runs/incremental-p193/$arm"
+        "$exe" screen division-p193 "$seed" "$dest" 730
+        "$exe" probes division-p193 "$seed" "$dest"
+    done
+    cmp "runs/incremental-p193/control/division-p193/seed$seed/weights.f32" \
+        "runs/incremental-p193/candidate/division-p193/seed$seed/weights.f32"
+done
+```
+
+To reproduce the paired address-search comparison, build `control` from
+`63cbae95` and `bin` from `3912175d`, both with `fp32-affine-reference`.
 
 ```sh
 PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh --first-pass "$control" "$bin" \
