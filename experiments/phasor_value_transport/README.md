@@ -2,8 +2,9 @@
 
 ## Learned stream readout
 
-The current experiment trains from raw token IDs. Each ID selects its
-embedding. Phasor's causal backbone produces four hidden streams at each
+The inner model takes a sequence of embedding vectors. For a tokenized
+benchmark, an input adapter looks up the vectors. Phasor's causal backbone
+produces four hidden streams at each
 position. Each hidden coordinate learns four weights for reading those
 streams before the original RMS normalization and tied output projection.
 The weights start at one quarter, with zero trainable offsets. At width
@@ -15,6 +16,14 @@ every output logit at every depth. It also gives the exact gradient of the
 readout and shows that opposite stream contents, which cancel in the
 original mean, can become visible to the classifier.
 [Learned stream readout](../../src/Transformer/Phasor/LearnedStreamRead.lean)
+
+The embedding-input formalization gives the backbone a type with no
+vocabulary or target space. For arbitrary real input vectors it proves
+that states at each position depend only on the vector prefix. Lookup
+followed by this backbone and the tied classifier recovers every logit
+of the token-level forward, including for distinct IDs that alias the
+same vector. Training targets are arguments of the outer loss.
+[Embedding-input interface](../../src/Transformer/Phasor/EmbeddingInput.lean)
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.LearnedStreamRead
