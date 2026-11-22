@@ -2329,8 +2329,8 @@ gates with arbitrary additional hidden contributions. [Affine gate proof](../../
 | NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 | — |
 
 The GPT scores use free generation including termination. With the
-original graph scales, seeds 0 and 1 scored 193/512 and 113/512 on
-key–value binding at the matched updates 1,088 and 960. The 20-bit
+original graph scales, seeds 0, 1 and 2 scored 193, 113 and 94 of 512 on
+key–value binding at the matched updates 1,088, 960 and 768. The 20-bit
 parity checkpoint transferred to 64/64 at both 32 and 64 bits.
 On blinded absolute difference, the original
 scales crossed earlier on every seed at update 171. Every NV11
@@ -2357,6 +2357,40 @@ for seed in 0 1 2; do
     "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
 done
 "$bin" screen recurrence-fibonacci-k1-c2-lgt 0 "$out" 1000
+```
+
+### A basis for mixing exposed values
+
+Consider the final mixture at one position. Fix a prefix control and expose
+$m$ dense values of width $d\ge m$. The values may vary independently.
+Require that applying any one linear map to all the values also applies that
+map to the output, including when the map is singular. Every such readout
+is a sum of the exposed values with one learned scalar coefficient per
+value. Evaluating the readout on a single coordinate frame recovers those
+coefficients. When the frame coordinates are affine in the prefix, affine
+gates suffice. Every exposed value is necessary for this class, since its own
+projection distinguishes two inputs that agree on every other value.
+The proof covers the final mixture with independently supplied reads.
+It leaves open which reads a causal backbone must compute.
+[Readout completeness and necessity](../../src/Transformer/Phasor/TripleTransport/ReadBasis.lean)
+
+At the unit-scale model's first passing blinded absolute-difference checkpoint
+(update 228), disabling the transport read reduced the three held-out scores
+from 4,663, 4,699 and 4,692 to 36, 55 and 41 of 4,705. Disabling either the
+direct or the constant read left all three counts unchanged. Disabling the
+context read improved every seed to 4,705/4,705. The structural reads alone
+also classified every held-out pair correctly on all three seeds. These
+interventions use the same learned weights as the full model.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ReadBasis
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-unit-graph
+bin=./target/release/phasor-value-transport
+for seed in 0 1 2; do
+    "$bin" cell arithmetic-abs-diff-blind "$seed" runs/unit-graph
+    "$bin" slot-ablate arithmetic-abs-diff-blind "$seed" runs/unit-graph
+done
 ```
 
 ### Sharing exact witness signatures
