@@ -1,7 +1,7 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
 One prefix-and-successor Phasor passed every original short and long GPT
-stress task and three additional catalog tasks in seeds 0, 1 and 2. Each
+stress task and four additional catalog tasks in seeds 0, 1 and 2. Each
 task trained its own weights using the same architecture and original AdamW.
 Every NV11 seed classified all 9,409 pairs correctly at update 1,250.
 
@@ -27,6 +27,9 @@ in every seed, down from 900, 3,500 and 7,500. Fibonacci recurrence took
 9,980, 7,480 and 9,560, up from 7,550, 5,560 and 8,090. The five other
 regressions occurred on associative divisor seed 1, easy depth seed 0,
 hard depth seed 2 and branch amplitudes seeds 1 and 2.
+
+The expanded benchmark has 29 short tasks and ten long tasks. All 87 short
+and 30 long task/seed runs reached 99% and replayed independently.
 
 For the epoch comparison, first generate the incumbent's paired report with
 the baseline reproduction commands below.
@@ -171,12 +174,17 @@ sequences. On length 64 it scored 19, 15 and 17 of 64. Dyck scored 64/64
 on the ordinary test in all seeds and 19, 18 and 18 of 64 at length 64.
 The admissions describe the declared held-out selection split.
 
+The selected half-gain model added `language-l1`, the one-block language
+with no neutral tokens. It trained on lengths 32–64. At update 250 each
+seed classified all 512 length-128 validation sequences and all 512 separate
+length-128 test sequences correctly. The slowest fresh cell took 40.64 s,
+qualifying this fourth addition for short.
+
+The selected binary lists the four additions and reports the three seeds for each.
+
 ```sh
 "$bin" extensions
-PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor extended
-./run_stress.sh replay runs/prefix-successor extended
-"$bin" extended-report runs/prefix-successor
-"$bin" catalog-report runs/prefix-successor suite-blocks suite-dyck arithmetic-sum-pow6
+"$bin" catalog-report runs/prefix-successor-half suite-blocks suite-dyck arithmetic-sum-pow6 language-l1
 ```
 
 The runner lists the frozen original tiers and the extension tiers
@@ -201,8 +209,8 @@ with masked targets found minimum held-out margins of 1.155, 0.356 and
 All nine saved models in each row generated parity and EOS on the same
 64 held-out catalog prompts per length. Training ended at 16, 20 or 24 bits
 according to the Basis task. These two transfer sets never entered training
-or stopping. The half-gain model also passed all nine registered extension
-cells. Sixth-power modular sum took 250 updates in all seeds, Dyck took 250
+or stopping. On the first three additions, sixth-power modular sum took
+250 updates in all seeds, Dyck took 250
 in all seeds, and blocks took 750, 1,000 and 1,250.
 
 The linear prefix-sum pilot scored 214/306 on 24-bit parity at 2,000
