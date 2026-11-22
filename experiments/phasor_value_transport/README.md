@@ -715,6 +715,13 @@ their 1,024-bit scores were 256 / 256 / 206 of 256. The fastest crossing
 lost accuracy on both tests. The mixed reflection model retained the
 stronger three-seed transfer in this comparison.
 
+All three 16-bit runs and all three 24-bit runs crossed at 500 updates.
+Every one of those six checkpoints scored 512/512 on its independent
+source test, 64/64 at both 32 and 64 bits, and 256/256 at 128, 256, 512
+and 1,024 bits. The 20-bit seed that crossed at 250 updates remains the
+exception at 1,024 bits. Each score used the original frozen checkpoint
+and the independently recounted test prompts.
+
 ```sh
 cd experiments/phasor_value_transport
 cargo +stable build --release --locked --features fp32-affine-reference,single-reflection-read
