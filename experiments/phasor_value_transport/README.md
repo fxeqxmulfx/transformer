@@ -650,6 +650,13 @@ all counts below the last address remain distinct, and that modular and
 capped tables produce identical reads and gradients on batches below capacity.
 [Capped counter and table identities](../../src/Transformer/Phasor/SaturatedTransitions.lean)
 
+The inclusive transition-table trial counts changes up to and including
+the current token. On binary words with a distinct start token, that
+counter gives the exact number of blocks before saturation. Lean proves
+that one learned scalar per count and one per current token can then
+separate each binary block language with its target below the cap.
+[Inclusive counts and additive readout](../../src/Transformer/Phasor/InclusiveTransitions.lean)
+
 The geometric-memory trial learns one additional value for each token and
 hidden coordinate. It scans every input sequence in order. Each coordinate
 retains a fixed fraction of its preceding state and adds the current learned
