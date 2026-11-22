@@ -5,7 +5,7 @@
 250. The same model is trained separately on each GPT task, starting from
 the original random embeddings with ordinary AdamW. [Triple transport](#triple-transport) · [Model and scoring rules](../../rule.md)
 
-A partial audit of the default verified **43/75 short runs and 3/30 long
+A partial audit of the default verified **44/75 short runs and 3/30 long
 runs** alongside all three exact NV11 checkpoints. [Default GPT results](#triple-transport-on-the-canonical-gpt-tiers)
 
 The input-phase comparison reached 75/75 short and 30/30 long runs. Its
@@ -1599,13 +1599,13 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" memory-bench triple-transport basis-parity16 0 2
 
 ### Triple transport on the canonical GPT tiers
 
-The November 22 partial audit independently reloaded 49 checkpoints from
-Kernite v0.6.0. Triple transport passed 43/75 short runs and 3/30 long
+The November 22 partial audit independently reloaded 50 checkpoints from
+Kernite v0.6.0. Triple transport passed 44/75 short runs and 3/30 long
 runs. All three NV11 checkpoints recovered 4,704 training and 4,705
-held-out pairs. Thirteen short cases and one long case crossed on all three
-seeds. Seventeen other short runs and 21 other long runs have a recorded
-cutoff below budget in this snapshot. The remaining 15 short and six long
-runs have no completed run or screen in the snapshot. No run exhausted its source budget.
+held-out pairs. Fourteen short cases and one long case crossed on all three
+seeds. Another 26 short runs and 27 long runs reached recorded cutoffs below
+their source budgets. Five short runs were still unmeasured in this snapshot.
+No run exhausted its source budget.
 
 All three easy key–value recall crossings reproduced on the novel validation
 split. The original test split contains eight queries per sequence.
@@ -1628,11 +1628,10 @@ the same depth checkpoints scored 512, 326 and 512 out of 512.
 | --- | --- | --- | --- |
 | Key–value binding | 1,984 / 3,456 / 3,456 | 509 / 511 / 507 of 512 | 510 / 502 / 504 of 512 |
 | Linear transport | 704 / 576 / 576 | 254 / 255 / 256 of 256 | 251 / 255 / 256 of 256 |
+| Branch amplitudes | 576 / 544 / 576 | 256 / 256 / 256 of 256 | 256 / 256 / 256 of 256 |
 | Easy depth | 500 / 500 / 750 | 512 / 512 / 512 of 512 | 512 / 512 / 512 of 512 |
 
-On GPT branch amplitudes, seeds 0 and 1 scored 256/256 at updates 576
-and 544 respectively. Each independently scored 256/256. On shifted Boolean AND all
-three seeds reached 7/7, at updates 84, 60 and 68. Their independent
+On shifted Boolean AND all three seeds reached 7/7 at updates 84, 60 and 68. Their independent
 test scores were 64, 27 and 27 out of 64. At length 64 they scored
 29, 35 and 35 out of 64.
 
