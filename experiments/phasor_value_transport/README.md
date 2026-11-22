@@ -62,11 +62,26 @@ All 18 end-to-end finite differences passed. At widths 64, 128 and 256,
 all 1,332 logits matched the original mean bit for bit at initialization
 and permuted bit for bit under a shuffled vocabulary with nonzero offsets.
 
+On eleven source tasks the learned stream readout and original fixed mean
+each produced 33 independently replayed first-crossing checkpoints. The
+table counts the three fixed seeds separately for every named task.
+
+| Source tier | Tasks passing all three seeds | Verified per architecture | Geometric mean time to first pass, learned / mean |
+| --- | --- | ---: | ---: |
+| Short | Shifted AND, random AND, modular addition, key/value binding, easy depth, blocks, Dyck, language L1 | 24 | 1.0242 |
+| Long | Modular absolute difference, depth-one C-RASP, language L2 | 9 | 1.0026 |
+
+This timing comparison covers the named paired passes. On modular absolute
+difference, the stream model crossed at 3,116 / 1,577 / 2,109 updates and
+the original mean at 3,496 / 1,634 / 2,014. On 16-bit parity, all six
+screens missed 99% through 3,500 updates. On 20-bit parity the six
+screens also missed 99% through 3,500.
+
 On depth-one C-RASP, seed 2 reached 32/32 validation at update 250 with
 both readouts. Independent reloads of both scored 64/64 on the source
 test, 56/64 at length 32 and 41/64 at length 64. On NV11 the learned
-readout reached 4,696/4,704 training pairs but only 86/4,705 held-out
-pairs at update 3,000 in seed 0.
+readout reached 4,696 / 4,692 / 4,703 of 4,704 training pairs at update
+3,000. Reloading those weights gave 86 / 74 / 84 of 4,705 held-out pairs.
 
 ### Long-tier addition from the embedding-input model
 
