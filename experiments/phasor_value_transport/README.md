@@ -43,8 +43,8 @@ both 750 and 3,000 updates.
 
 On the source task `arithmetic-sum-pow32`, the three closed-relation
 checkpoints scored 4,703 / 4,698 / 4,704 out of 4,705 held-out pairs at
-update 250. Each scored 51/51 on the held-out zero-first-operand pairs;
-the longest cell took 2.37 seconds. The predecessor reached the same
+update 250. Each scored 51/51 on the held-out zero-first-operand pairs.
+The longest cell took 2.37 seconds. The predecessor reached the same
 scores with byte-identical weights in all three seeds. This admission
 extends coverage to 120 short and 33 long GPT runs. The checkpoint
 replay audit also covers the three NV11 runs, for 156 verified files.
@@ -233,6 +233,13 @@ additions in separate launches. To reproduce, apply the patch at
 `2e58f96b`, use `fp32-affine-reference,single-write-gain`, and run
 `time_cells.sh` on addition, 20-bit parity, language L1 and depth-one C-RASP.
 [Tied gradient source change](trials/tied-embedding-gradients.patch)
+
+The packed-transfer trial sends table addresses and gain evidence in one
+host-to-device copy. The backward pass packs the offset directory and
+its row indices in a second buffer. Lean proves that both forward reads
+and every ordered gradient reduction agree with separate arrays, including
+empty groups, repeated owners and unused capacity after a shorter batch.
+[Packed forward and transpose layout](../../src/Transformer/Phasor/PackedReadBuffers.lean)
 
 The transport-normalization trial writes two coefficients when a vocabulary
 mass is normalized. The original mass supplies the softmax derivative.
