@@ -328,12 +328,16 @@ pub enum ProbeSet {
     Validation,
     Tests,
     Extended,
+    Parity1024,
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
     let test_splits = probes != ProbeSet::Validation;
-    let extended = probes == ProbeSet::Extended;
+    let extended = matches!(probes, ProbeSet::Extended | ProbeSet::Parity1024);
     let parity_task = matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24");
+    if probes == ProbeSet::Parity1024 && !parity_task {
+        return Err("parity-1024 probes require a Basis parity checkpoint".into());
+    }
     if extended && !parity_task && !name.starts_with("language-l") {
         return Err("extended probes require a source block language or Basis parity task".into());
     }
@@ -342,7 +346,12 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
     if test_splits && parity_task {
         catalog::add_parity_probes(&mut task)?;
         if extended {
-            probe_hashes = catalog::add_extended_parity_probes(&mut task)
+            let lengths: &[usize] = if probes == ProbeSet::Parity1024 {
+                &[128, 256, 512, 1024]
+            } else {
+                &[128, 256]
+            };
+            probe_hashes = catalog::add_extended_parity_probes(&mut task, lengths)
                 .map_err(|err| -> Box<dyn std::error::Error> { err })?;
         }
     }

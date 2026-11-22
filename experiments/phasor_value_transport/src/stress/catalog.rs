@@ -154,6 +154,7 @@ pub(super) fn add_parity_probes(task: &mut Task) -> Result<()> {
 /// These sets enter evaluation only after a checkpoint has been selected.
 pub(super) fn add_extended_parity_probes(
     task: &mut Task,
+    lengths: &[usize],
 ) -> basis::Result<BTreeMap<String, String>> {
     let protocol: Value = serde_json::from_str(parity::PROTOCOL)?;
     let mut spec = protocol["definitions"]["suite-parity-none"].clone();
@@ -163,7 +164,7 @@ pub(super) fn add_extended_parity_probes(
         .ok_or("unexpected source parity probe lengths")?;
     spec["min_length"] = Value::Null;
     let mut hashes = BTreeMap::new();
-    for length in [128, 256] {
+    for &length in lengths {
         spec["length"] = json!(length);
         // The source generator validates this bound even without index hints.
         spec["number_limit"] = json!(length);

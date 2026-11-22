@@ -643,6 +643,15 @@ and 256/256 at 256 bits. These scores count exact generated answers.
 | ---: | --- | --- | --- |
 | 16 | 512 / 509 / 512 | 253 / 256 / 256 | 256 / 256 / 256 |
 | 20 | 512 / 506 / 511 | 256 / 256 / 256 | 256 / 256 / 256 |
+| 24 | 512 / 512 / 497 | 256 / 256 / 256 | 256 / 256 / 256 |
+
+The 24-bit checkpoints reached validation at 750 / 500 / 500 updates.
+The 20-bit checkpoints also solved all 256 independently generated
+512-bit prompts per seed. At 1,024 bits they scored 256 / 252 / 256.
+The longer evaluation reuses the source test generator, recounts every
+bit with a second oracle and checks prompt uniqueness within each length.
+The checkpoint, validation, original test and all shorter probes replayed
+identically when the batch cap was reduced to one.
 
 The same architecture scored 86 / 91 / 91 of 4,705 held-out NV11
 pairs after 3,000 updates. Training accuracy was 4,703 / 4,704 / 4,695
@@ -656,6 +665,7 @@ bin=./target/release/phasor-value-transport
 "$bin" check
 PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity20 0 runs/reflection 3500
 PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-parity20 0 runs/reflection extended
+PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity20 0 runs/reflection parity-1024
 ```
 
 ## NV11 prediction shifts
