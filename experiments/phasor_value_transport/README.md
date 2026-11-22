@@ -376,6 +376,18 @@ on any seed through the matched 3,500-update screen.
 | 1 | 750 | 154 / 155 | 45 | 34 |
 | 2 | 1,250 | 151 / 130 | 61 | 32 |
 
+Extending the same 16-bit training runs to 8,000 updates gave the mean
+control three crossings at 5,250, 7,250 and 8,000. The learned stream
+control crossed at 7,250 and 8,000 on seeds 0 and 2. Seed 1 still scored
+154/157 at 8,000. The phase model's slowest crossing was at 1,500.
+
+Training the same phase architecture on the original long-tier 20-bit
+task gave 284/284 on all three validation splits at updates 7,000, 750
+and 1,000. The saved checkpoints generated 512, 512 and 511 correct
+answers out of 512 source test examples. Their 64-bit transfer scores
+were 53, 16 and 0 out of 64. Seed 0 first crossed after the initial
+3,500-update screen.
+
 The same phase architecture, trained separately on modular addition,
 passed seed 0 at update 874, matching the stream control. On depth-one
 C-RASP it scored 31/32 at the 1,500-update cutoff. The stream control
@@ -413,6 +425,18 @@ within `8.31e-7`. All twelve directional checks passed. Swapping two
 unequal segments of arbitrary dense vectors changed the isolated endpoint
 phase read by at most `2.99e-7` and its reordered input gradient by at
 most `2.99e-8`.
+
+On 16-bit Basis parity, all three input-phase checkpoints generated the
+correct bit and end token for all 157 validation and 512 source test
+examples. All three solved the 32-bit catalog probe. Moving the increment
+projection to the input improved 64-bit accuracy on every paired seed.
+Each catalog probe has 64 examples, so seed 0's 51/64 misses the 99% target.
+
+| Seed | Input phase, first 157/157 update | 32-bit correct | 64-bit correct | Contextual phase, 64-bit correct |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 1,750 | 64 | 51 | 15 |
+| 1 | 1,000 | 64 | 64 | 34 |
+| 2 | 1,000 | 64 | 64 | 32 |
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.InputPhaseRead
