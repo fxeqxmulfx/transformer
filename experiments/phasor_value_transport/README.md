@@ -616,6 +616,15 @@ the selected 0.75-gain successor and the closed-gain model each scored
 checks. At a prefix with 15 completed changes and 12 buckets, only bucket
 3 of the new table received a gradient.
 
+The geometric-memory trial learns one additional value for each token and
+hidden coordinate. It scans every input sequence in order. Each coordinate
+retains a fixed fraction of its preceding state and adds the current learned
+value. The retentions cycle through 1, 1/2, −1 and −1/2. All values start
+at zero. Lean proves the composition law across arbitrary sequence splits,
+a bound on state magnitude, and the reverse-scan gradient for every token,
+including repeated occurrences and masked outputs.
+[Causal geometric memory and its adjoint](../../src/Transformer/Phasor/GeometricMemory.lean)
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
