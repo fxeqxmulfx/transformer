@@ -256,6 +256,13 @@ a mean at most one in each such tier and retention of every baseline pass
 at initialization. A tier composed entirely of initialization comparisons
 has no geometric mean.
 
+Fresh reports also retain the GPU, Kernite version, affine precision and
+source fingerprint for each timed cell. When every pair in a tier matches
+on these fields, `compare.jq` reports its geometric mean elapsed-time ratio
+and counts of faster, tied and slower cells. This timing includes evaluation
+at initialization. Keep the evaluation batch cap and GPU workload fixed
+when training both cohorts.
+
 ```sh
 git show dd5e0f14:experiments/phasor_value_transport/extensions.tsv > runs/baseline-extensions.tsv
 jq -s --rawfile extensions runs/baseline-extensions.tsv -f compare.jq CONTROL_REPORT CANDIDATE_REPORT

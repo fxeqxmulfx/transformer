@@ -13,7 +13,8 @@ def indexed($registry):
        then $registry[$task.case]
      else empty end as $tier
    | $task.seeds[]
-   | {case:$task.case,tier:$tier,seed,status,step,examples_seen,correct,total,source:$task.tier}]
+   | {case:$task.case,tier:$tier,seed,status,step,examples_seen,correct,total,
+      elapsed_seconds,timing_environment,source:$task.tier}]
   | sort_by(.tier,.case,.seed);
 def nonnegative_integer: type == "number" and . >= 0 and . == floor;
 def complete($registry):
@@ -26,6 +27,16 @@ def complete($registry):
            and (.total|type) == "number" and .total > 0 and .correct <= .total
            and .correct * 100 >= .total * 99);
 def identity: [.source,.case,.seed,.total];
+def positive_seconds: type == "number" and isfinite and . > 0;
+def compare_time($a;$b):
+  $a.timing_environment as $env
+  | if ($a.elapsed_seconds|positive_seconds) and ($b.elapsed_seconds|positive_seconds)
+       and ($env|type) == "object" and $env == $b.timing_environment
+       and ([$env.gpu,$env.kernite_version,$env.suite_sha256] | all(.[]; type == "string" and length > 0))
+       and ($env.fp32_affines|type) == "boolean"
+    then {elapsed_ratio:($b.elapsed_seconds / $a.elapsed_seconds),
+          control_seconds:$a.elapsed_seconds,candidate_seconds:$b.elapsed_seconds}
+    else {} end;
 def tier_summary:
   [ .[] | select(.step > 0 and .control_step > 0) | .epoch_ratio | log ] as $logs
   | {runs:length,faster:(map(select(.step < .control_step))|length),
@@ -35,13 +46,20 @@ def tier_summary:
          {initialization:{gained:(map(select(.step == 0 and .control_step > 0))|length),
                           retained:(map(select(.step == 0 and .control_step == 0))|length),
                           lost:(map(select(.step > 0 and .control_step == 0))|length)}}
+       else {} end)
+    + (if all(.[]; has("elapsed_ratio")) then
+         {elapsed:{runs:length,faster:(map(select(.elapsed_ratio < 1))|length),
+           tied:(map(select(.elapsed_ratio == 1))|length),slower:(map(select(.elapsed_ratio > 1))|length),
+           geometric_mean_ratio:(map(.elapsed_ratio|log)|add/length|exp)}}
        else {} end);
 if length != 2 then error("expected a control report and a candidate report") else . end
 | registry as $registry | .[0] as $before | .[1] as $after
 | ($before|indexed($registry)) as $a | ($after|indexed($registry)) as $b
 | if (($a|complete($registry)) and ($b|complete($registry)) and ($a|map(identity)) == ($b|map(identity))) then
-    [range(0; $a|length) as $i | ($b[$i] | del(.source,.correct,.total)) + {control_step:$a[$i].step,
-        epoch_ratio:(if $a[$i].examples_seen > 0 then $b[$i].examples_seen / $a[$i].examples_seen else null end)}] as $pairs
+    [range(0; $a|length) as $i | ($b[$i] | del(.source,.correct,.total,.timing_environment,.elapsed_seconds))
+       + {control_step:$a[$i].step,
+          epoch_ratio:(if $a[$i].examples_seen > 0 then $b[$i].examples_seen / $a[$i].examples_seen else null end)}
+       + compare_time($a[$i];$b[$i])] as $pairs
     | {control:$before.model,candidate:$after.model,complete:true,
        tiers:($pairs|group_by(.tier)|map({key:.[0].tier,value:tier_summary})|from_entries),
        pairs:$pairs}

@@ -86,7 +86,9 @@ fn observations(out: &Path, row: &Value) -> Result<(Vec<Value>, [usize; 3])> {
         seeds.push(
             json!({"seed":seed,"status":if pass { "pass" } else { "budget miss" },
             "step":point["step"],"correct":point["correct"],"total":point["total"],
-            "examples_seen":point["examples_seen"],"elapsed_seconds":result["elapsed_seconds"]}),
+            "examples_seen":point["examples_seen"],"elapsed_seconds":result["elapsed_seconds"],
+            "timing_environment":{"gpu":result["gpu"],"kernite_version":trained_with(&result)?,
+            "fp32_affines":result["fp32_affines"],"suite_sha256":result["suite_sha256"]}}),
         );
     }
     Ok((seeds, count))
