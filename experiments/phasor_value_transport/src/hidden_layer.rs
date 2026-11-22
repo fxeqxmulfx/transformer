@@ -11,6 +11,7 @@ enum Memory {
     AffinePhase(affine_phase::kernels::Kernels),
     BilinearPhase(bilinear_phase::kernels::Kernels),
     SharedBilinear(SharedBilinearPhase),
+    Toeplitz(super::toeplitz_layer::ToeplitzLayer),
     Householder {
         scan: crate::householder::kernels::Kernels,
         reduction: reflection_phase::kernels::Kernels,
@@ -67,6 +68,7 @@ impl HiddenLayer {
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::SharedBilinear | Head::ScalarPhase => Memory::SharedBilinear(SharedBilinearPhase::new(e, rows)?),
+            Head::PrefixToeplitz => Memory::Toeplitz(super::toeplitz_layer::ToeplitzLayer::new(e, rows)?),
             Head::Householder => Memory::Householder {
                 scan: crate::householder::kernels::Kernels::load(&e.cuda)?,
                 reduction: reflection_phase::kernels::Kernels::load(&e.cuda)?,
@@ -101,6 +103,8 @@ impl HiddenLayer {
         let input_weights = crate::architecture::memory_start(cfg);
         let (projected_channels, read_channels) = if cfg.head.is_phase() {
             (cfg.head.phase_inputs(), 2 * M)
+        } else if cfg.head == Head::PrefixToeplitz {
+            (2 * cfg.width, 2 * cfg.width)
         } else if cfg.head == Head::Householder {
             (crate::householder::INPUTS, crate::householder::FEATURES)
         } else {
@@ -167,6 +171,7 @@ impl HiddenLayer {
                 )?,
                 Memory::SharedBilinear(memory) => memory.forward(e, self.read.ptr(),
                     self.projected.ptr(), rows, length)?,
+                Memory::Toeplitz(memory) => memory.forward(e, self.read.ptr(), self.projected.ptr(), rows, length)?,
                 Memory::BilinearPhase(kernels) => kernels.forward::<false>(
                     Grid::new((rows / length) as u32, M as u32),
                     self.read.ptr(), self.projected.ptr(), length as u32,
@@ -223,7 +228,7 @@ impl HiddenLayer {
             d,
             self.read_channels,
         )?;
-        if e.config.head != Head::ScalarPhase { unsafe {
+        if !e.config.head.replaces_context() { unsafe {
             e.ops.add(
                 grid(rows * d),
                 self.merged.ptr(),
@@ -280,6 +285,7 @@ impl HiddenLayer {
                 }
                 Memory::SharedBilinear(memory) => memory.backward(e, self.dprojected.ptr(),
                     self.projected.ptr(), self.dread.ptr(), rows, length)?,
+                Memory::Toeplitz(memory) => memory.backward(e, self.dprojected.ptr(), self.projected.ptr(), self.dread.ptr(), rows, length)?,
                 Memory::BilinearPhase(kernels) => kernels.backward::<false>(
                     Grid::new((rows / length) as u32, M as u32),
                     self.dprojected.ptr(), self.projected.ptr(), self.dread.ptr(), length as u32,

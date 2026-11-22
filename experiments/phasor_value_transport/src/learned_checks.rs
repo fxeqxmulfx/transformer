@@ -134,9 +134,9 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     let initial = e.logits.read()?;
     if architecture::COMPACT {
         compact_checks::close("initial padded logits", &initial, &original, 2e-5)?;
-    } else if architecture::SCALAR_PHASE {
+    } else if architecture::HEAD.replaces_context() {
         if initial == original {
-            return Err("an active scalar bottleneck reproduced the unrestricted stream".into());
+            return Err("an active replacement read reproduced the unrestricted stream".into());
         }
     } else if initial != original {
         return Err("zero read offsets failed the pinned stream mean comparison".into());
@@ -155,6 +155,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         || architecture::PHASE_MEMORY
         || architecture::CONTEXT_ROTATION
         || architecture::HOUSEHOLDER
+        || architecture::TOEPLITZ
     {
         0.0003
     } else {
@@ -302,6 +303,8 @@ pub fn run(width: Option<usize>) -> Result<()> {
         crate::associative_checks::run()?;
     } else if architecture::SCALAR_PHASE {
         crate::scalar_phase_checks::run()?;
+    } else if architecture::TOEPLITZ {
+        crate::toeplitz_checks::run()?;
     } else if architecture::PHASE_MEMORY {
         crate::phase_checks::run()?;
     }

@@ -935,6 +935,27 @@ cyclically, even when it occupies only part of the bank. All coefficients
 can be learned, and the prefix can choose a different operator at every
 position. [Prefix-conditioned operator proofs](../../src/Transformer/Phasor/PrefixToeplitz.lean)
 
+The implementation uses one complex channel per embedding dimension. On
+length-257 inputs, reads agreed with dense FP64 matrix multiplication to
+within `6.28e-7`; directional derivatives across the four input and
+control tensors differed by at most `6.79e-6`. The full width-128 logit
+error was at most `8.76e-7`. The 11-channel cyclic shift inside a bank
+of 16 also reproduced the Lean witness exactly.
+
+The three 3,000-update NV11 checkpoints fit 4,689 / 4,694 / 4,693 of the
+4,704 training pairs. Independent reloads classified 85 / 94 / 95 of
+4,705 held-out pairs, including 34 / 43 / 47 of the 4,654 nonzero-row
+pairs. The closest result to uniform guessing on those rows was seed 2
+with 47 correct, against an expectation of 48.
+
+```sh
+cargo +stable build --release --locked --features fp32-affine-reference,prefix-toeplitz
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/toeplitz-nv11/seed0 0 3000
+"$bin" nv11-score runs/toeplitz-nv11/seed0/nv11-train-3000.f32 rows
+```
+
 ## Scalar phase bottleneck
 
 The earlier shared bilinear model fit 4,701 of 4,704 training pairs on

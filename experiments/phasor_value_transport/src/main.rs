@@ -39,6 +39,8 @@ mod reflection_phase_checks;
 mod relation_paths;
 mod relation_support;
 mod scalar_phase_checks;
+mod toeplitz;
+mod toeplitz_checks;
 mod transition;
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
@@ -249,6 +251,7 @@ fn main() -> Result<()> {
         [op] if op == "memory-check" && architecture::ASSOCIATIVE_REFLECTION => associative_checks::run(),
         [op] if op == "memory-check" && architecture::HOUSEHOLDER => householder_checks::run(),
         [op] if op == "memory-check" && architecture::SCALAR_PHASE => scalar_phase_checks::run(),
+        [op] if op == "memory-check" && architecture::TOEPLITZ => toeplitz_checks::run(),
         [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
         [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),

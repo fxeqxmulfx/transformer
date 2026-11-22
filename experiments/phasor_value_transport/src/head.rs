@@ -20,6 +20,7 @@ pub enum Head {
     BilinearPhase,
     SharedBilinear,
     ScalarPhase,
+    PrefixToeplitz,
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
@@ -48,6 +49,7 @@ impl Head {
             "bilinear-phase" => Ok(Self::BilinearPhase),
             "shared-bilinear" => Ok(Self::SharedBilinear),
             "scalar-phase" => Ok(Self::ScalarPhase),
+            "prefix-toeplitz" => Ok(Self::PrefixToeplitz),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
@@ -75,6 +77,7 @@ impl Head {
             Self::BilinearPhase => "phasor-learned-bilinear-phase-32-v1",
             Self::SharedBilinear => "phasor-learned-shared-bilinear-8x32-v1",
             Self::ScalarPhase => "phasor-learned-scalar-phase-bottleneck-v1",
+            Self::PrefixToeplitz => "phasor-learned-prefix-toeplitz-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
@@ -104,7 +107,8 @@ impl Head {
     pub const fn projects_embeddings(self) -> bool {
         matches!(
             self,
-            Self::InputPhase
+            Self::PrefixToeplitz
+                | Self::InputPhase
                 | Self::AffinePhase
                 | Self::BilinearPhase
                 | Self::SharedBilinear
@@ -120,7 +124,11 @@ impl Head {
     }
 
     pub const fn has_stream_memory(self) -> bool {
-        self.is_phase() || matches!(self, Self::Householder)
+        self.is_phase() || matches!(self, Self::Householder | Self::PrefixToeplitz)
+    }
+
+    pub const fn replaces_context(self) -> bool {
+        matches!(self, Self::ScalarPhase | Self::PrefixToeplitz)
     }
 
     pub const fn phase_inputs(self) -> usize {
@@ -158,6 +166,7 @@ impl Head {
                 Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
+            Self::PrefixToeplitz => crate::toeplitz::parameter_count(cfg.width),
             Self::ScalarPhase => (4 + 4 + 2 * MEMORY_WIDTH + 1) * cfg.width + MEMORY_WIDTH,
             Self::ContextRotation | Self::CrossedContext => {
                 (4 + self.context_stages() * (cfg.width / 2)) * cfg.width
@@ -205,6 +214,24 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::PrefixToeplitz => {
+                let d = cfg.width;
+                let mut offset = crate::architecture::memory_start(cfg);
+                let scale = (d as f64).sqrt().recip();
+                let mut rng = Random::new(seed.wrapping_add(30_000));
+                for (count, stddev) in [
+                    (2 * d * d, scale),
+                    (2 * d * d, scale / 2f64.sqrt()),
+                    ((2 * d - 1) * d, 1. / d as f64),
+                    (2 * d * d, scale),
+                    (2 * d * d, scale),
+                ] {
+                    for w in &mut parameters[offset..offset + count] {
+                        *w = rng.gauss(0., stddev) as f32;
+                    }
+                    offset += count;
+                }
+            }
             Self::ScalarPhase => {
                 let first = crate::architecture::memory_start(cfg);
                 let output = first + self.phase_inputs() * cfg.width;
