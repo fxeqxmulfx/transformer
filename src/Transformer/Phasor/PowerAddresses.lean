@@ -9,6 +9,8 @@ Source: the host address timing trial in `experiments/phasor_value_transport/REA
 The vocabulary, including composite sizes, fixes the first three power residues
 of every input token. Each operand pair can reuse them in all thirteen power
 tables. A bounded conditional gives the exact sum or difference representative.
+The dense pair-address trial materializes whole address vectors and reuses
+them before applying the history-dependent edits at each position.
 -/
 
 @[expose] public section
@@ -66,5 +68,45 @@ example :
       ((PairKey.sumPowers 1 1).address (3 : Fin 8) 6).val,
       (PairKey.difference.address (1 : Fin 8) 6).val,
       (PairKey.difference.address (6 : Fin 8) 1).val) = (0, 3, 5, 3, 5) := by decide
+
+/-- Row-major storage of one static address vector for every pair of tokens.
+The value type can contain every component of the model's address row. -/
+def pairAddressCache {κ : Type*} (p : ℕ) (address : ℕ → ℕ → κ) : Array κ :=
+  Array.ofFn (fun i : Fin (p * p) => address (i.val / p) (i.val % p))
+
+/-- The dense pair-address trial in the experiment README. Valid tokens give
+an in-bounds address, and decoding its row and column recovers both operands
+even for a composite vocabulary or a single-token vocabulary. -/
+theorem pairAddressCache_read {κ : Type*} (address : ℕ → ℕ → κ) (a b : Fin p) :
+    (pairAddressCache p address)[a.val * p + b.val]? = some (address a.val b.val) := by
+  have bound : a.val * p + b.val < p * p := by
+    simpa only [Nat.mul_comm p a.val] using Nat.mul_add_lt_mul_of_lt_of_lt a.isLt b.isLt
+  have order : a.val * p + b.val = b.val + p * a.val := by ac_rfl
+  have pos : 0 < p := Nat.zero_lt_of_lt b.isLt
+  rw [pairAddressCache, Array.getElem?_ofFn, dite_eq_left bound]
+  simp [order, Nat.add_mul_div_left _ _ pos, Nat.div_eq_of_lt b.isLt, Nat.mod_eq_of_lt b.isLt]
+
+/-- The dense pair-address trial in the experiment README. A chronological
+scan can patch its static addresses using the current tokens and any earlier
+state. Every resulting state, including a log of all reads or gradient
+owners in row order, agrees with a scan that computes the vectors directly. -/
+theorem pairAddressCache_scan {κ σ : Type*} (address : ℕ → ℕ → κ)
+    (update : σ → (Fin p × Fin p) → κ → σ) (initial : σ) (rows : List (Fin p × Fin p)) :
+    rows.foldlM (m := Option) (fun s ab =>
+      ((pairAddressCache p address)[ab.1.val * p + ab.2.val]?).map (update s ab)) initial =
+    some (rows.foldl (fun s ab => update s ab (address ab.1.val ab.2.val)) initial) := by
+  induction rows generalizing initial with
+  | nil => rfl
+  | cons pair rest ih =>
+    rcases pair with ⟨a,b⟩
+    simpa [pairAddressCache_read] using ih (update initial (a,b) (address a.val b.val))
+
+/-- Repeated reads and exchanged operands at a composite vocabulary keep
+their separate positions in the chronological output. -/
+example :
+    let pairs : List (Fin 6 × Fin 6) := [(5,1), (1,5), (5,1)]
+    pairs.foldlM (m := Option) (fun (trace : List ℕ) ab => do
+      let key ← (pairAddressCache 6 (fun a b => (a * a + b) % 6))[ab.1.val * 6 + ab.2.val]?
+      return key :: trace) [] = some [2,0,2] := by decide
 
 end Transformer.Phasor

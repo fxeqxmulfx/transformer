@@ -220,6 +220,14 @@ means. Addition was 0.62% faster in all three seeds, while 20-bit parity
 was 0.96% slower across its three seeds. The selected host implementation
 continues to evaluate the per-pair formulas.
 
+The dense pair-address trial precomputes the entire static address vector
+for each ordered token pair when the vocabulary fits in a bounded host
+table. Each causal read copies that vector and applies its usual changes
+for the current prefix. Lean proves that the flat index recovers both
+tokens and that every updated state agrees with direct evaluation over any
+sequence, including repeated reads and changes to an earlier address.
+[Dense address lookup and scan equivalence](../../src/Transformer/Phasor/PowerAddresses.lean)
+
 The tied-gradient trial combines the backbone, output-projection and value
 contributions to each embedding coordinate in one GPU launch. It retains
 the two original FP32 additions in their original order. Lean proves that
