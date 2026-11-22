@@ -30,7 +30,10 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
             );
         }
     }
-    let causality = if matches!(engine.config.head, Head::Transition | Head::Recurrent) {
+    let causality = if matches!(
+        engine.config.head,
+        Head::Transition | Head::Recurrent | Head::Bounded
+    ) {
         let sample = task.splits[&task.selection]
             .iter()
             .max_by_key(|e| e.tokens.len())

@@ -47,7 +47,13 @@ fn reference(cfg: &Config, weights: &[f32], hidden: &[f32], length: usize) -> Ve
                 }
             } else {
                 for j in 0..M {
-                    state[j] = z[j].tanh() * state[j] + z[M + j].tanh();
+                    let proposal = z[M + j].tanh();
+                    if cfg.head == Head::Bounded {
+                        let retention = 1. / (1. + (-z[j]).exp());
+                        state[j] = retention * state[j] + (1. - retention) * proposal;
+                    } else {
+                        state[j] = z[j].tanh() * state[j] + proposal;
+                    }
                     read[j] = state[j] / (1. + (-z[2 * M + j]).exp());
                 }
             }
@@ -234,10 +240,31 @@ pub fn run() -> Result<()> {
             .diagnostic_snapshot(tokens.len())?
             .remove("readout_input")
             .unwrap();
-        for head in [Head::Transition, Head::Recurrent] {
+        for head in [Head::Transition, Head::Recurrent, Head::Bounded] {
             cfg.head = head;
-            let weights = layout::initialize_model(&cfg, 1);
+            let mut weights = layout::initialize_model(&cfg, 1);
             let mut engine = Engine::new(cfg.clone(), &weights)?;
+            if head == Head::Bounded {
+                engine.forward(&tokens, &labels, 2, length)?;
+                if engine.logits.read()? != base.logits.read()? {
+                    return Err("zero-output recurrent head changed the backbone logits".into());
+                }
+                engine.backward(2, length)?;
+                let grad = engine.gradients.read()?;
+                let start = architecture::start(&cfg);
+                let output = start + 3 * M * width;
+                let end = output + M * width;
+                if grad[start..output].iter().any(|&x| x != 0.)
+                    || !grad[output..end].iter().any(|g| g.abs() > 1e-7)
+                {
+                    return Err("incorrect zero-output recurrence gradient".into());
+                }
+                let mut rng = random::Random::new(3407);
+                for w in &mut weights[output..end] {
+                    *w = rng.gauss(0., 0.12) as f32;
+                }
+                engine.parameters.write(&weights)?;
+            }
             engine.forward(&tokens, &labels, 2, length)?;
             let actual = engine.logits.read()?;
             let expected = reference(&cfg, &weights, &hidden, length);

@@ -8,15 +8,30 @@ pub const RAW: bool = !cfg!(any(
     feature = "prefix-xor",
     feature = "prefix-sum"
 ));
-pub const STREAM_READ: bool = RAW && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if STREAM_READ {
+#[cfg(all(
+    feature = "bounded-memory-read",
+    any(
+        feature = "original-stream-mean",
+        feature = "prefix-xor",
+        feature = "prefix-sum",
+        feature = "pair-v2"
+    )
+))]
+compile_error!("choose one architecture per stress binary");
+pub const BOUNDED: bool = cfg!(feature = "bounded-memory-read");
+pub const STREAM_READ: bool = RAW && !BOUNDED && !cfg!(feature = "original-stream-mean");
+pub const HEAD: Head = if BOUNDED {
+    Head::Bounded
+} else if STREAM_READ {
     Head::Stream
 } else if RAW {
     Head::Original
 } else {
     Head::Relations
 };
-pub const MODEL: &str = if STREAM_READ {
+pub const MODEL: &str = if BOUNDED {
+    "phasor-bounded-memory-32-v1"
+} else if STREAM_READ {
     "phasor-learned-stream-read-v1"
 } else if RAW {
     "phasor-original-stream-mean-v1"
@@ -48,7 +63,14 @@ pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {
 
 pub fn valid_record(result: &Value, width: u64) -> bool {
     if RAW {
-        return result["readout_parameters"] == if STREAM_READ { 4 * width } else { 0 }
+        let per_channel = if BOUNDED {
+            4 * crate::head::MEMORY_WIDTH as u64
+        } else if STREAM_READ {
+            4
+        } else {
+            0
+        };
+        return result["readout_parameters"] == per_channel * width
             && result.get("pair_parameters").is_none();
     }
     result["initial_gain"] == json!(pair_memory::INITIAL_GAIN)

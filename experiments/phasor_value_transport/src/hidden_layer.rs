@@ -40,7 +40,7 @@ impl HiddenLayer {
                 probabilities: e.cuda.alloc(rows * cfg.max_length)?,
                 scores: e.cuda.alloc(rows * cfg.max_length)?,
             },
-            Head::Recurrent => Memory::Recurrent {
+            Head::Recurrent | Head::Bounded => Memory::Recurrent {
                 kernels: recurrent::kernels::Kernels::load(&e.cuda)?,
                 states: e.cuda.alloc(rows * M)?,
             },
@@ -92,13 +92,21 @@ impl HiddenLayer {
                     self.projected.ptr(),
                     length as u32,
                 )?,
-                Memory::Recurrent { kernels, states } => kernels.forward(
-                    Grid::new((rows / length) as u32, 32),
-                    self.read.ptr(),
-                    states.ptr(),
-                    self.projected.ptr(),
-                    length as u32,
-                )?,
+                Memory::Recurrent { kernels, states } => {
+                    let forward = if e.config.head == Head::Bounded {
+                        recurrent::kernels::Kernels::forward::<true>
+                    } else {
+                        recurrent::kernels::Kernels::forward::<false>
+                    };
+                    forward(
+                        kernels,
+                        Grid::new((rows / length) as u32, 32),
+                        self.read.ptr(),
+                        states.ptr(),
+                        self.projected.ptr(),
+                        length as u32,
+                    )?;
+                }
             }
         }
         e.linear(
@@ -174,14 +182,22 @@ impl HiddenLayer {
                         length as u32,
                     )?;
                 }
-                Memory::Recurrent { kernels, states } => kernels.backward(
-                    Grid::new((rows / length) as u32, 32),
-                    self.dprojected.ptr(),
-                    self.projected.ptr(),
-                    states.ptr(),
-                    self.dread.ptr(),
-                    length as u32,
-                )?,
+                Memory::Recurrent { kernels, states } => {
+                    let backward = if e.config.head == Head::Bounded {
+                        recurrent::kernels::Kernels::backward::<true>
+                    } else {
+                        recurrent::kernels::Kernels::backward::<false>
+                    };
+                    backward(
+                        kernels,
+                        Grid::new((rows / length) as u32, 32),
+                        self.dprojected.ptr(),
+                        self.projected.ptr(),
+                        states.ptr(),
+                        self.dread.ptr(),
+                        length as u32,
+                    )?;
+                }
             }
         }
         e.linear_back(

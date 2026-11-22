@@ -33,8 +33,8 @@ bin=./target/release/phasor-value-transport
 "$bin" check
 "$bin" cell suite-boolean-and-shift 0 runs/learned-streams
 "$bin" probes suite-boolean-and-shift 0 runs/learned-streams
-jq -nc '[range(3) as $i | [range(64) as $j | (($i + $j) / 64)]]' > vectors.json
-"$bin" embedding-forward suite-boolean-and-shift 0 runs/learned-streams vectors.json
+jq -nc '[range(3) as $i | [range(64) as $j | (($i + $j) / 64)]]' > runs/learned-streams/vectors.json
+"$bin" embedding-forward suite-boolean-and-shift 0 runs/learned-streams runs/learned-streams/vectors.json
 "$bin" nv11-train runs/learned-nv11/seed0 0 3000
 "$bin" nv11-score runs/learned-nv11/seed0/nv11-train-3000.f32
 ```
@@ -80,10 +80,31 @@ shared across positions and tasks are trained separately.
 Lean proves that the magnitude of every memory coordinate stays at most
 one at any sequence length. The difference between two states equals their
 initial difference times the product of the intervening retention gates.
-The output map starts at zero, so the
-untrained model reproduces the original Phasor features for every embedding
+The output map starts at zero, so the untrained model reproduces the
+original Phasor features for every embedding
 sequence. The proof also gives the gradient from a current read and all
 later reads. [Bounded recurrent readout](../../src/Transformer/Phasor/BoundedMemoryRead.lean)
+
+The FP32 implementation agreed with independent FP64 logits within
+`3.5e-7` at widths 64 and 128. Both widths passed finite differences
+for the tied embedding, a backbone router and each of the four new
+projections. Only the output projection received a readout gradient at
+initialization. On arbitrary dense inputs the three tested directions
+agreed with finite differences and the first three positions were
+bit-identical with either suffix. Width 128 adds 16,384 learned weights.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.BoundedMemoryRead
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,bounded-memory-read
+bin=./target/release/phasor-value-transport
+"$bin" memory-check
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen suite-blocks 0 runs/bounded-memory 2000
+"$bin" probes suite-blocks 0 runs/bounded-memory
+"$bin" nv11-train runs/bounded-nv11/seed0 0 3000
+"$bin" nv11-score runs/bounded-nv11/seed0/nv11-train-3000.f32
+```
 
 ## Representation-only causal memory
 

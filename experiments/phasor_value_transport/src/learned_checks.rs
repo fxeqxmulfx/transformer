@@ -138,7 +138,8 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     e.backward(3, length)?;
     let gradients = e.gradients.read()?;
     let unmasked = labels.iter().filter(|&&v| v != u32::MAX).count();
-    for (range, epsilon) in [(0..p * width, 0.0002), (start..end, 0.003)] {
+    let read_epsilon = if architecture::BOUNDED { 0.0003 } else { 0.003 };
+    for (range, epsilon) in [(0..p * width, 0.0002), (start..end, read_epsilon)] {
         if range.is_empty() {
             continue;
         }
@@ -194,7 +195,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
             }
         }
     }
-    if architecture::STREAM_READ {
+    if architecture::parameters(&cfg) > 0 {
         e.parameters.write(&parameters)?;
         e.forward(&tokens, &labels, 3, length)?;
         e.backward(3, length)?;

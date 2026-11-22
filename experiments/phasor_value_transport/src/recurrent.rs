@@ -1,4 +1,5 @@
-//! Signed, input-dependent diagonal recurrence with a gated read.
+//! Learned diagonal recurrence with a gated read. The bounded variant
+//! implements Transformer.Phasor.gatedMemoryStep and its adjoint.
 //! One lane owns one state coordinate of one sequence in both directions.
 #[kernite_macros::kernels]
 pub mod kernels {
@@ -23,7 +24,8 @@ pub mod kernels {
         sigmoid(v);
         fma.rn.f32(v, v, 2.0, -1.0);
     }
-    pub unsafe extern "ptx-kernel" fn forward(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn forward<const BOUNDED: bool>(
         read: *mut f32,
         states: *mut f32,
         gates: *mut f32,
@@ -39,7 +41,11 @@ pub mod kernels {
         label(scan);
         mad.lo.u32(at, row, 96, lane);
         load(a, gates, at);
-        tanh(a);
+        if BOUNDED {
+            sigmoid(a);
+        } else {
+            tanh(a);
+        }
         store(gates, at, a);
         add.u32(at, at, 32);
         load(b, gates, at);
@@ -49,7 +55,12 @@ pub mod kernels {
         load(c, gates, at);
         sigmoid(c);
         store(gates, at, c);
-        fma.rn.f32(s, a, s, b);
+        if BOUNDED {
+            sub.rn.f32(output, s, b);
+            fma.rn.f32(s, a, output, b);
+        } else {
+            fma.rn.f32(s, a, s, b);
+        }
         mad.lo.u32(at, row, 32, lane);
         store(states, at, s);
         mul.rn.f32(output, s, c);
@@ -61,7 +72,8 @@ pub mod kernels {
             bra(scan);
         }
     }
-    pub unsafe extern "ptx-kernel" fn backward(
+    #[instances(false, true)]
+    pub unsafe extern "ptx-kernel" fn backward<const BOUNDED: bool>(
         dgates: *mut f32,
         gates: *const f32,
         states: *const f32,
@@ -98,18 +110,31 @@ pub mod kernels {
         store(dgates, at, d);
         sub.u32(at, at, 32);
         load(b, gates, at);
+        let forget_at: u32;
+        sub.u32(forget_at, at, 32);
+        load(a, gates, forget_at);
         mul.rn.f32(d, b, b);
         sub.rn.f32(d, 1.0, d);
+        let part: f32;
+        if BOUNDED {
+            sub.rn.f32(part, 1.0, a);
+            mul.rn.f32(d, d, part);
+        }
         mul.rn.f32(d, d, ds);
         store(dgates, at, d);
-        sub.u32(at, at, 32);
-        load(a, gates, at);
         mul.rn.f32(carry, ds, a);
-        mul.rn.f32(d, a, a);
-        sub.rn.f32(d, 1.0, d);
-        mul.rn.f32(d, d, prev);
+        if BOUNDED {
+            sub.rn.f32(d, 1.0, a);
+            mul.rn.f32(d, d, a);
+            sub.rn.f32(part, prev, b);
+            mul.rn.f32(d, d, part);
+        } else {
+            mul.rn.f32(d, a, a);
+            sub.rn.f32(d, 1.0, d);
+            mul.rn.f32(d, d, prev);
+        }
         mul.rn.f32(d, d, ds);
-        store(dgates, at, d);
+        store(dgates, forget_at, d);
         if more {
             bra(scan);
         }
