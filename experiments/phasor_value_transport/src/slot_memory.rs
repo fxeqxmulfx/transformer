@@ -136,13 +136,17 @@ pub struct Routing {
     inverse: Vec<f32>,
 }
 
+pub struct BankGeometry {
+    pub priority: Vec<usize>,
+    pub value_scales: Vec<f32>,
+}
+
 impl Routing {
     pub fn inverse_norms(&self) -> &[f32] {
         &self.inverse
     }
 
-    // Products are hidden value · hidden prototype, computed by Kernite.
-    pub fn refresh(&mut self, l: &Layout, w: &[f32], products: &[f32]) {
+    pub fn geometry(&mut self, l: &Layout, w: &[f32]) -> BankGeometry {
         self.inverse = (0..l.slots)
             .map(|i| inverse_norm(l.prototype(w, i)))
             .collect();
@@ -157,34 +161,45 @@ impl Routing {
                 distinct[pair[1]] = false;
             }
         }
-        let mut bank = vec![ABSENT; l.slots * l.slots];
-        for (cell, scores) in products.chunks_exact(l.slots).enumerate() {
-            if !distinct[cell / l.slots] || !distinct[cell % l.slots] {
-                continue;
-            }
-            let v = l.row(w, cell);
-            let energy = dot(v, v);
-            let damping = l.d as f32 * f32::EPSILON;
-            if energy <= damping {
-                continue;
-            }
-            let norm = (energy + damping).sqrt().recip();
-            let mut best = std::f32::consts::FRAC_1_SQRT_2;
-            for (i, &score) in scores.iter().enumerate() {
-                let cosine = score * self.inverse[i] * norm;
-                if cosine > best {
-                    best = cosine;
-                    bank[cell] = i as u32;
-                } else if cosine == best {
-                    bank[cell] = ABSENT;
+        let damping = l.d as f32 * f32::EPSILON;
+        let value_scales = w[l.values..l.gates]
+            .chunks_exact(l.d)
+            .enumerate()
+            .map(|(cell, v)| {
+                if !distinct[cell / l.slots] || !distinct[cell % l.slots] {
+                    return 0.;
                 }
-            }
+                let energy = dot(v, v);
+                if energy <= damping {
+                    0.
+                } else {
+                    (energy + damping).sqrt().recip()
+                }
+            })
+            .collect();
+        BankGeometry {
+            priority,
+            value_scales,
         }
+    }
+
+    pub fn install(&mut self, l: &Layout, bank: Vec<u32>, priority: Vec<usize>) {
         if self.bank != bank || self.priority != priority {
             self.reads = Some(self.graph.complete(l.slots, &bank, &priority));
             self.bank = bank;
             self.priority = priority;
         }
+    }
+
+    /// Scalar reference used by the gradient and device equivalence checks.
+    pub fn refresh(&mut self, l: &Layout, w: &[f32], products: &[f32]) {
+        let geometry = self.geometry(l, w);
+        let bank = products
+            .chunks_exact(l.slots)
+            .zip(&geometry.value_scales)
+            .map(|(scores, &scale)| trusted_slot(scores, &self.inverse, scale))
+            .collect();
+        self.install(l, bank, geometry.priority);
     }
 
     fn nearest(&self, l: &Layout, w: &[f32], v: &[f32]) -> Option<usize> {
@@ -201,6 +216,24 @@ impl Routing {
         }
         winner
     }
+}
+
+pub fn trusted_slot(scores: &[f32], inverse: &[f32], scale: f32) -> u32 {
+    if scale == 0. {
+        return ABSENT;
+    }
+    let mut best = std::f32::consts::FRAC_1_SQRT_2;
+    let mut winner = ABSENT;
+    for (i, (&score, &inv)) in scores.iter().zip(inverse).enumerate() {
+        let cosine = score * inv * scale;
+        if cosine > best {
+            best = cosine;
+            winner = i as u32;
+        } else if cosine == best {
+            winner = ABSENT;
+        }
+    }
+    winner
 }
 
 #[derive(Clone, Default)]

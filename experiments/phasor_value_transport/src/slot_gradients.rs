@@ -15,6 +15,7 @@ fn route(l: &Layout, w: &[f32]) -> Routing {
 }
 
 pub(super) fn run() -> Result<()> {
+    crate::slot_bank_checks::run()?;
     check_addresses()?;
     let d = 32;
     let k = 7;

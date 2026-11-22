@@ -36,6 +36,8 @@ pub(super) struct SlotLayer {
     addresses: crate::slot_addresses::kernels::Kernels,
     dictionary_t: F,
     inverse_norms: RefCell<F>,
+    value_scales: RefCell<F>,
+    bank: Buffer<u32>,
     cells: Buffer<u32>,
     parameters: RefCell<F>,
     products: F,
@@ -58,6 +60,8 @@ impl SlotLayer {
             products: e.cuda.alloc(layout.slots.pow(3))?,
             dictionary_t: e.cuda.alloc(layout.slots * layout.d)?,
             inverse_norms: RefCell::new(e.cuda.alloc(layout.slots)?),
+            value_scales: RefCell::new(e.cuda.alloc(layout.slots.pow(2))?),
+            bank: e.cuda.alloc(layout.slots.pow(2))?,
             cells: e.cuda.alloc(e.config.max_length * e.config.max_batch)?,
             addresses: crate::slot_addresses::kernels::Kernels::load(&e.cuda)?,
             layout,
@@ -118,13 +122,31 @@ impl SlotLayer {
                     l.d as u32,
                 )?;
             }
-            tape.routing.refresh(l, &w, &self.products.read()?);
+            let geometry = tape.routing.geometry(l, &w);
             self.inverse_norms
                 .borrow_mut()
                 .write(tape.routing.inverse_norms())?;
+            self.value_scales
+                .borrow_mut()
+                .write(&geometry.value_scales)?;
+            // Four complete warps per block, one independent cell per warp.
+            unsafe {
+                self.addresses.trusted_bank(
+                    Grid::new(m.div_ceil(4) as u32, 128),
+                    self.bank.ptr(),
+                    self.products.ptr(),
+                    self.inverse_norms.borrow().ptr(),
+                    self.value_scales.borrow().ptr(),
+                    l.slots as u32,
+                    m as u32,
+                    std::f32::consts::FRAC_1_SQRT_2,
+                )?;
+            }
+            tape.routing
+                .install(l, self.bank.read()?, geometry.priority);
         }
         // A block sees just its row and the preceding row of this sequence.
-        // Both scores for every slot fit in the block's shared memory.
+        // Both score arrays fit in shared memory.
         unsafe {
             self.addresses.cells(
                 Grid::new(rows as u32, l.slots as u32),

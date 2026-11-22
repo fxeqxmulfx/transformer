@@ -21,6 +21,7 @@ public import Transformer.Phasor.TwoSidedFrame
 public import Transformer.Phasor.SingleFrameOrbit
 public import Transformer.Phasor.TripleTransport
 public import Transformer.Phasor.TripleTransport.Capacity
+public import Transformer.Phasor.TripleTransport.ConfidenceSelection
 public import Transformer.Phasor.TripleTransport.Incremental
 public import Transformer.Phasor.TripleTransport.PhaseResidual
 public import Transformer.Phasor.FourierTransport

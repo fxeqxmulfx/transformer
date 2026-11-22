@@ -1,4 +1,4 @@
-//! Adjacent prototype addresses for TripleTransport.scanAddresses_eq_zip.
+//! Prototype searches for the adjacent addresses and the trusted triple bank.
 #[kernite_macros::kernels]
 pub mod kernels {
     fn load(value: f32, buffer: u64, index: u32) {
@@ -15,6 +15,89 @@ pub mod kernels {
         selp.u32(winner, 0xffffffff, winner, equal);
         selp.u32(winner, slot, winner, greater);
         selp.f32(best, score, best, greater);
+    }
+
+    // Each warp scans one cell's prototype scores. A lane remembers ties
+    // among its own slots. The ballot detects ties between different lanes.
+    pub unsafe extern "ptx-kernel" fn trusted_bank(
+        output: *mut u32,
+        products: *const f32,
+        inverse: *const f32,
+        scales: *const f32,
+        slots: u32,
+        cells: u32,
+        threshold: f32,
+    ) {
+        let (thread, cell, lane, i, start): (u32, u32, u32, u32, u32);
+        let (block, size, local): (u32, u32, u32);
+        mov.u32(block, ctaid.x);
+        mov.u32(size, ntid.x);
+        mov.u32(local, tid.x);
+        mad.lo.u32(thread, block, size, local);
+        shr.u32(cell, thread, 5);
+        and.b32(lane, thread, 31);
+        let (outside, leader): (pred, pred);
+        setp.ge.u32(outside, cell, cells);
+        if outside {
+            ret();
+        }
+        setp.eq.u32(leader, lane, 0);
+        let (scale, best, score, inv): (f32, f32, f32, f32);
+        let (winner, absent): (u32, u32);
+        let out_at: u64;
+        mad.wide.u32(out_at, cell, 4, output);
+        mov.u32(absent, 0xffffffff);
+        load(scale, scales, cell);
+        let (masked, masked_leader): (pred, pred);
+        setp.eq.f32(masked, scale, 0.0);
+        and.pred(masked_leader, masked, leader);
+        if masked_leader {
+            st.global.u32([out_at], absent);
+        }
+        if masked {
+            ret();
+        }
+        mov.f32(best, threshold);
+        mov.u32(winner, absent);
+        mul.lo.u32(start, cell, slots);
+        mov.u32(i, lane);
+        let done: pred;
+        let offset: u32;
+        label(columns);
+        setp.ge.u32(done, i, slots);
+        if done {
+            bra(peak);
+        }
+        add.u32(offset, start, i);
+        load(score, products, offset);
+        load(inv, inverse, i);
+        mul.rn.f32(score, score, inv);
+        mul.rn.f32(score, score, scale);
+        consider(best, winner, score, i);
+        add.u32(i, i, 32);
+        bra(columns);
+
+        label(peak);
+        let (highest, other): (f32, f32);
+        mov.f32(highest, best);
+        for k in 0..5 {
+            shfl.sync.bfly.b32(other, highest, 1 << k, 31, 0xffffffff);
+            max.f32(highest, highest, other);
+        }
+        let (above, equal, attains, single): (pred, pred, pred, pred);
+        setp.gt.f32(above, best, threshold);
+        setp.eq.f32(equal, best, highest);
+        and.pred(attains, above, equal);
+        let (mask, count, source, selected): (u32, u32, u32, u32);
+        vote.sync.ballot.b32(mask, attains, 0xffffffff);
+        popc.b32(count, mask);
+        bfind.u32(source, mask);
+        shfl.sync.idx.b32(selected, winner, source, 31, 0xffffffff);
+        setp.eq.u32(single, count, 1);
+        selp.u32(selected, selected, absent, single);
+        if leader {
+            st.global.u32([out_at], selected);
+        }
     }
 
     // One block per position, one lane per prototype. The dot products use

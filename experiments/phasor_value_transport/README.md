@@ -1468,6 +1468,41 @@ checkpoint bytes for each seed. On NV11 with the default 128 prototypes,
 seed 0 took 15.31 seconds with full rebuilds and 7.99 seconds with the
 incremental graph. The independently reloaded weights recovered all 9,409
 pairs. These times cover training and scheduled observations.
+A second NV11 comparison alternated execution order for each seed. The
+incremental graph reached update 250 in 7.52–7.95 seconds against
+14.99–16.30 seconds for full rebuilds. It was faster in all six pairs,
+with a geometric mean time ratio of 0.501. Each timed checkpoint was
+independently reloaded.
+
+The confidence classifier now returns one winning slot or an abstention for
+each learned value. A GPU warp compares the cosine scores and counts all
+maximizers above the strict threshold. This reduces the data copied back to
+the host from `K³` scores to `K²` slot indices for a dictionary of size `K`.
+The device check compares 632 cells with a scalar scan, including threshold
+ties, tied maxima on the same lane and on different lanes, and masked cells.
+[Unique maximum proof](../../src/Transformer/Phasor/TripleTransport/ConfidenceSelection.lean)
+
+With the incremental graph in both implementations, NV11 training through
+update 250 took 7.99 / 8.64 / 7.76 seconds with the host classifier and
+7.33 / 7.25 / 7.62 seconds with the device classifier. The checkpoint
+files were byte-identical on all three seeds. On modulo-193 division, seed
+0 reached 18,528/18,528 at update 292 in 30.53 and 29.11 seconds, also
+with identical weights. At 250 updates of long-tier 16-bit parity, the
+host took 2.40–2.46 seconds and the device took 2.31–2.39 seconds. The
+device was faster in all six alternating-order pairs, with a geometric
+mean time ratio of 0.960. All measurements used the GTX 1050 and Kernite
+v0.6.0. To reproduce the NV11 and fixed-work long comparisons, build
+`control` from `3ff5cb2d` and `bin` from this revision with
+`fp32-affine-reference,triple-transport`.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ConfidenceSelection
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+./time_screens.sh --first-pass "$control" "$bin" runs/confidence-nv11 250 arithmetic-cubic-product
+./time_screens.sh "$control" "$bin" runs/confidence-parity 250 basis-parity16
+```
 
 To reproduce the modulo-193 comparison, build the control from
 `174cec4c` and the candidate from this revision, both with
