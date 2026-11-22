@@ -18,6 +18,7 @@ pub enum Head {
     AffinePhase,
     BilinearPhase,
     ReflectionPhase,
+    SingleReflection,
 }
 
 impl Head {
@@ -38,6 +39,7 @@ impl Head {
             "affine-phase" => Ok(Self::AffinePhase),
             "bilinear-phase" => Ok(Self::BilinearPhase),
             "reflection-phase" => Ok(Self::ReflectionPhase),
+            "single-reflection" => Ok(Self::SingleReflection),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -57,6 +59,7 @@ impl Head {
             Self::AffinePhase => "phasor-learned-affine-phase-32-v1",
             Self::BilinearPhase => "phasor-learned-bilinear-phase-32-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
+            Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
         }
     }
 
@@ -68,13 +71,18 @@ impl Head {
                 | Self::AffinePhase
                 | Self::BilinearPhase
                 | Self::ReflectionPhase
+                | Self::SingleReflection
         )
     }
 
     pub const fn projects_embeddings(self) -> bool {
         matches!(
             self,
-            Self::InputPhase | Self::AffinePhase | Self::BilinearPhase | Self::ReflectionPhase
+            Self::InputPhase
+                | Self::AffinePhase
+                | Self::BilinearPhase
+                | Self::ReflectionPhase
+                | Self::SingleReflection
         )
     }
 
@@ -102,7 +110,8 @@ impl Head {
             | Self::InputPhase
             | Self::AffinePhase
             | Self::BilinearPhase
-            | Self::ReflectionPhase => {
+            | Self::ReflectionPhase
+            | Self::SingleReflection => {
                 (4 + self.phase_inputs() + 2 * MEMORY_WIDTH) * cfg.width + self.phase_gates()
             }
             Self::Relations => pair_memory::parameters(cfg),
@@ -124,7 +133,8 @@ impl Head {
             | Self::InputPhase
             | Self::AffinePhase
             | Self::BilinearPhase
-            | Self::ReflectionPhase => {
+            | Self::ReflectionPhase
+            | Self::SingleReflection => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
                 let start = crate::architecture::memory_start(cfg);
                 let end = crate::architecture::start(cfg) + self.parameters(cfg);

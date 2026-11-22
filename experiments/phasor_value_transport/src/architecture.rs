@@ -15,11 +15,13 @@ pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
 pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
 pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
+pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read")
     || INPUT_PHASE
     || AFFINE_PHASE
     || BILINEAR_PHASE
-    || REFLECTION_PHASE;
+    || REFLECTION_PHASE
+    || SINGLE_REFLECTION;
 const _: () = {
     let variants = BOUNDED as u8
         + INPUT_PRODUCT as u8
@@ -28,7 +30,8 @@ const _: () = {
         + INPUT_PHASE as u8
         + AFFINE_PHASE as u8
         + BILINEAR_PHASE as u8
-        + REFLECTION_PHASE as u8;
+        + REFLECTION_PHASE as u8
+        + SINGLE_REFLECTION as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -36,7 +39,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if REFLECTION_PHASE {
+pub const HEAD: Head = if SINGLE_REFLECTION {
+    Head::SingleReflection
+} else if REFLECTION_PHASE {
     Head::ReflectionPhase
 } else if BILINEAR_PHASE {
     Head::BilinearPhase

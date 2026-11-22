@@ -20,7 +20,7 @@ pub(super) fn error(native: &[f32], expected: &[f64], tolerance: f64) -> Result<
     Ok(worst)
 }
 
-fn scan(length: usize) -> Result<()> {
+fn scan<const REFLECT: bool>(length: usize) -> Result<()> {
     let batch = 3;
     let rows = batch * length;
     let cuda = Cuda::new()?;
@@ -40,8 +40,8 @@ fn scan(length: usize) -> Result<()> {
     let grid = Grid::new(batch as u32, M as u32);
     // One block per full sequence. Each lane has its own projected channel.
     unsafe {
-        kernel.forward(grid, read.ptr(), saved.ptr(), length as u32)?;
-        kernel.backward(grid, grad.ptr(), saved.ptr(), g.ptr(), length as u32)?;
+        kernel.forward::<REFLECT>(grid, read.ptr(), saved.ptr(), length as u32)?;
+        kernel.backward::<REFLECT>(grid, grad.ptr(), saved.ptr(), g.ptr(), length as u32)?;
     }
     let mut features = vec![0.; upstream.len()];
     let mut derivative = vec![0.; increments.len()];
@@ -49,9 +49,16 @@ fn scan(length: usize) -> Result<()> {
     // never carries an adjoint across rows and resets at batch boundaries.
     for row in 0..rows {
         let start = row - row % length;
+        let sign = |i| {
+            if REFLECT && (row - i) % 2 == 1 {
+                -1.
+            } else {
+                1.
+            }
+        };
         for k in 0..M {
             let angle: f64 = (start..=row)
-                .map(|i| f64::from(increments[i * M + k]))
+                .map(|i| sign(i) * f64::from(increments[i * M + k]))
                 .sum();
             let (s, c) = angle.sin_cos();
             let offset = row * 2 * M + k;
@@ -59,7 +66,7 @@ fn scan(length: usize) -> Result<()> {
             features[offset + M] = c - 1.;
             let g = f64::from(upstream[offset]) * c - f64::from(upstream[offset + M]) * s;
             for i in start..=row {
-                derivative[i * M + k] += g;
+                derivative[i * M + k] += sign(i) * g;
             }
         }
     }
@@ -104,6 +111,7 @@ fn network(width: usize) -> Result<()> {
     let affine = cfg.head == head::Head::AffinePhase;
     let bilinear = cfg.head == head::Head::BilinearPhase;
     let reflecting = cfg.head == head::Head::ReflectionPhase;
+    let single = cfg.head == head::Head::SingleReflection;
     let output = increments + cfg.head.phase_inputs() * width;
     let end = first + cfg.head.parameters(&cfg) - cfg.head.phase_gates();
     let mut e = Engine::new(cfg.clone(), &weights)?;
@@ -140,6 +148,9 @@ fn network(width: usize) -> Result<()> {
         }
     }
     e.parameters.write(&weights)?;
+    if single {
+        phase_controls::one_gate(&cfg, &weights, end, &mut e)?;
+    }
     e.forward(&tokens, &labels, 2, length)?;
     let actual = e.logits.read()?;
     let hidden = e.diagnostic_snapshot(tokens.len())?;
@@ -167,6 +178,11 @@ fn network(width: usize) -> Result<()> {
                     ordered[k] = (c * u - s * v + step[M + k], s * u + c * v);
                     pair[k] = ordered[k].1;
                     pair[M + k] = ordered[k].0 - 1.;
+                } else if single {
+                    reflection[k] = step[k] - reflection[k];
+                    let (s, c) = reflection[k].sin_cos();
+                    pair[k] = s;
+                    pair[M + k] = c - 1.;
                 } else {
                     angles[k] += step[k];
                     let mut angle = angles[k];
@@ -224,7 +240,7 @@ fn network(width: usize) -> Result<()> {
     if cfg.head.projects_embeddings() {
         phase_controls::input_segment(&cfg, &weights, &mut e)?;
     }
-    if reflecting {
+    if reflecting || single {
         reflection_phase_checks::insert_pair(&cfg, &weights, end, &mut e)?;
     }
     Ok(())
@@ -242,7 +258,7 @@ pub fn run() -> Result<()> {
         } else if architecture::AFFINE_PHASE {
             affine_phase_checks::scan(length)?;
         } else {
-            scan(length)?;
+            scan::<{ architecture::SINGLE_REFLECTION }>(length)?;
         }
     }
     for width in [64, 128] {

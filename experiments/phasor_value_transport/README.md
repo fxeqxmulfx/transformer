@@ -682,6 +682,28 @@ is the sum of the adjacent projected differences. A simultaneous change
 in all directions propagates through the same signed recurrence.
 [Single-state derivation](../../src/Transformer/Phasor/SingleReflection.lean)
 
+At length 257 the single-state Kernite scan agreed with FP64 within
+`4.85e-6` on 49,344 outputs and `1.50e-5` on 24,672 derivatives.
+At widths 64 and 128, the complete single-state model matched the separate
+unit-gate implementation within `3.58e-7` on arbitrary hidden vectors.
+The input pullbacks were identical. The additive specialization reproduced
+the original 20-bit seed-0 training observations and weights byte for byte.
+
+The first three 20-bit crossings occurred at updates 500 / 500 / 250.
+Their independent source test scores were 512 / 512 / 481 of 512 and
+their 1,024-bit scores were 256 / 256 / 206 of 256. The fastest crossing
+lost accuracy on both tests. The mixed reflection model retained the
+stronger three-seed transfer in this comparison.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,single-reflection-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity20 0 runs/single-reflection 3500
+PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity20 0 runs/single-reflection parity-1024
+```
+
 ## Contextual rotation
 
 Each normalized input embedding supplies a learned angle for every pair

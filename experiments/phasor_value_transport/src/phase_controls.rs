@@ -36,6 +36,30 @@ pub(super) fn zero_extension(cfg: &Config, weights: &[f32], ordered: &mut Engine
     let base_weights = [&weights[..removed.start], &weights[removed.end..]].concat();
     let mut base = Engine::new(base_cfg, &base_weights)?;
     ordered.parameters.write(&controlled)?;
+    compare_dense(cfg, ordered, &mut base, "zero ordered contribution")
+}
+
+/// With the extra gates fixed to one, the mixed model supplies a separately
+/// implemented reference for the whole single-state solve and input VJP.
+pub(super) fn one_gate(
+    cfg: &Config,
+    weights: &[f32],
+    gates: usize,
+    single: &mut Engine,
+) -> Result<()> {
+    let mut mixed = cfg.clone();
+    mixed.head = head::Head::ReflectionPhase;
+    let mixed_weights = [&weights[..gates], &[1.; M], &weights[gates..]].concat();
+    let mut reference = Engine::new(mixed, &mixed_weights)?;
+    compare_dense(
+        cfg,
+        single,
+        &mut reference,
+        "single reflection against unit gates",
+    )
+}
+
+fn compare_dense(cfg: &Config, ordered: &mut Engine, base: &mut Engine, name: &str) -> Result<()> {
     let rows = cfg.max_length * 2;
     let mut rng = random::Random::new(101);
     let mut samples = |n| {
@@ -53,7 +77,7 @@ pub(super) fn zero_extension(cfg: &Config, weights: &[f32], ordered: &mut Engine
     let logits = compact_checks::close("initial ordered logits", &a.logits, &b.logits, 3e-6)?;
     let gradient = compact_checks::close("initial ordered input VJP", &da, &db, 1e-5)?;
     println!(
-        "zero ordered contribution width={} hidden={hidden:.3e} logits={logits:.3e} input_gradient={gradient:.3e}",
+        "{name} width={} hidden={hidden:.3e} logits={logits:.3e} input_gradient={gradient:.3e}",
         cfg.width
     );
     Ok(())
@@ -109,7 +133,10 @@ pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Re
         .collect();
     let cotangent: Vec<_> = (0..vocab).map(|_| rng.gauss(0., 0.2) as f32).collect();
     let (ab, mut gab) = endpoint(e, &mut base, &values, &cotangent)?;
-    let shift = if cfg.head == head::Head::ReflectionPhase {
+    let shift = if matches!(
+        cfg.head,
+        head::Head::ReflectionPhase | head::Head::SingleReflection
+    ) {
         let mut even = values.clone();
         even.rotate_left(2 * width);
         let (read, grad) = endpoint(e, &mut base, &even, &cotangent)?;
@@ -133,7 +160,10 @@ pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Re
     }
     if matches!(
         cfg.head,
-        head::Head::AffinePhase | head::Head::BilinearPhase | head::Head::ReflectionPhase
+        head::Head::AffinePhase
+            | head::Head::BilinearPhase
+            | head::Head::ReflectionPhase
+            | head::Head::SingleReflection
     ) {
         let changed = |a: &[f32], b: &[f32]| {
             a.iter()

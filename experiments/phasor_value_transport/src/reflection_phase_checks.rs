@@ -101,7 +101,7 @@ pub(super) fn insert_pair(
 ) -> Result<()> {
     let d = cfg.width;
     let mut active = weights.to_vec();
-    active[gates..gates + M].fill(1.);
+    active[gates..gates + cfg.head.phase_gates()].fill(1.);
     e.parameters.write(&active)?;
     let mut base = phase_controls::stream_control(cfg, weights)?;
     let mut rng = random::Random::new(191);

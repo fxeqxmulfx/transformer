@@ -46,7 +46,7 @@ impl HiddenLayer {
         let cfg = &e.config;
         let rows = cfg.max_batch * cfg.max_length;
         let memory = match cfg.head {
-            Head::PhasePrefix | Head::InputPhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
+            Head::PhasePrefix | Head::InputPhase | Head::SingleReflection => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::ReflectionPhase => Memory::Reflection {
@@ -130,12 +130,15 @@ impl HiddenLayer {
                     self.projected.ptr(),
                     length as u32,
                 )?,
-                Memory::Phase(kernels) => kernels.forward(
-                    Grid::new((rows / length) as u32, M as u32),
-                    self.read.ptr(),
-                    self.projected.ptr(),
-                    length as u32,
-                )?,
+                Memory::Phase(kernels) => {
+                    let forward = if e.config.head == Head::SingleReflection {
+                        phase_prefix::kernels::Kernels::forward::<true>
+                    } else {
+                        phase_prefix::kernels::Kernels::forward::<false>
+                    };
+                    forward(kernels, Grid::new((rows / length) as u32, M as u32),
+                        self.read.ptr(), self.projected.ptr(), length as u32)?;
+                }
                 Memory::Transitions {
                     kernels,
                     probabilities,
@@ -235,13 +238,15 @@ impl HiddenLayer {
                     self.dread.ptr(),
                     length as u32,
                 )?,
-                Memory::Phase(kernels) => kernels.backward(
-                    Grid::new((rows / length) as u32, M as u32),
-                    self.dprojected.ptr(),
-                    self.projected.ptr(),
-                    self.dread.ptr(),
-                    length as u32,
-                )?,
+                Memory::Phase(kernels) => {
+                    let backward = if e.config.head == Head::SingleReflection {
+                        phase_prefix::kernels::Kernels::backward::<true>
+                    } else {
+                        phase_prefix::kernels::Kernels::backward::<false>
+                    };
+                    backward(kernels, Grid::new((rows / length) as u32, M as u32),
+                        self.dprojected.ptr(), self.projected.ptr(), self.dread.ptr(), length as u32)?;
+                }
                 Memory::Transitions {
                     kernels,
                     probabilities,
