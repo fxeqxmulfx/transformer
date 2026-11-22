@@ -984,6 +984,11 @@ The remaining 39 / 34 / 41 correct answers exceed the learned stream's
 36 / 25 / 33 at this update. All six nonzero-row counts are below the
 48 expected from uniform guesses.
 
+At 100,000 updates seed 0 fit all 4,704 training pairs. Its independent
+checkpoint replay recovered 92 of 4,705 held-out answers, including 41 of
+4,654 with a nonzero first operand. Its highest held-out count across
+the 250-update evaluation intervals was 104 at update 88,250.
+
 ```sh
 cargo +stable build --release --locked --features fp32-affine-reference,two-sided-frame
 bin=./target/release/phasor-value-transport
