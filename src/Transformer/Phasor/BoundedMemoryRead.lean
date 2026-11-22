@@ -65,6 +65,21 @@ theorem gatedMemoryScan_initial_difference (a b : ℕ → ℝ) (z z' : ℝ) (n :
       Finset.prod_range_succ]
     linear_combination Real.sigmoid (a n) * ih
 
+/-- The state after a prefix is independent of every subsequent projection. -/
+theorem gatedMemoryScan_congr_prefix (a b a' b' : ℕ → ℝ) (z : ℝ) (n : ℕ)
+    (h : ∀ j < n, a j = a' j ∧ b j = b' j) :
+    gatedMemoryScan a b z n = gatedMemoryScan a' b' z n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    obtain ⟨ha, hb⟩ := h n (by omega)
+    simp only [gatedMemoryScan, ha, hb, ih fun j hj => h j (by omega)]
+
+example (a b : ℕ → ℝ) : gatedMemoryScan a b 0 3 =
+    gatedMemoryScan (fun i => if i < 3 then a i else 7)
+      (fun i => if i < 3 then b i else -9) 0 3 :=
+  gatedMemoryScan_congr_prefix _ _ _ _ _ _ (fun i hi => by simp [hi])
+
 /-- The derivative of the current read and next state paired with arbitrary
 upstream gradients. Its coefficients are the four reverse-mode updates for
 the previous state and the forget, write and read projections. -/
@@ -108,5 +123,23 @@ theorem BoundedMemoryRead.feature_zero_output {D m : ℕ} (A : BoundedMemoryRead
     (x : ℕ → EucSpace D) (i : ℕ) :
     ({A with output := 0} : BoundedMemoryRead D m).feature x i = x i := by
   simp [BoundedMemoryRead.feature]
+
+/-- At any position the residual is determined by the dense hidden vectors
+through that position for every setting of the four learned matrices. -/
+theorem BoundedMemoryRead.feature_congr_prefix {D m : ℕ} (A : BoundedMemoryRead D m)
+    (x y : ℕ → EucSpace D) (i : ℕ) (h : ∀ j ≤ i, x j = y j) :
+    A.feature x i = A.feature y i := by
+  have scan (k : Fin m) : gatedMemoryScan (fun j => A.forget (x j) k)
+      (fun j => A.write (x j) k) 0 (i+1) =
+      gatedMemoryScan (fun j => A.forget (y j) k) (fun j => A.write (y j) k) 0 (i+1) := by
+    apply gatedMemoryScan_congr_prefix
+    intro j hj
+    rw [h j (by omega)]
+    exact ⟨rfl, rfl⟩
+  simp only [BoundedMemoryRead.feature, scan, h i (by omega)]
+
+example (A : BoundedMemoryRead 128 32) (x y : ℕ → EucSpace 128) (i : ℕ) :
+    A.feature x i = A.feature (fun j => if j ≤ i then x j else y j) i :=
+  A.feature_congr_prefix _ _ _ (fun j hj => by simp [hj])
 
 end Transformer.Phasor
