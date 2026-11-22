@@ -10,6 +10,7 @@ public import Transformer.Phasor.PackedReadBuffers
 public import Transformer.Phasor.PowerAddresses
 public import Transformer.Phasor.SharedValues
 public import Transformer.Phasor.GeometricMemory
+public import Transformer.Phasor.AffineProjectionMemory
 public import Transformer.Phasor.TiedGradients
 public import Transformer.Phasor.PrefixValues
 public import Transformer.Phasor.SuccessorValues

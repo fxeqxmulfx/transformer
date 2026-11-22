@@ -829,6 +829,15 @@ repeat them, apply the patch at `8e47e999`, build with
 by `screen TASK SEED RUN_DIR CUTOFF`.
 [Geometric memory trial source](trials/geometric-token-memory.patch)
 
+The affine-projection memory trial learns a slope and intercept for every
+token and coordinate pair. At each position it projects the preceding
+pair of hidden values onto the current token's line. Lean proves that
+repeating any token preserves the auxiliary state, while changing token
+order can change it. Zero intercepts recover the previous residual for
+every input. The proof also derives the reverse update for the slopes,
+intercepts and states.
+[Affine projection memory](../../src/Transformer/Phasor/AffineProjectionMemory.lean)
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
