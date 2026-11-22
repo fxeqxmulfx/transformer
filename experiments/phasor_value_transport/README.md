@@ -762,6 +762,18 @@ a bound on state magnitude, and the reverse-scan gradient for every token,
 including repeated occurrences and masked outputs.
 [Causal geometric memory and its adjoint](../../src/Transformer/Phasor/GeometricMemory.lean)
 
+Adding geometric memory to the lagged transition table passed 135 GPU
+gradient checks. It recovered all 64 MQAR test sequences at each of the
+three test lengths in every seed. Dyck took 500 / 500 / 500 updates,
+compared with 500 / 250 / 500 for the transition table alone. On seed 0,
+typed Dyck and C-RASP depths two and three reached 23/32, 23/32 and
+27/31 at the 2,500-update cutoff. Copy-repeat reached 0/32 at update
+1,000. This trial supplied no new passing case on those screens. To
+repeat them, apply the patch at `8e47e999`, build with
+`fp32-affine-reference,geometric-memory` and run `shared-check` followed
+by `screen TASK SEED RUN_DIR CUTOFF`.
+[Geometric memory trial source](trials/geometric-token-memory.patch)
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.

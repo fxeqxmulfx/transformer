@@ -1,0 +1,275 @@
+diff --git a/experiments/phasor_value_transport/Cargo.toml b/experiments/phasor_value_transport/Cargo.toml
+index 9215c0c4..b36e1e85 100644
+--- a/experiments/phasor_value_transport/Cargo.toml
++++ b/experiments/phasor_value_transport/Cargo.toml
+@@ -33,6 +33,7 @@ closed-relation = ["successor-gain-three-quarters"]
+ closed-relation-boost = ["closed-relation"]
+ single-write-gain = ["closed-relation-boost"]
+ transition-table = ["single-write-gain"]
++geometric-memory = ["transition-table"]
+ successor-hit-gain = ["successor-displacement"]
+ successor-hit-gain-seven-quarters = ["successor-hit-gain"]
+ successor-agreement = ["successor-hit-gain"]
+diff --git a/experiments/phasor_value_transport/src/geometric_memory.rs b/experiments/phasor_value_transport/src/geometric_memory.rs
+new file mode 100644
+index 00000000..1dd5ce06
+--- /dev/null
++++ b/experiments/phasor_value_transport/src/geometric_memory.rs
+@@ -0,0 +1,82 @@
++//! One value scan per sequence and coordinate. The token table gather supplies
++//! the immediate term. The reverse scan supplies its full adjoint to the same
++//! deterministic token incidence lists used by the other learned tables.
++#[kernite_macros::kernels]
++pub mod kernels {
++    fn retention(r: f32, col: u32) {
++        let bits: u32;
++        let flag: pred;
++        and.b32(bits, col, 1);
++        setp.ne.u32(flag, bits, 0);
++        selp.f32(r, 0.5, 1.0, flag);
++        and.b32(bits, col, 2);
++        setp.ne.u32(flag, bits, 0);
++        if flag {
++            neg.f32(r, r);
++        }
++    }
++    pub unsafe extern "ptx-kernel" fn add_history(
++        hidden: *mut f32,
++        table: *const f32,
++        tokens: *const u32,
++        width: u32,
++        length: u32,
++    ) {
++        let (sequence, row, end, col, at, token): (u32, u32, u32, u32, u32, u32);
++        mov.u32(sequence, ctaid.x);
++        mov.u32(col, tid.x);
++        mul.lo.u32(row, sequence, length);
++        add.u32(end, row, length);
++        let (r, state, x): (f32, f32, f32);
++        retention(r, col);
++        mov.f32(state, 0.0);
++        let ptr: u64;
++        let more: pred;
++        label(position);
++        mad.lo.u32(at, row, width, col);
++        mad.wide.u32(ptr, at, 4, hidden);
++        ld.global.f32(x, [ptr]);
++        fma.rn.f32(x, r, state, x);
++        st.global.f32([ptr], x);
++        mad.wide.u32(ptr, row, 4, tokens);
++        ld.global.u32(token, [ptr]);
++        mad.lo.u32(at, token, width, col);
++        mad.wide.u32(ptr, at, 4, table);
++        ld.global.f32(x, [ptr]);
++        fma.rn.f32(state, r, state, x);
++        add.u32(row, row, 1);
++        setp.lt.u32(more, row, end);
++        if more {
++            bra(position);
++        }
++    }
++    pub unsafe extern "ptx-kernel" fn reverse(
++        out: *mut f32,
++        upstream: *const f32,
++        width: u32,
++        length: u32,
++    ) {
++        let (sequence, start, row, col, at): (u32, u32, u32, u32, u32);
++        mov.u32(sequence, ctaid.x);
++        mov.u32(col, tid.x);
++        mul.lo.u32(start, sequence, length);
++        add.u32(row, start, length);
++        let (r, tail, x): (f32, f32, f32);
++        retention(r, col);
++        mov.f32(tail, 0.0);
++        let ptr: u64;
++        let more: pred;
++        label(position);
++        sub.u32(row, row, 1);
++        mad.lo.u32(at, row, width, col);
++        mad.wide.u32(ptr, at, 4, upstream);
++        ld.global.f32(x, [ptr]);
++        fma.rn.f32(tail, r, tail, x);
++        mad.wide.u32(ptr, at, 4, out);
++        st.global.f32([ptr], tail);
++        setp.gt.u32(more, row, start);
++        if more {
++            bra(position);
++        }
++    }
++}
+diff --git a/experiments/phasor_value_transport/src/main.rs b/experiments/phasor_value_transport/src/main.rs
+index 1b2a4957..af8ac3ca 100644
+--- a/experiments/phasor_value_transport/src/main.rs
++++ b/experiments/phasor_value_transport/src/main.rs
+@@ -9,6 +9,7 @@ use std::{env, fs, io::Write, path::Path};
+ mod addresses;
+ mod causal_values;
+ mod frequency_read;
++mod geometric_memory;
+ mod pair_checks;
+ mod pair_memory;
+ mod pair_ops;
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index 0a3755aa..ced943c8 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -61,6 +61,16 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
+             *x += f64::from(v);
+         }
+     }
++    if cfg!(feature = "geometric-memory") {
++        let base = pair_memory::DIRECT_TABLES * p as usize * d;
++        for (delay, token) in std::iter::once(&b).chain(prefix.iter().rev()).enumerate() {
++            let at = base + *token as usize * d;
++            for (col, x) in result.iter_mut().enumerate() {
++                let rate = [1.0_f64, 0.5, -1.0, -0.5][col % 4];
++                *x += rate.powi(delay as i32) * f64::from(tables[at + col]);
++            }
++        }
++    }
+     result
+ }
+
+@@ -314,7 +324,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+     ];
+     if cfg!(feature = "transition-table") && length == 17 {
+         // There are 15 completed changes at the labelled row, or 3 modulo 12.
+-        let offset = start + (pair_memory::TABLES - 1) * p * d;
++        let offset = start + (pair_memory::DIRECT_TABLES - 1) * p * d;
+         let wrapped = offset + 3 * d..offset + 4 * d;
+         let unused = offset + 4 * d..offset + 5 * d;
+         if gradients[wrapped.clone()].iter().all(|&g| g == 0.)
+@@ -325,6 +335,18 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+         directions.push(("wrapped transition count".to_owned(), wrapped));
+         directions.push(("unused transition count".to_owned(), unused));
+     }
++    if cfg!(feature = "geometric-memory") && length == 17 {
++        let table = start + pair_memory::DIRECT_TABLES * p * d;
++        let unused = table + 11 * d..table + 12 * d;
++        if gradients[unused.clone()].iter().any(|&x| x != 0.) {
++            return Err("unread geometric token received a gradient".into());
++        }
++        for (col, rate) in ["1", "1/2", "-1", "-1/2"].into_iter().enumerate() {
++            let at = table + d + col;
++            directions.push((format!("repeated token, retention {rate}"), at..at + 1));
++        }
++        directions.push(("unread geometric token".to_owned(), unused));
++    }
+     if cfg!(feature = "closed-relation") && length == 8 {
+         let endpoint = start + 3 * d..start + 4 * d;
+         let ordinary = start..start + d;
+diff --git a/experiments/phasor_value_transport/src/pair_memory.rs b/experiments/phasor_value_transport/src/pair_memory.rs
+index 9b9857f0..e91189b9 100644
+--- a/experiments/phasor_value_transport/src/pair_memory.rs
++++ b/experiments/phasor_value_transport/src/pair_memory.rs
+@@ -5,7 +5,8 @@ use crate::engine::{Config, Result};
+ use kernite_cuda::{Buffer, Cuda};
+
+ const PAIR_TABLES: usize = 17;
+-pub const TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
++pub const DIRECT_TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
++pub const TABLES: usize = DIRECT_TABLES + cfg!(feature = "geometric-memory") as usize;
+ // With no experiment selector a binary contains the selected successor model.
+ const DEFAULT_MODEL: bool = !cfg!(any(
+     feature = "pair-v2",
+@@ -103,6 +104,8 @@ pub const MODEL: &str = if LEARN_BONUS {
+     }
+ } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
+     "phasor-successor-hit-gain175-v1"
++} else if cfg!(feature = "geometric-memory") {
++    "phasor-geometric-token-memory-v1"
+ } else if cfg!(feature = "transition-table") {
+     "phasor-independent-transition-table-v1"
+ } else if cfg!(feature = "single-write-gain") {
+@@ -237,6 +240,7 @@ pub struct PairMemory {
+     pub owners: Buffer<u32>,
+     pub causal: crate::causal_values::kernels::Kernels,
+     pub frequency: Option<crate::frequency_read::kernels::Kernels>,
++    pub geometric: Option<crate::geometric_memory::kernels::Kernels>,
+     pub relations: Option<crate::relation_paths::RelationRead>,
+     pub dscores: Buffer<f32>,
+     pub merged: Buffer<f32>,
+@@ -269,6 +273,9 @@ impl PairMemory {
+             frequency: cfg!(feature = "prefix-frequency")
+                 .then(|| crate::frequency_read::kernels::Kernels::load(cuda))
+                 .transpose()?,
++            geometric: cfg!(feature = "geometric-memory")
++                .then(|| crate::geometric_memory::kernels::Kernels::load(cuda))
++                .transpose()?,
+             relations: cfg!(feature = "relation-paths")
+                 .then(|| crate::relation_paths::RelationRead::new(cuda, rows, cfg.vocab))
+                 .transpose()?,
+@@ -340,6 +347,9 @@ impl PairMemory {
+             };
+             let (a, b) = (tokens[prev] as usize, token as usize);
+             keys.copy_from_slice(&addresses(a, b, p, self.factors[b]));
++            if cfg!(feature = "geometric-memory") {
++                keys[TABLES - 1] = ((TABLES - 1) * p + b) as u32;
++            }
+             if SUCCESSOR {
+                 let pos = row % length;
+                 if pos == 0 {
+@@ -393,7 +403,7 @@ impl PairMemory {
+                         transitions += 1;
+                     }
+                     if cfg!(feature = "transition-table") {
+-                        let count_table = TABLES - 1;
++                        let count_table = DIRECT_TABLES - 1;
+                         keys[count_table] = (count_table * p + transitions % p) as u32;
+                     } else {
+                         let squared_product = PAIR_TABLES - 1;
+diff --git a/experiments/phasor_value_transport/src/value_layer.rs b/experiments/phasor_value_transport/src/value_layer.rs
+index 3a4e82b5..6b2bb7e5 100644
+--- a/experiments/phasor_value_transport/src/value_layer.rs
++++ b/experiments/phasor_value_transport/src/value_layer.rs
+@@ -142,6 +142,17 @@ impl ValueLayer {
+                     d as u32,
+                     crate::pair_memory::TABLES as u32,
+                 )?;
++                if let Some(geometric) = &m.geometric {
++                    let at = crate::pair_memory::start(&e.config) + crate::pair_memory::DIRECT_TABLES * p * d;
++                    geometric.add_history(
++                        Grid::new(batch as u32, d as u32),
++                        self.hidden.ptr(),
++                        e.parameters.at(at).ok_or("geometric token table outside parameters")?,
++                        e.tokens.ptr(),
++                        d as u32,
++                        length as u32,
++                    )?;
++                }
+             }
+         }
+         e.rms(self.normalized.ptr(), self.hidden.ptr(), rows)?;
+@@ -288,7 +299,7 @@ impl ValueLayer {
+                     )?;
+                 }
+                 m.kernels.backward(
+-                    Grid::new((p * crate::pair_memory::TABLES) as u32, d as u32),
++                    Grid::new((p * crate::pair_memory::DIRECT_TABLES) as u32, d as u32),
+                     e.gradients
+                         .at(crate::pair_memory::start(&e.config))
+                         .ok_or("value table outside gradient buffer")?,
+@@ -297,6 +308,22 @@ impl ValueLayer {
+                     m.owners.ptr(),
+                     d as u32,
+                 )?;
++                if let Some(geometric) = &m.geometric {
++                    let words = crate::pair_memory::DIRECT_TABLES * p;
++                    // The projection has already consumed the scaled features.
++                    geometric.reverse(
++                        Grid::new(batch as u32, d as u32), m.scaled.ptr(),
++                        self.dhidden.ptr(), d as u32, length as u32,
++                    )?;
++                    m.kernels.backward(
++                        Grid::new(p as u32, d as u32),
++                        e.gradients.at(crate::pair_memory::start(&e.config) + words * d)
++                            .ok_or("geometric token table outside gradients")?,
++                        m.scaled.ptr(),
++                        m.offsets.at(words).ok_or("geometric token incidence offsets missing")?,
++                        m.owners.ptr(), d as u32,
++                    )?;
++                }
+                 m.causal.pullback(
+                     Grid::new(rows as u32, 32),
+                     m.dscores.ptr(),
