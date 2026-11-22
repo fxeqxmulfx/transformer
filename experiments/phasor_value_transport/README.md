@@ -1961,10 +1961,11 @@ independent renamings of contexts, keys and outputs. The bounded dictionary
 can give every lookup vector its own slot whenever the ceiling permits it.
 [Aligned peer proof](../../src/Transformer/Phasor/TripleTransport/AlignedPeers.lean) · [Dictionary capacity proof](../../src/Transformer/Phasor/TripleTransport/Capacity.lean)
 
-A partial audit of this architecture independently verified **48/75 short,
-9/30 long and 3/3 exact NV11**. Each seed started from fresh weights.
-Three short runs reached a screen cutoff. The remaining 24 short and 21
-long runs were pending at this snapshot. The table gives the first
+A partial audit of this architecture independently verified **55/75 short,
+9/30 long and 3/3 exact NV11**. These cover all three seeds on 18 short
+tasks and three long tasks. Three short and four long runs reached a
+screen cutoff. Another 17 short and 17 long runs were unmeasured at
+this snapshot. The table gives the first
 passing updates and reloaded primary counts. Arithmetic cases supply one
 evaluation split.
 
@@ -1975,6 +1976,9 @@ evaluation split.
 | Power division, modulus 97, exponent 3 | 0 / 1 / 2 | 171 / 171 / 171 | 4,656 / 4,656 / 4,656 of 4,656 |
 | Power division, modulus 97, exponent 5 | 0 / 1 / 2 | 171 / 190 / 171 | 4,656 / 4,656 / 4,656 of 4,656 |
 | Power division, modulus 193, exponent 5 | 0 / 1 / 2 | 292 / 219 / 292 | 18,528 / 18,404 / 18,528 of 18,528 |
+| Power division, modulus 193, exponent 2 | 0 | 219 | 18,514/18,528 |
+| Division, modulus 193 | 0 / 1 / 2 | 292 / 292 / 292 | 18,528 / 18,528 / 18,528 of 18,528 |
+| GPT linear transport | 0 / 1 / 2 | 448 / 544 / 608 | 256 / 255 / 256 of 256 |
 | Addition, subtraction, half-sum and square-times | 0 / 1 / 2 | 171 / 171 / 171 on each | 4,705/4,705 on each |
 | Multiplication | 0 / 1 / 2 | 171 / 171 / 190 | 4,705 / 4,705 / 4,705 of 4,705 |
 | Division | 0 / 1 / 2 | 171 / 190 / 171 | 4,656 / 4,656 / 4,656 of 4,656 |
@@ -1988,7 +1992,11 @@ evaluation split.
 | 24-bit parity | 0 / 1 / 2 | 750 / 750 / 1,000 | 306 / 306 / 306 of 306 |
 | NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
 
-All three NV11 checkpoints also recovered 4,704/4,704 training pairs.
+GPT linear transport scored 255 / 255 / 256 of 256 on the independent
+free-generation test. Associative division scored 4,436 / 4,537 / 4,369
+of 4,656 at update 2,394, below the crossing on all three seeds. This
+case has a 100,000-update budget. All three NV11 checkpoints also
+recovered 4,704/4,704 training pairs.
 Shifted AND scored 63, 27 and 27 of 64 on the independent test and
 29, 35 and 35 of 64 at length 64. Random AND scored 64, 33 and 33 of 64
 on the independent test and 28, 36 and 36 of 64 at length 64.
@@ -2019,6 +2027,7 @@ export PHASOR_EVAL_BATCH_CAP=16
 for seed in 0 1 2; do
     for task in arithmetic-cubic-product arithmetic-square-sum power-division-p97-k2 \
         power-division-p97-k3 power-division-p97-k5 power-division-p193-k5 \
+        power-division-p193-k2 division-p193 gpt-probe-linear-transport \
         arithmetic-add arithmetic-sub arithmetic-half-sum arithmetic-square-times \
         arithmetic-mul arithmetic-div arithmetic-affine-product arithmetic-cube-plus \
         arithmetic-perm-add suite-boolean-and-shift suite-boolean-and-random \
@@ -2105,9 +2114,9 @@ Lean proves that every round preserves a total interpretation if the
 initial evidence agrees with it and each new inference is locally sound.
 A finite example distinguishes one round from two. [Repeated-read proofs](../../src/Transformer/Phasor/TripleTransport/EvidenceRounds.lean)
 
-The first partial audit verified **11/75 short, 5/30 long and 3/3 exact
-NV11**. Two short and five long runs had reached a screen cutoff. The
-remaining 62 short and 20 long runs were pending in that snapshot.
+The partial audit verified **26/75 short, 7/30 long and 3/3 exact
+NV11**. Three short and six long runs had reached a screen cutoff.
+The remaining 46 short and 17 long runs were unmeasured at that snapshot.
 
 | Case | Seed | First passing update | Reloaded primary | Independent test |
 | --- | --- | --- | --- | --- |
@@ -2115,7 +2124,7 @@ remaining 62 short and 20 long runs were pending in that snapshot.
 | Sum-square, short | 0 | 171 | 4,705/4,705 | — |
 | Sum-cube, long | 0 | 171 | 4,705/4,705 | — |
 | Power division, modulus 97, exponent 2 | 0 | 171 | 4,656/4,656 | — |
-| GPT branch amplitudes, short | 0 | 736 | 256/256 | 256/256 |
+| GPT branch amplitudes, short | 0 / 1 / 2 | 736 / 896 / 960 | 256 / 256 / 254 of 256 | 256 / 253 / 255 of 256 |
 | GPT linear transport, short | 0 | 448 | 256/256 | 255/256 |
 | 16-bit parity, long | 0 | 1,000 | 157/157 | 504/512 |
 | NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 | — |
@@ -2175,6 +2184,7 @@ room for an incorrect unseen prediction. [Hidden-role and overlap proofs](../../
 | Case | Seed | First passing update | Correct on reloaded primary split |
 | --- | --- | --- | --- |
 | Fourth power of the modular sum, long | 0 / 1 / 2 | 152 / 190 / 209 | 4,703 / 4,705 / 4,705 of 4,705 |
+| Absolute difference, long | 0 / 1 / 2 | 209 / 171 / 247 | 4,693 / 4,660 / 4,690 of 4,705 |
 | Square of the modular sum, short | 0 | 171 | 4,705/4,705 |
 | NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
 
@@ -2182,6 +2192,13 @@ Every NV11 checkpoint also classified all 4,704 training pairs correctly.
 The original arithmetic tasks supply one evaluation split. The preceding
 three-round model scored 158/4,705 on the fourth-power case at the seed 0
 screen cutoff of 950 updates.
+
+At the saved fourth-power checkpoints, removing the relative overlap
+threshold reduced the three counts to 2,110 / 2,252 / 2,290. Removing
+only the role proposals gave 4,700 / 4,705 / 4,705. Removing both gave
+1,595 / 182 / 203. The same architecture passed the GPT linear-transport
+probe at update 448 on seed 0, with 256/256 on validation and 255/256
+on the independent test.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.RoleWitnesses
