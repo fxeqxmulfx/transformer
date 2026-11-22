@@ -1,7 +1,7 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
 One prefix-and-successor Phasor passed every original short and long GPT
-stress task and six additional catalog tasks in seeds 0, 1 and 2. Each
+stress task and seven additional catalog tasks in seeds 0, 1 and 2. Each
 task trained its own weights using the same architecture and original AdamW.
 Every NV11 seed classified all 9,409 pairs correctly at update 1,250.
 
@@ -65,7 +65,7 @@ in every seed, down from 900, 3,500 and 7,500. Fibonacci recurrence took
 regressions occurred on associative divisor seed 1, easy depth seed 0,
 hard depth seed 2 and branch amplitudes seeds 1 and 2.
 
-The expanded benchmark has 31 short tasks and ten long tasks. All 93 short
+The expanded benchmark has 32 short tasks and ten long tasks. All 96 short
 and 30 long task/seed runs reached 99% and replayed independently.
 
 Fresh key/value-binding runs on the GTX 1050 took 5.41, 5.32 and 3.95 s
@@ -396,11 +396,16 @@ all 4,705 held-out pairs, including the 51 zero-row pairs, at update 250.
 All three saved checkpoints replayed exactly. The slowest fresh cell took
 2.34 seconds. The source provides one held-out split.
 
-The selected binary lists all six additions and reports each seed.
+On `arithmetic-sum-pow12`, the seventh short admission, the three seeds
+classified 4,662, 4,662 and 4,671 of 4,705 held-out pairs at update 250.
+Independent replay recovered each count and all 51 zero-row pairs in every
+seed. The slowest v0.6.0 cell took 2.36 seconds.
+
+The selected binary lists all seven additions and reports each seed.
 
 ```sh
 "$bin" extensions
-"$bin" catalog-report runs/prefix-successor-half suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval
+"$bin" catalog-report runs/prefix-successor-half suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval arithmetic-sum-pow12
 ```
 
 The runner lists the frozen original tiers and the extension tiers
