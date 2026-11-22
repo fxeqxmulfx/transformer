@@ -62,14 +62,16 @@ All 18 end-to-end finite differences passed. At widths 64, 128 and 256,
 all 1,332 logits matched the original mean bit for bit at initialization
 and permuted bit for bit under a shuffled vocabulary with nonzero offsets.
 
-On eleven source tasks the learned stream readout and original fixed mean
-each produced 33 independently replayed first-crossing checkpoints. The
-table counts the three fixed seeds separately for every named task.
+On fifteen source tasks the learned stream readout and original fixed
+mean each produced 45 independently replayed first-crossing checkpoints.
+The table counts all three fixed seeds for every named task. The fixed
+mean also passed all three L4 seeds, giving 48 verified checkpoints over
+these sixteen tasks.
 
 | Source tier | Tasks passing all three seeds | Verified per architecture | Geometric mean time to first pass, learned / mean |
 | --- | --- | ---: | ---: |
-| Short | Shifted AND, random AND, modular addition, key/value binding, easy depth, blocks, Dyck, language L1 | 24 | 1.0242 |
-| Long | Modular absolute difference, depth-one C-RASP, language L2 | 9 | 1.0026 |
+| Short | Shifted AND, random AND, modular addition, subtraction, multiplication, maximum, key/value binding, easy depth, blocks, Dyck, language L1 | 33 | 1.0321 |
+| Long | Absolute difference, depth-one C-RASP, languages L2 and L3 | 12 | 1.0365 |
 
 This timing comparison covers the named paired passes. On modular absolute
 difference, the stream model crossed at 3,116 / 1,577 / 2,109 updates and
@@ -150,7 +152,8 @@ larger of two inputs over the 97-symbol vocabulary. All three training
 runs fit 4,704/4,704 pairs. The first 99% checkpoints reloaded with
 4,658 / 4,661 / 4,659 correct on the 4,705 held-out pairs, at updates
 4,750 / 2,500 / 3,250. The slowest run took 37.11 seconds. The source
-provides one held-out split for this task.
+provides one held-out split for this task. The fixed mean scored
+4,659 / 4,658 / 4,659 at updates 4,500 / 2,500 / 2,250.
 
 ```sh
 for seed in 0 1 2; do
