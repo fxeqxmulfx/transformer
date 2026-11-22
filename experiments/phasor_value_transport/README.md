@@ -1,12 +1,36 @@
 # Embedding-input Phasor on the GPT stress suite and NV11
 
-Input-phase Phasor passed all 25 original short tasks and ten long tasks
-on seeds 0, 1 and 2. Each of the 105 checkpoints reproduced its primary
-held-out score after reload. [Canonical GPT results](#canonical-gpt-stress-tiers)
+**Triple transport is the default Phasor architecture.** It solved all
+4,704 training and 4,705 held-out NV11 pairs on seeds 0, 1 and 2 at update
+250. The same model is trained separately on each GPT task, starting from
+the original random embeddings with ordinary AdamW. [Triple transport](#triple-transport) · [Model and scoring rules](../../rule.md)
 
-Phasor with triple transport solved all 9,409 canonical NV11 pairs for
-three random initializations at update 250. The tied external lookup starts
-with the original random embedding vectors. [Architecture, controls and reproduction](#triple-transport)
+The input-phase comparison reached 75/75 short and 30/30 long runs. Its
+best NV11 result at updates 250 and 3,000 was 90/4,705 held-out pairs.
+[Input-phase GPT results](#canonical-gpt-stress-tiers)
+
+To train and independently score the default model on NV11 and both GPT
+tiers, run the following from the repository root. The combined report
+gives a count for each tier. The NV11 check requires exact recovery of
+every training and held-out pair.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+out=runs/main-triple
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+./run_stress.sh cell "$out"
+"$bin" report "$out" > "$out/report.json"
+./run_stress.sh replay "$out" > "$out/replays.jsonl"
+jq -es --slurpfile report "$out/report.json" -f verify_replays.jq "$out/replays.jsonl"
+for seed in 0 1 2; do
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32" |
+        jq -e 'select(.training.correct == 4704 and .held_out.correct == 4705)'
+done
+```
 
 A compact Fourier read used 49,985 read parameters and reached at most
 100/4,705 held-out NV11 answers over three 10,000-update trials.
@@ -215,7 +239,7 @@ same vector. Training targets are arguments of the outer loss.
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.LearnedStreamRead
 cd experiments/phasor_value_transport
-cargo +stable build --release --locked --features fp32-affine-reference
+cargo +stable build --release --locked --features fp32-affine-reference,learned-stream-read
 export PHASOR_EVAL_BATCH_CAP=16
 bin=./target/release/phasor-value-transport
 "$bin" check
@@ -227,8 +251,8 @@ jq -nc '[range(3) as $i | [range(64) as $j | (($i + $j) / 64)]]' > runs/learned-
 "$bin" nv11-score runs/learned-nv11/seed0/nv11-train-3000.f32
 ```
 
-For the original fixed-mean Phasor control, add `original-stream-mean` to
-the Cargo features and use a separate run directory. Both executables
+For the original fixed-mean Phasor control, replace `learned-stream-read`
+with `original-stream-mean` and use a separate run directory. Both executables
 use the same initialization for the backbone, per-task AdamW schedule,
 training split and checkpoint selection rule.
 
@@ -519,7 +543,7 @@ respectively.
 
 ```sh
 # From experiments/phasor_value_transport
-CARGO_TARGET_DIR=target/wide cargo +stable build --release --locked --features fp32-affine-reference
+CARGO_TARGET_DIR=target/wide cargo +stable build --release --locked --features fp32-affine-reference,learned-stream-read
 CARGO_TARGET_DIR=target/compact cargo +stable build --release --locked --features fp32-affine-reference,compact-ffn
 PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh target/wide/release/phasor-value-transport \
     target/compact/release/phasor-value-transport runs/compact-timing 380 arithmetic-add arithmetic-abs-diff
@@ -624,7 +648,7 @@ executables from this checkout with Kernite v0.6.0.
 
 ```sh
 # From experiments/phasor_value_transport
-CARGO_TARGET_DIR=target/stream cargo +stable build --release --locked --features fp32-affine-reference
+CARGO_TARGET_DIR=target/stream cargo +stable build --release --locked --features fp32-affine-reference,learned-stream-read
 CARGO_TARGET_DIR=target/input cargo +stable build --release --locked --features fp32-affine-reference,input-phase-read
 PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh --first-pass target/stream/release/phasor-value-transport \
     target/input/release/phasor-value-transport runs/square-time 1520 arithmetic-square-sum
@@ -1839,7 +1863,7 @@ Run these commands from the repository root. [DiffGPT checkout instructions](../
 
 ```sh
 cd experiments/phasor_value_transport
-cargo +stable build --release --locked --features fp32-affine-reference
+cargo +stable build --release --locked --features fp32-affine-reference,learned-stream-read
 ./target/release/phasor-value-transport memory-check
 ./run_memory_benchmark.sh runs/hidden-memory-8000
 ```
