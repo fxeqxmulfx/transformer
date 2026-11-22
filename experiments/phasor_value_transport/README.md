@@ -162,6 +162,19 @@ the combined gradient gives the directional derivative of both uses of
 the embedding on every finite set of active rows.
 [Tied embedding adjoint](../../src/Transformer/Phasor/TiedGradients.lean)
 
+The RMS and power-address timing trials can be rebuilt from their archived
+source changes. Build and save the FP32 control at `58bd7352` for RMS or
+`8f7ca6ef` for cached powers. In that checkout apply the corresponding
+patch with `git apply`, then build and save the second binary using the
+same features. The paired runner trains fresh cells, alternates build order
+and checks every byte of each checkpoint and observation history.
+[RMS source change](trials/fused-residual-rms.patch) · [Cached powers source change](trials/cached-power-addresses.patch)
+
+```sh
+PHASOR_EVAL_BATCH_CAP=16 ./time_cells.sh BEFORE_BIN AFTER_BIN runs/timings \
+    arithmetic-add basis-parity20 language-l1 basis-recall-easy
+```
+
 ## Half-gain prefix and successor model
 
 The half-gain predecessor applies one causal update at every token. Its prefix state

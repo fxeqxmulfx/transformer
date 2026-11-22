@@ -1,0 +1,144 @@
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index c503382b..f968ad14 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -389,6 +389,7 @@ pub fn run(width: Option<usize>) -> Result<()> {
+     if !precision::FP32_AFFINE_REFERENCE {
+         return Err("finite differences require FP32 affines".into());
+     }
++    pair_memory::check_power_addresses()?;
+     if cfg!(any(
+         feature = "relation-support",
+         feature = "closed-relation"
+diff --git a/experiments/phasor_value_transport/src/pair_memory.rs b/experiments/phasor_value_transport/src/pair_memory.rs
+index 570f163d..da338e46 100644
+--- a/experiments/phasor_value_transport/src/pair_memory.rs
++++ b/experiments/phasor_value_transport/src/pair_memory.rs
+@@ -195,31 +195,80 @@ fn power_factor(x: usize, p: usize) -> usize {
+     acc
+ }
+
+-fn addresses(a: usize, b: usize, p: usize, factor_b: usize) -> [u32; TABLES] {
+-    let powers = |x| [x, x * x % p, (x * x % p) * x % p];
+-    let (left, right) = (powers(a), powers(b));
++struct TokenPowers {
++    powers: [usize; 3],
++    quotient_factor: usize,
++}
++
++impl TokenPowers {
++    fn new(x: usize, p: usize) -> Self {
++        let square = x * x % p;
++        Self {
++            powers: [x, square, square * x % p],
++            quotient_factor: power_factor(x, p),
++        }
++    }
++}
++
++// The bounded operations follow Transformer.Phasor.PowerAddresses. Prefix
++// substitutions still use the running context after these base keys are copied.
++fn addresses(left: &TokenPowers, right: &TokenPowers, p: usize) -> [u32; TABLES] {
++    let (a, b) = (left.powers[0], right.powers[0]);
+     let mut result = [0; TABLES];
+     let mut keys = result.iter_mut().enumerate();
+     let mut put = |value| {
+         let (table, dest) = keys.next().unwrap();
+         *dest = (table * p + value) as u32;
+     };
+-    for value in [b, (a + p - b) % p, a.abs_diff(b), a * factor_b % p] {
++    let difference = if a >= b { a - b } else { p - (b - a) };
++    for value in [b, difference, a.abs_diff(b), a * right.quotient_factor % p] {
+         put(value);
+     }
+-    for &x in &left {
+-        for &y in &right {
+-            put((x + y) % p);
++    for &x in &left.powers {
++        for &y in &right.powers {
++            let wrap = p - y;
++            put(if x < wrap { x + y } else { x - wrap });
+         }
+     }
+-    for &x in &left[..2] {
+-        for &y in &right[..2] {
++    for &x in &left.powers[..2] {
++        for &y in &right.powers[..2] {
+             put(x * y % p);
+         }
+     }
+     result
+ }
+
++// Compare every base-table word with independent modular exponentiation,
++// including unit, composite and prime vocabularies and both wrap branches.
++pub fn check_power_addresses() -> Result<()> {
++    for p in [1_usize, 2, 3, 8, 17, 36, 97, 100, 193] {
++        let cache: Vec<_> = (0..p).map(|x| TokenPowers::new(x, p)).collect();
++        for a in 0..p {
++            for b in 0..p {
++                let power =
++                    |x: usize, n| crate::arithmetic_data::power(x as u32, n, p as u32) as usize;
++                let inverse = if b == 0 { 0 } else { power(b, p as u32 - 2) };
++                let sums =
++                    (1..=3).flat_map(|i| (1..=3).map(move |j| (power(a, i) + power(b, j)) % p));
++                let products =
++                    (1..=2).flat_map(|i| (1..=2).map(move |j| power(a, i) * power(b, j) % p));
++                let want = [b, (a + p - b) % p, a.abs_diff(b), a * inverse % p]
++                    .into_iter()
++                    .chain(sums)
++                    .chain(products)
++                    .enumerate()
++                    .map(|(table, value)| (table * p + value) as u32);
++                if addresses(&cache[a], &cache[b], p).into_iter().ne(want) {
++                    return Err(
++                        "cached Phasor address differs from the direct modular formula".into(),
++                    );
++                }
++            }
++        }
++    }
++    Ok(())
++}
++
+ struct GainEvidence {
+     reads: Vec<u32>,
+     device: Buffer<u32>,
+@@ -242,7 +291,7 @@ pub struct PairMemory {
+     starts: Vec<u32>,
+     cursor: Vec<u32>,
+     rows: Vec<u32>,
+-    factors: Vec<usize>,
++    powers: Vec<TokenPowers>,
+     successors: Vec<Option<u32>>,
+     closed: Option<crate::relation_support::ClosedRead>,
+     ambiguous: Vec<bool>,
+@@ -275,7 +324,9 @@ impl PairMemory {
+             starts: vec![0; words + 1],
+             cursor: vec![0; words],
+             rows: vec![0; entries],
+-            factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
++            powers: (0..cfg.vocab)
++                .map(|x| TokenPowers::new(x, cfg.vocab))
++                .collect(),
+             successors: vec![None; if SUCCESSOR { cfg.vocab } else { 0 }],
+             closed: cfg!(feature = "closed-relation")
+                 .then(|| crate::relation_support::ClosedRead::new(cfg.vocab)),
+@@ -310,7 +361,7 @@ impl PairMemory {
+     }
+
+     pub fn prepare(&mut self, tokens: &[u32], length: usize) -> Result<()> {
+-        let p = self.factors.len();
++        let p = self.powers.len();
+         self.active_shape = None;
+         let mut prefix = 0;
+         let mut transitions = 0;
+@@ -325,7 +376,7 @@ impl PairMemory {
+                 row - 1
+             };
+             let (a, b) = (tokens[prev] as usize, token as usize);
+-            keys.copy_from_slice(&addresses(a, b, p, self.factors[b]));
++            keys.copy_from_slice(&addresses(&self.powers[a], &self.powers[b], p));
+             if SUCCESSOR {
+                 let pos = row % length;
+                 if pos == 0 {

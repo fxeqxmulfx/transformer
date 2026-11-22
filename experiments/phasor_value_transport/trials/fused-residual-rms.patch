@@ -1,0 +1,166 @@
+diff --git a/experiments/phasor_value_transport/src/causal_values.rs b/experiments/phasor_value_transport/src/causal_values.rs
+index 07633126..0616d68d 100644
+--- a/experiments/phasor_value_transport/src/causal_values.rs
++++ b/experiments/phasor_value_transport/src/causal_values.rs
+@@ -245,24 +245,54 @@ pub mod kernels {
+         ld.global.f32(bonus, [ptr]);
+         add.rn.f32(g, g, bonus);
+     }
+-    #[instances((false, false), (true, false), (true, true))]
+-    pub unsafe extern "ptx-kernel" fn combine<const HIT_GAIN: bool, const BONUS: bool>(
++    // The row reduction preserves base_ops::rms from DiffGPT 5a37c515,
++    // including the separated FP32 square, sum and machine epsilon.
++    #[instances((64, false, false), (128, false, false), (256, false, false),
++                (64, true, false), (128, true, false), (256, true, false),
++                (64, true, true), (128, true, true), (256, true, true))]
++    pub unsafe extern "ptx-kernel" fn rms_combine<
++        const W: usize,
++        const HIT_GAIN: bool,
++        const BONUS: bool,
++    >(
+         out: *mut f32,
+         scaled: *mut f32,
++        normalized: *mut f32,
+         context: *const f32,
+-        value: *const f32,
++        raw: *const f32,
+         gain: *const f32,
+         tokens: *const u32,
+         keys: *const u32,
+         tables: u32,
+         on_hit: f32,
+-        width: u32,
++        rows: u32,
+     ) {
+-        let (row, col, at): (u32, u32, u32);
+-        mov.u32(row, ctaid.x);
+-        mov.u32(col, tid.x);
+-        mad.lo.u32(at, row, width, col);
+-        let (v, g, x): (f32, f32, f32);
++        let (index, row, lane, at): (u32, u32, u32, u32);
++        mov.u32(index, ctaid.x);
++        mov.u32(at, ntid.x);
++        mov.u32(lane, tid.x);
++        mad.lo.u32(index, index, at, lane);
++        shr.u32(row, index, 5);
++        and.b32(lane, index, 31);
++        let past: pred;
++        setp.ge.u32(past, row, rows);
++        if past {
++            ret();
++        }
++        mad.lo.u32(at, row, W, lane);
++        let values: [f32; W / 32];
++        let (s, v, g, x): (f32, f32, f32, f32);
++        mov.f32(s, 0.0);
++        for j in 0..W / 32 {
++            load(values[j], raw, at);
++            mul.rn.f32(v, values[j], values[j]);
++            add.rn.f32(s, s, v);
++            add.u32(at, at, 32);
++        }
++        sum_warp(s);
++        mul.rn.f32(s, s, 1.0 / (W as f32));
++        add.rn.f32(s, s, 0.00000011920928955078125);
++        rsqrt.approx.f32(s, s);
+         ld.global.f32(g, [gain]);
+         if HIT_GAIN {
+             let changed: pred;
+@@ -276,12 +306,17 @@ pub mod kernels {
+                 mul.rn.f32(g, g, x);
+             }
+         }
+-        load(v, value, at);
+-        mul.rn.f32(v, v, g);
+-        store(scaled, at, v);
+-        load(x, context, at);
+-        add.rn.f32(x, x, v);
+-        store(out, at, x);
++        mad.lo.u32(at, row, W, lane);
++        for j in 0..W / 32 {
++            mul.rn.f32(v, values[j], s);
++            store(normalized, at, v);
++            mul.rn.f32(v, v, g);
++            store(scaled, at, v);
++            load(x, context, at);
++            add.rn.f32(x, x, v);
++            store(out, at, x);
++            add.u32(at, at, 32);
++        }
+     }
+     #[instances((false, false), (true, false), (true, true))]
+     pub unsafe extern "ptx-kernel" fn gain_back<const HIT_GAIN: bool, const BONUS: bool>(
+diff --git a/experiments/phasor_value_transport/src/value_layer.rs b/experiments/phasor_value_transport/src/value_layer.rs
+index 3a4e82b5..329a0858 100644
+--- a/experiments/phasor_value_transport/src/value_layer.rs
++++ b/experiments/phasor_value_transport/src/value_layer.rs
+@@ -47,6 +47,34 @@ impl ValueLayer {
+         }
+     }
+
++    fn rms_combine<const W: usize>(
++        &self,
++        e: &Engine,
++        m: &crate::pair_memory::PairMemory,
++        rows: usize,
++    ) -> Result<()> {
++        let (gain_addresses, stride) = m.gain_addresses();
++        unsafe {
++            m.causal.rms_combine::<W, { crate::pair_memory::HIT_GAIN }, { crate::pair_memory::LEARN_BONUS }>(
++                rows_grid(rows),
++                m.merged.ptr(),
++                m.scaled.ptr(),
++                self.normalized.ptr(),
++                e.last.ptr(),
++                self.hidden.ptr(),
++                e.parameters
++                    .at(crate::pair_memory::gain(&e.config))
++                    .ok_or("value gain outside parameter buffer")?,
++                e.tokens.ptr(),
++                gain_addresses.ptr(),
++                stride,
++                crate::pair_memory::HIT_FACTOR,
++                rows as u32,
++            )?;
++        }
++        Ok(())
++    }
++
+     fn project(&self, e: &Engine, batch: usize, length: usize, product: bool) -> Result<()> {
+         let (rows, p, d) = (batch * length, e.config.vocab, e.config.width);
+         if let Some(m) = &self.memory {
+@@ -144,28 +172,16 @@ impl ValueLayer {
+                 )?;
+             }
+         }
+-        e.rms(self.normalized.ptr(), self.hidden.ptr(), rows)?;
+         let features = if let Some(m) = &self.memory {
+-            let (gain_addresses, stride) = m.gain_addresses();
+-            unsafe {
+-                m.causal.combine::<{ crate::pair_memory::HIT_GAIN }, { crate::pair_memory::LEARN_BONUS }>(
+-                    Grid::new(rows as u32, d as u32),
+-                    m.merged.ptr(),
+-                    m.scaled.ptr(),
+-                    e.last.ptr(),
+-                    self.normalized.ptr(),
+-                    e.parameters
+-                        .at(crate::pair_memory::gain(&e.config))
+-                        .ok_or("value gain outside parameter buffer")?,
+-                    e.tokens.ptr(),
+-                    gain_addresses.ptr(),
+-                    stride,
+-                    crate::pair_memory::HIT_FACTOR,
+-                    d as u32,
+-                )?;
++            match d {
++                64 => self.rms_combine::<64>(e, m, rows)?,
++                128 => self.rms_combine::<128>(e, m, rows)?,
++                256 => self.rms_combine::<256>(e, m, rows)?,
++                _ => return Err("unsupported shared residual width".into()),
+             }
+             m.merged.ptr()
+         } else {
++            e.rms(self.normalized.ptr(), self.hidden.ptr(), rows)?;
+             self.normalized.ptr()
+         };
+         e.linear(e.logits.ptr(), features, 0, rows, p, d)?;
