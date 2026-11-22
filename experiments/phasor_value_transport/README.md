@@ -513,6 +513,23 @@ swapping unequal dense input segments changed the isolated endpoint read
 by 1.31 and 1.95 at the two widths. All fourteen masked-loss parameter
 directions passed, including separate angle and write directions.
 
+At the matched 1,500-update depth-one C-RASP cutoff, the affine model
+reached 32/32 on all three seeds at updates 750/500/250. The input-phase
+control reached 30/32 on seed 0 and passed at 500/250 on the others.
+The affine checkpoints scored 64/63/63 out of 64 on the source test
+and 42/48/53 out of 64 on the length-64 transfer set.
+
+On 20-bit parity the affine model passed all three seeds at 1,500/1,750/1,500
+updates. Every checkpoint scored 284/284 on validation, 512/512 on the
+source test and 64/64 at 32 bits. At 64 bits the scores were 64/41/64.
+The input-phase control passed in fewer updates on each seed and scored
+64/64 throughout. Short key–value binding also crossed on all three seeds
+at 640/704/704 updates. Its independent test scores were 502/505/505 out
+of 512. On canonical NV11 at 3,000 updates the affine model scored
+4,702/4,700/4,701 out of 4,704 training pairs and 90/83/89 out of 4,705
+held-out pairs. Every score in this comparison came from saved checkpoints
+except the input-phase C-RASP cutoff that missed its threshold.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.AffinePhaseRead
 cd experiments/phasor_value_transport
