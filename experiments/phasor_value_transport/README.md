@@ -1047,10 +1047,26 @@ reproduced each original checkpoint's exact scores and minimum margins.
 The native fixture compares the counter with direct four-corner
 enumeration on incomplete modular tables.
 
+Scoring by first operand separates the constant zero row from the other
+96 rows, each of which contains every output class once. The held-out
+split has 51 pairs in the zero row and 4,654 in the others. After 100,000
+updates both seed-0 models fit all 4,704 training pairs and all 51 held-out
+zero-row pairs. The learned stream classified 39 of the remaining 4,654
+pairs and the shared bilinear model classified 46. Uniform predictions
+would average about 48. Across all 401 observations from initialization
+through update 100,000, the shared model first reached its highest total
+of 105/4,705 at update 63,500 and finished at 97/4,705.
+
+At 3,000 updates the learned stream classified 36 / 25 / 33 of the 4,654
+nonzero-row pairs on seeds 0 / 1 / 2. The shared bilinear model classified
+37 / 31 / 36. The evaluator recovers these counts from frozen weights and
+masked inputs. Row membership and correctness are computed after inference.
+
 ```sh
 # From experiments/phasor_value_transport, with the matching architecture build.
 cargo +stable test --release --locked --test shift_diagnostics
 target/release/phasor-value-transport nv11-score runs/nv11/seed0/nv11-train-100000.f32 shifts
+target/release/phasor-value-transport nv11-score runs/nv11/seed0/nv11-train-100000.f32 rows
 ```
 
 ## Matched CM121 tasks

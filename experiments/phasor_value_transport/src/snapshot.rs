@@ -101,10 +101,17 @@ fn recorded_nv11(path: &Path, digest: &str) -> Result<Option<Value>> {
     Err("missing named NV11 checkpoint in the training observations".into())
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Nv11Detail {
+    Margins,
+    Shifts,
+    Rows,
+}
+
 /// Score all 9,409 pairs using just the two input tokens in the forward pass.
 /// Keep the smallest correct-class advantage over every wrong class, including
 /// a negative margin when the checkpoint misclassifies an input.
-pub fn nv11_scores(path: &Path, shifts: bool) -> Result<()> {
+pub fn nv11_scores(path: &Path, detail: Nv11Detail) -> Result<()> {
     let bytes = fs::read(path)?;
     let digest = hash(&bytes);
     let recorded = recorded_nv11(path, &digest)?;
@@ -112,12 +119,13 @@ pub fn nv11_scores(path: &Path, shifts: bool) -> Result<()> {
     let mut cfg = config(BATCH)?;
     cfg.head = architecture::HEAD;
     let p = cfg.vocab;
-    if shifts && p != 97 {
-        return Err("NV11 shift diagnostics require the 97-class source table".into());
+    if detail != Nv11Detail::Margins && p != 97 {
+        return Err("NV11 diagnostics require the 97-class source table".into());
     }
     let mut e = load(&bytes, cfg)?;
     let mut split = |rows: &[[u32; 3]]| -> Result<Value> {
-        let mut residuals = shifts.then(shift_diagnostics::Residuals::<97>::new);
+        let mut residuals =
+            (detail != Nv11Detail::Margins).then(shift_diagnostics::Residuals::<97>::new);
         let mut correct = 0usize;
         let mut minimum = f64::INFINITY;
         let mut closest = None;
@@ -150,7 +158,11 @@ pub fn nv11_scores(path: &Path, shifts: bool) -> Result<()> {
         let mut report = json!({"correct":correct,"examples":rows.len(),"minimum_margin":minimum,
             "closest_pair_target_rival":closest});
         if let Some(diagnostic) = residuals {
-            report["shift_consistency"] = diagnostic.report();
+            if detail == Nv11Detail::Rows {
+                report["row_accuracy"] = diagnostic.row_accuracy();
+            } else {
+                report["shift_consistency"] = diagnostic.report();
+            }
         }
         Ok(report)
     };

@@ -72,4 +72,25 @@ impl<const P: usize> Residuals<P> {
         json!({"row_pairs": rows.json(), "column_pairs": columns.json(),
                "rectangles": rectangles.json()})
     }
+
+    /// Partition exact predictions by the first operand. In NV11 the entire
+    /// zero row has a single target, while each nonzero row permutes the classes.
+    pub fn row_accuracy(&self) -> Value {
+        let mut excluding_zero = [0usize; 2];
+        let rows: Vec<_> = self
+            .cells
+            .iter()
+            .enumerate()
+            .map(|(a, row)| {
+                let total = row.iter().flatten().count();
+                let correct = row.iter().flatten().filter(|&&r| r == 0).count();
+                if a != 0 {
+                    excluding_zero[0] += correct;
+                    excluding_zero[1] += total;
+                }
+                json!({"first_operand":a,"correct":correct,"examples":total})
+            })
+            .collect();
+        json!({"rows":rows,"nonzero_first_operand":{"correct":excluding_zero[0],"examples":excluding_zero[1]}})
+    }
 }

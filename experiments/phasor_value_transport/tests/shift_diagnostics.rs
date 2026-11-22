@@ -1,6 +1,24 @@
 #[path = "../src/shift_diagnostics.rs"]
 mod shift_diagnostics;
 
+#[test]
+fn row_accuracy_separates_observed_predictions_and_the_constant_zero_row() {
+    use shift_diagnostics::Residuals;
+    let mut r = Residuals::<3>::new();
+    for (a, b, p, y) in [(0, 0, 0, 0), (0, 2, 0, 0), (1, 0, 2, 0), (2, 1, 2, 2)] {
+        r.record(a, b, p, y).unwrap();
+    }
+    let report = r.row_accuracy();
+    assert_eq!(
+        report["rows"][0],
+        serde_json::json!({"first_operand":0,"correct":2,"examples":2})
+    );
+    assert_eq!(
+        report["nonzero_first_operand"],
+        serde_json::json!({"correct":1,"examples":2})
+    );
+}
+
 use serde_json::{Value, json};
 use shift_diagnostics::Residuals;
 
