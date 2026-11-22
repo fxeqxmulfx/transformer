@@ -231,3 +231,25 @@ fn refusals_are_early_and_inputs_are_pinned() -> Result<()> {
     std::fs::remove_dir_all(root)?;
     Ok(())
 }
+#[test]
+fn extended_plain_test_uses_the_actual_prompt_size() -> Result<()> {
+    let protocol: Value = serde_json::from_str(PROTOCOL)?;
+    let mut spec = protocol["definitions"]["suite-parity-none"].clone();
+    spec["min_length"] = Value::Null;
+    spec["length"] = json!(2049);
+    spec["number_limit"] = json!(4096);
+    let rows = dataset::generate(&spec, "test", 256)?;
+    for row in rows {
+        assert_eq!(row.prompt.len(), 2051);
+        let ones = row.prompt.iter().filter(|&&v| v == 22).count();
+        assert_eq!(row.answer, vec![24 + (ones % 2) as i64, 17]);
+    }
+    assert!(dataset::generate(&spec, "test", 1000).is_err());
+    assert!(dataset::generate(&spec, "train", 1).is_err());
+    spec["scratchpad"] = json!("running");
+    assert!(dataset::generate(&spec, "test", 1).is_err());
+    spec["scratchpad"] = json!("none");
+    spec["index_hints"] = json!(true);
+    assert!(dataset::generate(&spec, "test", 1).is_err());
+    Ok(())
+}

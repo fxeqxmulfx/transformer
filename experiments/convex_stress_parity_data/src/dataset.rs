@@ -20,18 +20,29 @@ pub fn generate(spec: &Value, split: &str, count: usize) -> Result<Vec<data::Exa
     let hinted = spec["index_hints"].as_bool().ok_or("missing hint policy")?;
     let scratchpad = spec["scratchpad"].as_str().ok_or("missing scratchpad")?;
     let number_limit = integer(spec, "number_limit")?;
+    // A scratchpad-free test prompt uses one token per bit and a fixed
+    // four-symbol envelope including its answer. Keep the original bounds
+    // for training and the denser formats, and the same total test capacity.
+    let long_plain_test = split == "test" && scratchpad == "none" && !hinted && length > 1024;
+    let maximum_length = if long_plain_test { 4096 } else { 1024 };
     if task != "parity"
         || !["none", "running", "ones"].contains(&scratchpad)
         || !["train", "validation", "test"].contains(&split)
         || !(2..=1024).contains(&symbols)
         || minimum == 0
         || minimum > length
-        || length > 1024
+        || length > maximum_length
         || !(1..=4096).contains(&number_limit)
         || length > number_limit
         || count == 0
         || count > 20000
-        || count * (4 * length + 3) > 2_000_000
+        || count
+            * (if long_plain_test {
+                length + 4
+            } else {
+                4 * length + 3
+            })
+            > 2_000_000
     {
         return Err("parity generator parameters refused".into());
     }

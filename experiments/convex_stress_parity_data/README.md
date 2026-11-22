@@ -29,13 +29,20 @@ generation limit still comes from the full prompt length. Numbers are reserved
 after the64 symbol slots, so hinted vocabularies exceed the old328 model's126
 class bound. Supporting that vocabulary is a separate model change in334.
 
-The six native checks verify all12 historical test token and transition
+The native checks verify all12 historical test token and transition
 denominators, independently recomputed prefix counts, format alignment, pair
 ordering, causal masks, novelty, initial EVEN, sparse hints, EOS and bounded
 own-output generation. They also exercise invalid layouts and immutable pins.
 Historical per-example hashes are unavailable: source-derived hashes and
 matching aggregate counts do not certify past byte identity. Each new inventory
 records original-style split hashes, padded tensor hashes and full record hashes.
+
+For evaluation beyond 1,024 bits, the unhinted scratchpad-free test format
+supports lengths through 4,096. It retains the two-million-token work
+bound, using the actual prompt and answer length. A regression fixture
+recounts 256 independent 2,049-bit answers and exercises the capacity
+and format checks. The published 32- and 64-bit splits use their original
+generator parameters.
 
 The inventory embeds the complete reviewed328 report unchanged, retaining all
 12 additional passes, earlier refusals and historical GPT results. It adds four
