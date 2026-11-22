@@ -70,6 +70,17 @@ impl ValueLayer {
                         crate::pair_memory::TABLES as u32,
                         crate::pair_memory::DISPLACEMENT,
                     )?;
+                    if let Some(frequency) = &m.frequency {
+                        frequency.center(
+                            grid(batch * p),
+                            m.dscores.ptr(),
+                            e.tokens.ptr(),
+                            p as u32,
+                            length as u32,
+                            (batch * p) as u32,
+                            0.5,
+                        )?;
+                    }
                 }
             }
         } else {

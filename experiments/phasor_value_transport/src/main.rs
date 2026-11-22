@@ -8,6 +8,7 @@ use std::{env, fs, io::Write, path::Path};
 
 mod addresses;
 mod causal_values;
+mod frequency_read;
 mod pair_checks;
 mod pair_memory;
 mod pair_ops;

@@ -138,6 +138,17 @@ fn profile(p: usize, length: usize) -> Result<()> {
                         - f64::from(theta[b as usize * d + col]));
             }
         }
+        if cfg!(feature = "prefix-frequency") && prefix.len() >= 2 {
+            let history = &prefix[..prefix.len() - 1];
+            for (col, value) in v.iter_mut().enumerate() {
+                let current = f64::from(theta[b as usize * d + col]);
+                let offset: f64 = history
+                    .iter()
+                    .map(|&token| f64::from(theta[token as usize * d + col]) - current)
+                    .sum();
+                *value += 0.5 * offset / history.len() as f64;
+            }
+        }
         let read = checks::reference(
             &scores[prev * p..(prev + 1) * p],
             &theta[..p * d],

@@ -92,6 +92,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-successor-hit-gain175-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
+} else if cfg!(feature = "prefix-frequency") {
+    "phasor-centered-prefix-frequency-v1"
 } else if cfg!(feature = "successor-gain-three-quarters") {
     "phasor-successor-displacement-gain075-v1"
 } else if cfg!(feature = "transition-count") {
@@ -198,6 +200,7 @@ pub struct PairMemory {
     pub offsets: Buffer<u32>,
     pub owners: Buffer<u32>,
     pub causal: crate::causal_values::kernels::Kernels,
+    pub frequency: Option<crate::frequency_read::kernels::Kernels>,
     pub dscores: Buffer<f32>,
     pub merged: Buffer<f32>,
     pub scaled: Buffer<f32>,
@@ -223,6 +226,9 @@ impl PairMemory {
             offsets: cuda.alloc(words + 1)?,
             owners: cuda.alloc(entries)?,
             causal: crate::causal_values::kernels::Kernels::load(cuda)?,
+            frequency: cfg!(feature = "prefix-frequency")
+                .then(|| crate::frequency_read::kernels::Kernels::load(cuda))
+                .transpose()?,
             dscores: cuda.alloc(rows * cfg.vocab)?,
             merged: cuda.alloc(rows * cfg.width)?,
             scaled: cuda.alloc(rows * cfg.width)?,

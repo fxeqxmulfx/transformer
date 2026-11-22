@@ -276,6 +276,14 @@ coefficients of the embedding read. Constant histories contribute zero
 when they equal the current token, and all logits on two-token inputs
 agree with the 0.75-gain model. [Centered-frequency derivation](../../src/Transformer/Phasor/PrefixFrequency.lean)
 
+With `fp32-affine-reference,prefix-frequency` on v0.6.0, the four forward
+checks agreed with the FP64 calculation to within 8.23 × 10⁻⁷. All 76
+directional derivatives passed. At update 500 the NV11 seed-0 run had
+byte-identical weights and training observations to the 0.75-gain control.
+Its checkpoint replayed at 4,703/4,705. On seed 0, the frequency model
+scored 31/32 on Dyck at 250 updates, 31/32 on MQAR at 1,000 and 0/32 on
+the histogram-with-BOS task at 1,000. It was set aside.
+
 ## Two reads through a shared relation
 
 The relation-path trial treats every completed triple `(key, relation, value)`
