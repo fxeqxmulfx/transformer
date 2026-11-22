@@ -537,6 +537,18 @@ agreeing writes preserve the ordinary successor, and that injectively
 renaming the vocabulary preserves the read.
 [Causal context-backoff proofs](../../src/Transformer/Phasor/ContextBackoff.lean)
 
+The trial passed 118 directional checks. It retained 32/32 novel sequences
+at initialization in every seed on MQAR and lookup, including 64/64 on
+the separate tests at lengths 48 and 96. Dyck still crossed at 500 / 250 /
+500 updates. At 1,500 updates on depth-one C-RASP, seed 0 scored 31/32.
+The single-write control had already passed at 1,250. In the same seed
+the trial scored 25/32 on typed Dyck and depth-two C-RASP at 2,500,
+and 0/32 on repeated-token copy and 11/32 on mode at 1,000. These are
+screen cutoffs. The experiment added no passing case. Apply the trial
+source at `d5c9b861` and build with `fp32-affine-reference,context-backoff`
+to reproduce the screens.
+[Context-backoff source change](trials/context-backoff.patch)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the

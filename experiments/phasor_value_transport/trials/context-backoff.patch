@@ -1,0 +1,163 @@
+diff --git a/experiments/phasor_value_transport/Cargo.toml b/experiments/phasor_value_transport/Cargo.toml
+index 20ab456a..65e8cac7 100644
+--- a/experiments/phasor_value_transport/Cargo.toml
++++ b/experiments/phasor_value_transport/Cargo.toml
+@@ -32,6 +32,7 @@ relation-support = ["relation-path-mean"]
+ closed-relation = ["successor-gain-three-quarters"]
+ closed-relation-boost = ["closed-relation"]
+ single-write-gain = ["closed-relation-boost"]
++context-backoff = ["single-write-gain"]
+ successor-hit-gain = ["successor-displacement"]
+ successor-hit-gain-seven-quarters = ["successor-hit-gain"]
+ successor-agreement = ["successor-hit-gain"]
+diff --git a/experiments/phasor_value_transport/src/closed_checks.rs b/experiments/phasor_value_transport/src/closed_checks.rs
+index 3d659892..69bf70e4 100644
+--- a/experiments/phasor_value_transport/src/closed_checks.rs
++++ b/experiments/phasor_value_transport/src/closed_checks.rs
+@@ -40,6 +40,18 @@ pub fn run() -> Result<()> {
+                     "closed address differs from the independently reconstructed relation".into(),
+                 );
+             }
++            if cfg!(feature = "context-backoff") {
++                for previous in 0..3 {
++                    let expected = prefix
++                        .windows(3)
++                        .rev()
++                        .find(|t| t[0] == previous && t[1] == query)
++                        .map(|t| t[2]);
++                    if state.context(previous, query) != expected {
++                        return Err("context read differs from the last completed triple".into());
++                    }
++                }
++            }
+             prefix.push(query);
+             if let [.., key, relation, value] = &prefix[..] {
+                 state.write(*key, *relation, *value);
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index a6189583..8b51a4db 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -11,6 +11,15 @@ fn successor(prefix: &[u32], query: u32, vocab: u32) -> u32 {
+     {
+         return end;
+     }
++    if cfg!(feature = "context-backoff")
++        && let Some(&previous) = prefix.last()
++        && let Some(triple) = prefix
++            .windows(3)
++            .rev()
++            .find(|t| t[0] == previous && t[1] == query)
++    {
++        return triple[2];
++    }
+     prefix
+         .windows(2)
+         .rev()
+@@ -72,7 +81,16 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+             [0, p - 1, 9, 0, 6, 4][(i % length + if r == 1 { 2 } else { 0 }) % 6] as u32
+         })
+         .collect();
+-    if cfg!(feature = "single-write-gain") && length == 9 {
++    if cfg!(feature = "context-backoff") && length == 10 {
++        let patterns = [
++            [4, 1, 7, 2, 1, 8, 5, 6, 4, 1],
++            [4, 1, 7, 4, 1, 9, 2, 3, 4, 1],
++            [4, 1, 7, 2, 1, 8, 5, 6, 3, 1],
++        ];
++        for (row, pattern) in tokens.chunks_mut(length).zip(patterns) {
++            row.copy_from_slice(&pattern);
++        }
++    } else if cfg!(feature = "single-write-gain") && length == 9 {
+         let patterns = [
+             [1, 7, 2, 4, 5, 6, 8, 9, 1],
+             [1, 7, 2, 1, 7, 6, 8, 9, 1],
+@@ -113,7 +131,11 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+         .map(|i| ((7 * i + 3) % p) as u32)
+         .collect();
+     labels[1] = u32::MAX;
+-    if cfg!(feature = "closed-relation") && length == 8 {
++    if cfg!(feature = "context-backoff") && length == 10 {
++        // Ordinary successor 8 competes with the successor 7 of context (4, 1).
++        labels.fill(u32::MAX);
++        labels[length - 1] = 7;
++    } else if cfg!(feature = "closed-relation") && length == 8 {
+         // This prefix has ordinary successor 0 and unique closed endpoint 3.
+         labels.fill(u32::MAX);
+         labels[length - 1] = 3;
+@@ -290,9 +312,16 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+         ("tied embedding".to_owned(), 0..p * d),
+         ("residual gain".to_owned(), gain_at..gain_at + 1),
+     ];
+-    if cfg!(feature = "closed-relation") && length == 8 {
+-        let endpoint = start + 3 * d..start + 4 * d;
+-        let ordinary = start..start + d;
++    let isolated = if cfg!(feature = "context-backoff") && length == 10 {
++        Some((7, 8))
++    } else if cfg!(feature = "closed-relation") && length == 8 {
++        Some((3, 0))
++    } else {
++        None
++    };
++    if let Some((active, inactive)) = isolated {
++        let endpoint = start + active * d..start + (active + 1) * d;
++        let ordinary = start + inactive * d..start + (inactive + 1) * d;
+         if gradients[endpoint.clone()].iter().all(|&v| v == 0.)
+             || gradients[ordinary.clone()].iter().any(|&v| v != 0.)
+         {
+@@ -300,7 +329,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+                 "address replacement sent a gradient to the wrong successor table row".into(),
+             );
+         }
+-        directions.push(("closed endpoint table row".to_owned(), endpoint));
++        directions.push(("selected successor table row".to_owned(), endpoint));
+         directions.push(("ordinary successor table row".to_owned(), ordinary));
+     }
+     if cfg!(feature = "successor-bonus") {
+@@ -429,6 +458,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
+     if cfg!(feature = "single-write-gain") {
+         profile(36, 9, 128)?;
+     }
++    if cfg!(feature = "context-backoff") {
++        profile(36, 10, 128)?;
++    }
+     if cfg!(feature = "relation-paths") {
+         profile(36, 12, 128)?;
+     }
+diff --git a/experiments/phasor_value_transport/src/pair_memory.rs b/experiments/phasor_value_transport/src/pair_memory.rs
+index 062c52f3..b06b55c4 100644
+--- a/experiments/phasor_value_transport/src/pair_memory.rs
++++ b/experiments/phasor_value_transport/src/pair_memory.rs
+@@ -102,6 +102,8 @@ pub const MODEL: &str = if LEARN_BONUS {
+     }
+ } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
+     "phasor-successor-hit-gain175-v1"
++} else if cfg!(feature = "context-backoff") {
++    "phasor-context-backoff-gain-v1"
+ } else if cfg!(feature = "single-write-gain") {
+     "phasor-single-write-or-closed-gain-v1"
+ } else if cfg!(feature = "closed-relation-boost") {
+@@ -362,6 +364,9 @@ impl PairMemory {
+                     } else if pos >= 3 {
+                         closed.write(tokens[row - 3], tokens[row - 2], tokens[row - 1]);
+                     }
++                    if cfg!(feature = "context-backoff") && pos > 0 {
++                        keys[0] = closed.context(tokens[prev], token).unwrap_or(keys[0]);
++                    }
+                     closed.address(token)
+                 } else {
+                     None
+diff --git a/experiments/phasor_value_transport/src/relation_support.rs b/experiments/phasor_value_transport/src/relation_support.rs
+index dde7cf83..3755c730 100644
+--- a/experiments/phasor_value_transport/src/relation_support.rs
++++ b/experiments/phasor_value_transport/src/relation_support.rs
+@@ -131,6 +131,10 @@ impl ClosedRead {
+         }
+         answer
+     }
++
++    pub fn context(&self, previous: u32, current: u32) -> Option<u32> {
++        self.edges.get(&(previous, current)).copied()
++    }
+ }
+
+ // Independently recount every two-edge source after each write on all
