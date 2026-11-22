@@ -1,0 +1,23 @@
+diff --git a/experiments/phasor_value_transport/src/relation_support.rs b/experiments/phasor_value_transport/src/relation_support.rs
+index dde7cf83..cc5b80e4 100644
+--- a/experiments/phasor_value_transport/src/relation_support.rs
++++ b/experiments/phasor_value_transport/src/relation_support.rs
+@@ -110,11 +110,17 @@ impl ClosedRead {
+     }
+
+     pub fn address(&self, source: u32) -> Option<u32> {
++        // A moving two-step permutation read visits three distinct sources.
++        if self.edges.len() < 3 {
++            return None;
++        }
+         let mut largest = 0;
+         let mut answer = None;
+         for (&(_, h), &middle) in self.edges.range((source, 0)..=(source, u32::MAX)) {
+             let size = self.support.sizes[h as usize];
+-            if self.support.scores[h as usize] != size.sources || size.destinations != size.sources
++            if size.sources < 3
++                || self.support.scores[h as usize] != size.sources
++                || size.destinations != size.sources
+             {
+                 continue;
+             }

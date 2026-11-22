@@ -503,6 +503,15 @@ applies to a single relation with at most two written sources. A three-cycle
 attains the bound.
 [Minimum support of a closed read](../../src/Transformer/Phasor/ClosedReadBounds.lean)
 
+Checking the bound before inspecting a relation reproduced all 78
+directional checks and every checkpoint and observation byte in twelve
+paired cells. Three cells ran faster. Time rose by 0.14% across the short
+tier and 0.52% across the long tier as geometric means. Apply the patch at
+`6bc2b20c` and use `fp32-affine-reference,closed-relation-boost` with
+`time_cells.sh` on addition, 20-bit parity, language L1 and depth-one C-RASP.
+The selected reader continues to inspect the closed relation directly.
+[Minimum-support timing trial](trials/closed-read-minimum.patch)
+
 With `fp32-affine-reference,closed-relation`, the two-step address matched
 all 64 labelled positions on the 32 novel lookup sequences. The full model
 scored 31 / 30 / 30 sequences at 5,000 updates. Its 78 directional
