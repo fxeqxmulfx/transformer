@@ -683,6 +683,16 @@ both scalar gradients for arbitrary batches and shows that the two kinds
 of moving read can receive independently prescribed amplitudes.
 [Exclusive singleton-gain proofs](../../src/Transformer/Phasor/SingleWrite.lean)
 
+The GPU passed 153 directional checks. A separately supervised singleton
+gave identical base and bonus derivatives of 1.454884. The isolated closed
+vote gave a zero bonus derivative. On depth-one C-RASP, seed 0 scored
+31/32 at update 1,500. The inclusive control had already reached 32/32
+at update 500 and the closed-relation default at 250. We ended the trial
+at that screen. To reproduce it, apply the patch at `7f4f78bb`, build with
+`fp32-affine-reference,exclusive-singleton-gain` and run `shared-check`
+and `screen suite-crasp-depth-1 0 RUN_DIR 1500`.
+[Exclusive singleton-gain source](trials/exclusive-singleton-gain.patch)
+
 The context-backoff trial reads the last completed triple starting with
 the previous and current tokens. A resolved closed relation has priority.
 If neither read supplies a value, the model uses the ordinary successor
