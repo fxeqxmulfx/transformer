@@ -111,4 +111,89 @@ example : ∃ c : Fin 36 → ℤ, ∃ t : Option Bool → ℤ, ∀ w : List Bool
     w ∈ altPlus true 6 ↔ 1 < c (saturatedChanges 36 (blocks w)) + t w.getLast? :=
   exists_additive_block_read 36 5 (by decide) true
 
+/-- The second-change trial in the experiment README. Its residual starts
+at the second observed change and then reads the inclusive capped count. -/
+def secondChangeRead {E : Type*} [Zero E] {p : ℕ} [NeZero p] (table : Fin p → E) (n : ℕ) : E :=
+  if 2 ≤ n then table (saturatedChanges p n) else 0
+
+/-- A prefix with one possible change of identity has exactly one edge
+when it spans that boundary and the two identities differ. The alphabet
+and both run lengths are arbitrary. -/
+theorem transitionCount_one_boundary {α : Type*} [DecidableEq α] (a b : α) (cut n : ℕ) :
+    transitionCount (fun j => if j < cut then a else b) n =
+      if a = b ∨ cut = 0 ∨ n < cut then 0 else 1 := by
+  induction n with
+  | zero =>
+    by_cases h : cut = 0
+    · simp [transitionCount, h]
+    · simp [transitionCount, Nat.pos_of_ne_zero h]
+  | succ n ih =>
+    rw [transitionCount, ih]
+    by_cases eq : a = b
+    · subst b; simp
+    · by_cases empty : cut = 0
+      · subst cut; simp
+      · by_cases next : n+1 < cut
+        · have prev : n < cut := by omega
+          simp [eq, empty, next, prev]
+        · by_cases prev : n < cut <;> simp [eq, empty, next, prev]
+
+/-- The second-change trial in the experiment README. Single-boundary
+streams of any length leave every coordinate of the backbone residual
+unchanged at every position, for arbitrary learned table values. -/
+theorem secondChangeRead_one_boundary {α E : Type*} [DecidableEq α] [Zero E] {p : ℕ} [NeZero p]
+    (table : Fin p → E) (a b : α) (cut n : ℕ) :
+    secondChangeRead table (transitionCount (fun j => if j < cut then a else b) n) = 0 := by
+  rw [transitionCount_one_boundary]
+  split <;> simp [secondChangeRead]
+
+/-- The second-change trial in the experiment README. For every target from
+two blocks up to the last distinguishable count, a learned count score and
+a current-token score separate the binary language at every word length. -/
+theorem exists_secondChange_block_read (p k : ℕ) [NeZero p] (fits : k+2 < p-1) (start : Bool) :
+    ∃ countWeight : Fin p → ℤ, ∃ tokenWeight : Option Bool → ℤ, ∀ w : List Bool,
+      w ∈ altPlus start (k+2) ↔ 1 < secondChangeRead countWeight (blocks w) + tokenWeight w.getLast? := by
+  let target := saturatedChanges p (k+2)
+  let last := some (if (k+2) % 2 = 1 then start else !start)
+  refine ⟨fun b => if b = target then 1 else 0, fun e => if e = last then 1 else 0, ?_⟩
+  intro w
+  rw [mem_blocks_iff_inclusive_read p (k+1) fits]
+  change (saturatedChanges p (blocks w) = target ∧ w.getLast? = last) ↔ _
+  by_cases hit : saturatedChanges p (blocks w) = target
+  · have high : 2 ≤ blocks w := by
+      rcases (saturatedChanges_eq_iff p _ _).mp hit with h | h <;> omega
+    by_cases endHit : w.getLast? = last <;> simp [secondChangeRead, hit, high, endHit]
+  · by_cases endHit : w.getLast? = last <;> by_cases high : 2 ≤ blocks w <;>
+      simp [secondChangeRead, hit, high, endHit]
+
+/-- The second-change trial in the experiment README. Its batch adjoint
+uses exactly the rows with two or more changes. Every coordinate receives
+the sum of upstream contributions in its own capped bucket. -/
+theorem secondChangeRead_adjoint {ι : Type*} {p : ℕ} [NeZero p] (rows : Finset ι)
+    (count : ι → ℕ) (upstream : ι → ℝ) (delta : Fin p → ℝ) :
+    (∑ i ∈ rows, upstream i * secondChangeRead delta (count i)) =
+      ∑ b, (∑ i ∈ rows.filter (fun j => 2 ≤ count j) with saturatedChanges p (count i) = b,
+        upstream i) * delta b := by
+  let active := rows.filter (fun i => 2 ≤ count i)
+  let key := fun i => saturatedChanges p (count i)
+  calc
+    _ = ∑ i ∈ active, upstream i * delta (key i) := by
+      rw [Finset.sum_filter]
+      apply Finset.sum_congr rfl
+      intro i _
+      by_cases h : 2 ≤ count i <;> simp [secondChangeRead, key, h]
+    _ = ∑ b, ∑ i ∈ active with key i = b, upstream i * delta (key i) :=
+      (Finset.sum_fiberwise active key _).symm
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro b _
+      rw [Finset.sum_mul]
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [(Finset.mem_filter.mp hi).2]
+
+example : ∃ c : Fin 12 → ℤ, ∃ t : Option Bool → ℤ, ∀ w : List Bool,
+    w ∈ altPlus false 4 ↔ 1 < secondChangeRead c (blocks w) + t w.getLast? :=
+  exists_secondChange_block_read 12 2 (by decide) false
+
 end Transformer.Phasor

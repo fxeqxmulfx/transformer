@@ -782,6 +782,15 @@ that one learned scalar per count and one per current token can then
 separate each binary block language with its target below the cap.
 [Inclusive counts and additive readout](../../src/Transformer/Phasor/InclusiveTransitions.lean)
 
+The second-change trial adds a learned count vector only after two changes
+of token identity. It uses the closed-relation gain at every position.
+Any prefix made from two constant runs receives zero correction, regardless
+of either run's length or of the table weights. Lean proves that the read
+can still separate each binary block language with at least two blocks and
+a target below saturation. The gradient for each table entry sums only
+the rows that reached its active count.
+[Second-change representation and gradient](../../src/Transformer/Phasor/InclusiveTransitions.lean)
+
 With `fp32-affine-reference,inclusive-transitions`, all three L2 seeds
 reached 512/512 at update 250 and repeated that score on both source test
 splits. Under the same source protocol, the closed-relation default also
