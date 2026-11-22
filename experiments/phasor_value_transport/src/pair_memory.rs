@@ -67,7 +67,13 @@ compile_error!(
     "the retrieval-dependent gain trial uses full displacement and the original table addresses"
 );
 
-pub const MODEL: &str = if cfg!(feature = "successor-hit-gain-seven-quarters") {
+pub const MODEL: &str = if cfg!(feature = "successor-agreement") {
+    if cfg!(feature = "successor-hit-gain-seven-quarters") {
+        "phasor-successor-agreement-gain175-v1"
+    } else {
+        "phasor-successor-agreement-v1"
+    }
+} else if cfg!(feature = "successor-hit-gain-seven-quarters") {
     "phasor-successor-hit-gain175-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
@@ -155,6 +161,12 @@ fn addresses(a: usize, b: usize, p: usize, factor_b: usize) -> [u32; TABLES] {
     result
 }
 
+struct SuccessorAgreement {
+    ambiguous: Vec<bool>,
+    reads: Vec<u32>,
+    device: Buffer<u32>,
+}
+
 pub struct PairMemory {
     pub kernels: crate::pair_ops::kernels::Kernels,
     pub keys: Buffer<u32>,
@@ -171,6 +183,7 @@ pub struct PairMemory {
     rows: Vec<u32>,
     factors: Vec<usize>,
     successors: Vec<Option<u32>>,
+    agreement: Option<SuccessorAgreement>,
 }
 
 impl PairMemory {
@@ -194,7 +207,24 @@ impl PairMemory {
             rows: vec![0; entries],
             factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
             successors: vec![None; if SUCCESSOR { cfg.vocab } else { 0 }],
+            agreement: if cfg!(feature = "successor-agreement") {
+                Some(SuccessorAgreement {
+                    ambiguous: vec![false; cfg.vocab],
+                    reads: vec![0; rows],
+                    device: cuda.alloc(rows)?,
+                })
+            } else {
+                None
+            },
         })
+    }
+
+    // One value per row for the agreement gate, or the first value in each
+    // row of ordinary table addresses for the unconditional successor gate.
+    pub fn gain_addresses(&self) -> (&Buffer<u32>, u32) {
+        self.agreement
+            .as_ref()
+            .map_or((&self.keys, TABLES as u32), |a| (&a.device, 1))
     }
 
     pub fn prepare(&mut self, tokens: &[u32], length: usize) -> Result<()> {
@@ -219,10 +249,22 @@ impl PairMemory {
                 let pos = row % length;
                 if pos == 0 {
                     self.successors.fill(None);
+                    if let Some(a) = &mut self.agreement {
+                        a.ambiguous.fill(false);
+                    }
                 } else if pos >= 2 {
-                    self.successors[tokens[row - 2] as usize] = Some(tokens[row - 1]);
+                    let (key, value) = (tokens[row - 2] as usize, tokens[row - 1]);
+                    if let Some(a) = &mut self.agreement
+                        && self.successors[key].is_some_and(|old| old != value)
+                    {
+                        a.ambiguous[key] = true;
+                    }
+                    self.successors[key] = Some(value);
                 }
                 keys[0] = self.successors[b].unwrap_or(token);
+                if let Some(a) = &mut self.agreement {
+                    a.reads[row] = if a.ambiguous[b] { token } else { keys[0] };
+                }
                 if cfg!(feature = "transition-count") {
                     if pos == 0 {
                         transitions = 0;
@@ -264,6 +306,9 @@ impl PairMemory {
             *offset += 1;
         }
         self.keys.write(&self.indices)?;
+        if let Some(a) = &mut self.agreement {
+            a.device.write(&a.reads)?;
+        }
         self.offsets.write(&self.starts)?;
         self.owners.write(&self.rows)?;
         Ok(())

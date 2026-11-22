@@ -121,6 +121,7 @@ impl ValueLayer {
         }
         e.rms(self.normalized.ptr(), self.hidden.ptr(), rows)?;
         let features = if let Some(m) = &self.memory {
+            let (gain_addresses, stride) = m.gain_addresses();
             unsafe {
                 m.causal.combine::<{ crate::pair_memory::HIT_GAIN }>(
                     Grid::new(rows as u32, d as u32),
@@ -132,8 +133,8 @@ impl ValueLayer {
                         .at(crate::pair_memory::gain(&e.config))
                         .ok_or("value gain outside parameter buffer")?,
                     e.tokens.ptr(),
-                    m.keys.ptr(),
-                    crate::pair_memory::TABLES as u32,
+                    gain_addresses.ptr(),
+                    stride,
                     crate::pair_memory::HIT_FACTOR,
                     d as u32,
                 )?;
@@ -181,6 +182,7 @@ impl ValueLayer {
             p,
         )?;
         let value_feature = if let Some(m) = &self.memory {
+            let (gain_addresses, stride) = m.gain_addresses();
             let gain = crate::pair_memory::gain(&e.config);
             unsafe {
                 m.causal.gain_back::<{ crate::pair_memory::HIT_GAIN }>(
@@ -192,8 +194,8 @@ impl ValueLayer {
                         .at(gain)
                         .ok_or("value gain outside parameter buffer")?,
                     e.tokens.ptr(),
-                    m.keys.ptr(),
-                    crate::pair_memory::TABLES as u32,
+                    gain_addresses.ptr(),
+                    stride,
                     crate::pair_memory::HIT_FACTOR,
                     d as u32,
                 )?;

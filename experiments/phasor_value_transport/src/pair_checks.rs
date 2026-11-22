@@ -104,7 +104,12 @@ fn profile(p: usize, length: usize) -> Result<()> {
                 .rev()
                 .find(|pair| pair[0] == b)
                 .map_or(b, |pair| pair[1]);
-            if cfg!(feature = "successor-hit-gain") && r != b {
+            let agreed = !cfg!(feature = "successor-agreement")
+                || prefix
+                    .windows(2)
+                    .filter(|edge| edge[0] == b)
+                    .all(|edge| edge[1] == r);
+            if cfg!(feature = "successor-hit-gain") && r != b && agreed {
                 gain *= if cfg!(feature = "successor-hit-gain-seven-quarters") {
                     7. / 4.
                 } else {

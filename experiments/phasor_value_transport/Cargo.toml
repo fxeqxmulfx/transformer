@@ -27,6 +27,7 @@ successor-displacement-quarter = ["successor-displacement"]
 successor-gain-three-quarters = ["successor-displacement"]
 successor-hit-gain = ["successor-displacement"]
 successor-hit-gain-seven-quarters = ["successor-hit-gain"]
+successor-agreement = ["successor-hit-gain"]
 transition-count = ["prefix-successor-half"]
 prefix-sum = []
 

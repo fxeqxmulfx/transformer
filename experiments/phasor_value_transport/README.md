@@ -221,6 +221,12 @@ preserves the resulting gain. On any conflicting history every class logit
 agrees with the constant-gain displacement model at the same weights.
 [Causal agreement proofs](../../src/Transformer/Phasor/SuccessorAgreement.lean)
 
+With `fp32-affine-reference,successor-agreement`, all three seeds scored
+32/32 on novel MQAR sequences at initialization and 64/64 on each of
+the ordinary, length-48 and length-96 tests after reload. Seed 0 again
+scored 31/32 on Dyck at 250 updates. Changing the ambiguity rule preserved
+recall and left the Dyck deficit at one sequence.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
