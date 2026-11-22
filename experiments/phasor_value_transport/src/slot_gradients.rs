@@ -15,6 +15,7 @@ fn route(l: &Layout, w: &[f32]) -> Routing {
 }
 
 pub(super) fn run() -> Result<()> {
+    check_addresses()?;
     let d = 32;
     let k = 7;
     let l = Layout {
@@ -58,7 +59,9 @@ pub(super) fn run() -> Result<()> {
     }
     let h: Vec<_> = (0..x.len()).map(|_| rng.gauss(0., 0.4) as f32).collect();
     let g: Vec<_> = (0..x.len()).map(|_| rng.gauss(0., 0.17) as f32).collect();
-    let (tape, _) = slot_memory::forward(&l, &w, &route(&l, &w), &x, &h, 3);
+    let routing = route(&l, &w);
+    let cells = slot_memory::scalar_cells(&l, &w, &routing, &x, &h, 3);
+    let (tape, _) = slot_memory::forward(&l, &w, &routing, &cells, &h, 3);
     if tape[1].transport != Some(4) || tape[4].constant != Some(2) {
         return Err("structural gradient fixture missed the transported or constant branch".into());
     }
@@ -87,7 +90,9 @@ pub(super) fn run() -> Result<()> {
             for (z, v) in target[range.clone()].iter_mut().zip(&direction) {
                 *z += (sign * delta) as f32 * v;
             }
-            let (changed, output) = slot_memory::forward(&l, &p, &route(&l, &p), &x, &state, 3);
+            let routing = route(&l, &p);
+            let cells = slot_memory::scalar_cells(&l, &p, &routing, &x, &state, 3);
+            let (changed, output) = slot_memory::forward(&l, &p, &routing, &cells, &state, 3);
             for (old, new) in tape.iter().zip(changed) {
                 if (old.cell, old.constant, old.transport)
                     != (new.cell, new.constant, new.transport)
@@ -115,6 +120,67 @@ pub(super) fn run() -> Result<()> {
         println!("slot mixture {name} analytic={analytic:.7} numeric={numeric:.7}");
     }
     initialization()
+}
+
+// Compare the real device kernel with the carried scalar search on arbitrary
+// dense inputs, duplicate directions, null vectors and separate sequences.
+fn check_addresses() -> Result<()> {
+    let cuda = kernite_cuda::Cuda::new()?;
+    let kernels = crate::slot_addresses::kernels::Kernels::load(&cuda)?;
+    let mut rng = random::Random::new(7293);
+    for (d, length) in [(7, 1), (7, 9), (64, 11), (128, 5), (256, 4)] {
+        let mut cfg = config(3)?;
+        cfg.width = d;
+        let l = Layout::new(&cfg);
+        let rows = 3 * length;
+        let mut w = vec![0.; l.bias + 4];
+        for coordinate in &mut w[..l.values] {
+            *coordinate = rng.gauss(0., 1.) as f32;
+        }
+        w.copy_within(0..d, d);
+        w[2 * d..3 * d].fill(0.);
+        let mut x: Vec<_> = (0..rows * d).map(|_| rng.gauss(0., 1.) as f32).collect();
+        let mut h: Vec<_> = (0..rows * d).map(|_| rng.gauss(0., 0.25) as f32).collect();
+        for row in (0..rows).step_by(4) {
+            x[row * d..(row + 1) * d].copy_from_slice(&w[..d]);
+            h[row * d..(row + 1) * d].fill(0.);
+        }
+        x[d..2 * d].fill(0.);
+        let mut routing = Routing::default();
+        routing.refresh(&l, &w, &vec![0.; l.slots.pow(3)]);
+        let expected = slot_memory::scalar_cells(&l, &w, &routing, &x, &h, length);
+        let transposed: Vec<_> = (0..l.slots * d)
+            .map(|i| w[i % l.slots * d + i / l.slots])
+            .collect();
+        let (input, hidden) = (cuda.upload(&x)?, cuda.upload(&h)?);
+        let dictionary = cuda.upload(&transposed)?;
+        let inverse = cuda.upload(routing.inverse_norms())?;
+        let cells = cuda.alloc::<u32>(rows)?;
+        unsafe {
+            kernels.cells(
+                kernite_cuda::Grid::new(rows as u32, l.slots as u32),
+                cells.ptr(),
+                input.ptr(),
+                hidden.ptr(),
+                dictionary.ptr(),
+                inverse.ptr(),
+                d as u32,
+                length as u32,
+                (d as f32).sqrt().recip(),
+            )?;
+        }
+        let measured = cells.read()?;
+        if measured != expected
+            || length > 1 && measured.iter().all(|&v| v == crate::slot_orbits::ABSENT)
+        {
+            return Err(format!(
+                "parallel slot addresses differ from the scalar scan at width {d}, length {length}"
+            )
+            .into());
+        }
+        println!("parallel slot addresses width={d} length={length} scalar_matches={rows}");
+    }
+    Ok(())
 }
 
 fn initialization() -> Result<()> {

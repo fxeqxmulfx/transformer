@@ -138,4 +138,30 @@ theorem mix_pairing {D : ℕ} (gate : EucSpace D → Fin 4 → ℝ) (h v : EucSp
     inner ℝ (mix gate h reads) v = ∑ i, inner ℝ (reads i) (gate h i • v) := by
   simp only [mix, sum_inner, real_inner_smul_left, real_inner_smul_right]
 
+/-- Source: the prototype addresses in the experiment's “Triple transport” section.
+Carry the preceding dense key's winning slot as the model scans one sequence.
+An ambiguous or missing winner at either end gives no direct address. -/
+noncomputable def scanAddresses {D : ℕ} (nearest : EucSpace D → Option X) (scale : ℝ) :
+    Option X → List (EucSpace D × EucSpace D) → List (Option (X × X))
+  | _, [] => []
+  | prior, (x, h) :: rest =>
+      (prior.bind fun a => (nearest x).map (a, ·)) ::
+        scanAddresses nearest scale (nearest (x + scale • h)) rest
+
+/-- Source: “Triple transport”, parallel prototype lookup. Each cell can search
+its own input and the preceding position's key independently. Zipping these
+searches agrees with the carried scan for every dense input, contextual state,
+and tie decision. At a sequence boundary the incoming address is `none`. -/
+theorem scanAddresses_eq_zip {D : ℕ} (nearest : EucSpace D → Option X) (scale : ℝ)
+    (prior : Option X) (rows : List (EucSpace D × EucSpace D)) :
+    scanAddresses nearest scale prior rows =
+      List.zipWith (fun p x => p.bind fun a => (nearest x).map (a, ·))
+        (prior :: rows.map (fun r => nearest (r.1 + scale • r.2))) (rows.map Prod.fst) := by
+  induction rows generalizing prior with
+  | nil => rfl
+  | cons row rest ih =>
+    obtain ⟨x, h⟩ := row
+    simp only [scanAddresses, List.map_cons, List.zipWith_cons_cons]
+    rw [ih]
+
 end Transformer.Phasor.TripleTransport

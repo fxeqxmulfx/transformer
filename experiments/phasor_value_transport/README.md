@@ -1383,6 +1383,14 @@ prototype and a transported prototype. Both structural coefficients start
 at zero. The first position uses the contextual read. The same functions
 operate at every sequence length.
 
+The Kernite implementation searches prototype directions in parallel at
+each position. It pairs the current input with the preceding position's
+dense key. Equal positive maxima and queries with no positive score give
+no address. Lean proves this pairing agrees with carrying the preceding
+winner through the sequence. The device search matched the scalar scan
+on 90 positions with arbitrary dense vectors, repeated directions, zero
+queries and batch boundaries. [Prototype address equivalence](../../src/Transformer/Phasor/TripleTransport.lean)
+
 The dictionary starts from the unordered values of the original random
 lookup. Its capacity is `K = min(D, 128)`. Dense vector ordering selects up
 to `K` initial directions, and independent random vectors fill vacant slots.
@@ -1424,6 +1432,26 @@ These trials establish performance on the canonical split. Each 250-update
 training command, including its scheduled evaluations and checkpoint writes,
 took 17.3–18.3 seconds on the GTX 1050 with the Rust host graph and Kernite
 v0.6.0 FP32 kernels.
+
+Replacing the host prototype search with the parallel search produced
+byte-identical first-passing weights on all nine NV11, modular addition
+and shifted-AND runs. On fresh NV11 runs through update 250, the original
+search took 17.12 / 17.00 / 17.99 seconds and the parallel search took
+15.31 / 15.77 / 15.88 seconds. On shifted AND, alternating the execution
+order for each seed gave six faster runs out of six, with a geometric mean
+of 0.813 times the original elapsed time. All twelve timed shifted-AND
+checkpoints independently reproduced their held-out scores.
+
+To reproduce the paired comparison, set `control` to the release binary
+from commit `63cbae95` built with `fp32-affine-reference` and `bin` to
+the current binary built with the same feature.
+
+```sh
+PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh --first-pass "$control" "$bin" \
+    runs/triple-address-timing/boolean 512 suite-boolean-and-shift
+PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh "$control" "$bin" \
+    runs/triple-address-timing/parity 250 basis-parity16
+```
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport

@@ -45,6 +45,7 @@ mod reflection_phase_checks;
 mod relation_paths;
 mod relation_support;
 mod scalar_phase_checks;
+mod slot_addresses;
 mod slot_checks;
 mod slot_copy;
 mod slot_gradients;

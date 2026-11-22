@@ -103,6 +103,10 @@ pub struct Routing {
 }
 
 impl Routing {
+    pub fn inverse_norms(&self) -> &[f32] {
+        &self.inverse
+    }
+
     // Products are hidden value · hidden prototype, computed by Kernite.
     pub fn refresh(&mut self, l: &Layout, w: &[f32], products: &[f32]) {
         self.inverse = (0..l.slots)
@@ -202,23 +206,55 @@ impl Row {
     }
 }
 
-pub fn forward(
+/// Independent scalar scan used to verify batched device addressing.
+pub fn scalar_cells(
     l: &Layout,
     w: &[f32],
     route: &Routing,
     x: &[f32],
     hidden: &[f32],
     length: usize,
-) -> (Vec<Row>, Vec<f32>) {
+) -> Vec<u32> {
     let d = l.d;
-    let scale = scales(d);
     let units = (d as f32).sqrt().recip();
-    let mut tape = Vec::with_capacity(x.len() / d);
-    let mut out = vec![0.; x.len()];
     let mut key = vec![0.; d];
     let mut prior = None;
-    for (r, ((q, h), dst)) in x
-        .chunks_exact(d)
+    let mut cells = Vec::with_capacity(x.len() / d);
+    for (r, (q, h)) in x.chunks_exact(d).zip(hidden.chunks_exact(d)).enumerate() {
+        let cell = if r.is_multiple_of(length) {
+            None
+        } else {
+            prior
+                .zip(route.nearest(l, w, q))
+                .map(|(a, b)| (a * l.slots + b) as u32)
+        };
+        cells.push(cell.unwrap_or(ABSENT));
+        if !(r + 1).is_multiple_of(length) {
+            for j in 0..d {
+                key[j] = q[j] + units * h[j];
+            }
+            prior = route.nearest(l, w, &key);
+        }
+    }
+    cells
+}
+
+pub fn forward(
+    l: &Layout,
+    w: &[f32],
+    route: &Routing,
+    cells: &[u32],
+    hidden: &[f32],
+    length: usize,
+) -> (Vec<Row>, Vec<f32>) {
+    let d = l.d;
+    assert_eq!(cells.len() * d, hidden.len());
+    let scale = scales(d);
+    let units = (d as f32).sqrt().recip();
+    let mut tape = Vec::with_capacity(cells.len());
+    let mut out = vec![0.; hidden.len()];
+    for (r, ((&cell, h), dst)) in cells
+        .iter()
         .zip(hidden.chunks_exact(d))
         .zip(out.chunks_exact_mut(d))
         .enumerate()
@@ -235,10 +271,8 @@ pub fn forward(
             }
             *g += scale[i] * value;
         }
-        if !r.is_multiple_of(length)
-            && let (Some(a), Some(b)) = (prior, route.nearest(l, w, q))
-        {
-            let cell = a * l.slots + b;
+        if cell != ABSENT {
+            let cell = cell as usize;
             let reads = route.reads.as_ref().expect("routing was refreshed");
             row.cell = Some(cell);
             row.constant =
@@ -252,12 +286,6 @@ pub fn forward(
                     *y += c * v;
                 }
             }
-        }
-        if !(r + 1).is_multiple_of(length) {
-            for j in 0..d {
-                key[j] = q[j] + units * h[j];
-            }
-            prior = route.nearest(l, w, &key);
         }
         tape.push(row);
     }

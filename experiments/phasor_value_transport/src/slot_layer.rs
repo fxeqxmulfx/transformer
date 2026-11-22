@@ -32,6 +32,10 @@ pub(super) struct SlotLayer {
     layout: Layout,
     offset: usize,
     copier: crate::slot_copy::kernels::Kernels,
+    addresses: crate::slot_addresses::kernels::Kernels,
+    dictionary_t: F,
+    inverse_norms: RefCell<F>,
+    cells: Buffer<u32>,
     parameters: RefCell<F>,
     products: F,
     output: F,
@@ -45,6 +49,10 @@ impl SlotLayer {
         Ok(Self {
             offset: crate::architecture::memory_start(&e.config),
             products: e.cuda.alloc(layout.slots.pow(3))?,
+            dictionary_t: e.cuda.alloc(layout.slots * layout.d)?,
+            inverse_norms: RefCell::new(e.cuda.alloc(layout.slots)?),
+            cells: e.cuda.alloc(e.config.max_length * e.config.max_batch)?,
+            addresses: crate::slot_addresses::kernels::Kernels::load(&e.cuda)?,
             layout,
             copier: crate::slot_copy::kernels::Kernels::load(&e.cuda)?,
             parameters: RefCell::new(e.cuda.alloc(count)?),
@@ -85,6 +93,7 @@ impl SlotLayer {
             // The dictionary transpose is at most width². This dedicated
             // FP32 dot product also serves the lower-precision backbone.
             e.transpose(p, l.slots, l.d)?;
+            self.copy(self.dictionary_t.ptr(), e.scratch.ptr(), l.slots * l.d)?;
             let m = l.slots * l.slots;
             let blocks = m.div_ceil(gemm::kernels::BM) * l.slots.div_ceil(gemm::kernels::BN);
             let values = e
@@ -103,12 +112,29 @@ impl SlotLayer {
                 )?;
             }
             tape.routing.refresh(l, &w, &self.products.read()?);
+            self.inverse_norms
+                .borrow_mut()
+                .write(tape.routing.inverse_norms())?;
         }
-        let x = e.embed_norm.read()?;
+        // A block sees just its row and the preceding row of this sequence.
+        // There are at most 128 slots and both score arrays fit in shared memory.
+        unsafe {
+            self.addresses.cells(
+                Grid::new(rows as u32, l.slots as u32),
+                self.cells.ptr(),
+                e.embed_norm.ptr(),
+                e.last.ptr(),
+                self.dictionary_t.ptr(),
+                self.inverse_norms.borrow().ptr(),
+                l.d as u32,
+                length as u32,
+                (l.d as f32).sqrt().recip(),
+            )?;
+        }
+        let cells = self.cells.read()?;
         let mut h = e.last.read()?;
         h.truncate(rows * l.d);
-        let (choices, out) =
-            slot_memory::forward(l, &w, &tape.routing, &x[..rows * l.d], &h, length);
+        let (choices, out) = slot_memory::forward(l, &w, &tape.routing, &cells[..rows], &h, length);
         let device = e.cuda.upload(&out)?;
         self.copy(self.output.ptr(), device.ptr(), out.len())?;
         tape.weights = w;
