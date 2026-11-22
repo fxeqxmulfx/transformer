@@ -156,6 +156,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         || architecture::CONTEXT_ROTATION
         || architecture::HOUSEHOLDER
         || architecture::TOEPLITZ
+        || architecture::TWO_FRAME
     {
         0.0003
     } else {
@@ -194,6 +195,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
                 || architecture::CROSSED_CONTEXT
                 || architecture::SHARED_BILINEAR
                 || architecture::SCALAR_PHASE
+                || architecture::TWO_FRAME
                 || architecture::HOUSEHOLDER
             {
                 let fine = difference(epsilon / 2.)?;
@@ -305,6 +307,8 @@ pub fn run(width: Option<usize>) -> Result<()> {
         crate::scalar_phase_checks::run()?;
     } else if architecture::TOEPLITZ {
         crate::toeplitz_checks::run()?;
+    } else if architecture::TWO_FRAME {
+        crate::two_frame_checks::run()?;
     } else if architecture::PHASE_MEMORY {
         crate::phase_checks::run()?;
     }

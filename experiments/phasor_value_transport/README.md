@@ -971,6 +971,27 @@ prefix shares the same learned transformation up to two rotations. The
 model can also make its output constant through the scalar gain.
 [Two-sided frame proofs](../../src/Transformer/Phasor/TwoSidedFrame.lean)
 
+The native implementation reproduced independently evaluated FP64 logits
+within `7.92e-7` at widths 64 and 128. Applying the measured frame
+displacement between two off-table prefixes aligned their hidden vectors
+within `3.44e-6`. Setting the gain to zero on an arbitrary prefix gave
+the same learned bias for two different inputs within `7.83e-7`.
+
+At 3,000 updates, the three NV11 seeds fit 4,205 / 4,380 / 4,182 of
+4,704 training pairs and classified 90 / 85 / 92 of 4,705 held-out pairs.
+All 51 held-out zero-row pairs were correct in each reloaded checkpoint.
+The remaining 39 / 34 / 41 correct answers exceed the learned stream's
+36 / 25 / 33 at this update. All six nonzero-row counts are below the
+48 expected from uniform guesses.
+
+```sh
+cargo +stable build --release --locked --features fp32-affine-reference,two-sided-frame
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/two-frame-nv11/seed0 0 3000
+"$bin" nv11-score runs/two-frame-nv11/seed0/nv11-train-3000.f32 rows
+```
+
 ## Tied Toeplitz read
 
 The same learned matrix projects the current embedding into complex

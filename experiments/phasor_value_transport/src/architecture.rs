@@ -17,6 +17,7 @@ pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
 pub const SHARED_BILINEAR: bool = cfg!(feature = "shared-bilinear-phase");
 pub const SCALAR_PHASE: bool = cfg!(feature = "scalar-phase-bottleneck");
 pub const TIED_TOEPLITZ: bool = cfg!(feature = "tied-toeplitz");
+pub const TWO_FRAME: bool = cfg!(feature = "two-sided-frame");
 pub const TOEPLITZ: bool = cfg!(feature = "prefix-toeplitz") || TIED_TOEPLITZ;
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
@@ -47,6 +48,7 @@ const _: () = {
         + SCALAR_PHASE as u8
         + cfg!(feature = "prefix-toeplitz") as u8
         + TIED_TOEPLITZ as u8
+        + TWO_FRAME as u8
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
         + cfg!(feature = "context-rotation-read") as u8
@@ -61,7 +63,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if TIED_TOEPLITZ {
+pub const HEAD: Head = if TWO_FRAME {
+    Head::TwoFrame
+} else if TIED_TOEPLITZ {
     Head::TiedToeplitz
 } else if TOEPLITZ {
     Head::PrefixToeplitz
@@ -118,7 +122,7 @@ pub fn start(cfg: &Config) -> usize {
 /// Other hidden memories project the fixed-mean contextual vectors directly.
 pub fn memory_start(cfg: &Config) -> usize {
     start(cfg)
-        + if cfg.head.has_stream_memory() || cfg.head.context_stages() > 0 {
+        + if cfg.head.has_stream_memory() || cfg.head.transforms_context() {
             4 * cfg.width
         } else {
             0
@@ -155,6 +159,10 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             && result.get("readout_parameters").is_none();
     }
     if RAW {
+        if TWO_FRAME {
+            return result["readout_parameters"] == (2 * width + 8) * width
+                && result.get("pair_parameters").is_none();
+        }
         if TOEPLITZ {
             return result["readout_parameters"]
                 == crate::toeplitz::parameter_count(width as usize, TIED_TOEPLITZ)

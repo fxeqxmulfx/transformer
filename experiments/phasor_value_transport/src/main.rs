@@ -42,6 +42,8 @@ mod scalar_phase_checks;
 mod toeplitz;
 mod toeplitz_checks;
 mod transition;
+mod two_frame;
+mod two_frame_checks;
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
 mod checks;
@@ -252,6 +254,7 @@ fn main() -> Result<()> {
         [op] if op == "memory-check" && architecture::HOUSEHOLDER => householder_checks::run(),
         [op] if op == "memory-check" && architecture::SCALAR_PHASE => scalar_phase_checks::run(),
         [op] if op == "memory-check" && architecture::TOEPLITZ => toeplitz_checks::run(),
+        [op] if op == "memory-check" && architecture::TWO_FRAME => two_frame_checks::run(),
         [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
         [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),

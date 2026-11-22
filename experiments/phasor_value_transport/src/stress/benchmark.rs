@@ -44,6 +44,7 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
             | Head::ScalarPhase
             | Head::PrefixToeplitz
             | Head::TiedToeplitz
+            | Head::TwoFrame
             | Head::ReflectionPhase
             | Head::SingleReflection
             | Head::ContextRotation

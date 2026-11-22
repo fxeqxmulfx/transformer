@@ -22,6 +22,7 @@ pub enum Head {
     ScalarPhase,
     PrefixToeplitz,
     TiedToeplitz,
+    TwoFrame,
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
@@ -52,6 +53,7 @@ impl Head {
             "scalar-phase" => Ok(Self::ScalarPhase),
             "prefix-toeplitz" => Ok(Self::PrefixToeplitz),
             "tied-toeplitz" => Ok(Self::TiedToeplitz),
+            "two-frame" => Ok(Self::TwoFrame),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
@@ -81,6 +83,7 @@ impl Head {
             Self::ScalarPhase => "phasor-learned-scalar-phase-bottleneck-v1",
             Self::PrefixToeplitz => "phasor-learned-prefix-toeplitz-v1",
             Self::TiedToeplitz => "phasor-learned-tied-toeplitz-v1",
+            Self::TwoFrame => "phasor-learned-two-sided-frame-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
@@ -132,7 +135,11 @@ impl Head {
     }
 
     pub const fn replaces_context(self) -> bool {
-        self.is_toeplitz() || matches!(self, Self::ScalarPhase)
+        self.is_toeplitz() || matches!(self, Self::ScalarPhase | Self::TwoFrame)
+    }
+
+    pub const fn transforms_context(self) -> bool {
+        self.context_stages() > 0 || matches!(self, Self::TwoFrame)
     }
 
     pub const fn is_toeplitz(self) -> bool {
@@ -174,6 +181,7 @@ impl Head {
                 Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
             }
             Self::Householder => crate::householder::parameter_count(cfg.width),
+            Self::TwoFrame => (2 * cfg.width + 8) * cfg.width,
             Self::PrefixToeplitz | Self::TiedToeplitz => {
                 crate::toeplitz::parameter_count(cfg.width, self == Self::TiedToeplitz)
             }
@@ -224,6 +232,26 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::TwoFrame => {
+                let d = cfg.width;
+                let first = crate::architecture::memory_start(cfg);
+                let bias = first + 3 * d;
+                let matrix = bias + d * d;
+                let freq = matrix + d * d;
+                let mut rng = Random::new(seed.wrapping_add(30_000));
+                let scale = (d as f64).sqrt().recip();
+                for (range, sd) in [
+                    (first..first + 2 * d, scale),
+                    (bias..matrix, 0.25 * scale),
+                    (matrix..freq, scale),
+                    (freq..freq + d, (d as f64).sqrt().sqrt()),
+                ] {
+                    for w in &mut parameters[range] {
+                        *w = rng.gauss(0., sd) as f32;
+                    }
+                }
+                parameters[first + 2 * d..bias].fill(0.);
+            }
             Self::PrefixToeplitz | Self::TiedToeplitz => {
                 let d = cfg.width;
                 let mut offset = crate::architecture::memory_start(cfg);

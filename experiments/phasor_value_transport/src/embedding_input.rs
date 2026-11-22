@@ -25,7 +25,7 @@ impl Engine {
     }
 
     fn transform_context(&self, rows: usize, length: usize) -> Result<()> {
-        if let Some(rotation) = &self.context_rotation {
+        if let Some(rotation) = &self.context_layer {
             rotation.forward(self, rows, length)?;
         } else if let Some(memory) = &self.hidden_layer {
             memory.forward_features(self, rows, length)?;
@@ -38,7 +38,7 @@ impl Engine {
             Some(layer) => layer.backward(self, rows, length)?,
             None => self.dx.ptr(),
         };
-        if let Some(rotation) = &self.context_rotation {
+        if let Some(rotation) = &self.context_layer {
             rotation.add_input_gradient(self, gradient, rows)?;
         } else if self.config.head.projects_embeddings() {
             self.hidden_layer.as_ref().ok_or("missing input phase read")?
@@ -48,7 +48,7 @@ impl Engine {
     }
 
     fn encoded_features(&self) -> &F {
-        if let Some(rotation) = &self.context_rotation {
+        if let Some(rotation) = &self.context_layer {
             return rotation.features();
         }
         self.hidden_layer
