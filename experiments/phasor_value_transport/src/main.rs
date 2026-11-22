@@ -243,7 +243,9 @@ fn main() -> Result<()> {
         [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),
         [op, head, name, seed, updates, out] if op == "memory-bench" =>
-            stress::benchmark::run(head, name, seed.parse()?, updates.parse()?, Path::new(out)),
+            stress::benchmark::run(stress::benchmark::Source::ComparedHead(head), name, seed.parse()?, updates.parse()?, Path::new(out)),
+        [op, name, seed, updates, out] if op == "catalog-bench" =>
+            stress::benchmark::run(stress::benchmark::Source::Catalog, name, seed.parse()?, updates.parse()?, Path::new(out)),
         [op] if op == "check" => checks::run(),
         [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(None),
         [op, width] if op == "shared-check" => pair_checks::run(Some(width.parse()?)),
@@ -287,6 +289,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), true),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts] | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts] | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }

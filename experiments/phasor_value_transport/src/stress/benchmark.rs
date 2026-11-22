@@ -56,9 +56,44 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
     Ok((json!(scores), causality))
 }
 
-pub fn run(arm: &str, name: &str, seed: u32, updates: usize, out: &Path) -> Result<()> {
-    let head = Head::parse(arm)?;
-    let (row, mut task) = load(name)?;
+pub enum Source<'a> {
+    ComparedHead(&'a str),
+    Catalog,
+}
+
+/// Hash the ordered input sequences alone. For generative tasks use each
+/// prompt, and for categorical tasks use its input tokens. Lengths delimit rows.
+fn input_digest(examples: &[Example]) -> String {
+    use sha2::{Digest, Sha256};
+    use std::fmt::Write as _;
+    let mut digest = Sha256::new();
+    digest.update((examples.len() as u64).to_le_bytes());
+    for e in examples {
+        let input = if e.prompt.is_empty() {
+            &e.tokens
+        } else {
+            &e.prompt
+        };
+        digest.update((input.len() as u64).to_le_bytes());
+        for token in input {
+            digest.update(token.to_le_bytes());
+        }
+    }
+    let mut hex = String::with_capacity(64);
+    for byte in digest.finalize() {
+        write!(hex, "{byte:02x}").unwrap();
+    }
+    hex
+}
+
+pub fn run(source: Source, name: &str, seed: u32, updates: usize, out: &Path) -> Result<()> {
+    let (head, model, arm, (row, mut task)) = match source {
+        Source::ComparedHead(arm) => {
+            let head = Head::parse(arm)?;
+            (head, head.id(), arm, load(name)?)
+        }
+        Source::Catalog => (architecture::HEAD, MODEL, MODEL, catalog::load(name)?),
+    };
     let schedule = row["case"]["max_updates"].as_u64().unwrap() as usize;
     let observe = row["case"]["observe"].as_u64().unwrap() as usize;
     let batch = row["case"]["batch"].as_u64().unwrap() as usize;
@@ -70,13 +105,26 @@ pub fn run(arm: &str, name: &str, seed: u32, updates: usize, out: &Path) -> Resu
     }
     let mut cfg = task_config(&row, &task, true)?;
     cfg.head = head;
-    let protocol = json!({"model":head.id(), "case":name, "seed":seed, "updates":updates,
+    let mut protocol = json!({"model":model, "case":name, "seed":seed, "updates":updates,
         "schedule_updates":schedule, "observe":observe, "batch":batch, "selection":task.selection,
         "train_examples":task.splits["train"].len(), "heldout_examples":task.splits[&task.selection].len(),
         "suite_sha256":suite_hash(&row), "kernite_version":KERNITE_VERSION,
         "fp32_affines":precision::FP32_AFFINE_REFERENCE, "bf16":precision::BF16,
         "tf32_backward":precision::TF32_BACKWARD, "parameters":layout::independent_count(&cfg),
         "stored_parameters":layout::total_count(&cfg), "head_parameters":head.parameters(&cfg)});
+    let mut initialization = None;
+    if matches!(source, Source::Catalog) {
+        let weights = layout::initialize_model(&cfg, seed);
+        let bytes: Vec<_> = weights.iter().flat_map(|w| w.to_le_bytes()).collect();
+        protocol["initial_weights_sha256"] = json!(hash(&bytes));
+        protocol["shape"] =
+            json!({"width":cfg.width,"layers":cfg.layers,"heads":cfg.heads,"vocabulary":cfg.vocab});
+        protocol["ordered_inputs_sha256"] = json!({
+            "train":input_digest(&task.splits["train"]),
+            "held_out":input_digest(&task.splits[&task.selection])
+        });
+        initialization = Some(weights);
+    }
     let dir = out
         .join(arm)
         .join(name)
@@ -104,7 +152,7 @@ pub fn run(arm: &str, name: &str, seed: u32, updates: usize, out: &Path) -> Resu
     let gpu = if let Some(result) = &saved {
         result["gpu"].clone()
     } else {
-        let weights = layout::initialize_model(&cfg, seed);
+        let weights = initialization.unwrap_or_else(|| layout::initialize_model(&cfg, seed));
         let mut e = Engine::new(cfg, &weights)?;
         let mut training = Training::new(&e, seed, schedule)?;
         let held = &task.splits[&task.selection];

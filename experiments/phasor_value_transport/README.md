@@ -818,6 +818,37 @@ cargo +stable test --release --locked --test shift_diagnostics
 target/release/phasor-value-transport nv11-score runs/nv11/seed0/nv11-train-100000.f32 shifts
 ```
 
+## Matched CM121 tasks
+
+The fixed-budget catalog runner uses the frozen GPT plan for every task.
+For the six CM121 arithmetic tables, this gives 4,704 training pairs in
+the same order, 4,705 held-out pairs, a batch of 256 and an observation
+every 250 updates on the 100,000-update WSD schedule. Each run records
+its initial weight digest and separate digests of the ordered training
+and held-out inputs. Each task trains its own instance of the selected
+architecture with the original AdamW. The checkpoint replay scores every
+held-out pair. The 250-update cubic-product checkpoint reproduced the
+canonical contextual-rotation NV11 weights byte for byte.
+[E6 task definitions and CM121](../convex_stress_schatten_mixed/README.md)
+
+On seed 0, both contextual rotation and the learned stream reached
+4,705/4,705 on multiplication and on its affine shift at 3,000 updates.
+Both first crossed 99% on multiplication at 1,000. On the affine shift
+the first crossings were 1,500 for contextual rotation and 1,250 for
+the learned stream. Within each architecture, the two tasks started
+with the same weights and used the same inputs.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,context-rotation-read
+bin=./target/release/phasor-value-transport
+for name in $(jq -r '.tasks[]' ../convex_stress_schatten_mixed/protocol.json)
+do
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" catalog-bench "$name" 0 3000 runs/cm121
+done
+# Repeat the same command to authenticate the stored result and score its weights again.
+```
+
 ## GPT order discrimination
 
 The catalog adapter uses the native GPT mechanism-probe data port to load
