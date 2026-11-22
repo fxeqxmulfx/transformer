@@ -120,6 +120,23 @@ initialization. On arbitrary dense inputs the three tested directions
 agreed with finite differences and the first three positions were
 bit-identical with either suffix. Width 128 adds 16,384 learned weights.
 
+All three bounded checkpoints reached 28/28 on novel GPT blocks at
+update 750. Reloaded checkpoints scored as follows in seed order.
+
+| Architecture | First 28/28 update | Source test, out of 64 | Length 64, out of 64 |
+| --- | ---: | ---: | ---: |
+| Bounded recurrent read | 750 / 750 / 750 | 63 / 63 / 64 | 20 / 19 / 24 |
+| Learned stream read | 1,500 / 1,000 / 1,000 | 63 / 60 / 63 | 15 / 12 / 22 |
+| Original mean | 750 / 750 / 1,000 | 60 / 57 / 63 | 14 / 10 / 26 |
+
+Depth-one C-RASP seed 0 reached 31/32 by update 2,250 with the bounded
+read. Both controls had reached 32/32 at update 750. We stopped the
+broader bounded trial after this regression. On NV11 at update 3,000
+the bounded checkpoints classified 95 / 86 / 101 of 4,705 held-out
+pairs correctly. Extending seed 0 to 12,000 updates gave 85/4,705 for
+the bounded read and 89/4,705 for the matched original mean. Their
+training counts were 4,699/4,704 and 4,702/4,704.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.BoundedMemoryRead
 cd experiments/phasor_value_transport
