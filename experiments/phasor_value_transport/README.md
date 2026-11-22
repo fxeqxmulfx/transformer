@@ -172,6 +172,15 @@ additions in separate launches. To reproduce, apply the patch at
 `time_cells.sh` on addition, 20-bit parity, language L1 and depth-one C-RASP.
 [Tied gradient source change](trials/tied-embedding-gradients.patch)
 
+The transport-normalization trial writes two coefficients when a vocabulary
+mass is normalized. The original mass supplies the softmax derivative.
+The second includes the displacement from the current token to its read
+address and supplies the embedding multiply. Lean proves that each output
+coordinate agrees with the two-pass calculation, even at a circular wrap
+or a self read, and that changes in the normalized mass pass through the
+displacement unchanged.
+[Transport coefficient identities](../../src/Transformer/Phasor/TransportCoefficients.lean)
+
 The RMS and power-address timing trials can be rebuilt from their archived
 source changes. Build and save the FP32 control at `58bd7352` for RMS or
 `8f7ca6ef` for cached powers. In that checkout apply the corresponding

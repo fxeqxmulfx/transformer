@@ -12,6 +12,7 @@ public import Transformer.Phasor.TiedGradients
 public import Transformer.Phasor.PrefixValues
 public import Transformer.Phasor.SuccessorValues
 public import Transformer.Phasor.SuccessorDisplacement
+public import Transformer.Phasor.TransportCoefficients
 public import Transformer.Phasor.TransitionValues
 public import Transformer.Phasor.TransitionTable
 public import Transformer.Phasor.DisplacementGain
