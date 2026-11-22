@@ -816,6 +816,21 @@ Reproduce from either build with
 `PHASOR_EVAL_BATCH_CAP=4 "$bin" probes language-l3 "$seed" "$run_dir" extended`.
 The scorer emits the SHA-256 of the saved weights alongside the results.
 
+On the source L4 task, the same inclusive architecture reached 512/512 on
+length-128 validation at update 250 in every seed. The slowest run took
+40.53 seconds, within the short-tier limit. The checkpoints were trained
+separately on L4 using the original optimizer.
+
+| L4 whole sequences correct | Total | Seed 0 | Seed 1 | Seed 2 |
+| --- | ---: | ---: | ---: | ---: |
+| Original-length test | 512 | 511 | 512 | 512 |
+| Length-128 test | 512 | 512 | 512 | 512 |
+| Every ten-letter word | 1,024 | 991 | 1,024 | 1,021 |
+| Alternating tails at length 128 | 64 | 64 | 64 | 64 |
+
+Use `cell language-l4 SEED RUN_DIR` and `probes language-l4 SEED RUN_DIR`
+with the inclusive feature flag to reproduce the training and transfer tests.
+
 The modulated transition-table trial reads a capped count entry `x` and a
 current-token entry `y` at every position. Each hidden coordinate contributes
 `x + y + x*y` before normalization. Initializing the token table to zero
