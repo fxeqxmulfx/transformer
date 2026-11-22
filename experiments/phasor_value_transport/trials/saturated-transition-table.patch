@@ -1,0 +1,95 @@
+diff --git a/experiments/phasor_value_transport/Cargo.toml b/experiments/phasor_value_transport/Cargo.toml
+index 9215c0c4..445f36dc 100644
+--- a/experiments/phasor_value_transport/Cargo.toml
++++ b/experiments/phasor_value_transport/Cargo.toml
+@@ -33,6 +33,7 @@ closed-relation = ["successor-gain-three-quarters"]
+ closed-relation-boost = ["closed-relation"]
+ single-write-gain = ["closed-relation-boost"]
+ transition-table = ["single-write-gain"]
++saturated-transitions = ["transition-table"]
+ successor-hit-gain = ["successor-displacement"]
+ successor-hit-gain-seven-quarters = ["successor-hit-gain"]
+ successor-agreement = ["successor-hit-gain"]
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index 0a3755aa..9bd90275 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -47,7 +47,11 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
+         feature = "transition-table"
+     )) {
+         let transitions = prefix.windows(2).filter(|edge| edge[0] != edge[1]).count();
+-        let bucket = (transitions % p as usize) as u32;
++        let bucket = if cfg!(feature = "saturated-transitions") {
++            transitions.min(p as usize - 1)
++        } else {
++            transitions % p as usize
++        } as u32;
+         if cfg!(feature = "transition-table") {
+             keys.push(bucket);
+         } else {
+@@ -313,16 +317,24 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+         ("residual gain".to_owned(), gain_at..gain_at + 1),
+     ];
+     if cfg!(feature = "transition-table") && length == 17 {
+-        // There are 15 completed changes at the labelled row, or 3 modulo 12.
++        // Fifteen completed changes wrap to 3 or saturate at 11 in twelve buckets.
+         let offset = start + (pair_memory::TABLES - 1) * p * d;
+-        let wrapped = offset + 3 * d..offset + 4 * d;
++        let bucket = if cfg!(feature = "saturated-transitions") {
++            11
++        } else {
++            3
++        };
++        let active = offset + bucket * d..offset + (bucket + 1) * d;
+         let unused = offset + 4 * d..offset + 5 * d;
+-        if gradients[wrapped.clone()].iter().all(|&g| g == 0.)
+-            || gradients[unused.clone()].iter().any(|&g| g != 0.)
++        let table = &gradients[offset..offset + p * d];
++        if table
++            .chunks_exact(d)
++            .enumerate()
++            .any(|(i, row)| row.iter().any(|&g| g != 0.) != (i == bucket))
+         {
+             return Err("transition table gradient reached the wrong count bucket".into());
+         }
+-        directions.push(("wrapped transition count".to_owned(), wrapped));
++        directions.push(("active transition count".to_owned(), active));
+         directions.push(("unused transition count".to_owned(), unused));
+     }
+     if cfg!(feature = "closed-relation") && length == 8 {
+diff --git a/experiments/phasor_value_transport/src/pair_memory.rs b/experiments/phasor_value_transport/src/pair_memory.rs
+index 9b9857f0..6ab45fa2 100644
+--- a/experiments/phasor_value_transport/src/pair_memory.rs
++++ b/experiments/phasor_value_transport/src/pair_memory.rs
+@@ -103,6 +103,8 @@ pub const MODEL: &str = if LEARN_BONUS {
+     }
+ } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
+     "phasor-successor-hit-gain175-v1"
++} else if cfg!(feature = "saturated-transitions") {
++    "phasor-saturated-transition-table-v1"
+ } else if cfg!(feature = "transition-table") {
+     "phasor-independent-transition-table-v1"
+ } else if cfg!(feature = "single-write-gain") {
+@@ -389,12 +391,20 @@ impl PairMemory {
+                 )) {
+                     if pos == 0 {
+                         transitions = 0;
+-                    } else if pos >= 2 && tokens[row - 2] != tokens[row - 1] {
++                    } else if pos >= 2
++                        && tokens[row - 2] != tokens[row - 1]
++                        && (!cfg!(feature = "saturated-transitions") || transitions < p - 1)
++                    {
+                         transitions += 1;
+                     }
+                     if cfg!(feature = "transition-table") {
+                         let count_table = TABLES - 1;
+-                        keys[count_table] = (count_table * p + transitions % p) as u32;
++                        let bucket = if cfg!(feature = "saturated-transitions") {
++                            transitions
++                        } else {
++                            transitions % p
++                        };
++                        keys[count_table] = (count_table * p + bucket) as u32;
+                     } else {
+                         let squared_product = PAIR_TABLES - 1;
+                         let base = squared_product * p;

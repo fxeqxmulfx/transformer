@@ -703,6 +703,16 @@ all counts below the last address remain distinct, and that modular and
 capped tables produce identical reads and gradients on batches below capacity.
 [Capped counter and table identities](../../src/Transformer/Phasor/SaturatedTransitions.lean)
 
+Fresh capped-counter training produced the same L2 weights and observation
+histories as the modular counter in every seed. It scored 512/512 on each
+source test, 1,008 / 992 / 992 on the ten-letter words and 63 / 62 / 62 on
+the long alternating tails. The FP32 oracle checked 124 directions and
+verified that the gradient at 15 changes entered bucket 11 of 12.
+To repeat, apply the patch at `10192529` and build with
+`fp32-affine-reference,saturated-transitions`. Run `probes language-l2`
+on each trained checkpoint for both additional evaluation sets.
+[Capped counter source](trials/saturated-transition-table.patch)
+
 The inclusive transition-table trial counts changes up to and including
 the current token. On binary words with a distinct start token, that
 counter gives the exact number of blocks before saturation. Lean proves
