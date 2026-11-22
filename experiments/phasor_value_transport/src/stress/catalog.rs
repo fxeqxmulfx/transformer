@@ -192,7 +192,7 @@ pub(super) fn load(name: &str) -> Result<(Value, Task)> {
             .iter()
             .find(|r| r["case"] == case)
             .ok_or("arithmetic configuration differs from original plan")?;
-        let data = dataset::build(entry)?.ok_or("missing catalog split")?;
+        let data = dataset::build_catalog(entry)?;
         (
             arithmetic_task(data),
             entry["history"]["data_fingerprints"].clone(),

@@ -51,6 +51,12 @@ full budget if no crossing has occurred. Repeating the command reloads
 and scores the first and final weights, including available test splits.
 Training uses Phasor's original WSD AdamW throughout.
 
+The catalog data adapter authenticates all 54 original arithmetic cases,
+including the fixed random table, four swapped intervals and random
+half-set. Each reconstructed train and validation tensor matches its
+original hash before examples reach the experiment.
+[Arithmetic data and source registry](../convex_stress_arithmetic_data/README.md)
+
 On modular addition at seed 0, the broader plan's 250-update cadence
 first observed 99% at update 1,000 (4,704/4,705). The retention checkpoint
 at 1,500 scored 4,705/4,705. Both weight digests matched independently

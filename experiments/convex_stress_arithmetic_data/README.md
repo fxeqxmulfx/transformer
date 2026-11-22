@@ -1,5 +1,17 @@
 # Original arithmetic data for the expanded stress tests
 
+The GPT catalog runner can now reconstruct all 54 arithmetic and powered
+division tasks. The original registry contains the SplitMix64 seeds and
+sampling order for the random answer table, the four swapped intervals
+and the random half-set. `dataset::build_catalog` ports those generators
+in Rust. All twelve additional train and validation tensor hashes match
+the historical records, and the other 48 datasets match the frozen port
+row for row. Run `cargo +stable test --offline --locked` in this directory
+to check the complete catalog and the historical freeze.
+[Original task generators](https://github.com/fxeqxmulfx/grokking/blob/308912f2d6b736e4a061e72be8c32c0e72ac687a/experiments/training/src/training/domain/tasks.py)
+
+## Task348 data freeze
+
 Task348 prepares the54 arithmetic and powered-division cases from the original
 165-case catalog. It preserves22 original35 controls and32 additional cases.
 This executable prepares data only; it trains no model and claims no accuracy.
@@ -19,7 +31,7 @@ including a zero numerator. Integer floor, absolute distance and max retain
 their original meanings. The old22 cases also match the independently written,
 reviewed native oracle in `convex_stress/src/vendor/arithmetic_data.rs`.
 
-The original registry path under `rust_projects/grokking` is absent locally.
+At the time of the freeze, the original registry path under `rust_projects/grokking` was absent locally.
 The pinned DiffGPT task inventory retains exact expressions for the supported
 functions, and the catalog supplies the parity-cubic definition. Six helpers'
 fixed data are unavailable: the random table, four swapped interval sets and

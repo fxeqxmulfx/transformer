@@ -28,6 +28,28 @@ fn all54_source_cases_keep_exact_historical_fingerprints_or_explicit_refusals() 
     Ok(())
 }
 #[test]
+fn recovered_registry_matches_both_original_tensors_on_all_six_cases() -> Result<()> {
+    let mut recovered = 0;
+    for row in inventory::cases()? {
+        let full = dataset::build_catalog(&row)?;
+        if let Some(frozen) = dataset::build(&row)? {
+            assert_eq!(full, frozen);
+        } else {
+            recovered += 1;
+            assert_eq!(full.training.rows.len(), 4704);
+            assert_eq!(full.validation.len(), 4705);
+            for split in ["train", "validation"] {
+                let mut wrong = row.clone();
+                wrong["history"]["data_fingerprints"][split] = json!("different fixed table");
+                assert!(dataset::build_catalog(&wrong).is_err());
+            }
+        }
+    }
+    assert_eq!(recovered, 6);
+    Ok(())
+}
+
+#[test]
 fn all22_existing_cases_match_independent_old_oracle_and_masks() -> Result<()> {
     let previous: Value = serde_json::from_str(ORIGINAL35)?;
     let cases = inventory::cases()?;

@@ -13,6 +13,7 @@ pub fn hash(bytes: &[u8]) -> String {
 pub mod dataset;
 pub mod inventory;
 pub mod oracle;
+mod registry;
 // Preserve the reviewed original22 arithmetic split, fingerprint and oracle
 // implementation. Independent tests compare the newly ported oracle to it.
 // Its historical RNG method returns a word, not an Iterator item.

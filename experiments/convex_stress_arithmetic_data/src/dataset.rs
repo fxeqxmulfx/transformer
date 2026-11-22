@@ -47,9 +47,23 @@ pub fn build(row: &Value) -> Result<Option<Dataset>> {
     {
         return Err("original case, seed or criterion changed".into());
     }
-    let Some(mut rows) = oracle::table(&case["data"])? else {
-        return Ok(None);
-    };
+    oracle::table(&case["data"])?
+        .map(|rows| split_and_verify(row, rows))
+        .transpose()
+}
+
+/// Prepare the full GPT catalog, including the six fixed tables recovered
+/// from the original grokking registry after the Task348 data freeze.
+pub fn build_catalog(row: &Value) -> Result<Dataset> {
+    if let Some(dataset) = build(row)? {
+        return Ok(dataset);
+    }
+    split_and_verify(row, crate::registry::table(&row["case"]["data"])?)
+}
+
+fn split_and_verify(row: &Value, mut rows: Vec<[u32; 3]>) -> Result<Dataset> {
+    let case = &row["case"];
+    let old = &row["history"];
     reference::SplitMix64(1).shuffle(&mut rows);
     let mid = rows.len() / 2;
     let d = Dataset {
@@ -72,5 +86,5 @@ pub fn build(row: &Value) -> Result<Option<Dataset>> {
             .into());
         }
     }
-    Ok(Some(d))
+    Ok(d)
 }
