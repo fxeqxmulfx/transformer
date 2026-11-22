@@ -57,15 +57,61 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
     Ok(())
 }
 
+// Bind a named training checkpoint to the observation that saved it. Several
+// learned architectures have the same weight count and distinct forward maps.
+fn recorded_nv11(path: &Path, digest: &str) -> Result<Option<Value>> {
+    let stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("");
+    let Some((arm, slot)) = ["nv11-train", "shared-values"]
+        .into_iter()
+        .find_map(|arm| stem.strip_prefix(arm)?.strip_prefix('-').map(|s| (arm, s)))
+    else {
+        return Ok(None);
+    };
+    let log = path.with_file_name(format!("{arm}.jsonl"));
+    if !log.try_exists()? {
+        return Ok(None);
+    }
+    let step = if slot == "first-exact" {
+        None
+    } else if let Ok(n) = slot.parse::<u64>() {
+        Some(n)
+    } else {
+        return Ok(None);
+    };
+    use std::io::{BufRead, BufReader};
+    for line in BufReader::new(fs::File::open(&log)?).lines() {
+        let row: Value = serde_json::from_str(&line?)?;
+        let selected = match step {
+            Some(n) => row["step"] == n,
+            None => row["train"]["correct"] == 4704 && row["held_out"]["correct"] == 4705,
+        };
+        if !selected {
+            continue;
+        }
+        if row["arm"] != arm || row["weights_sha256"] != digest {
+            return Err("NV11 weight digest differs from the named training observation".into());
+        }
+        if (arm == "nv11-train" || row.get("model").is_some())
+            && row["model"] != architecture::MODEL
+        {
+            return Err("NV11 checkpoint was trained with a different architecture".into());
+        }
+        return Ok(Some(row));
+    }
+    Err("missing named NV11 checkpoint in the training observations".into())
+}
+
 /// Score all 9,409 pairs using just the two input tokens in the forward pass.
 /// Keep the smallest correct-class advantage over every wrong class, including
 /// a negative margin when the checkpoint misclassifies an input.
 pub fn nv11_scores(path: &Path) -> Result<()> {
+    let bytes = fs::read(path)?;
+    let digest = hash(&bytes);
+    let recorded = recorded_nv11(path, &digest)?;
     let data = cubic_data()?;
     let mut cfg = config(BATCH)?;
     cfg.head = architecture::HEAD;
     let p = cfg.vocab;
-    let bytes = fs::read(path)?;
     let mut e = load(&bytes, cfg)?;
     let mut split = |rows: &[[u32; 3]]| -> Result<Value> {
         let mut correct = 0usize;
@@ -99,10 +145,20 @@ pub fn nv11_scores(path: &Path) -> Result<()> {
             "closest_pair_target_rival":closest}),
         )
     };
+    let training = split(&data.training.rows)?;
+    let held_out = split(&data.validation)?;
+    if let Some(row) = recorded
+        && (training["correct"] != row["train"]["correct"]
+            || held_out["correct"] != row["held_out"]["correct"]
+            || training["examples"] != row["train"]["examples"]
+            || held_out["examples"] != row["held_out"]["examples"])
+    {
+        return Err("reloaded NV11 scores differ from the named training observation".into());
+    }
     println!(
         "{}",
-        json!({"training":split(&data.training.rows)?,"held_out":split(&data.validation)?,
-            "weights_sha256":hash(&bytes),"scored_with_model":architecture::MODEL,
+        json!({"training":training,"held_out":held_out,
+            "weights_sha256":digest,"scored_with_model":architecture::MODEL,
             "scored_with_kernite":KERNITE_VERSION})
     );
     Ok(())

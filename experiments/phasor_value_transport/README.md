@@ -1703,12 +1703,13 @@ The optional final argument of `shared-values` sets the observation window
 within the original 100,000-step schedule. Each saved observation records
 the SHA-256 of its exact weight bytes and the shared architecture identifier.
 `nv11-score` returns the file digest, scoring architecture and Kernite
-version alongside the exhaustive scores. Match these fields against the
-training observation to verify a saved checkpoint. The trainer also saves
-the first checkpoint
-that classifies the entire NV11 table correctly. `nv11-score` takes a
-shared-value checkpoint, masks all training targets in the forward pass
-and measures the minimum correct-class margin on each split.
+version alongside the exhaustive scores. For a named training checkpoint
+beside its observation log, the scorer checks the saved digest and
+recorded architecture, recomputes both splits, and checks their exact
+counts. The `first-exact` filename selects the earliest recorded 9,409/9,409
+score. A standalone weights file can also be scored with the executable
+for its architecture. The scorer masks the targets and reports the minimum
+correct-class margin on each split.
 
 The `shared-check` command compares logits with an independent scalar FP64
 forward evaluation. It checks the tied embedding, gain and all 17 table
