@@ -105,6 +105,17 @@ for arm in successor-displacement successor-displacement-quarter; do
 done
 ```
 
+## Counting completed transitions
+
+The transition-count trial shifts the squared-product table address by the
+number of unequal adjacent tokens strictly before the current read. For
+position `i`, it counts edges ending no later than `i−1`. It uses the
+incumbent's 17 learned tables and its original gain initialization. The
+counter resets at the start of each sequence and uses token equality across
+all vocabularies. Lean proves the chunk-composition law, invariance under
+injective relabeling, and exact agreement of all logits whenever the observed
+prefix is constant. [Transition-count proofs](../../src/Transformer/Phasor/TransitionValues.lean)
+
 ## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
