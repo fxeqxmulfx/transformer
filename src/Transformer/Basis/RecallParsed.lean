@@ -154,4 +154,39 @@ theorem recallAnswer_validated_last_write (s : RecallSpec) (tokens : Tokens) (an
 
 example : recallAnswer easyRecall (bindingPrefix 292 293) = some 292 := by decide
 
+/-- Prefixing the query region with arbitrarily many valid value tokens
+preserves its answer, including on repeated queries or an empty region.
+Source: the MQAR.targets post-table scan in synthetic/retrieval.py at cbafbe9. -/
+theorem recallQueries_prepend_values (s : RecallSpec) (writes : List (ℤ × ℤ))
+    (seen filler region : Tokens) (hf : ∀ v ∈ filler, ValueToken s v) :
+    recallQueries s writes seen (filler ++ region) = recallQueries s writes seen region := by
+  induction filler with
+  | nil => rfl
+  | cons v tail ih =>
+    obtain ⟨hv, ht⟩ := List.forall_mem_cons.mp hf
+    have hk : ¬KeyToken s v := fun h => keyToken_not_value s v h hv
+    simp only [List.cons_append, recallQueries, ite_eq_right hk, ite_eq_left hv, ih ht]
+
+example (region : Tokens) : recallQueries easyRecall [(36, 292)] [] ([295, 292] ++ region) =
+    recallQueries easyRecall [(36, 292)] [] region :=
+  recallQueries_prepend_values _ _ _ _ _ (by decide)
+
+/-- Inserting a value-only gap immediately after the full serialized write
+table preserves every subsequent query-prefix target. This holds with the
+easy uniqueness rule and with hard-mode overwrites.
+Source: Basis MQAR.targets in synthetic/retrieval.py at cbafbe9. -/
+theorem recallAnswer_insert_gap (s : RecallSpec) (writes : List (ℤ × ℤ)) (filler region : Tokens)
+    (hn : writes.length = s.pairs) (hw : ∀ row ∈ writes, KeyToken s row.1 ∧ ValueToken s row.2)
+    (hf : ∀ v ∈ filler, ValueToken s v) :
+    recallAnswer s (bos :: (recallTableTokens writes ++ (filler ++ region))) =
+      recallAnswer s (bos :: (recallTableTokens writes ++ region)) := by
+  simp only [recallAnswer, ← hn, recallWrites_table s writes _ hw,
+    recallQueries_prepend_values s writes [] filler region hf]
+
+example (region : Tokens) :
+    recallAnswer ⟨256, 2, true⟩ ([1, 36, 292, 36, 300] ++ ([301, 300] ++ region)) =
+      recallAnswer ⟨256, 2, true⟩ ([1, 36, 292, 36, 300] ++ region) :=
+  recallAnswer_insert_gap ⟨256, 2, true⟩ [(36, 292), (36, 300)] [301, 300] region
+    rfl (by decide) (by decide)
+
 end Transformer.Basis
