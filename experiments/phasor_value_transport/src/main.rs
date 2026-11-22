@@ -10,17 +10,21 @@ mod addresses;
 mod architecture;
 mod causal_values;
 mod frequency_read;
+mod head;
 mod learned_checks;
 mod learned_read;
 mod pair_checks;
 mod pair_memory;
 mod pair_ops;
+mod recurrent;
 mod relation_paths;
 mod relation_support;
+mod transition;
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
 mod checks;
 mod closed_checks;
+mod memory_checks;
 mod snapshot;
 mod stress;
 
@@ -47,7 +51,7 @@ fn config(batch: usize) -> Result<Config> {
         warmup: schedule::Schedule::new(BUDGET)?.warmup,
         architecture: "complex-phase-score-lerope".into(),
         phase_optimizer: false,
-        shared_values: false,
+        head: head::Head::Original,
     })
 }
 
@@ -121,7 +125,10 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
     }
     let data = cubic_data()?;
     let mut cfg = config(BATCH)?;
-    cfg.shared_values = arm == "shared-values" || arm == "nv11-train";
+    let shared_run = matches!(arm, "shared-values" | "nv11-train");
+    if shared_run {
+        cfg.head = architecture::HEAD;
+    }
     let initial = layout::initialize_model(&cfg, seed);
     let digest = arithmetic::hash(
         &initial
@@ -156,18 +163,16 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
                 "train":train,"held_out":held,"zero_offset_held_out":ablated,
                 "fp32_affines":precision::FP32_AFFINE_REFERENCE,"gpu":e.cuda.name(),
                 "kernite_version":KERNITE_VERSION});
-            if e.config.shared_values {
+            if shared_run {
                 row["model"] = json!(architecture::MODEL);
             }
-            if (layer.is_some() || e.config.shared_values)
-                && (completed == OBSERVE || completed == window)
-            {
+            if (layer.is_some() || shared_run) && (completed == OBSERVE || completed == window) {
                 row["weights_sha256"] = json!(snapshot::save(
                     &e,
                     &out.join(format!("{arm}-{completed}.f32"))
                 )?);
             }
-            if e.config.shared_values
+            if shared_run
                 && !saved_exact
                 && row["train"]["correct"] == data.training.rows.len()
                 && row["held_out"]["correct"] == data.validation.len()
@@ -218,6 +223,9 @@ fn main() -> Result<()> {
             Err("this historical command requires an explicit historical architecture".into()),
         [op, width] if architecture::RAW && op == "shared-check" =>
             learned_checks::run(Some(width.parse()?)),
+        [op] if op == "memory-check" => memory_checks::run(),
+        [op, head, name, seed, updates, out] if op == "memory-bench" =>
+            stress::benchmark::run(head, name, seed.parse()?, updates.parse()?, Path::new(out)),
         [op] if op == "check" => checks::run(),
         [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(None),
         [op, width] if op == "shared-check" => pair_checks::run(Some(width.parse()?)),
@@ -253,6 +261,6 @@ fn main() -> Result<()> {
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes} | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE | predict FILE [VOCAB] A B".into()),
     }
 }

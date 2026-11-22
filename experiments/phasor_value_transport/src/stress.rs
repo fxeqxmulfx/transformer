@@ -5,6 +5,7 @@ use data::{Example, Task};
 use std::collections::BTreeMap;
 
 pub mod alignment;
+pub mod benchmark;
 mod catalog;
 mod language_probes;
 pub mod report;
@@ -52,7 +53,7 @@ fn task_config(row: &Value, task: &Task, reserve_training_batch: bool) -> Result
         })
         .max()
         .ok_or("empty task")?;
-    cfg.shared_values = true;
+    cfg.head = architecture::HEAD;
     Ok(cfg)
 }
 
@@ -113,7 +114,7 @@ pub fn routes() -> Result<()> {
             row["tier"].as_str().unwrap(),
             cfg.max_length,
             cfg.vocab,
-            cfg.shared_values
+            cfg.head == architecture::HEAD
         );
     }
     Ok(())
@@ -209,11 +210,8 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
     }
     let parameters = layout::initialize_model(&cfg, seed);
     let mut e = Engine::new(cfg, &parameters)?;
-    let mut opt = optimizer::Optimizer::new(&e, budget)?;
-    let mut rng = random::Random::new(seed.checked_add(10000).ok_or("seed overflow")?);
-    let mut epoch = Vec::new();
-    let (mut offset, mut seen, mut previous) = (0, 0, 0);
-    let mut packed = metrics::Packed::default();
+    let mut training = Training::new(&e, seed, budget)?;
+    let mut previous = 0;
     // Restart an interrupted cell from its fixed seed and publish result.json
     // last. A completed cell is verified above before any file can change.
     let mut history = fs::OpenOptions::new()
@@ -227,7 +225,7 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
             let correct = scores["exact"].as_u64().ok_or("missing exact count")? as usize;
             let pass = correct * 100 >= 99 * held.len();
             let point = json!({"case":name,"tier":row["tier"],"seed":seed,"step":step,
-                "examples_seen":seen,"correct":correct,"total":held.len(),"pass":pass});
+                "examples_seen":training.seen,"correct":correct,"total":held.len(),"pass":pass});
             writeln!(history, "{point}")?;
             history.flush()?;
             if pass || step == budget {
@@ -256,21 +254,60 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
             }
             previous = step;
         }
-        if offset == epoch.len() {
-            epoch = (0..train.len() as u32).collect();
-            rng.shuffle(&mut epoch);
-            offset = 0;
-        }
-        let end = (offset + batch).min(epoch.len());
-        let indices = &epoch[offset..end];
-        packed.fill(train, indices);
-        e.forward(&packed.tokens, &packed.labels, indices.len(), packed.length)?;
-        e.backward(indices.len(), packed.length)?;
-        opt.step(&e, step)?;
-        seen += indices.len();
-        offset = end;
+        training.update(&mut e, train, batch, step)?;
     }
     unreachable!()
+}
+
+/// Both stopping protocols consume the same shuffled epochs, including short final batches.
+struct Training {
+    optimizer: optimizer::Optimizer,
+    rng: random::Random,
+    epoch: Vec<u32>,
+    offset: usize,
+    seen: usize,
+    packed: metrics::Packed,
+}
+
+impl Training {
+    fn new(engine: &Engine, seed: u32, schedule_budget: usize) -> Result<Self> {
+        Ok(Self {
+            optimizer: optimizer::Optimizer::new(engine, schedule_budget)?,
+            rng: random::Random::new(seed.checked_add(10_000).ok_or("seed overflow")?),
+            epoch: Vec::new(),
+            offset: 0,
+            seen: 0,
+            packed: metrics::Packed::default(),
+        })
+    }
+
+    fn update(
+        &mut self,
+        engine: &mut Engine,
+        train: &[Example],
+        batch: usize,
+        step: usize,
+    ) -> Result<()> {
+        if self.offset == self.epoch.len() {
+            self.epoch = (0..train.len() as u32).collect();
+            self.rng.shuffle(&mut self.epoch);
+            self.offset = 0;
+        }
+        let end = (self.offset + batch).min(self.epoch.len());
+        let indices = &self.epoch[self.offset..end];
+        self.packed.fill(train, indices);
+        engine.forward(
+            &self.packed.tokens,
+            &self.packed.labels,
+            indices.len(),
+            self.packed.length,
+        )?;
+        engine.backward(indices.len(), self.packed.length)?;
+        self.optimizer.step(engine, step)?;
+        self.seen += indices.len();
+        self.offset = end;
+        Ok(())
+    }
 }
 
 /// Re-score a saved model using the pinned split and decoder. For pair tasks

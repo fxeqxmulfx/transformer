@@ -17,9 +17,7 @@ impl ValueLayer {
         let rows = e.config.max_batch * e.config.max_length;
         let (d, p) = (e.config.width, e.config.vocab);
         Ok(Self {
-            memory: e
-                .config
-                .shared_values
+            memory: (e.config.head == crate::head::Head::Relations)
                 .then(|| crate::pair_memory::PairMemory::new(&e.cuda, &e.config))
                 .transpose()?,
             addresses: crate::addresses::kernels::Kernels::load(&e.cuda)?,
@@ -345,18 +343,28 @@ impl ValueLayer {
 }
 
 impl Engine {
-    fn enable_shared_values(&mut self) -> Result<()> {
-        if self.config.shared_values && crate::architecture::STREAM_READ {
-            if self.mhc.is_none() {
-                return Err("the learned readout requires the four Phasor streams".into());
+    fn enable_output_head(&mut self) -> Result<()> {
+        use crate::head::Head;
+        match self.config.head {
+            Head::Original => {}
+            Head::Stream => {
+                if self.mhc.is_none() {
+                    return Err("the learned readout requires the four Phasor streams".into());
+                }
+                self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
             }
-            self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
-        } else if self.config.shared_values && !crate::architecture::RAW {
-            self.shared_layer = Some(ValueLayer::new(self)?);
+            Head::Relations => self.shared_layer = Some(ValueLayer::new(self)?),
+            Head::Transition | Head::Recurrent =>
+                self.hidden_layer = Some(hidden_layer::HiddenLayer::new(self)?),
         }
         Ok(())
     }
-    fn project_shared_values(&mut self, tokens: &[u32], batch: usize, length: usize) -> Result<()> {
+    fn project_output(&mut self, tokens: &[u32], batch: usize, length: usize) -> Result<()> {
+        let rows = batch * length;
+        if let Some(memory) = &self.hidden_layer {
+            return memory.forward(self, rows, length);
+        }
+        self.linear(self.logits.ptr(), self.last.ptr(), 0, rows, self.config.vocab, self.config.width)?;
         if let Some(layer) = &mut self.shared_layer {
             layer.memory.as_mut().unwrap().prepare(tokens, length)?;
             self.shared_layer
@@ -365,6 +373,15 @@ impl Engine {
                 .project(self, batch, length, true)?;
         }
         Ok(())
+    }
+    fn output_backward(&self, rows: usize, length: usize) -> Result<()> {
+        if let Some(memory) = &self.hidden_layer {
+            return memory.backward(self, rows, length);
+        }
+        self.linear_back(
+            self.dlast.ptr(), self.dlogits.ptr(), self.last.ptr(), 0,
+            rows, self.config.vocab, self.config.width,
+        )
     }
     pub fn backward(&mut self, batch: usize, length: usize) -> Result<()> {
         if let Some(layer) = &mut self.shared_layer {

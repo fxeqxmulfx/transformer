@@ -120,7 +120,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     control.forward(&tokens, &labels, 3, length)?;
     let original = control.logits.read()?;
     drop(control);
-    cfg.shared_values = true;
+    cfg.head = architecture::HEAD;
     let mut parameters = layout::initialize_model(&cfg, 2);
     let start = architecture::start(&cfg);
     let end = start + architecture::parameters(&cfg);

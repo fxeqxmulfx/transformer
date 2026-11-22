@@ -55,6 +55,53 @@ test, 56/64 at length 32 and 41/64 at length 64. On NV11 the learned
 readout reached 4,696/4,704 training pairs but only 86/4,705 held-out
 pairs at update 3,000 in seed 0.
 
+## Representation-only causal memory
+
+How much of the closed-relation head's learning speed and length transfer can
+Phasor recover from its causal hidden states? All four arms use the original
+backbone. Let `h[t]` be its RMS-normalized mean of four streams and `E` its
+tied embedding. Both learned heads return logits `E (h[t] + O r[t])`.
+
+| Head | Read at position `t` |
+| --- | --- |
+| Original Phasor | Projects `h[t]` directly with `E`. |
+| Closed relation | Uses the historical 17 trainable tables, token addresses and closed-relation gain. |
+| Transition attention | Scores each key `K h[i]` with `Q h[t]` by a dot product divided by √32. Softmax over `i + 1 < t` weights the values `V h[i+1]`. An empty memory returns zero. |
+| Recurrent prefix | Computes `s[t] = tanh(A h[t]) ⊙ s[t−1] + tanh(B h[t])` and reads `r[t] = sigmoid(C h[t]) ⊙ s[t]`. The initial state is zero in each sequence. |
+
+The two learned heads have 32 memory coordinates, four bias-free projections
+and the same parameter count. Their weights start from independent Gaussian
+draws with variance equal to the reciprocal of the input dimension. A separate
+random stream preserves the paired backbone initialization and minibatch order.
+Masked cross-entropy trains the backbone, tied embedding and head jointly
+through the pinned independent-coordinate AdamW optimizer.
+
+The benchmark uses seeds 0, 1 and 2, the original splits, shuffled epochs and
+short final batches. All arms take 8,000 updates. WSD retains its 30,000-update
+horizon for binding and 100,000 for the other cases. Complete held-out scoring
+runs at initialization and every 64 updates for binding or 250 for the other
+tasks. The first 99% score is the first **observed** crossing. Training continues
+to the common budget even after a crossing. A fresh engine loads the update-8,000
+weights and scores the held-out split and each available test split. Parity
+requires greedy generation of the answer bit and EOS. Binding and lookup
+require a correct prediction at every labeled query in the sequence. NV11
+scores the answer at the second operand.
+
+With the [pinned DiffGPT checkout](../rerope/README.md#build-and-commands)
+available under `.lake/reproduction/gpt`, run from the repository root.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference
+./target/release/phasor-value-transport memory-check
+./run_memory_benchmark.sh runs/hidden-memory-8000
+```
+
+The script writes each cell's observations, checkpoint and scores under its
+head, case and seed. Repeating it verifies the saved weights, observation
+cadence, first crossing and replayed scores. For one cell, use
+`memory-bench HEAD CASE SEED UPDATES RUN_DIR` with the same binary.
+
 ## Historical benchmark with hand-written features
 
 The closed-relation Phasor passed all **159 GPT task/seed runs** across 41 short

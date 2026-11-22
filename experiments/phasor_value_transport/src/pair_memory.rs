@@ -150,7 +150,7 @@ pub const MODEL: &str = if LEARN_BONUS {
 };
 
 pub fn parameters(cfg: &Config) -> usize {
-    if cfg.shared_values {
+    if cfg.head == crate::head::Head::Relations {
         TABLES * cfg.vocab * cfg.width
             + 1
             + usize::from(LEARN_BONUS)
@@ -164,16 +164,14 @@ pub fn parameters(cfg: &Config) -> usize {
     }
 }
 
-pub fn start(cfg: &Config) -> usize {
-    crate::layout::score_offset(cfg) + crate::layout::score_count(cfg)
-}
+pub use crate::architecture::start;
 
 pub fn gain(cfg: &Config) -> usize {
     start(cfg) + TABLES * cfg.vocab * cfg.width
 }
 
 pub fn initialize_gains(cfg: &Config, parameters: &mut [f32]) {
-    if cfg.shared_values {
+    if cfg.head == crate::head::Head::Relations {
         let index = gain(cfg);
         parameters[index] = INITIAL_GAIN;
         if LEARN_BONUS {

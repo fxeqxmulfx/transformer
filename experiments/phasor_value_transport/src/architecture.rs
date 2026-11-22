@@ -1,5 +1,5 @@
 //! Parameter layout and identity of the architecture used for every stress case.
-use crate::{engine::Config, layout, pair_memory};
+use crate::{engine::Config, head::Head, layout, pair_memory};
 use serde_json::{Value, json};
 
 // Historical binary selectors are explicit. Precision and the task never select a model.
@@ -9,6 +9,13 @@ pub const RAW: bool = !cfg!(any(
     feature = "prefix-sum"
 ));
 pub const STREAM_READ: bool = RAW && !cfg!(feature = "original-stream-mean");
+pub const HEAD: Head = if STREAM_READ {
+    Head::Stream
+} else if RAW {
+    Head::Original
+} else {
+    Head::Relations
+};
 pub const MODEL: &str = if STREAM_READ {
     "phasor-learned-stream-read-v1"
 } else if RAW {
@@ -22,20 +29,7 @@ pub fn start(cfg: &Config) -> usize {
 }
 
 pub fn parameters(cfg: &Config) -> usize {
-    if !RAW {
-        return pair_memory::parameters(cfg);
-    }
-    if cfg.shared_values && STREAM_READ {
-        4 * cfg.width
-    } else {
-        0
-    }
-}
-
-pub fn initialize(cfg: &Config, parameters: &mut [f32]) {
-    if !RAW {
-        pair_memory::initialize_gains(cfg, parameters);
-    }
+    cfg.head.parameters(cfg)
 }
 
 pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {

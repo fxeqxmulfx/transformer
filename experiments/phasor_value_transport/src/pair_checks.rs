@@ -159,7 +159,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
     let targets = labels.iter().filter(|&&label| label != u32::MAX).count();
     base.forward(&tokens, &labels, batch, length)?;
     let scores = base.logits.read()?;
-    cfg.shared_values = true;
+    cfg.head = crate::head::Head::Relations;
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
@@ -425,7 +425,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
 // Rebuild the adjoint after intervening inference at a different batch shape.
 fn check_table_transpose() -> Result<()> {
     let mut cfg = config(2)?;
-    cfg.shared_values = true;
+    cfg.head = crate::head::Head::Relations;
     cfg.max_length = 4;
     let (start, gain) = (pair_memory::start(&cfg), pair_memory::gain(&cfg));
     let weights = layout::initialize_model(&cfg, 0);
@@ -493,7 +493,7 @@ pub fn run(width: Option<usize>) -> Result<()> {
         profile(36, 18, 128)?;
     }
     let mut cfg = config(8)?;
-    cfg.shared_values = true;
+    cfg.head = crate::head::Head::Relations;
     let (p, d) = (cfg.vocab, cfg.width);
     let mut theta = layout::initialize_model(&cfg, 0);
     theta[..p * d].fill(0.);

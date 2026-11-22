@@ -27,7 +27,9 @@ fn load(bytes: &[u8], cfg: Config) -> Result<Engine> {
 
 pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result<()> {
     let mut cfg = config(1)?;
-    cfg.shared_values = architecture::RAW;
+    if architecture::RAW || vocabulary.is_some() {
+        cfg.head = architecture::HEAD;
+    }
     if let Some(vocab) = vocabulary {
         if vocab == 0
             || vocab > u32::MAX as usize
@@ -36,7 +38,6 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
             return Err("vocabulary outside the checkpoint's embedding capacity".into());
         }
         cfg.vocab = vocab;
-        cfg.shared_values = true;
     }
     let mut e = load(&fs::read(path)?, cfg)?;
     e.forward(&[a, b], &[u32::MAX, u32::MAX], 1, 2)?;
@@ -62,7 +63,7 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
 pub fn nv11_scores(path: &Path) -> Result<()> {
     let data = cubic_data()?;
     let mut cfg = config(BATCH)?;
-    cfg.shared_values = true;
+    cfg.head = architecture::HEAD;
     let p = cfg.vocab;
     let bytes = fs::read(path)?;
     let mut e = load(&bytes, cfg)?;

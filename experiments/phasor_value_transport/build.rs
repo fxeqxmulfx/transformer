@@ -157,23 +157,27 @@ fn main() {
     for (from, to) in [
         (
             "pub phase_optimizer: bool,",
-            "pub phase_optimizer: bool,\n    pub shared_values: bool,",
+            "pub phase_optimizer: bool,\n    pub head: crate::head::Head,",
         ),
         (
             "pub struct Engine {",
-            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,",
+            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    hidden_layer: Option<hidden_layer::HiddenLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,",
         ),
         (
             "let mut engine = Self {",
-            "let mut engine = Self {\n            shared_layer: None,\n            stream_read: None,",
+            "let mut engine = Self {\n            shared_layer: None,\n            hidden_layer: None,\n            stream_read: None,",
         ),
         (
             "        Ok(engine)",
-            "        engine.enable_shared_values()?;\n        Ok(engine)",
+            "        engine.enable_output_head()?;\n        Ok(engine)",
         ),
         (
-            "        let normalizer = labels",
-            "        self.project_shared_values(tokens, batch, length)?;\n        let normalizer = labels",
+            "self.linear(\n            self.logits.ptr(),\n            self.last.ptr(),\n            0,\n            r,\n            self.config.vocab,\n            w,\n        )?;",
+            "self.project_output(tokens, batch, length)?;",
+        ),
+        (
+            "self.linear_back(\n            self.dlast.ptr(),\n            self.dlogits.ptr(),\n            self.last.ptr(),\n            0,\n            r,\n            self.config.vocab,\n            w,\n        )?;",
+            "self.output_backward(r, length)?;",
         ),
         (
             "pub fn backward(&self, batch: usize, length: usize)",
@@ -202,7 +206,7 @@ fn main() {
     assert_eq!(layout.matches(initialize).count(), 1);
     let layout = layout.replace(
         initialize,
-        "p.resize(total_count(cfg), 0.);\n    crate::architecture::initialize(cfg, &mut p);",
+        "p.resize(total_count(cfg), 0.);\n    cfg.head.initialize(cfg, seed, &mut p);",
     );
     let offset = "score_offset(cfg) + score_count(cfg)";
     assert_eq!(layout.matches(offset).count(), 1);
@@ -220,6 +224,9 @@ fn main() {
         engine.push_str(&format!("\ninclude!({extension:?});\n"));
         println!("cargo:rerun-if-changed={file}");
     }
+    let hidden = Path::new("src/hidden_layer.rs").canonicalize().unwrap();
+    engine.push_str(&format!("#[path={hidden:?}] mod hidden_layer;\n"));
+    println!("cargo:rerun-if-changed=src/hidden_layer.rs");
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
     let mut mods = String::new();
