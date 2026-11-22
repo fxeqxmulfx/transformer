@@ -506,6 +506,22 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen suite-crasp-depth-1 0 runs/affine-phase 1
 "$bin" probes suite-crasp-depth-1 0 runs/affine-phase
 ```
 
+## Bilinear phase memory
+
+Two learned projections of the normalized input supply a left and a right
+vector. Each position multiplies its right vector by the sum of all earlier
+left vectors, coordinate by coordinate. The running sum of these products
+adds an ordered interaction to the phase. A separate learned projection
+of the current embedding can change the angle used in that position's
+read. All positions share the same projections.
+
+Combining two segments adds their individual ordered sums and one cross
+term, the product of the first segment's left sum and the second segment's
+right sum. Lean proves this identity, the exact second-order perturbation,
+prefix causality and the one-step derivative. Initializing the right and
+local read projections to zero recovers the input-phase model at any depth.
+[Bilinear phase proofs](../../src/Transformer/Phasor/BilinearPhaseRead.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

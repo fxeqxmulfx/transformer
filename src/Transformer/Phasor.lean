@@ -12,6 +12,7 @@ public import Transformer.Phasor.CompactFFN
 public import Transformer.Phasor.PhasePrefixRead
 public import Transformer.Phasor.InputPhaseRead
 public import Transformer.Phasor.AffinePhaseRead
+public import Transformer.Phasor.BilinearPhaseRead
 public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.PairValues
 public import Transformer.Phasor.PackedReadBuffers
