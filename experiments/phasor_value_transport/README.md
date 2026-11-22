@@ -747,8 +747,11 @@ separate each binary block language with its target below the cap.
 
 With `fp32-affine-reference,inclusive-transitions`, all three L2 seeds
 reached 512/512 at update 250 and repeated that score on both source test
-splits. Counting the current edge improved the two additional whole-sequence
-tests in every seed.
+splits. Under the same source protocol, the closed-relation default also
+reached 512/512 at update 250 in seeds 0 and 1. In seed 2 it scored
+453/512 at 250 and 341/512 at every observation from 500 through 2,250.
+Counting the current edge improved the two additional whole-sequence
+tests over the lagged count in every seed.
 
 | L2 test | Previous modular count, seeds 0 / 1 / 2 | Inclusive capped count, seeds 0 / 1 / 2 |
 | --- | ---: | ---: |
