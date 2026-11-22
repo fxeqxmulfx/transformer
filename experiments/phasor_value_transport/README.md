@@ -832,6 +832,24 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-mul 0 runs/context-rotation 38
 "$bin" nv11-score runs/context-nv11/nv11-train-3000.f32 shifts
 ```
 
+## Shared bilinear phase
+
+Eight latent coordinates summarize an arbitrary prefix of dense
+embeddings. Each coordinate accumulates learned additive increments and
+ordered products of earlier left and current right projections. A fourth
+learned projection adds a local contribution at the read position. Each
+of 32 learned frequency vectors mixes all eight coordinates before sine
+and centered cosine are projected back into the contextual feature.
+
+Lean proves the exact interaction between any two segments and the
+gradients of both the shared state and the learned frequencies. A
+displacement of the state rotates every observation by its frequency
+applied to that displacement. Its squared chord across the observation
+bank is independent of the starting state. The complete model is causal
+on arbitrary dense vectors. Zero output projections recover the learned
+stream model for every input.
+[Shared bilinear phase proofs](../../src/Transformer/Phasor/SharedBilinearPhase.lean)
+
 ## Crossed contextual rotations
 
 Two learned projections of every normalized embedding supply two sets
