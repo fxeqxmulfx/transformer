@@ -92,6 +92,30 @@ theorem Model.retrievalGainLogit_eq_of_self (M : Model D d H F p) (T : PairTable
       M.displacedSuccessorLogit T strength gain eps scale xs L i c := by
   simp [retrievalGainLogit, retrievalGain, h]
 
+/-- Interpolating the gain multipliers interpolates the entire tied logit
+vector for every input, including prefixes whose successor is a self-read.
+Source: the retrieval-gain trials in `experiments/phasor_value_transport/README.md`. -/
+theorem Model.retrievalGainLogit_factor_interpolate (M : Model D d H F p) (T : PairTables D p)
+    (strength gain lo hi t eps scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ) (c : Fin p) :
+    M.retrievalGainLogit T strength gain ((1-t)*lo+t*hi) eps scale xs L i c =
+      (1-t) * M.retrievalGainLogit T strength gain lo eps scale xs L i c +
+        t * M.retrievalGainLogit T strength gain hi eps scale xs L i c := by
+  by_cases h : successorAddress xs i = xs i
+  · simp only [retrievalGainLogit, retrievalGain, ite_eq_left h]
+    ring
+  · simpa only [retrievalGainLogit, retrievalGain, ite_eq_right h, add_mul, mul_assoc] using
+      M.displacedSuccessorLogit_interpolate T strength (lo*gain) (hi*gain) t eps scale xs L i c
+
+/-- At multiplier 1.75, every score is a quarter of the ordinary score
+plus three quarters of the doubled-multiplier score, with shared weights. -/
+example (M : Model 64 16 4 86 68) (T : PairTables 64 68)
+    (xs : ℕ → Fin 68) (L i : ℕ) (c : Fin 68) :
+    M.retrievalGainLogit T 1 (1/2) (7/4) 1 1 xs L i c =
+      (1/4) * M.retrievalGainLogit T 1 (1/2) 1 1 1 xs L i c +
+        (3/4) * M.retrievalGainLogit T 1 (1/2) 2 1 1 xs L i c := by
+  convert M.retrievalGainLogit_factor_interpolate T 1 (1/2) 1 2 (3/4) 1 1 xs L i c using 1 <;>
+    norm_num
+
 /-- The conditional gain can change a two-class margin by at most the
 absolute change in gain on a hit times the class distance and square root
 of the width. The estimate holds for arbitrary embeddings and prefixes. -/
