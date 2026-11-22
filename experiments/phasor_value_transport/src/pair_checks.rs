@@ -47,11 +47,14 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
     result
 }
 
-fn profile(p: usize, length: usize) -> Result<()> {
+fn profile(p: usize, length: usize, width: usize) -> Result<()> {
     let batch = 3;
     let mut cfg = config(batch)?;
     cfg.max_length = length;
     cfg.vocab = p;
+    cfg.width = width;
+    cfg.heads = cfg.heads.max(width / 32);
+    cfg.gain = cfg.heads as f32 / width as f32;
     let d = cfg.width;
     let mut base = Engine::new(cfg.clone(), &layout::initialize_model(&cfg, 0))?;
     let mut tokens: Vec<_> = (0..batch * length)
@@ -318,21 +321,28 @@ fn check_table_transpose() -> Result<()> {
     Ok(())
 }
 
-pub fn run() -> Result<()> {
+pub fn run(width: Option<usize>) -> Result<()> {
     if !precision::FP32_AFFINE_REFERENCE {
         return Err("finite differences require FP32 affines".into());
+    }
+    if let Some(width) = width {
+        if ![64, 128, 256].contains(&width) {
+            return Err("shared checks support widths 64, 128 and 256".into());
+        }
+        println!("width={width}");
+        return profile(36, 8, width);
     }
     check_table_transpose()?;
     // Include a composite vocabulary, multi-position batches, a one-token
     // sequence, repeated histories and supervised initial positions.
     for (p, l) in [(97, 2), (100, 4), (36, 1)] {
-        profile(p, l)?;
+        profile(p, l, 128)?;
     }
     if pair_memory::SUCCESSOR {
-        profile(36, 8)?;
+        profile(36, 8, 128)?;
     }
     if cfg!(feature = "relation-paths") {
-        profile(36, 12)?;
+        profile(36, 12, 128)?;
     }
     let mut cfg = config(8)?;
     cfg.shared_values = true;

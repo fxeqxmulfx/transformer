@@ -198,7 +198,8 @@ fn main() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
         [op] if op == "check" => checks::run(),
-        [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(),
+        [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(None),
+        [op, width] if op == "shared-check" => pair_checks::run(Some(width.parse()?)),
         [op] if op == "routes" => stress::routes(),
         [op] if op == "extensions" => stress::extensions(),
         [op, name] if op == "successor-alignment" => stress::alignment::run(name, 1),
@@ -225,6 +226,6 @@ fn main() -> Result<()> {
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|shared-check|routes|extensions} | successor-alignment CASE [HOPS] | {report|extended-report} RUN_DIR | catalog-report RUN_DIR CASE... | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|extensions} | shared-check [WIDTH] | successor-alignment CASE [HOPS] | {report|extended-report} RUN_DIR | catalog-report RUN_DIR CASE... | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
     }
 }
