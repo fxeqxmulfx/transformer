@@ -832,6 +832,23 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-mul 0 runs/context-rotation 38
 "$bin" nv11-score runs/context-nv11/nv11-train-3000.f32 shifts
 ```
 
+## Crossed contextual rotations
+
+Two learned projections of every normalized embedding supply two sets
+of prefix angles. At each position the first stage rotates pairs across
+the two halves of the contextual vector. The second rotates adjacent
+coordinates. Each stage uses only earlier input angles. The classifier
+reads the result in its original coordinate order.
+
+Lean proves that the composition preserves norms, is exactly invertible,
+and recovers the one-stage architecture when the second projection is
+zero. The second pairing changes what can be represented. At width four,
+it can move a unit vector from coordinate zero to coordinate one. Every
+single half-split rotation leaves coordinate one zero on that input.
+The proof also gives the contribution of four output gradients to a first-
+stage angle and establishes prefix causality.
+[Crossed rotation proofs](../../src/Transformer/Phasor/CrossedContextRotation.lean)
+
 ## Associative write memory
 
 Every pair of consecutive embeddings contributes to a learned matrix.
