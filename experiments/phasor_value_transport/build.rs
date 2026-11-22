@@ -250,6 +250,17 @@ fn main() {
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
     let mut mods = String::new();
+    // The pinned stable-loss tests use the scalar oracle declared inline in
+    // their binary. Include that same oracle when compiling native test targets.
+    let main = src.join("main.rs");
+    println!("cargo:rerun-if-changed={}", main.display());
+    let text = fs::read_to_string(main).unwrap();
+    let marker = "#[cfg(test)]\nmod loss_precision {";
+    let (_, tail) = text.split_once(marker).expect("missing pinned loss oracle");
+    let (body, _) = tail
+        .split_once("\n}\n")
+        .expect("unterminated pinned loss oracle");
+    mods.push_str(&format!("{marker}{body}\n}}\n"));
     for (dir, names) in [
         (
             src,
