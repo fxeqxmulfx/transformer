@@ -673,6 +673,16 @@ training and 4,705/4,705 on held-out pairs. The `shared-values` and
 `nv11-score` commands in the Kernite v0.6.0 section reproduce the result
 with `closed-relation-boost` or `single-write-gain`.
 
+The exclusive singleton-gain trial learns a separate increment for a moving
+successor supplied by one completed write. A closed-relation vote still
+doubles the base gain and takes priority if both events occur. All other
+positions use the base gain. The model also uses the inclusive change-count
+table. Lean proves that a zero increment recovers closed-only gains and
+an increment equal to the base recovers the single-write gains. It derives
+both scalar gradients for arbitrary batches and shows that the two kinds
+of moving read can receive independently prescribed amplitudes.
+[Exclusive singleton-gain proofs](../../src/Transformer/Phasor/SingleWrite.lean)
+
 The context-backoff trial reads the last completed triple starting with
 the previous and current tokens. A resolved closed relation has priority.
 If neither read supplies a value, the model uses the ordinary successor

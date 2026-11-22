@@ -111,4 +111,74 @@ example : sourceUses ((fun a : Fin 3 => a.val) ∘ word) 4 0 = sourceUses word 4
 
 example : singleWriteGain 1 2 false word 1 = 1 := singleWriteGain_start _ _ _ _ (by decide)
 
+/-- Evidence for a residual gain. A moving closed-relation vote takes
+priority over any simultaneously available ordinary singleton. -/
+inductive ReadSupport where
+  | ordinary | singleton | relation
+  deriving DecidableEq
+
+/-- Classify a position using its causal closed vote and completed writes.
+A self-read contributes no singleton evidence, even when it was written once. -/
+def classifyReadSupport [DecidableEq α] (closed : Bool) (xs : ℕ → α) (i : ℕ) : ReadSupport :=
+  if closed then .relation else
+    if sourceUses xs (i-1) (xs i) = 1 ∧ successorAddress xs i ≠ xs i then .singleton else .ordinary
+
+/-- The separately learned increment belongs only to a moving singleton
+without a closed vote. Closed votes keep twice the learned base gain. -/
+def ReadSupport.amplitude (e : ReadSupport) (base bonus : ℝ) : ℝ :=
+  match e with
+  | .ordinary => base
+  | .singleton => base + bonus
+  | .relation => 2 * base
+
+/-- The exclusive singleton-gain trial in the experiment README. Zero bonus
+recovers every closed-only gain. A bonus equal to the base recovers every
+gain of the inclusive single-write model, including where both kinds of
+evidence occur. -/
+theorem readSupport_gain_endpoints [DecidableEq α] (closed : Bool) (xs : ℕ → α) (i : ℕ)
+    (base : ℝ) :
+    (classifyReadSupport closed xs i).amplitude base 0 = (if closed then 2*base else base) ∧
+    (classifyReadSupport closed xs i).amplitude base base = singleWriteGain base 2 closed xs i := by
+  cases closed <;> by_cases one : sourceUses xs (i-1) (xs i) = 1 <;>
+    by_cases same : successorAddress xs i = xs i <;>
+    simp [classifyReadSupport, ReadSupport.amplitude, singleWriteGain, retrievalGain, one, same, two_mul]
+
+/-- The exclusive singleton-gain trial in the experiment README. A closed
+vote and a moving singleton can be assigned any two real amplitudes, with
+a unique parameter pair, despite using a single gain on ordinary reads. -/
+theorem existsUnique_readSupport_amplitudes {ι : Type*} (support : ι → ReadSupport) (i j : ι)
+    (hi : support i = .relation) (hj : support j = .singleton) (r s : ℝ) :
+    ∃! θ : ℝ × ℝ, (support i).amplitude θ.1 θ.2 = r ∧ (support j).amplitude θ.1 θ.2 = s := by
+  rw [hi, hj]
+  refine ⟨(r/2, s-r/2), ?_, ?_⟩
+  · constructor <;> dsimp [ReadSupport.amplitude] <;> ring
+  · rintro ⟨g,b⟩ ⟨hr,hs⟩
+    change 2*g = r at hr
+    change g+b = s at hs
+    apply Prod.ext <;> dsimp <;> linarith
+
+/-- The exclusive singleton-gain trial in the experiment README. For
+arbitrary upstream derivatives, a closed vote doubles the base derivative
+and every exclusive singleton contributes once to the bonus derivative.
+Both sums preserve all repeated and masked rows. -/
+theorem readSupport_batch_adjoint {ι : Type*} [Fintype ι] (support : ι → ReadSupport)
+    (upstream : ι → ℝ) (g b dg db : ℝ) :
+    (∑ i, upstream i * ((support i).amplitude (g+dg) (b+db) - (support i).amplitude g b)) =
+      (∑ i, if support i = .relation then 2 * upstream i else upstream i) * dg +
+      (∑ i, if support i = .singleton then upstream i else 0) * db := by
+  rw [Finset.sum_mul, Finset.sum_mul, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  cases support i <;> simp [ReadSupport.amplitude] <;> ring
+
+example :
+    (classifyReadSupport false word 3, classifyReadSupport false word 5,
+      classifyReadSupport true word 3) = (.singleton, .ordinary, .relation) := by decide
+
+example (r s : ℝ) :
+    let support := fun vote : Bool => classifyReadSupport vote word 3
+    ∃! θ : ℝ × ℝ, (support true).amplitude θ.1 θ.2 = r ∧ (support false).amplitude θ.1 θ.2 = s :=
+  existsUnique_readSupport_amplitudes (fun vote => classifyReadSupport vote word 3)
+    true false (by decide) (by decide) r s
+
 end Transformer.Phasor
