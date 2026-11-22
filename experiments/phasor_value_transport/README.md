@@ -682,6 +682,19 @@ is the sum of the adjacent projected differences. A simultaneous change
 in all directions propagates through the same signed recurrence.
 [Single-state derivation](../../src/Transformer/Phasor/SingleReflection.lean)
 
+## Contextual rotation
+
+Each normalized input embedding supplies a learned angle for every pair
+of hidden coordinates. Before adding its own increment, a position rotates
+its full contextual vector by the sum of the preceding angles. The outer
+classifier then scores that vector. The input projection starts at zero.
+For arbitrary embeddings and projection weights, Lean proves that this
+operation preserves the contextual norm and that negating the angles
+recovers the original vector. The angle gradient uses the rotated vector
+and the output gradient. Each increment receives angle gradients from the
+strictly later positions in its sequence.
+[Contextual rotation proofs](../../src/Transformer/Phasor/ContextRotation.lean)
+
 ## NV11 prediction shifts
 
 CM121 describes row and column translations of class labels. To see
