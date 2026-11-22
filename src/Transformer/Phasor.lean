@@ -28,6 +28,7 @@ public import Transformer.Phasor.TripleTransport.Incremental
 public import Transformer.Phasor.TripleTransport.OverlappingEvidence
 public import Transformer.Phasor.TripleTransport.EvidenceRounds
 public import Transformer.Phasor.TripleTransport.RoleWitnesses
+public import Transformer.Phasor.TripleTransport.SignatureIndex
 public import Transformer.Phasor.TripleTransport.CorrespondenceLayers
 public import Transformer.Phasor.TripleTransport.FixedEvaluation
 public import Transformer.Phasor.TripleTransport.PhaseResidual

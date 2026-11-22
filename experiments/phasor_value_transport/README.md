@@ -2273,6 +2273,35 @@ for seed in 0 1 2; do
 done
 ```
 
+### Sharing exact witness signatures
+
+In later witness rounds, several pairs of contexts can supply the same
+set of ordered output pairs. One copy supplies all postings and pooled
+outputs for that set. Each original context still counts separately
+toward the required support. The index first selects candidates by set
+size and three ordered entries, then checks every entry for equality.
+It runs when the peer limit exceeds 16 and at least three quarters of
+the current bank contains observed or inferred evidence.
+
+Lean proves that replacing eligible signatures by representatives
+preserves the connected components and the union of candidate outputs
+at each key. A two-vote example shows why the original context count
+matters. [Witness signature proof](../../src/Transformer/Phasor/TripleTransport/SignatureIndex.lean)
+
+On a GTX 1050, the three-round witness model reached the same seed 0
+sum-cube checkpoint in 5.85 seconds with the index and 8.93 seconds
+with the previous implementation. The weights, scheduled observations
+and independently reloaded scores agreed exactly. To repeat the timing
+on fresh seeds 0, 1 and 2, build the same feature in both revisions.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.SignatureIndex
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-iterated-witness
+PHASOR_EVAL_BATCH_CAP=16 bash time_cells.sh "$BEFORE_BIN" ./target/release/phasor-value-transport \
+    runs/witness-signature-timing arithmetic-sum-cube arithmetic-sum-square
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.

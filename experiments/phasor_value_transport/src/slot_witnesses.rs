@@ -119,6 +119,9 @@ fn read_round(
         return;
     }
     let pairs = peers.len() * contexts;
+    let group_identical =
+        peer_limit > 16 && bank.iter().filter(|&&y| y != ABSENT).count() * 4 >= bank.len() * 3;
+    let mut representatives = HashMap::new();
     let mut signatures = vec![Vec::new(); pairs];
     let mut postings = vec![Vec::new(); slots * slots];
     let mut counts = vec![0_u16; pairs];
@@ -141,6 +144,15 @@ fn read_round(
             if observed.len() < usize::from(THRESHOLD) {
                 continue;
             }
+            if group_identical
+                && let Some(representative) =
+                    identical_signature(&mut representatives, &signatures, id)
+            {
+                groups.join(id, representative);
+                signatures[id].clear();
+                continue;
+            }
+            let observed = &signatures[id];
             lengths[id] = observed.len();
             let mut touched = Vec::new();
             for &uv in observed.iter() {
@@ -221,5 +233,45 @@ fn read_round(
                 *read = y;
             }
         }
+    }
+}
+
+/// The sampled entries choose a bucket. Full equality determines whether a
+/// context pair can reuse an earlier signature's postings and pooled outputs.
+fn identical_signature(
+    representatives: &mut HashMap<[usize; 4], Vec<usize>>,
+    signatures: &[Vec<usize>],
+    id: usize,
+) -> Option<usize> {
+    let current = &signatures[id];
+    let n = current.len();
+    let key = [n, current[0], current[n / 2], current[n - 1]];
+    let candidates = representatives.entry(key).or_default();
+    if let Some(previous) = candidates
+        .iter()
+        .copied()
+        .find(|&j| signatures[j] == *current)
+    {
+        return Some(previous);
+    }
+    candidates.push(id);
+    None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn postings_require_equal_signatures_even_in_the_same_bucket() {
+        let a = vec![1, 5, 8, 13, 18, 21, 29, 35];
+        let b = vec![1, 4, 9, 12, 18, 26, 27, 35];
+        let signatures = vec![a.clone(), b.clone(), b, a];
+        let mut buckets = HashMap::new();
+        let actual: Vec<_> = (0..signatures.len())
+            .map(|i| identical_signature(&mut buckets, &signatures, i))
+            .collect();
+        assert_eq!(actual, [None, None, Some(1), Some(0)]);
+        assert_eq!(buckets.len(), 1);
     }
 }
