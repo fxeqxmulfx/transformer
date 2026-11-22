@@ -63,4 +63,68 @@ example (M : Model 64 16 4 86 68) (T : PairTables 64 68)
     |gap (3/4) - gap (1/2)| ≤ |(3/4 : ℝ)-1/2| * (‖M.embedding u - M.embedding v‖ * Real.sqrt 64) :=
   M.displacedSuccessor_margin_gain_bound T _ _ _ (by norm_num) (by decide) _ xs L i u v
 
+
+/-- A gain multiplier can depend on whether the causal read returns a
+different token. It uses only completed transitions and the query input. -/
+def retrievalGain {α : Type*} [DecidableEq α] (gain factor : ℝ) (xs : ℕ → α) (i : ℕ) : ℝ :=
+  if successorAddress xs i = xs i then gain else factor * gain
+
+/-- Injectively renaming all input tokens preserves the gain at every position
+even if the target vocabulary is larger. -/
+theorem retrievalGain_map {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (f : α → β) (hf : Function.Injective f) (gain factor : ℝ) (xs : ℕ → α) (i : ℕ) :
+    retrievalGain gain factor (fun j => f (xs j)) i = retrievalGain gain factor xs i := by
+  simp only [retrievalGain, successorAddress, latestSuccessor_map f hf, Option.getD_map, hf.eq_iff]
+  split <;> rename_i h <;> simp [h]
+
+/-- Place the input-dependent gain on the normalized hidden residual. -/
+noncomputable def Model.retrievalGainLogit (M : Model D d H F p) (T : PairTables D p)
+    (strength gain factor eps scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ) (c : Fin p) : ℝ :=
+  M.displacedSuccessorLogit T strength (retrievalGain gain factor xs i) eps scale xs L i c
+
+/-- On a self-read the full score agrees for all parameters and all
+multipliers. This includes a missing transition, a self-loop, and the first
+two positions of any prompt. -/
+theorem Model.retrievalGainLogit_eq_of_self (M : Model D d H F p) (T : PairTables D p)
+    (strength gain factor eps scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ)
+    (h : successorAddress xs i = xs i) (c : Fin p) :
+    M.retrievalGainLogit T strength gain factor eps scale xs L i c =
+      M.displacedSuccessorLogit T strength gain eps scale xs L i c := by
+  simp [retrievalGainLogit, retrievalGain, h]
+
+/-- The conditional gain can change a two-class margin by at most the
+absolute change in gain on a hit times the class distance and square root
+of the width. The estimate holds for arbitrary embeddings and prefixes. -/
+theorem Model.retrievalGain_margin_bound (M : Model D d H F p) (T : PairTables D p)
+    (strength gain factor : ℝ) {eps : ℝ} (heps : 0 < eps) (hD : 0 < D)
+    (scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ) (u v : Fin p) :
+    let read := M.retrievalGainLogit T strength gain factor eps scale xs L i
+    let base := M.displacedSuccessorLogit T strength gain eps scale xs L i
+    |(read u - read v) - (base u - base v)| ≤
+      (|factor-1| * |gain|) * (‖M.embedding u - M.embedding v‖ * Real.sqrt D) := by
+  by_cases h : successorAddress xs i = xs i
+  · simp only [M.retrievalGainLogit_eq_of_self T _ _ _ _ _ xs L i h, sub_self, abs_zero]
+    positivity
+  · have gap := M.displacedSuccessor_margin_gain_bound T strength (factor * gain) gain
+      heps hD scale xs L i u v
+    have diff : factor * gain - gain = (factor-1) * gain := by ring
+    simpa [retrievalGainLogit, retrievalGain, h, diff, abs_mul] using gap
+
+example (xs : ℕ → ℕ) (i : ℕ) :
+    retrievalGain (1/2) 2 (fun j => xs j + 17) i = retrievalGain (1/2) 2 xs i :=
+  retrievalGain_map (fun a : ℕ => a+17) (by intro a b h; dsimp at h; omega) _ _ xs i
+
+example (M : Model 128 32 4 171 97) (T : PairTables 128 97) (xs : ℕ → Fin 97)
+    (L : ℕ) (c : Fin 97) :
+    M.retrievalGainLogit T 1 (1/2) 2 1 1 xs L 1 c =
+      M.displacedSuccessorLogit T 1 (1/2) 1 1 xs L 1 c :=
+  M.retrievalGainLogit_eq_of_self T _ _ _ _ _ xs L 1 (successorAddress_start xs 1 (by decide)) c
+
+example (M : Model 64 16 4 86 68) (T : PairTables 64 68)
+    (xs : ℕ → Fin 68) (L i : ℕ) (u v : Fin 68) :
+    let read := M.retrievalGainLogit T 1 (1/2) 2 1 1 xs L i
+    let base := M.displacedSuccessorLogit T 1 (1/2) 1 1 xs L i
+    |(read u - read v) - (base u - base v)| ≤
+      (|(2:ℝ)-1| * |(1/2:ℝ)|) * (‖M.embedding u - M.embedding v‖ * Real.sqrt 64) :=
+  M.retrievalGain_margin_bound T _ _ _ (by norm_num) (by decide) _ xs L i u v
 end Transformer.Phasor

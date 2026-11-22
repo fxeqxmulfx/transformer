@@ -133,6 +133,12 @@ the two embeddings and the square root of the hidden width, multiplied
 together. The trial compares first observed crossings and exhaustive NV11
 checkpoints under the original optimizer. [Gain interpolation and margin bound](../../src/Transformer/Phasor/DisplacementGain.lean)
 
+A second trial doubles the learned gain only when the memory read returns
+a different token. It starts the shared gain at 0.5. The condition depends
+on the input prefix, and an injective token renaming preserves it. Lean
+bounds the change in the two-class margin at every position and proves
+exact score agreement on self-reads, including both positions of NV11.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
