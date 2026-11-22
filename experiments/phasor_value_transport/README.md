@@ -207,6 +207,20 @@ done
 "$bin" screen suite-dyck 0 runs/kernite-060-hit-gain 250
 ```
 
+## Agreement among previous successors
+
+The agreement trial doubles the hidden residual gain when every completed
+write to the current key names the same successor and that successor differs
+from the key. Conflicting writes restore the constant gain of 0.5 at
+initialization. The table and tied-displacement reads still use the latest
+successor. During training AdamW updates the single gain shared by every row.
+
+Lean proves that a last-value register and one conflict bit per key detect
+exactly the histories with two distinct values. An injective token renaming
+preserves the resulting gain. On any conflicting history every class logit
+agrees with the constant-gain displacement model at the same weights.
+[Causal agreement proofs](../../src/Transformer/Phasor/SuccessorAgreement.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
