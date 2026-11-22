@@ -27,6 +27,23 @@ variable {D d H F p : ℕ}
 noncomputable def transportedValue (E : Fin p → EucSpace D) (w : Fin p → ℝ)
     (r : Fin p) : EucSpace D := ∑ s, w s • E (s + r)
 
+/-- A circular vocabulary read can compare the source address with the first
+wrapping address. Both selected branches fit in the original address width.
+Source: the shifted address in the Phasor causal transport kernel. -/
+theorem transportedAddress_val (s r : Fin p) :
+    (s + r).val = if s.val < p - r.val then s.val + r.val else s.val - (p - r.val) := by
+  change (s.val + r.val) % p = _
+  have hs := s.isLt
+  have hr := r.isLt
+  split
+  · exact Nat.mod_eq_of_lt (by omega)
+  · rw [Nat.mod_eq_sub_mod (show s.val + r.val ≥ p by omega),
+      Nat.mod_eq_of_lt (show s.val + r.val - p < p by omega)]
+    omega
+
+/-- The address just before a wrap maps to the last word. The next maps to zero. -/
+example : (((91 : Fin 97) + 5).val, ((92 : Fin 97) + 5).val) = (96, 0) := by decide
+
 /-- The ordinary tied, RMS-normalized readout of the new hidden value. -/
 noncomputable def transportedLogit (E : Fin p → EucSpace D) (w : Fin p → ℝ)
     (eps : ℝ) (r c : Fin p) : ℝ :=
