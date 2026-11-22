@@ -90,6 +90,13 @@ To include all previously admitted tasks in a promotion comparison, pass a
 frozen extension registry from the baseline commit. Both reports must contain
 the same held-out sizes and three passing seeds per case.
 
+The report counts a first crossing at update zero as a pass at initialization.
+It lists gains, retentions and losses of these passes by tier. The geometric
+mean uses the pairs where both models trained. The speed criterion requires
+a mean at most one in each such tier and retention of every baseline pass
+at initialization. A tier composed entirely of initialization comparisons
+has no geometric mean.
+
 ```sh
 git show dd5e0f14:experiments/phasor_value_transport/extensions.tsv > runs/baseline-extensions.tsv
 jq -s --rawfile extensions runs/baseline-extensions.tsv -f compare.jq CONTROL_REPORT CANDIDATE_REPORT
