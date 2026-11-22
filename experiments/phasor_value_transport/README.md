@@ -653,6 +653,25 @@ bit with a second oracle and checks prompt uniqueness within each length.
 The checkpoint, validation, original test and all shorter probes replayed
 identically when the batch cap was reduced to one.
 
+All nine checkpoints trained on 16, 20 and 24 bits solved every 512-bit
+prompt. Seven solved every 1,024-bit prompt. The other two scored 252/256.
+The 24-bit checkpoints also solved all 256 prompts per seed at lengths
+63, 65, 255, 257 and 1,025. Neighboring lengths expose errors hidden by
+the perfect three-seed score at 1,024 bits.
+
+| Test length | Correct out of 256, seeds 0 / 1 / 2 trained on 24 bits |
+| ---: | --- |
+| 1,023 | 256 / 246 / 256 |
+| 2,047 | 256 / 221 / 256 |
+| 2,048 | 256 / 221 / 253 |
+| 2,049 | 253 / 255 / 256 |
+
+On original short tasks, the same mixed reflection architecture crossed
+99% for modular addition at 874 / 950 / 931 updates, scoring 4,667 /
+4,674 / 4,690 of 4,705 held-out pairs. GPT key–value binding crossed at
+512 / 576 / 576 updates with 507 / 510 / 508 out of 512. Its separate
+512-example test scored 503 / 509 / 503. All six checkpoints were reloaded.
+
 The same architecture scored 86 / 91 / 91 of 4,705 held-out NV11
 pairs after 3,000 updates. Training accuracy was 4,703 / 4,704 / 4,695
 of 4,704. NV11 remains open for this backbone.
@@ -666,6 +685,7 @@ bin=./target/release/phasor-value-transport
 PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity20 0 runs/reflection 3500
 PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-parity20 0 runs/reflection extended
 PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity20 0 runs/reflection parity-1024
+PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity24 0 runs/reflection parity-neighbors
 ```
 
 ## Single reflection memory
