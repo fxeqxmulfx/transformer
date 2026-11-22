@@ -14,7 +14,9 @@ const DEFAULT_MODEL: bool = !cfg!(any(
 const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
-pub const HIT_GAIN: bool = cfg!(feature = "successor-hit-gain");
+pub const LEARN_BONUS: bool = cfg!(feature = "successor-bonus");
+pub const HIT_GAIN: bool = LEARN_BONUS || cfg!(feature = "successor-hit-gain");
+pub const INITIAL_BONUS: f32 = 0.5;
 pub const HIT_FACTOR: f32 = if cfg!(feature = "successor-hit-gain-seven-quarters") {
     1.75
 } else {
@@ -67,7 +69,20 @@ compile_error!(
     "the retrieval-dependent gain trial uses full displacement and the original table addresses"
 );
 
-pub const MODEL: &str = if cfg!(feature = "successor-agreement") {
+#[cfg(all(
+    feature = "successor-bonus",
+    any(
+        feature = "successor-hit-gain",
+        feature = "successor-gain-three-quarters",
+        feature = "successor-displacement-quarter",
+        feature = "transition-count"
+    )
+))]
+compile_error!("the independent bonus trial uses a half-gain base and full successor displacement");
+
+pub const MODEL: &str = if LEARN_BONUS {
+    "phasor-successor-independent-bonus-v1"
+} else if cfg!(feature = "successor-agreement") {
     if cfg!(feature = "successor-hit-gain-seven-quarters") {
         "phasor-successor-agreement-gain175-v1"
     } else {
@@ -107,7 +122,7 @@ pub const MODEL: &str = if cfg!(feature = "successor-agreement") {
 
 pub fn parameters(cfg: &Config) -> usize {
     if cfg.shared_values {
-        TABLES * cfg.vocab * cfg.width + 1
+        TABLES * cfg.vocab * cfg.width + 1 + usize::from(LEARN_BONUS)
     } else {
         0
     }
@@ -119,6 +134,16 @@ pub fn start(cfg: &Config) -> usize {
 
 pub fn gain(cfg: &Config) -> usize {
     start(cfg) + TABLES * cfg.vocab * cfg.width
+}
+
+pub fn initialize_gains(cfg: &Config, parameters: &mut [f32]) {
+    if cfg.shared_values {
+        let index = gain(cfg);
+        parameters[index] = INITIAL_GAIN;
+        if LEARN_BONUS {
+            parameters[index + 1] = INITIAL_BONUS;
+        }
+    }
 }
 
 fn power_factor(x: usize, p: usize) -> usize {
@@ -201,7 +226,7 @@ impl PairMemory {
             dscores: cuda.alloc(rows * cfg.vocab)?,
             merged: cuda.alloc(rows * cfg.width)?,
             scaled: cuda.alloc(rows * cfg.width)?,
-            partial: cuda.alloc(rows)?,
+            partial: cuda.alloc(rows * (1 + usize::from(LEARN_BONUS)))?,
             indices: vec![0; entries],
             active_shape: None,
             starts: vec![0; words + 1],

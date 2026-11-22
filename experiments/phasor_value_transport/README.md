@@ -256,6 +256,12 @@ AdamW can then adjust the two amplitudes independently. Lean proves that
 any prescribed pair of amplitudes has unique parameters whenever the input
 contains both kinds of read. [Independent-gain theorem](../../src/Transformer/Phasor/DisplacementGain.lean)
 
+The `successor-bonus` build passed all 80 directional derivatives, including
+the separate scalar. At update 500, blocks seed 0 had learned a base gain of
+0.55031 and a bonus of 0.54894. Its checkpoint replayed at 28/28. On MQAR it
+scored 32/32 at initialization, and on Dyck it scored 31/32 at the 250-update
+cutoff. This trial was set aside.
+
 ## Centered prefix frequencies
 
 The separate centered-frequency trial reads the average tied embedding of

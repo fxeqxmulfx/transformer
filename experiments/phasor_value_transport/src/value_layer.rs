@@ -123,7 +123,7 @@ impl ValueLayer {
         let features = if let Some(m) = &self.memory {
             let (gain_addresses, stride) = m.gain_addresses();
             unsafe {
-                m.causal.combine::<{ crate::pair_memory::HIT_GAIN }>(
+                m.causal.combine::<{ crate::pair_memory::HIT_GAIN }, { crate::pair_memory::LEARN_BONUS }>(
                     Grid::new(rows as u32, d as u32),
                     m.merged.ptr(),
                     m.scaled.ptr(),
@@ -185,7 +185,7 @@ impl ValueLayer {
             let (gain_addresses, stride) = m.gain_addresses();
             let gain = crate::pair_memory::gain(&e.config);
             unsafe {
-                m.causal.gain_back::<{ crate::pair_memory::HIT_GAIN }>(
+                m.causal.gain_back::<{ crate::pair_memory::HIT_GAIN }, { crate::pair_memory::LEARN_BONUS }>(
                     Grid::new(rows as u32, 32),
                     m.partial.ptr(),
                     self.dnormalized.ptr(),
@@ -198,9 +198,10 @@ impl ValueLayer {
                     stride,
                     crate::pair_memory::HIT_FACTOR,
                     d as u32,
+                    rows as u32,
                 )?;
                 m.causal.gain_sum(
-                    Grid::new(1, 32),
+                    Grid::new(1 + u32::from(crate::pair_memory::LEARN_BONUS), 32),
                     e.gradients
                         .at(gain)
                         .ok_or("value gain outside gradient buffer")?,

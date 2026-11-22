@@ -137,7 +137,10 @@ fn main() {
     let layout = fs::read_to_string(src.join("layout.rs")).unwrap();
     let initialize = "p.resize(total_count(cfg), 0.);";
     assert_eq!(layout.matches(initialize).count(), 1);
-    let layout = layout.replace(initialize, "p.resize(total_count(cfg), 0.);\n    if cfg.shared_values { p[crate::pair_memory::gain(cfg)] = crate::pair_memory::INITIAL_GAIN; }");
+    let layout = layout.replace(
+        initialize,
+        "p.resize(total_count(cfg), 0.);\n    crate::pair_memory::initialize_gains(cfg, &mut p);",
+    );
     let offset = "score_offset(cfg) + score_count(cfg)";
     assert_eq!(layout.matches(offset).count(), 1);
     fs::write(

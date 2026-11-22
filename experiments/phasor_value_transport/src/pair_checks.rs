@@ -83,6 +83,15 @@ fn profile(p: usize, length: usize) -> Result<()> {
     if theta[gain_at] != expected_gain || theta[start..gain_at].iter().any(|&v| v != 0.) {
         return Err("shared residual initialization differs from specification".into());
     }
+    if cfg!(feature = "successor-bonus") {
+        if theta.get(gain_at + 1) != Some(&0.5) {
+            return Err(
+                "independent successor bonus initialization differs from specification".into(),
+            );
+        }
+        // Exercise an independently signed bonus in the reference and adjoint.
+        theta[gain_at + 1] = -0.2;
+    }
     let mut rng = random::Random::new(301);
     for x in &mut theta[start..gain_at] {
         *x = rng.gauss(0., 0.005) as f32;
@@ -109,7 +118,9 @@ fn profile(p: usize, length: usize) -> Result<()> {
                     .windows(2)
                     .filter(|edge| edge[0] == b)
                     .all(|edge| edge[1] == r);
-            if cfg!(feature = "successor-hit-gain") && r != b && agreed {
+            if cfg!(feature = "successor-bonus") && r != b {
+                gain += f64::from(theta[gain_at + 1]);
+            } else if cfg!(feature = "successor-hit-gain") && r != b && agreed {
                 gain *= if cfg!(feature = "successor-hit-gain-seven-quarters") {
                     7. / 4.
                 } else {
@@ -152,6 +163,9 @@ fn profile(p: usize, length: usize) -> Result<()> {
         ("tied embedding".to_owned(), 0..p * d),
         ("residual gain".to_owned(), gain_at..gain_at + 1),
     ];
+    if cfg!(feature = "successor-bonus") {
+        directions.push(("successor bonus".to_owned(), gain_at + 1..gain_at + 2));
+    }
     for k in 0..pair_memory::TABLES {
         directions.push((
             format!("memory {k}"),
