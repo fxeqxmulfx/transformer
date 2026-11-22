@@ -627,6 +627,13 @@ the selected 0.75-gain successor and the closed-gain model each scored
 checks. At a prefix with 15 completed changes and 12 buckets, only bucket
 3 of the new table received a gradient.
 
+The saturated transition-table trial gives the last address to all change
+counts at or above that address. It uses the same number of parameters.
+Lean proves that capped counters from adjacent segments can be merged, that
+all counts below the last address remain distinct, and that modular and
+capped tables produce identical reads and gradients on batches below capacity.
+[Capped counter and table identities](../../src/Transformer/Phasor/SaturatedTransitions.lean)
+
 The geometric-memory trial learns one additional value for each token and
 hidden coordinate. It scans every input sequence in order. Each coordinate
 retains a fixed fraction of its preceding state and adds the current learned
