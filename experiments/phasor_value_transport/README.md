@@ -465,6 +465,14 @@ exhaustive observation (750 updates) and at 3,000 updates. Dyck reached
 32/32 at 500 / 250 / 500, matching the selected model. On MQAR, seed 0
 scored 31/32 at 1,000 updates.
 
+The single-write trial also doubles the gain when a moving ordinary
+successor comes from exactly one completed write of its key. Seeing the
+same key twice disables this ordinary-read multiplier, even when both
+writes contain the same value. The counter stops at two. Lean proves that
+this identifies the unique transition and its destination at any prefix
+length and that an injective renaming of the input tokens preserves the
+gain. [Single-write proofs](../../src/Transformer/Phasor/SingleWrite.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
