@@ -595,7 +595,9 @@ state, including after an arbitrary common suffix. The rotation state
 continues to accumulate the same two inputs. Lean proves this insertion
 identity, the signed derivative through a suffix, prefix causality, and
 the derivatives for both angles and the shared gate. Zero gates recover
-the input-phase model for all embeddings and all output weights.
+the input-phase model for all embeddings and all output weights. Two
+even-length segments can also exchange places without changing either
+endpoint phase. Each acts on the incoming reflected angle by a translation.
 [Rotation and reflection proofs](../../src/Transformer/Phasor/ReflectionPhaseRead.lean)
 
 ## GPT order discrimination

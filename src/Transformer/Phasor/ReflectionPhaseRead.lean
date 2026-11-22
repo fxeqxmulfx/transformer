@@ -55,6 +55,28 @@ example (a fill : ℕ → ℝ) (z : ℝ) (n : ℕ) :
     reflectedPhase a z n = reflectedPhase (fun j => if j < n then a j else fill j) z n :=
   reflectedPhase_congr_prefix _ _ _ _ (fun j hj => by simp [hj])
 
+/-- A segment acts on any preceding state by the same signed affine map. -/
+theorem reflectedPhase_join (a b : ℕ → ℝ) (z : ℝ) (n m : ℕ) :
+    reflectedPhase (joinEmbeddingSegment n a b) z (n+m) =
+      (-1 : ℝ)^m * reflectedPhase a z n + reflectedPhase b 0 m := by
+  rw [reflectedPhase_split]
+  have initial := reflectedPhase_congr_prefix (joinEmbeddingSegment n a b) a z n
+    (fun j hj => by simp [joinEmbeddingSegment, hj])
+  have appended := reflectedPhase_congr_prefix (fun j => joinEmbeddingSegment n a b (n+j)) b 0 m
+    (fun j _ => by simp [joinEmbeddingSegment])
+  rw [initial, appended]
+
+/-- Exchanging any two even-length segments preserves the reflected
+endpoint angle. Each segment acts as a translation on the incoming angle. -/
+theorem reflectedPhase_swap_even (a b : ℕ → ℝ) (z : ℝ) (n m : ℕ) :
+    reflectedPhase (joinEmbeddingSegment (2*n) a b) z (2*n+2*m) =
+      reflectedPhase (joinEmbeddingSegment (2*m) b a) z (2*m+2*n) := by
+  have evenPower (k : ℕ) : (-1 : ℝ)^(2*k) = 1 := by rw [pow_mul]; norm_num
+  have evenState (x : ℕ → ℝ) (k : ℕ) : reflectedPhase x z (2*k) = z + reflectedPhase x 0 (2*k) := by
+    simpa [evenPower, reflectedPhase] using reflectedPhase_split x z 0 (2*k)
+  rw [reflectedPhase_join, reflectedPhase_join, evenPower, evenPower, evenState a, evenState b]
+  ring
+
 /-- Insert two occurrences of an arbitrary vector before position `n`. -/
 def insertIdenticalPair {α : Type*} (x : ℕ → α) (v : α) (n j : ℕ) : α :=
   if j < n then x j else if j < n+2 then v else x (j-2)
