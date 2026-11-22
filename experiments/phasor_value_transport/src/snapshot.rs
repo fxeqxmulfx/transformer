@@ -27,6 +27,7 @@ fn load(bytes: &[u8], cfg: Config) -> Result<Engine> {
 
 pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result<()> {
     let mut cfg = config(1)?;
+    cfg.shared_values = architecture::RAW;
     if let Some(vocab) = vocabulary {
         if vocab == 0
             || vocab > u32::MAX as usize
@@ -39,7 +40,7 @@ pub fn predict(path: &Path, vocabulary: Option<usize>, a: u32, b: u32) -> Result
     }
     let mut e = load(&fs::read(path)?, cfg)?;
     e.forward(&[a, b], &[u32::MAX, u32::MAX], 1, 2)?;
-    if vocabulary.is_some() {
+    if vocabulary.is_some() || architecture::RAW {
         println!(
             "{}",
             json!({"a":a,"b":b,"prediction":e.predictions.read()?[1]})
@@ -100,7 +101,7 @@ pub fn nv11_scores(path: &Path) -> Result<()> {
     println!(
         "{}",
         json!({"training":split(&data.training.rows)?,"held_out":split(&data.validation)?,
-            "weights_sha256":hash(&bytes),"scored_with_model":pair_memory::MODEL,
+            "weights_sha256":hash(&bytes),"scored_with_model":architecture::MODEL,
             "scored_with_kernite":KERNITE_VERSION})
     );
     Ok(())

@@ -79,6 +79,25 @@ fn catalog_schedule(gpt: &Path, out: &Path) {
     .unwrap();
 }
 
+// Only replace the two final stream operations in the pinned four-stream network.
+fn stream_engine(src: &Path) -> String {
+    let mut source = check_device_offsets(fs::read_to_string(src.join("engine_mhc.rs")).unwrap());
+    let forward = "unsafe {\n            k.collapse::<false>(grid(r * w), self.shared.ptr(), x, w as u32, (r * w) as u32)?;\n        }";
+    let backward = "unsafe {\n            k.collapse::<true>(\n                grid(r * w),\n                self.stream_grad.ptr(),\n                self.dshared.ptr(),\n                w as u32,\n                (r * w) as u32,\n            )?;\n        }";
+    for (from, to) in [
+        (forward, "self.collapse_streams(x, r)?;"),
+        (backward, "self.collapse_streams_backward(r)?;"),
+    ] {
+        assert_eq!(
+            source.matches(from).count(),
+            1,
+            "unexpected final stream operation"
+        );
+        source = source.replace(from, to);
+    }
+    source
+}
+
 fn main() {
     let lock = include_str!("Cargo.lock");
     let version = lock
@@ -134,8 +153,7 @@ fn main() {
         );
         engine = engine.replace(from, to);
     }
-    // The ordinary parameter group includes the new hidden tables. Keep the
-    // optimizer, cross-entropy and schedule at their pinned implementations.
+    // New trainable coordinates go in the original ordinary AdamW group.
     for (from, to) in [
         (
             "pub phase_optimizer: bool,",
@@ -143,11 +161,11 @@ fn main() {
         ),
         (
             "pub struct Engine {",
-            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,",
+            "pub struct Engine {\n    shared_layer: Option<ValueLayer>,\n    stream_read: Option<crate::learned_read::kernels::Kernels>,",
         ),
         (
             "let mut engine = Self {",
-            "let mut engine = Self {\n            shared_layer: None,",
+            "let mut engine = Self {\n            shared_layer: None,\n            stream_read: None,",
         ),
         (
             "        Ok(engine)",
@@ -160,6 +178,16 @@ fn main() {
         (
             "pub fn backward(&self, batch: usize, length: usize)",
             "fn backward_original(&self, batch: usize, length: usize)",
+        ),
+        // The pinned non-mHC models use a prefix mask. Phasor's four-stream
+        // backbone never reads it, and the raw-token model never computes it.
+        (
+            "            self.seq.prefix(\n                grid(r),\n                self.flags.ptr(),",
+            "            if !crate::architecture::RAW || self.mhc.is_none() { self.seq.prefix(\n                grid(r),\n                self.flags.ptr(),",
+        ),
+        (
+            "            self.ops.embed(",
+            "            }\n            self.ops.embed(",
         ),
     ] {
         assert_eq!(
@@ -174,7 +202,7 @@ fn main() {
     assert_eq!(layout.matches(initialize).count(), 1);
     let layout = layout.replace(
         initialize,
-        "p.resize(total_count(cfg), 0.);\n    crate::pair_memory::initialize_gains(cfg, &mut p);",
+        "p.resize(total_count(cfg), 0.);\n    crate::architecture::initialize(cfg, &mut p);",
     );
     let offset = "score_offset(cfg) + score_count(cfg)";
     assert_eq!(layout.matches(offset).count(), 1);
@@ -182,18 +210,16 @@ fn main() {
         out.join("layout.rs"),
         layout.replace(
             offset,
-            "crate::pair_memory::start(cfg) + crate::pair_memory::parameters(cfg)",
+            "crate::architecture::start(cfg) + crate::architecture::parameters(cfg)",
         ),
     )
     .unwrap();
-    fs::write(
-        out.join("engine_mhc.rs"),
-        check_device_offsets(fs::read_to_string(src.join("engine_mhc.rs")).unwrap()),
-    )
-    .unwrap();
-    let extension = Path::new("src/value_layer.rs").canonicalize().unwrap();
-    engine.push_str(&format!("\ninclude!({extension:?});\n"));
-    println!("cargo:rerun-if-changed=src/value_layer.rs");
+    fs::write(out.join("engine_mhc.rs"), stream_engine(&src)).unwrap();
+    for file in ["src/value_layer.rs", "src/stream_layer.rs"] {
+        let extension = Path::new(file).canonicalize().unwrap();
+        engine.push_str(&format!("\ninclude!({extension:?});\n"));
+        println!("cargo:rerun-if-changed={file}");
+    }
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
     let mut mods = String::new();

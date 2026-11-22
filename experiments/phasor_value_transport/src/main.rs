@@ -7,8 +7,11 @@ use serde_json::{Value, json};
 use std::{env, fs, io::Write, path::Path};
 
 mod addresses;
+mod architecture;
 mod causal_values;
 mod frequency_read;
+mod learned_checks;
+mod learned_read;
 mod pair_checks;
 mod pair_memory;
 mod pair_ops;
@@ -118,7 +121,7 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
     }
     let data = cubic_data()?;
     let mut cfg = config(BATCH)?;
-    cfg.shared_values = arm == "shared-values";
+    cfg.shared_values = arm == "shared-values" || arm == "nv11-train";
     let initial = layout::initialize_model(&cfg, seed);
     let digest = arithmetic::hash(
         &initial
@@ -154,7 +157,7 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
                 "fp32_affines":precision::FP32_AFFINE_REFERENCE,"gpu":e.cuda.name(),
                 "kernite_version":KERNITE_VERSION});
             if e.config.shared_values {
-                row["model"] = json!(pair_memory::MODEL);
+                row["model"] = json!(architecture::MODEL);
             }
             if (layer.is_some() || e.config.shared_values)
                 && (completed == OBSERVE || completed == window)
@@ -208,6 +211,13 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
 fn main() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [op] if architecture::RAW && matches!(op.as_str(), "check" | "shared-check") =>
+            learned_checks::run(None),
+        [op, ..] if architecture::RAW && matches!(op.as_str(),
+            "transport" | "inspect" | "successor-alignment" | "closed-alignment" | "pair-check") =>
+            Err("this historical command requires an explicit historical architecture".into()),
+        [op, width] if architecture::RAW && op == "shared-check" =>
+            learned_checks::run(Some(width.parse()?)),
         [op] if op == "check" => checks::run(),
         [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(None),
         [op, width] if op == "shared-check" => pair_checks::run(Some(width.parse()?)),
@@ -231,18 +241,18 @@ fn main() -> Result<()> {
             stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::Tests),
         [op, name, seed, out, mode] if op == "probes" && mode == "extended" =>
             stress::score_checkpoint(name, seed.parse()?, Path::new(out), stress::ProbeSet::ExtendedLanguage),
-        [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values") => {
+        [arm, dest] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values" | "nv11-train") => {
             cell(arm, Path::new(dest), SEED, WINDOW)
         }
-        [arm, dest, seed] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values") => {
+        [arm, dest, seed] if matches!(arm.as_str(), "transport" | "phasor" | "shared-values" | "nv11-train") => {
             cell(arm, Path::new(dest), seed.parse()?, WINDOW)
         }
-        [arm, dest, seed, steps] if arm == "shared-values" =>
+        [arm, dest, seed, steps] if matches!(arm.as_str(), "nv11-train" | "shared-values") =>
             cell(arm, Path::new(dest), seed.parse()?, steps.parse()?),
         [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes} | extensions [REGISTRY.tsv] | shared-check [WIDTH] | successor-alignment CASE [HOPS] | closed-alignment CASE | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes} | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE | predict FILE [VOCAB] A B".into()),
     }
 }

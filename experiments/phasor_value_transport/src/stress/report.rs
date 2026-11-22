@@ -20,19 +20,12 @@ pub(super) fn validate(row: &Value, seed: u32, dir: &Path, result: &Value) -> Re
         )
     };
     if result["model"] != MODEL
-        || result["initial_gain"] != json!(pair_memory::INITIAL_GAIN)
+        || !architecture::valid_record(result, number("width")?)
         || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
         || result["suite_sha256"] != suite_hash(row)
         || result["selection"] != row["selection"]
         || result["train_total"] != train
         || !result["train_correct"].as_u64().is_some_and(|n| n <= train)
-        || !result["pair_parameters"].as_u64().is_some_and(|n| n > 1)
-        || !result["gain"].as_f64().is_some_and(f64::is_finite)
-        || (pair_memory::LEARN_BONUS
-            && (result["initial_bonus"] != json!(pair_memory::INITIAL_BONUS)
-                || !result["successor_bonus"]
-                    .as_f64()
-                    .is_some_and(f64::is_finite)))
     {
         return Err(invalid().into());
     }

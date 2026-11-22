@@ -346,7 +346,12 @@ impl ValueLayer {
 
 impl Engine {
     fn enable_shared_values(&mut self) -> Result<()> {
-        if self.config.shared_values {
+        if self.config.shared_values && crate::architecture::STREAM_READ {
+            if self.mhc.is_none() {
+                return Err("the learned readout requires the four Phasor streams".into());
+            }
+            self.stream_read = Some(crate::learned_read::kernels::Kernels::load(&self.cuda)?);
+        } else if self.config.shared_values && !crate::architecture::RAW {
             self.shared_layer = Some(ValueLayer::new(self)?);
         }
         Ok(())

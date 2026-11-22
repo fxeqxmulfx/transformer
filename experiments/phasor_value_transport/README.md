@@ -16,6 +16,36 @@ readout and shows that opposite stream contents, which cancel in the
 original mean, can become visible to the classifier.
 [Learned stream readout](../../src/Transformer/Phasor/LearnedStreamRead.lean)
 
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.LearnedStreamRead
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference
+export PHASOR_EVAL_BATCH_CAP=16
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" cell suite-boolean-and-shift 0 runs/learned-streams
+"$bin" probes suite-boolean-and-shift 0 runs/learned-streams
+"$bin" nv11-train runs/learned-nv11/seed0 0 3000
+"$bin" nv11-score runs/learned-nv11/seed0/nv11-train-3000.f32
+```
+
+For the original fixed-mean Phasor control, add `original-stream-mean` to
+the Cargo features and use a separate run directory. Both executables
+use the same initialization for the backbone, per-task AdamW schedule,
+training split and checkpoint selection rule.
+
+The FP32 kernels agreed with an independent FP64 calculation on 24,304
+forward values and gradient components to within `2.3e-7` absolute error.
+All 18 end-to-end finite differences passed. At widths 64, 128 and 256,
+all 1,332 logits matched the original mean bit for bit at initialization
+and permuted bit for bit under a shuffled vocabulary with nonzero offsets.
+
+On depth-one C-RASP, seed 2 reached 32/32 validation at update 250 with
+both readouts. Independent reloads of both scored 64/64 on the source
+test, 56/64 at length 32 and 41/64 at length 64. On NV11 the learned
+readout reached 4,696/4,704 training pairs but only 86/4,705 held-out
+pairs at update 3,000 in seed 0.
+
 ## Historical benchmark with hand-written features
 
 The closed-relation Phasor passed all **159 GPT task/seed runs** across 41 short
@@ -83,7 +113,7 @@ For all 4,096 twelve-letter words, the whole-sequence scores were
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ClosedRelations
 cd experiments/phasor_value_transport
-cargo +stable build --release --locked --features fp32-affine-reference
+cargo +stable build --release --locked --features fp32-affine-reference,closed-relation-boost
 export PHASOR_EVAL_BATCH_CAP=16
 bin=./target/release/phasor-value-transport
 out=runs/v060-closed
@@ -869,7 +899,7 @@ The slowest inclusive run took 65.23 seconds, within the long-tier limit.
 Against the closed-relation default on L3, the inclusive runs used
 30.66% fewer updates and 25.59% less elapsed time as geometric means.
 Use the same commands with `language-l3` and the two feature flags in the
-table comparison. The full-suite default uses the closed-relation architecture.
+table comparison. The 159-run historical result used the closed-relation architecture.
 
 The longer transfer test evaluates every twelve-letter binary word and
 all 256 eight-letter words after repeating each letter 32 times. The
@@ -1465,7 +1495,7 @@ From the repository root, check Lean before running the experiment.
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TransportedValues
 cd experiments/phasor_value_transport
-cargo +stable build --locked --release --features fp32-affine-reference
+cargo +stable build --locked --release --features fp32-affine-reference,pair-v2
 bin=./target/release/phasor-value-transport
 "$bin" check
 for seed in 1 2 3
