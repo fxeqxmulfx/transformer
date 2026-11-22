@@ -32,6 +32,7 @@ public import Transformer.Phasor.TripleTransport.SignatureIndex
 public import Transformer.Phasor.TripleTransport.CorrespondenceLayers
 public import Transformer.Phasor.TripleTransport.CalibratedRead
 public import Transformer.Phasor.TripleTransport.FixedEvaluation
+public import Transformer.Phasor.TripleTransport.ResumeSchedule
 public import Transformer.Phasor.TripleTransport.PhaseResidual
 public import Transformer.Phasor.TripleTransport.SeparateRoles
 public import Transformer.Phasor.FourierTransport

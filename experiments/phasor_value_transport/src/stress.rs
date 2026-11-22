@@ -13,6 +13,7 @@ pub mod embedding;
 mod language_probes;
 pub mod numeric_probe;
 pub mod phase_ablation;
+mod progress;
 pub mod slot_ablation;
 pub mod triple_phase_ablation;
 mod recall_gap;
@@ -168,7 +169,18 @@ fn publish(dir: &Path, name: &str, bytes: &[u8]) -> Result<()> {
     Ok(())
 }
 
-pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<()> {
+#[derive(Clone, Copy)]
+pub enum Horizon {
+    Budget,
+    Screen(usize),
+    Advance(usize),
+}
+
+pub fn run(name: &str, seed: u32, out: &Path, horizon: Horizon) -> Result<()> {
+    let cutoff = match horizon {
+        Horizon::Budget => None,
+        Horizon::Screen(at) | Horizon::Advance(at) => Some(at),
+    };
     let started = std::time::Instant::now();
     let (row, task) = load(name)?;
     let cfg = task_config(&row, &task, true)?;
@@ -218,21 +230,46 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
                 return Err("scheduled cutoff missing from saved observation log".into());
             }
         }
-        return replay(name, seed, out);
+        replay(name, seed, out)?;
+        return progress::finish(&dest);
     }
     let parameters = layout::initialize_model(&cfg, seed);
     let mut e = Engine::new(cfg, &parameters)?;
     let mut training = Training::new(&e, seed, budget)?;
-    let mut previous = 0;
-    // Restart an interrupted cell from its fixed seed and publish result.json
-    // last. A completed cell is verified above before any file can change.
+    let resume = if matches!(horizon, Horizon::Budget | Horizon::Advance(_)) {
+        progress::Progress::load(&dest, &row, seed, &mut e)?
+    } else {
+        None
+    };
+    let first = resume.as_ref().map_or(0, |r| r.completed);
+    let carried = resume.as_ref().map_or(0., |r| r.elapsed);
+    let mut previous = first;
+    if let Some(saved) = &resume {
+        if first == 0 || first >= budget || !first.is_multiple_of(observe) {
+            return Err("progress ends outside the original observation schedule".into());
+        }
+        training.seek(train.len(), batch, first);
+        let point = saved.observation(first)?;
+        if point["examples_seen"] != training.seen
+            || point["correct"] != metrics::evaluate(&mut e, held, true)?["exact"]
+        {
+            return Err("restored state differs from its observation".into());
+        }
+        if let Some(limit) = cutoff.filter(|&limit| limit <= first) {
+            println!("{}", screen_result(&row, &e, saved.observation(limit)?));
+            return Ok(());
+        }
+    }
     let mut history = fs::OpenOptions::new()
         .create(true)
         .truncate(true)
         .write(true)
         .open(dest.join("observations.jsonl"))?;
-    for step in 0..=budget {
-        if step % observe == 0 || step == budget {
+    if let Some(saved) = &resume {
+        history.write_all(saved.history.as_bytes())?;
+    }
+    for step in first..=budget {
+        if (step % observe == 0 || step == budget) && (resume.is_none() || step != first) {
             let scores = metrics::evaluate(&mut e, held, true)?;
             let correct = scores["exact"].as_u64().ok_or("missing exact count")? as usize;
             let pass = correct * 100 >= 99 * held.len();
@@ -252,20 +289,25 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
                     "parameters":values.len(),"weights_sha256":hash(&bytes),"gpu":e.cuda.name(),
                     "fp32_affines":precision::FP32_AFFINE_REFERENCE,"bf16":precision::BF16,
                     "tf32_backward":precision::TF32_BACKWARD,"suite_sha256":suite_hash(&row),"kernite_version":KERNITE_VERSION,
-                    "elapsed_seconds":(started.elapsed()-waited).as_secs_f64()});
+                    "elapsed_seconds":carried+(started.elapsed()-waited).as_secs_f64()});
                 architecture::record(&mut result, &e.config, &values);
                 publish(&dest, "result.json", &serde_json::to_vec_pretty(&result)?)?;
+                progress::finish(&dest)?;
                 println!("{result}");
                 return Ok(());
             }
             if cutoff == Some(step) {
-                println!(
-                    "{}",
-                    json!({"model":MODEL,"status":"screen cutoff","observation":point,
-                        "kernite_version":KERNITE_VERSION,"gpu":e.cuda.name(),"suite_sha256":suite_hash(&row),
-                        "fp32_affines":precision::FP32_AFFINE_REFERENCE,"bf16":precision::BF16,
-                        "tf32_backward":precision::TF32_BACKWARD})
-                );
+                if matches!(horizon, Horizon::Advance(_)) {
+                    progress::save(
+                        &dest,
+                        &row,
+                        seed,
+                        &e,
+                        &point,
+                        carried + (started.elapsed() - waited).as_secs_f64(),
+                    )?;
+                }
+                println!("{}", screen_result(&row, &e, point));
                 return Ok(());
             }
             previous = step;
@@ -273,6 +315,13 @@ pub fn run(name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<(
         training.update(&mut e, train, batch, step)?;
     }
     unreachable!()
+}
+
+fn screen_result(row: &Value, e: &Engine, point: Value) -> Value {
+    json!({"model":MODEL,"status":"screen cutoff","observation":point,
+        "kernite_version":KERNITE_VERSION,"gpu":e.cuda.name(),"suite_sha256":suite_hash(row),
+        "fp32_affines":precision::FP32_AFFINE_REFERENCE,"bf16":precision::BF16,
+        "tf32_backward":precision::TF32_BACKWARD})
 }
 
 /// Both stopping protocols consume the same shuffled epochs, including short final batches.
@@ -305,9 +354,7 @@ impl Training {
         step: usize,
     ) -> Result<()> {
         if self.offset == self.epoch.len() {
-            self.epoch = (0..train.len() as u32).collect();
-            self.rng.shuffle(&mut self.epoch);
-            self.offset = 0;
+            self.next_epoch(train.len());
         }
         let end = (self.offset + batch).min(self.epoch.len());
         let indices = &self.epoch[self.offset..end];
@@ -323,6 +370,27 @@ impl Training {
         self.seen += indices.len();
         self.offset = end;
         Ok(())
+    }
+
+    fn next_epoch(&mut self, examples: usize) {
+        self.epoch = (0..examples as u32).collect();
+        self.rng.shuffle(&mut self.epoch);
+        self.offset = 0;
+    }
+
+    /// Regenerate exactly the source shuffles consumed up to this update.
+    /// Only the last epoch and the random generator's state need to survive.
+    fn seek(&mut self, examples: usize, batch: usize, completed: usize) {
+        let per_epoch = examples.div_ceil(batch);
+        let shuffles = completed.div_ceil(per_epoch);
+        for _ in 0..shuffles {
+            self.next_epoch(examples);
+        }
+        if completed > 0 {
+            let previous_epochs = shuffles - 1;
+            self.offset = examples.min((completed - previous_epochs * per_epoch) * batch);
+            self.seen = previous_epochs * examples + self.offset;
+        }
     }
 }
 

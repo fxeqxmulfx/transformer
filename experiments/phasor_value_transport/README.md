@@ -1674,6 +1674,37 @@ for seed in 0 1 2; do
 done
 ```
 
+### Resuming the original update budget
+
+`advance CASE SEED RUN_DIR STEP` trains to a scheduled observation. At
+a pre-budget cutoff it atomically saves the weights, both AdamW moments
+and the observation history. A later `advance` or `cell` in that run
+directory restores them. The trainer reconstructs the pinned sampler
+from the seed and absolute update, including the short batch at the end
+of each epoch. It rechecks the saved held-out count before continuing.
+The first crossing or full-budget miss uses the ordinary checkpoint and
+the same independent replay. A pre-budget cutoff remains pending.
+
+Lean proves that splitting a step-dependent update schedule preserves
+the full state and the list of scheduled observations. On seed 0 the
+windowed and uninterrupted graph runs produced identical weights,
+observation logs and independent test scores on blinded absolute
+difference, GPT linear transport and shifted Boolean AND. Their first
+crossings were at 171, 448 and 92 updates. [Observation schedule proof](../../src/Transformer/Phasor/TripleTransport/ResumeSchedule.lean)
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ResumeSchedule
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-graph-witness
+bin=./target/release/phasor-value-transport
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" advance arithmetic-abs-diff-blind 0 runs/windowed-graph 19
+"$bin" advance arithmetic-abs-diff-blind 0 runs/windowed-graph 57
+"$bin" cell arithmetic-abs-diff-blind 0 runs/windowed-graph
+"$bin" probes arithmetic-abs-diff-blind 0 runs/windowed-graph
+bash tests/advance.sh "$bin" runs/window-equivalence
+```
+
 ### Fixed-weight evaluation
 
 Triple transport prepares its slot weights and learned correspondence table
