@@ -55,6 +55,15 @@ PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor-half extende
 jq -s -f compare.jq runs/shared-quarter/paired-report.json runs/prefix-successor-half/report.json
 ```
 
+To include all previously admitted tasks in a promotion comparison, pass a
+frozen extension registry from the baseline commit. Both reports must contain
+the same held-out sizes and three passing seeds per case.
+
+```sh
+git show dd5e0f14:experiments/phasor_value_transport/extensions.tsv > runs/baseline-extensions.tsv
+jq -s --rawfile extensions runs/baseline-extensions.tsv -f compare.jq CONTROL_REPORT CANDIDATE_REPORT
+```
+
 ## Tied successor displacement
 
 Can a successor read carry the identity of a retrieved token before the
