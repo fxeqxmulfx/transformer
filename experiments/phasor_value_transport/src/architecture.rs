@@ -59,6 +59,7 @@ const _: () = {
         + cfg!(feature = "triple-peer-phase") as u8
         + cfg!(feature = "triple-witness-phase") as u8
         + cfg!(feature = "triple-iterated-witness") as u8
+        + cfg!(feature = "triple-role-witness") as u8
         + cfg!(feature = "learned-stream-read") as u8
         + FOURIER as u8
         + REFLECTION_PHASE as u8
@@ -88,7 +89,11 @@ pub const HEAD: Head = if FOURIER {
 } else if cfg!(feature = "triple-witness-phase") {
     Head::PeerTriplePhase(crate::head::PeerSearch::Witnesses)
 } else if cfg!(feature = "triple-iterated-witness") {
-    Head::PeerTriplePhase(crate::head::PeerSearch::IteratedWitnesses)
+    Head::PeerTriplePhase(crate::head::PeerSearch::Iterated(None))
+} else if cfg!(feature = "triple-role-witness") {
+    Head::PeerTriplePhase(crate::head::PeerSearch::Iterated(Some(
+        crate::slot_orbits::RoleEvidence::All,
+    )))
 } else if cfg!(feature = "triple-transport") {
     Head::TripleTransport
 } else if cfg!(feature = "triple-bipartite") {

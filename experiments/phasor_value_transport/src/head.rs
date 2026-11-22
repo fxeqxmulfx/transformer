@@ -8,7 +8,7 @@ pub const SHARED_LATENTS: usize = 8;
 pub enum PeerSearch {
     Aligned,
     Witnesses,
-    IteratedWitnesses,
+    Iterated(Option<crate::slot_orbits::RoleEvidence>),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -76,7 +76,10 @@ impl Head {
             "triple-lookup-phase" => Ok(Self::LookupTriplePhase),
             "triple-peer-phase" => Ok(Self::PeerTriplePhase(PeerSearch::Aligned)),
             "triple-witness-phase" => Ok(Self::PeerTriplePhase(PeerSearch::Witnesses)),
-            "triple-iterated-witness" => Ok(Self::PeerTriplePhase(PeerSearch::IteratedWitnesses)),
+            "triple-iterated-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(None))),
+            "triple-role-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(Some(
+                crate::slot_orbits::RoleEvidence::All,
+            )))),
             "fourier-transport" => Ok(Self::FourierTransport),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
@@ -117,11 +120,17 @@ impl Head {
             Self::PeerTriplePhase(PeerSearch::Aligned) => "phasor-triple-peer-phase-32-v1",
             Self::PeerTriple(PeerSearch::Witnesses) => "phasor-triple-witness-trunk-v1",
             Self::PeerTriplePhase(PeerSearch::Witnesses) => "phasor-triple-witness-phase-32-v1",
-            Self::PeerTriple(PeerSearch::IteratedWitnesses) => {
+            Self::PeerTriple(PeerSearch::Iterated(None)) => {
                 "phasor-triple-iterated-witness-trunk-v1"
             }
-            Self::PeerTriplePhase(PeerSearch::IteratedWitnesses) => {
+            Self::PeerTriplePhase(PeerSearch::Iterated(None)) => {
                 "phasor-triple-iterated-witness-32-v1"
+            }
+            Self::PeerTriple(PeerSearch::Iterated(Some(_))) => {
+                "phasor-triple-role-overlap-trunk-v1"
+            }
+            Self::PeerTriplePhase(PeerSearch::Iterated(Some(_))) => {
+                "phasor-triple-role-overlap-32-v1"
             }
             Self::FourierTransport => "phasor-learned-fourier-transport-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",

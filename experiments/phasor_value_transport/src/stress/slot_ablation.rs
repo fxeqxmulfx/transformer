@@ -66,11 +66,36 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         let mut plain = Engine::new(cfg, &original)?;
         results.insert("without_peers", score(&mut plain, &original)?);
     }
-    if cfg.head.peer_search() == Some(head::PeerSearch::IteratedWitnesses) {
+    if cfg.head.peer_search() == Some(head::PeerSearch::Iterated(None)) {
         let mut single_cfg = cfg.clone();
         single_cfg.head = head::Head::PeerTriplePhase(head::PeerSearch::Witnesses);
         let mut single = Engine::new(single_cfg, &original)?;
         results.insert("one_round", score(&mut single, &original)?);
+    }
+    if matches!(
+        cfg.head.peer_search(),
+        Some(head::PeerSearch::Iterated(Some(_)))
+    ) {
+        use crate::head::PeerSearch;
+        use crate::slot_orbits::RoleEvidence;
+        for (name, search) in [
+            (
+                "without_role_proposals",
+                PeerSearch::Iterated(Some(RoleEvidence::WithoutProposals)),
+            ),
+            (
+                "without_relative_overlap",
+                PeerSearch::Iterated(Some(RoleEvidence::AbsoluteOverlap)),
+            ),
+            ("without_role_evidence", PeerSearch::Iterated(None)),
+        ] {
+            let mut control = cfg.clone();
+            control.head = head::Head::PeerTriplePhase(search);
+            results.insert(
+                name,
+                score(&mut Engine::new(control, &original)?, &original)?,
+            );
+        }
     }
     println!(
         "{}",

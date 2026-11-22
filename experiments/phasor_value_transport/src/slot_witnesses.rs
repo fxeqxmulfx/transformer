@@ -1,6 +1,9 @@
 //! Pool distinct ordered output pairs observed across common hidden keys.
 use super::{ABSENT, Components};
 use std::collections::HashMap;
+#[path = "slot_symmetry.rs"]
+mod symmetry;
+pub use symmetry::RoleEvidence;
 
 #[derive(Clone, Copy, Default)]
 struct Values([u64; 4]);
@@ -32,7 +35,7 @@ pub fn fill_from_witnesses(
     constant: &[u32],
     output: &mut [u32],
 ) {
-    read_round(slots, bank, priority, constant, output, 16);
+    read_round(slots, bank, priority, constant, output, 16, false);
 }
 
 /// Further rounds can use answers established at other keys. All source
@@ -43,10 +46,22 @@ pub fn fill_in_rounds(
     priority: &[usize],
     constant: &[u32],
     output: &mut [u32],
+    roles: Option<RoleEvidence>,
 ) {
+    if !output
+        .iter()
+        .zip(constant)
+        .any(|(&y, &c)| y == ABSENT && c == ABSENT)
+    {
+        return;
+    }
     let mut evidence = bank.to_vec();
+    let relative =
+        roles.is_some_and(|terms| symmetry::extend(slots, &mut evidence, constant, output, terms));
     for budget in [16, 32, 32] {
-        read_round(slots, &evidence, priority, constant, output, budget);
+        read_round(
+            slots, &evidence, priority, constant, output, budget, relative,
+        );
         if !output
             .iter()
             .zip(constant)
@@ -74,6 +89,7 @@ fn read_round(
     constant: &[u32],
     output: &mut [u32],
     peer_limit: usize,
+    relative: bool,
 ) {
     const THRESHOLD: u8 = 6;
     assert!(slots > 0 && slots <= 256);
@@ -105,7 +121,8 @@ fn read_round(
     let pairs = peers.len() * contexts;
     let mut signatures = vec![Vec::new(); pairs];
     let mut postings = vec![Vec::new(); slots * slots];
-    let mut counts = vec![0_u8; pairs];
+    let mut counts = vec![0_u16; pairs];
+    let mut lengths = vec![0_usize; pairs];
     let mut groups = Components::new(pairs);
     for (index, &(source, _)) in peers.iter().enumerate() {
         for (target, &row) in rows.iter().enumerate() {
@@ -124,15 +141,24 @@ fn read_round(
             if observed.len() < usize::from(THRESHOLD) {
                 continue;
             }
+            lengths[id] = observed.len();
             let mut touched = Vec::new();
             for &uv in observed.iter() {
                 for &previous in &postings[uv] {
-                    let count: &mut u8 = &mut counts[previous];
+                    let count: &mut u16 = &mut counts[previous];
                     if *count == 0 {
                         touched.push(previous);
                     }
                     *count = count.saturating_add(1);
-                    if *count == THRESHOLD {
+                    let required = if relative {
+                        lengths[id]
+                            .min(lengths[previous])
+                            .div_ceil(2)
+                            .max(usize::from(THRESHOLD))
+                    } else {
+                        usize::from(THRESHOLD)
+                    };
+                    if usize::from(*count) == required {
                         groups.join(id, previous);
                     }
                 }

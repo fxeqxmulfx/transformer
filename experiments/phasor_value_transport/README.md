@@ -2105,6 +2105,55 @@ done
 "$bin" screen gpt-probe-key-value-binding 0 "$out" 4096
 ```
 
+### Evidence from permutations of hidden roles
+
+The `triple-role-witness` model tries the five nonidentity permutations
+of a learned correspondence's context, key and output. It accepts a
+permutation after at least 12 confirmations at other cells, provided every
+observed destination and every proposal from that permutation agree.
+Different accepted permutations can suggest a value at the same cell.
+The model uses that value only when their proposals agree.
+
+When a permutation is supported, two context pairs must share at least
+six ordered output pairs and at least half of the smaller observed set to
+join the same group. The read then uses the same three inference rounds
+and learned gates. Every decision comes from the hidden correspondences.
+Lean proves that valid permutations preserve the unknown relation and
+that relative overlap can distinguish relations that share six pairs.
+A counterexample shows that agreement on the observations alone leaves
+room for an incorrect unseen prediction. [Hidden-role and overlap proofs](../../src/Transformer/Phasor/TripleTransport/RoleWitnesses.lean)
+
+| Case | Seed | First passing update | Correct on reloaded primary split |
+| --- | --- | --- | --- |
+| Fourth power of the modular sum, long | 0 / 1 / 2 | 152 / 190 / 209 | 4,703 / 4,705 / 4,705 of 4,705 |
+| Square of the modular sum, short | 0 | 171 | 4,705/4,705 |
+| NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
+
+Every NV11 checkpoint also classified all 4,704 training pairs correctly.
+The original arithmetic tasks supply one evaluation split. The preceding
+three-round model scored 158/4,705 on the fourth-power case at the seed 0
+screen cutoff of 950 updates.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.RoleWitnesses
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-role-witness
+bin=./target/release/phasor-value-transport
+out=runs/role-witness
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    for task in arithmetic-cubic-product arithmetic-sum-pow4; do
+        "$bin" cell "$task" "$seed" "$out"
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" slot-ablate arithmetic-sum-pow4 "$seed" "$out"
+done
+"$bin" cell arithmetic-sum-square 0 "$out"
+"$bin" probes arithmetic-sum-square 0 "$out"
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.

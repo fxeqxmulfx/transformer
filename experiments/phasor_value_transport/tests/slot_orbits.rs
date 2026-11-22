@@ -313,7 +313,7 @@ fn later_witnesses_resolve_additional_unseen_cells() {
     let mut once = constant.clone();
     let mut iterated = constant.clone();
     slot_orbits::fill_from_witnesses(slots, &bank, &priority, &constant, &mut once);
-    slot_orbits::fill_in_rounds(slots, &bank, &priority, &constant, &mut iterated);
+    slot_orbits::fill_in_rounds(slots, &bank, &priority, &constant, &mut iterated, None);
     let mut added = 0;
     for (index, (&first, &last)) in once.iter().zip(&iterated).enumerate() {
         if first != ABSENT {
@@ -325,4 +325,45 @@ fn later_witnesses_resolve_additional_unseen_cells() {
         }
     }
     assert!(added > slots, "{added} additional held-out cells");
+}
+
+#[test]
+fn role_reads_follow_a_common_renaming_at_unseen_keys() {
+    let slots = 16;
+    let rename = |a: usize| (3 * a + 7) % slots;
+    let mut bank = vec![ABSENT; slots * slots];
+    let mut renamed = bank.clone();
+    for row in 0..slots {
+        for col in 0..slots {
+            if (row + 3 * col) % 7 != 0 {
+                let y = row ^ col;
+                bank[row * slots + col] = y as u32;
+                renamed[rename(row) * slots + rename(col)] = rename(y) as u32;
+            }
+        }
+    }
+    let priority: Vec<_> = (0..slots).collect();
+    let new_order: Vec<_> = priority.iter().copied().map(rename).collect();
+    let constant = vec![ABSENT; bank.len()];
+    let mut original = constant.clone();
+    let mut after = constant.clone();
+    let terms = Some(slot_orbits::RoleEvidence::All);
+    slot_orbits::fill_in_rounds(slots, &bank, &priority, &constant, &mut original, terms);
+    slot_orbits::fill_in_rounds(slots, &renamed, &new_order, &constant, &mut after, terms);
+    let mut recovered = 0;
+    for (i, y) in original.into_iter().enumerate() {
+        let a = i / slots;
+        let b = i % slots;
+        if bank[i] == ABSENT && y != ABSENT {
+            assert_eq!(y as usize, a ^ b);
+            recovered += 1;
+        }
+        let expected = if y == ABSENT {
+            ABSENT
+        } else {
+            rename(y as usize) as u32
+        };
+        assert_eq!(after[rename(a) * slots + rename(b)], expected);
+    }
+    assert!(recovered > slots);
 }

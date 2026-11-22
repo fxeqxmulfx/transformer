@@ -207,12 +207,13 @@ impl Routing {
                     &reads.constant,
                     &mut reads.transport,
                 ),
-                Some(crate::head::PeerSearch::IteratedWitnesses) => slot_orbits::fill_in_rounds(
+                Some(crate::head::PeerSearch::Iterated(roles)) => slot_orbits::fill_in_rounds(
                     l.slots,
                     &bank,
                     &priority,
                     &reads.constant,
                     &mut reads.transport,
+                    roles,
                 ),
                 None => {}
             }
@@ -444,7 +445,8 @@ mod capacity_tests {
         for search in [
             PeerSearch::Aligned,
             PeerSearch::Witnesses,
-            PeerSearch::IteratedWitnesses,
+            PeerSearch::Iterated(None),
+            PeerSearch::Iterated(Some(crate::slot_orbits::RoleEvidence::All)),
         ] {
             for head in [Head::PeerTriple(search), Head::PeerTriplePhase(search)] {
                 assert_eq!(capacity(head, 64, 97), 97);
