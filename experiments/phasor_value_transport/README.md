@@ -122,6 +122,27 @@ done
 "$bin" catalog-report runs/learned-streams language-l2
 ```
 
+### Language L3 and L4
+
+The learned stream readout also passed the existing long-tier L3 task
+on all three seeds. On L4 it passed seeds 0 and 2 at updates 750 and
+1,000. Seed 1 scored 355/512 at update 2,250.
+
+The fixed-mean embedding-input control qualified L4 for the long tier.
+Its slowest first crossing took 212.59 seconds. Each reloaded checkpoint
+scored 512/512 on the source test and the independent length-128 test,
+and 256/256 on the stretched eight-letter words. Training used lengths
+32–64. The table gives the validation counts and the harder exhaustive
+twelve-letter scores for both three-seed passes.
+
+| Task and model | First ≥99% update, seeds 0 / 1 / 2 | Validation, out of 512 | Twelve-letter test, out of 4,096 |
+| --- | --- | --- | --- |
+| L3, learned stream read | 1,000 / 1,500 / 500 | 512 / 508 / 510 | 4,096 / 4,024 / 3,516 |
+| L4, fixed mean | 1,000 / 2,000 / 1,000 | 511 / 512 / 512 | 4,096 / 4,016 / 4,096 |
+
+For L4, build with `fp32-affine-reference,original-stream-mean` and run
+the L2 commands above with `language-l4` and a fresh run directory.
+
 ## Bounded recurrent readout
 
 Each position supplies its contextual embedding features to three learned
