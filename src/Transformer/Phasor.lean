@@ -20,6 +20,7 @@ public import Transformer.Phasor.TiedToeplitz
 public import Transformer.Phasor.TwoSidedFrame
 public import Transformer.Phasor.SingleFrameOrbit
 public import Transformer.Phasor.TripleTransport
+public import Transformer.Phasor.FourierTransport
 public import Transformer.Phasor.ReflectionPhaseRead
 public import Transformer.Phasor.HouseholderMemory
 public import Transformer.Phasor.SingleReflection

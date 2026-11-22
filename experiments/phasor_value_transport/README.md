@@ -1001,6 +1001,25 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/two-frame-nv11/seed0/nv11-train-3000.f32 rows
 ```
 
+## Learned Fourier transport
+
+One real matrix encodes the current dense embedding into complex channels.
+The preceding Phasor context chooses a softmax mixture of cyclic shifts of
+these channels and a constant complex source of value one. A separate
+learned angle per output channel rotates the mixture. The transpose of
+the encoding matrix decodes the result. An empty prefix gives the identity
+route and zero phase. The native read uses the smaller of the hidden width
+and 96 channels. At NV11 width 128, one cycle has room for every nonzero
+character of the field.
+
+For an affine map of a residue, each output character factors into the
+phase of the intercept and the input character at the scaled frequency.
+Multiplication by a nonzero field element permutes the frequencies. In
+generator order it shifts the channel index. Multiplication by zero sends
+all frequencies to the constant character. The learned read receives dense
+vectors and estimates both controls from its prefix.
+[Fourier transport proofs](../../src/Transformer/Phasor/FourierTransport.lean)
+
 ## Triple transport
 
 A context can learn a partial map between a dictionary of hidden vectors.
