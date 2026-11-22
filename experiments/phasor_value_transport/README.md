@@ -449,6 +449,15 @@ endpoint's logit margin. If the normalized read points toward the endpoint
 over every rival, one shared multiplier can overcome a finite set of
 adverse gaps while retaining comparisons already won on ordinary reads.
 
+With `closed-relation-boost` on v0.6.0, all three untrained seeds scored
+32/32 on the novel lookup validation set and 128/128 on training. Reloading
+each checkpoint gave 64/64 on the ordinary test, 64/64 at length 48 and
+64/64 at length 96. The training-length prompts have 24 tokens. All three
+seeds reproduced the selected NV11 checkpoints byte for byte at the first
+exhaustive observation (750 updates) and at 3,000 updates. Dyck reached
+32/32 at 500 / 250 / 500, matching the selected model. On MQAR, seed 0
+scored 31/32 at 1,000 updates.
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the

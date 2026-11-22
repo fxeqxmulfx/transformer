@@ -23,7 +23,11 @@ const HALF_GAIN: bool = cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
 pub const LEARN_BONUS: bool = cfg!(feature = "successor-bonus");
-pub const HIT_GAIN: bool = LEARN_BONUS || cfg!(feature = "successor-hit-gain");
+pub const HIT_GAIN: bool = LEARN_BONUS
+    || cfg!(any(
+        feature = "successor-hit-gain",
+        feature = "closed-relation-boost"
+    ));
 pub const INITIAL_BONUS: f32 = 0.5;
 pub const HIT_FACTOR: f32 = if cfg!(feature = "successor-hit-gain-seven-quarters") {
     1.75
@@ -98,6 +102,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     }
 } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
     "phasor-successor-hit-gain175-v1"
+} else if cfg!(feature = "closed-relation-boost") {
+    "phasor-closed-relation-gain-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
 } else if cfg!(feature = "closed-relation") {
@@ -214,8 +220,7 @@ fn addresses(a: usize, b: usize, p: usize, factor_b: usize) -> [u32; TABLES] {
     result
 }
 
-struct SuccessorAgreement {
-    ambiguous: Vec<bool>,
+struct GainEvidence {
     reads: Vec<u32>,
     device: Buffer<u32>,
 }
@@ -240,7 +245,8 @@ pub struct PairMemory {
     factors: Vec<usize>,
     successors: Vec<Option<u32>>,
     closed: Option<crate::relation_support::ClosedRead>,
-    agreement: Option<SuccessorAgreement>,
+    ambiguous: Vec<bool>,
+    evidence: Option<GainEvidence>,
 }
 
 impl PairMemory {
@@ -273,9 +279,19 @@ impl PairMemory {
             successors: vec![None; if SUCCESSOR { cfg.vocab } else { 0 }],
             closed: cfg!(feature = "closed-relation")
                 .then(|| crate::relation_support::ClosedRead::new(cfg.vocab)),
-            agreement: if cfg!(feature = "successor-agreement") {
-                Some(SuccessorAgreement {
-                    ambiguous: vec![false; cfg.vocab],
+            ambiguous: vec![
+                false;
+                if cfg!(feature = "successor-agreement") {
+                    cfg.vocab
+                } else {
+                    0
+                }
+            ],
+            evidence: if cfg!(any(
+                feature = "successor-agreement",
+                feature = "closed-relation-boost"
+            )) {
+                Some(GainEvidence {
                     reads: vec![0; rows],
                     device: cuda.alloc(rows)?,
                 })
@@ -285,10 +301,10 @@ impl PairMemory {
         })
     }
 
-    // One value per row for the agreement gate, or the first value in each
-    // row of ordinary table addresses for the unconditional successor gate.
+    // Gated reads have a separate evidence address. A plain hit multiplier
+    // uses the first address in each row of the ordinary table indices.
     pub fn gain_addresses(&self) -> (&Buffer<u32>, u32) {
-        self.agreement
+        self.evidence
             .as_ref()
             .map_or((&self.keys, TABLES as u32), |a| (&a.device, 1))
     }
@@ -314,29 +330,36 @@ impl PairMemory {
                 let pos = row % length;
                 if pos == 0 {
                     self.successors.fill(None);
-                    if let Some(a) = &mut self.agreement {
-                        a.ambiguous.fill(false);
-                    }
+                    self.ambiguous.fill(false);
                 } else if pos >= 2 {
                     let (key, value) = (tokens[row - 2] as usize, tokens[row - 1]);
-                    if let Some(a) = &mut self.agreement
+                    if cfg!(feature = "successor-agreement")
                         && self.successors[key].is_some_and(|old| old != value)
                     {
-                        a.ambiguous[key] = true;
+                        self.ambiguous[key] = true;
                     }
                     self.successors[key] = Some(value);
                 }
                 keys[0] = self.successors[b].unwrap_or(token);
-                if let Some(closed) = &mut self.closed {
+                let closed_end = if let Some(closed) = &mut self.closed {
                     if pos == 0 {
                         closed.clear();
                     } else if pos >= 3 {
                         closed.write(tokens[row - 3], tokens[row - 2], tokens[row - 1]);
                     }
-                    keys[0] = closed.address(token).unwrap_or(keys[0]);
-                }
-                if let Some(a) = &mut self.agreement {
-                    a.reads[row] = if a.ambiguous[b] { token } else { keys[0] };
+                    closed.address(token)
+                } else {
+                    None
+                };
+                keys[0] = closed_end.unwrap_or(keys[0]);
+                if let Some(evidence) = &mut self.evidence {
+                    evidence.reads[row] = if cfg!(feature = "closed-relation-boost") {
+                        closed_end.unwrap_or(token)
+                    } else if self.ambiguous[b] {
+                        token
+                    } else {
+                        keys[0]
+                    };
                 }
                 if cfg!(feature = "transition-count") {
                     if pos == 0 {
@@ -367,8 +390,8 @@ impl PairMemory {
             }
         }
         self.keys.write(&self.indices)?;
-        if let Some(a) = &mut self.agreement {
-            a.device.write(&a.reads)?;
+        if let Some(evidence) = &mut self.evidence {
+            evidence.device.write(&evidence.reads)?;
         }
         if let Some(relations) = &mut self.relations {
             relations.prepare(tokens, length)?;

@@ -180,7 +180,11 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
                     .windows(2)
                     .filter(|edge| edge[0] == b)
                     .all(|edge| edge[1] == r);
-            if cfg!(feature = "successor-bonus") && r != b {
+            if cfg!(feature = "closed-relation-boost")
+                && crate::closed_checks::reference(prefix, b, p as u32).is_some()
+            {
+                gain *= 2.;
+            } else if cfg!(feature = "successor-bonus") && r != b {
                 gain += f64::from(theta[gain_at + 1]);
             } else if cfg!(feature = "successor-hit-gain") && r != b && agreed {
                 gain *= if cfg!(feature = "successor-hit-gain-seven-quarters") {
