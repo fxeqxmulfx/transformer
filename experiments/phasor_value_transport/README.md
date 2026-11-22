@@ -744,6 +744,15 @@ the last edge from its predecessor, and a longer fixture checks the
 absorbing bucket. Reproduce with `shared-check`, `cell language-l2 SEED RUN_DIR`
 and `probes language-l2 SEED RUN_DIR` in the same build.
 
+The modulated transition-table trial reads a capped count entry `x` and a
+current-token entry `y` at every position. Each hidden coordinate contributes
+`x + y + x*y` before normalization. Initializing the token table to zero
+recovers the inclusive count read for any learned count table. Lean proves
+that summing these coordinates can represent any scalar function of the two
+keys using one coordinate per token. It also gives the exact finite-batch
+gradient, including repeated keys and masked rows.
+[Two-key representation and gradient](../../src/Transformer/Phasor/ModulatedTransitions.lean)
+
 The geometric-memory trial learns one additional value for each token and
 hidden coordinate. It scans every input sequence in order. Each coordinate
 retains a fixed fraction of its preceding state and adds the current learned
