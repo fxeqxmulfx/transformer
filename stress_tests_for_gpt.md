@@ -477,10 +477,11 @@ sweep and the 35-task short/long selection retain their original membership.
 
 ## Sources and reproducibility
 
-The native Phasor runner trains and independently replays the 25 short
-and ten long tasks at seeds 0, 1 and 2. Its report also supports additional
-catalog tasks and preserves their separate tier counts.
-[Phasor stress commands](experiments/phasor_value_transport/README.md#canonical-gpt-stress-tiers)
+The native Phasor runner trains the default triple-transport architecture
+separately on each of the 25 short and ten long tasks at seeds 0, 1 and 2.
+Its audit reloads the GPT checkpoints and checks exact NV11 recovery under
+the same model identifier. The report gives extensions their own tier counts.
+[Default Phasor and reproduction commands](experiments/phasor_value_transport/README.md)
 
 - [Frozen 165-case plan](research/current_grokking/plan.json): exact IDs, task
   parameters, model sizes, budgets, targets and the recorded user-requested skips.

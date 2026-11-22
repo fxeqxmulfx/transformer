@@ -25,11 +25,11 @@ export PHASOR_EVAL_BATCH_CAP=16
 ./run_stress.sh cell "$out"
 "$bin" report "$out" > "$out/report.json"
 ./run_stress.sh replay "$out" > "$out/replays.jsonl"
-jq -es --slurpfile report "$out/report.json" -f verify_replays.jq "$out/replays.jsonl"
 for seed in 0 1 2; do
-    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32" |
-        jq -e 'select(.training.correct == 4704 and .held_out.correct == 4705)'
-done
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done > "$out/nv11-scores.jsonl"
+jq -es --slurpfile report "$out/report.json" --slurpfile nv11 "$out/nv11-scores.jsonl" \
+    -f verify_replays.jq "$out/replays.jsonl"
 ```
 
 A compact Fourier read used 49,985 read parameters and reached at most
