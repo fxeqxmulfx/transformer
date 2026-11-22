@@ -63,7 +63,16 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
             [0, p - 1, 9, 0, 6, 4][(i % length + if r == 1 { 2 } else { 0 }) % 6] as u32
         })
         .collect();
-    if cfg!(feature = "relation-paths") && length >= 8 {
+    if cfg!(feature = "relation-support") && length == 18 {
+        let patterns = [
+            [2, 0, 3, 4, 1, 0, 2, 1, 1, 0, 2, 1, 7, 0, 8, 7, 0, 7],
+            [1, 0, 2, 0, 3, 0, 4, 0, 5, 9, 1, 6, 7, 6, 8, 9, 9, 1],
+            [1, 0, 2, 4, 1, 0, 5, 1, 5, 0, 3, 1, 5, 0, 5, 1, 5, 1],
+        ];
+        for (row, pattern) in tokens.chunks_mut(length).zip(patterns) {
+            row.copy_from_slice(&pattern);
+        }
+    } else if cfg!(feature = "relation-paths") && length >= 8 {
         let patterns = [
             [2, 0, 3, 4, 1, 0, 2, 1, 1, 0, 2, 1],
             [1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 5, 1],
@@ -77,8 +86,8 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
         .map(|i| ((7 * i + 3) % p) as u32)
         .collect();
     labels[1] = u32::MAX;
-    if cfg!(feature = "relation-paths") && length == 12 {
-        // Only this prediction reads two relations pointing to the same token.
+    if cfg!(feature = "relation-paths") && matches!(length, 12 | 18) {
+        // Isolate a tie at length 12 and a strict support winner at length 18.
         labels.fill(u32::MAX);
         labels[2 * length - 1] = 3;
     }
@@ -184,18 +193,30 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
             }
         }
         if cfg!(feature = "relation-paths") {
-            let ends: Vec<_> = (0..p)
-                .map(|h| {
-                    let next = |key| {
-                        prefix
-                            .windows(3)
-                            .rev()
-                            .find(|triple| triple[0] == key && triple[1] == h as u32)
-                            .map(|triple| triple[2])
-                    };
-                    next(b).and_then(next).unwrap_or(b)
-                })
-                .collect();
+            let next = |key: u32, h: usize| {
+                prefix
+                    .windows(3)
+                    .rev()
+                    .find(|triple| triple[0] == key && triple[1] == h as u32)
+                    .map(|triple| triple[2])
+            };
+            let walk = |key, h| next(key, h).and_then(|middle| next(middle, h));
+            let mut ends: Vec<_> = (0..p).map(|h| walk(b, h).unwrap_or(b)).collect();
+            if cfg!(feature = "relation-support") {
+                let counts: Vec<_> = (0..p)
+                    .map(|h| (0..p as u32).filter(|&key| walk(key, h).is_some()).count())
+                    .collect();
+                let maximum = (0..p)
+                    .filter(|&h| ends[h] != b)
+                    .map(|h| counts[h])
+                    .max()
+                    .unwrap_or(0);
+                for (end, count) in ends.iter_mut().zip(counts) {
+                    if count < maximum {
+                        *end = b;
+                    }
+                }
+            }
             let divisor = if cfg!(feature = "relation-path-mean") {
                 ends.iter().filter(|&&end| end != b).count().max(1) as f64
             } else {
@@ -249,6 +270,13 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
                 "one of two agreeing relations".to_owned(),
                 gain_at + 1..gain_at + 2,
             ));
+        }
+        if length == 18 {
+            if gradients[gain_at + 1].abs() <= 1e-6 || gradients[gain_at + 7] != 0. {
+                return Err("strict relation winner did not isolate its amplitude gradient".into());
+            }
+            directions.push(("highest support".to_owned(), gain_at + 1..gain_at + 2));
+            directions.push(("lower support".to_owned(), gain_at + 7..gain_at + 8));
         }
     }
     for k in 0..pair_memory::TABLES {
@@ -325,6 +353,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     if !precision::FP32_AFFINE_REFERENCE {
         return Err("finite differences require FP32 affines".into());
     }
+    if cfg!(feature = "relation-support") {
+        crate::relation_support::check_counts()?;
+    }
     if let Some(width) = width {
         if ![64, 128, 256].contains(&width) {
             return Err("shared checks support widths 64, 128 and 256".into());
@@ -343,6 +374,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     if cfg!(feature = "relation-paths") {
         profile(36, 12, 128)?;
+    }
+    if cfg!(feature = "relation-support") {
+        profile(36, 18, 128)?;
     }
     let mut cfg = config(8)?;
     cfg.shared_values = true;

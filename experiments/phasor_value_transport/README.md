@@ -411,6 +411,15 @@ the update. This rank uses only completed triples and treats every token
 as a possible relation or endpoint. A unique maximizer supplies one full
 tied displacement at initialization. [Relation support proofs](../../src/Transformer/Phasor/RelationSupport.lean)
 
+The `relation-support` build checked its incremental counts after every
+write on all 6,561 eight-token prompts over three symbols. It passed 123
+directional derivatives. For an isolated strict winner the learned amplitude
+gave 1.354837 analytically and 1.354814 numerically, and the losing
+amplitude gave zero by both methods. On seed 0, lookup reached 26/32 by
+1,000 updates and its best score through 5,000 remained 26/32. Blocks
+passed at 500 updates (28/28), Dyck scored 31/32 at 250 and MQAR scored
+30/32 at 1,000. These results leave the selected architecture in place.
+
 ## One address from a closed relation
 
 This trial changes the address shared by the successor table and the tied

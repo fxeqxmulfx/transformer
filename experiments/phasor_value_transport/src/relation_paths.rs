@@ -2,8 +2,8 @@
 //! A triple writes its last token under its first two tokens. The current
 //! query follows two edges through each relation in this prefix only.
 use crate::engine::Result;
+use crate::relation_support::{Edges, Support};
 use kernite_cuda::{Buffer, Cuda};
-use std::collections::BTreeMap;
 
 pub const MEAN: bool = cfg!(feature = "relation-path-mean");
 
@@ -32,17 +32,25 @@ impl RelationRead {
         if length <= 2 {
             return Ok(());
         }
-        let mut edges = BTreeMap::new();
+        let mut edges = Edges::new();
+        let mut support = cfg!(feature = "relation-support").then(|| Support::new(self.vocab));
         let batches = self.host.chunks_exact_mut(length * self.vocab);
         for (example, (prompt, batch)) in tokens.chunks_exact(length).zip(batches).enumerate() {
             edges.clear();
+            if let Some(support) = &mut support {
+                support.clear();
+            }
             for (i, (&source, row)) in prompt
                 .iter()
                 .zip(batch.chunks_exact_mut(self.vocab))
                 .enumerate()
             {
                 if i >= 3 {
-                    edges.insert((prompt[i - 3], prompt[i - 2]), prompt[i - 1]);
+                    let (key, relation, value) = (prompt[i - 3], prompt[i - 2], prompt[i - 1]);
+                    if let Some(support) = &mut support {
+                        support.before_write(&edges, key, relation, value);
+                    }
+                    edges.insert((key, relation), value);
                 }
                 row.fill(source);
                 let mut moving = 0;
@@ -55,6 +63,9 @@ impl RelationRead {
                     }
                 }
                 if MEAN {
+                    if let Some(support) = &support {
+                        moving = support.retain_maximal(row, source);
+                    }
                     self.host_scales[example * length + i] =
                         if moving == 0 { 0. } else { 1. / moving as f32 };
                 }

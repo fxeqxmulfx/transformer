@@ -95,6 +95,8 @@ pub const MODEL: &str = if LEARN_BONUS {
     "phasor-successor-hit-gain175-v1"
 } else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
+} else if cfg!(feature = "relation-support") {
+    "phasor-composable-relation-support-v1"
 } else if cfg!(feature = "relation-path-mean") {
     "phasor-mean-two-hop-relation-values-v1"
 } else if cfg!(feature = "relation-paths") {

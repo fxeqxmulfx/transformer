@@ -13,6 +13,7 @@ mod pair_checks;
 mod pair_memory;
 mod pair_ops;
 mod relation_paths;
+mod relation_support;
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 use engine::{Config, Engine, Result, ValueLayer};
 mod checks;
