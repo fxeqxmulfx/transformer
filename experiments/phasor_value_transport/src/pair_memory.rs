@@ -5,14 +5,20 @@ use crate::engine::{Config, Result};
 use kernite_cuda::{Buffer, Cuda};
 
 pub const TABLES: usize = 17;
-pub const INITIAL_GAIN: f32 = 0.25;
+pub const INITIAL_GAIN: f32 = if cfg!(feature = "prefix-successor-half") {
+    0.5
+} else {
+    0.25
+};
 
 #[cfg(all(feature = "prefix-xor", feature = "prefix-sum"))]
 compile_error!("choose one prefix architecture per binary");
 #[cfg(all(feature = "prefix-xor-cubic", feature = "prefix-successor"))]
 compile_error!("the successor trial uses the linear prefix sum");
 
-pub const MODEL: &str = if cfg!(feature = "prefix-successor") {
+pub const MODEL: &str = if cfg!(feature = "prefix-successor-half") {
+    "phasor-prefix-successor-half-v1"
+} else if cfg!(feature = "prefix-successor") {
     "phasor-prefix-successor-v1"
 } else if cfg!(feature = "prefix-xor-cubic") {
     "phasor-prefix-xor-cubic-v1"

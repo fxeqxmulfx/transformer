@@ -19,6 +19,7 @@ fp32-affine-reference = []
 prefix-xor = []
 prefix-xor-cubic = ["prefix-xor"]
 prefix-successor = ["prefix-xor"]
+prefix-successor-half = ["prefix-successor"]
 prefix-sum = []
 
 [[bin]]

@@ -14,6 +14,9 @@ occurrence of its key. The state accepts arbitrary tokens and stream lengths.
 
 namespace Transformer.Phasor
 
+open scoped RealInnerProductSpace
+open Transformer
+
 universe u v
 
 variable {α : Type u} {β : Type v}
@@ -81,6 +84,26 @@ noncomputable def Model.successorLogit {D d H F p : ℕ} [NeZero p] (M : Model D
     (T : PairTables D p) (gain eps scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ) (c : Fin p) : ℝ :=
   M.prefixLogit (T.withSuccessor xs i) .xor (0,0) gain eps scale xs L i c
 
+/-- At arbitrary depth and position, changing the gain by `g-h` changes a
+class logit by at most the embedding norm times `|g-h| √D`. The lookup and
+the rest of the learned parameters are fixed. This bounds the effect of the
+quarter- versus half-gain initializations in the successor experiment. -/
+theorem Model.successorLogit_gain_bound {D d H F p : ℕ} [NeZero p] (M : Model D d H F p)
+    (T : PairTables D p) (g h : ℝ) {eps : ℝ} (heps : 0 < eps) (hD : 0 < D)
+    (scale : ℝ) (xs : ℕ → Fin p) (L i : ℕ) (c : Fin p) :
+    |M.successorLogit T g eps scale xs L i c - M.successorLogit T h eps scale xs L i c| ≤
+      |g-h| * (‖M.embedding c‖ * Real.sqrt D) := by
+  let raw := transportedValue M.embedding (Perspective.softmaxWeight
+    (M.logits eps scale xs L (i-1))) (xs (i-1) * xs i) +
+    (T.withSuccessor xs i).prefixRead .xor (0,0) xs i
+  let y := GPTMini.rmsNormEps eps raw
+  change |⟪M.embedding c, M.feature eps scale xs L i + g • y⟫ -
+    ⟪M.embedding c, M.feature eps scale xs L i + h • y⟫| ≤ _
+  simp only [inner_add_right, real_inner_smul_right, add_sub_add_left_eq_sub, ← sub_mul, abs_mul]
+  exact mul_le_mul_of_nonneg_left ((abs_real_inner_le_norm _ _).trans
+    (mul_le_mul_of_nonneg_left (GPTMini.rmsNormEps_norm_le eps heps hD raw) (norm_nonneg _)))
+    (abs_nonneg _)
+
 /-- The composed score still agrees with the incumbent for every choice of
 the learned parameters at the first two positions. -/
 theorem Model.successorLogit_eq_shared {D d H F p : ℕ} [NeZero p] (M : Model D d H F p)
@@ -105,5 +128,11 @@ example (M : Model 128 32 4 171 97) (T : PairTables 128 97) (xs : ℕ → Fin 97
     (L : ℕ) (c : Fin 97) :
     M.successorLogit T (1/4) 1 1 xs L 1 c = M.sharedLogit T (1/4) 1 1 xs L 1 c :=
   M.successorLogit_eq_shared T _ _ _ xs L 1 (by decide) c
+
+example (M : Model 64 16 4 86 68) (T : PairTables 64 68) (xs : ℕ → Fin 68)
+    (L i : ℕ) (c : Fin 68) :
+    |M.successorLogit T (1/2) 1 1 xs L i c - M.successorLogit T (1/4) 1 1 xs L i c| ≤
+      |(1/2 : ℝ)-1/4| * (‖M.embedding c‖ * Real.sqrt 64) :=
+  M.successorLogit_gain_bound T _ _ (by norm_num) (by decide) _ xs L i c
 
 end Transformer.Phasor

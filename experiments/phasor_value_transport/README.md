@@ -75,6 +75,11 @@ renaming. These are properties of the internal address. Learned logits and
 held-out accuracy are measured separately.
 [Successor read and lookup theorems](../../src/Transformer/Phasor/SuccessorValues.lean)
 
+The half-gain trial initializes this same learned residual at 0.5 throughout
+the model. Lean bounds the change in any logit at fixed weights by
+`|g − h| × ‖embedding[class]‖ × sqrt(width)` when the gain changes from
+`h` to `g`, at every position. Build this trial with `prefix-successor-half`.
+
 For promotion we compare all three seeds with the incumbent. Every original
 pass must survive. We compare the geometric mean of paired training epochs
 to the first scheduled 99% crossing separately for short and long, retaining

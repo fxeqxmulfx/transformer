@@ -66,7 +66,12 @@ fn profile(p: usize, length: usize) -> Result<()> {
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
-    if theta[gain_at] != 0.25 || theta[start..gain_at].iter().any(|&v| v != 0.) {
+    let expected_gain = if cfg!(feature = "prefix-successor-half") {
+        0.5
+    } else {
+        0.25
+    };
+    if theta[gain_at] != expected_gain || theta[start..gain_at].iter().any(|&v| v != 0.) {
         return Err("shared residual initialization differs from specification".into());
     }
     let mut rng = random::Random::new(301);
