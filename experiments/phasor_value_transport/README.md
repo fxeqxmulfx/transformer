@@ -556,6 +556,12 @@ vote or a disagreement leaves the ordinary successor address in place.
 The model has the same 17 tables and learned gain as the selected model.
 [Closed relation and address proofs](../../src/Transformer/Phasor/ClosedRelations.lean)
 
+The source-row storage trial keeps a sorted list of relation labels and
+destinations for each written source. Lean proves that replacing a value
+or inserting a new label preserves strict order, and that the resulting
+lookup matches the flat table after every finite write stream.
+[Sorted relation rows](../../src/Transformer/Phasor/RelationRows.lean)
+
 The query, the first endpoint and the second endpoint are distinct whenever
 a closed two-step read moves. Thus fewer than three distinct stored edges
 force the fallback for every relation and every query. The same argument
