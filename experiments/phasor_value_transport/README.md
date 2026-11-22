@@ -556,6 +556,31 @@ prefix causality and the one-step derivative. Initializing the right and
 local read projections to zero recovers the input-phase model at any depth.
 [Bilinear phase proofs](../../src/Transformer/Phasor/BilinearPhaseRead.lean)
 
+At length 257 a separate FP64 sum over ordered pairs reproduced 49,344
+GPU reads within `1.92e-5`. Differentiating every read independently
+reproduced 98,688 projected-input derivatives within `7.43e-4`.
+At widths 64 and 128 the full-network scalar reference matched logits
+within `5.12e-7`. Zero-initialized contributions gave identical off-table
+hidden values, logits and embedding gradients to the input-phase control.
+All eighteen masked-loss parameter directions passed, including distinct
+directions for left, right and transient projections.
+
+For the combined embedding direction at width 64 and length nine, the
+initial finite difference was 5.220870. Halving the step twice gave
+5.138516 and 5.116463. The two extrapolations were 5.111065 and 5.109111
+against the analytic 5.110137, using the convergence criterion of the
+separate phase-gradient checks.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.BilinearPhaseRead
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,bilinear-phase-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+"$bin" nv11-train runs/bilinear-phase-nv11/seed0 0 3000
+"$bin" nv11-score runs/bilinear-phase-nv11/seed0/nv11-train-3000.f32
+```
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can

@@ -102,6 +102,7 @@ fn network(width: usize) -> Result<()> {
     let increments = architecture::memory_start(&cfg);
     let writes = increments + M * width;
     let affine = cfg.head == head::Head::AffinePhase;
+    let bilinear = cfg.head == head::Head::BilinearPhase;
     let output = increments + cfg.head.phase_inputs() * width;
     let end = first + cfg.head.parameters(&cfg);
     let mut e = Engine::new(cfg.clone(), &weights)?;
@@ -122,9 +123,10 @@ fn network(width: usize) -> Result<()> {
     for w in &mut weights[output..end] {
         *w = rng.gauss(0., 0.08) as f32;
     }
-    if affine {
-        affine_phase_checks::zero_write(&cfg, &weights, &mut e)?;
-        for w in &mut weights[writes..output] {
+    if affine || bilinear {
+        phase_controls::zero_extension(&cfg, &weights, &mut e)?;
+        let inactive = if bilinear { writes + M * width } else { writes };
+        for w in &mut weights[inactive..output] {
             *w = rng.gauss(0., 0.05) as f32;
         }
     }
@@ -142,6 +144,7 @@ fn network(width: usize) -> Result<()> {
     for (seq, source) in contextual.zip(hidden[source].chunks_exact(width * length)) {
         let mut angles = [0.; M];
         let mut ordered = [(1., 0.); M];
+        let mut left_sum = [0.; M];
         for (h, x) in seq.chunks_exact(width).zip(source.chunks_exact(width)) {
             let h: Vec<_> = h.iter().copied().map(f64::from).collect();
             let x: Vec<_> = x.iter().copied().map(f64::from).collect();
@@ -156,7 +159,13 @@ fn network(width: usize) -> Result<()> {
                     pair[M + k] = ordered[k].0 - 1.;
                 } else {
                     angles[k] += step[k];
-                    let (s, c) = angles[k].sin_cos();
+                    let mut angle = angles[k];
+                    if bilinear {
+                        angles[k] += left_sum[k] * step[2 * M + k];
+                        angle = angles[k] + step[3 * M + k];
+                        left_sum[k] += step[M + k];
+                    }
+                    let (s, c) = angle.sin_cos();
                     pair[k] = s;
                     pair[M + k] = c - 1.;
                 }
@@ -182,83 +191,20 @@ fn network(width: usize) -> Result<()> {
     ];
     if affine {
         groups.push(("affine phase write", (writes..output).collect()));
+    } else if bilinear {
+        for (j, name) in ["ordered left", "ordered right", "local phase"]
+            .into_iter()
+            .enumerate()
+        {
+            let start = writes + j * M * width;
+            groups.push((name, (start..start + M * width).collect()));
+        }
     }
     println!("phase network width={width} max_absolute_logits={logits:.3e} prefix={prefix:.3e}");
     memory_checks::check_directions(&mut e, &weights, &tokens, &labels, length, groups)?;
     if cfg.head.projects_embeddings() {
-        input_segment(&cfg, &weights, &mut e)?;
+        phase_controls::input_segment(&cfg, &weights, &mut e)?;
     }
-    Ok(())
-}
-
-/// Isolate the residual and its input VJP by subtracting a model with the
-/// same trained backbone and classifier. Swap unequal off-table segments.
-fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Result<()> {
-    let mut control = cfg.clone();
-    control.head = head::Head::Stream;
-    let memory = architecture::memory_start(cfg);
-    if layout::frequency_offset(&control) != memory {
-        return Err("input phase parameters overlap the stream backbone".into());
-    }
-    // The native layout stores the learned rotary frequencies after the readout.
-    let base_weights = [
-        &weights[..memory],
-        &weights[layout::frequency_offset(cfg)..],
-    ]
-    .concat();
-    let mut base = Engine::new(control, &base_weights)?;
-    let (width, length, vocab) = (cfg.width, cfg.max_length, cfg.vocab);
-    let mut rng = random::Random::new(717);
-    let mut values: Vec<_> = (0..length * width)
-        .map(|_| rng.gauss(0., 0.28) as f32)
-        .collect();
-    let mut cotangent = vec![0.; length * vocab];
-    for g in &mut cotangent[(length - 1) * vocab..] {
-        *g = rng.gauss(0., 0.2) as f32;
-    }
-    let mut residual = |input: &[f32]| -> Result<(Vec<f32>, Vec<f32>)> {
-        let a = e.infer_embeddings(input, 1, length)?;
-        let b = base.infer_embeddings(input, 1, length)?;
-        let g = e.embedding_pullback(input, 1, length, &cotangent)?;
-        let h = base.embedding_pullback(input, 1, length, &cotangent)?;
-        let read = a.hidden[(length - 1) * width..]
-            .iter()
-            .zip(&b.hidden[(length - 1) * width..])
-            .map(|(x, y)| x - y)
-            .collect();
-        Ok((read, g.iter().zip(h).map(|(x, y)| x - y).collect()))
-    };
-    let (ab, mut gab) = residual(&values)?;
-    values.rotate_left(2 * width);
-    let (ba, gba) = residual(&values)?;
-    gab.rotate_left(2 * width);
-    if !ab.iter().any(|x| x.abs() > 0.01) || !gba[..width].iter().any(|x| x.abs() > 0.001) {
-        return Err("segment check requires active phase outputs and early input gradients".into());
-    }
-    if cfg.head == head::Head::AffinePhase {
-        let changed = |a: &[f32], b: &[f32]| {
-            a.iter()
-                .zip(b)
-                .map(|(x, y)| (x - y).abs())
-                .fold(0_f32, f32::max)
-        };
-        let forward = changed(&ab, &ba);
-        let gradient = changed(&gab, &gba);
-        if forward < 0.01 || gradient < 0.001 {
-            return Err(
-                "learned affine writes failed to distinguish ordered off-table segments".into(),
-            );
-        }
-        println!(
-            "ordered phase segment width={width} hidden_difference={forward:.3e} input_gradient_difference={gradient:.3e}"
-        );
-        return Ok(());
-    }
-    let forward = compact_checks::close("phase segment exchange", &ab, &ba, 8e-6)?;
-    let grad = compact_checks::close("phase segment VJP exchange", &gab, &gba, 3e-5)?;
-    println!(
-        "input phase segment width={width} max_absolute_hidden={forward:.3e} input_grad={grad:.3e}"
-    );
     Ok(())
 }
 
@@ -267,7 +213,9 @@ pub fn run() -> Result<()> {
         return Err("phase memory checks require --features fp32-affine-reference".into());
     }
     for length in [1, 7, 257] {
-        if architecture::AFFINE_PHASE {
+        if architecture::BILINEAR_PHASE {
+            bilinear_phase_checks::scan(length)?;
+        } else if architecture::AFFINE_PHASE {
             affine_phase_checks::scan(length)?;
         } else {
             scan(length)?;

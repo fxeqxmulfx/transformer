@@ -166,17 +166,37 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
                 .zip(&signs)
                 .map(|(&g, &s)| f64::from(g) * s)
                 .sum();
-            let mut loss = [0.; 2];
-            for (i, sign) in [-1., 1.].into_iter().enumerate() {
-                let mut changed = parameters.clone();
-                for (w, &s) in changed[range.clone()].iter_mut().zip(&signs) {
-                    *w += (sign * epsilon * s) as f32;
+            let mut difference = |step: f64| -> Result<f64> {
+                let mut loss = [0.; 2];
+                for (i, sign) in [-1., 1.].into_iter().enumerate() {
+                    let mut changed = parameters.clone();
+                    for (w, &s) in changed[range.clone()].iter_mut().zip(&signs) {
+                        *w += (sign * step * s) as f32;
+                    }
+                    e.parameters.write(&changed)?;
+                    e.forward(&tokens, &labels, 3, length)?;
+                    loss[i] =
+                        e.losses(rows)?.into_iter().map(f64::from).sum::<f64>() / unmasked as f64;
                 }
-                e.parameters.write(&changed)?;
-                e.forward(&tokens, &labels, 3, length)?;
-                loss[i] = e.losses(rows)?.into_iter().map(f64::from).sum::<f64>() / unmasked as f64;
-            }
-            let finite = (loss[1] - loss[0]) / (2. * epsilon);
+                Ok((loss[1] - loss[0]) / (2. * step))
+            };
+            let coarse = difference(epsilon)?;
+            let finite = if architecture::BILINEAR_PHASE {
+                let fine = difference(epsilon / 2.)?;
+                let finer = difference(epsilon / 4.)?;
+                memory_checks::refined_difference(
+                    &format!(
+                        "stream width={width} length={length} start={} trial={trial}",
+                        range.start
+                    ),
+                    adjoint,
+                    coarse,
+                    fine,
+                    finer,
+                )?
+            } else {
+                coarse
+            };
             if !finite.is_finite()
                 || !adjoint.is_finite()
                 || (adjoint - finite).abs() > 0.012 * (1. + finite.abs())

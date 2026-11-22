@@ -16,6 +16,7 @@ pub enum Head {
     PhasePrefix,
     InputPhase,
     AffinePhase,
+    BilinearPhase,
 }
 
 impl Head {
@@ -34,6 +35,7 @@ impl Head {
             "phase" => Ok(Self::PhasePrefix),
             "input-phase" => Ok(Self::InputPhase),
             "affine-phase" => Ok(Self::AffinePhase),
+            "bilinear-phase" => Ok(Self::BilinearPhase),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -51,25 +53,29 @@ impl Head {
             Self::PhasePrefix => "phasor-learned-phase-prefix-32-v1",
             Self::InputPhase => "phasor-learned-input-phase-32-v1",
             Self::AffinePhase => "phasor-learned-affine-phase-32-v1",
+            Self::BilinearPhase => "phasor-learned-bilinear-phase-32-v1",
         }
     }
 
     pub const fn is_phase(self) -> bool {
         matches!(
             self,
-            Self::PhasePrefix | Self::InputPhase | Self::AffinePhase
+            Self::PhasePrefix | Self::InputPhase | Self::AffinePhase | Self::BilinearPhase
         )
     }
 
     pub const fn projects_embeddings(self) -> bool {
-        matches!(self, Self::InputPhase | Self::AffinePhase)
+        matches!(
+            self,
+            Self::InputPhase | Self::AffinePhase | Self::BilinearPhase
+        )
     }
 
     pub const fn phase_inputs(self) -> usize {
-        if matches!(self, Self::AffinePhase) {
-            2 * MEMORY_WIDTH
-        } else {
-            MEMORY_WIDTH
+        match self {
+            Self::AffinePhase => 2 * MEMORY_WIDTH,
+            Self::BilinearPhase => 4 * MEMORY_WIDTH,
+            _ => MEMORY_WIDTH,
         }
     }
 
@@ -77,7 +83,7 @@ impl Head {
         match self {
             Self::Original => 0,
             Self::Stream | Self::CompactStream => 4 * cfg.width,
-            Self::PhasePrefix | Self::InputPhase | Self::AffinePhase => {
+            Self::PhasePrefix | Self::InputPhase | Self::AffinePhase | Self::BilinearPhase => {
                 (4 + self.phase_inputs() + 2 * MEMORY_WIDTH) * cfg.width
             }
             Self::Relations => pair_memory::parameters(cfg),
@@ -97,7 +103,8 @@ impl Head {
             | Self::InputProduct
             | Self::PhasePrefix
             | Self::InputPhase
-            | Self::AffinePhase => {
+            | Self::AffinePhase
+            | Self::BilinearPhase => {
                 let mut rng = Random::new(seed.wrapping_add(30_000));
                 let start = crate::architecture::memory_start(cfg);
                 let end = crate::architecture::start(cfg) + self.parameters(cfg);
@@ -113,13 +120,14 @@ impl Head {
                         *w = rng.gauss(0., scale) as f32;
                     }
                 };
-                if self == Self::AffinePhase {
-                    let (angles, writes) = input.split_at_mut(MEMORY_WIDTH * cfg.width);
-                    initialize(angles, cfg.width);
-                    writes.fill(0.);
-                } else {
-                    initialize(input, cfg.width);
-                }
+                let active_rows = match self {
+                    Self::AffinePhase => MEMORY_WIDTH,
+                    Self::BilinearPhase => 2 * MEMORY_WIDTH,
+                    _ => rows,
+                };
+                let (active, inactive) = input.split_at_mut(active_rows * cfg.width);
+                initialize(active, cfg.width);
+                inactive.fill(0.);
                 if self.is_phase() || matches!(self, Self::Bounded | Self::InputProduct) {
                     output.fill(0.);
                 } else {

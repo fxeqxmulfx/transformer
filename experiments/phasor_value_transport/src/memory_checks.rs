@@ -198,6 +198,27 @@ fn gradients(
     )
 }
 
+pub(super) fn refined_difference(
+    name: &str,
+    analytic: f64,
+    coarse: f64,
+    fine: f64,
+    finer: f64,
+) -> Result<f64> {
+    let first = (4. * fine - coarse) / 3.;
+    let second = (4. * finer - fine) / 3.;
+    println!(
+        "phase difference {name}: h={coarse:.6} h/2={fine:.6} h/4={finer:.6} extrapolated={first:.6}/{second:.6}"
+    );
+    if !first.is_finite()
+        || !second.is_finite()
+        || (first - second).abs() > 0.004 * (1. + analytic.abs())
+    {
+        return Err(format!("phase finite differences did not converge for {name}").into());
+    }
+    Ok(first)
+}
+
 pub(super) fn check_directions(
     e: &mut Engine,
     theta: &[f32],
@@ -248,15 +269,7 @@ pub(super) fn check_directions(
         let numeric = if phase {
             let fine = difference(1e-4)?;
             let finer = difference(5e-5)?;
-            let first = (4. * fine - coarse) / 3.;
-            let second = (4. * finer - fine) / 3.;
-            println!(
-                "phase difference {name}: h={coarse:.6} h/2={fine:.6} h/4={finer:.6} extrapolated={first:.6}/{second:.6}"
-            );
-            if (first - second).abs() > 0.004 * (1. + analytic.abs()) {
-                return Err(format!("phase finite differences did not converge for {name}").into());
-            }
-            first
+            refined_difference(name, analytic, coarse, fine, finer)?
         } else {
             coarse
         };

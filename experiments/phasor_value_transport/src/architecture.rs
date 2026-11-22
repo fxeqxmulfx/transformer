@@ -13,14 +13,17 @@ pub const INPUT_PRODUCT: bool = cfg!(feature = "causal-product-input");
 pub const COMPACT: bool = cfg!(feature = "compact-ffn");
 pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
 pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
-pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read") || INPUT_PHASE || AFFINE_PHASE;
+pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
+pub const PHASE_MEMORY: bool =
+    cfg!(feature = "phase-prefix-read") || INPUT_PHASE || AFFINE_PHASE || BILINEAR_PHASE;
 const _: () = {
     let variants = BOUNDED as u8
         + INPUT_PRODUCT as u8
         + COMPACT as u8
         + cfg!(feature = "phase-prefix-read") as u8
         + INPUT_PHASE as u8
-        + AFFINE_PHASE as u8;
+        + AFFINE_PHASE as u8
+        + BILINEAR_PHASE as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -28,7 +31,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if AFFINE_PHASE {
+pub const HEAD: Head = if BILINEAR_PHASE {
+    Head::BilinearPhase
+} else if AFFINE_PHASE {
     Head::AffinePhase
 } else if INPUT_PHASE {
     Head::InputPhase

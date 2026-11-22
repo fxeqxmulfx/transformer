@@ -68,39 +68,3 @@ pub(super) fn scan(length: usize) -> Result<()> {
     );
     Ok(())
 }
-
-/// The two models share every learned matrix except the zero write map.
-/// Preserve the trained output projections and all trailing rotary weights.
-pub(super) fn zero_write(cfg: &Config, weights: &[f32], ordered: &mut Engine) -> Result<()> {
-    let size = M * cfg.width;
-    let writes = architecture::memory_start(cfg) + size;
-    if weights[writes..writes + size].iter().any(|&x| x != 0.) {
-        return Err("initial affine write matrix must be zero".into());
-    }
-    let mut base_cfg = cfg.clone();
-    base_cfg.head = head::Head::InputPhase;
-    let base_weights = [&weights[..writes], &weights[writes + size..]].concat();
-    let mut base = Engine::new(base_cfg, &base_weights)?;
-    ordered.parameters.write(weights)?;
-    let rows = cfg.max_length * 2;
-    let mut rng = random::Random::new(101);
-    let mut samples = |n| {
-        (0..n)
-            .map(|_| rng.gauss(0., 0.2) as f32)
-            .collect::<Vec<_>>()
-    };
-    let inputs = samples(rows * cfg.width);
-    let g = samples(rows * cfg.vocab);
-    let a = ordered.infer_embeddings(&inputs, 2, cfg.max_length)?;
-    let b = base.infer_embeddings(&inputs, 2, cfg.max_length)?;
-    let da = ordered.embedding_pullback(&inputs, 2, cfg.max_length, &g)?;
-    let db = base.embedding_pullback(&inputs, 2, cfg.max_length, &g)?;
-    let hidden = compact_checks::close("zero affine write hidden", &a.hidden, &b.hidden, 3e-6)?;
-    let logits = compact_checks::close("zero affine write logits", &a.logits, &b.logits, 3e-6)?;
-    let gradient = compact_checks::close("zero affine write input VJP", &da, &db, 1e-5)?;
-    println!(
-        "zero affine writes width={} hidden={hidden:.3e} logits={logits:.3e} input_gradient={gradient:.3e}",
-        cfg.width
-    );
-    Ok(())
-}

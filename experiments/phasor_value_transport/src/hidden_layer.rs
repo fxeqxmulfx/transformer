@@ -2,12 +2,13 @@
 use super::*;
 use crate::{
     head::{Head, MEMORY_WIDTH as M},
-    affine_phase, phase_prefix, recurrent, transition,
+    affine_phase, bilinear_phase, phase_prefix, recurrent, transition,
 };
 
 enum Memory {
     Phase(phase_prefix::kernels::Kernels),
     AffinePhase(affine_phase::kernels::Kernels),
+    BilinearPhase(bilinear_phase::kernels::Kernels),
     Transitions {
         kernels: transition::kernels::Kernels,
         probabilities: F,
@@ -41,6 +42,7 @@ impl HiddenLayer {
         let memory = match cfg.head {
             Head::PhasePrefix | Head::InputPhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
+            Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
             Head::Transition => Memory::Transitions {
                 kernels: transition::kernels::Kernels::load(&e.cuda)?,
                 probabilities: e.cuda.alloc(rows * cfg.max_length)?,
@@ -100,6 +102,10 @@ impl HiddenLayer {
         // Each launch owns its sequence slice, with length and rows checked by Engine::forward.
         unsafe {
             match &self.memory {
+                Memory::BilinearPhase(kernels) => kernels.forward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.read.ptr(), self.projected.ptr(), length as u32,
+                )?,
                 Memory::AffinePhase(kernels) => kernels.forward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.read.ptr(),
@@ -188,6 +194,10 @@ impl HiddenLayer {
         )?;
         unsafe {
             match &self.memory {
+                Memory::BilinearPhase(kernels) => kernels.backward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.dprojected.ptr(), self.projected.ptr(), self.dread.ptr(), length as u32,
+                )?,
                 Memory::AffinePhase(kernels) => kernels.backward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.dprojected.ptr(),
