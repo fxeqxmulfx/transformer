@@ -11,6 +11,65 @@ pub enum PeerSearch {
     Iterated(Option<crate::slot_orbits::RoleEvidence>),
 }
 
+/// The search and gate scales are independent so a fixed-weight ablation
+/// can remove proposals while retaining the trained affine coordinates.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PeerRead {
+    pub search: Option<PeerSearch>,
+    pub unit_gates: bool,
+}
+
+impl PeerRead {
+    const fn new(search: PeerSearch) -> Self {
+        Self {
+            search: Some(search),
+            unit_gates: false,
+        }
+    }
+
+    pub const UNIT_GRAPH: Self = Self {
+        search: Some(PeerSearch::Iterated(Some(
+            crate::slot_orbits::RoleEvidence::WITH_GRAPH,
+        ))),
+        unit_gates: true,
+    };
+
+    const fn id(self, with_phase: bool) -> &'static str {
+        use crate::slot_orbits::RoleEvidence;
+        let (trunk, phase) = match (self.unit_gates, self.search) {
+            (true, Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH)))) => (
+                "phasor-triple-graph-unit-gates-trunk-v1",
+                "phasor-triple-graph-unit-gates-32-v1",
+            ),
+            (false, Some(PeerSearch::Aligned)) => (
+                "phasor-triple-peer-trunk-v1",
+                "phasor-triple-peer-phase-32-v1",
+            ),
+            (false, Some(PeerSearch::Witnesses)) => (
+                "phasor-triple-witness-trunk-v1",
+                "phasor-triple-witness-phase-32-v1",
+            ),
+            (false, Some(PeerSearch::Iterated(None))) => (
+                "phasor-triple-iterated-witness-trunk-v1",
+                "phasor-triple-iterated-witness-32-v1",
+            ),
+            (false, Some(PeerSearch::Iterated(Some(RoleEvidence::WITH_GRAPH)))) => (
+                "phasor-triple-graph-relations-trunk-v1",
+                "phasor-triple-graph-relations-32-v1",
+            ),
+            (false, Some(PeerSearch::Iterated(Some(RoleEvidence::OBSERVED_ROLES)))) => (
+                "phasor-triple-role-overlap-trunk-v1",
+                "phasor-triple-role-overlap-32-v1",
+            ),
+            _ => (
+                "phasor-triple-peer-ablation-trunk",
+                "phasor-triple-peer-ablation-phase",
+            ),
+        };
+        if with_phase { phase } else { trunk }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Head {
     Original,
@@ -35,8 +94,8 @@ pub enum Head {
     LookupTripleTransport,
     TriplePhase,
     LookupTriplePhase,
-    PeerTriple(PeerSearch),
-    PeerTriplePhase(PeerSearch),
+    PeerTriple(PeerRead),
+    PeerTriplePhase(PeerRead),
     FourierTransport,
     ReflectionPhase,
     SingleReflection,
@@ -74,13 +133,14 @@ impl Head {
             "triple-lookup-prototypes" => Ok(Self::LookupTripleTransport),
             "triple-phase-read" => Ok(Self::TriplePhase),
             "triple-lookup-phase" => Ok(Self::LookupTriplePhase),
-            "triple-peer-phase" => Ok(Self::PeerTriplePhase(PeerSearch::Aligned)),
-            "triple-witness-phase" => Ok(Self::PeerTriplePhase(PeerSearch::Witnesses)),
-            "triple-iterated-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(None))),
-            "triple-graph-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(Some(
+            "triple-peer-phase" => Ok(Self::peer_phase(PeerSearch::Aligned)),
+            "triple-witness-phase" => Ok(Self::peer_phase(PeerSearch::Witnesses)),
+            "triple-iterated-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(None))),
+            "triple-unit-graph" => Ok(Self::PeerTriplePhase(PeerRead::UNIT_GRAPH)),
+            "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,
             )))),
-            "triple-role-witness" => Ok(Self::PeerTriplePhase(PeerSearch::Iterated(Some(
+            "triple-role-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::OBSERVED_ROLES,
             )))),
             "fourier-transport" => Ok(Self::FourierTransport),
@@ -119,28 +179,8 @@ impl Head {
             Self::LookupTripleTransport => "phasor-triple-prototype-capacity-v1",
             Self::TriplePhase => "phasor-triple-phase-residual-32-v1",
             Self::LookupTriplePhase => "phasor-triple-lookup-phase-32-v1",
-            Self::PeerTriple(PeerSearch::Aligned) => "phasor-triple-peer-trunk-v1",
-            Self::PeerTriplePhase(PeerSearch::Aligned) => "phasor-triple-peer-phase-32-v1",
-            Self::PeerTriple(PeerSearch::Witnesses) => "phasor-triple-witness-trunk-v1",
-            Self::PeerTriplePhase(PeerSearch::Witnesses) => "phasor-triple-witness-phase-32-v1",
-            Self::PeerTriple(PeerSearch::Iterated(None)) => {
-                "phasor-triple-iterated-witness-trunk-v1"
-            }
-            Self::PeerTriplePhase(PeerSearch::Iterated(None)) => {
-                "phasor-triple-iterated-witness-32-v1"
-            }
-            Self::PeerTriple(PeerSearch::Iterated(Some(
-                crate::slot_orbits::RoleEvidence::WITH_GRAPH,
-            ))) => "phasor-triple-graph-relations-trunk-v1",
-            Self::PeerTriplePhase(PeerSearch::Iterated(Some(
-                crate::slot_orbits::RoleEvidence::WITH_GRAPH,
-            ))) => "phasor-triple-graph-relations-32-v1",
-            Self::PeerTriple(PeerSearch::Iterated(Some(_))) => {
-                "phasor-triple-role-overlap-trunk-v1"
-            }
-            Self::PeerTriplePhase(PeerSearch::Iterated(Some(_))) => {
-                "phasor-triple-role-overlap-32-v1"
-            }
+            Self::PeerTriple(read) => read.id(false),
+            Self::PeerTriplePhase(read) => read.id(true),
             Self::FourierTransport => "phasor-learned-fourier-transport-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
@@ -235,14 +275,32 @@ impl Head {
 
     pub const fn uses_lookup_capacity(self) -> bool {
         matches!(self, Self::LookupTripleTransport | Self::LookupTriplePhase)
-            || self.peer_search().is_some()
+            || self.peer_read().is_some()
     }
 
-    pub const fn peer_search(self) -> Option<PeerSearch> {
+    pub const fn peer_phase(search: PeerSearch) -> Self {
+        Self::PeerTriplePhase(PeerRead::new(search))
+    }
+
+    pub const fn peer_read(self) -> Option<PeerRead> {
         match self {
-            Self::PeerTriple(search) | Self::PeerTriplePhase(search) => Some(search),
+            Self::PeerTriple(read) | Self::PeerTriplePhase(read) => Some(read),
             _ => None,
         }
+    }
+
+    pub const fn unit_read_gates(self) -> bool {
+        matches!(
+            self.peer_read(),
+            Some(PeerRead {
+                unit_gates: true,
+                ..
+            })
+        )
+    }
+
+    pub fn peer_search(self) -> Option<PeerSearch> {
+        self.peer_read().and_then(|read| read.search)
     }
 
     pub const fn phase_inputs(self) -> usize {

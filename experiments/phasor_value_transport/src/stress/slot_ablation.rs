@@ -53,26 +53,37 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         let mut shared = Engine::new(shared_cfg, &original)?;
         results.insert("shared_roles", score(&mut shared, &original)?);
     }
-    if cfg.head.peer_search().is_some() {
-        let mut cfg = cfg.clone();
-        let slots = crate::slot_memory::capacity(cfg.head, cfg.width, cfg.vocab);
-        cfg.head = if slots
-            == crate::slot_memory::capacity(head::Head::LookupTriplePhase, cfg.width, cfg.vocab)
-        {
-            head::Head::LookupTriplePhase
-        } else {
-            head::Head::TriplePhase
-        };
-        let mut plain = Engine::new(cfg, &original)?;
+    if let Some(read) = cfg.head.peer_read() {
+        let mut control = cfg.clone();
+        control.head = head::Head::PeerTriplePhase(head::PeerRead {
+            search: None,
+            ..read
+        });
+        let mut plain = Engine::new(control, &original)?;
         results.insert("without_peers", score(&mut plain, &original)?);
     }
-    if cfg.head.peer_search() == Some(head::PeerSearch::Iterated(None)) {
+    if let Some(
+        read @ head::PeerRead {
+            search: Some(head::PeerSearch::Iterated(None)),
+            ..
+        },
+    ) = cfg.head.peer_read()
+    {
         let mut single_cfg = cfg.clone();
-        single_cfg.head = head::Head::PeerTriplePhase(head::PeerSearch::Witnesses);
+        single_cfg.head = head::Head::PeerTriplePhase(head::PeerRead {
+            search: Some(head::PeerSearch::Witnesses),
+            ..read
+        });
         let mut single = Engine::new(single_cfg, &original)?;
         results.insert("one_round", score(&mut single, &original)?);
     }
-    if let Some(head::PeerSearch::Iterated(Some(roles))) = cfg.head.peer_search() {
+    if let Some(
+        read @ head::PeerRead {
+            search: Some(head::PeerSearch::Iterated(Some(roles))),
+            ..
+        },
+    ) = cfg.head.peer_read()
+    {
         use crate::head::PeerSearch;
         use crate::slot_orbits::RoleEvidence;
         let mut controls = vec![
@@ -103,7 +114,10 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         }
         for (name, terms) in controls {
             let mut control = cfg.clone();
-            control.head = head::Head::PeerTriplePhase(PeerSearch::Iterated(terms));
+            control.head = head::Head::PeerTriplePhase(head::PeerRead {
+                search: Some(PeerSearch::Iterated(terms)),
+                ..read
+            });
             results.insert(
                 name,
                 score(&mut Engine::new(control, &original)?, &original)?,

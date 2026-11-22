@@ -2273,6 +2273,61 @@ for seed in 0 1 2; do
 done
 ```
 
+### Unit scales for the context and direct reads
+
+`triple-unit-graph` uses a scale of one for both the contextual vector
+and the direct memory value. The previous graph model used $1/\sqrt{d}$
+and $d$ at width $d$. The two prototype reads keep their $\sqrt{d}$
+scale. The prefix supplies the learned coefficients for all four reads,
+and every task uses the same graph search and 32 phase channels.
+
+Over the reals the scale change preserves the class of learned affine
+gates. It changes the initial forward value and the gradient into an
+empty direct memory cell. Lean gives the parameter substitution for both
+gates with arbitrary additional hidden contributions. [Affine gate proof](../../src/Transformer/Phasor/TripleTransport/CalibratedRead.lean)
+
+| Case | Seeds | First passing update | Reloaded primary | Independent test |
+| --- | --- | --- | --- | --- |
+| GPT key–value binding, short | 0 / 1 / 2 | 1,088 / 960 / 768 | 508 / 509 / 509 of 512 | 507 / 507 / 506 of 512 |
+| GPT linear transport, short | 0 | 192 | 255/256 | 256/256 |
+| Permuted addition, short | 0 / 1 / 2 | 247 / 247 / 247 | 4,705 / 4,705 / 4,705 of 4,705 | — |
+| Blinded absolute difference, long | 0 / 1 / 2 | 228 / 228 / 228 | 4,663 / 4,699 / 4,692 of 4,705 | — |
+| Absolute difference, long | 0 | 247 | 4,696/4,705 | — |
+| Fourth power of the modular sum, long | 0 | 228 | 4,705/4,705 | — |
+| 20-bit parity, long | 0 | 1,250 | 284/284 | 512/512 |
+| NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 | — |
+
+The GPT scores use free generation including termination. With the
+original graph scales, seeds 0 and 1 scored 193/512 and 113/512 on
+key–value binding at the matched updates 1,088 and 960. The 20-bit
+parity checkpoint transferred to 64/64 at both 32 and 64 bits.
+On blinded absolute difference, the original
+scales crossed earlier on every seed at update 171. Every NV11
+checkpoint also classified all 4,704 training pairs correctly. The
+smallest held-out margins were 0.309, 0.563 and 0.652. On the
+Fibonacci orbit split, seed 0 scored 4,446/4,704 at the 1,000-update
+screen. The original budget is 100,000 updates.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.CalibratedRead
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-unit-graph
+bin=./target/release/phasor-value-transport
+out=runs/unit-graph
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    for task in arithmetic-cubic-product gpt-probe-key-value-binding \
+        gpt-probe-linear-transport arithmetic-perm-add arithmetic-abs-diff-blind \
+        arithmetic-abs-diff arithmetic-sum-pow4 basis-parity20; do
+        "$bin" cell "$task" "$seed" "$out"
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done
+"$bin" screen recurrence-fibonacci-k1-c2-lgt 0 "$out" 1000
+```
+
 ### Sharing exact witness signatures
 
 In later witness rounds, several pairs of contexts can supply the same

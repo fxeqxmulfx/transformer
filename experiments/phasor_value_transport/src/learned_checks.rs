@@ -134,7 +134,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     let initial = e.logits.read()?;
     if architecture::COMPACT {
         compact_checks::close("initial padded logits", &initial, &original, 2e-5)?;
-    } else if architecture::HEAD.replaces_context() {
+    } else if architecture::HEAD.replaces_context() && !architecture::HEAD.unit_read_gates() {
         if initial == original {
             return Err("an active replacement read reproduced the unrestricted stream".into());
         }
@@ -150,6 +150,9 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     e.parameters.write(&parameters)?;
     e.forward(&tokens, &labels, 3, length)?;
     let logits = e.logits.read()?;
+    if architecture::HEAD.unit_read_gates() && logits == original {
+        return Err("learned slot reads left the reference logits unchanged".into());
+    }
     e.backward(3, length)?;
     let gradients = e.gradients.read()?;
     let unmasked = labels.iter().filter(|&&v| v != u32::MAX).count();

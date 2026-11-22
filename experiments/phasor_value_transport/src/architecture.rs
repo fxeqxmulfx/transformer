@@ -61,6 +61,7 @@ const _: () = {
         + cfg!(feature = "triple-iterated-witness") as u8
         + cfg!(feature = "triple-role-witness") as u8
         + cfg!(feature = "triple-graph-witness") as u8
+        + cfg!(feature = "triple-unit-graph") as u8
         + cfg!(feature = "learned-stream-read") as u8
         + FOURIER as u8
         + REFLECTION_PHASE as u8
@@ -86,17 +87,19 @@ pub const HEAD: Head = if FOURIER {
 } else if cfg!(feature = "triple-lookup-phase") {
     Head::LookupTriplePhase
 } else if cfg!(feature = "triple-peer-phase") {
-    Head::PeerTriplePhase(crate::head::PeerSearch::Aligned)
+    Head::peer_phase(crate::head::PeerSearch::Aligned)
 } else if cfg!(feature = "triple-witness-phase") {
-    Head::PeerTriplePhase(crate::head::PeerSearch::Witnesses)
+    Head::peer_phase(crate::head::PeerSearch::Witnesses)
 } else if cfg!(feature = "triple-iterated-witness") {
-    Head::PeerTriplePhase(crate::head::PeerSearch::Iterated(None))
+    Head::peer_phase(crate::head::PeerSearch::Iterated(None))
+} else if cfg!(feature = "triple-unit-graph") {
+    Head::PeerTriplePhase(crate::head::PeerRead::UNIT_GRAPH)
 } else if cfg!(feature = "triple-graph-witness") {
-    Head::PeerTriplePhase(crate::head::PeerSearch::Iterated(Some(
+    Head::peer_phase(crate::head::PeerSearch::Iterated(Some(
         crate::slot_orbits::RoleEvidence::WITH_GRAPH,
     )))
 } else if cfg!(feature = "triple-role-witness") {
-    Head::PeerTriplePhase(crate::head::PeerSearch::Iterated(Some(
+    Head::peer_phase(crate::head::PeerSearch::Iterated(Some(
         crate::slot_orbits::RoleEvidence::OBSERVED_ROLES,
     )))
 } else if cfg!(feature = "triple-transport") {

@@ -9,6 +9,7 @@ use crate::{
 pub struct Layout {
     pub d: usize,
     pub slots: usize,
+    pub gate_scales: [f32; 4],
     pub dictionary: usize,
     pub values: usize,
     pub gates: usize,
@@ -17,7 +18,7 @@ pub struct Layout {
 
 pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
     const LIMIT: usize = 256;
-    if head.uses_lookup_capacity() && (head.peer_search().is_none() || vocab <= LIMIT) {
+    if head.uses_lookup_capacity() && (head.peer_read().is_none() || vocab <= LIMIT) {
         vocab.min(LIMIT)
     } else {
         width.min(128)
@@ -53,6 +54,7 @@ impl Layout {
         Self {
             d,
             slots,
+            gate_scales: scales(d, cfg.head.unit_read_gates()),
             dictionary,
             values,
             gates,
@@ -276,15 +278,13 @@ pub struct Row {
     pub coefficients: [f32; 4],
 }
 
-pub fn scales(d: usize) -> [f32; 4] {
+pub fn scales(d: usize, unit_gates: bool) -> [f32; 4] {
     let root = (d as f32).sqrt();
-    [root.recip(), d as f32, root, root]
-}
-
-pub fn bases(d: usize) -> [f32; 4] {
-    let mut b = scales(d);
-    b[2..].fill(0.);
-    b
+    if unit_gates {
+        [1., 1., root, root]
+    } else {
+        [root.recip(), d as f32, root, root]
+    }
 }
 
 impl Row {
@@ -348,7 +348,7 @@ pub fn forward(
 ) -> (Vec<Row>, Vec<f32>) {
     let d = l.d;
     assert_eq!(cells.len() * d, hidden.len());
-    let scale = scales(d);
+    let scale = l.gate_scales;
     let units = (d as f32).sqrt().recip();
     let mut tape = Vec::with_capacity(cells.len());
     let mut out = vec![0.; hidden.len()];
@@ -359,7 +359,7 @@ pub fn forward(
         .enumerate()
     {
         let mut row = Row {
-            coefficients: bases(d),
+            coefficients: [scale[0], scale[1], 0., 0.],
             ..Row::default()
         };
         for (i, g) in row.coefficients.iter_mut().enumerate() {
@@ -401,7 +401,7 @@ pub fn backward(
     dw: &mut [f32],
 ) -> Vec<f32> {
     let d = l.d;
-    let scale = scales(d);
+    let scale = l.gate_scales;
     let units = (d as f32).sqrt().recip();
     let mut dh = vec![0.; rows.len() * d];
     dw[l.dictionary..l.bias + 4].fill(0.);
@@ -438,7 +438,28 @@ pub fn backward(
 #[cfg(test)]
 mod capacity_tests {
     use super::capacity;
-    use crate::head::{Head, PeerSearch};
+    use crate::head::{Head, PeerRead, PeerSearch};
+
+    #[test]
+    fn removing_search_preserves_dictionary_and_unit_gates() {
+        let full = PeerRead::UNIT_GRAPH;
+        let removed = PeerRead {
+            search: None,
+            ..full
+        };
+        for read in [full, removed] {
+            for head in [Head::PeerTriple(read), Head::PeerTriplePhase(read)] {
+                assert_eq!(super::scales(64, head.unit_read_gates()), [1., 1., 8., 8.]);
+                assert_eq!(capacity(head, 64, 97), 97);
+                assert_eq!(capacity(head, 64, 300), 64);
+            }
+        }
+        let original = Head::peer_phase(full.search.unwrap());
+        assert_eq!(
+            super::scales(64, original.unit_read_gates()),
+            [0.125, 64., 8., 8.]
+        );
+    }
 
     #[test]
     fn peer_trunk_and_phase_share_the_same_bounded_dictionary() {
@@ -448,7 +469,8 @@ mod capacity_tests {
             PeerSearch::Iterated(None),
             PeerSearch::Iterated(Some(crate::slot_orbits::RoleEvidence::OBSERVED_ROLES)),
         ] {
-            for head in [Head::PeerTriple(search), Head::PeerTriplePhase(search)] {
+            let read = Head::peer_phase(search).peer_read().unwrap();
+            for head in [Head::PeerTriple(read), Head::PeerTriplePhase(read)] {
                 assert_eq!(capacity(head, 64, 97), 97);
                 assert_eq!(capacity(head, 64, 256), 256);
                 assert_eq!(capacity(head, 64, 257), 64);

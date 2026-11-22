@@ -116,8 +116,8 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     drop(dense_model);
     // Remove the entire phase parameter block. The remaining weights belong
     // to the corresponding original trunk, including its learned frequencies.
-    let base_head = if let Some(search) = cfg.head.peer_search() {
-        Head::PeerTriple(search)
+    let base_head = if let Some(read) = cfg.head.peer_read() {
+        Head::PeerTriple(read)
     } else if cfg.head.uses_lookup_capacity() {
         Head::LookupTripleTransport
     } else {

@@ -78,6 +78,7 @@ fn mixture(delta: f64) -> Result<()> {
     let l = Layout {
         d,
         slots: k,
+        gate_scales: slot_memory::scales(d, architecture::HEAD.unit_read_gates()),
         dictionary: 0,
         values: k * d,
         gates: (k + k * k) * d,
