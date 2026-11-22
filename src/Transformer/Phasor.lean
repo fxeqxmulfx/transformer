@@ -20,6 +20,7 @@ public import Transformer.Phasor.TiedToeplitz
 public import Transformer.Phasor.TwoSidedFrame
 public import Transformer.Phasor.SingleFrameOrbit
 public import Transformer.Phasor.TripleTransport
+public import Transformer.Phasor.TripleTransport.AlignedPeers
 public import Transformer.Phasor.TripleTransport.Capacity
 public import Transformer.Phasor.TripleTransport.CandidateIndex
 public import Transformer.Phasor.TripleTransport.ConfidenceSelection

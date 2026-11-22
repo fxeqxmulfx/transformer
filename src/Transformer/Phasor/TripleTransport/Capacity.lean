@@ -81,4 +81,43 @@ example : Connected (withUnused cycleThree) ((Triple.mk 0 1 2).map (Sum.inl : Fi
     ((Triple.mk 1 2 0).map Sum.inl) :=
   (connected_withUnused_iff cycleThree _ _).2 (.rel _ _ cycleEdge)
 
+/-- The “Aligned peer reads” experiment uses all initial lookup directions
+when the dictionary permits one slot per vector. Larger lookups use the
+hidden-width resource budget. -/
+def boundedDictionary (vocab fallback limit : ℕ) : ℕ :=
+  if vocab ≤ limit then vocab else min fallback limit
+
+/-- This policy permits a distinct address for each external lookup entry
+exactly when any dictionary under the device limit can do so. The claim
+concerns the number of available slots. -/
+theorem complete_dictionary_iff (vocab fallback limit : ℕ) :
+    Nonempty (Fin vocab ↪ Fin (boundedDictionary vocab fallback limit)) ↔ vocab ≤ limit := by
+  by_cases fits : vocab ≤ limit
+  · simp only [boundedDictionary, ite_eq_left fits]
+    exact ⟨fun _ => fits, fun _ => ⟨Function.Embedding.refl _⟩⟩
+  · constructor
+    · rintro ⟨address⟩
+      have count := Fintype.card_le_of_injective address address.injective
+      simp only [Fintype.card_fin, boundedDictionary, ite_eq_right fits] at count
+      exact count.trans (Nat.min_le_right _ _)
+    · exact fun h => (fits h).elim
+
+/-- When the lookup exceeds the allocation ceiling, a smaller fallback
+requires strictly fewer trainable entries in its dense pair-value table. -/
+theorem bounded_dictionary_table_cost {vocab fallback limit d : ℕ}
+    (large : limit < vocab) (smaller : fallback < limit) (positive : 0 < d) :
+    boundedDictionary vocab fallback limit ^ 2 * d < limit ^ 2 * d := by
+  simp only [boundedDictionary, ite_eq_right (Nat.not_le_of_lt large), Nat.min_eq_left (Nat.le_of_lt smaller)]
+  apply Nat.mul_lt_mul_of_pos_right _ positive
+  nlinarith
+
+example : Nonempty (Fin 193 ↪ Fin (boundedDictionary 193 128 256)) :=
+  (complete_dictionary_iff _ _ _).2 (by decide)
+
+example : ¬ Nonempty (Fin 548 ↪ Fin (boundedDictionary 548 64 256)) :=
+  fun embedding => (by decide : ¬548 ≤ 256) ((complete_dictionary_iff _ _ _).1 embedding)
+
+example : boundedDictionary 548 64 256 ^ 2 * 64 < 256 ^ 2 * 64 :=
+  bounded_dictionary_table_cost (by decide) (by decide) (by decide)
+
 end Transformer.Phasor.TripleTransport

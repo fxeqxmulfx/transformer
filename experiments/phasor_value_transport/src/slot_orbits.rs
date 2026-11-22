@@ -4,6 +4,9 @@
 #[path = "slot_candidates.rs"]
 mod candidates;
 use candidates::RowCandidates;
+#[path = "slot_aligned.rs"]
+mod aligned;
+pub use aligned::fill_from_peers;
 
 pub const ABSENT: u32 = u32::MAX;
 

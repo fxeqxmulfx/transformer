@@ -9,7 +9,7 @@ fn route(l: &Layout, w: &[f32]) -> Routing {
             products.push(slot_memory::dot(m, l.prototype(w, i)));
         }
     }
-    let mut routing = Routing::new(architecture::HEAD.separates_triple_roles());
+    let mut routing = Routing::new(architecture::HEAD);
     routing.refresh(l, w, &products);
     routing
 }
@@ -163,7 +163,7 @@ fn check_addresses() -> Result<()> {
             h[row * d..(row + 1) * d].fill(0.);
         }
         x[d..2 * d].fill(0.);
-        let mut routing = Routing::new(architecture::HEAD.separates_triple_roles());
+        let mut routing = Routing::new(architecture::HEAD);
         routing.refresh(&l, &w, &vec![0.; l.slots.pow(3)]);
         let expected = slot_memory::scalar_cells(&l, &w, &routing, &x, &h, length);
         let transposed: Vec<_> = (0..l.slots * d)

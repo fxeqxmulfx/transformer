@@ -16,8 +16,9 @@ pub struct Layout {
 }
 
 pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
-    if head.uses_lookup_capacity() {
-        vocab.min(256)
+    const LIMIT: usize = 256;
+    if head.uses_lookup_capacity() && (!head.uses_peer_reads() || vocab <= LIMIT) {
+        vocab.min(LIMIT)
     } else {
         width.min(128)
     }
@@ -133,6 +134,7 @@ pub struct Routing {
     priority: Vec<usize>,
     reads: Option<slot_orbits::Reads>,
     graph: slot_orbits::TripleGraph,
+    peer_reads: bool,
     inverse: Vec<f32>,
 }
 
@@ -142,9 +144,10 @@ pub struct BankGeometry {
 }
 
 impl Routing {
-    pub fn new(separate_images: bool) -> Self {
+    pub fn new(head: crate::head::Head) -> Self {
         Self {
-            graph: slot_orbits::TripleGraph::new(separate_images),
+            graph: slot_orbits::TripleGraph::new(head.separates_triple_roles()),
+            peer_reads: head.uses_peer_reads(),
             ..Self::default()
         }
     }
@@ -192,7 +195,11 @@ impl Routing {
 
     pub fn install(&mut self, l: &Layout, bank: Vec<u32>, priority: Vec<usize>) {
         if self.bank != bank || self.priority != priority {
-            self.reads = Some(self.graph.complete(l.slots, &bank, &priority));
+            let mut reads = self.graph.complete(l.slots, &bank, &priority);
+            if self.peer_reads {
+                slot_orbits::fill_from_peers(l.slots, &bank, &mut reads.transport);
+            }
+            self.reads = Some(reads);
             self.bank = bank;
             self.priority = priority;
         }
@@ -409,4 +416,19 @@ pub fn backward(
         }
     }
     dh
+}
+#[cfg(test)]
+mod capacity_tests {
+    use super::capacity;
+    use crate::head::Head;
+
+    #[test]
+    fn peer_trunk_and_phase_share_the_same_bounded_dictionary() {
+        for head in [Head::PeerTriple, Head::PeerTriplePhase] {
+            assert_eq!(capacity(head, 64, 97), 97);
+            assert_eq!(capacity(head, 64, 256), 256);
+            assert_eq!(capacity(head, 64, 257), 64);
+            assert_eq!(capacity(head, 192, 257), 128);
+        }
+    }
 }

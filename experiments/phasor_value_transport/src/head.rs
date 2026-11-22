@@ -28,6 +28,8 @@ pub enum Head {
     LookupTripleTransport,
     TriplePhase,
     LookupTriplePhase,
+    PeerTriple,
+    PeerTriplePhase,
     FourierTransport,
     ReflectionPhase,
     SingleReflection,
@@ -65,6 +67,7 @@ impl Head {
             "triple-lookup-prototypes" => Ok(Self::LookupTripleTransport),
             "triple-phase-read" => Ok(Self::TriplePhase),
             "triple-lookup-phase" => Ok(Self::LookupTriplePhase),
+            "triple-peer-phase" => Ok(Self::PeerTriplePhase),
             "fourier-transport" => Ok(Self::FourierTransport),
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
@@ -101,6 +104,8 @@ impl Head {
             Self::LookupTripleTransport => "phasor-triple-prototype-capacity-v1",
             Self::TriplePhase => "phasor-triple-phase-residual-32-v1",
             Self::LookupTriplePhase => "phasor-triple-lookup-phase-32-v1",
+            Self::PeerTriple => "phasor-triple-peer-trunk-v1",
+            Self::PeerTriplePhase => "phasor-triple-peer-phase-32-v1",
             Self::FourierTransport => "phasor-learned-fourier-transport-v1",
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
@@ -175,7 +180,10 @@ impl Head {
     pub const fn is_triple(self) -> bool {
         matches!(
             self,
-            Self::TripleTransport | Self::BipartiteTriple | Self::LookupTripleTransport
+            Self::TripleTransport
+                | Self::BipartiteTriple
+                | Self::LookupTripleTransport
+                | Self::PeerTriple
         ) || self.has_triple_phase()
     }
 
@@ -184,11 +192,19 @@ impl Head {
     }
 
     pub const fn has_triple_phase(self) -> bool {
-        matches!(self, Self::TriplePhase | Self::LookupTriplePhase)
+        matches!(
+            self,
+            Self::TriplePhase | Self::LookupTriplePhase | Self::PeerTriplePhase
+        )
     }
 
     pub const fn uses_lookup_capacity(self) -> bool {
         matches!(self, Self::LookupTripleTransport | Self::LookupTriplePhase)
+            || self.uses_peer_reads()
+    }
+
+    pub const fn uses_peer_reads(self) -> bool {
+        matches!(self, Self::PeerTriple | Self::PeerTriplePhase)
     }
 
     pub const fn phase_inputs(self) -> usize {
@@ -231,6 +247,8 @@ impl Head {
             | Self::BipartiteTriple
             | Self::LookupTripleTransport
             | Self::TriplePhase
+            | Self::PeerTriple
+            | Self::PeerTriplePhase
             | Self::LookupTriplePhase => crate::slot_memory::parameter_count(
                 self,
                 cfg.width,
@@ -291,6 +309,8 @@ impl Head {
             | Self::BipartiteTriple
             | Self::LookupTripleTransport
             | Self::TriplePhase
+            | Self::PeerTriple
+            | Self::PeerTriplePhase
             | Self::LookupTriplePhase => {
                 crate::slot_memory::initialize(cfg, seed, parameters);
             }

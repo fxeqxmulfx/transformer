@@ -1,6 +1,6 @@
 #[path = "../src/slot_orbits.rs"]
 mod slot_orbits;
-use slot_orbits::{ABSENT, Reads, TripleGraph};
+use slot_orbits::{ABSENT, Reads, TripleGraph, fill_from_peers};
 
 fn complete(slots: usize, bank: &[u32], priority: &[usize]) -> Reads {
     TripleGraph::default().complete(slots, bank, priority)
@@ -145,4 +145,60 @@ fn completions_allow_independent_renaming_of_images() {
             }
         );
     }
+}
+#[test]
+fn repeated_keys_and_renamed_outputs_recover_held_out_cells() {
+    let k = 17;
+    let rename = |x: usize| ((7 * x + 3) % k) as u32;
+    let target = |i: usize, j: usize| rename((3 * i + j / 2) % k);
+    let mut bank = vec![ABSENT; k * k];
+    let mut read = bank.clone();
+    for i in 0..k {
+        for j in 0..k {
+            if (7 * i + 5 * j + i * j) % 13 < 9 {
+                bank[i * k + j] = target(i, j);
+            }
+        }
+    }
+    fill_from_peers(k, &bank, &mut read);
+    let mut recovered = 0;
+    for i in 0..k {
+        for j in 0..k {
+            if bank[i * k + j] == ABSENT && read[i * k + j] != ABSENT {
+                assert_eq!(read[i * k + j], target(i, j));
+                recovered += 1;
+            }
+        }
+    }
+    assert!(recovered >= 65, "{recovered} held-out cells");
+    let (mut permuted, mut expected) = (vec![ABSENT; k * k], vec![ABSENT; k * k]);
+    let slot = |x: u32| {
+        if x == ABSENT {
+            ABSENT
+        } else {
+            (11 * x + 6) % k as u32
+        }
+    };
+    for i in 0..k {
+        for j in 0..k {
+            let dest = ((5 * i + 3) % k) * k + (9 * j + 2) % k;
+            permuted[dest] = slot(bank[i * k + j]);
+            expected[dest] = slot(read[i * k + j]);
+        }
+    }
+    let mut changed = vec![ABSENT; k * k];
+    fill_from_peers(k, &permuted, &mut changed);
+    assert_eq!(changed, expected);
+}
+
+#[test]
+fn insufficient_peer_evidence_preserves_existing_reads() {
+    let mut bank = vec![ABSENT; 25];
+    bank[..4].copy_from_slice(&[0, 1, 2, 3]);
+    bank[5..8].copy_from_slice(&[1, 2, 3]);
+    let mut read = vec![ABSENT; 25];
+    read[8] = 4;
+    let old = read.clone();
+    fill_from_peers(5, &bank, &mut read);
+    assert_eq!(read, old);
 }

@@ -53,6 +53,19 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         let mut shared = Engine::new(shared_cfg, &original)?;
         results.insert("shared_roles", score(&mut shared, &original)?);
     }
+    if cfg.head == head::Head::PeerTriplePhase {
+        let mut cfg = cfg.clone();
+        let slots = crate::slot_memory::capacity(cfg.head, cfg.width, cfg.vocab);
+        cfg.head = if slots
+            == crate::slot_memory::capacity(head::Head::LookupTriplePhase, cfg.width, cfg.vocab)
+        {
+            head::Head::LookupTriplePhase
+        } else {
+            head::Head::TriplePhase
+        };
+        let mut plain = Engine::new(cfg, &original)?;
+        results.insert("without_peers", score(&mut plain, &original)?);
+    }
     println!(
         "{}",
         json!({"case":name,"seed":seed,"model":MODEL,"weights_sha256":saved["weights_sha256"],

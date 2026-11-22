@@ -1893,6 +1893,80 @@ for seed in 0 1 2; do
 done
 ```
 
+### Aligned peer reads
+
+The `triple-peer-phase` model uses shared hidden keys to relate the outputs
+of two learned contexts. For example, if two contexts map one key to
+the pair `(u, v)` and another to `(s, t)`, the read connects those two
+ordered pairs. For each missing triple prediction, it looks for a unique
+image consistent with one peer's output. It requires two other shared keys
+per peer and agreement from at least two peers. A conflicting vote cancels
+the prediction. The four gates and the 32 learned phase channels feed the
+same tied classifier at every prefix.
+
+The dictionary uses one slot per external embedding up to 256. For larger
+lookups it uses the smaller of the hidden width and 128. The peer search
+adds no weights. Lean proves when an invariant of the observed pairs
+determines the hidden target. The proof permits repeated images and
+independent renamings of contexts, keys and outputs. The bounded dictionary
+can give every lookup vector its own slot whenever the ceiling permits it.
+[Aligned peer proof](../../src/Transformer/Phasor/TripleTransport/AlignedPeers.lean) · [Dictionary capacity proof](../../src/Transformer/Phasor/TripleTransport/Capacity.lean)
+
+A partial audit of this architecture independently verified **12/75 short,
+1/30 long and 3/3 exact NV11**. Each seed started from fresh weights.
+The other 63 short and 29 long runs were awaiting a completed run or
+cutoff report in this snapshot. The table gives the first passing updates and their
+reloaded primary counts. The arithmetic cases supply one evaluation split.
+
+| Case | Seeds | First update | Correct on primary |
+| --- | --- | --- | --- |
+| Square-sum | 0 / 1 / 2 | 171 / 171 / 209 | 4,705 / 4,705 / 4,705 of 4,705 |
+| Power division, modulus 97, exponent 2 | 0 / 1 / 2 | 171 / 171 / 171 | 4,656 / 4,656 / 4,645 of 4,656 |
+| Power division, modulus 193, exponent 5 | 0 | 292 | 18,528/18,528 |
+| Permuted addition | 0 | 190 | 4,705/4,705 |
+| Shifted Boolean AND | 0 / 1 / 2 | 92 / 56 / 68 | 7 / 7 / 7 of 7 |
+| Random Boolean AND | 0 | 104 | 8/8 |
+| 16-bit parity | 0 | 1,000 | 157/157 |
+| NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
+
+All three NV11 checkpoints also recovered 4,704/4,704 training pairs.
+Shifted AND scored 63, 27 and 27 of 64 on the independent test and
+29, 35 and 35 of 64 at length 64. Random AND seed 0 scored 64/64 on
+the independent test and 28/64 at length 64. Parity seed 0 scored
+504/512 on the independent test, 58/64 at 32 bits and 64/64 at 64 bits.
+
+On square-sum seeds 0 and 1, disabling only the peer search reduced
+validation from 4,705 to 45 correct with the same weights and dictionary.
+On modulus-97 power division with exponent 2, the same intervention
+reduced seed 0 from 4,656 to 100 correct.
+On 16-bit parity seed 0, zeroing the sine and cosine projections together
+reduced novel validation from 157 to 86 correct and the independent test
+from 504 to 350. The zeroed model's dense output matched the phase-free
+peer read at every tested position.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.AlignedPeers
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-peer-phase
+bin=./target/release/phasor-value-transport
+out=runs/aligned-peer-phase
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    for task in arithmetic-cubic-product arithmetic-square-sum power-division-p97-k2 suite-boolean-and-shift; do
+        "$bin" cell "$task" "$seed" "$out"
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done
+for task in power-division-p193-k5 arithmetic-perm-add suite-boolean-and-random basis-parity16; do
+    "$bin" cell "$task" 0 "$out"
+    "$bin" probes "$task" 0 "$out"
+done
+"$bin" slot-ablate arithmetic-square-sum 1 "$out"
+"$bin" slot-phase-ablate basis-parity16 0 "$out"
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.
