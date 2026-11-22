@@ -982,25 +982,26 @@ held-out pair. The 250-update cubic-product checkpoint reproduced the
 canonical contextual-rotation NV11 weights byte for byte.
 [E6 task definitions and CM121](../convex_stress_schatten_mixed/README.md)
 
-On seed 0, both contextual rotation and the learned stream reached
-4,705/4,705 on multiplication and on its affine shift at 3,000 updates.
-Both first crossed 99% on multiplication at 1,000. On the affine shift
-the first crossings were 1,500 for contextual rotation and 1,250 for
-the learned stream. Within each architecture, the two tasks started
-with the same weights and used the same inputs.
+Both architectures solved multiplication and its affine shift on all
+three seeds at 3,000 updates. The learned stream first crossed 99% on
+multiplication at 1,000 updates for every seed. Contextual rotation
+crossed at 1,000 / 1,000 / 1,250. On the affine shift, the respective
+crossings were 1,250 / 1,500 / 1,500 and 1,500 / 1,500 / 1,500.
 
-All 12 seed-0 checkpoints were scored again at 3,000 updates. The two
-architectures used identical ordered input splits and the original
-optimizer settings on all six tasks.
+All 36 checkpoints were reloaded and scored. They used identical ordered
+input splits. Within each architecture and seed, all six tasks used
+identical initial weights. Each cubic-product checkpoint matched its
+separately trained canonical NV11 counterpart byte for byte. The table
+gives correct held-out pairs out of 4,705 in seed order 0 / 1 / 2.
 
-| Target modulo 97 | Learned stream, held out of 4,705 | Contextual rotation, held out of 4,705 |
-| --- | ---: | ---: |
-| `ab` | 4,705 | 4,705 |
-| `a + ab` | 4,705 | 4,705 |
-| `a³ + ab` | 86 | 91 |
-| `a² + ab` | 74 | 69 |
-| `a² + ab + b²` | 61 | 60 |
-| `a² + ab + b² + a` | 34 | 47 |
+| Target modulo 97 | Learned stream | Contextual rotation |
+| --- | --- | --- |
+| `ab` | 4,705 / 4,705 / 4,705 | 4,705 / 4,705 / 4,705 |
+| `a + ab` | 4,705 / 4,705 / 4,705 | 4,705 / 4,705 / 4,705 |
+| `a³ + ab` | 86 / 74 / 84 | 91 / 81 / 78 |
+| `a² + ab` | 74 / 69 / 84 | 69 / 75 / 80 |
+| `a² + ab + b²` | 61 / 75 / 87 | 60 / 62 / 60 |
+| `a² + ab + b² + a` | 34 / 36 / 37 | 47 / 28 / 43 |
 
 `catalog-shifts` replays both checkpoints, verifies their common inputs
 and initialization, then sends the same input pairs through each model.
@@ -1009,7 +1010,7 @@ to rotate the candidate's class probabilities. It checks all 9,409
 target shifts for row-plus-column separability and compares ordinary
 softmax probabilities on every class, separately for each split.
 
-Both multiplication self-comparisons agreed exactly. For contextual
+On seed 0, both multiplication self-comparisons agreed exactly. For contextual
 rotation on the affine shift, every held-out argmax agreed after alignment
 and the largest probability difference was `8.71e-7`. On the cubic
 shift, the models' top classes differed after alignment on 1/4,704 training
