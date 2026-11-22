@@ -731,6 +731,23 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity20 0 runs/single-reflection 3
 PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity20 0 runs/single-reflection parity-1024
 ```
 
+## Periodic phase activation
+
+A channel with learned strength `g` and center `b` maps its projected
+embedding coordinate `x` to `x - (g/2) sin(2(x-b))`. Both the rotation
+and the reflection consume that increment. The same 32 activations are
+shared across the entire sequence and all tasks. The strength starts at
+one and the center at zero. With zero strength, all hidden features
+agree with the mixed reflection backbone for every input.
+
+At unit strength, an angle within `|e| ≤ 1/2` radians of any
+`b + kπ` remains within `(2/3)|e|³ + (4/25)|e|⁵` of that angle's
+center `b + kπ`. Lean proves this bound at every integer lift and sums
+it through both scans for arbitrary finite prefixes. It also derives the
+three trainable input, center and strength derivatives. The bound is
+conditional on the learned projections reaching those neighborhoods.
+[Periodic phase activation proofs](../../src/Transformer/Phasor/PeriodicPhaseActivation.lean)
+
 ## Contextual rotation
 
 Each normalized input embedding supplies a learned angle for every pair

@@ -17,6 +17,7 @@ public import Transformer.Phasor.ReflectionPhaseRead
 public import Transformer.Phasor.SingleReflection
 public import Transformer.Phasor.ContextRotation
 public import Transformer.Phasor.AssociativeWrite
+public import Transformer.Phasor.PeriodicPhaseActivation
 public import Transformer.Phasor.PredictionShifts
 public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.PairValues
