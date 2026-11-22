@@ -115,6 +115,38 @@ The tier admission rule is 99% held-out exact sequences in each of seeds
 case in short at up to 60 seconds or long at up to 300 seconds on the
 measuring GPU. Historical membership of the original 35 stays fixed.
 
+### Additions from the 165-case GPT catalog
+
+The quarter-gain successor model qualified three new short tasks on the
+GTX 1050 with FP32 affines. Each cell below used a fresh model, the source
+training split and an independent checkpoint replay. The synthetic catalog
+used a 95% target for blocks and Dyck. Phasor's admission threshold is 99%.
+
+| New case | First 99% updates, seeds 0 / 1 / 2 | Held-out exact counts | Slowest fresh cell |
+| --- | --- | --- | ---: |
+| Three alternating blocks, with neutral symbols | 500 / 750 / 500 | 28/28 in each seed | 6.86 s |
+| One-type Dyck bracket-prefix labeling | 250 / 250 / 250 | 32/32 in each seed | 2.45 s |
+| Sixth power of a modular sum | 1,250 / 1,250 / 1,250 | 4,698 / 4,668 / 4,680 of 4,705 | 10.55 s |
+
+On the separate ordinary test set, blocks scored 63, 62 and 57 of 64
+sequences. On length 64 it scored 19, 15 and 17 of 64. Dyck scored 64/64
+on the ordinary test in all seeds and 19, 18 and 18 of 64 at length 64.
+The admissions describe the declared held-out selection split.
+
+```sh
+"$bin" extensions
+PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor extended
+./run_stress.sh replay runs/prefix-successor extended
+"$bin" extended-report runs/prefix-successor
+"$bin" catalog-report runs/prefix-successor suite-blocks suite-dyck arithmetic-sum-pow6
+```
+
+The runner lists the frozen original tiers and the extension tiers
+separately. `probes` on a Basis parity checkpoint also runs the original
+scratchpad-free catalog's 32- and 64-bit test prompts through the fitted
+weights. The command expands the inference buffer for these longer inputs.
+[Frozen extension membership](extensions.tsv)
+
 ### Choice of initial gain
 
 The first uniform architecture used an initial gain of one. Hard depth seed 0

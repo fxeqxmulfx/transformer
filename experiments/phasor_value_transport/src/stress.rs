@@ -88,6 +88,13 @@ fn arithmetic_task(d: dataset::Dataset) -> Task {
 
 use pair_memory::MODEL;
 
+pub fn extensions() -> Result<()> {
+    for (name, tier) in catalog::registered()? {
+        println!("{name}\t{tier}");
+    }
+    Ok(())
+}
+
 pub fn routes() -> Result<()> {
     for row in cases()? {
         let task = data::build(&row)?;
@@ -253,7 +260,10 @@ pub fn replay(name: &str, seed: u32, out: &Path) -> Result<()> {
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) -> Result<()> {
-    let (row, task) = load(name)?;
+    let (row, mut task) = load(name)?;
+    if test_splits && matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
+        catalog::add_parity_probes(&mut task)?;
+    }
     let cfg = task_config(&row, &task)?;
     let dest = out.join(name).join(format!("seed{seed}"));
     let result: Value = serde_json::from_slice(&fs::read(dest.join("result.json"))?)?;

@@ -196,7 +196,9 @@ fn main() -> Result<()> {
         [op] if op == "check" => checks::run(),
         [op] if matches!(op.as_str(), "shared-check" | "pair-check") => pair_checks::run(),
         [op] if op == "routes" => stress::routes(),
-        [op, dest] if op == "report" => stress::report::run(Path::new(dest)),
+        [op] if op == "extensions" => stress::extensions(),
+        [op, dest] if matches!(op.as_str(), "report" | "extended-report") =>
+            stress::report::run(Path::new(dest), op == "extended-report"),
         [op, dest, names @ ..] if op == "catalog-report" && !names.is_empty() =>
             stress::report::catalog(Path::new(dest), names),
         [op, name, seed, out] if op == "cell" => stress::run(name, seed.parse()?, Path::new(out), None),
@@ -217,6 +219,6 @@ fn main() -> Result<()> {
         [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|shared-check|routes} | report RUN_DIR | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|shared-check|routes|extensions} | {report|extended-report} RUN_DIR | catalog-report RUN_DIR CASE... | {cell|replay|probes} CASE SEED RUN_DIR | screen CASE SEED RUN_DIR LAST_OBSERVATION | {transport|phasor} RUN_DIR [SEED] | shared-values RUN_DIR [SEED [STEPS]] | {inspect|nv11-score} FILE | predict FILE [VOCAB] A B".into()),
     }
 }

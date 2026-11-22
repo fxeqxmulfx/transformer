@@ -6,6 +6,24 @@ use basis::sequences;
 const PLAN: &str =
     include_str!("../../../../.lake/reproduction/gpt/research/current_grokking/plan.json");
 
+pub(super) fn registered() -> Result<Vec<(&'static str, &'static str)>> {
+    let original = cases()?;
+    let mut registry = Vec::new();
+    for line in include_str!("../../extensions.tsv").lines() {
+        let (tier, name) = line.split_once('\t').ok_or("invalid extension row")?;
+        if !matches!(tier, "short" | "long")
+            || name.is_empty()
+            || name == "arithmetic-cubic-product"
+            || original.iter().any(|r| r["name"] == name)
+            || registry.iter().any(|(existing, _)| *existing == name)
+        {
+            return Err("invalid or duplicate extension membership".into());
+        }
+        registry.push((name, tier));
+    }
+    Ok(registry)
+}
+
 fn source_case(name: &str) -> Result<Value> {
     let registry: Value = serde_json::from_str(sequences::CATALOG)?;
     if hash(PLAN.as_bytes()) != registry["input_sha256"]["plan"] {
@@ -52,6 +70,35 @@ fn sequence_task(d: sequences::dataset::Dataset) -> Task {
         vocab: source.vocab,
         selection: source.selection,
     }
+}
+
+/// The official scratchpad-free parity catalog includes entirely unseen
+/// 32- and 64-bit prompts with the same bit, answer and EOS token IDs as Basis.
+/// Add them only after training, while loading the selected checkpoint.
+pub(super) fn add_parity_probes(task: &mut Task) -> Result<()> {
+    let (_, mut other) = load("suite-parity-none")?;
+    for length in [32, 64] {
+        let key = format!("test/length-{length}");
+        let examples = other
+            .splits
+            .remove(&key)
+            .ok_or("missing catalog parity probe")?;
+        for e in &examples {
+            if e.prompt.len() != length + 2
+                || e.answer.len() != 2
+                || !e
+                    .tokens
+                    .iter()
+                    .chain(&e.answer)
+                    .all(|&v| (0..task.vocab as i64).contains(&v))
+            {
+                return Err("incompatible Basis parity probe encoding".into());
+            }
+        }
+        task.splits
+            .insert(format!("test/catalog-parity-{length}"), examples);
+    }
+    Ok(())
 }
 
 pub(super) fn load(name: &str) -> Result<(Value, Task)> {

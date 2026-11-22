@@ -129,15 +129,27 @@ pub fn catalog(out: &Path, names: &[String]) -> Result<()> {
     Ok(())
 }
 
-pub fn run(out: &Path) -> Result<()> {
+pub fn run(out: &Path, extended: bool) -> Result<()> {
     if !out.is_dir() {
         return Err(format!("missing cohort directory {}", out.display()).into());
     }
     let mut totals = BTreeMap::<String, [usize; 3]>::new();
     let mut tasks = Vec::new();
-    for row in cases()?.into_iter().chain([nv11_case()]) {
+    let mut rows = cases()?;
+    rows.push(nv11_case());
+    if extended {
+        for (name, tier) in super::catalog::registered()? {
+            let (mut row, _) = super::catalog::load(name)?;
+            row["report_tier"] = json!(format!("{tier}-extension"));
+            rows.push(row);
+        }
+    }
+    for row in rows {
         let name = row["name"].as_str().ok_or("missing case name")?;
-        let tier = row["tier"].as_str().ok_or("missing tier")?;
+        let tier = row["report_tier"]
+            .as_str()
+            .or(row["tier"].as_str())
+            .ok_or("missing tier")?;
         let count = totals.entry(tier.into()).or_default();
         let (seeds, measured) = observations(out, &row)?;
         for (total, increment) in count.iter_mut().zip(measured) {
