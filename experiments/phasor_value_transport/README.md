@@ -546,6 +546,27 @@ fixed prompts at each length for every checkpoint.
 | Basis parity, 20 bits | 1,000 / 1,250 / 1,000 | 284/284 | 512/512 | 64/64 and 64/64 |
 | Basis parity, 24 bits | 1,000 / 1,000 / 1,000 | 306/306 | 512/512 | 64/64 and 64/64 |
 
+At the first passing checkpoint we separately zeroed the learned output
+weights on the sine channels, the centered cosine channels, and both.
+Every other weight, embedding and prompt stayed fixed. Each cell below
+gives exact sequences for seeds 0 / 1 / 2.
+
+| Task and split | Trained model | Sine removed | Cosine removed | Both removed |
+| --- | --- | --- | --- | --- |
+| Modular addition, 4,705 held-out pairs | 4,677 / 4,689 / 4,665 | 4,681 / 4,664 / 4,654 | 4,665 / 4,655 / 4,633 | 4,656 / 4,621 / 4,610 |
+| 20-bit parity, 284 novel validation prompts | 284 / 284 / 284 | 284 / 224 / 284 | 151 / 284 / 133 | 151 / 136 / 133 |
+| 20-bit parity, 64 length-64 prompts | 64 / 64 / 64 | 55 / 38 / 32 | 39 / 64 / 25 | 35 / 25 / 25 |
+
+The phase read contributed to modular addition on each seed. Parity
+seeds 0 and 2 relied on cosine for the training-length validation split,
+while seed 1 relied on sine. The apparently dispensable sine projection
+on seeds 0 and 2 still contributed to length-64 transfer. Removing both
+projections reproduced the trained stream backbone on every scored split.
+On arbitrary dense inputs it also reproduced every hidden coordinate and
+logit bit for bit. These interventions measure reliance after training.
+Testing whether a simpler model can learn the same computations requires
+retraining.
+
 The contextual phase control on 24-bit parity crossed at updates 500 and
 750 on seeds 1 and 2. Seed 0 scored 184/306 even at 8,000 updates.
 The input-phase model also passed two original short tasks on all seeds.
@@ -583,6 +604,11 @@ bin=./target/release/phasor-value-transport
 PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/input-phase 3500
 "$bin" probes basis-parity16 0 runs/input-phase
 PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-parity16 0 runs/input-phase extended
+for name in arithmetic-add basis-parity20; do
+    for seed in 0 1 2; do
+        PHASOR_EVAL_BATCH_CAP=16 "$bin" phase-ablate "$name" "$seed" runs/input-phase
+    done
+done
 ```
 
 ## Affine phase memory

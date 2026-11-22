@@ -10,7 +10,11 @@ fn exact(engine: &mut Engine, examples: &[Example]) -> Result<u64> {
         .ok_or_else(|| "missing exact-sequence score".into())
 }
 
-fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Option<Value>)> {
+pub(super) fn score_checkpoint(
+    cfg: Config,
+    task: &Task,
+    bytes: &[u8],
+) -> Result<(Value, Option<Value>)> {
     if bytes.len() != layout::total_count(&cfg) * 4 {
         return Err("fixed-budget checkpoint shape mismatch".into());
     }

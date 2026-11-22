@@ -11,6 +11,7 @@ mod class_translation;
 pub mod compare_shifts;
 pub mod embedding;
 mod language_probes;
+pub mod phase_ablation;
 mod recall_gap;
 pub mod report;
 mod source_target;
