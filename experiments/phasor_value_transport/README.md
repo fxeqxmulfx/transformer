@@ -1912,28 +1912,43 @@ independent renamings of contexts, keys and outputs. The bounded dictionary
 can give every lookup vector its own slot whenever the ceiling permits it.
 [Aligned peer proof](../../src/Transformer/Phasor/TripleTransport/AlignedPeers.lean) · [Dictionary capacity proof](../../src/Transformer/Phasor/TripleTransport/Capacity.lean)
 
-A partial audit of this architecture independently verified **12/75 short,
-1/30 long and 3/3 exact NV11**. Each seed started from fresh weights.
-The other 63 short and 29 long runs were awaiting a completed run or
-cutoff report in this snapshot. The table gives the first passing updates and their
-reloaded primary counts. The arithmetic cases supply one evaluation split.
+A partial audit of this architecture independently verified **48/75 short,
+9/30 long and 3/3 exact NV11**. Each seed started from fresh weights.
+Three short runs reached a screen cutoff. The remaining 24 short and 21
+long runs were pending at this snapshot. The table gives the first
+passing updates and reloaded primary counts. Arithmetic cases supply one
+evaluation split.
 
 | Case | Seeds | First update | Correct on primary |
 | --- | --- | --- | --- |
 | Square-sum | 0 / 1 / 2 | 171 / 171 / 209 | 4,705 / 4,705 / 4,705 of 4,705 |
 | Power division, modulus 97, exponent 2 | 0 / 1 / 2 | 171 / 171 / 171 | 4,656 / 4,656 / 4,645 of 4,656 |
-| Power division, modulus 193, exponent 5 | 0 | 292 | 18,528/18,528 |
-| Permuted addition | 0 | 190 | 4,705/4,705 |
+| Power division, modulus 97, exponent 3 | 0 / 1 / 2 | 171 / 171 / 171 | 4,656 / 4,656 / 4,656 of 4,656 |
+| Power division, modulus 97, exponent 5 | 0 / 1 / 2 | 171 / 190 / 171 | 4,656 / 4,656 / 4,656 of 4,656 |
+| Power division, modulus 193, exponent 5 | 0 / 1 / 2 | 292 / 219 / 292 | 18,528 / 18,404 / 18,528 of 18,528 |
+| Addition, subtraction, half-sum and square-times | 0 / 1 / 2 | 171 / 171 / 171 on each | 4,705/4,705 on each |
+| Multiplication | 0 / 1 / 2 | 171 / 171 / 190 | 4,705 / 4,705 / 4,705 of 4,705 |
+| Division | 0 / 1 / 2 | 171 / 190 / 171 | 4,656 / 4,656 / 4,656 of 4,656 |
+| Affine product | 0 / 1 / 2 | 171 / 171 / 171 | 4,705 / 4,705 / 4,703 of 4,705 |
+| Cube-plus | 0 / 1 / 2 | 171 / 171 / 171 | 4,705 / 4,702 / 4,705 of 4,705 |
+| Permuted addition | 0 / 1 / 2 | 190 / 171 / 228 | 4,705 / 4,661 / 4,705 of 4,705 |
 | Shifted Boolean AND | 0 / 1 / 2 | 92 / 56 / 68 | 7 / 7 / 7 of 7 |
-| Random Boolean AND | 0 | 104 | 8/8 |
-| 16-bit parity | 0 | 1,000 | 157/157 |
+| Random Boolean AND | 0 / 1 / 2 | 104 / 60 / 68 | 8 / 8 / 8 of 8 |
+| 16-bit parity | 0 / 1 / 2 | 1,000 / 750 / 750 | 157 / 157 / 157 of 157 |
+| 20-bit parity | 0 / 1 / 2 | 1,000 / 1,000 / 1,250 | 284 / 284 / 284 of 284 |
+| 24-bit parity | 0 / 1 / 2 | 750 / 750 / 1,000 | 306 / 306 / 306 of 306 |
 | NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 |
 
 All three NV11 checkpoints also recovered 4,704/4,704 training pairs.
 Shifted AND scored 63, 27 and 27 of 64 on the independent test and
-29, 35 and 35 of 64 at length 64. Random AND seed 0 scored 64/64 on
-the independent test and 28/64 at length 64. Parity seed 0 scored
-504/512 on the independent test, 58/64 at 32 bits and 64/64 at 64 bits.
+29, 35 and 35 of 64 at length 64. Random AND scored 64, 33 and 33 of 64
+on the independent test and 28, 36 and 36 of 64 at length 64.
+
+| Training length | Independent test, seeds 0 / 1 / 2 | Transfer to 32 bits | Transfer to 64 bits |
+| --- | --- | --- | --- |
+| 16 bits | 504 / 512 / 512 of 512 | 58 / 64 / 64 of 64 | 64 / 64 / 64 of 64 |
+| 20 bits | 512 / 512 / 512 of 512 | 64 / 64 / 64 of 64 | 64 / 64 / 64 of 64 |
+| 24 bits | 512 / 511 / 512 of 512 | 64 / 64 / 64 of 64 | 64 / 64 / 64 of 64 |
 
 On square-sum seeds 0 and 1, disabling only the peer search reduced
 validation from 4,705 to 45 correct with the same weights and dictionary.
@@ -1953,15 +1968,16 @@ out=runs/aligned-peer-phase
 export PHASOR_EVAL_BATCH_CAP=16
 "$bin" check
 for seed in 0 1 2; do
-    for task in arithmetic-cubic-product arithmetic-square-sum power-division-p97-k2 suite-boolean-and-shift; do
+    for task in arithmetic-cubic-product arithmetic-square-sum power-division-p97-k2 \
+        power-division-p97-k3 power-division-p97-k5 power-division-p193-k5 \
+        arithmetic-add arithmetic-sub arithmetic-half-sum arithmetic-square-times \
+        arithmetic-mul arithmetic-div arithmetic-affine-product arithmetic-cube-plus \
+        arithmetic-perm-add suite-boolean-and-shift suite-boolean-and-random \
+        basis-parity16 basis-parity20 basis-parity24; do
         "$bin" cell "$task" "$seed" "$out"
         "$bin" probes "$task" "$seed" "$out"
     done
     "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
-done
-for task in power-division-p193-k5 arithmetic-perm-add suite-boolean-and-random basis-parity16; do
-    "$bin" cell "$task" 0 "$out"
-    "$bin" probes "$task" 0 "$out"
 done
 "$bin" slot-ablate arithmetic-square-sum 1 "$out"
 "$bin" slot-phase-ablate basis-parity16 0 "$out"
