@@ -855,6 +855,15 @@ Reproduce from either build with
 `PHASOR_EVAL_BATCH_CAP=4 "$bin" probes language-l3 "$seed" "$run_dir" extended`.
 The scorer emits the SHA-256 of the saved weights alongside the results.
 
+For a missed repeated-letter sequence, the scorer now reports the first
+misclassified prefix in probe order. It checks the expanded prefix by itself
+and then checks its original letters, with all output labels masked. The
+inclusive seed-2 error occurred at payload letter 232 of `abaaaaaa` after
+expansion. The model rejected that prefix in isolation and accepted the
+eight original letters, as required by L3. The lagged seed-0 witness was
+`abbaaaaa` at letter 248 and also failed without expansion. Its seed-1
+witness was `aaaaabaa` at letter 252 and passed without expansion.
+
 On the source L4 task, the same inclusive architecture reached 512/512 on
 length-128 validation at update 250 in every seed. The slowest run took
 40.53 seconds, within the short-tier limit. The checkpoints were trained

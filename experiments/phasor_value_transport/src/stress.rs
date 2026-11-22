@@ -339,6 +339,13 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
         for (split, examples) in &task.splits {
             if split == "test" || split.starts_with("test/") {
                 let measured = metrics::evaluate(&mut e, examples, true)?;
+                if split == language_probes::STUTTER {
+                    report["first_stutter_error"] = if measured["exact"] == examples.len() {
+                        Value::Null
+                    } else {
+                        language_probes::stutter_error(&mut e, examples)?
+                    };
+                }
                 scores.insert(
                     split,
                     json!({"correct":measured["exact"],"total":examples.len()}),

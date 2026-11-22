@@ -4,7 +4,9 @@
 use super::*;
 
 const LETTERS: usize = 10;
+const REPEATS: usize = 32;
 pub(super) const EXHAUSTIVE: &str = "test/exhaustive-10-letters";
+pub(super) const STUTTER: &str = "test/stutter-8x32";
 
 fn word(bits: usize, width: usize) -> Vec<i64> {
     (0..width)
@@ -67,25 +69,27 @@ pub(super) fn add(task: &mut Task, name: &str, extended: bool) -> basis::Result<
             exhaustive(&mut spec, blocks, 12)?,
         );
         let seeds = exhaustive(&mut spec, blocks, 8)?;
-        let repeats = 32;
-        spec["length"] = json!(1 + 8 * repeats);
+        spec["length"] = json!(1 + 8 * REPEATS);
         let mut stretched = Vec::with_capacity(seeds.len());
         for seed in seeds {
             let letters = seed.tokens[1..]
                 .iter()
-                .flat_map(|&t| std::iter::repeat_n(t, repeats))
+                .flat_map(|&t| std::iter::repeat_n(t, REPEATS))
                 .collect();
             let long = labeled(&spec, letters, blocks)?;
-            if !long.targets[1..]
-                .chunks_exact(repeats)
-                .zip(&seed.targets[1..])
-                .all(|(copies, label)| copies.iter().all(|t| t == label))
+            let (groups, tail) = long.targets[1..].as_chunks::<REPEATS>();
+            if !tail.is_empty()
+                || groups.len() != seed.targets.len() - 1
+                || !groups
+                    .iter()
+                    .zip(&seed.targets[1..])
+                    .all(|(copies, label)| copies.iter().all(|t| t == label))
             {
                 return Err("stretched prefix labels differ from the original word".into());
             }
             stretched.push(long);
         }
-        task.splits.insert("test/stutter-8x32".into(), stretched);
+        task.splits.insert(STUTTER.into(), stretched);
     }
     Ok(())
 }
@@ -129,4 +133,49 @@ pub(super) fn shortest_error(engine: &mut Engine, words: &[Example]) -> Result<V
         }
     }
     Ok(Value::Null)
+}
+
+fn final_prediction(engine: &mut Engine, prefix: &[u32]) -> Result<u32> {
+    engine.forward(prefix, &vec![u32::MAX; prefix.len()], 1, prefix.len())?;
+    Ok(engine.predictions.read()?[prefix.len() - 1])
+}
+
+/// Locate the first missed prefix in probe order. Score the prefix again
+/// in isolation, then remove the repetitions and score its original word.
+/// All three predictions are made with every output label masked.
+pub(super) fn stutter_error(engine: &mut Engine, words: &[Example]) -> Result<Value> {
+    for rows in words.chunks(engine.config.max_batch) {
+        let length = rows[0].tokens.len();
+        let tokens: Vec<_> = rows
+            .iter()
+            .flat_map(|row| row.tokens.iter().map(|&t| t as u32))
+            .collect();
+        engine.forward(&tokens, &vec![u32::MAX; tokens.len()], rows.len(), length)?;
+        let predictions = engine.predictions.read()?;
+        for (i, row) in rows.iter().enumerate() {
+            let offset = i * length;
+            for (pos, &label) in row.targets.iter().enumerate().skip(1) {
+                let batched = predictions[offset + pos];
+                if batched as i64 == label {
+                    continue;
+                }
+                let prefix = &tokens[offset..=offset + pos];
+                let mut original = vec![prefix[0]];
+                original.extend(prefix[1..].iter().step_by(REPEATS));
+                let letters: String = original[1..]
+                    .iter()
+                    .map(|&t| if t == 9 { 'a' } else { 'b' })
+                    .collect();
+                return Ok(json!({
+                    "source_prefix": letters,
+                    "payload_position": pos,
+                    "expected_token": label,
+                    "batched_token": batched,
+                    "standalone_token": final_prediction(engine, prefix)?,
+                    "unstretched_token": final_prediction(engine, &original)?,
+                }));
+            }
+        }
+    }
+    Err("masked repeated-word predictions did not reproduce the measured error".into())
 }
