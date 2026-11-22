@@ -70,6 +70,32 @@ theorem cubic_zero [NeZero p] (k b : ZMod p) (z : Fin m → ℂ) (j : Fin m) :
     act 1 (fun _ => 0) (fun _ => 1) z j = character k (0^3+0*b) := by
   simp [act_constant, character]
 
+/-- Generator order for the exact 97-class reference check. -/
+def chart97 (j : Fin 96) : ZMod 97 := 5 ^ j.val
+
+/-- Wrapping a frequency index leaves its field value unchanged after one
+period. Adding a shift therefore multiplies every frequency by one scalar. -/
+theorem chart97_add (i s : Fin 96) : chart97 (i+s) = chart97 i * chart97 s := by
+  simp only [chart97, Fin.val_add, ← pow_add]
+  generalize (i.val + s.val) = n
+  conv_rhs => rw [← Nat.mod_add_div n 96]
+  rw [pow_add, pow_mul, show (5 : ZMod 97)^96 = 1 by decide, one_pow, mul_one]
+
+set_option maxRecDepth 20000 in
+private theorem chart97_covers : ∀ a : ZMod 97, a ≠ 0 → ∃ s : Fin 96, chart97 s = a := by
+  decide
+
+/-- Every nonzero NV11 row has an exact single-shift realization in the
+concrete chart. The same shift works for every frequency and every operand. -/
+theorem cubic97_nonzero (a : ZMod 97) (ha : a ≠ 0) :
+    ∃ s : Fin 96, ∀ (j : Fin 96) (b : ZMod 97),
+      act 0 (fun t => if t = s then 1 else 0) (fun i => character (chart97 i) (a^3))
+        (fun i => character (chart97 i) b) j = character (chart97 j) (a^3+a*b) := by
+  obtain ⟨s, hs⟩ := chart97_covers a ha
+  exact ⟨s, fun j b => cubic_shift chart97 s j a b (fun i => by rw [chart97_add, hs])⟩
+
+example := cubic97_nonzero 17 (by decide)
+
 /-- Learned frequency coordinates and affine prefix control projections. -/
 structure Read (D m : ℕ) where
   spectrum : EucSpace D →ₗ[ℝ] ToeplitzChannels m

@@ -1018,6 +1018,8 @@ Multiplication by a nonzero field element permutes the frequencies. In
 generator order it shifts the channel index. Multiplication by zero sends
 all frequencies to the constant character. The learned read receives dense
 vectors and estimates both controls from its prefix.
+In Lean, powers of five exhaust all 96 nonzero residues modulo 97, and a
+single shift realizes each nonzero row for all frequencies and operands.
 [Fourier transport proofs](../../src/Transformer/Phasor/FourierTransport.lean)
 
 ## Triple transport
