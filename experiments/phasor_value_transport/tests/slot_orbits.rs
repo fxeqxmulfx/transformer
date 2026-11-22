@@ -291,3 +291,38 @@ fn few_observations_produce_no_peer_read() {
     );
     assert_eq!(old, output);
 }
+
+#[test]
+fn later_witnesses_resolve_additional_unseen_cells() {
+    let slots = 67_usize;
+    let mut bank = vec![ABSENT; slots * slots];
+    let mut state = 19031_u64;
+    let truth = |row: usize, key: usize| {
+        let left = (5 * row + 11) % slots;
+        let right = (17 * key + 9) % slots;
+        ((23 * left.abs_diff(right) + 3) % slots) as u32
+    };
+    for (index, cell) in bank.iter_mut().enumerate() {
+        state = state.wrapping_mul(6364136223846793005).wrapping_add(17);
+        if state >> 63 == 0 {
+            *cell = truth(index / slots, index % slots);
+        }
+    }
+    let priority: Vec<_> = (0..slots).rev().collect();
+    let constant = vec![ABSENT; bank.len()];
+    let mut once = constant.clone();
+    let mut iterated = constant.clone();
+    slot_orbits::fill_from_witnesses(slots, &bank, &priority, &constant, &mut once);
+    slot_orbits::fill_in_rounds(slots, &bank, &priority, &constant, &mut iterated);
+    let mut added = 0;
+    for (index, (&first, &last)) in once.iter().zip(&iterated).enumerate() {
+        if first != ABSENT {
+            assert_eq!(last, first);
+        }
+        if bank[index] == ABSENT && first == ABSENT && last != ABSENT {
+            assert_eq!(last, truth(index / slots, index % slots));
+            added += 1;
+        }
+    }
+    assert!(added > slots, "{added} additional held-out cells");
+}

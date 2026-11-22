@@ -2026,6 +2026,69 @@ done
 "$bin" screen arithmetic-abs-diff 0 "$out" 950
 ```
 
+### Repeated witness reads
+
+The `triple-iterated-witness` model can use a prediction at one hidden key
+as evidence at another. It runs the same search up to three times, using
+at most 16, 32 and 32 reference rows. Each round preserves the learned
+correspondences and all previous answers. It stops when no new evidence
+appears or every structural read has an answer. All inferred evidence is
+local to the current bank of learned weights. The next refresh starts
+again from those weights. This change adds no parameters.
+
+Lean proves that every round preserves a total interpretation if the
+initial evidence agrees with it and each new inference is locally sound.
+A finite example distinguishes one round from two. [Repeated-read proofs](../../src/Transformer/Phasor/TripleTransport/EvidenceRounds.lean)
+
+The first partial audit verified **11/75 short, 5/30 long and 3/3 exact
+NV11**. Two short and five long runs had reached a screen cutoff. The
+remaining 62 short and 20 long runs were pending in that snapshot.
+
+| Case | Seed | First passing update | Reloaded primary | Independent test |
+| --- | --- | --- | --- | --- |
+| Absolute difference, long | 0 / 1 / 2 | 209 / 171 / 247 | 4,664 / 4,669 / 4,662 of 4,705 | — |
+| Sum-square, short | 0 | 171 | 4,705/4,705 | — |
+| Sum-cube, long | 0 | 171 | 4,705/4,705 | — |
+| Power division, modulus 97, exponent 2 | 0 | 171 | 4,656/4,656 | — |
+| GPT branch amplitudes, short | 0 | 736 | 256/256 | 256/256 |
+| GPT linear transport, short | 0 | 448 | 256/256 | 255/256 |
+| 16-bit parity, long | 0 | 1,000 | 157/157 | 504/512 |
+| NV11 | 0 / 1 / 2 | 250 / 250 / 250 | 4,705 / 4,705 / 4,705 of 4,705 | — |
+
+On the same trained absolute-difference checkpoints, retaining one round
+scored 4,246 / 4,211 / 4,255. Disabling all witness reads scored
+399 / 289 / 407. The three NV11 checkpoints each scored 4,704/4,704 on
+the training split. The parity checkpoint transferred to 58/64 at 32 bits
+and 64/64 at 64 bits. Both GPT probes used the original free-generation
+scorer. Blinded absolute difference scored 160 / 191 / 173 of 4,705
+through the 950-update screen. GPT key–value binding seed 0 scored
+423/512 at update 4,096. Both cases have larger original budgets.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.EvidenceRounds
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference,triple-iterated-witness
+bin=./target/release/phasor-value-transport
+out=runs/iterated-witness
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    for task in arithmetic-cubic-product arithmetic-abs-diff; do
+        "$bin" cell "$task" "$seed" "$out"
+        "$bin" probes "$task" "$seed" "$out"
+    done
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" slot-ablate arithmetic-abs-diff "$seed" "$out"
+    "$bin" screen arithmetic-abs-diff-blind "$seed" "$out" 950
+done
+for task in arithmetic-sum-square arithmetic-sum-cube power-division-p97-k2 \
+    basis-parity16 gpt-probe-branch-amplitudes gpt-probe-linear-transport; do
+    "$bin" cell "$task" 0 "$out"
+    "$bin" probes "$task" 0 "$out"
+done
+"$bin" screen gpt-probe-key-value-binding 0 "$out" 4096
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.

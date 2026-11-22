@@ -26,6 +26,7 @@ public import Transformer.Phasor.TripleTransport.CandidateIndex
 public import Transformer.Phasor.TripleTransport.ConfidenceSelection
 public import Transformer.Phasor.TripleTransport.Incremental
 public import Transformer.Phasor.TripleTransport.OverlappingEvidence
+public import Transformer.Phasor.TripleTransport.EvidenceRounds
 public import Transformer.Phasor.TripleTransport.PhaseResidual
 public import Transformer.Phasor.TripleTransport.SeparateRoles
 public import Transformer.Phasor.FourierTransport

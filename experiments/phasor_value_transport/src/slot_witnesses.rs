@@ -32,8 +32,50 @@ pub fn fill_from_witnesses(
     constant: &[u32],
     output: &mut [u32],
 ) {
+    read_round(slots, bank, priority, constant, output, 16);
+}
+
+/// Further rounds can use answers established at other keys. All source
+/// values survive. The next refresh always starts from the learned bank.
+pub fn fill_in_rounds(
+    slots: usize,
+    bank: &[u32],
+    priority: &[usize],
+    constant: &[u32],
+    output: &mut [u32],
+) {
+    let mut evidence = bank.to_vec();
+    for budget in [16, 32, 32] {
+        read_round(slots, &evidence, priority, constant, output, budget);
+        if !output
+            .iter()
+            .zip(constant)
+            .any(|(&read, &c)| read == ABSENT && c == ABSENT)
+        {
+            break;
+        }
+        let mut changed = false;
+        for ((value, &c), &transport) in evidence.iter_mut().zip(constant).zip(output.iter()) {
+            if *value == ABSENT && (c != ABSENT || transport != ABSENT) {
+                *value = if c != ABSENT { c } else { transport };
+                changed = true;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+}
+
+fn read_round(
+    slots: usize,
+    bank: &[u32],
+    priority: &[usize],
+    constant: &[u32],
+    output: &mut [u32],
+    peer_limit: usize,
+) {
     const THRESHOLD: u8 = 6;
-    const PEER_LIMIT: usize = 16;
     assert!(slots > 0 && slots <= 256);
     assert!(bank.len().is_multiple_of(slots));
     assert_eq!(constant.len(), bank.len());
@@ -56,7 +98,7 @@ pub fn fill_from_witnesses(
         .collect();
     // Stable sorting keeps the learned prototype order for equal support counts.
     peers.sort_by_key(|&(_, count)| std::cmp::Reverse(count));
-    peers.truncate(PEER_LIMIT);
+    peers.truncate(peer_limit);
     if peers.len() < 2 {
         return;
     }

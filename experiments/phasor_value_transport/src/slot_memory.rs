@@ -207,6 +207,13 @@ impl Routing {
                     &reads.constant,
                     &mut reads.transport,
                 ),
+                Some(crate::head::PeerSearch::IteratedWitnesses) => slot_orbits::fill_in_rounds(
+                    l.slots,
+                    &bank,
+                    &priority,
+                    &reads.constant,
+                    &mut reads.transport,
+                ),
                 None => {}
             }
             self.reads = Some(reads);
@@ -434,7 +441,11 @@ mod capacity_tests {
 
     #[test]
     fn peer_trunk_and_phase_share_the_same_bounded_dictionary() {
-        for search in [PeerSearch::Aligned, PeerSearch::Witnesses] {
+        for search in [
+            PeerSearch::Aligned,
+            PeerSearch::Witnesses,
+            PeerSearch::IteratedWitnesses,
+        ] {
             for head in [Head::PeerTriple(search), Head::PeerTriplePhase(search)] {
                 assert_eq!(capacity(head, 64, 97), 97);
                 assert_eq!(capacity(head, 64, 256), 256);

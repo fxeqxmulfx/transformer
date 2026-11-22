@@ -66,6 +66,12 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         let mut plain = Engine::new(cfg, &original)?;
         results.insert("without_peers", score(&mut plain, &original)?);
     }
+    if cfg.head.peer_search() == Some(head::PeerSearch::IteratedWitnesses) {
+        let mut single_cfg = cfg.clone();
+        single_cfg.head = head::Head::PeerTriplePhase(head::PeerSearch::Witnesses);
+        let mut single = Engine::new(single_cfg, &original)?;
+        results.insert("one_round", score(&mut single, &original)?);
+    }
     println!(
         "{}",
         json!({"case":name,"seed":seed,"model":MODEL,"weights_sha256":saved["weights_sha256"],

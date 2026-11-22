@@ -9,7 +9,7 @@ mod aligned;
 pub use aligned::fill_from_peers;
 #[path = "slot_witnesses.rs"]
 mod witnesses;
-pub use witnesses::fill_from_witnesses;
+pub use witnesses::{fill_from_witnesses, fill_in_rounds};
 
 pub const ABSENT: u32 = u32::MAX;
 
