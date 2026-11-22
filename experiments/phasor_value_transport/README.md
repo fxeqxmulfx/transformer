@@ -956,6 +956,21 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/toeplitz-nv11/seed0/nv11-train-3000.f32 rows
 ```
 
+## Two-sided frame read
+
+One learned matrix maps current embeddings across every prefix. The
+previous Phasor context selects two scalar coordinates. The first rotates
+the embedding before this matrix and the second rotates its output.
+Each scalar drives all channel pairs through a learned frequency per pair.
+A prefix-dependent scalar gain and vector bias complete the read.
+
+Before the gain and bias, every prefix operator attains the same set of
+output norms on the unit sphere. Applying the difference of the input and
+output frame coordinates transports one operator to another. Thus every
+prefix shares the same learned transformation up to two rotations. The
+model can also make its output constant through the scalar gain.
+[Two-sided frame proofs](../../src/Transformer/Phasor/TwoSidedFrame.lean)
+
 ## Tied Toeplitz read
 
 The same learned matrix projects the current embedding into complex
