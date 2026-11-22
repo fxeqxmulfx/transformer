@@ -11,7 +11,7 @@ pub fn save(e: &Engine, path: &Path) -> Result<String> {
     Ok(hash(&bytes))
 }
 
-fn load(bytes: &[u8], cfg: Config) -> Result<Engine> {
+pub(super) fn load(bytes: &[u8], cfg: Config) -> Result<Engine> {
     if bytes.len() != 4 * layout::total_count(&cfg) {
         return Err("wrong checkpoint length".into());
     }

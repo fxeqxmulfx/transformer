@@ -88,6 +88,40 @@ fn input_digest(examples: &[Example]) -> String {
 }
 
 pub fn run(source: Source, name: &str, seed: u32, updates: usize, out: &Path) -> Result<()> {
+    let result = measure(source, name, seed, updates, out, true)?;
+    println!("{result}");
+    Ok(())
+}
+
+fn directory(out: &Path, arm: &str, name: &str, seed: u32, updates: usize) -> std::path::PathBuf {
+    out.join(arm)
+        .join(name)
+        .join(format!("seed{seed}-{updates}"))
+}
+
+/// Replay the frozen catalog record and return the very bytes it authenticates.
+pub(super) fn replay_catalog(
+    name: &str,
+    seed: u32,
+    updates: usize,
+    out: &Path,
+) -> Result<(Value, Vec<u8>)> {
+    let result = measure(Source::Catalog, name, seed, updates, out, false)?;
+    let bytes = fs::read(directory(out, MODEL, name, seed, updates).join("weights.f32"))?;
+    if result["weights_sha256"] != hash(&bytes) {
+        return Err("catalog weights changed after replay".into());
+    }
+    Ok((result, bytes))
+}
+
+fn measure(
+    source: Source,
+    name: &str,
+    seed: u32,
+    updates: usize,
+    out: &Path,
+    train_missing: bool,
+) -> Result<Value> {
     let (head, model, arm, (row, mut task)) = match source {
         Source::ComparedHead(arm) => {
             let head = Head::parse(arm)?;
@@ -126,11 +160,13 @@ pub fn run(source: Source, name: &str, seed: u32, updates: usize, out: &Path) ->
         });
         initialization = Some(weights);
     }
-    let dir = out
-        .join(arm)
-        .join(name)
-        .join(format!("seed{seed}-{updates}"));
-    fs::create_dir_all(&dir)?;
+    let dir = directory(out, arm, name, seed, updates);
+    let result_file = dir.join("result.json");
+    if train_missing {
+        fs::create_dir_all(&dir)?;
+    } else if !result_file.is_file() {
+        return Err("catalog comparison requires a completed fixed-budget cell".into());
+    }
     let lock = fs::File::options()
         .read(true)
         .write(true)
@@ -138,7 +174,6 @@ pub fn run(source: Source, name: &str, seed: u32, updates: usize, out: &Path) ->
         .truncate(false)
         .open(dir.join("cell.lock"))?;
     lock.lock()?;
-    let result_file = dir.join("result.json");
     let weights_file = dir.join("weights.f32");
     let history_file = dir.join("observations.jsonl");
     let saved: Option<Value> = if result_file.try_exists()? {
@@ -147,8 +182,10 @@ pub fn run(source: Source, name: &str, seed: u32, updates: usize, out: &Path) ->
             return Err("saved benchmark has a different protocol".into());
         }
         Some(result)
-    } else {
+    } else if train_missing {
         None
+    } else {
+        return Err("catalog result disappeared before replay".into());
     };
     let gpu = if let Some(result) = &saved {
         result["gpu"].clone()
@@ -222,6 +259,5 @@ pub fn run(source: Source, name: &str, seed: u32, updates: usize, out: &Path) ->
     } else {
         publish(&dir, "result.json", &serde_json::to_vec_pretty(&result)?)?;
     }
-    println!("{result}");
-    Ok(())
+    Ok(result)
 }

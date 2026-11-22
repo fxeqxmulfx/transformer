@@ -872,6 +872,34 @@ the first crossings were 1,500 for contextual rotation and 1,250 for
 the learned stream. Within each architecture, the two tasks started
 with the same weights and used the same inputs.
 
+All 12 seed-0 checkpoints were scored again at 3,000 updates. The two
+architectures used identical ordered input splits and the original
+optimizer settings on all six tasks.
+
+| Target modulo 97 | Learned stream, held out of 4,705 | Contextual rotation, held out of 4,705 |
+| --- | ---: | ---: |
+| `ab` | 4,705 | 4,705 |
+| `a + ab` | 4,705 | 4,705 |
+| `a³ + ab` | 86 | 91 |
+| `a² + ab` | 74 | 69 |
+| `a² + ab + b²` | 61 | 60 |
+| `a² + ab + b² + a` | 34 | 47 |
+
+`catalog-shifts` replays both checkpoints, verifies their common inputs
+and initialization, then sends the same input pairs through each model.
+In the evaluator, the difference of the source targets tells it how far
+to rotate the candidate's class probabilities. It checks all 9,409
+target shifts for row-plus-column separability and compares ordinary
+softmax probabilities on every class, separately for each split.
+
+Both multiplication self-comparisons agreed exactly. For contextual
+rotation on the affine shift, every held-out argmax agreed after alignment
+and the largest probability difference was `8.71e-7`. On the cubic
+shift, the models' top classes differed after alignment on 1/4,704 training
+pairs and 4,614/4,705 held-out pairs. The held-out mean total variation
+distance was 0.98155. The affine endpoint was highly confident under
+both trainings, and its earlier 99% crossings already differed.
+
 ```sh
 cd experiments/phasor_value_transport
 cargo +stable build --release --locked --features fp32-affine-reference,context-rotation-read
@@ -881,6 +909,8 @@ do
     PHASOR_EVAL_BATCH_CAP=16 "$bin" catalog-bench "$name" 0 3000 runs/cm121
 done
 # Repeat the same command to authenticate the stored result and score its weights again.
+PHASOR_EVAL_BATCH_CAP=16 "$bin" catalog-shifts arithmetic-mul arithmetic-cubic-product 0 3000 runs/cm121
+cargo +stable test --release --locked --test class_translation
 ```
 
 ## GPT order discrimination
