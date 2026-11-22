@@ -105,6 +105,16 @@ for arm in successor-displacement successor-displacement-quarter; do
 done
 ```
 
+## Gain of the tied successor read
+
+The trial keeps the full tied displacement and initializes the learned residual
+gain at 0.75. For fixed other parameters, Lean proves that interpolating
+two gains interpolates every logit. The absolute change in a two-class
+margin is bounded by the gain change in magnitude, the distance between
+the two embeddings and the square root of the hidden width, multiplied
+together. The trial compares first observed crossings and exhaustive NV11
+checkpoints under the original optimizer. [Gain interpolation and margin bound](../../src/Transformer/Phasor/DisplacementGain.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the
