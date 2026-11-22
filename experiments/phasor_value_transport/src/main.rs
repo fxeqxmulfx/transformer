@@ -26,6 +26,8 @@ mod phase_checks;
 mod phase_controls;
 mod phase_prefix;
 mod recurrent;
+mod reflection_phase;
+mod reflection_phase_checks;
 mod relation_paths;
 mod relation_support;
 mod transition;

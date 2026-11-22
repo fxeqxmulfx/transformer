@@ -103,8 +103,9 @@ fn network(width: usize) -> Result<()> {
     let writes = increments + M * width;
     let affine = cfg.head == head::Head::AffinePhase;
     let bilinear = cfg.head == head::Head::BilinearPhase;
+    let reflecting = cfg.head == head::Head::ReflectionPhase;
     let output = increments + cfg.head.phase_inputs() * width;
-    let end = first + cfg.head.parameters(&cfg);
+    let end = first + cfg.head.parameters(&cfg) - cfg.head.phase_gates();
     let mut e = Engine::new(cfg.clone(), &weights)?;
     e.forward(&tokens, &labels, 2, length)?;
     e.backward(2, length)?;
@@ -112,6 +113,9 @@ fn network(width: usize) -> Result<()> {
     let output_indices =
         |half: usize| (output..end).filter(move |&i| (i - output) % (2 * M) / M == half);
     if grad[increments..output].iter().any(|&g| g != 0.)
+        || grad[end..end + cfg.head.phase_gates()]
+            .iter()
+            .any(|&g| g != 0.)
         || (0..2).any(|half| !output_indices(half).any(|i| grad[i].abs() > 1e-7))
     {
         return Err("zero phase output maps produced incorrect parameter gradients".into());
@@ -123,11 +127,16 @@ fn network(width: usize) -> Result<()> {
     for w in &mut weights[output..end] {
         *w = rng.gauss(0., 0.08) as f32;
     }
-    if affine || bilinear {
+    if affine || bilinear || reflecting {
         phase_controls::zero_extension(&cfg, &weights, &mut e)?;
         let inactive = if bilinear { writes + M * width } else { writes };
         for w in &mut weights[inactive..output] {
             *w = rng.gauss(0., 0.05) as f32;
+        }
+        if reflecting {
+            for w in &mut weights[end..end + M] {
+                *w = rng.gauss(0.5, 0.45) as f32;
+            }
         }
     }
     e.parameters.write(&weights)?;
@@ -145,6 +154,7 @@ fn network(width: usize) -> Result<()> {
         let mut angles = [0.; M];
         let mut ordered = [(1., 0.); M];
         let mut left_sum = [0.; M];
+        let mut reflection = [0.; M];
         for (h, x) in seq.chunks_exact(width).zip(source.chunks_exact(width)) {
             let h: Vec<_> = h.iter().copied().map(f64::from).collect();
             let x: Vec<_> = x.iter().copied().map(f64::from).collect();
@@ -168,6 +178,13 @@ fn network(width: usize) -> Result<()> {
                     let (s, c) = angle.sin_cos();
                     pair[k] = s;
                     pair[M + k] = c - 1.;
+                    if reflecting {
+                        reflection[k] = step[k] - reflection[k];
+                        let (rs, rc) = reflection[k].sin_cos();
+                        let gate = f64::from(weights[end + k]);
+                        pair[k] += gate * (rs - s);
+                        pair[M + k] += gate * (rc - c);
+                    }
                 }
             }
             let residual = linear(&weights[output..end], &pair);
@@ -191,6 +208,8 @@ fn network(width: usize) -> Result<()> {
     ];
     if affine {
         groups.push(("affine phase write", (writes..output).collect()));
+    } else if reflecting {
+        groups.push(("rotation/reflection gate", (end..end + M).collect()));
     } else if bilinear {
         for (j, name) in ["ordered left", "ordered right", "local phase"]
             .into_iter()
@@ -205,6 +224,9 @@ fn network(width: usize) -> Result<()> {
     if cfg.head.projects_embeddings() {
         phase_controls::input_segment(&cfg, &weights, &mut e)?;
     }
+    if reflecting {
+        reflection_phase_checks::insert_pair(&cfg, &weights, end, &mut e)?;
+    }
     Ok(())
 }
 
@@ -213,7 +235,9 @@ pub fn run() -> Result<()> {
         return Err("phase memory checks require --features fp32-affine-reference".into());
     }
     for length in [1, 7, 257] {
-        if architecture::BILINEAR_PHASE {
+        if architecture::REFLECTION_PHASE {
+            reflection_phase_checks::scan(length)?;
+        } else if architecture::BILINEAR_PHASE {
             bilinear_phase_checks::scan(length)?;
         } else if architecture::AFFINE_PHASE {
             affine_phase_checks::scan(length)?;

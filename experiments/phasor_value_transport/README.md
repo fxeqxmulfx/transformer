@@ -600,6 +600,39 @@ even-length segments can also exchange places without changing either
 endpoint phase. Each acts on the incoming reflected angle by a translation.
 [Rotation and reflection proofs](../../src/Transformer/Phasor/ReflectionPhaseRead.lean)
 
+At length 257 the Kernite scan matched an independent FP64 alternating
+sum within `3.05e-6` on 49,344 read coordinates. The largest errors on
+24,672 input derivatives and 32 shared gate derivatives were `1.18e-5`
+and `3.37e-5`. At widths 64 and 128, inserting an off-table vector twice
+changed the reflection-only endpoint by at most `2.99e-7`. The two
+derivatives with respect to the inserted copies summed to zero within
+`1.50e-8`. Rebuilding the input-phase control reproduced its 20-bit
+seed-0 checkpoint byte for byte.
+
+The 16-bit reflection run reached the source validation threshold at
+500 updates on each seed. The 20-bit run reached it at 750 / 500 / 500.
+Every selected checkpoint then scored 64/64 on both catalog lengths
+and 256/256 at 256 bits. These scores count exact generated answers.
+
+| Training bits | Source test out of 512, seeds 0 / 1 / 2 | 128-bit test out of 256 | 256-bit test out of 256 |
+| ---: | --- | --- | --- |
+| 16 | 512 / 509 / 512 | 253 / 256 / 256 | 256 / 256 / 256 |
+| 20 | 512 / 506 / 511 | 256 / 256 / 256 | 256 / 256 / 256 |
+
+The same architecture scored 86 / 91 / 91 of 4,705 held-out NV11
+pairs after 3,000 updates. Training accuracy was 4,703 / 4,704 / 4,695
+of 4,704. NV11 remains open for this backbone.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ReflectionPhaseRead
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,reflection-phase-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity20 0 runs/reflection 3500
+PHASOR_EVAL_BATCH_CAP=4 "$bin" probes basis-parity20 0 runs/reflection extended
+```
+
 ## NV11 prediction shifts
 
 CM121 describes row and column translations of class labels. To see

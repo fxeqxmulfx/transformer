@@ -8,19 +8,34 @@ pub(super) fn zero_extension(cfg: &Config, weights: &[f32], ordered: &mut Engine
     let size = M * cfg.width;
     let first = architecture::memory_start(cfg);
     let end = first + cfg.head.phase_inputs() * cfg.width;
-    let inactive = match cfg.head {
-        head::Head::AffinePhase => first + size,
-        head::Head::BilinearPhase => first + 2 * size,
+    let mut controlled = weights.to_vec();
+    let removed = match cfg.head {
+        head::Head::ReflectionPhase => {
+            let gates = end + 2 * size..end + 2 * size + M;
+            if weights[gates.clone()].iter().any(|&x| x != 0.5) {
+                return Err("reflection gates must initialize at one half".into());
+            }
+            controlled[gates.clone()].fill(0.);
+            gates
+        }
+        head::Head::AffinePhase | head::Head::BilinearPhase => {
+            let inactive = if cfg.head == head::Head::AffinePhase {
+                first + size
+            } else {
+                first + 2 * size
+            };
+            if weights[inactive..end].iter().any(|&x| x != 0.) {
+                return Err("initial ordered contributions must be zero".into());
+            }
+            first + size..end
+        }
         _ => return Err("expected an ordered phase extension".into()),
     };
-    if weights[inactive..end].iter().any(|&x| x != 0.) {
-        return Err("initial ordered contributions must be zero".into());
-    }
     let mut base_cfg = cfg.clone();
     base_cfg.head = head::Head::InputPhase;
-    let base_weights = [&weights[..first + size], &weights[end..]].concat();
+    let base_weights = [&weights[..removed.start], &weights[removed.end..]].concat();
     let mut base = Engine::new(base_cfg, &base_weights)?;
-    ordered.parameters.write(weights)?;
+    ordered.parameters.write(&controlled)?;
     let rows = cfg.max_length * 2;
     let mut rng = random::Random::new(101);
     let mut samples = |n| {
@@ -44,9 +59,8 @@ pub(super) fn zero_extension(cfg: &Config, weights: &[f32], ordered: &mut Engine
     Ok(())
 }
 
-/// Isolate the residual and its input VJP by subtracting a model with the
-/// same trained backbone and classifier. Swap unequal off-table segments.
-pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Result<()> {
+/// Retain exactly the same contextual backbone, classifier and rotary frequencies.
+pub(super) fn stream_control(cfg: &Config, weights: &[f32]) -> Result<Engine> {
     let mut control = cfg.clone();
     control.head = head::Head::Stream;
     let memory = architecture::memory_start(cfg);
@@ -59,38 +73,67 @@ pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Re
         &weights[layout::frequency_offset(cfg)..],
     ]
     .concat();
-    let mut base = Engine::new(control, &base_weights)?;
+    Engine::new(control, &base_weights)
+}
+
+/// Subtract the control's hidden vector and input gradient at the endpoint.
+pub(super) fn endpoint(
+    e: &mut Engine,
+    base: &mut Engine,
+    input: &[f32],
+    g: &[f32],
+) -> Result<(Vec<f32>, Vec<f32>)> {
+    let width = e.config.width;
+    let length = input.len() / width;
+    let mut cotangent = vec![0.; length * g.len()];
+    cotangent[(length - 1) * g.len()..].copy_from_slice(g);
+    let a = e.infer_embeddings(input, 1, length)?;
+    let b = base.infer_embeddings(input, 1, length)?;
+    let da = e.embedding_pullback(input, 1, length, &cotangent)?;
+    let db = base.embedding_pullback(input, 1, length, &cotangent)?;
+    let hidden = a.hidden[(length - 1) * width..]
+        .iter()
+        .zip(&b.hidden[(length - 1) * width..])
+        .map(|(x, y)| x - y)
+        .collect();
+    Ok((hidden, da.iter().zip(db).map(|(x, y)| x - y).collect()))
+}
+
+/// Swap two unequal off-table segments after isolating the phase contribution.
+pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Result<()> {
+    let mut base = stream_control(cfg, weights)?;
     let (width, length, vocab) = (cfg.width, cfg.max_length, cfg.vocab);
     let mut rng = random::Random::new(717);
     let mut values: Vec<_> = (0..length * width)
         .map(|_| rng.gauss(0., 0.28) as f32)
         .collect();
-    let mut cotangent = vec![0.; length * vocab];
-    for g in &mut cotangent[(length - 1) * vocab..] {
-        *g = rng.gauss(0., 0.2) as f32;
-    }
-    let mut residual = |input: &[f32]| -> Result<(Vec<f32>, Vec<f32>)> {
-        let a = e.infer_embeddings(input, 1, length)?;
-        let b = base.infer_embeddings(input, 1, length)?;
-        let g = e.embedding_pullback(input, 1, length, &cotangent)?;
-        let h = base.embedding_pullback(input, 1, length, &cotangent)?;
-        let read = a.hidden[(length - 1) * width..]
-            .iter()
-            .zip(&b.hidden[(length - 1) * width..])
-            .map(|(x, y)| x - y)
-            .collect();
-        Ok((read, g.iter().zip(h).map(|(x, y)| x - y).collect()))
+    let cotangent: Vec<_> = (0..vocab).map(|_| rng.gauss(0., 0.2) as f32).collect();
+    let (ab, mut gab) = endpoint(e, &mut base, &values, &cotangent)?;
+    let shift = if cfg.head == head::Head::ReflectionPhase {
+        let mut even = values.clone();
+        even.rotate_left(2 * width);
+        let (read, grad) = endpoint(e, &mut base, &even, &cotangent)?;
+        let mut old_gradient = gab.clone();
+        old_gradient.rotate_left(2 * width);
+        let hidden = compact_checks::close("even reflection segment exchange", &ab, &read, 1e-5)?;
+        let derivative =
+            compact_checks::close("even reflection exchange VJP", &old_gradient, &grad, 4e-5)?;
+        println!(
+            "even reflection segment width={width} hidden={hidden:.3e} input_gradient={derivative:.3e}"
+        );
+        width
+    } else {
+        2 * width
     };
-    let (ab, mut gab) = residual(&values)?;
-    values.rotate_left(2 * width);
-    let (ba, gba) = residual(&values)?;
-    gab.rotate_left(2 * width);
+    values.rotate_left(shift);
+    let (ba, gba) = endpoint(e, &mut base, &values, &cotangent)?;
+    gab.rotate_left(shift);
     if !ab.iter().any(|x| x.abs() > 0.01) || !gba[..width].iter().any(|x| x.abs() > 0.001) {
         return Err("segment check requires active phase outputs and early input gradients".into());
     }
     if matches!(
         cfg.head,
-        head::Head::AffinePhase | head::Head::BilinearPhase
+        head::Head::AffinePhase | head::Head::BilinearPhase | head::Head::ReflectionPhase
     ) {
         let changed = |a: &[f32], b: &[f32]| {
             a.iter()

@@ -2,13 +2,19 @@
 use super::*;
 use crate::{
     head::{Head, MEMORY_WIDTH as M},
-    affine_phase, bilinear_phase, phase_prefix, recurrent, transition,
+    affine_phase, bilinear_phase, phase_prefix, recurrent, reflection_phase, transition,
 };
 
 enum Memory {
     Phase(phase_prefix::kernels::Kernels),
     AffinePhase(affine_phase::kernels::Kernels),
     BilinearPhase(bilinear_phase::kernels::Kernels),
+    Reflection {
+        kernels: reflection_phase::kernels::Kernels,
+        angles: F,
+        gate_partials: F,
+        gate_offset: usize,
+    },
     Transitions {
         kernels: transition::kernels::Kernels,
         probabilities: F,
@@ -43,6 +49,12 @@ impl HiddenLayer {
             Head::PhasePrefix | Head::InputPhase => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
+            Head::ReflectionPhase => Memory::Reflection {
+                kernels: reflection_phase::kernels::Kernels::load(&e.cuda)?,
+                angles: e.cuda.alloc(rows * M)?,
+                gate_partials: e.cuda.alloc(cfg.max_batch * M)?,
+                gate_offset: crate::architecture::start(cfg) + cfg.head.parameters(cfg) - M,
+            },
             Head::Transition => Memory::Transitions {
                 kernels: transition::kernels::Kernels::load(&e.cuda)?,
                 probabilities: e.cuda.alloc(rows * cfg.max_length)?,
@@ -102,6 +114,12 @@ impl HiddenLayer {
         // Each launch owns its sequence slice, with length and rows checked by Engine::forward.
         unsafe {
             match &self.memory {
+                Memory::Reflection { kernels, angles, gate_offset, .. } => kernels.forward(
+                    Grid::new((rows / length) as u32, M as u32),
+                    self.read.ptr(), self.projected.ptr(), angles.ptr(),
+                    e.parameters.at(*gate_offset).ok_or("reflection gates outside parameters")?,
+                    length as u32,
+                )?,
                 Memory::BilinearPhase(kernels) => kernels.forward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.read.ptr(), self.projected.ptr(), length as u32,
@@ -194,6 +212,17 @@ impl HiddenLayer {
         )?;
         unsafe {
             match &self.memory {
+                Memory::Reflection { kernels, angles, gate_partials, gate_offset } => {
+                    let batch = (rows / length) as u32;
+                    kernels.backward(
+                        Grid::new(batch,M as u32), self.dprojected.ptr(), gate_partials.ptr(),
+                        self.projected.ptr(), angles.ptr(), self.dread.ptr(),
+                        e.parameters.at(*gate_offset).ok_or("reflection gates outside parameters")?, length as u32,
+                    )?;
+                    kernels.gate_sum(Grid::new(1,M as u32),
+                        e.gradients.at(*gate_offset).ok_or("reflection gates outside gradients")?,
+                        gate_partials.ptr(), batch)?;
+                }
                 Memory::BilinearPhase(kernels) => kernels.backward(
                     Grid::new((rows / length) as u32, M as u32),
                     self.dprojected.ptr(), self.projected.ptr(), self.dread.ptr(), length as u32,

@@ -14,8 +14,12 @@ pub const COMPACT: bool = cfg!(feature = "compact-ffn");
 pub const INPUT_PHASE: bool = cfg!(feature = "input-phase-read");
 pub const AFFINE_PHASE: bool = cfg!(feature = "affine-phase-read");
 pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
-pub const PHASE_MEMORY: bool =
-    cfg!(feature = "phase-prefix-read") || INPUT_PHASE || AFFINE_PHASE || BILINEAR_PHASE;
+pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
+pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read")
+    || INPUT_PHASE
+    || AFFINE_PHASE
+    || BILINEAR_PHASE
+    || REFLECTION_PHASE;
 const _: () = {
     let variants = BOUNDED as u8
         + INPUT_PRODUCT as u8
@@ -23,7 +27,8 @@ const _: () = {
         + cfg!(feature = "phase-prefix-read") as u8
         + INPUT_PHASE as u8
         + AFFINE_PHASE as u8
-        + BILINEAR_PHASE as u8;
+        + BILINEAR_PHASE as u8
+        + REFLECTION_PHASE as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -31,7 +36,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if BILINEAR_PHASE {
+pub const HEAD: Head = if REFLECTION_PHASE {
+    Head::ReflectionPhase
+} else if BILINEAR_PHASE {
     Head::BilinearPhase
 } else if AFFINE_PHASE {
     Head::AffinePhase
@@ -113,7 +120,7 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             0
         };
         return (!COMPACT || result["ffn_complex_units"] == width)
-            && result["readout_parameters"] == per_channel * width
+            && result["readout_parameters"] == per_channel * width + HEAD.phase_gates() as u64
             && result.get("pair_parameters").is_none();
     }
     result["initial_gain"] == json!(pair_memory::INITIAL_GAIN)
