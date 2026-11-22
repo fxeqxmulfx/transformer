@@ -1004,6 +1004,13 @@ stream model scored 461/496 and the affine phase model scored 459/496.
 The short and long extension registry requires a three-seed 99% crossing.
 [Native GPT probe data](../convex_stress_probe_data/README.md)
 
+At the end of the original 30,000-update schedule, both the input-phase
+and mixed reflection models classified all 496 training pairs correctly
+on seed 0. Their held-out results were 463/496 and 472/496. Across all
+121 observations, the input-phase model peaked at 475/496 at update
+10,000 and mixed reflection at 473/496 at update 15,250. The 99%
+criterion requires 492 correct.
+
 ```sh
 # From the repository root, set PINNED_TORCH_ROOT to the native ATen installation.
 bash experiments/convex_stress_probe_data/native/build.sh "$PINNED_TORCH_ROOT" .lake/reproduction/gpt-probe-reference
