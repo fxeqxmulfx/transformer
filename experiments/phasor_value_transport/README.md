@@ -1100,6 +1100,18 @@ do
 done
 ```
 
+On the original long-tier `basis-parity16` case, seed 0 reached 85/157 on
+novel validation sequences at update 250. The historical closed-relation
+control reached 157/157 at this checkpoint. A fresh process reproduced
+the triple-transport scores on the source test (266/512), the 32-bit
+transfer set (21/64) and the 64-bit transfer set (25/64). All 18 causal
+prefix comparisons preserved their logits. This parity trial ended at the
+matched checkpoint.
+
+```sh
+PHASOR_EVAL_BATCH_CAP=16 "$bin" memory-bench triple-transport basis-parity16 0 250 runs/triple-bench
+```
+
 ## Single-coordinate frame orbit
 
 One learned coordinate from the preceding context moves both frames.
