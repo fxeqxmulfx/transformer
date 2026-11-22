@@ -187,6 +187,12 @@ also reached 99% on easy recall and key/value binding at initialization.
 It scored 31/32 on Dyck at the 250-update retention cutoff. The incumbent
 keeps its place in the expanded suite.
 
+The smaller multiplier 1.75 also gave seed 0 an exact 32/32 MQAR score at
+initialization and 31/32 on Dyck at 250 updates. To repeat this screen use
+`successor-hit-gain-seven-quarters` and a fresh output directory. For fixed
+weights Lean proves the 1.75 logit is a quarter of the multiplier-1 logit
+plus three quarters of the multiplier-2 logit at every token.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.DisplacementGain
 cd experiments/phasor_value_transport

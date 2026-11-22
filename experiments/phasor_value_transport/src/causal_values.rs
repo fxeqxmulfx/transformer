@@ -228,7 +228,7 @@ pub mod kernels {
         add.u32(s, s, stride);
         bra(col);
     }
-    fn retrieval_factor(factor: f32, row: u32, tokens: u64, keys: u64, tables: u32) {
+    fn retrieval_factor(factor: f32, row: u32, tokens: u64, keys: u64, tables: u32, on_hit: f32) {
         let (b, r, at): (u32, u32, u32);
         let addr: u64;
         mad.wide.u32(addr, row, 4, tokens);
@@ -238,7 +238,7 @@ pub mod kernels {
         ld.global.u32(r, [addr]);
         let same: pred;
         setp.eq.u32(same, r, b);
-        selp.f32(factor, 1.0, 2.0, same);
+        selp.f32(factor, 1.0, on_hit, same);
     }
     #[instances(false, true)]
     pub unsafe extern "ptx-kernel" fn combine<const HIT_GAIN: bool>(
@@ -250,6 +250,7 @@ pub mod kernels {
         tokens: *const u32,
         keys: *const u32,
         tables: u32,
+        on_hit: f32,
         width: u32,
     ) {
         let (row, col, at): (u32, u32, u32);
@@ -260,7 +261,7 @@ pub mod kernels {
         ld.global.f32(g, [gain]);
         if HIT_GAIN {
             let factor: f32;
-            retrieval_factor(factor, row, tokens, keys, tables);
+            retrieval_factor(factor, row, tokens, keys, tables, on_hit);
             mul.rn.f32(g, g, factor);
         }
         load(v, value, at);
@@ -279,6 +280,7 @@ pub mod kernels {
         tokens: *const u32,
         keys: *const u32,
         tables: u32,
+        on_hit: f32,
         width: u32,
     ) {
         let (row, col, at): (u32, u32, u32);
@@ -288,7 +290,7 @@ pub mod kernels {
         ld.global.f32(g, [gain]);
         let factor: f32;
         if HIT_GAIN {
-            retrieval_factor(factor, row, tokens, keys, tables);
+            retrieval_factor(factor, row, tokens, keys, tables, on_hit);
             mul.rn.f32(g, g, factor);
         }
         mov.f32(sum, 0.0);

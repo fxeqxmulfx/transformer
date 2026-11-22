@@ -15,6 +15,11 @@ const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half")
 pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
 pub const HIT_GAIN: bool = cfg!(feature = "successor-hit-gain");
+pub const HIT_FACTOR: f32 = if cfg!(feature = "successor-hit-gain-seven-quarters") {
+    1.75
+} else {
+    2.0
+};
 pub const INITIAL_GAIN: f32 = if cfg!(feature = "successor-gain-three-quarters") {
     0.75
 } else if HALF_GAIN {
@@ -62,7 +67,9 @@ compile_error!(
     "the retrieval-dependent gain trial uses full displacement and the original table addresses"
 );
 
-pub const MODEL: &str = if HIT_GAIN {
+pub const MODEL: &str = if cfg!(feature = "successor-hit-gain-seven-quarters") {
+    "phasor-successor-hit-gain175-v1"
+} else if HIT_GAIN {
     "phasor-successor-hit-gain-v1"
 } else if cfg!(feature = "successor-gain-three-quarters") {
     "phasor-successor-displacement-gain075-v1"

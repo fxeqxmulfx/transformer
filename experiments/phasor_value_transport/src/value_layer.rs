@@ -134,6 +134,7 @@ impl ValueLayer {
                     e.tokens.ptr(),
                     m.keys.ptr(),
                     crate::pair_memory::TABLES as u32,
+                    crate::pair_memory::HIT_FACTOR,
                     d as u32,
                 )?;
             }
@@ -193,6 +194,7 @@ impl ValueLayer {
                     e.tokens.ptr(),
                     m.keys.ptr(),
                     crate::pair_memory::TABLES as u32,
+                    crate::pair_memory::HIT_FACTOR,
                     d as u32,
                 )?;
                 m.causal.gain_sum(

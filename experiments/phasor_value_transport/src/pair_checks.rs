@@ -105,7 +105,11 @@ fn profile(p: usize, length: usize) -> Result<()> {
                 .find(|pair| pair[0] == b)
                 .map_or(b, |pair| pair[1]);
             if cfg!(feature = "successor-hit-gain") && r != b {
-                gain *= 2.;
+                gain *= if cfg!(feature = "successor-hit-gain-seven-quarters") {
+                    7. / 4.
+                } else {
+                    2.
+                };
             }
             let strength = if cfg!(feature = "successor-displacement-quarter") {
                 0.25
