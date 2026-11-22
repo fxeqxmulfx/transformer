@@ -600,6 +600,22 @@ even-length segments can also exchange places without changing either
 endpoint phase. Each acts on the incoming reflected angle by a translation.
 [Rotation and reflection proofs](../../src/Transformer/Phasor/ReflectionPhaseRead.lean)
 
+## NV11 prediction shifts
+
+CM121 describes row and column translations of class labels. To see
+whether a checkpoint learns this structure, score its original top-one
+predictions and subtract the true classes modulo 97 in the evaluator.
+Two held-out cells in the same row agree up to a row shift when their
+residuals coincide. For each pair of rows, group their common held-out
+columns by residual difference. Two columns in the same group give a
+rectangle whose four errors cancel. Every corner must belong to the
+split being evaluated.
+
+Lean proves that a row-plus-column translation passes all rectangles and,
+on a complete table, that passing all rectangles characterizes exactly
+these translations. Multiplication and NV11 differ by such a row shift.
+[Prediction-shift identities](../../src/Transformer/Phasor/PredictionShifts.lean)
+
 ## GPT order discrimination
 
 The catalog adapter uses the native GPT mechanism-probe data port to load
