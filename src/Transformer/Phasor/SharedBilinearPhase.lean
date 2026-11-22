@@ -119,31 +119,39 @@ theorem EmbeddingBackbone.sharedBilinearFeature_zero (A : EmbeddingBackbone D d 
       A.feature θ eps scale x l i := by
   simp [EmbeddingBackbone.sharedBilinearFeature]
 
+/-- The latent state and its local projection depend only on the dense prefix. -/
+theorem SharedBilinearRead.latent_congr_prefix (P : SharedBilinearRead D r m)
+    (eps : ℝ) (x y : ℕ → EucSpace D) (i : ℕ) (h : ∀ j ≤ i, x j = y j) :
+    P.latent eps x i = P.latent eps y i := by
+  let v := fun (seq : ℕ → EucSpace D) j => GPTMini.rmsNormEps eps (seq j)
+  have equal (j) (hj : j < i+1) : v x j = v y j := by simp [v, h j (by omega)]
+  funext k
+  change (prefixPhase (fun j => P.additive (v x j) k) (i+1) + _) + _ =
+    (prefixPhase (fun j => P.additive (v y j) k) (i+1) + _) + _
+  have additive : prefixPhase (fun j => P.additive (v x j) k) (i+1) =
+      prefixPhase (fun j => P.additive (v y j) k) (i+1) :=
+    Finset.sum_congr rfl fun j hj => by
+      change P.additive (v x j) k = P.additive (v y j) k
+      rw [equal j (Finset.mem_range.mp hj)]
+  have pairs := orderedPhaseIntegral_congr_prefix
+    (fun j => P.ordered.left (v x j) k) (fun j => P.ordered.right (v x j) k)
+    (fun j => P.ordered.left (v y j) k) (fun j => P.ordered.right (v y j) k) (i+1)
+    (fun j hj => by rw [equal j hj]; exact ⟨rfl, rfl⟩)
+  change (_ + orderedPhaseIntegral _ _ _) + P.ordered.transient (v x i) k = _
+  rw [additive, pairs, equal i (by omega)]
+
+example (P : SharedBilinearRead 128 1 32) (x fill : ℕ → EucSpace 128) :
+    P.latent 1 x 15 = P.latent 1 (fun j => if j ≤ 15 then x j else fill j) 15 :=
+  P.latent_congr_prefix _ _ _ _ (fun j hj => by simp [hj])
+
 /-- All recurrent and local projections, the learned frequencies and the
 contextual branch depend only on the observed embedding prefix. -/
 theorem EmbeddingBackbone.sharedBilinearFeature_congr_prefix (A : EmbeddingBackbone D d H F)
     (P : SharedBilinearRead D r m) (θ : StreamReadWeights D) (eps scale : ℝ)
     (x y : ℕ → EucSpace D) (l i : ℕ) (h : ∀ j ≤ i, x j = y j) :
     A.sharedBilinearFeature P θ eps scale x l i = A.sharedBilinearFeature P θ eps scale y l i := by
-  let v := fun (seq : ℕ → EucSpace D) j => GPTMini.rmsNormEps eps (seq j)
-  have equal (j) (hj : j < i+1) : v x j = v y j := by simp [v, h j (by omega)]
-  have latent : P.latent eps x i = P.latent eps y i := by
-    funext k
-    change (prefixPhase (fun j => P.additive (v x j) k) (i+1) + _) + _ =
-      (prefixPhase (fun j => P.additive (v y j) k) (i+1) + _) + _
-    have additive : prefixPhase (fun j => P.additive (v x j) k) (i+1) =
-        prefixPhase (fun j => P.additive (v y j) k) (i+1) :=
-      Finset.sum_congr rfl fun j hj => by
-        change P.additive (v x j) k = P.additive (v y j) k
-        rw [equal j (Finset.mem_range.mp hj)]
-    have pairs := orderedPhaseIntegral_congr_prefix
-      (fun j => P.ordered.left (v x j) k) (fun j => P.ordered.right (v x j) k)
-      (fun j => P.ordered.left (v y j) k) (fun j => P.ordered.right (v y j) k) (i+1)
-      (fun j hj => by rw [equal j hj]; exact ⟨rfl, rfl⟩)
-    change (_ + orderedPhaseIntegral _ _ _) + P.ordered.transient (v x i) k = _
-    rw [additive, pairs, equal i (by omega)]
-  simp only [EmbeddingBackbone.sharedBilinearFeature, EmbeddingBackbone.feature, latent,
-    A.states_congr_prefix eps scale x y l i h]
+  simp only [EmbeddingBackbone.sharedBilinearFeature, EmbeddingBackbone.feature,
+    P.latent_congr_prefix eps x y i h, A.states_congr_prefix eps scale x y l i h]
 
 example (A : EmbeddingBackbone 128 32 4 171) (P : SharedBilinearRead 128 8 32)
     (θ : StreamReadWeights 128) (x fill : ℕ → EucSpace 128) (l : ℕ) :

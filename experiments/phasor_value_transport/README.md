@@ -918,6 +918,23 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/crossed-nv11/nv11-train-3000.f32 shifts
 ```
 
+## Scalar phase bottleneck
+
+The earlier shared bilinear model fit 4,701 of 4,704 training pairs on
+NV11 seed 0 after 3,000 updates and generalized to 88 of 4,705 held-out
+pairs. Its residual connection allows a full contextual vector to reach the
+classifier. To test whether that path makes memorization easy, this model
+combines one learned projection of the contextual vector with one ordered
+bilinear state. Every hidden coordinate sent to the external classifier
+is decoded from that single scalar using 32 learned frequencies.
+
+Lean proves that any two prefixes with the same scalar have identical
+logits under every linear classifier. At any scalar value, every
+two-by-two minor of the score Jacobian vanishes. The frequencies and
+output projections are arbitrary in both statements. These are
+constraints on the representation that training can learn.
+[Scalar phase bottleneck proofs](../../src/Transformer/Phasor/ScalarPhaseBottleneck.lean)
+
 ## Householder memory
 
 Each embedding supplies three learned slopes per channel. With a leading

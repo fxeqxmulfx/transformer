@@ -14,6 +14,7 @@ public import Transformer.Phasor.InputPhaseRead
 public import Transformer.Phasor.AffinePhaseRead
 public import Transformer.Phasor.BilinearPhaseRead
 public import Transformer.Phasor.SharedBilinearPhase
+public import Transformer.Phasor.ScalarPhaseBottleneck
 public import Transformer.Phasor.ReflectionPhaseRead
 public import Transformer.Phasor.HouseholderMemory
 public import Transformer.Phasor.SingleReflection
