@@ -1,6 +1,6 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all 141 GPT task/seed runs across 36 short
+One Phasor architecture passed all 147 GPT task/seed runs across 38 short
 and eleven long tasks. It classified all 9,409 NV11 pairs correctly at update
 750 in every seed. Each task trained its own weights with the original AdamW. The model
 uses a causal successor read, full tied embedding displacement and a learned
@@ -25,6 +25,7 @@ The half-gain predecessor and this model have the same parameter count.
 | Short, including seven catalog additions | 96/96 | 0.6223 | 67 / 23 / 6 |
 | Short, including the first nine short catalog additions | 102/102 | 0.6144 | 70 / 26 / 6 |
 | Short, including noisy parity and modular sum to the 24th power | 108/108 | 0.6314 | 70 / 32 / 6 |
+| Short, including the square-product and quadratic-residue tasks | 114/114 | 0.6401 | 73 / 35 / 6 |
 | Original long tasks | 30/30 | 0.7550 | 17 / 9 / 4 |
 | Long, including depth-one C-RASP | 33/33 | 0.8049 | 18 / 9 / 6 |
 
@@ -776,11 +777,20 @@ Every checkpoint reproduced these counts, and the slowest run took
 2.32 seconds. The half-gain predecessor crossed 99% at the same update
 with 4,660/4,705 in each seed.
 
-The selected binary lists all twelve additions and reports each seed.
+On `(a² + ab) mod 97`, all three seeds crossed 99% at 500 updates. The
+half-gain predecessor took 750 in each seed. The selected checkpoints
+replayed at 4,704 / 4,698 / 4,703 of 4,705, including every held-out zero
+row. The slowest cell took 4.39 seconds. On the source predicate that
+`(a + b) mod 97` is a nonzero quadratic residue, both models scored
+4,705/4,705 at update 250 in every seed. The slowest selected cell took
+2.34 seconds. A separate screen of `(a² + ab + b²) mod 97` scored
+520/4,705 in seed 0 at 1,500 updates.
+
+The selected binary lists all fourteen additions and reports each seed.
 
 ```sh
 "$bin" extensions
-"$bin" catalog-report runs/v060-selected suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval arithmetic-sum-pow12 suite-parity-none arithmetic-sum-pow16 suite-crasp-depth-1 basis-parity-noise20 arithmetic-sum-pow24
+cut -f2 extensions.tsv | xargs "$bin" catalog-report runs/v060-selected
 ```
 
 The runner lists the frozen original tiers and the extension tiers
