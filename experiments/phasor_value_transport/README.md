@@ -411,6 +411,20 @@ the update. This rank uses only completed triples and treats every token
 as a possible relation or endpoint. A unique maximizer supplies one full
 tied displacement at initialization. [Relation support proofs](../../src/Transformer/Phasor/RelationSupport.lean)
 
+## One address from a closed relation
+
+This trial changes the address shared by the successor table and the tied
+embedding displacement. Every completed triple still writes an edge. A
+relation qualifies when all of its written sources lead to another written
+source and it has as many distinct destinations as sources. Lean proves
+that these two counts characterize a permutation of the written domain.
+At each query the reader follows each qualifying relation twice, then takes
+the moving endpoints from the relations with the most written sources.
+If those endpoints agree, their common value becomes the address. An empty
+vote or a disagreement leaves the ordinary successor address in place.
+The model has the same 17 tables and learned gain as the selected model.
+[Closed relation and address proofs](../../src/Transformer/Phasor/ClosedRelations.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the

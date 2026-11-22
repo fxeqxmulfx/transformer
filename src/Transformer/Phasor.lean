@@ -16,6 +16,7 @@ public import Transformer.Phasor.SuccessorAgreement
 public import Transformer.Phasor.PrefixFrequency
 public import Transformer.Phasor.RelationalPaths
 public import Transformer.Phasor.RelationSupport
+public import Transformer.Phasor.ClosedRelations
 public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream
