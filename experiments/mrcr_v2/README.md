@@ -58,7 +58,9 @@ ties and the 200-character filtering boundary are covered by native tests.
 [Release evaluator](https://github.com/google-deepmind/eval_hub/blob/d5637d5cfb420a040ad550b2125c6aa23f71f9e4/eval_hub/mrcr_v2/run_evaluation.py)
 
 The reference-answer and empty-answer controls scored 1.0 and 0.0 respectively
-on both published splits. The benchmark supplies evaluation conversations.
+on both published splits. Repeat the full-data check after downloading them
+with `MRCR_DATA_DIR=runs cargo +1.99.1 test --release --locked -- --ignored`.
+The benchmark supplies evaluation conversations.
 A Phasor score requires text completions from a named checkpoint on the full
 split. The short and long training-suite totals count their own held-out
 sequence-accuracy runs.
