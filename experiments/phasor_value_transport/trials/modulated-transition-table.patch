@@ -1,0 +1,308 @@
+diff --git a/experiments/phasor_value_transport/Cargo.toml b/experiments/phasor_value_transport/Cargo.toml
+index 8fda76cf..c08831b3 100644
+--- a/experiments/phasor_value_transport/Cargo.toml
++++ b/experiments/phasor_value_transport/Cargo.toml
+@@ -34,6 +34,7 @@ closed-relation-boost = ["closed-relation"]
+ single-write-gain = ["closed-relation-boost"]
+ transition-table = ["single-write-gain"]
+ inclusive-transitions = ["transition-table"]
++modulated-transitions = ["inclusive-transitions"]
+ successor-hit-gain = ["successor-displacement"]
+ successor-hit-gain-seven-quarters = ["successor-hit-gain"]
+ successor-agreement = ["successor-hit-gain"]
+diff --git a/experiments/phasor_value_transport/src/pair_checks.rs b/experiments/phasor_value_transport/src/pair_checks.rs
+index 83ef4996..cdfbad8a 100644
+--- a/experiments/phasor_value_transport/src/pair_checks.rs
++++ b/experiments/phasor_value_transport/src/pair_checks.rs
+@@ -55,11 +55,23 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
+         } as u32;
+         if cfg!(feature = "transition-table") {
+             keys.push(bucket);
++            if pair_memory::MODULATED {
++                keys.push(b);
++            }
+         } else {
+             keys[16] = (keys[16] + bucket) % p;
+         }
+     }
+     let mut result = vec![0.; d];
++    if pair_memory::MODULATED {
++        let entry = |table: usize, col: usize| {
++            let address = table * p as usize + keys[table] as usize;
++            f64::from(tables[address * d + col])
++        };
++        for (col, value) in result.iter_mut().enumerate() {
++            *value = entry(keys.len() - 2, col) * entry(keys.len() - 1, col);
++        }
++    }
+     for (table, key) in keys.into_iter().enumerate() {
+         let offset = (table * p as usize + key as usize) * d;
+         for (x, &v) in result.iter_mut().zip(&tables[offset..offset + d]) {
+@@ -204,6 +216,14 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+     for x in &mut theta[start..gain_at] {
+         *x = rng.gauss(0., 0.005) as f32;
+     }
++    if pair_memory::MODULATED && length == 6 {
++        // Only [0, 1, 1, 2, 2, 0]'s final token is supervised. Cancel one
++        // derivative on each side, in different coordinates of its active rows.
++        let count = start + (pair_memory::COUNT_TABLE * p + 3) * d;
++        let token = start + (pair_memory::COUNT_TABLE + 1) * p * d;
++        theta[token] = -1.;
++        theta[count + 1] = -1.;
++    }
+     theta[gain_at] = 0.7;
+     let mut e = Engine::new(cfg, &theta)?;
+     e.forward(&tokens, &labels, batch, length)?;
+@@ -326,7 +346,7 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+     if check_count_bucket {
+         // The six-token fixture has three changes including the final edge.
+         // In twelve buckets the alternating fixture either wraps to 3 or caps at 11.
+-        let offset = start + (pair_memory::TABLES - 1) * p * d;
++        let offset = start + pair_memory::COUNT_TABLE * p * d;
+         let bucket = if cfg!(feature = "inclusive-transitions") && length == 17 {
+             11
+         } else {
+@@ -344,6 +364,24 @@ fn profile(p: usize, length: usize, width: usize) -> Result<()> {
+         directions.push(("active transition count".to_owned(), active));
+         directions.push(("unused transition count".to_owned(), unused));
+     }
++    if pair_memory::MODULATED && length == 6 {
++        let count = start + (pair_memory::COUNT_TABLE * p + 3) * d;
++        let token = start + (pair_memory::COUNT_TABLE + 1) * p * d;
++        if gradients[count] != 0.
++            || gradients[token + 1] != 0.
++            || gradients[count + 1].abs() <= 1e-6
++            || gradients[token].abs() <= 1e-6
++            || gradients[token + d..gain_at].iter().any(|&v| v != 0.)
++        {
++            return Err("modulated transpose did not isolate both partner coordinates".into());
++        }
++        directions.push(("cancelled count coordinate".to_owned(), count..count + 1));
++        directions.push((
++            "cancelled token coordinate".to_owned(),
++            token + 1..token + 2,
++        ));
++        directions.push(("active current token".to_owned(), token..token + d));
++    }
+     if pair_memory::CLOSED_RELATION && length == 8 {
+         let endpoint = start + 3 * d..start + 4 * d;
+         let ordinary = start..start + d;
+diff --git a/experiments/phasor_value_transport/src/pair_memory.rs b/experiments/phasor_value_transport/src/pair_memory.rs
+index 381b35e2..d9d7d720 100644
+--- a/experiments/phasor_value_transport/src/pair_memory.rs
++++ b/experiments/phasor_value_transport/src/pair_memory.rs
+@@ -5,7 +5,10 @@ use crate::engine::{Config, Result};
+ use kernite_cuda::{Buffer, Cuda};
+
+ const PAIR_TABLES: usize = 17;
+-pub const TABLES: usize = PAIR_TABLES + cfg!(feature = "transition-table") as usize;
++pub const COUNT_TABLE: usize = PAIR_TABLES;
++pub const MODULATED: bool = cfg!(feature = "modulated-transitions");
++pub const TABLES: usize =
++    PAIR_TABLES + cfg!(feature = "transition-table") as usize + MODULATED as usize;
+ // A build without a historical selector uses the promoted closed-relation reader.
+ pub const DEFAULT_MODEL: bool = !cfg!(any(
+     feature = "pair-v2",
+@@ -101,6 +104,8 @@ pub const MODEL: &str = if LEARN_BONUS {
+     }
+ } else if cfg!(feature = "successor-hit-gain-seven-quarters") {
+     "phasor-successor-hit-gain175-v1"
++} else if MODULATED {
++    "phasor-modulated-transition-table-v1"
+ } else if cfg!(feature = "inclusive-transitions") {
+     "phasor-inclusive-transition-table-v1"
+ } else if cfg!(feature = "transition-table") {
+@@ -393,14 +398,16 @@ impl PairMemory {
+                     } else if changed {
+                         transitions += 1;
+                     }
+-                    if cfg!(feature = "transition-table") {
+-                        let count_table = TABLES - 1;
++                    if let Some((count_address, other)) = keys[PAIR_TABLES..].split_first_mut() {
+                         let bucket = if cfg!(feature = "inclusive-transitions") {
+                             transitions.min(p - 1)
+                         } else {
+                             transitions % p
+                         };
+-                        keys[count_table] = (count_table * p + bucket) as u32;
++                        *count_address = (COUNT_TABLE * p + bucket) as u32;
++                        if let Some(token_address) = other.first_mut() {
++                            *token_address = ((COUNT_TABLE + 1) * p + b) as u32;
++                        }
+                     } else {
+                         let squared_product = PAIR_TABLES - 1;
+                         let base = squared_product * p;
+diff --git a/experiments/phasor_value_transport/src/pair_ops.rs b/experiments/phasor_value_transport/src/pair_ops.rs
+index 01e08f47..c5cd4982 100644
+--- a/experiments/phasor_value_transport/src/pair_ops.rs
++++ b/experiments/phasor_value_transport/src/pair_ops.rs
+@@ -7,35 +7,53 @@ pub mod kernels {
+         mad.wide.u32(address, i, 4, ptr);
+         ld.global.u32(v, [address]);
+     }
+-    pub unsafe extern "ptx-kernel" fn read(
++    fn entry(value: f32, values: u64, keys: u64, slot: u32, width: u32, col: u32) {
++        let (key, at): (u32, u32);
++        let ptr: u64;
++        word(key, keys, slot);
++        mad.lo.u32(at, key, width, col);
++        mad.wide.u32(ptr, at, 4, values);
++        ld.global.f32(value, [ptr]);
++    }
++    #[instances(false, true)]
++    pub unsafe extern "ptx-kernel" fn read<const MODULATED: bool>(
+         hidden: *mut f32,
+         values: *const f32,
+         keys: *const u32,
+         width: u32,
+         tables: u32,
+     ) {
+-        let (row, col, at, ix, end, key): (u32, u32, u32, u32, u32, u32);
++        let (row, col, at, ix, end): (u32, u32, u32, u32, u32);
+         mov.u32(row, ctaid.x);
+         mov.u32(col, tid.x);
+         mad.lo.u32(at, row, width, col);
+-        let (dest, ptr): (u64, u64);
++        let dest: u64;
+         let (sum, val): (f32, f32);
+         mad.wide.u32(dest, at, 4, hidden);
+         ld.global.f32(sum, [dest]);
+         mul.lo.u32(ix, row, tables);
+         add.u32(end, ix, tables);
++        if MODULATED {
++            sub.u32(end, end, 2);
++        }
+         let more: pred;
+         label(next);
+-        word(key, keys, ix);
+-        mad.lo.u32(at, key, width, col);
+-        mad.wide.u32(ptr, at, 4, values);
+-        ld.global.f32(val, [ptr]);
++        entry(val, values, keys, ix, width, col);
+         add.rn.f32(sum, sum, val);
+         add.u32(ix, ix, 1);
+         setp.lt.u32(more, ix, end);
+         if more {
+             bra(next);
+         }
++        if MODULATED {
++            let (count, token): (f32, f32);
++            entry(count, values, keys, ix, width, col);
++            add.u32(ix, ix, 1);
++            entry(token, values, keys, ix, width, col);
++            add.rn.f32(sum, sum, count);
++            add.rn.f32(sum, sum, token);
++            fma.rn.f32(sum, count, token, sum);
++        }
+         st.global.f32([dest], sum);
+     }
+     pub unsafe extern "ptx-kernel" fn backward(
+@@ -73,4 +91,54 @@ pub mod kernels {
+         mad.wide.u32(ptr, at, 4, gradients);
+         st.global.f32([ptr], sum);
+     }
++    // One writer for each coordinate of either interacting table. An owner
++    // supplies its hidden derivative and selects the other table's multiplier.
++    pub unsafe extern "ptx-kernel" fn modulated_backward(
++        gradients: *mut f32,
++        dhidden: *const f32,
++        values: *const f32,
++        keys: *const u32,
++        offsets: *const u32,
++        owners: *const u32,
++        width: u32,
++        vocab: u32,
++        tables: u32,
++    ) {
++        let (local, key, col, count_slot, token_slot, partner): (u32, u32, u32, u32, u32, u32);
++        mov.u32(local, ctaid.x);
++        mov.u32(col, tid.x);
++        sub.u32(count_slot, tables, 2);
++        sub.u32(token_slot, tables, 1);
++        mad.lo.u32(key, count_slot, vocab, local);
++        let count_writer: pred;
++        setp.lt.u32(count_writer, local, vocab);
++        selp.u32(partner, token_slot, count_slot, count_writer);
++        let (ix, end, row, at): (u32, u32, u32, u32);
++        word(ix, offsets, key);
++        add.u32(at, key, 1);
++        word(end, offsets, at);
++        let (sum, grad, scale): (f32, f32, f32);
++        let ptr: u64;
++        mov.f32(sum, 0.0);
++        let done: pred;
++        label(next);
++        setp.ge.u32(done, ix, end);
++        if done {
++            bra(write);
++        }
++        word(row, owners, ix);
++        mad.lo.u32(at, row, tables, partner);
++        entry(scale, values, keys, at, width, col);
++        add.rn.f32(scale, scale, 1.0);
++        mad.lo.u32(at, row, width, col);
++        mad.wide.u32(ptr, at, 4, dhidden);
++        ld.global.f32(grad, [ptr]);
++        fma.rn.f32(sum, grad, scale, sum);
++        add.u32(ix, ix, 1);
++        bra(next);
++        label(write);
++        mad.lo.u32(at, key, width, col);
++        mad.wide.u32(ptr, at, 4, gradients);
++        st.global.f32([ptr], sum);
++    }
+ }
+diff --git a/experiments/phasor_value_transport/src/value_layer.rs b/experiments/phasor_value_transport/src/value_layer.rs
+index 3a4e82b5..f093dc35 100644
+--- a/experiments/phasor_value_transport/src/value_layer.rs
++++ b/experiments/phasor_value_transport/src/value_layer.rs
+@@ -132,7 +132,7 @@ impl ValueLayer {
+         }
+         if let Some(m) = &self.memory {
+             unsafe {
+-                m.kernels.read(
++                m.kernels.read::<{ crate::pair_memory::MODULATED }>(
+                     Grid::new(rows as u32, d as u32),
+                     self.hidden.ptr(),
+                     e.parameters
+@@ -287,16 +287,36 @@ impl ValueLayer {
+                         if length > 2 { rows as u32 } else { 0 },
+                     )?;
+                 }
++                let start = crate::pair_memory::start(&e.config);
++                let table_gradients = e.gradients.at(start)
++                    .ok_or("value table outside gradient buffer")?;
++                let additive = if crate::pair_memory::MODULATED {
++                    crate::pair_memory::COUNT_TABLE
++                } else {
++                    crate::pair_memory::TABLES
++                };
+                 m.kernels.backward(
+-                    Grid::new((p * crate::pair_memory::TABLES) as u32, d as u32),
+-                    e.gradients
+-                        .at(crate::pair_memory::start(&e.config))
+-                        .ok_or("value table outside gradient buffer")?,
++                    Grid::new((p * additive) as u32, d as u32),
++                    table_gradients,
+                     self.dhidden.ptr(),
+                     m.offsets.ptr(),
+                     m.owners.ptr(),
+                     d as u32,
+                 )?;
++                if crate::pair_memory::MODULATED {
++                    m.kernels.modulated_backward(
++                        Grid::new((2 * p) as u32, d as u32),
++                        table_gradients,
++                        self.dhidden.ptr(),
++                        e.parameters.at(start).ok_or("value table outside parameter buffer")?,
++                        m.keys.ptr(),
++                        m.offsets.ptr(),
++                        m.owners.ptr(),
++                        d as u32,
++                        p as u32,
++                        crate::pair_memory::TABLES as u32,
++                    )?;
++                }
+                 m.causal.pullback(
+                     Grid::new(rows as u32, 32),
+                     m.dscores.ptr(),

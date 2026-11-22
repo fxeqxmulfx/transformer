@@ -891,6 +891,19 @@ keys using one coordinate per token. It also gives the exact finite-batch
 gradient, including repeated keys and masked rows.
 [Two-key representation and gradient](../../src/Transformer/Phasor/ModulatedTransitions.lean)
 
+The modulated model passed 156 directional checks, including zero gradients
+when the other factor cancels a coordinate. It reached 512/512 on L2 and
+L3 validation at the same updates as the inclusive table in all three seeds.
+L2 ten-letter scores were 1,020 / 1,008 / 1,016 out of 1,024, down in seeds
+0 and 1 and up in seed 2. All L3 seeds passed every ten-letter word and
+every length-128 alternating tail. MQAR again passed at initialization and
+scored 64/64 at all three test lengths. Dyck took 500 / 250 / 750 updates,
+against 500 / 250 / 500 for the inclusive table. We retained the inclusive
+table for further testing. To repeat this comparison, apply the patch at
+`978d5c7f`, build with `fp32-affine-reference,modulated-transitions`, and
+run `shared-check`, `cell` and `probes` on the four source tasks.
+[Modulated transition source](trials/modulated-transition-table.patch)
+
 The geometric-memory trial learns one additional value for each token and
 hidden coordinate. It scans every input sequence in order. Each coordinate
 retains a fixed fraction of its preceding state and adds the current learned
