@@ -665,6 +665,14 @@ the perfect three-seed score at 1,024 bits.
 | 2,047 | 256 / 221 / 256 |
 | 2,048 | 256 / 221 / 253 |
 | 2,049 | 253 / 255 / 256 |
+| 2,303 | 255 / 253 / 256 |
+| 2,304 | 245 / 215 / 254 |
+| 2,305 | 256 / 217 / 255 |
+
+The same 24-bit checkpoints emitted the correct end token on every
+2,303–2,305-bit prompt. Teacher-forced and freely generated exact scores
+agreed. A separate checkpoint trained at 16 bits (seed 1) scored 256/256
+on the identical 2,304-bit prompts.
 
 Across all nine mixed checkpoints, all 256 prompts passed at 65, 255
 and 257 bits. At 63 bits, the 16-bit seed-0 model dropped to 132/256.
