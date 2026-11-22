@@ -5,18 +5,28 @@ use crate::engine::{Config, Result};
 use kernite_cuda::{Buffer, Cuda};
 
 pub const TABLES: usize = 17;
-pub const INITIAL_GAIN: f32 = if cfg!(feature = "prefix-successor-half") {
-    0.5
-} else {
-    0.25
-};
+// With no experiment selector a binary contains the selected successor model.
+const DEFAULT_MODEL: bool = !cfg!(any(
+    feature = "pair-v2",
+    feature = "prefix-xor",
+    feature = "prefix-sum"
+));
+const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half");
+pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
+pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
+pub const INITIAL_GAIN: f32 = if HALF_GAIN { 0.5 } else { 0.25 };
 
 #[cfg(all(feature = "prefix-xor", feature = "prefix-sum"))]
 compile_error!("choose one prefix architecture per binary");
+#[cfg(all(
+    feature = "pair-v2",
+    any(feature = "prefix-xor", feature = "prefix-sum")
+))]
+compile_error!("pair-v2 replays the original pair-address control");
 #[cfg(all(feature = "prefix-xor-cubic", feature = "prefix-successor"))]
 compile_error!("the successor trial uses the linear prefix sum");
 
-pub const MODEL: &str = if cfg!(feature = "prefix-successor-half") {
+pub const MODEL: &str = if HALF_GAIN {
     "phasor-prefix-successor-half-v1"
 } else if cfg!(feature = "prefix-successor") {
     "phasor-prefix-successor-v1"
@@ -124,14 +134,7 @@ impl PairMemory {
             cursor: vec![0; words],
             rows: vec![0; entries],
             factors: (0..cfg.vocab).map(|b| power_factor(b, cfg.vocab)).collect(),
-            successors: vec![
-                None;
-                if cfg!(feature = "prefix-successor") {
-                    cfg.vocab
-                } else {
-                    0
-                }
-            ],
+            successors: vec![None; if SUCCESSOR { cfg.vocab } else { 0 }],
         })
     }
 
@@ -152,7 +155,7 @@ impl PairMemory {
             };
             let (a, b) = (tokens[prev] as usize, token as usize);
             keys.copy_from_slice(&addresses(a, b, p, self.factors[b]));
-            if cfg!(feature = "prefix-successor") {
+            if SUCCESSOR {
                 let pos = row % length;
                 if pos == 0 {
                     self.successors.fill(None);
@@ -161,7 +164,7 @@ impl PairMemory {
                 }
                 keys[0] = self.successors[b].unwrap_or(token);
             }
-            if cfg!(any(feature = "prefix-xor", feature = "prefix-sum")) {
+            if XOR_PREFIX || cfg!(feature = "prefix-sum") {
                 let left = if prev == row { b } else { prefix };
                 if cfg!(feature = "prefix-xor-cubic") {
                     let cube = |x: usize| x * x % p * x % p;
@@ -170,7 +173,7 @@ impl PairMemory {
                     keys[4] = (4 * p + (left + b) % p) as u32;
                 }
                 let earlier = if prev == row { 0 } else { prefix };
-                prefix = if cfg!(feature = "prefix-xor") {
+                prefix = if XOR_PREFIX {
                     earlier ^ b
                 } else {
                     (earlier + b) % p

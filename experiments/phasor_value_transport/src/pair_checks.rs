@@ -12,7 +12,7 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
     let power = |x, i| arithmetic_data::power(x, i, p);
     let inverse = if b == 0 { 0 } else { power(b, p - 2) };
     let mut keys = vec![b, (a + p - b) % p, a.abs_diff(b), a * inverse % p];
-    if cfg!(feature = "prefix-successor") {
+    if pair_memory::SUCCESSOR {
         keys[0] = prefix
             .windows(2)
             .rev()
@@ -21,7 +21,7 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
     }
     keys.extend((1..=3).flat_map(|i| (1..=3).map(move |j| (power(a, i) + power(b, j)) % p)));
     if !prefix.is_empty() {
-        if cfg!(feature = "prefix-xor") {
+        if pair_memory::XOR_PREFIX {
             let left = prefix.iter().fold(0, |x, y| x ^ y);
             if cfg!(feature = "prefix-xor-cubic") {
                 keys[12] = (power(left, 3) + power(b, 3)) % p;
@@ -66,7 +66,7 @@ fn profile(p: usize, length: usize) -> Result<()> {
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
-    let expected_gain = if cfg!(feature = "prefix-successor-half") {
+    let expected_gain = if pair_memory::MODEL == "phasor-prefix-successor-half-v1" {
         0.5
     } else {
         0.25
@@ -168,7 +168,7 @@ pub fn run() -> Result<()> {
     for (p, l) in [(97, 2), (100, 4), (36, 1)] {
         profile(p, l)?;
     }
-    if cfg!(feature = "prefix-successor") {
+    if pair_memory::SUCCESSOR {
         profile(36, 8)?;
     }
     let mut cfg = config(8)?;

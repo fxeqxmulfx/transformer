@@ -1,11 +1,49 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-Can a single change to Phasor's hidden state learn NV11 and retain both
-tiers of the GPT stress suite with the original AdamW? Every task uses the
-same causal value residual, including sequence tasks with composite
-vocabularies. Model seeds and per-task training follow the original suite.
+One prefix-and-successor Phasor passed every original short and long GPT
+stress task and three additional catalog tasks in seeds 0, 1 and 2. Each
+task trained its own weights using the same architecture and original AdamW.
+Every NV11 seed classified all 9,409 pairs correctly at update 1,250.
 
-## Architecture
+## Selected prefix and successor model
+
+The default Phasor applies one causal update at every token. Its prefix state
+is the XOR of preceding token IDs. Its key/value memory records the latest
+completed successor of each token. The linear-sum table reads the prefix
+state plus the current token modulo the vocabulary size, and the original
+right-operand table reads the retrieved successor. An unwritten key reads
+itself. Both reads enter the same normalized hidden residual with one learned
+gain, initialized to 0.5. The parameter count and the original AdamW are
+the same as for the pair-address incumbent.
+
+| Original tier | Passing runs | Paired epoch ratio to incumbent | Faster / tied / slower | First 99% updates |
+| --- | ---: | ---: | ---: | ---: |
+| Short | 75/75 | 0.6090 | 66 / 5 / 4 | 36–1,250 |
+| Long | 30/30 | 0.1657 | 25 / 1 / 4 | 228–9,980 |
+
+The ratio is the geometric mean across matched task and seed pairs. Every
+saved score replayed with the public scorer. Easy recall took 400 updates
+in every seed, down from 900, 3,500 and 7,500. Fibonacci recurrence took
+9,980, 7,480 and 9,560, up from 7,550, 5,560 and 8,090. The five other
+regressions occurred on associative divisor seed 1, easy depth seed 0,
+hard depth seed 2 and branch amplitudes seeds 1 and 2.
+
+For the epoch comparison, first generate the incumbent's paired report with
+the baseline reproduction commands below.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SuccessorValues
+cd experiments/phasor_value_transport
+cargo +1.99.1 build --release --offline --locked --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+"$bin" shared-check
+PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/prefix-successor-half extended
+./run_stress.sh replay runs/prefix-successor-half extended
+"$bin" extended-report runs/prefix-successor-half > runs/prefix-successor-half/report.json
+jq -s -f compare.jq runs/shared-quarter/paired-report.json runs/prefix-successor-half/report.json
+```
+
+## Pair-address baseline
 
 Let `b` be the current token and `a` its predecessor in the same sequence.
 The first token serves as its own predecessor. At each position the preceding
@@ -185,7 +223,7 @@ crossed 99% with the smaller gain. These published splits informed the choice
 of initialization. The reported quarter-gain suite starts each task and seed
 from fresh weights.
 
-## NV11 results
+## NV11 results for the pair-address baseline
 
 Each model reached the original 99% held-out threshold at update 1,500.
 Continuing the same AdamW trajectory produced one checkpoint per seed that
@@ -206,7 +244,7 @@ At update 5,000 all three checkpoints again classified the complete
 modulus-97 table correctly, with minimum held-out margins of 10.9882,
 9.1783 and 11.6655 in seed order.
 
-## GPT stress results
+## GPT stress results for the pair-address baseline
 
 One architecture, `phasor-causal-value-residual-v2`, reached the original
 99% held-out exact-sequence threshold on every task in all three seeds.
@@ -232,7 +270,7 @@ three seeds and absolute difference 50/51, 48/51 and 50/51.
 Every measured run used scalar FP32 affines on a GeForce GTX 1050. The
 upstream mixed-precision configuration received a separate compilation check.
 
-## Training and replay
+## Reproducing the pair-address baseline
 
 Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` and Kernite at
 `a1b6bc2c956e1a5f35960e26b209e1b6c213096c` under
@@ -249,12 +287,12 @@ weights. NV11 uses its original 4,704/4,705 half-table split and separate
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.SharedValues
 cd experiments/phasor_value_transport
-cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference
+cargo +1.99.1 build --offline --locked --release --features fp32-affine-reference,pair-v2
 bin=./target/release/phasor-value-transport
 "$bin" shared-check
 PHASOR_EVAL_BATCH_CAP=16 ./run_stress.sh cell runs/shared-quarter
 ./run_stress.sh replay runs/shared-quarter
-"$bin" report runs/shared-quarter > runs/shared-quarter/report.json
+"$bin" report runs/shared-quarter > runs/shared-quarter/paired-report.json
 "$bin" predict runs/shared-quarter/arithmetic-cubic-product/seed0/weights.f32 97 12 34
 for seed in 0 1 2
 do
