@@ -1,8 +1,8 @@
 # One Phasor architecture for NV11 and the GPT stress suite
 
-One Phasor architecture passed all 126 GPT task/seed runs in the matched
-suite and classified all 9,409 NV11 pairs correctly at update 750 in every
-seed. Each task trained its own weights with the original AdamW. The model
+One Phasor architecture passed all 132 GPT task/seed runs across 34 short
+and ten long tasks. It classified all 9,409 NV11 pairs correctly at update
+750 in every seed. Each task trained its own weights with the original AdamW. The model
 uses a causal successor read, full tied embedding displacement and a learned
 residual gain initialized to 0.75.
 
@@ -23,6 +23,7 @@ The half-gain predecessor and this model have the same parameter count.
 | Matched tier | Passing task/seed runs | Epoch ratio to half-gain predecessor | Faster / tied / slower |
 | --- | ---: | ---: | ---: |
 | Short, including seven catalog additions | 96/96 | 0.6223 | 67 / 23 / 6 |
+| Short, including all nine catalog additions | 102/102 | 0.6144 | 70 / 26 / 6 |
 | Long | 30/30 | 0.7550 | 17 / 9 / 4 |
 
 Each ratio is the geometric mean of examples consumed to the first 99%
@@ -65,6 +66,8 @@ for arm in half selected; do
 done
 git show 849aa3be:experiments/phasor_value_transport/extensions.tsv > runs/seven-extensions.tsv
 jq -s --rawfile extensions runs/seven-extensions.tsv -f compare.jq \
+    runs/v060-half/report.json runs/v060-selected/report.json
+jq -s --rawfile extensions extensions.tsv -f compare.jq \
     runs/v060-half/report.json runs/v060-selected/report.json
 ```
 
@@ -145,8 +148,9 @@ in every seed, down from 900, 3,500 and 7,500. Fibonacci recurrence took
 regressions occurred on associative divisor seed 1, easy depth seed 0,
 hard depth seed 2 and branch amplitudes seeds 1 and 2.
 
-The expanded benchmark has 32 short tasks and ten long tasks. All 96 short
-and 30 long task/seed runs reached 99% and replayed independently.
+At the seven-addition comparison the benchmark had 32 short tasks and ten
+long tasks. All 96 short and 30 long task/seed runs reached 99% and replayed
+independently.
 
 Fresh key/value-binding runs on the GTX 1050 took 5.41, 5.32 and 3.95 s
 for the incumbent, and 3.51, 3.50 and 3.50 s for the half-gain model.
@@ -571,11 +575,24 @@ classified 4,662, 4,662 and 4,671 of 4,705 held-out pairs at update 250.
 Independent replay recovered each count and all 51 zero-row pairs in every
 seed. The slowest v0.6.0 cell took 2.36 seconds.
 
-The selected binary lists all seven additions and reports each seed.
+The eighth short admission is the GPT catalog's scratchpad-free parity task.
+The training inputs contain 8–16 bits. With the selected 0.75-gain model,
+all three seeds scored 32/32 on novel validation sequences at updates
+500 / 250 / 500. Replaying the checkpoints gave 64 / 63 / 63 of 64 on the
+ordinary test, 64/64 in every seed at 32 bits and 64 / 63 / 64 at 64 bits.
+The slowest fresh cell took 5.51 seconds. The half-gain predecessor needed
+5,250 / 1,000 / 750 updates on the same task.
+
+The ninth short admission is the sixteenth power of a modular sum. Every
+seed reached 99% at update 250. The saved checkpoints replayed at 4,705 /
+4,703 / 4,705 of 4,705 held-out pairs, including all 51 zero-row pairs per
+seed. The slowest selected-model cell took 2.35 seconds.
+
+The selected binary lists all nine additions and reports each seed.
 
 ```sh
 "$bin" extensions
-"$bin" catalog-report runs/prefix-successor-half suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval arithmetic-sum-pow12
+"$bin" catalog-report runs/v060-selected suite-blocks suite-dyck arithmetic-sum-pow6 language-l1 arithmetic-sum-pow8 arithmetic-sum-interval arithmetic-sum-pow12 suite-parity-none arithmetic-sum-pow16
 ```
 
 The runner lists the frozen original tiers and the extension tiers

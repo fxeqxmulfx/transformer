@@ -5,3 +5,5 @@ short	language-l1
 short	arithmetic-sum-pow8
 short	arithmetic-sum-interval
 short	arithmetic-sum-pow12
+short	suite-parity-none
+short	arithmetic-sum-pow16
