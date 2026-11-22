@@ -992,6 +992,17 @@ bin=./target/release/phasor-value-transport
 "$bin" nv11-score runs/two-frame-nv11/seed0/nv11-train-3000.f32 rows
 ```
 
+## Single-coordinate frame orbit
+
+One learned coordinate from the preceding context moves both frames.
+Their frequencies remain independent. A second scalar controls the gain
+around one learned center shared across every prefix. The current
+embedding keeps all its dimensions. After undoing a nonzero gain, the
+difference of two prefix coordinates transports the complete response
+from one prefix to the other. This puts all normalized operators in one
+one-parameter family. At zero gain every current embedding gives the
+same center. [Frame orbit and adjoint proofs](../../src/Transformer/Phasor/SingleFrameOrbit.lean)
+
 ## Tied Toeplitz read
 
 The same learned matrix projects the current embedding into complex
