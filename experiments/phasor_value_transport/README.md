@@ -55,6 +55,22 @@ test, 56/64 at length 32 and 41/64 at length 64. On NV11 the learned
 readout reached 4,696/4,704 training pairs but only 86/4,705 held-out
 pairs at update 3,000 in seed 0.
 
+## Bounded recurrent readout
+
+Each position supplies its contextual embedding features to three learned
+linear maps. A sigmoid gate retains part of the preceding memory, and the
+remaining weight goes to a learned tanh proposal. A second sigmoid gate
+reads the resulting state. A fourth linear map adds that read to the
+current hidden vector before the tied classifier. All four maps are
+shared across positions and tasks are trained separately.
+
+Lean proves that the magnitude of every memory coordinate stays at most
+one at any sequence length. Two initial states converge by the product of
+the intervening retention gates. The output map starts at zero, so the
+untrained model reproduces the original Phasor features for every embedding
+sequence. The proof also gives the gradient from a current read and all
+later reads. [Bounded recurrent readout](../../src/Transformer/Phasor/BoundedMemoryRead.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can
