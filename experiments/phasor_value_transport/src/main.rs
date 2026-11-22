@@ -26,6 +26,8 @@ mod learned_read;
 mod pair_checks;
 mod pair_memory;
 mod pair_ops;
+mod periodic_activation;
+mod periodic_activation_checks;
 mod phase_checks;
 mod phase_controls;
 mod phase_prefix;

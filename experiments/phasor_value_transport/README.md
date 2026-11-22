@@ -748,6 +748,30 @@ three trainable input, center and strength derivatives. The bound is
 conditional on the learned projections reaching those neighborhoods.
 [Periodic phase activation proofs](../../src/Transformer/Phasor/PeriodicPhaseActivation.lean)
 
+At length 257 the Kernite activation agreed with FP64 within `1.34e-6`
+on 24,672 coordinates. Its input and shared-parameter gradient errors
+were at most `2.01e-6` and `1.24e-5`. All 771 sampled unit-strength
+coordinates satisfied the cubic bound to FP32 tolerance. With active
+output projections, setting the strengths to zero reproduced arbitrary
+mixed-model hidden features, logits and input gradients at widths 64
+and 128. A fresh mixed-model 20-bit run reproduced the saved training
+observations and weights exactly.
+
+The seed-0 16-bit checkpoint crossed at 750 updates and passed the
+512-example source test. At 1,024 bits it scored 191/256. The original
+mixed model crossed at 500 and scored 256/256 there. In the 3,000-update
+NV11 comparison, the periodic model scored 4,702/4,704 in training
+and 90/4,705 held out.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,periodic-reflection-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/periodic 3500
+PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-parity16 0 runs/periodic parity-1024
+```
+
 ## Contextual rotation
 
 Each normalized input embedding supplies a learned angle for every pair

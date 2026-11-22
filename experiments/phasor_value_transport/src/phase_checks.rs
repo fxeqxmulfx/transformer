@@ -110,10 +110,11 @@ fn network(width: usize) -> Result<()> {
     let writes = increments + M * width;
     let affine = cfg.head == head::Head::AffinePhase;
     let bilinear = cfg.head == head::Head::BilinearPhase;
-    let reflecting = cfg.head == head::Head::ReflectionPhase;
+    let periodic = cfg.head == head::Head::PeriodicReflection;
+    let reflecting = cfg.head == head::Head::ReflectionPhase || periodic;
     let single = cfg.head == head::Head::SingleReflection;
     let output = increments + cfg.head.phase_inputs() * width;
-    let end = first + cfg.head.parameters(&cfg) - cfg.head.phase_gates();
+    let end = output + 2 * M * width;
     let mut e = Engine::new(cfg.clone(), &weights)?;
     e.forward(&tokens, &labels, 2, length)?;
     e.backward(2, length)?;
@@ -121,7 +122,7 @@ fn network(width: usize) -> Result<()> {
     let output_indices =
         |half: usize| (output..end).filter(move |&i| (i - output) % (2 * M) / M == half);
     if grad[increments..output].iter().any(|&g| g != 0.)
-        || grad[end..end + cfg.head.phase_gates()]
+        || grad[end..end + cfg.head.phase_gates() + cfg.head.activation_parameters()]
             .iter()
             .any(|&g| g != 0.)
         || (0..2).any(|half| !output_indices(half).any(|i| grad[i].abs() > 1e-7))
@@ -144,6 +145,14 @@ fn network(width: usize) -> Result<()> {
         if reflecting {
             for w in &mut weights[end..end + M] {
                 *w = rng.gauss(0.5, 0.45) as f32;
+            }
+        }
+        if periodic {
+            for w in &mut weights[end + M..end + 2 * M] {
+                *w = rng.gauss(1., 0.24) as f32;
+            }
+            for w in &mut weights[end + 2 * M..end + 3 * M] {
+                *w = rng.gauss(0., 0.48) as f32;
             }
         }
     }
@@ -169,7 +178,14 @@ fn network(width: usize) -> Result<()> {
         for (h, x) in seq.chunks_exact(width).zip(source.chunks_exact(width)) {
             let h: Vec<_> = h.iter().copied().map(f64::from).collect();
             let x: Vec<_> = x.iter().copied().map(f64::from).collect();
-            let step = linear(&weights[increments..output], &x);
+            let mut step = linear(&weights[increments..output], &x);
+            if periodic {
+                for (k, x) in step.iter_mut().enumerate() {
+                    let strength = f64::from(weights[end + M + k]);
+                    let center = f64::from(weights[end + 2 * M + k]);
+                    *x -= strength * (2. * (*x - center)).sin() / 2.;
+                }
+            }
             let mut pair = [0.; 2 * M];
             for k in 0..M {
                 if affine {
@@ -226,6 +242,10 @@ fn network(width: usize) -> Result<()> {
         groups.push(("affine phase write", (writes..output).collect()));
     } else if reflecting {
         groups.push(("rotation/reflection gate", (end..end + M).collect()));
+        if periodic {
+            groups.push(("periodic strength", (end + M..end + 2 * M).collect()));
+            groups.push(("periodic center", (end + 2 * M..end + 3 * M).collect()));
+        }
     } else if bilinear {
         for (j, name) in ["ordered left", "ordered right", "local phase"]
             .into_iter()
@@ -251,7 +271,10 @@ pub fn run() -> Result<()> {
         return Err("phase memory checks require --features fp32-affine-reference".into());
     }
     for length in [1, 7, 257] {
-        if architecture::REFLECTION_PHASE {
+        if architecture::PERIODIC_REFLECTION {
+            crate::periodic_activation_checks::scan(length)?;
+            reflection_phase_checks::scan(length)?;
+        } else if architecture::REFLECTION_PHASE {
             reflection_phase_checks::scan(length)?;
         } else if architecture::BILINEAR_PHASE {
             bilinear_phase_checks::scan(length)?;

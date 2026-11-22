@@ -44,6 +44,7 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Op
             | Head::SingleReflection
             | Head::ContextRotation
             | Head::AssociativeReflection
+            | Head::PeriodicReflection
     ) {
         let sample = task.splits[&task.selection]
             .iter()

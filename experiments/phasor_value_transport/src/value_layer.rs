@@ -347,7 +347,7 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::AssociativeReflection => {
+            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::AssociativeReflection | Head::PeriodicReflection => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }

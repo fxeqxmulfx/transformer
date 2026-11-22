@@ -28,6 +28,7 @@ enum Memory {
 
 pub(super) struct HiddenLayer {
     memory: Memory,
+    periodic: Option<PeriodicActivation>,
     associative: Option<super::associative_layer::AssociativeLayer>,
     projected: F,
     dprojected: F,
@@ -42,6 +43,12 @@ pub(super) struct HiddenLayer {
     forward_shape: std::cell::Cell<Option<(usize, usize)>>,
 }
 
+struct PeriodicActivation {
+    kernels: crate::periodic_activation::kernels::Kernels,
+    raw: F,
+    weights: usize,
+}
+
 impl HiddenLayer {
     pub(super) fn new(e: &Engine) -> Result<Self> {
         let cfg = &e.config;
@@ -50,7 +57,7 @@ impl HiddenLayer {
             Head::PhasePrefix | Head::InputPhase | Head::SingleReflection => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
-            Head::ReflectionPhase | Head::AssociativeReflection => Memory::Reflection {
+            Head::ReflectionPhase | Head::AssociativeReflection | Head::PeriodicReflection => Memory::Reflection {
                 kernels: reflection_phase::kernels::Kernels::load(&e.cuda)?,
                 angles: e.cuda.alloc(rows * M)?,
                 gate_partials: e.cuda.alloc(cfg.max_batch * M)?,
@@ -67,6 +74,13 @@ impl HiddenLayer {
             },
             _ => return Err("expected a learned hidden memory".into()),
         };
+        let periodic = if cfg.head == Head::PeriodicReflection {
+            Some(PeriodicActivation {
+                kernels: crate::periodic_activation::kernels::Kernels::load(&e.cuda)?,
+                raw: e.cuda.alloc(rows * M)?,
+                weights: crate::architecture::start(cfg) + Head::ReflectionPhase.parameters(cfg),
+            })
+        } else { None };
         let input_weights = crate::architecture::memory_start(cfg);
         let (projected_channels, read_channels) = if cfg.head.is_phase() {
             (cfg.head.phase_inputs(), 2 * M)
@@ -75,6 +89,7 @@ impl HiddenLayer {
         };
         Ok(Self {
             memory,
+            periodic,
             associative: (cfg.head == Head::AssociativeReflection)
                 .then(|| super::associative_layer::AssociativeLayer::new(e)).transpose()?,
             projected: e.cuda.alloc(rows * projected_channels)?,
@@ -116,6 +131,10 @@ impl HiddenLayer {
         )?;
         // Each launch owns its sequence slice, with length and rows checked by Engine::forward.
         unsafe {
+            if let Some(a) = &self.periodic {
+                a.kernels.forward(Grid::new(rows as u32,M as u32), self.projected.ptr(),
+                    a.raw.ptr(), e.parameters.at(a.weights).ok_or("missing periodic weights")?)?;
+            }
             match &self.memory {
                 Memory::Reflection { kernels, angles, gate_offset, .. } => kernels.forward(
                     Grid::new((rows / length) as u32, M as u32),
@@ -288,6 +307,13 @@ impl HiddenLayer {
                         length as u32,
                     )?;
                 }
+            }
+        }
+        if let Some(a) = &self.periodic {
+            unsafe {
+                a.kernels.backward(Grid::new(M as u32,32), self.dprojected.ptr(),
+                    e.gradients.at(a.weights).ok_or("missing periodic gradient")?,
+                    a.raw.ptr(), e.parameters.at(a.weights).ok_or("missing periodic weights")?, rows as u32)?;
             }
         }
         e.linear_back(

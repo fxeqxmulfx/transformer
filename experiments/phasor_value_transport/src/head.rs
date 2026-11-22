@@ -21,6 +21,7 @@ pub enum Head {
     SingleReflection,
     ContextRotation,
     AssociativeReflection,
+    PeriodicReflection,
 }
 
 impl Head {
@@ -44,6 +45,7 @@ impl Head {
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
             "associative-reflection" => Ok(Self::AssociativeReflection),
+            "periodic-reflection" => Ok(Self::PeriodicReflection),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -66,6 +68,7 @@ impl Head {
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
             Self::AssociativeReflection => "phasor-learned-associative-reflection-8x4-v1",
+            Self::PeriodicReflection => "phasor-learned-periodic-reflection-32-v1",
         }
     }
 
@@ -79,6 +82,7 @@ impl Head {
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::AssociativeReflection
+                | Self::PeriodicReflection
         )
     }
 
@@ -92,6 +96,7 @@ impl Head {
                 | Self::SingleReflection
                 | Self::ContextRotation
                 | Self::AssociativeReflection
+                | Self::PeriodicReflection
         )
     }
 
@@ -104,7 +109,10 @@ impl Head {
     }
 
     pub const fn phase_gates(self) -> usize {
-        if matches!(self, Self::ReflectionPhase | Self::AssociativeReflection) {
+        if matches!(
+            self,
+            Self::ReflectionPhase | Self::AssociativeReflection | Self::PeriodicReflection
+        ) {
             MEMORY_WIDTH
         } else {
             0
@@ -113,6 +121,9 @@ impl Head {
 
     pub fn parameters(self, cfg: &Config) -> usize {
         match self {
+            Self::PeriodicReflection => {
+                Self::ReflectionPhase.parameters(cfg) + self.activation_parameters()
+            }
             Self::ContextRotation => (4 + cfg.width / 2) * cfg.width,
             Self::AssociativeReflection => {
                 Self::ReflectionPhase.parameters(cfg)
@@ -135,9 +146,23 @@ impl Head {
         }
     }
 
+    pub const fn activation_parameters(self) -> usize {
+        if matches!(self, Self::PeriodicReflection) {
+            2 * MEMORY_WIDTH
+        } else {
+            0
+        }
+    }
+
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::PeriodicReflection => {
+                Self::ReflectionPhase.initialize(cfg, seed, parameters);
+                let start = crate::architecture::start(cfg) + Self::ReflectionPhase.parameters(cfg);
+                parameters[start..start + MEMORY_WIDTH].fill(1.);
+                parameters[start + MEMORY_WIDTH..start + 2 * MEMORY_WIDTH].fill(0.);
+            }
             Self::AssociativeReflection => {
                 Self::ReflectionPhase.initialize(cfg, seed, parameters);
                 let start = crate::architecture::start(cfg) + Self::ReflectionPhase.parameters(cfg);

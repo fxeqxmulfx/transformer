@@ -10,6 +10,18 @@ pub(super) fn zero_extension(cfg: &Config, weights: &[f32], ordered: &mut Engine
     let end = first + cfg.head.phase_inputs() * cfg.width;
     let mut controlled = weights.to_vec();
     let removed = match cfg.head {
+        head::Head::PeriodicReflection => {
+            let after = end + 2 * size + M;
+            if weights[after..after + M].iter().any(|&x| x != 1.)
+                || weights[after + M..after + 2 * M].iter().any(|&x| x != 0.)
+            {
+                return Err(
+                    "periodic activation must start at unit strength and zero center".into(),
+                );
+            }
+            controlled[after..after + M].fill(0.);
+            after..after + 2 * M
+        }
         head::Head::ReflectionPhase => {
             let gates = end + 2 * size..end + 2 * size + M;
             if weights[gates.clone()].iter().any(|&x| x != 0.5) {
@@ -32,7 +44,11 @@ pub(super) fn zero_extension(cfg: &Config, weights: &[f32], ordered: &mut Engine
         _ => return Err("expected an ordered phase extension".into()),
     };
     let mut base_cfg = cfg.clone();
-    base_cfg.head = head::Head::InputPhase;
+    base_cfg.head = if cfg.head == head::Head::PeriodicReflection {
+        head::Head::ReflectionPhase
+    } else {
+        head::Head::InputPhase
+    };
     let base_weights = [&weights[..removed.start], &weights[removed.end..]].concat();
     let mut base = Engine::new(base_cfg, &base_weights)?;
     ordered.parameters.write(&controlled)?;
@@ -135,7 +151,7 @@ pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Re
     let (ab, mut gab) = endpoint(e, &mut base, &values, &cotangent)?;
     let shift = if matches!(
         cfg.head,
-        head::Head::ReflectionPhase | head::Head::SingleReflection
+        head::Head::ReflectionPhase | head::Head::SingleReflection | head::Head::PeriodicReflection
     ) {
         let mut even = values.clone();
         even.rotate_left(2 * width);
@@ -164,6 +180,7 @@ pub(super) fn input_segment(cfg: &Config, weights: &[f32], e: &mut Engine) -> Re
             | head::Head::BilinearPhase
             | head::Head::ReflectionPhase
             | head::Head::SingleReflection
+            | head::Head::PeriodicReflection
     ) {
         let changed = |a: &[f32], b: &[f32]| {
             a.iter()

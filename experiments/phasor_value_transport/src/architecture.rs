@@ -18,13 +18,15 @@ pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const CONTEXT_ROTATION: bool = cfg!(feature = "context-rotation-read");
 pub const ASSOCIATIVE_REFLECTION: bool = cfg!(feature = "associative-reflection-read");
+pub const PERIODIC_REFLECTION: bool = cfg!(feature = "periodic-reflection-read");
 pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read")
     || INPUT_PHASE
     || AFFINE_PHASE
     || BILINEAR_PHASE
     || REFLECTION_PHASE
     || SINGLE_REFLECTION
-    || ASSOCIATIVE_REFLECTION;
+    || ASSOCIATIVE_REFLECTION
+    || PERIODIC_REFLECTION;
 const _: () = {
     let variants = BOUNDED as u8
         + INPUT_PRODUCT as u8
@@ -36,7 +38,8 @@ const _: () = {
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
         + CONTEXT_ROTATION as u8
-        + ASSOCIATIVE_REFLECTION as u8;
+        + ASSOCIATIVE_REFLECTION as u8
+        + PERIODIC_REFLECTION as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -44,7 +47,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if ASSOCIATIVE_REFLECTION {
+pub const HEAD: Head = if PERIODIC_REFLECTION {
+    Head::PeriodicReflection
+} else if ASSOCIATIVE_REFLECTION {
     Head::AssociativeReflection
 } else if CONTEXT_ROTATION {
     Head::ContextRotation
@@ -140,7 +145,9 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             0
         };
         return (!COMPACT || result["ffn_complex_units"] == width)
-            && result["readout_parameters"] == per_channel * width + HEAD.phase_gates() as u64
+            && result["readout_parameters"]
+                == per_channel * width
+                    + (HEAD.phase_gates() + HEAD.activation_parameters()) as u64
             && result.get("pair_parameters").is_none();
     }
     result["initial_gain"] == json!(pair_memory::INITIAL_GAIN)
