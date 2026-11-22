@@ -87,6 +87,12 @@ requires greedy generation of the answer bit and EOS. Binding and lookup
 require a correct prediction at every labeled query in the sequence. NV11
 scores the answer at the second operand.
 
+On each trained memory checkpoint the scorer takes a longest held-out
+sequence and replaces every token after each possible prefix in turn. It
+records the largest absolute change over every shared-prefix logit with
+all labels masked. The separate `memory-check` command also compares whole
+sequences in a batch against their isolated, unpadded prefixes.
+
 With the [pinned DiffGPT checkout](../rerope/README.md#build-and-commands)
 available under `.lake/reproduction/gpt`, run from the repository root.
 

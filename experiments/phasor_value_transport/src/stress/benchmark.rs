@@ -9,7 +9,7 @@ fn exact(engine: &mut Engine, examples: &[Example]) -> Result<u64> {
         .ok_or_else(|| "missing exact-sequence score".into())
 }
 
-fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<Value> {
+fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<(Value, Option<Value>)> {
     if bytes.len() != layout::total_count(&cfg) * 4 {
         return Err("fixed-budget checkpoint shape mismatch".into());
     }
@@ -30,7 +30,17 @@ fn score_checkpoint(cfg: Config, task: &Task, bytes: &[u8]) -> Result<Value> {
             );
         }
     }
-    Ok(json!(scores))
+    let causality = if matches!(engine.config.head, Head::Transition | Head::Recurrent) {
+        let sample = task.splits[&task.selection]
+            .iter()
+            .max_by_key(|e| e.tokens.len())
+            .ok_or("missing held-out sequence for causality check")?;
+        let tokens: Vec<_> = sample.tokens.iter().map(|&v| v as u32).collect();
+        Some(memory_checks::trained_prefixes(&mut engine, &tokens)?)
+    } else {
+        None
+    };
+    Ok((json!(scores), causality))
 }
 
 pub fn run(arm: &str, name: &str, seed: u32, updates: usize, out: &Path) -> Result<()> {
@@ -108,7 +118,7 @@ pub fn run(arm: &str, name: &str, seed: u32, updates: usize, out: &Path) -> Resu
     let mut cfg = task_config(&row, &task, false)?;
     cfg.head = head;
     let bytes = fs::read(weights_file)?;
-    let scores = score_checkpoint(cfg, &task, &bytes)?;
+    let (scores, causality) = score_checkpoint(cfg, &task, &bytes)?;
     let train = task.splits["train"].len();
     let held = task.splits[&task.selection].len() as u64;
     let epoch = train.div_ceil(batch);
@@ -138,8 +148,11 @@ pub fn run(arm: &str, name: &str, seed: u32, updates: usize, out: &Path) -> Resu
     if history.next().is_some() || scores[&task.selection]["correct"] != last {
         return Err("history failed final held-out checkpoint replay".into());
     }
-    let result = json!({"protocol":protocol, "initial_correct":initial, "first_99":first_99,
+    let mut result = json!({"protocol":protocol, "initial_correct":initial, "first_99":first_99,
         "scores":scores, "weights_sha256":hash(&bytes), "gpu":gpu});
+    if let Some(probe) = causality {
+        result["causality"] = probe;
+    }
     if let Some(saved) = saved {
         if result != saved {
             return Err("fixed-budget result differs from independent replay".into());

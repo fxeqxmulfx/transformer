@@ -62,6 +62,45 @@ fn reference(cfg: &Config, weights: &[f32], hidden: &[f32], length: usize) -> Ve
     logits
 }
 
+fn logit_difference(left: &[f32], right: &[f32]) -> Result<f32> {
+    let mut worst = 0_f32;
+    for (a, b) in left.iter().zip(right) {
+        let difference = (a - b).abs();
+        if !difference.is_finite() {
+            return Err("nonfinite prefix logit".into());
+        }
+        worst = worst.max(difference);
+    }
+    Ok(worst)
+}
+
+/// Replay a real sequence with every nonempty proper suffix changed. Keep
+/// the batch shape fixed so the two logits use identical GEMM kernels.
+pub(crate) fn trained_prefixes(engine: &mut Engine, seq: &[u32]) -> Result<Value> {
+    let length = seq.len();
+    let vocab = engine.config.vocab;
+    let masked = vec![u32::MAX; length];
+    engine.forward(seq, &masked, 1, length)?;
+    let baseline = engine.logits.read()?;
+    let mut worst = 0_f32;
+    for cut in 1..length {
+        let mut changed = seq.to_vec();
+        for token in &mut changed[cut..] {
+            *token = (*token + 1) % vocab as u32;
+        }
+        engine.forward(&changed, &masked, 1, length)?;
+        let alternative = engine.logits.read()?;
+        worst = worst.max(logit_difference(
+            &baseline[..cut * vocab],
+            &alternative[..cut * vocab],
+        )?);
+    }
+    if worst > 2e-5 {
+        return Err(format!("trained prefix logits changed by {worst}").into());
+    }
+    Ok(json!({"sequence_length":length, "cuts":length-1, "max_logit_change":worst}))
+}
+
 fn prefix_error(engine: &mut Engine, seq: &[u32]) -> Result<f32> {
     let p = engine.config.vocab;
     let length = seq.len();
@@ -78,14 +117,11 @@ fn prefix_error(engine: &mut Engine, seq: &[u32]) -> Result<f32> {
         // between calls, with no right padding or previous example available.
         engine.forward(&seq[..cut], &masked[..cut], 1, cut)?;
         let alone = engine.logits.read()?;
-        for i in 0..cut * p {
-            for x in [both[i], both[length * p + i]] {
-                let delta = (x - alone[i]).abs();
-                if !delta.is_finite() {
-                    return Err("nonfinite prefix logit".into());
-                }
-                worst = worst.max(delta);
-            }
+        for offset in [0, length * p] {
+            worst = worst.max(logit_difference(
+                &both[offset..offset + cut * p],
+                &alone[..cut * p],
+            )?);
         }
     }
     Ok(worst)
