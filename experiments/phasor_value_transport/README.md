@@ -802,6 +802,20 @@ copy has the same target as the corresponding original prefix, even when
 the repetition counts differ across letters.
 [Prefix labels under repetitions](../../src/Transformer/Phasor/StutterTransfer.lean)
 
+At twelve letters, the inclusive L3 model classified every prefix of all
+4,096 words correctly in each seed. On the 257-token prompts, seed 2
+missed one sequence. These tests use the same six checkpoints as the
+ten-letter comparison above.
+
+| L3 whole sequences correct | Previous modular count, seeds 0 / 1 / 2 | Inclusive capped count, seeds 0 / 1 / 2 |
+| --- | ---: | ---: |
+| Every twelve-letter word, out of 4,096 | 3,737 / 3,872 / 4,080 | 4,096 / 4,096 / 4,096 |
+| Eight letters repeated 32 times each, out of 256 | 251 / 198 / 256 | 256 / 256 / 255 |
+
+Reproduce from either build with
+`PHASOR_EVAL_BATCH_CAP=4 "$bin" probes language-l3 "$seed" "$run_dir" extended`.
+The scorer emits the SHA-256 of the saved weights alongside the results.
+
 The modulated transition-table trial reads a capped count entry `x` and a
 current-token entry `y` at every position. Each hidden coordinate contributes
 `x + y + x*y` before normalization. Initializing the token table to zero
