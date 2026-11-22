@@ -339,6 +339,20 @@ PHASOR_EVAL_BATCH_CAP=16 "$bin" screen basis-parity16 0 runs/phase-streams 3500
 "$bin" probes basis-parity16 0 runs/phase-streams
 ```
 
+## Input phase memory
+
+This variant projects each RMS-normalized input embedding into the 32 phase
+increments. The sine and centered cosine of their running sums join the
+contextual stream vector after the final layer. The weights and optimizer
+have the same shapes as the contextual phase model.
+
+Lean proves that a segment contributes the same phase increment in every
+preceding context. Swapping two input segments preserves the phase at their
+end, and repeating any embedding adds its learned increment once per copy.
+The contextual branch retains its sensitivity to sequence order. Both
+branches are causal, and their gradient contributions add at the input.
+[Input phase proofs](../../src/Transformer/Phasor/InputPhaseRead.lean)
+
 ## Representation-only causal memory
 
 How much of the closed-relation head's learning speed and length transfer can
