@@ -3,14 +3,16 @@ use super::*;
 
 pub(super) struct TiedProjection {
     weights: usize,
+    coordinates: usize,
     output_gradient: F,
 }
 
 impl TiedProjection {
-    pub(super) fn new(e: &Engine, weights: usize) -> Result<Self> {
+    pub(super) fn new(e: &Engine, weights: usize, coordinates: usize) -> Result<Self> {
         Ok(Self {
             weights,
-            output_gradient: e.cuda.alloc(2 * e.config.width * e.config.width)?,
+            coordinates,
+            output_gradient: e.cuda.alloc(coordinates * e.config.width)?,
         })
     }
 
@@ -21,12 +23,19 @@ impl TiedProjection {
             .at(self.weights)
             .ok_or("missing tied value matrix")?;
         if crate::precision::FP32_AFFINE_REFERENCE {
-            e.mm_backward(out, read, weights, rows, d, 2 * d)
+            e.mm_backward(out, read, weights, rows, d, self.coordinates)
         } else {
             e.pipeline
                 .as_ref()
                 .ok_or("missing mixed-precision forward pipeline")?
-                .multiply::<{ crate::precision::BF16 }>(out, read, weights, rows, d, 2 * d)
+                .multiply::<{ crate::precision::BF16 }>(
+                    out,
+                    read,
+                    weights,
+                    rows,
+                    d,
+                    self.coordinates,
+                )
         }
     }
 
@@ -36,14 +45,21 @@ impl TiedProjection {
             .parameters
             .at(self.weights)
             .ok_or("missing tied value matrix")?;
-        e.transpose(weights, 2 * d, d)?;
-        e.mm_backward(dread, e.dlast.ptr(), e.scratch.ptr(), rows, 2 * d, d)?;
-        e.transpose(read, rows, 2 * d)?;
+        e.transpose(weights, self.coordinates, d)?;
+        e.mm_backward(
+            dread,
+            e.dlast.ptr(),
+            e.scratch.ptr(),
+            rows,
+            self.coordinates,
+            d,
+        )?;
+        e.transpose(read, rows, self.coordinates)?;
         e.mm_backward(
             self.output_gradient.ptr(),
             e.scratch.ptr(),
             e.dlast.ptr(),
-            2 * d,
+            self.coordinates,
             d,
             rows,
         )

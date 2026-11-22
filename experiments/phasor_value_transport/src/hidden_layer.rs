@@ -113,7 +113,7 @@ impl HiddenLayer {
         };
         Ok(Self {
             memory,
-            tied: (cfg.head == Head::TiedToeplitz).then(|| super::tied_projection::TiedProjection::new(e, input_weights)).transpose()?,
+            tied: (cfg.head == Head::TiedToeplitz).then(|| super::tied_projection::TiedProjection::new(e, input_weights, 2*cfg.width)).transpose()?,
             periodic,
             associative: (cfg.head == Head::AssociativeReflection)
                 .then(|| super::associative_layer::AssociativeLayer::new(e)).transpose()?,

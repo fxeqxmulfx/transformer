@@ -4,6 +4,10 @@ Phasor with triple transport solved all 9,409 canonical NV11 pairs for
 three random initializations at update 250. The tied external lookup starts
 with the original random embedding vectors. [Architecture, controls and reproduction](#triple-transport)
 
+A compact Fourier read used 49,985 read parameters and reached at most
+100/4,705 held-out NV11 answers over three 10,000-update trials.
+[Fourier measurements and ablations](#learned-fourier-transport)
+
 ## Learned stream readout
 
 The inner model takes a sequence of embedding vectors. For a tokenized
@@ -1021,6 +1025,106 @@ vectors and estimates both controls from its prefix.
 In Lean, powers of five exhaust all 96 nonzero residues modulo 97, and a
 single shift realizes each nonzero row for all frequencies and operands.
 [Fourier transport proofs](../../src/Transformer/Phasor/FourierTransport.lean)
+
+The exact nonzero reference uses a vertex of the routing simplex. A real
+softmax approaches that vertex as the selected logit pulls away from the
+others. The reference kernel check exercises all 903,264 complex outputs,
+including the zero multiplier, in a relabelled channel chart. The largest
+component error against FP64 was `1.20e-7` or less. Fractional softmax
+routes, phases and their adjoints agreed with an independent FP64 calculation
+within `2.73e-7`. The implementation also checks directional derivatives of
+the masked loss, arbitrary dense input vectors and strict-prefix causality.
+
+Training uses the original random embeddings and the original AdamW
+schedule for 100,000 updates. The comparison checkpoint was update 250.
+We declared a 10,000-update extension for all seeds that missed exactness,
+with observations every 250 updates. There is one trainable spectrum
+matrix, one affine projection for the routing logits and angles, and four
+stream weights per hidden dimension. For width `D` and `M` channels the read
+adds `4D + 2MD + (2M+1)(D+1)` parameters. At NV11 width 128 this is
+**49,985** read parameters and **283,921** total. Triple transport at
+`e67ad738` uses **2,114,564** read parameters and **2,348,500** total.
+
+Every row below was rescored from its saved weights in a separate process.
+All seeds use the same split of 4,704 training and 4,705 held-out pairs.
+The two zero-row columns cover the 46 training and 51 held-out examples
+with first operand zero. The margin is the lowest target logit minus its
+strongest rival on the held-out split. Seconds cover the training command,
+its scheduled evaluations and checkpoint writes on the GTX 1050, with
+Kernite v0.6.0 and FP32 affine operations. Repeating the triple baseline
+reproduced its three original checkpoint digests.
+
+| Read | Update | Seed | Train correct | Held correct | Zero train | Zero held | Min held margin | Seconds |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Triple | 250 | 0 | 4,704 | 4,705 | 46 | 51 | 2.711 | 17.78 |
+| Triple | 250 | 1 | 4,704 | 4,705 | 46 | 51 | 3.003 | 17.78 |
+| Triple | 250 | 2 | 4,704 | 4,705 | 46 | 51 | 2.936 | 18.58 |
+| Fourier | 250 | 0 | 353 | 48 | 7 | 2 | −0.895 | 2.56 |
+| Fourier | 250 | 1 | 425 | 86 | 46 | 51 | −1.391 | 2.50 |
+| Fourier | 250 | 2 | 390 | 39 | 4 | 1 | −0.956 | 2.50 |
+| Fourier | 10,000 | 0 | 4,700 | 51 | 46 | 4 | −61.051 | 87.64 |
+| Fourier | 10,000 | 1 | 4,699 | 85 | 46 | 51 | −54.822 | 88.06 |
+| Fourier | 10,000 | 2 | 4,698 | 57 | 46 | 2 | −65.965 | 87.66 |
+
+The largest held-out counts in the extension were 55 at update 750 for
+seed 0, 100 at 7,250 for seed 1, and 57 at 10,000 for seed 2. Fresh runs
+ending at those updates and independent checkpoint reloads reproduced
+these counts. Their training counts were 2,040, 4,700 and 4,698.
+At update 250 the Fourier read took about one seventh of the baseline
+time. Further training fit nearly every training pair while the held-out
+predictions remained poor.
+
+The diagnostic measures each learned input channel on all 97 operands.
+A one-to-one assignment maximizes the sum of squared complex correlations
+with the 96 nonzero characters. It fits one complex gain per channel. This
+accounts for a permutation of channel names and each channel's phase origin.
+For each nonzero prefix and output channel, the routing test compares the
+highest-weight choice with multiplication of the assigned frequency by
+the prefix residue. The phase comparison compensates for the fitted origins
+of both channels. The last two columns count held-out answers after forcing
+all routes to the identity shift or forcing all phase angles to zero,
+one intervention at a time.
+
+| Update | Seed | Mean matched correlation | Correct top route / 9,216 | Zero-prefix collapse probability | Mean nonzero phase cosine | Identity route correct | Zero phase correct |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 250 | 0 | 0.218 | 106 | 0.00035 | 0.002 | 48 | 42 |
+| 250 | 1 | 0.220 | 81 | 0.961 | 0.009 | 48 | 106 |
+| 250 | 2 | 0.222 | 100 | 0.00052 | −0.0003 | 48 | 38 |
+| 10,000 | 0 | 0.216 | 104 | 7.2e-9 | 0.020 | 42 | 49 |
+| 10,000 | 1 | 0.214 | 108 | 0.99999 | 0.023 | 49 | 54 |
+| 10,000 | 2 | 0.212 | 110 | 7.3e-9 | 0.018 | 48 | 44 |
+
+The same matching procedure at initialization gave mean correlations of
+0.220, 0.218 and 0.220. At update 10,000 the cosine between the complete
+transported coordinates and the gain-adjusted ideal output, summed over
+all pairs and channels, was 0.022–0.023 (ideal 1). Seed 1 learned the
+constant route for the zero row. Across nonzero prefixes, the routing and
+phase measurements show little alignment with the affine action. In all
+six audits, consistently renaming the external vocabulary reproduced all
+9,409 predictions and all 912,673 class logits bit for bit.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.FourierTransport
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,fourier-transport
+bin=./target/release/phasor-value-transport
+"$bin" check
+for steps in 250 10000
+do
+    for seed in 0 1 2
+    do
+        trial="runs/fourier-$steps/seed$seed"
+        /usr/bin/time -f '%e' "$bin" nv11-train "$trial" "$seed" "$steps"
+        "$bin" nv11-score "$trial/nv11-train-$steps.f32" rows
+        "$bin" nv11-fourier-audit "$trial/nv11-train-$steps.f32"
+    done
+done
+```
+
+For the matched baseline, build with
+`--features fp32-affine-reference,triple-transport` and repeat the
+250-update train and score commands in a fresh directory. The Fourier
+geometry audit applies to Fourier checkpoints.
 
 ## Triple transport
 

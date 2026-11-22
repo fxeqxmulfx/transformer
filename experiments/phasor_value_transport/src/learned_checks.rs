@@ -161,6 +161,7 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
         || architecture::TOEPLITZ
         || architecture::TWO_FRAME
         || architecture::TRIPLE_TRANSPORT
+        || architecture::FOURIER
     {
         0.0003
     } else {
@@ -315,6 +316,8 @@ pub fn run(width: Option<usize>) -> Result<()> {
         crate::two_frame_checks::run()?;
     } else if architecture::TRIPLE_TRANSPORT {
         crate::slot_gradients::run()?;
+    } else if architecture::FOURIER {
+        crate::fourier_checks::run()?;
     } else if architecture::PHASE_MEMORY {
         crate::phase_checks::run()?;
     }

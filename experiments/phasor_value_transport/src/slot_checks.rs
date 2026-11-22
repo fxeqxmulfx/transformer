@@ -24,31 +24,15 @@ struct Scores {
 }
 
 fn score(e: &mut Engine, rows: &[[u32; 3]], names: &[usize]) -> Result<Scores> {
-    let vocab = names.len();
-    let mut results = Vec::with_capacity(rows.len() * vocab);
     let mut written = 0;
-    let mut correct = 0;
-    for examples in rows.chunks(BATCH) {
-        let tokens: Vec<_> = examples
-            .iter()
-            .flat_map(|&[a, b, _]| [names[a as usize] as u32, names[b as usize] as u32])
-            .collect();
-        e.forward(&tokens, &vec![u32::MAX; tokens.len()], examples.len(), 2)?;
+    let scored = dense_audit::score(e, rows, names, |e| {
         written += e.written_slot_reads()?;
-        let logits = e.logits.read()?;
-        let predictions = e.predictions.read()?;
-        for (i, example) in examples.iter().enumerate() {
-            correct += usize::from(predictions[2 * i + 1] as usize == names[example[2] as usize]);
-            let at = (2 * i + 1) * vocab;
-            for &j in names {
-                results.push(logits[at + j]);
-            }
-        }
-    }
+        Ok(())
+    })?;
     Ok(Scores {
-        logits: results,
+        logits: scored.logits,
         written,
-        correct,
+        correct: scored.correct,
     })
 }
 
