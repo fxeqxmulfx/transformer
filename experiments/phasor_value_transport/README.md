@@ -57,21 +57,35 @@ at 1,500 scored 4,705/4,705. Both weight digests matched independently
 trained fixed-budget runs ending at the respective update. The canonical
 addition case observes every 19 updates.
 
-The input-phase model passed all 25 original short tasks at seed 0.
-Independent reloads reproduced every primary held-out score. First crossings
-ranged from 68 updates on shifted Boolean AND to 1,957 on the modular
-square of the sum. On hard depth the first crossing was at update 1,500,
-with 511/512 exact sequences on novel length-128 validation inputs after
-training on lengths 32–64.
+The input-phase model passed **75/75 short runs and 30/30 long runs**.
+All 105 first-crossing checkpoints independently reproduced their held-out
+counts in Kernite v0.6.0. Every canonical case had a supported scorer and
+every seed crossed within the original update budget. The short tier
+ranged from 68 updates on shifted AND to 2,014 on the modular square of
+the sum. The long tier ranged from 589 on associative division to 15,800
+on the Fibonacci recurrence.
 
-Two long-tier arithmetic tasks first crossed after the 3,496-update
-seed-0 screen. All six runs used the original 100,000-update schedule.
-Each count below covers the 4,705 held-out pairs at the first crossing.
+| Task | Held-out sequences | First crossing, seeds 0 / 1 / 2 | Correct at crossing, seeds 0 / 1 / 2 |
+| --- | ---: | --- | --- |
+| Hard depth, length 128 | 512 | 1,500 / 2,000 / 1,000 | 511 / 512 / 512 |
+| Easy key–value recall | 512 | 2,350 / 1,450 / 900 | 509 / 508 / 509 |
+| Blinded absolute difference | 4,705 | 4,750 / 6,460 / 4,123 | 4,659 / 4,659 / 4,660 |
+| Fourth power of the modular sum | 4,705 | 3,648 / 4,275 / 3,743 | 4,659 / 4,663 / 4,665 |
+| Fibonacci recurrence, first differences | 4,704 | 12,360 / 15,800 / 14,570 | 4,657 / 4,659 / 4,662 |
 
-| Long task | First crossing, seeds 0 / 1 / 2 | Held-out correct, seeds 0 / 1 / 2 |
-| --- | --- | --- |
-| Blinded absolute difference | 4,750 / 6,460 / 4,123 | 4,659 / 4,659 / 4,660 |
-| Fourth power of the modular sum | 3,648 / 4,275 / 3,743 | 4,659 / 4,663 / 4,665 |
+Eleven tasks also supplied an independent test set. Of the 33 checkpoints
+trained on these tasks, 25 reached 99% on that test. Across all 78
+available test and transfer scores, 53 reached 99%. Hard depth scored
+512/512 at length 128 on every independent test after training on lengths
+32–64. On shifted AND, all three seeds scored 7/7 on the primary split.
+The independent test scores were 64 / 27 / 64 of 64 and length-64 scores
+were 0 / 35 / 64 of 64. The per-seed `gpt-tests.jsonl` above includes
+every first crossing, denominator and available test split.
+
+On the separate NV11 regression, the same input-phase architecture
+scored 52 / 50 / 53 of 4,705 held-out pairs at update 250 and
+83 / 90 / 89 at update 3,000. The triple-transport reference solved
+all 4,705 at update 250 on every seed.
 
 ## Learned stream readout
 
