@@ -93,8 +93,8 @@ records the largest absolute change over every shared-prefix logit with
 all labels masked. The separate `memory-check` command also compares whole
 sequences in a batch against their isolated, unpadded prefixes.
 
-With the [pinned DiffGPT checkout](../rerope/README.md#build-and-commands)
-available under `.lake/reproduction/gpt`, run from the repository root.
+The build expects the pinned DiffGPT checkout under `.lake/reproduction/gpt`.
+Run these commands from the repository root. [DiffGPT checkout instructions](../rerope/README.md#build-and-commands)
 
 ```sh
 cd experiments/phasor_value_transport
@@ -107,6 +107,74 @@ The script writes each cell's observations, checkpoint and scores under its
 head, case and seed. Repeating it verifies the saved weights, observation
 cadence, first crossing and replayed scores. For one cell, use
 `memory-bench HEAD CASE SEED UPDATES RUN_DIR` with the same binary.
+
+### Measurements at the stop
+
+Eight of the planned 48 cells completed 8,000 updates. All eight are original
+Phasor controls. The third lookup seed stopped after its 3,500-update observation.
+The short learned-head runs below establish that the heads train and replay.
+The fraction of the closed head's convergence and length-transfer gains recovered
+across three seeds is still undetermined.
+
+| Task | Independent parameters, original | Closed relation | Transition | Recurrent |
+| --- | ---: | ---: | ---: | ---: |
+| Parity, up to 20 bits | 78,472 | 152,457 | 86,664 | 86,664 |
+| Key/value binding and two-hop lookup, each | 80,520 | 189,321 | 88,712 | 88,712 |
+| NV11 | 135,504 | 346,577 | 151,888 | 151,888 |
+
+Each learned head adds 8,192 independent coordinates at width 64 and 16,384
+at width 128. The totals count each tied complex coordinate once. Each cell's
+JSON also gives the number of stored FP32 entries in the expanded layout.
+
+Counts and updates below are in seed order 0 / 1 / 2. Each numerator counts
+whole correct sequences. “Miss” means every scheduled score through 8,000
+updates was below 99%.
+
+| Original Phasor | Held-out denominator | Correct at initialization | First 99% update | Correct at 8,000 | Longer-input correct at 8,000, each out of 64 |
+| --- | ---: | --- | --- | --- | --- |
+| Parity | 284 | 0 / 0 / 0 | 6,000 / miss / miss | 247 / 267 / 274 | 32 bits 44 / 22 / 41. 64 bits 38 / 25 / 39. |
+| Key/value binding | 512 | 0 / 0 / 0 | 448 / 512 / 512 | 507 / 512 / 512 | Source provides an ordinary-length test only. |
+| Two-hop lookup | 32 | 0 / 0 / 0 | miss / miss / stopped | 2 / 1 / — | Length 48 scored 0 / 1 / —. Length 96 scored 0 / 0 / —. |
+
+The archived closed-relation runs used the same splits, initialization seeds,
+minibatches and observation cadence. They saved the first crossing. The fresh
+64-update binding run below reproduced the archived seed-0 weights byte for byte.
+
+| Closed relation, archived | Held-out denominator | Correct at initialization | First 99% update |
+| --- | ---: | --- | --- |
+| Parity | 284 | 0 / 0 / 0 | 250 / 250 / 250 |
+| Key/value binding | 512 | 501 / 508 / 505 | 64 / 0 / 64 |
+| Two-hop lookup | 32 | 32 / 32 / 32 | 0 / 0 / 0 |
+| NV11 | 4,705 | 47 / 48 / 48 | 500 / 500 / 500 |
+
+| Fresh seed-0 pilot | Updates | Initial held-out | Final held-out | First 99% | Longer-input correct, each out of 64 |
+| --- | ---: | ---: | ---: | --- | --- |
+| Recurrent, parity | 250 | 0/284 | 194/284 | Miss through 250 | 39 at 32 bits, 29 at 64 bits |
+| Transition, binding | 64 | 0/512 | 5/512 | Miss through 64 | — |
+| Closed relation, binding | 64 | 501/512 | 507/512 | 64 | — |
+| Transition, two-hop lookup | 250 | 0/32 | 0/32 | Miss through 250 | 0 at 48, 0 at 96 |
+| Recurrent, two-hop lookup | 250 | 0/32 | 0/32 | Miss through 250 | 0 at 48, 0 at 96 |
+
+At update 250 original Phasor scored 145/284 on parity in seed 0. The
+recurrent head gained 49 correct answers at that observation. NV11 has two
+input tokens, so its strict transition memory is empty at both positions.
+Both learned heads showed zero prefix-logit change in the width-64 and
+width-128 checks. The maximum error against the independent FP64 forward was
+`6.88e-7`, and all 24 masked-loss directional derivatives passed. Trained
+transition-binding and recurrent-lookup checkpoints also gave zero logit
+change across 11 and 23 suffix replacements respectively.
+
+```sh
+bin=./target/release/phasor-value-transport
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" memory-bench recurrent basis-parity20 0 250 runs/hidden-memory-pilots
+for head in transition closed; do
+    "$bin" memory-bench "$head" gpt-probe-key-value-binding 0 64 runs/hidden-memory-pilots
+done
+for head in transition recurrent; do
+    "$bin" memory-bench "$head" suite-lookup 0 250 runs/hidden-memory-pilots
+done
+```
 
 ## Historical benchmark with hand-written features
 
