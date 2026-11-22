@@ -6,11 +6,12 @@ use std::collections::BTreeMap;
 
 pub mod alignment;
 pub mod benchmark;
-mod catalog;
+pub mod catalog;
 mod class_translation;
 pub mod compare_shifts;
 pub mod embedding;
 mod language_probes;
+pub mod numeric_probe;
 pub mod phase_ablation;
 mod recall_gap;
 pub mod report;

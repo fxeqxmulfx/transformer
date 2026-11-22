@@ -60,6 +60,49 @@ pub struct Score {
     pub exact99: bool,
     pub original_success: bool,
 }
+
+/// Original NumericMetrics accumulation in source row and component order.
+#[derive(Default)]
+pub struct NumericTotals {
+    pub components: u64,
+    pub valid: u64,
+    pub squared_error: f64,
+}
+
+impl NumericTotals {
+    pub fn add(
+        &mut self,
+        teacher: &[u64],
+        mut predicted: impl Iterator<Item = usize>,
+        step: f64,
+        offset: i64,
+        vocabulary: usize,
+    ) -> Result<()> {
+        if !step.is_finite() || step <= 0. {
+            return Err("invalid numeric grid step".into());
+        }
+        for &word in teacher {
+            let truth = f64::from_bits(word);
+            if !truth.is_finite() {
+                return Err("nonfinite numeric teacher".into());
+            }
+            self.components += 1;
+            self.squared_error +=
+                if let Some(token) = predicted.next().filter(|&t| (36..vocabulary).contains(&t)) {
+                    self.valid += 1;
+                    let decoded = (token as i64 - 36 - offset) as f64 * step;
+                    (decoded - truth).powi(2)
+                } else {
+                    64.
+                };
+        }
+        Ok(())
+    }
+
+    pub fn mse(&self) -> Option<f64> {
+        (self.components > 0).then(|| self.squared_error / self.components as f64)
+    }
+}
 fn logits(model: &mut impl Predictor, prefix: &[i64], vocab: usize) -> Result<(Vec<f64>, usize)> {
     let values = model.logits(prefix)?;
     if values.len() != vocab || values.iter().any(|x| !x.is_finite()) {
@@ -106,6 +149,7 @@ pub fn score(dataset: &Dataset, split: &str, model: &mut impl Predictor) -> Resu
         exact99: false,
         original_success: false,
     };
+    let mut numeric = NumericTotals::default();
     for (index, row) in shard.records.iter().enumerate() {
         row.validate(dataset.vocabulary)?;
         if generates != (!split.starts_with("train") && !row.prompt.is_empty()) {
@@ -150,33 +194,26 @@ pub fn score(dataset: &Dataset, split: &str, model: &mut impl Predictor) -> Resu
             if teacher.len() + 1 != row.answer.len() {
                 return Err("numeric teacher width".into());
             }
-            for (component, &word) in teacher.iter().enumerate() {
-                let truth = f64::from_bits(word);
-                if !truth.is_finite() {
-                    return Err("nonfinite numeric teacher".into());
-                }
-                let token = predicted.get(component).copied();
-                let valid = token.is_some_and(|x| x >= 36 && x < dataset.vocabulary);
-                out.numeric_components += 1;
-                out.valid_numeric_components += u64::from(valid);
-                out.squared_error += if valid {
-                    let decoded = (token.unwrap() as i64 - 36 - offset) as f64 * step;
-                    (decoded - truth).powi(2)
-                } else {
-                    64.
-                };
-            }
+            numeric.add(
+                teacher,
+                predicted.iter().copied(),
+                step,
+                offset,
+                dataset.vocabulary,
+            )?;
         }
     }
     out.cross_entropy /= out.teacher_forced.target_count as f64;
     out.example_cross_entropy /= out.teacher_forced.example_count as f64;
+    out.numeric_components = numeric.components;
+    out.valid_numeric_components = numeric.valid;
+    out.squared_error = numeric.squared_error;
     if !out.cross_entropy.is_finite() || !out.squared_error.is_finite() {
         return Err("nonfinite native score".into());
     }
     out.raw99 = out.raw.raw99();
     out.exact99 = out.raw.exact99();
-    out.mse =
-        (out.numeric_components > 0).then(|| out.squared_error / out.numeric_components as f64);
+    out.mse = numeric.mse();
     out.original_success = out.mse.map_or(out.exact99, |mse| mse <= 0.001);
     Ok(out)
 }

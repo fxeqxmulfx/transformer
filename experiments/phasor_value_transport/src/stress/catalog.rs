@@ -25,7 +25,7 @@ pub(super) fn registered(contents: &str) -> Result<Vec<(&str, &str)>> {
     Ok(registry)
 }
 
-fn source_case(name: &str) -> Result<Value> {
+fn definition(name: &str) -> Result<Value> {
     let registry: Value = serde_json::from_str(sequences::CATALOG)?;
     if hash(PLAN.as_bytes()) != registry["input_sha256"]["plan"] {
         return Err("GPT catalog plan fingerprint changed".into());
@@ -37,10 +37,18 @@ fn source_case(name: &str) -> Result<Value> {
         .iter()
         .find(|c| c["name"] == name)
         .ok_or("unknown catalog case")?;
-    if case["metric"] != "sequence_accuracy" || case["data_seed"] != 1 {
-        return Err("expected a seed-1 sequence-accuracy task".into());
+    if case["data_seed"] != 1 {
+        return Err("expected a seed-1 source dataset".into());
     }
     Ok(case.clone())
+}
+
+fn source_case(name: &str) -> Result<Value> {
+    let case = definition(name)?;
+    if case["metric"] != "sequence_accuracy" {
+        return Err("expected a seed-1 sequence-accuracy task".into());
+    }
+    Ok(case)
 }
 
 pub(super) fn sequence_example(e: basis::data::Example) -> Example {
@@ -73,7 +81,7 @@ fn sequence_task(d: sequences::dataset::Dataset) -> Task {
 
 /// The reviewed GPT probe port validates both original tensor fingerprints
 /// before releasing the order-discrimination records to the stress harness.
-fn categorical_probe(case: &Value) -> basis::Result<(Task, Value)> {
+pub(super) fn probe_data(case: &Value) -> basis::Result<(probes::dataset::Dataset, Value)> {
     let source = probes::cases()?
         .into_iter()
         .find(|r| r["case"] == *case)
@@ -85,13 +93,26 @@ fn categorical_probe(case: &Value) -> basis::Result<(Task, Value)> {
                 .join("../../.lake/reproduction/gpt-probe-reference")
         });
     let original = probes::dataset::build(&source, &helper)?;
-    if original.numeric_step.is_some() || original.numeric_offset.is_some() {
-        return Err("expected a categorical sequence-accuracy probe".into());
-    }
+    Ok((original, source["history"]["data_fingerprints"].clone()))
+}
+
+fn mechanism_probe(case: &Value) -> basis::Result<(Task, Value, Option<numeric_probe::Teachers>)> {
+    let (original, hashes) = probe_data(case)?;
+    let mut teachers = original
+        .numeric_step
+        .zip(original.numeric_offset)
+        .map(|(step, offset)| numeric_probe::Teachers {
+            step,
+            offset,
+            splits: BTreeMap::new(),
+        });
     let splits = original
         .splits
         .into_iter()
         .map(|(split, data)| {
+            if let (Some(t), Some(words)) = (&mut teachers, data.teacher_words) {
+                t.splits.insert(split.clone(), words);
+            }
             let examples = data
                 .records
                 .into_iter()
@@ -116,7 +137,8 @@ fn categorical_probe(case: &Value) -> basis::Result<(Task, Value)> {
             vocab: original.vocabulary,
             selection: original.selection,
         },
-        source["history"]["data_fingerprints"].clone(),
+        hashes,
+        teachers,
     ))
 }
 
@@ -186,6 +208,26 @@ pub(super) fn add_extended_parity_probes(
 
 pub(super) fn load(name: &str) -> Result<(Value, Task)> {
     let case = source_case(name)?;
+    load_sequence(name, case)
+}
+
+/// Keep unquantized numeric teachers exclusively in the external scorer.
+pub(super) fn load_declared(name: &str) -> Result<(Value, Task, Option<numeric_probe::Teachers>)> {
+    let case = definition(name)?;
+    if case["metric"] == "sequence_accuracy" {
+        let (row, task) = load_sequence(name, case)?;
+        return Ok((row, task, None));
+    }
+    if case["metric"] != "negative_mse" || case["kind"] != "probe" {
+        return Err(format!("unsupported source metric {}", case["metric"]).into());
+    }
+    let (task, hashes, teachers) = mechanism_probe(&case).map_err(|e| e.to_string())?;
+    let teachers = teachers.ok_or("numeric probe lacks its unquantized teachers")?;
+    let (row, task) = with_identity(name, case, hashes, task)?;
+    Ok((row, task, Some(teachers)))
+}
+
+fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
     let (task, fingerprints) = if case["kind"] == "arithmetic" {
         let entries = arithmetic::inventory::cases()?;
         let entry = entries
@@ -198,7 +240,22 @@ pub(super) fn load(name: &str) -> Result<(Value, Task)> {
             entry["history"]["data_fingerprints"].clone(),
         )
     } else if case["kind"] == "probe" {
-        categorical_probe(&case).map_err(|err| -> Box<dyn std::error::Error> { err })?
+        let (task, hashes, teachers) = mechanism_probe(&case).map_err(|err| err.to_string())?;
+        if teachers.is_some() {
+            return Err("expected a categorical sequence-accuracy probe".into());
+        }
+        (task, hashes)
+    } else if let Some(original) = cases()?.into_iter().find(|r| r["name"] == name) {
+        for key in ["kind", "data", "data_seed"] {
+            if case[key] != original["case"][key] {
+                return Err("canonical and broader dataset definitions disagree".into());
+            }
+        }
+        let task = data::build(&original)?;
+        if original["selection"] != task.selection {
+            return Err("canonical source selection changed".into());
+        }
+        (task, original["data_fingerprints"].clone())
     } else {
         let d = if basis::CASES.contains(&name) {
             basis::dataset::build(name).map(|(d, _)| d)
@@ -219,6 +276,15 @@ pub(super) fn load(name: &str) -> Result<(Value, Task)> {
         let fingerprints = json!(d.original_fingerprints);
         (sequence_task(d), fingerprints)
     };
+    with_identity(name, case, fingerprints, task)
+}
+
+fn with_identity(
+    name: &str,
+    case: Value,
+    fingerprints: Value,
+    task: Task,
+) -> Result<(Value, Task)> {
     let identity = hash(&serde_json::to_vec(&json!([
         case,
         fingerprints,
@@ -228,4 +294,50 @@ pub(super) fn load(name: &str) -> Result<(Value, Task)> {
         "train_examples":task.splits["train"].len(),"heldout_examples":task.splits[&task.selection].len(),
         "case":case,"catalog_sha256":identity});
     Ok((row, task))
+}
+
+/// List the source metric and actual native adapter availability before training.
+pub fn inventory(registry: &str) -> Result<()> {
+    let plan: Value = serde_json::from_str(PLAN)?;
+    let added: BTreeMap<_, _> = registered(registry)?.into_iter().collect();
+    let cohort = cases()?;
+    let mut records = Vec::new();
+    for case in plan["cases"].as_array().ok_or("missing source cases")? {
+        let name = case["name"].as_str().ok_or("missing source name")?;
+        let membership = if let Some(row) = cohort.iter().find(|r| r["name"] == name) {
+            format!(
+                "canonical-{}",
+                row["tier"].as_str().ok_or("missing canonical tier")?
+            )
+        } else if let Some(tier) = added.get(name) {
+            format!("{tier}-extension")
+        } else if name == "arithmetic-cubic-product" {
+            "NV11".into()
+        } else {
+            "broader".into()
+        };
+        let mut record = json!({"case":name,"membership":membership,"metric":case["metric"],
+            "target":case["target"],"budget":case["max_updates"],"observe":case["observe"],
+            "after_target":case["after_target"]});
+        match load_declared(name) {
+            Ok((row, _, _)) => {
+                record["source_adapter"] = json!("ready");
+                record["selection"] = row["selection"].clone();
+                record["heldout_examples"] = row["heldout_examples"].clone();
+                record["catalog_sha256"] = row["catalog_sha256"].clone();
+            }
+            Err(error) => {
+                record["source_adapter"] = json!("unavailable");
+                record["reason"] = json!(error.to_string());
+            }
+        }
+        records.push(record);
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&json!({
+            "source_plan_sha256":hash(PLAN.as_bytes()),"cases":records
+        }))?
+    );
+    Ok(())
 }

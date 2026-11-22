@@ -1,4 +1,8 @@
-# One Phasor architecture for NV11 and the GPT stress suite
+# Embedding-input Phasor on the GPT stress suite and NV11
+
+Input-phase Phasor passed all 25 original short tasks and ten long tasks
+on seeds 0, 1 and 2. Each of the 105 checkpoints reproduced its primary
+held-out score after reload. [Canonical GPT results](#canonical-gpt-stress-tiers)
 
 Phasor with triple transport solved all 9,409 canonical NV11 pairs for
 three random initializations at update 250. The tied external lookup starts
@@ -46,11 +50,15 @@ seeds separately. It checks the first passing update as well as the model,
 weights and exact counts.
 
 ```sh
+"$bin" gpt-report "$out" extensions.tsv > "$out/gpt-report.json"
+jq -r '.tasks[] as $t | $t.seeds[] | select(.status == "pass") | [$t.case,.seed] | @tsv' \
+    "$out/gpt-report.json" |
+    while read -r task seed; do "$bin" probes "$task" "$seed" "$out"; done > "$out/gpt-tests.jsonl"
 jq -es --argjson passing_only true --slurpfile report "$out/gpt-report.json" \
     -f verify_replays.jq "$out/gpt-tests.jsonl"
 ```
 
-For a broader catalog case scored by exact sequence accuracy,
+For a broader catalog case scored by exact sequence accuracy or numeric MSE,
 `catalog-target CASE SEED SEARCH_UPDATES RUN_DIR` uses the target and
 post-crossing window from the frozen source plan. For example, a case with
 a 95% target and 500 additional updates saves the first 95% checkpoint
@@ -59,6 +67,41 @@ later, capped by the source budget. A search window can end before the
 full budget if no crossing has occurred. Repeating the command reloads
 and scores the first and final weights, including available test splits.
 Training uses Phasor's original WSD AdamW throughout.
+
+For the four numeric mechanism probes, the target is MSE at most 0.001
+on freely generated outputs. The scorer compares each decoded component
+with the original unquantized binary64 teacher and charges squared error
+64 for a missing or invalid component. The report includes exact sequences
+and valid numeric coverage alongside the source metric. The independent
+audit runs the original scalar scorer on the checkpoint, requesting logits
+for one prefix at a time.
+
+```sh
+"$bin" catalog-inventory > "$out/catalog-source-inventory.json"
+"$bin" catalog-target gpt-probe-conditional-amplitudes 0 4500 "$out"
+weights="$out/phasor-learned-input-phase-32-v1/gpt-probe-conditional-amplitudes/seed0-4500/declared-target/weights.f32"
+"$bin" numeric-audit gpt-probe-conditional-amplitudes "$weights"
+```
+
+The inventory checks native source adapters for every catalog entry and
+records its declared metric, target, budget and cohort. A completed
+canonical run and availability under the broader source protocol are
+separate fields in the respective reports.
+
+Of the 108 catalog cases outside the original tiers, the 21 registered
+extensions and NV11, 56 have authenticated data and a supported source
+metric in this runner. For 28 more sequence-accuracy cases the required
+data adapter is unavailable. The other 24 need a different source scorer
+or an authenticated numeric teacher. The inventory names each case and
+gives its reason.
+
+On branch amplitudes at seed 0, the first MSE crossing came at update
+1,000. Free generation produced 255/256 exact validation sequences and
+MSE 0.0004882813 on 8,192 components. At update 1,500 the independent
+test and validation each scored 256/256 with MSE approximately
+2.22 × 10⁻¹⁶. This case also belongs to the canonical tiers.
+Routing mixture has no Phasor MSE result because the reconstructed
+unquantized teacher differs from the frozen fingerprint.
 
 The catalog data adapter authenticates all 54 original arithmetic cases,
 including the fixed random table, four swapped intervals and random
@@ -98,7 +141,8 @@ were 0 / 35 / 64 of 64. The per-seed `gpt-tests.jsonl` above includes
 every first crossing, denominator and available test split.
 
 At length 256, all three hard-depth checkpoints still classified every
-prefix correctly on all 512 test sequences. Easy depth scored
+prefix correctly on all 512 test sequences. Increasing hard depth to
+length 512 gave 341 / 342 / 348 correct sequences out of 512. Easy depth scored
 507 / 512 / 295 out of 512 at the same length. Both tasks trained on
 lengths 32–64. The depth probe rebuilds the original length-128 test and
 checks its tensor fingerprint before generating the requested length.

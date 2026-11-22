@@ -277,6 +277,10 @@ fn main() -> Result<()> {
             stress::benchmark::run(stress::benchmark::Source::Catalog, name, seed.parse()?, updates.parse()?, Path::new(out)),
         [op, name, seed, updates, out] if op == "catalog-target" =>
             stress::benchmark::run(stress::benchmark::Source::DeclaredTarget, name, seed.parse()?, updates.parse()?, Path::new(out)),
+        [op, name, weights] if op == "numeric-audit" =>
+            stress::numeric_probe::audit(name, Path::new(weights), None),
+        [op, name, weights, rows] if op == "numeric-audit" =>
+            stress::numeric_probe::audit(name, Path::new(weights), Some(rows.parse()?)),
         [op, base, name, seed, updates, out] if op == "catalog-shifts" =>
             stress::compare_shifts::run(base, name, seed.parse()?, updates.parse()?, Path::new(out)),
         [op] if op == "check" => checks::run(),
@@ -284,6 +288,8 @@ fn main() -> Result<()> {
         [op, width] if op == "shared-check" => pair_checks::run(Some(width.parse()?)),
         [op] if op == "routes" => stress::routes(),
         [op] if op == "extensions" => stress::extensions(stress::EXTENSIONS),
+        [op] if op == "catalog-inventory" => stress::catalog::inventory(stress::EXTENSIONS),
+        [op, registry] if op == "catalog-inventory" => stress::catalog::inventory(&fs::read_to_string(registry)?),
         [op, registry] if op == "extensions" => stress::extensions(&fs::read_to_string(registry)?),
         [op, name] if op == "successor-alignment" => stress::alignment::run(name, 1, false),
         [op, name, hops] if op == "successor-alignment" => stress::alignment::run(name, hops.parse()?, false),
@@ -336,6 +342,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Rows),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | numeric-audit CASE WEIGHTS [ROWS] | catalog-inventory [REGISTRY.tsv] | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }

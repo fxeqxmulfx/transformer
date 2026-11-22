@@ -3,6 +3,23 @@ mod build_compact;
 mod build_embedding;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
+// Expose the actual completions of the frozen batched EOS scorer to external
+// metrics. The existing entry point uses the same rollout with an empty sink.
+fn export_completions(source: &Path, out: &Path) {
+    let original = fs::read_to_string(source).unwrap();
+    let entry = "pub fn evaluate(engine: &mut Engine, examples: &[Example], generate: bool) -> Result<Value> {";
+    let emitted = "for (i, tokens) in written.iter().enumerate() {";
+    assert_eq!(original.matches(entry).count(), 1);
+    assert_eq!(original.matches(emitted).count(), 1);
+    let scorer = original.replace(entry, &format!(
+        "{entry}\n    evaluate_with_completions(engine, examples, generate, |_, _| Ok(()))\n}}\n\n\
+         pub(crate) fn evaluate_with_completions(engine: &mut Engine, examples: &[Example], generate: bool, \
+         mut emitted: impl FnMut(usize, &[u32]) -> Result<()>) -> Result<Value> {{"
+    )).replace(emitted, &format!("{emitted}\n            emitted(start + i, tokens)?;"));
+    fs::write(out.join("metrics.rs"), scorer).unwrap();
+    println!("cargo:rerun-if-changed={}", source.display());
+}
+
 fn pin(dir: &Path, revision: &str, tree: &str) {
     let git = |args: &[&str]| {
         Command::new("git")
@@ -256,6 +273,7 @@ fn main() {
     }
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
+    export_completions(&geometry.join("native/src/metrics.rs"), &out);
     let mut mods = String::new();
     // The pinned stable-loss tests use the scalar oracle declared inline in
     // their binary. Include that same oracle when compiling native test targets.
@@ -275,10 +293,10 @@ fn main() {
         ),
         (
             geometry.join("native/src"),
-            "blake complex data gemm metrics pcg random sequence_ops",
+            "blake complex data gemm pcg random sequence_ops",
         ),
         (geometry.join("diagnostic/src"), "plain_product"),
-        (out.clone(), "engine layout schedule"),
+        (out.clone(), "engine layout metrics schedule"),
     ] {
         for name in names.split_whitespace() {
             let path = dir.join(format!("{name}.rs"));
