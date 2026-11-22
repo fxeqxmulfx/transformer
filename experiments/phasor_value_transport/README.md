@@ -370,6 +370,15 @@ with learned relations and 1/32 with the 0.75-gain control. The relation
 model scored 32/32 on Dyck at 250 updates and 31/32 on MQAR at 1,000.
 Reproduce with `shared-check` followed by `screen TASK 0 FRESH_DIR CUTOFF`.
 
+On the extended lookup screen, its seed-0 score peaked at 24/32 at update
+3,250 and was 17/32 at 10,000. A second variant initializes the relation
+amplitudes to one and divides each row's contribution by the number of
+relations leading to a different token. For a nonempty set of agreeing
+reads, the initial update is exactly one displacement to their common
+endpoint. Lean bounds the mean by the largest individual weighted
+displacement, regardless of how many paths the prefix contains.
+[Mean relation read](../../src/Transformer/Phasor/RelationalPaths.lean)
+
 ## Counting completed transitions
 
 The transition-count trial shifts the squared-product table address by the

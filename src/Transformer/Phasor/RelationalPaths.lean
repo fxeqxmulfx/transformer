@@ -105,6 +105,73 @@ theorem relationAmplitude_adjoint (E : Fin p → EucSpace D) (k : Fin p) (dest :
       ∑ h, change h * (⟪v, E (dest h)⟫ - ⟪v, E k⟫) := by
   simp only [inner_sum, real_inner_smul_right, inner_sub_right]
 
+/-- Relations whose two-step read ends at a token distinct from the query. -/
+def movingRelations (k : Fin p) (dest : Fin p → Fin p) : Finset (Fin p) :=
+  Finset.univ.filter fun h => dest h ≠ k
+
+/-- Mean weighted displacement over moving reads. An empty set contributes
+zero. Source: the normalized relation-path trial in the experiment README. -/
+noncomputable def relationMeanOffset (E : Fin p → EucSpace D) (k : Fin p) (dest : Fin p → Fin p)
+    (amplitudes : Fin p → ℝ) : EucSpace D :=
+  ((movingRelations k dest).card : ℝ)⁻¹ •
+    ∑ h ∈ movingRelations k dest, amplitudes h • (E (dest h) - E k)
+
+/-- Dividing each vocabulary coefficient by the number of moving reads
+implements the mean hidden displacement, including empty and repeated endpoints. -/
+theorem relationMean_read (q amplitudes : Fin p → ℝ) (k : Fin p) (dest : Fin p → Fin p)
+    (E : Fin p → EucSpace D) :
+    ∑ c, relationWeights q (fun h => ((movingRelations k dest).card : ℝ)⁻¹ * amplitudes h)
+      k dest c • E c = (∑ c, q c • E c) + relationMeanOffset E k dest amplitudes := by
+  rw [relationWeights_read]
+  congr 1
+  simp only [relationMeanOffset, Finset.smul_sum, movingRelations, Finset.sum_filter]
+  apply Finset.sum_congr rfl
+  intro h _
+  by_cases hit : dest h = k
+  · simp [hit]
+  · simp [hit, smul_smul]
+
+/-- Adding arbitrarily many active relations cannot exceed a common bound on
+their individual weighted displacements, including the case of no active read. -/
+theorem norm_relationMeanOffset_le (E : Fin p → EucSpace D) (k : Fin p) (dest : Fin p → Fin p)
+    (amplitudes : Fin p → ℝ) (B : ℝ) (hB : 0 ≤ B)
+    (bound : ∀ h ∈ movingRelations k dest, ‖amplitudes h • (E (dest h) - E k)‖ ≤ B) :
+    ‖relationMeanOffset E k dest amplitudes‖ ≤ B := by
+  let s := movingRelations k dest
+  change ‖(s.card : ℝ)⁻¹ • ∑ h ∈ s, amplitudes h • (E (dest h) - E k)‖ ≤ B
+  by_cases hs : s.Nonempty
+  · have hc : (0 : ℝ) < s.card := by exact_mod_cast Finset.card_pos.mpr hs
+    have total : ‖∑ h ∈ s, amplitudes h • (E (dest h) - E k)‖ ≤ (s.card : ℝ) * B := by
+      simpa using norm_sum_le_of_le s bound
+    rw [norm_smul, Real.norm_of_nonneg (by positivity)]
+    calc
+      _ ≤ (s.card : ℝ)⁻¹ * ((s.card : ℝ) * B) :=
+        mul_le_mul_of_nonneg_left total (by positivity)
+      _ = B := by field_simp
+  · have he : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+    simpa [he] using hB
+
+/-- When every moving relation reaches one token, unit amplitudes give one
+full displacement to it, independently of the number of agreeing relations. -/
+theorem relationMeanOffset_unanimous (E : Fin p → EucSpace D) (k r : Fin p) (dest : Fin p → Fin p)
+    (hn : (movingRelations k dest).Nonempty) (agree : ∀ h ∈ movingRelations k dest, dest h = r) :
+    relationMeanOffset E k dest (fun _ => 1) = E r - E k := by
+  let s := movingRelations k dest
+  have hc : (s.card : ℝ) ≠ 0 := by exact_mod_cast (Finset.card_pos.mpr hn).ne'
+  have terms : ∑ h ∈ s, (1 : ℝ) • (E (dest h) - E k) = ∑ _h ∈ s, (E r - E k) := by
+    exact Finset.sum_congr rfl (fun h hh => by rw [agree h hh, one_smul])
+  change (s.card : ℝ)⁻¹ • _ = _
+  rw [terms, Finset.sum_const, ← Nat.cast_smul_eq_nsmul ℝ, smul_smul, inv_mul_cancel₀ hc, one_smul]
+
+example (E : Fin 3 → EucSpace D) :
+    ‖relationMeanOffset E 0 (fun _ => 1) (fun _ => 1)‖ ≤ ‖E 1 - E 0‖ := by
+  apply norm_relationMeanOffset_le _ _ _ _ _ (norm_nonneg _)
+  intro h _
+  simp
+
+example (E : Fin 3 → EucSpace D) : relationMeanOffset E 0 (fun _ => 1) (fun _ => 1) = E 1 - E 0 :=
+  relationMeanOffset_unanimous _ _ _ _ (by decide) (by intros; rfl)
+
 /-- The edge 2→3 is written before 1→2. Both use relation 0. -/
 example :
     let xs := fun j => (![2,0,3,4,1,0,2] : Fin 7 → Fin 5) (Fin.ofNat 7 j)
