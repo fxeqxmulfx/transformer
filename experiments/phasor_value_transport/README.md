@@ -312,6 +312,23 @@ for the sine and cosine output matrices. Finite differences used three step
 sizes to check convergence. Isolated prefixes matched exactly. Three further
 directions checked derivatives with respect to arbitrary input vectors.
 
+On the original long-tier 16-bit Basis parity task, all three first-crossing
+checkpoints scored 157/157 on validation and 512/512 on the independent
+source test after reload. Evaluation generated the answer bit and end token.
+Neither the learned stream readout nor the fixed-mean control reached 99%
+on any seed through the matched 3,500-update screen.
+
+| Seed | Phase model, first 157/157 update | Stream / mean validation at 3,500, out of 157 | 32-bit test, out of 64 | 64-bit test, out of 64 |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 1,500 | 154 / 143 | 64 | 15 |
+| 1 | 750 | 154 / 155 | 45 | 34 |
+| 2 | 1,250 | 151 / 130 | 61 | 32 |
+
+The same phase architecture, trained separately on modular addition,
+passed seed 0 at update 874, matching the stream control. On depth-one
+C-RASP it scored 31/32 at the 1,500-update cutoff. The stream control
+had passed that seed at update 750.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.PhasePrefixRead
 cd experiments/phasor_value_transport
