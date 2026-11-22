@@ -147,6 +147,34 @@ scratchpad-free catalog's 32- and 64-bit test prompts through the fitted
 weights. The command expands the inference buffer for these longer inputs.
 [Frozen extension membership](extensions.tsv)
 
+### NV11 and length transfer with the half-gain successor
+
+The single half-gain successor model reached 99% held-out on NV11 at 750
+updates in every seed. At update 1,250 all three checkpoints classified
+every one of the 9,409 input pairs correctly. An independent forward pass
+with masked targets found minimum held-out margins of 1.155, 0.356 and
+0.846 in seed order. All three remained exact when replayed at update 3,000.
+
+| Model at its first 99% Basis checkpoint | 16-, 20-, 24-bit training tasks | New 32-bit prompts | New 64-bit prompts |
+| --- | --- | --- | --- |
+| Pair-address incumbent | 5,750–39,250 updates | 21–36/64 exact | 29–39/64 exact |
+| Half-gain successor | 250 updates in all nine runs | 64/64 in every run | 64/64 in every run |
+
+All nine saved models in each row generated parity and EOS on the same
+64 held-out catalog prompts per length. Training ended at 16, 20 or 24 bits
+according to the Basis task. These two transfer sets never entered training
+or stopping. The half-gain model also passed all nine registered extension
+cells. Sixth-power modular sum took 250 updates in all seeds, Dyck took 250
+in all seeds, and blocks took 750, 1,000 and 1,250.
+
+The linear prefix-sum pilot scored 214/306 on 24-bit parity at 2,000
+updates in seed 1. The XOR-only and cubic-slot XOR pilots needed 640 and
+736 updates on branch amplitudes seed 0, against 416 for the incumbent.
+These results informed the successor trial. Additional quarter-gain
+screens on small-sample catalog tasks reached 1/32 on associative recall
+at 4,000 updates with the successor read, and 30/136 on division modulo 17
+at 3,000 with the XOR-only model. Those cases remain outside the extension.
+
 ### Choice of initial gain
 
 The first uniform architecture used an initial gain of one. Hard depth seed 0
