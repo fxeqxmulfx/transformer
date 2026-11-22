@@ -36,6 +36,7 @@ public import Transformer.Phasor.TripleTransport.StructuralGate
 public import Transformer.Phasor.TripleTransport.PairClasses
 public import Transformer.Phasor.TripleTransport.FixedEvaluation
 public import Transformer.Phasor.TripleTransport.ResumeSchedule
+public import Transformer.Phasor.TripleTransport.RowAdjoint
 public import Transformer.Phasor.TripleTransport.PhaseResidual
 public import Transformer.Phasor.TripleTransport.SeparateRoles
 public import Transformer.Phasor.FourierTransport

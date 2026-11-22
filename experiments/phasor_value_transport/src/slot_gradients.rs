@@ -125,8 +125,8 @@ fn mixture(delta: f64) -> Result<()> {
     if tape[1].transport != Some(4) || tape[4].constant != Some(2) {
         return Err("structural gradient fixture missed the transported or constant branch".into());
     }
-    let mut dw = vec![0.; w.len()];
-    let dh = slot_memory::backward(&l, &w, &h, &tape, &g, 3, &mut dw);
+    let (dh, adjoint) = slot_memory::backward(&l, &w, &h, &tape, &g, 3);
+    let dw = adjoint.dense(&l);
     for (name, range) in [
         ("prototypes", 0..l.values),
         ("direct_values", l.values..l.gates),

@@ -46,6 +46,7 @@ mod relation_paths;
 mod relation_support;
 mod scalar_phase_checks;
 mod slot_addresses;
+mod slot_adjoint;
 mod slot_bank_checks;
 mod slot_checks;
 mod slot_copy;

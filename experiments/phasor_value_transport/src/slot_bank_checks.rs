@@ -5,6 +5,36 @@ use crate::{slot_memory::trusted_slot, slot_orbits::ABSENT};
 pub(super) fn run() -> Result<()> {
     let cuda = kernite_cuda::Cuda::new()?;
     let kernels = crate::slot_addresses::kernels::Kernels::load(&cuda)?;
+    let copier = crate::slot_copy::kernels::Kernels::load(&cuda)?;
+    for d in [3, 17, 128] {
+        let ids = [7_u32, 0, 12];
+        let data: Vec<f32> = (0..ids.len() * d).map(|i| i as f32 - 29.).collect();
+        let mut expected = vec![0.; 13 * d];
+        for (&row, v) in ids.iter().zip(data.chunks_exact(d)) {
+            expected[row as usize * d..][..d].copy_from_slice(v);
+        }
+        let bank = cuda.upload(&vec![41.; expected.len()])?;
+        let values = cuda.upload(&data)?;
+        let indices = cuda.upload(&ids)?;
+        unsafe {
+            copier.clear(
+                kernite_cuda::Grid::new(expected.len().div_ceil(128) as u32, 128),
+                bank.ptr(),
+                expected.len() as u32,
+            )?;
+            copier.scatter_rows(
+                kernite_cuda::Grid::new(data.len().div_ceil(128) as u32, 128),
+                bank.ptr(),
+                values.ptr(),
+                indices.ptr(),
+                d as u32,
+                data.len() as u32,
+            )?;
+        }
+        if bank.read()? != expected {
+            return Err("compact slot adjoint left a stale or misplaced row".into());
+        }
+    }
     let mut rng = random::Random::new(8909);
     let cut = std::f32::consts::FRAC_1_SQRT_2;
     for slots in [1, 7, 32, 63, 64, 97, 128, 256] {

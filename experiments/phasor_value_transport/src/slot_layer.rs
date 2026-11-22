@@ -254,6 +254,44 @@ impl SlotLayer {
         Ok(())
     }
 
+    fn write_adjoint(&self, e: &Engine, gradient: &crate::slot_adjoint::Adjoint) -> Result<()> {
+        let l = &self.layout;
+        let base = e
+            .gradients
+            .at(self.offset)
+            .ok_or("missing slot gradients")?;
+        if l.gates < 128 * 1024 || 2 * gradient.values.len() >= l.gates {
+            let dense = gradient.dense(l);
+            let mut buffer = self.parameters.borrow_mut();
+            buffer.write(&dense)?;
+            return self.copy(base, buffer.ptr(), dense.len());
+        }
+        // Clear the entire bank at this update. AdamW still visits every parameter.
+        unsafe {
+            self.copier.clear(grid(l.gates), base, l.gates as u32)?;
+        }
+        if !gradient.indices.is_empty() {
+            let rows = e.cuda.upload(&gradient.indices)?;
+            let values = e.cuda.upload(&gradient.values)?;
+            unsafe {
+                self.copier.scatter_rows(
+                    grid(values.len()),
+                    base,
+                    values.ptr(),
+                    rows.ptr(),
+                    l.d as u32,
+                    values.len() as u32,
+                )?;
+            }
+        }
+        let gates = e.cuda.upload(&gradient.gates)?;
+        let target = e
+            .gradients
+            .at(self.offset + l.gates)
+            .ok_or("missing slot gate gradients")?;
+        self.copy(target, gates.ptr(), gates.len())
+    }
+
     pub(super) fn backward(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
         let tape = self.tape.borrow();
         if tape.rows.len() != rows || tape.length != length {
@@ -262,26 +300,16 @@ impl SlotLayer {
         if let Some(phase) = &self.phase {
             phase.backward(e, rows, length)?;
         }
-        let mut buffer = self.parameters.borrow_mut();
-        let mut dw = vec![0.; buffer.len()];
         let dy = e.dlast.read()?;
-        let dh = slot_memory::backward(
+        let (dh, gradient) = slot_memory::backward(
             &self.layout,
             &tape.weights,
             &tape.hidden,
             &tape.rows,
             &dy,
             length,
-            &mut dw,
         );
-        buffer.write(&dw)?;
-        self.copy(
-            e.gradients
-                .at(self.offset)
-                .ok_or("missing slot gradients")?,
-            buffer.ptr(),
-            dw.len(),
-        )?;
+        self.write_adjoint(e, &gradient)?;
         let device = e.cuda.upload(&dh)?;
         self.copy(e.dlast.ptr(), device.ptr(), dh.len())
     }

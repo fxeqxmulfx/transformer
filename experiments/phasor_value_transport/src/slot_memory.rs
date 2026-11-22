@@ -433,13 +433,12 @@ pub fn backward(
     rows: &[Row],
     dy: &[f32],
     length: usize,
-    dw: &mut [f32],
-) -> Vec<f32> {
+) -> (Vec<f32>, crate::slot_adjoint::Adjoint) {
     let d = l.d;
     let scale = l.gate_scales;
     let units = (d as f32).sqrt().recip();
     let mut dh = vec![0.; rows.len() * d];
-    dw[l.dictionary..l.end()].fill(0.);
+    let mut adjoint = crate::slot_adjoint::Adjoint::new(l, rows);
     for (r, row) in rows.iter().enumerate() {
         let v = &dy[r * d..(r + 1) * d];
         let h = &hidden[r * d..(r + 1) * d];
@@ -448,20 +447,20 @@ pub fn backward(
                 continue;
             };
             let dg = scale[i] * dot(value, v);
-            dw[l.bias + i] += dg;
+            adjoint.gates[l.bias - l.gates + i] += dg;
             if let Some(position) = l.gate_mode.position(r, length) {
                 for j in 0..d {
                     let k = l.gates + i * d + j;
-                    dw[k] += units * dg * hidden[position * d + j];
+                    adjoint.gates[k - l.gates] += units * dg * hidden[position * d + j];
                     dh[position * d + j] += units * dg * w[k];
                 }
             }
             let dst = match i {
                 0 => &mut dh[r * d..(r + 1) * d],
-                1 => &mut dw[l.values + row.cell.unwrap() * d..][..d],
+                1 => adjoint.row(l.slots + row.cell.unwrap(), d),
                 2 | 3 => {
                     let slot = row.structural(i, l.gate_mode.shared()).unwrap();
-                    &mut dw[l.dictionary + slot * d..][..d]
+                    adjoint.row(slot, d)
                 }
                 _ => unreachable!(),
             };
@@ -470,7 +469,7 @@ pub fn backward(
             }
         }
     }
-    dh
+    (dh, adjoint)
 }
 #[cfg(test)]
 mod capacity_tests {

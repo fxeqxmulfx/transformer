@@ -2522,6 +2522,45 @@ for arm in triple-pair-classes triple-current-graph; do
 done
 ```
 
+### Addressed row gradients
+
+Each backward tape identifies the dense rows it read from the dictionary
+and value bank. The trainer accumulates contributions to each addressed
+row in their original order. For a bank of at least 512 KiB with fewer
+than half its coordinates addressed, the device clears the full bank
+gradient and scatters the accumulated rows. Smaller or denser banks use
+a dense copy. Every AdamW step still updates every parameter and its
+moments. Lean proves the two accumulations agree for any ordered sequence
+of contributions, including arithmetic that rounds after each addition.
+[Row gradient proof](../../src/Transformer/Phasor/TripleTransport/RowAdjoint.lean)
+
+Fresh paired runs used the original optimizer, schedule and scorer on a
+GTX 1050. Times are seconds for seeds 0, 1 and 2, including process
+startup. Each row compares the same model and the same training endpoint.
+
+| Model and endpoint | Dense transfer | Addressed transfer |
+| --- | --- | --- |
+| Default triple transport, exact NV11 checkpoint at update 250 | 5.50 / 5.58 / 5.66 | 4.91 / 5.01 / 5.07 |
+| Four unit gates, first 100 Fibonacci updates | 12.74 / 12.44 / 12.39 | 10.13 / 10.12 / 9.89 |
+| Four unit gates, first 192 GPT key/value updates | 2.41 / 2.45 / 2.45 | 2.34 / 2.32 / 2.36 |
+| Default triple transport, shifted Boolean AND crossing | 1.39 / 1.11 / 1.19 | 1.36 / 1.14 / 1.16 |
+
+In the unfinished cells, the saved parameters, both optimizer moments
+and scheduled observations agreed byte for byte. The completed NV11
+and Boolean cells had identical checkpoint bytes and reloaded scores.
+To repeat the timings, build the two revisions with the same features
+and set `BEFORE_BIN` to the binary built from `2e8229ef`.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.RowAdjoint
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+cargo +stable build --release --locked --features fp32-affine-reference,triple-transport
+bin=./target/release/phasor-value-transport
+"$bin" check
+bash time_screens.sh --first-pass "$BEFORE_BIN" "$bin" runs/row-gradient-nv11 250 arithmetic-cubic-product
+```
+
 ### Sharing exact witness signatures
 
 In later witness rounds, several pairs of contexts can supply the same
