@@ -33,7 +33,15 @@ compile_error!("pair-v2 replays the original pair-address control");
 #[cfg(all(feature = "prefix-xor-cubic", feature = "prefix-successor"))]
 compile_error!("the successor trial uses the linear prefix sum");
 
-pub const MODEL: &str = if cfg!(feature = "successor-displacement-quarter") {
+pub const MODEL: &str = if cfg!(feature = "transition-count") {
+    if cfg!(feature = "successor-displacement-quarter") {
+        "phasor-transitions-displacement-quarter-v1"
+    } else if cfg!(feature = "successor-displacement") {
+        "phasor-transitions-displacement-v1"
+    } else {
+        "phasor-transitions-v1"
+    }
+} else if cfg!(feature = "successor-displacement-quarter") {
     "phasor-successor-displacement-quarter-v1"
 } else if cfg!(feature = "successor-displacement") {
     "phasor-successor-displacement-v1"
@@ -154,6 +162,7 @@ impl PairMemory {
         let used = tokens.len() * TABLES;
         self.starts.fill(0);
         let mut prefix = 0;
+        let mut transitions = 0;
         for (row, (&token, keys)) in tokens
             .iter()
             .zip(self.indices.as_chunks_mut::<TABLES>().0)
@@ -174,6 +183,17 @@ impl PairMemory {
                     self.successors[tokens[row - 2] as usize] = Some(tokens[row - 1]);
                 }
                 keys[0] = self.successors[b].unwrap_or(token);
+                if cfg!(feature = "transition-count") {
+                    if pos == 0 {
+                        transitions = 0;
+                    } else if pos >= 2 && tokens[row - 2] != tokens[row - 1] {
+                        transitions += 1;
+                    }
+                    let squared_product = TABLES - 1;
+                    let base = squared_product * p;
+                    let address = keys[squared_product] as usize - base;
+                    keys[squared_product] = (base + (address + transitions) % p) as u32;
+                }
             }
             if XOR_PREFIX || cfg!(feature = "prefix-sum") {
                 let left = if prev == row { b } else { prefix };

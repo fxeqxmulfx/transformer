@@ -33,6 +33,10 @@ fn residual(prefix: &[u32], b: u32, p: u32, d: usize, tables: &[f32]) -> Vec<f64
         }
     }
     keys.extend((1..=2).flat_map(|i| (1..=2).map(move |j| power(a, i) * power(b, j) % p)));
+    if cfg!(feature = "transition-count") {
+        let transitions = prefix.windows(2).filter(|edge| edge[0] != edge[1]).count();
+        keys[16] = (keys[16] + (transitions % p as usize) as u32) % p;
+    }
     let mut result = vec![0.; d];
     for (table, key) in keys.into_iter().enumerate() {
         let offset = (table * p as usize + key as usize) * d;
@@ -68,6 +72,7 @@ fn profile(p: usize, length: usize) -> Result<()> {
     let mut theta = layout::initialize_model(&cfg, 0);
     let expected_gain = if pair_memory::MODEL == "phasor-prefix-successor-half-v1"
         || cfg!(feature = "successor-displacement")
+        || cfg!(feature = "transition-count")
     {
         0.5
     } else {

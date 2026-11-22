@@ -23,6 +23,7 @@ prefix-successor = ["prefix-xor"]
 prefix-successor-half = ["prefix-successor"]
 successor-displacement = ["prefix-successor-half"]
 successor-displacement-quarter = ["successor-displacement"]
+transition-count = ["prefix-successor-half"]
 prefix-sum = []
 
 [[bin]]
