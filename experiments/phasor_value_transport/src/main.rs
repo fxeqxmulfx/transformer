@@ -38,6 +38,7 @@ mod closed_checks;
 mod compact;
 mod compact_checks;
 mod memory_checks;
+mod shift_diagnostics;
 mod snapshot;
 mod stress;
 
@@ -276,9 +277,11 @@ fn main() -> Result<()> {
         [arm, dest, seed, steps] if matches!(arm.as_str(), "nv11-train" | "shared-values") =>
             cell(arm, Path::new(dest), seed.parse()?, steps.parse()?),
         [op, file] if op == "inspect" => snapshot::inspect(Path::new(file)),
-        [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file)),
+        [op, file] if op == "nv11-score" => snapshot::nv11_scores(Path::new(file), false),
+        [op, file, mode] if op == "nv11-score" && mode == "shifts" =>
+            snapshot::nv11_scores(Path::new(file), true),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay} CASE SEED RUN_DIR | probes CASE SEED RUN_DIR [extended|parity-1024] | screen CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts] | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }

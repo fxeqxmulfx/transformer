@@ -698,6 +698,28 @@ on a complete table, that passing all rectangles characterizes exactly
 these translations. Multiplication and NV11 differ by such a row shift.
 [Prediction-shift identities](../../src/Transformer/Phasor/PredictionShifts.lean)
 
+At 100,000 updates the learned stream's seed-0 checkpoint fit all
+4,704 training pairs. Every one of the 1,355,860 training rectangles
+passed. On the disjoint held-out half, 13,866 of 1,358,083 rectangles
+passed (1.021%). Independent uniform residuals would pass in expectation
+with probability 1/97 (1.031%). Rectangles share corners. In the same
+held-out table, 2,453 of 112,950 within-row pairs and 1,115 of 113,021
+within-column pairs had equal residuals. Thus the 90/4,705 held-out
+predictions were also inconsistent with a global row-plus-column shift.
+
+At 3,000 updates, among the same held-out rectangles, the learned stream
+passed 13,932 / 13,878 / 13,946 and the input-phase model passed
+13,888 / 14,159 / 14,103 across the three seeds. Enabling these counts
+reproduced each original checkpoint's exact scores and minimum margins.
+The native fixture compares the counter with direct four-corner
+enumeration on incomplete modular tables.
+
+```sh
+# From experiments/phasor_value_transport, with the matching architecture build.
+cargo +stable test --release --locked --test shift_diagnostics
+target/release/phasor-value-transport nv11-score runs/nv11/seed0/nv11-train-100000.f32 shifts
+```
+
 ## GPT order discrimination
 
 The catalog adapter uses the native GPT mechanism-probe data port to load
