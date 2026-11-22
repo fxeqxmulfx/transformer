@@ -3,6 +3,9 @@
 //! recounts every prefix before a probe is handed to the checkpoint scorer.
 use super::*;
 
+const LETTERS: usize = 10;
+pub(super) const EXHAUSTIVE: &str = "test/exhaustive-10-letters";
+
 fn word(bits: usize, width: usize) -> Vec<i64> {
     (0..width)
         .rev()
@@ -35,12 +38,11 @@ pub(super) fn add(task: &mut Task, name: &str) -> basis::Result<()> {
     }
     let blocks = basis::generator::number(&spec, "blocks")?;
     spec["min_length"] = Value::Null;
-    spec["length"] = json!(11);
-    let exhaustive = (0..1 << 10)
-        .map(|bits| labeled(&spec, word(bits, 10), blocks))
+    spec["length"] = json!(LETTERS + 1);
+    let exhaustive = (0..1 << LETTERS)
+        .map(|bits| labeled(&spec, word(bits, LETTERS), blocks))
         .collect::<basis::Result<Vec<_>>>()?;
-    task.splits
-        .insert("test/exhaustive-10-letters".into(), exhaustive);
+    task.splits.insert(EXHAUSTIVE.into(), exhaustive);
 
     spec["length"] = json!(128);
     let mut alternating = Vec::new();
@@ -56,4 +58,45 @@ pub(super) fn add(task: &mut Task, name: &str) -> basis::Result<()> {
     task.splits
         .insert("test/alternating-tail-128".into(), alternating);
     Ok(())
+}
+
+/// Evaluate words in length and lexicographic order, with no suffix and
+/// every label masked. Recheck an observed mistake on its own before returning it.
+pub(super) fn shortest_error(engine: &mut Engine, words: &[Example]) -> Result<Value> {
+    let batch = engine.config.max_batch;
+    for depth in 1..=LETTERS {
+        let length = depth + 1;
+        let count = 1 << depth;
+        for first in (0..count).step_by(batch) {
+            let end = (first + batch).min(count);
+            // All ten-letter words starting with a given prefix are contiguous.
+            let source = |index: usize| &words[index << (LETTERS - depth)];
+            let tokens: Vec<_> = (first..end)
+                .flat_map(|i| source(i).tokens[..length].iter().map(|&t| t as u32))
+                .collect();
+            let masked = vec![u32::MAX; tokens.len()];
+            engine.forward(&tokens, &masked, end - first, length)?;
+            let predictions = engine.predictions.read()?;
+            for i in first..end {
+                let expected = source(i).targets[depth] as u32;
+                let offset = (i - first) * length;
+                if predictions[offset + depth] == expected {
+                    continue;
+                }
+                let prefix = &tokens[offset..offset + length];
+                engine.forward(prefix, &masked[..length], 1, length)?;
+                let predicted = engine.predictions.read()?[depth];
+                if predicted != expected {
+                    let letters: String = prefix[1..]
+                        .iter()
+                        .map(|&t| if t == 9 { 'a' } else { 'b' })
+                        .collect();
+                    return Ok(
+                        json!({"letters":letters,"expected_token":expected,"predicted_token":predicted}),
+                    );
+                }
+            }
+        }
+    }
+    Ok(Value::Null)
 }

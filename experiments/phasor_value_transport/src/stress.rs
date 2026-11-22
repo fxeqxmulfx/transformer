@@ -329,6 +329,9 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, test_splits: bool) ->
             }
         }
         report["test_splits"] = json!(scores);
+        if let Some(words) = task.splits.get(language_probes::EXHAUSTIVE) {
+            report["shortest_binary_error"] = language_probes::shortest_error(&mut e, words)?;
+        }
     }
     let zeros: Vec<_> = held
         .iter()
