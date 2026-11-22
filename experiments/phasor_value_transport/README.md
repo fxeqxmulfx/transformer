@@ -143,6 +143,23 @@ twelve-letter scores for both three-seed passes.
 For L4, build with `fp32-affine-reference,original-stream-mean` and run
 the L2 commands above with `language-l4` and a fresh run directory.
 
+### Short-tier addition from the maximum task
+
+On GPT's `arithmetic-max`, the learned stream readout classified the
+larger of two inputs over the 97-symbol vocabulary. All three training
+runs fit 4,704/4,704 pairs. The first 99% checkpoints reloaded with
+4,658 / 4,661 / 4,659 correct on the 4,705 held-out pairs, at updates
+4,750 / 2,500 / 3,250. The slowest run took 37.11 seconds. The source
+provides one held-out split for this task.
+
+```sh
+for seed in 0 1 2; do
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" screen arithmetic-max "$seed" runs/learned-streams 6500
+    "$bin" probes arithmetic-max "$seed" runs/learned-streams
+done
+"$bin" catalog-report runs/learned-streams arithmetic-max
+```
+
 ## Bounded recurrent readout
 
 Each position supplies its contextual embedding features to three learned
