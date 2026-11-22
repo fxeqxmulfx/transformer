@@ -417,6 +417,31 @@ The contextual branch retains its sensitivity to sequence order. Both
 branches are causal, and their gradient contributions add at the input.
 [Input phase proofs](../../src/Transformer/Phasor/InputPhaseRead.lean)
 
+On the original short task `arithmetic-square-sum`, the target is
+$(a^2+b^2)\bmod 97$. The input-phase model reached 99% at updates
+1,102 / 1,159 / 1,121, scoring 4,661 / 4,663 / 4,678 of 4,705
+held-out pairs. The learned stream took 1,235 / 1,292 / 1,178 updates,
+the fixed mean 1,235 / 1,292 / 1,216 and the bilinear phase model
+1,178 / 1,235 / 1,178. All four architectures passed on all seeds.
+
+Two independent timing series compared the input-phase and learned
+stream models through their first passing observation on the GTX 1050.
+Each series trained each seed twice in opposite execution orders. The
+input-phase model finished first in all twelve pairs. Its geometric
+mean elapsed time was 93.77% and 94.01% of the stream model's time in
+the two series. Each of the 24 timed checkpoints was reloaded and
+rescored outside the timer. The timer includes process startup, training
+and source validation. To repeat one six-pair series, build both
+executables from this checkout with Kernite v0.6.0.
+
+```sh
+# From experiments/phasor_value_transport
+CARGO_TARGET_DIR=target/stream cargo +stable build --release --locked --features fp32-affine-reference
+CARGO_TARGET_DIR=target/input cargo +stable build --release --locked --features fp32-affine-reference,input-phase-read
+PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh --first-pass target/stream/release/phasor-value-transport \
+    target/input/release/phasor-value-transport runs/square-time 1520 arithmetic-square-sum
+```
+
 The native forward projects the input RMS once per position. Its reverse
 pass adds the phase gradient to the backbone gradient before differentiating
 that RMS. At widths 64 and 128, an independent FP64 calculation starting

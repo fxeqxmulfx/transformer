@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-# Time equal scheduled work on two architectures. Every seed runs in both orders.
+# Compare fixed work or first passing checkpoints. Every seed runs in both orders.
 set -euo pipefail
+mode=fixed
+if [[ ${1:-} == --first-pass ]]; then
+    mode=crossing
+    shift
+fi
 if (( $# < 5 )); then
-    echo 'usage: time_screens.sh CONTROL_BIN CANDIDATE_BIN RUN_DIR UPDATES CASE...' >&2
+    echo 'usage: time_screens.sh [--first-pass] CONTROL_BIN CANDIDATE_BIN RUN_DIR UPDATES CASE...' >&2
     exit 2
 fi
 control=$(realpath -- "$1")
@@ -21,7 +26,7 @@ for task in "${cases[@]}"; do
     fi
     seen[$task]=1
 done
-run=$(mktemp -d "$out/fixed-XXXXXXXX")
+run=$(mktemp -d "$out/$mode-XXXXXXXX")
 sha256sum -- "$control" "$candidate" > "$run/binaries.sha256"
 lock=${PHASOR_TIMING_LOCK:-"$out/device.lock"}
 echo "$run" >&2
@@ -43,14 +48,36 @@ for round in 0 1 2 3 4 5; do
                     "$bin" screen "$task" "$seed" "$pair/$arm" "$steps" > "$pair/$arm.json"
             done
         ) 9>"$lock"
-        # Compare the entire schedule, including examples consumed in short final batches.
+        # Compare observation cadence and examples consumed through the common endpoint.
         for arm in control candidate; do
             jq -ce '{case,tier,seed,step,examples_seen,total}' \
                 "$pair/$arm/$task/seed$seed/observations.jsonl" > "$pair/$arm.schedule"
         done
-        cmp "$pair/control.schedule" "$pair/candidate.schedule"
+        if [[ $mode == fixed ]]; then
+            cmp "$pair/control.schedule" "$pair/candidate.schedule"
+        else
+            count=$(wc -l <"$pair/control.schedule")
+            other=$(wc -l <"$pair/candidate.schedule")
+            if (( other < count )); then count=$other; fi
+            cmp <(head -n "$count" "$pair/control.schedule") <(head -n "$count" "$pair/candidate.schedule")
+            for arm in control candidate; do
+                bin=$control
+                if [[ $arm == candidate ]]; then bin=$candidate; fi
+                if ! jq -e '.observation.pass == true' "$pair/$arm.json" >/dev/null; then
+                    echo "$task seed $seed $arm did not cross by update $steps" >&2
+                    exit 1
+                fi
+                flock "$lock" "$bin" replay "$task" "$seed" "$pair/$arm" > "$pair/$arm-replay.json"
+                jq -e --slurpfile observed "$pair/$arm.json" '
+                    .model == $observed[0].model and .weights_sha256 == $observed[0].weights_sha256 and
+                    .observation == $observed[0].observation and .correct == .observation.correct and
+                    .total == .observation.total and .correct * 100 >= .total * 99 and
+                    .scored_with_kernite == $observed[0].kernite_version
+                ' "$pair/$arm-replay.json" >/dev/null
+            done
+        fi
         jq -nec --arg task "$task" --arg first "${order[0]}" --argjson seed "$seed" \
-            --argjson steps "$steps" --argjson round "$round" \
+            --arg mode "$mode" --argjson steps "$steps" --argjson round "$round" \
             --slurpfile a "$pair/control.json" --slurpfile b "$pair/candidate.json" \
             --rawfile ta "$pair/control.seconds" --rawfile tb "$pair/candidate.seconds" '
             def environment: {gpu,kernite_version,fp32_affines,bf16,tf32_backward,suite_sha256};
@@ -59,15 +86,19 @@ for round in 0 1 2 3 4 5; do
                 (.suite_sha256|type=="string" and test("^[0-9a-f]{64}$")) and
                 ([.fp32_affines,.bf16,.tf32_backward]|all(.[];type=="boolean"));
             ($ta|rtrimstr("\n")|tonumber) as $x | ($tb|rtrimstr("\n")|tonumber) as $y |
-            if ([$a[0],$b[0]] | all(.[]; .status == "screen cutoff" and
-                .observation.case == $task and .observation.seed == $seed and
-                .observation.step == $steps and .observation.pass == false))
+            def endpoint:
+                if $mode == "crossing" then .observation.pass == true and .observation.step <= $steps
+                else .status == "screen cutoff" and .observation.step == $steps and .observation.pass == false end;
+            if ([$a[0],$b[0]] | all(.[]; endpoint and
+                .observation.case == $task and .observation.seed == $seed))
                 and ($a[0]|known) and ($a[0]|environment) == ($b[0]|environment)
                 and $x > 0 and $y > 0
-            then {case:$task,seed:$seed,round:$round,first:$first,step:$steps,
+            then {case:$task,seed:$seed,round:$round,first:$first,
                 control:$a[0].model,candidate:$b[0].model,environment:($a[0]|environment),
-                control_seconds:$x,candidate_seconds:$y,ratio:($y/$x)}
-            else error("check the timing environments and choose a cutoff below both first crossings") end
+                control_seconds:$x,candidate_seconds:$y,ratio:($y/$x)} +
+                (if $mode=="crossing" then {control_step:$a[0].observation.step,candidate_step:$b[0].observation.step}
+                 else {step:$steps} end)
+            else error("timing environments or requested endpoints differ") end
         ' | tee -a "$run/pairs.jsonl"
     done
 done
