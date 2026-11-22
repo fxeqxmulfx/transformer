@@ -70,7 +70,9 @@ fn profile(p: usize, length: usize) -> Result<()> {
     let start = pair_memory::start(&cfg);
     let gain_at = pair_memory::gain(&cfg);
     let mut theta = layout::initialize_model(&cfg, 0);
-    let expected_gain = if pair_memory::MODEL == "phasor-prefix-successor-half-v1"
+    let expected_gain = if cfg!(feature = "successor-gain-three-quarters") {
+        0.75
+    } else if pair_memory::MODEL == "phasor-prefix-successor-half-v1"
         || cfg!(feature = "successor-displacement")
         || cfg!(feature = "transition-count")
     {

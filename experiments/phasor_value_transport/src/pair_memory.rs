@@ -14,7 +14,13 @@ const DEFAULT_MODEL: bool = !cfg!(any(
 const HALF_GAIN: bool = DEFAULT_MODEL || cfg!(feature = "prefix-successor-half");
 pub const SUCCESSOR: bool = HALF_GAIN || cfg!(feature = "prefix-successor");
 pub const XOR_PREFIX: bool = SUCCESSOR || cfg!(feature = "prefix-xor");
-pub const INITIAL_GAIN: f32 = if HALF_GAIN { 0.5 } else { 0.25 };
+pub const INITIAL_GAIN: f32 = if cfg!(feature = "successor-gain-three-quarters") {
+    0.75
+} else if HALF_GAIN {
+    0.5
+} else {
+    0.25
+};
 pub const DISPLACEMENT: f32 = if cfg!(feature = "successor-displacement-quarter") {
     0.25
 } else if cfg!(feature = "successor-displacement") {
@@ -32,8 +38,20 @@ compile_error!("choose one prefix architecture per binary");
 compile_error!("pair-v2 replays the original pair-address control");
 #[cfg(all(feature = "prefix-xor-cubic", feature = "prefix-successor"))]
 compile_error!("the successor trial uses the linear prefix sum");
+#[cfg(all(
+    feature = "successor-gain-three-quarters",
+    any(
+        feature = "transition-count",
+        feature = "successor-displacement-quarter"
+    )
+))]
+compile_error!(
+    "the three-quarter gain trial specifies full displacement and the original table addresses"
+);
 
-pub const MODEL: &str = if cfg!(feature = "transition-count") {
+pub const MODEL: &str = if cfg!(feature = "successor-gain-three-quarters") {
+    "phasor-successor-displacement-gain075-v1"
+} else if cfg!(feature = "transition-count") {
     if cfg!(feature = "successor-displacement-quarter") {
         "phasor-transitions-displacement-quarter-v1"
     } else if cfg!(feature = "successor-displacement") {
