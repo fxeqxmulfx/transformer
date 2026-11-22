@@ -466,7 +466,21 @@ double-descent experiment. Shakespeare is an LM quality check, not by itself
 a delayed-grokking benchmark. Both data adapters are in
 [`probes.py`](research/current_grokking/probes.py).
 
+## Additional long-context recall test
+
+The `mrcr-v2-8needle` case asks a model to reproduce one of eight earlier
+responses from a conversation. The published splits contain 484 prompts
+up to 128K tokens and 310 prompts near one million tokens. The scorer
+reports a mean text-match ratio for each split. The historical 165-case
+sweep and the 35-task short/long selection retain their original membership.
+[MRCR V2 prompts, scorer and Lean formalization](experiments/mrcr_v2/README.md)
+
 ## Sources and reproducibility
+
+The native Phasor runner trains and independently replays the 25 short
+and ten long tasks at seeds 0, 1 and 2. Its report also supports additional
+catalog tasks and preserves their separate tier counts.
+[Phasor stress commands](experiments/phasor_value_transport/README.md#canonical-gpt-stress-tiers)
 
 - [Frozen 165-case plan](research/current_grokking/plan.json): exact IDs, task
   parameters, model sizes, budgets, targets and the recorded user-requested skips.
