@@ -45,6 +45,31 @@ The change in any two-class margin is bounded by that quantity times the
 distance between the two tied embeddings.
 [Shared forward map and proofs](../../src/Transformer/Phasor/SharedValues.lean)
 
+### Causal prefix trials
+
+One existing power-sum table can read the entire preceding prefix. For each
+sequence start a state at zero. Reading a token updates the state by bitwise
+XOR or ordinary addition on its token ID. At position `i`, the selected
+table reads `(state^u + token[i]^v) mod V`. At the first position its left
+operand is the first token. Every position, vocabulary and task uses the
+same fold and exponents. The other sixteen tables, contextual Phasor
+feature, gain, readout and AdamW retain their definitions.
+
+Lean proves the scan composes over arbitrary consecutive chunks. In the XOR
+scan each bit of the state gives the parity of that bit's occurrences in the
+entire preceding prefix. The tokenizer, vocabulary, and sequence length are
+arbitrary. The trained table sees the result after the specified power and
+vocabulary reduction, which can map different states to the same address.
+Lean also proves exact logit agreement with the pair residual at the first
+two positions for every setting of the weights and all nine power-sum slots.
+[Prefix representation and logit theorems](../../src/Transformer/Phasor/PrefixValues.lean)
+
+For promotion we compare all three seeds with the incumbent. Every original
+pass must survive. We compare the geometric mean of paired training epochs
+to the first scheduled 99% crossing separately for short and long, retaining
+the individual crossings so regressions are visible. An improvement must
+retain or improve both tier averages. Catalog additions are measured separately.
+
 ### Choice of initial gain
 
 The first uniform architecture used an initial gain of one. Hard depth seed 0

@@ -7,6 +7,7 @@ public import Transformer.Phasor.Forward
 public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.PairValues
 public import Transformer.Phasor.SharedValues
+public import Transformer.Phasor.PrefixValues
 public import Transformer.Phasor.Bounds
 public import Transformer.Phasor.PlainRouter
 public import Transformer.Phasor.OneStream
@@ -41,6 +42,8 @@ as concrete maps and plugs them into it, in exact real arithmetic.
 * `TransportedValues` studies the NV11 variant. First-token attention reads learned embeddings
   at product-shifted addresses in the answer state. Its tied readout translates the winner for
   orthonormal embeddings and admits a sufficient margin bound for arbitrary learned embeddings.
+* `PrefixValues` gives two causal scans for a shared learned table, their chunk-composition
+  laws at arbitrary lengths, and their agreement with the pair residual on two-token inputs.
 * `Bounds`: after `L` layers every stream and their mean have RMS at most `1 + 2√(2L)`, the final
   feature RMS at most one, every logit at most `√D ‖E v‖`, and every attention logit at most
   `(5/4) ln (i + 1)` at the query position `i`, for any parameters and any token sequence.
