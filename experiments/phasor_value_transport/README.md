@@ -139,6 +139,13 @@ two rounds for addition and parity, and one for language and recall.
 vocabulary-tied residual and its adjoint at each supported width.
 [Coordinate identity for RMS normalization](../../src/Transformer/Phasor/SharedValues.lean)
 
+The host address trial caches the first three power residues of each token.
+All thirteen power tables can reuse these values across every input pair.
+For each sum the host compares against the first wrapping value, and for
+the difference it compares the two operands. Lean proves that the resulting
+word indices agree with the original formulas for every vocabulary size.
+[Power and difference address identities](../../src/Transformer/Phasor/PowerAddresses.lean)
+
 ## Half-gain prefix and successor model
 
 The half-gain predecessor applies one causal update at every token. Its prefix state

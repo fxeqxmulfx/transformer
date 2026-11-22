@@ -6,6 +6,7 @@ public import Transformer.Phasor.FFN
 public import Transformer.Phasor.Forward
 public import Transformer.Phasor.TransportedValues
 public import Transformer.Phasor.PairValues
+public import Transformer.Phasor.PowerAddresses
 public import Transformer.Phasor.SharedValues
 public import Transformer.Phasor.PrefixValues
 public import Transformer.Phasor.SuccessorValues
