@@ -10,6 +10,8 @@ mod addresses;
 mod affine_phase;
 mod affine_phase_checks;
 mod architecture;
+mod associative;
+mod associative_checks;
 mod bilinear_phase;
 mod bilinear_phase_checks;
 mod causal_product;
@@ -239,6 +241,7 @@ fn main() -> Result<()> {
             Err("this historical command requires an explicit historical architecture".into()),
         [op, width] if architecture::RAW && op == "shared-check" =>
             learned_checks::run(Some(width.parse()?)),
+        [op] if op == "memory-check" && architecture::ASSOCIATIVE_REFLECTION => associative_checks::run(),
         [op] if op == "memory-check" && architecture::PHASE_MEMORY => phase_checks::run(),
         [op] if op == "memory-check" && architecture::CONTEXT_ROTATION => context_rotation_checks::run(),
         [op] if op == "memory-check" => memory_checks::run(),

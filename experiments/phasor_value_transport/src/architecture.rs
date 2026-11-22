@@ -17,12 +17,14 @@ pub const BILINEAR_PHASE: bool = cfg!(feature = "bilinear-phase-read");
 pub const REFLECTION_PHASE: bool = cfg!(feature = "reflection-phase-read");
 pub const SINGLE_REFLECTION: bool = cfg!(feature = "single-reflection-read");
 pub const CONTEXT_ROTATION: bool = cfg!(feature = "context-rotation-read");
+pub const ASSOCIATIVE_REFLECTION: bool = cfg!(feature = "associative-reflection-read");
 pub const PHASE_MEMORY: bool = cfg!(feature = "phase-prefix-read")
     || INPUT_PHASE
     || AFFINE_PHASE
     || BILINEAR_PHASE
     || REFLECTION_PHASE
-    || SINGLE_REFLECTION;
+    || SINGLE_REFLECTION
+    || ASSOCIATIVE_REFLECTION;
 const _: () = {
     let variants = BOUNDED as u8
         + INPUT_PRODUCT as u8
@@ -33,7 +35,8 @@ const _: () = {
         + BILINEAR_PHASE as u8
         + REFLECTION_PHASE as u8
         + SINGLE_REFLECTION as u8
-        + CONTEXT_ROTATION as u8;
+        + CONTEXT_ROTATION as u8
+        + ASSOCIATIVE_REFLECTION as u8;
     assert!(
         variants <= 1 && (variants == 0 || RAW && !cfg!(feature = "original-stream-mean")),
         "choose one architecture per stress binary"
@@ -41,7 +44,9 @@ const _: () = {
 };
 pub const STREAM_READ: bool =
     RAW && !BOUNDED && !INPUT_PRODUCT && !cfg!(feature = "original-stream-mean");
-pub const HEAD: Head = if CONTEXT_ROTATION {
+pub const HEAD: Head = if ASSOCIATIVE_REFLECTION {
+    Head::AssociativeReflection
+} else if CONTEXT_ROTATION {
     Head::ContextRotation
 } else if SINGLE_REFLECTION {
     Head::SingleReflection
@@ -119,7 +124,11 @@ pub fn valid_record(result: &Value, width: u64) -> bool {
             && result.get("readout_parameters").is_none();
     }
     if RAW {
-        let per_channel = if CONTEXT_ROTATION {
+        let per_channel = if ASSOCIATIVE_REFLECTION {
+            4 + HEAD.phase_inputs() as u64
+                + 2 * crate::head::MEMORY_WIDTH as u64
+                + (crate::associative::PROJECTED + crate::associative::VALUES) as u64
+        } else if CONTEXT_ROTATION {
             4 + width / 2
         } else if PHASE_MEMORY {
             4 + HEAD.phase_inputs() as u64 + 2 * crate::head::MEMORY_WIDTH as u64

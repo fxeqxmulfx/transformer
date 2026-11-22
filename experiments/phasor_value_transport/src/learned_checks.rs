@@ -288,7 +288,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     if architecture::COMPACT {
         compact_checks::run()?;
     }
-    if architecture::PHASE_MEMORY {
+    if architecture::ASSOCIATIVE_REFLECTION {
+        crate::associative_checks::run()?;
+    } else if architecture::PHASE_MEMORY {
         crate::phase_checks::run()?;
     }
     if architecture::CONTEXT_ROTATION {

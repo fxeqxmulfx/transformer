@@ -347,7 +347,7 @@ impl Engine {
         use crate::head::Head;
         match self.config.head {
             Head::Original => {}
-            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation => {
+            Head::Stream | Head::CompactStream | Head::PhasePrefix | Head::InputPhase | Head::AffinePhase | Head::BilinearPhase | Head::ReflectionPhase | Head::SingleReflection | Head::ContextRotation | Head::AssociativeReflection => {
                 if self.mhc.is_none() {
                     return Err("the learned readout requires the four Phasor streams".into());
                 }
@@ -380,14 +380,13 @@ impl Engine {
         Ok(())
     }
     fn output_backward(&self, rows: usize, length: usize) -> Result<()> {
-        if let Some(memory) = &self.hidden_layer {
-            return memory.backward(self, rows, length);
-        }
         self.linear_back(
             self.dlast.ptr(), self.dlogits.ptr(), self.encoded_features().ptr(), 0,
             rows, self.config.vocab, self.config.width,
         )?;
-        if let Some(rotation) = &self.context_rotation {
+        if let Some(memory) = &self.hidden_layer {
+            memory.backward(self, rows, length)?;
+        } else if let Some(rotation) = &self.context_rotation {
             rotation.backward(self, rows, length)?;
         }
         Ok(())

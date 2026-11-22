@@ -28,6 +28,7 @@ enum Memory {
 
 pub(super) struct HiddenLayer {
     memory: Memory,
+    associative: Option<super::associative_layer::AssociativeLayer>,
     projected: F,
     dprojected: F,
     read: F,
@@ -49,11 +50,11 @@ impl HiddenLayer {
             Head::PhasePrefix | Head::InputPhase | Head::SingleReflection => Memory::Phase(phase_prefix::kernels::Kernels::load(&e.cuda)?),
             Head::AffinePhase => Memory::AffinePhase(affine_phase::kernels::Kernels::load(&e.cuda)?),
             Head::BilinearPhase => Memory::BilinearPhase(bilinear_phase::kernels::Kernels::load(&e.cuda)?),
-            Head::ReflectionPhase => Memory::Reflection {
+            Head::ReflectionPhase | Head::AssociativeReflection => Memory::Reflection {
                 kernels: reflection_phase::kernels::Kernels::load(&e.cuda)?,
                 angles: e.cuda.alloc(rows * M)?,
                 gate_partials: e.cuda.alloc(cfg.max_batch * M)?,
-                gate_offset: crate::architecture::start(cfg) + cfg.head.parameters(cfg) - M,
+                gate_offset: crate::architecture::start(cfg) + Head::ReflectionPhase.parameters(cfg) - M,
             },
             Head::Transition => Memory::Transitions {
                 kernels: transition::kernels::Kernels::load(&e.cuda)?,
@@ -74,6 +75,8 @@ impl HiddenLayer {
         };
         Ok(Self {
             memory,
+            associative: (cfg.head == Head::AssociativeReflection)
+                .then(|| super::associative_layer::AssociativeLayer::new(e)).transpose()?,
             projected: e.cuda.alloc(rows * projected_channels)?,
             dprojected: e.cuda.alloc(rows * projected_channels)?,
             read: e.cuda.alloc(rows * read_channels)?,
@@ -97,7 +100,7 @@ impl HiddenLayer {
     }
 
     pub(super) fn features(&self) -> &F {
-        &self.merged
+        self.associative.as_ref().map_or(&self.merged, |a| a.features())
     }
 
     pub(super) fn forward_features(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
@@ -185,6 +188,9 @@ impl HiddenLayer {
                 (rows * d) as u32,
             )?;
         }
+        if let Some(a) = &self.associative {
+            a.forward(e, self.merged.ptr(), rows, length)?;
+        }
         self.forward_shape.set(Some((rows, length)));
         Ok(())
     }
@@ -194,16 +200,9 @@ impl HiddenLayer {
             return Err("hidden memory backward needs a forward pass with the same shape".into());
         }
         let d = e.config.width;
-        // This writes the tied output embedding gradient and the direct residual path dh.
-        e.linear_back(
-            e.dlast.ptr(),
-            e.dlogits.ptr(),
-            self.merged.ptr(),
-            0,
-            rows,
-            e.config.vocab,
-            d,
-        )?;
+        if let Some(a) = &self.associative {
+            a.backward(e, rows, length)?;
+        }
         e.linear_back(
             self.dread.ptr(),
             e.dlast.ptr(),
@@ -309,6 +308,9 @@ impl HiddenLayer {
     // Add the VJP at the same activation that supplied the forward projection.
     pub(super) fn add_projection_gradient(&self, e: &Engine, target: P, rows: usize) -> Result<()> {
         let d = e.config.width;
+        if let Some(a) = &self.associative {
+            a.add_input_gradient(e, target, rows)?;
+        }
         unsafe {
             e.ops.add(
                 grid(rows * d),

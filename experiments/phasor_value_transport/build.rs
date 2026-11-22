@@ -236,7 +236,12 @@ fn main() {
         engine.push_str(&format!("\ninclude!({extension:?});\n"));
         println!("cargo:rerun-if-changed={file}");
     }
-    for name in ["hidden_layer", "product_layer", "context_rotation_layer"] {
+    for name in [
+        "hidden_layer",
+        "product_layer",
+        "context_rotation_layer",
+        "associative_layer",
+    ] {
         let file = format!("src/{name}.rs");
         let path = Path::new(&file).canonicalize().unwrap();
         engine.push_str(&format!("#[path={path:?}] mod {name};\n"));

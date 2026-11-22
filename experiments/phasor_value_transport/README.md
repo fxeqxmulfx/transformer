@@ -787,6 +787,33 @@ It proves prefix causality for arbitrary embeddings and exact recovery
 of the mixed reflection backbone when the output matrix is zero.
 [Associative write proofs](../../src/Transformer/Phasor/AssociativeWrite.lean)
 
+The Kernite model uses eight key coordinates and four value rows.
+At length 257 the largest FP64 discrepancy was `3.42e-7` across 24,672
+matrix entries and `3.22e-7` across 3,084 reads. Seven independent full
+directions of the raw key, query and value projections agreed with central
+differences within `8.57e-6`. At lengths 1 and 7 the check also differentiated
+every projected coordinate individually. A zero output map reproduced the
+mixed backbone's arbitrary-vector features, logits and input gradients
+exactly at widths 64 and 128. With nonzero maps, the largest full-network
+feature discrepancy was `5.07e-7`, with unchanged causal prefixes.
+The original mixed model reproduced its 20-bit seed-0 weights byte for byte.
+
+On seed 0, GPT key–value binding crossed at update 576 with 507/512
+validation and 506/512 independent test examples correct. The same model
+trained on canonical NV11 for 3,000 updates reached 4,701/4,704 in
+training and 78/4,705 on the held-out half.
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,associative-reflection-read
+bin=./target/release/phasor-value-transport
+"$bin" check
+PHASOR_EVAL_BATCH_CAP=16 "$bin" screen gpt-probe-key-value-binding 0 runs/associative 2944
+PHASOR_EVAL_BATCH_CAP=16 "$bin" probes gpt-probe-key-value-binding 0 runs/associative
+"$bin" nv11-train runs/associative-nv11 0 3000
+"$bin" nv11-score runs/associative-nv11/nv11-train-3000.f32 shifts
+```
+
 ## NV11 prediction shifts
 
 CM121 describes row and column translations of class labels. To see

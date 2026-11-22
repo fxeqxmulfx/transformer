@@ -20,6 +20,7 @@ pub enum Head {
     ReflectionPhase,
     SingleReflection,
     ContextRotation,
+    AssociativeReflection,
 }
 
 impl Head {
@@ -42,6 +43,7 @@ impl Head {
             "reflection-phase" => Ok(Self::ReflectionPhase),
             "single-reflection" => Ok(Self::SingleReflection),
             "context-rotation" => Ok(Self::ContextRotation),
+            "associative-reflection" => Ok(Self::AssociativeReflection),
             _ => Err(format!("unknown head {name}").into()),
         }
     }
@@ -63,6 +65,7 @@ impl Head {
             Self::ReflectionPhase => "phasor-learned-reflection-phase-32-v1",
             Self::SingleReflection => "phasor-learned-single-reflection-32-v1",
             Self::ContextRotation => "phasor-learned-context-rotation-v1",
+            Self::AssociativeReflection => "phasor-learned-associative-reflection-8x4-v1",
         }
     }
 
@@ -75,6 +78,7 @@ impl Head {
                 | Self::BilinearPhase
                 | Self::ReflectionPhase
                 | Self::SingleReflection
+                | Self::AssociativeReflection
         )
     }
 
@@ -87,6 +91,7 @@ impl Head {
                 | Self::ReflectionPhase
                 | Self::SingleReflection
                 | Self::ContextRotation
+                | Self::AssociativeReflection
         )
     }
 
@@ -99,7 +104,7 @@ impl Head {
     }
 
     pub const fn phase_gates(self) -> usize {
-        if matches!(self, Self::ReflectionPhase) {
+        if matches!(self, Self::ReflectionPhase | Self::AssociativeReflection) {
             MEMORY_WIDTH
         } else {
             0
@@ -109,6 +114,10 @@ impl Head {
     pub fn parameters(self, cfg: &Config) -> usize {
         match self {
             Self::ContextRotation => (4 + cfg.width / 2) * cfg.width,
+            Self::AssociativeReflection => {
+                Self::ReflectionPhase.parameters(cfg)
+                    + (crate::associative::PROJECTED + crate::associative::VALUES) * cfg.width
+            }
             Self::Original => 0,
             Self::Stream | Self::CompactStream => 4 * cfg.width,
             Self::PhasePrefix
@@ -129,6 +138,17 @@ impl Head {
     pub fn initialize(self, cfg: &Config, seed: u32, parameters: &mut [f32]) {
         match self {
             Self::Original | Self::Stream | Self::CompactStream => {}
+            Self::AssociativeReflection => {
+                Self::ReflectionPhase.initialize(cfg, seed, parameters);
+                let start = crate::architecture::start(cfg) + Self::ReflectionPhase.parameters(cfg);
+                let output = start + crate::associative::PROJECTED * cfg.width;
+                let scale = (cfg.width as f64).sqrt().recip();
+                let mut rng = Random::new(seed.wrapping_add(31_000));
+                for w in &mut parameters[start..output] {
+                    *w = rng.gauss(0., scale) as f32;
+                }
+                parameters[output..output + crate::associative::VALUES * cfg.width].fill(0.);
+            }
             Self::ContextRotation => {
                 parameters[crate::architecture::memory_start(cfg)
                     ..crate::architecture::start(cfg) + self.parameters(cfg)]
