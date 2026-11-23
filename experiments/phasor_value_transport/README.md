@@ -2474,6 +2474,12 @@ compared with update 250 for the concentrated latest-write model. Two
 reloads generated the correct answer for Mira and all 100 answers at each
 of one, two, three, five and ten hops.
 
+With eighty actual shared-permutation tables and eighty chronological
+reads, the full concentrated seed-0 checkpoint at update 250 generated
+**95/100** correct letters. Each prompt had 1,305 tokens. It solved all
+five starts on 15 sets and four starts on the other five. These weights
+had seen only one- and two-hop questions during training.
+
 The CPU diagnostic isolates the learned path vote, projects it against
 the entire tied vocabulary at unit gain and records paired predictions.
 On forty shared-permutation tables, the mixed-length seed-0 checkpoint's
@@ -2493,6 +2499,7 @@ out=runs/concentrated-lookup
 "$bin" lookup-long-chains 0 "$out" 20 20 rebound
 "$bin" lookup-ordered-long 0 "$out" 20 20 rebound
 "$bin" lookup-ordered-long 0 "$out" 20 20 shared
+PHASOR_EVAL_BATCH_CAP=2 "$bin" lookup-ordered-long 0 "$out" 80 80 shared
 "$bin" lookup-isolated-long-budgets 0 "$out" 80
 # Train the same chronological rule from initialization.
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-ordered-lookup
@@ -2522,6 +2529,12 @@ output arrays had the same SHA-256 digest in each row.
 | 40 | 40 | 4 | 11.469, 11.285 | 2.863, 2.835 |
 | 40 | 80 | 4 | 14.229, 14.050 | 3.631, 3.681 |
 | 80 | 80 | 1 | 108.834, 109.100 | 12.826, 12.692 |
+
+On the full forty-table shared-permutation evaluation, including the
+backbone and greedy scoring of 100 questions at batch size four, the
+parallel evaluator took **15.96 seconds**, compared with 120.24 seconds
+without prefix sharing or parallel reads. The complete JSON reports
+matched byte for byte, including all 20 table-set outcomes.
 
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-fixed-ten-lookup,study-mixed-depths
