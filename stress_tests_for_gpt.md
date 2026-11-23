@@ -475,6 +475,23 @@ reports a mean text-match ratio for each split. The historical 165-case
 sweep and the 35-task short/long selection retain their original membership.
 [MRCR V2 prompts, scorer and Lean formalization](experiments/mrcr_v2/README.md)
 
+## N-Hop Lookup
+
+The `n-hop-lookup` case from Think Fast gives the model a starting entry and
+`N` lookup tables with fictional entries. Each table is randomized anew for
+each question. The result of one lookup is the key for the next. The model
+answers directly with one of five letters, with no intermediate answers.
+The source benchmark has 100 questions for each hop count from 1 to 10.
+Score exact answer-letter accuracy at each hop count. The random baseline
+is 20%.
+[Think Fast, § D.25](https://arxiv.org/html/2606.07157v4)
+
+Thinking Machines Lab used `TML-d24-varloop-research` to measure accuracy
+by hop count at 1, 2, 3, 5 and 10 passes through the same looped layers.
+The original questions are available from the Think Fast authors on
+request. The Phasor evaluation awaits those questions.
+[Inkling 2 Mini evaluation](https://thinkingmachines.ai/news/inkling-2-mini/#no-cot-capabilities)
+
 ## Sources and reproducibility
 
 The native Phasor runner trains the default pair-class triple-transport architecture

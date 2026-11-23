@@ -70,3 +70,6 @@ Start with the 25 short and 10 long cases listed in the
   as a separate exact held-out regression. Evaluate
   [MRCR V2 eight-needle](experiments/mrcr_v2/README.md) as a separate text
   benchmark using its official splits and mean match ratio.
+- Evaluate [N-Hop Lookup](stress_tests_for_gpt.md#n-hop-lookup)
+  on the original Think Fast questions and report exact answer-letter accuracy
+  by hop count.
