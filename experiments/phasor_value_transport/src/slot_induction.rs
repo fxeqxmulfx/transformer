@@ -3,6 +3,20 @@
 //! The original shared gate selects this value when a past address matches.
 use crate::slot_memory::dot;
 
+mod index;
+
+fn accepts(score: f32, left_energy: f32, right_energy: f32) -> bool {
+    score > 0. && 2. * score * score > left_energy * right_energy
+}
+
+fn latest(input: &[f32], energy: &[f32], width: usize, start: usize, row: usize) -> Option<usize> {
+    let query = &input[row * width..][..width];
+    (start..row.saturating_sub(1)).rev().find_map(|past| {
+        let score = dot(query, &input[past * width..][..width]);
+        accepts(score, energy[row], energy[past]).then_some(past + 1)
+    })
+}
+
 pub struct Prefix {
     input: Vec<f32>,
     donors: Vec<Option<usize>>,
@@ -13,17 +27,13 @@ impl Prefix {
     pub fn new(input: Vec<f32>, width: usize, length: usize) -> Self {
         assert!(width > 0 && length > 0 && input.len().is_multiple_of(width * length));
         let energy: Vec<_> = input.chunks_exact(width).map(|v| dot(v, v)).collect();
-        let mut donors = Vec::with_capacity(energy.len());
-        for (r, query) in input.chunks_exact(width).enumerate() {
-            let start = r - r % length;
-            // j+1 must already have arrived before the current query.
-            let source = (start..r.saturating_sub(1)).rev().find(|&j| {
-                let cosine_numerator = dot(query, &input[j * width..][..width]);
-                cosine_numerator > 0.
-                    && 2. * cosine_numerator * cosine_numerator > energy[r] * energy[j]
-            });
-            donors.push(source.map(|j| j + 1));
-        }
+        let donors = if length < 96 {
+            (0..energy.len())
+                .map(|r| latest(&input, &energy, width, r - r % length, r))
+                .collect()
+        } else {
+            index::donors(&input, &energy, width, length)
+        };
         Self {
             input,
             donors,

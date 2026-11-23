@@ -1702,7 +1702,7 @@ seeds first scored 512/512 on novel validation at update 50. Their
 independently reloaded checkpoints also scored 512/512 on the source
 test. Both splits stayed at 512/512 at update 550, after the original
 500-update retention window. For seed 0, both checkpoints also solved
-all 512 independent sequences with 64, 128, 256, 512 and 1,024 extra tokens.
+all 512 independent sequences with 64, 128, 256, 512, 1,024 and 1,536 extra tokens.
 From the same three initializations the main model finished its
 3,000-update budget at 0/512, 83/512 and 503/512 on novel validation.
 
@@ -1752,6 +1752,39 @@ for seed in 0 1 2; do
     "$bin" catalog-target basis-recall-hard "$seed" 100 "$out/catalog"
     for gap in 64 128 256 512 1024; do
         PHASOR_EVAL_BATCH_CAP=2 "$bin" target-probes basis-recall-hard "$seed" 100 "$out/catalog" recall-gap "$gap"
+    done
+done
+```
+
+#### Indexing repeated input vectors
+
+The dense read can reuse angular comparisons when the same embedding recurs.
+It keeps the latest completed successor for each set of identical input
+vectors and checks all sets that meet the same angular threshold. A batch
+can share the angular comparisons across examples. Each example starts with
+empty successor timestamps. The Lean proof shows that this gives the same
+donor as a backward scan even when several neighborhoods overlap.
+[Index equivalence](../../src/Transformer/Phasor/TripleTransport/IndexedInduction.lean)
+
+For the easy-recall seed-0 checkpoint, the indexed and scanning evaluators
+produced byte-identical score reports at delays of 64, 128, 256 and 512 tokens.
+At delay 256, median wall time for loading the checkpoint and scoring validation,
+test and transfer fell from 3.13 to 2.53 seconds on the GTX 1050. The indexed
+evaluator was faster in all six alternating-order pairs at a batch cap of four.
+
+Build both executables with `fp32-affine-reference,triple-dense-induction`.
+Use commit `77a9f8b1` for the scanning executable and the same saved run for
+both measurements.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.IndexedInduction
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=4
+for round in 0 1 2 3 4 5; do
+    arms=("$scan" "$indexed")
+    if (( round % 2 )); then arms=("$indexed" "$scan"); fi
+    for exe in "${arms[@]}"; do
+        /usr/bin/time -f '%e' "$exe" probes basis-recall-easy 0 "$out" recall-gap 256
     done
 done
 ```
