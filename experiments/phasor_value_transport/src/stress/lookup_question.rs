@@ -52,6 +52,9 @@ pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
         controls.extend(
             read.induction_controls()
                 .into_iter()
+                .filter(|(_, variant)| {
+                    read.path_passes.is_none() || variant.path_passes != read.path_passes
+                })
                 .map(|(name, read)| (name, head::Head::PeerTriplePhase(read))),
         );
     }

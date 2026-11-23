@@ -54,6 +54,7 @@ mod slot_copy;
 mod slot_gradients;
 mod slot_induction;
 mod slot_memory;
+mod typed_lookup;
 mod slot_orbits;
 mod toeplitz;
 mod toeplitz_checks;

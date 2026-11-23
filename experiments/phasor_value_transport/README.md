@@ -2010,6 +2010,69 @@ questions correctly. Reversing the rows preserved its prediction on
 0/100. Rotating the choices gave the expected shift on 14/100 pairs,
 with both answers correct on 2/100.
 
+#### Repeated lookup with learned relation weights
+
+`triple-typed-lookup` adds an associative read to the chart-induction
+model. Every consecutive triple of dense vectors can write a link. Their
+nearest learned prototypes supply the two keys and the middle relation.
+The latest write wins for each key, relation and direction. Each observed
+cue supplies its most recent successor as a starting key. Five passes can
+follow the same relation and a final read can use a different relation.
+The first missing link ends the repeated walk. A signed table of 32,768
+trainable coefficients combines the actual endpoint vectors. It starts at
+zero and uses the ordinary supervised loss. The same operations run on
+every task. [Latest writes, repeated reads and the loss gradient](../../src/Transformer/Phasor/TripleTransport/TypedLookupPaths.lean)
+
+At update 250, fresh training on seed 0 gave the following free-generated
+answers. Each row uses the same checkpoint. Validation has 200 questions
+with one or two tables. Each hop column has 100 independent questions.
+
+| Repeated reads | Validation | Mira | 1 hop | 2 hops | 3 hops | 5 hops | 10 hops |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| Disabled | 32 | D | 24 | 21 | 17 | 23 | 22 |
+| 1 | 76 | D | 66 | 19 | 24 | 22 | 18 |
+| 2 | 115 | C | 66 | 56 | 23 | 23 | 18 |
+| 3 | 115 | C | 66 | 56 | 46 | 21 | 18 |
+| 5 (training setting) | 115 | C | 66 | 56 | 46 | 31 | 18 |
+| 10 | 115 | C | 66 | 56 | 46 | 31 | 18 |
+
+The complete model answered all 1,000 training questions correctly at
+update 250. Mean answer cross-entropy was 0.0194 on training and 1.2707
+on validation. At update 750, validation reached 140/200. The independent
+one-, two-, three-, five- and ten-hop scores were 77, 62, 43, 30 and 19
+out of 100. Disabling the read at those weights gave 23, 18, 20, 23 and
+23. The intact model generated C for Mira at both checkpoints.
+
+On the additional 100 paired two-hop questions the five-read checkpoint
+answered 54 originals and 52 first-table rewrites correctly. Rewiring
+changed its prediction on 59 pairs and it got both answers right on 23.
+Reversing the rows preserved its prediction on 58 pairs. Rotating the
+choices shifted the predicted letter correctly on 27 pairs. The model
+uses the first table on some questions and remains sensitive to row order.
+
+On the separate NV11 regression, all three seeds recovered 4,704/4,704
+training pairs and 4,705/4,705 held-out pairs at update 250. This model
+is an experimental candidate. Canonical tier totals above refer to the
+main pair-class model.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.TypedLookupPaths
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-typed-lookup
+bin=./target/release/phasor-value-transport
+out=runs/typed-lookup
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+"$bin" advance study-lookup-questions 0 "$out" 250
+"$bin" lookup-study-score 0 "$out" ablations
+"$bin" lookup-fit 0 "$out"
+"$bin" lookup-interventions 0 "$out"
+for seed in 0 1 2; do
+    "$bin" advance arithmetic-cubic-product "$seed" "$out" 250
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done
+```
+
 ### Interpolation in a learned cyclic order
 
 Every memory address and value refers to a prototype in the learned dense

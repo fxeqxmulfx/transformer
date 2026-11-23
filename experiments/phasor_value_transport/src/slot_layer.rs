@@ -34,6 +34,7 @@ impl Drop for EvaluationScope {
 
 struct Tape {
     prefix: Option<crate::slot_induction::Prefix>,
+    local: Option<crate::typed_lookup::Tape>,
     weights: Vec<f32>,
     hidden: Vec<f32>,
     rows: Vec<Row>,
@@ -135,6 +136,7 @@ impl SlotLayer {
                 .alloc(e.config.max_length * e.config.max_batch * e.config.width)?,
             tape: RefCell::new(Tape {
                 prefix: None,
+                local: None,
                 weights: vec![],
                 hidden: vec![],
                 rows: vec![],
@@ -239,17 +241,32 @@ impl SlotLayer {
         let cells = self.cells.read()?;
         let mut h = e.last.read()?;
         h.truncate(rows * l.d);
-        let prefix = if length > 2
-            && !tape.routing.mute_proposals[1]
-            && e.config.head.peer_read().is_some_and(|r| r.dense_induction)
-        {
+        let read = e.config.head.peer_read();
+        let dense = read.is_some_and(|r| r.dense_induction);
+        let local = read.and_then(|r| r.path_passes).filter(|&mode| mode > 0);
+        let enabled = !tape.routing.mute_proposals[1];
+        let use_induction = dense && enabled && length > 2;
+        let local = local.filter(|_| enabled);
+        let input = if use_induction || local.is_some() {
             let mut input = e.embed_norm.read()?;
             input.truncate(rows * l.d);
-            Some(crate::slot_induction::Prefix::new(input, l.d, length))
+            input
         } else {
-            None
+            Vec::new()
         };
-        let (choices, out) = slot_memory::forward(
+        let local_tape = local.map(|mode| {
+            crate::typed_lookup::Tape::new(
+                &input,
+                &h,
+                &tape.weights[l.path_start.unwrap()..l.end()],
+                l.d,
+                length,
+                mode,
+                |v| tape.routing.nearest(l, &tape.weights, v),
+            )
+        });
+        let prefix = use_induction.then(|| crate::slot_induction::Prefix::new(input, l.d, length));
+        let (choices, mut out) = slot_memory::forward(
             l,
             &tape.weights,
             &tape.routing,
@@ -259,6 +276,10 @@ impl SlotLayer {
             prefix.as_ref(),
         );
         tape.prefix = prefix;
+        if let Some(local) = &local_tape {
+            local.add_output(&mut out);
+        }
+        tape.local = local_tape;
         let device = e.cuda.upload(&out)?;
         self.copy(self.output.ptr(), device.ptr(), out.len())?;
         if let Some(phase) = &self.phase {
@@ -326,7 +347,7 @@ impl SlotLayer {
             phase.backward(e, rows, length)?;
         }
         let dy = e.dlast.read()?;
-        let gradient = slot_memory::backward(
+        let mut gradient = slot_memory::backward(
             &self.layout,
             &tape.weights,
             &tape.hidden,
@@ -335,6 +356,19 @@ impl SlotLayer {
             length,
             tape.prefix.as_ref(),
         );
+        if let Some(local) = &tape.local {
+            let layout = &self.layout;
+            let start = layout.path_start.unwrap();
+            gradient.input.resize(rows * layout.d, 0.);
+            local.backward(
+                &tape.hidden,
+                &tape.weights[start..layout.end()],
+                &dy[..rows * layout.d],
+                &mut gradient.input,
+                &mut gradient.hidden,
+                &mut gradient.parameters.gates[start - layout.gates..],
+            );
+        }
         self.write_adjoint(e, &gradient.parameters)?;
         *self.input_gradient.borrow_mut() = if gradient.input.is_empty() {
             None

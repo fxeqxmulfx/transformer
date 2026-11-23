@@ -53,8 +53,7 @@ impl ReadGates {
     }
 }
 
-/// The search and gate scales are independent so a fixed-weight ablation
-/// can remove proposals while retaining the trained affine coordinates.
+/// Search and gate scales vary independently in fixed-weight controls.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PeerRead {
     pub search: Option<PeerSearch>,
@@ -62,6 +61,7 @@ pub struct PeerRead {
     pub pairs: Option<crate::slot_orbits::PairRead>,
     pub dense_induction: bool,
     pub fibers: Option<crate::slot_orbits::FiberRead>,
+    pub path_passes: Option<usize>,
 }
 
 impl PeerRead {
@@ -72,6 +72,7 @@ impl PeerRead {
             pairs: None,
             dense_induction: false,
             fibers: None,
+            path_passes: None,
         }
     }
 
@@ -83,6 +84,7 @@ impl PeerRead {
         pairs: None,
         dense_induction: false,
         fibers: None,
+        path_passes: None,
     };
 
     pub const SHARED_GRAPH: Self = Self {
@@ -112,11 +114,32 @@ impl PeerRead {
         fibers: Some(crate::slot_orbits::FiberRead::Chart),
         ..Self::DENSE_INDUCTION
     };
+    pub const TYPED_LOOKUP: Self = Self {
+        path_passes: Some(5),
+        ..Self::CHART_INDUCTION
+    };
 
     /// Change only the retrieved value. All arms use the original parameter layout.
     pub fn induction_controls(self) -> Vec<(&'static str, Self)> {
         use crate::slot_orbits::FiberRead;
         let mut variants = Vec::new();
+        if self.path_passes == Some(5) {
+            for (name, passes) in [
+                ("one_local_read", 1),
+                ("two_local_reads", 2),
+                ("three_local_reads", 3),
+                ("ten_local_reads", 10),
+                ("without_local_reads", 0),
+            ] {
+                variants.push((
+                    name,
+                    Self {
+                        path_passes: Some(passes),
+                        ..self
+                    },
+                ));
+            }
+        }
         if self.fibers == Some(FiberRead::Chart) {
             for (name, fibers) in [
                 ("without_chart", None),
@@ -143,6 +166,8 @@ impl PeerRead {
         if self.pairs.is_some() {
             return match (self, with_phase) {
                 (Self::CHART_INDUCTION, true) => "phasor-triple-chart-induction-32-v1",
+                (Self::TYPED_LOOKUP, true) => "phasor-triple-typed-lookup-32-v1",
+                (Self::TYPED_LOOKUP, false) => "phasor-triple-typed-lookup-trunk-v1",
                 (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
                 (Self::DENSE_INDUCTION, true) => "phasor-triple-dense-induction-32-v1",
                 (Self::DENSE_INDUCTION, false) => "phasor-triple-dense-induction-trunk-v1",
@@ -280,6 +305,7 @@ impl Head {
             "triple-pair-classes" => Ok(Self::PeerTriplePhase(PeerRead::PAIR_GRAPH)),
             "triple-dense-induction" => Ok(Self::PeerTriplePhase(PeerRead::DENSE_INDUCTION)),
             "triple-chart-induction" => Ok(Self::PeerTriplePhase(PeerRead::CHART_INDUCTION)),
+            "triple-typed-lookup" => Ok(Self::PeerTriplePhase(PeerRead::TYPED_LOOKUP)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,

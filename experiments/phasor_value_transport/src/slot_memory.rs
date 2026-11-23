@@ -15,6 +15,7 @@ pub struct Layout {
     pub values: usize,
     pub gates: usize,
     pub bias: usize,
+    pub path_start: Option<usize>,
 }
 
 pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
@@ -33,7 +34,12 @@ pub fn parameter_count(head: crate::head::Head, d: usize, k: usize) -> usize {
         0
     };
     let gates = head.read_gates().count();
-    4 * d + (k + k * k + gates) * d + gates + phase
+    let local = if head.peer_read().is_some_and(|r| r.path_passes.is_some()) {
+        crate::typed_lookup::parameters(d)
+    } else {
+        0
+    };
+    4 * d + (k + k * k + gates) * d + gates + phase + local
 }
 
 pub fn phase_start(cfg: &Config) -> usize {
@@ -63,11 +69,19 @@ impl Layout {
             values,
             gates,
             bias: gates + gate_mode.count() * d,
+            path_start: cfg
+                .head
+                .peer_read()
+                .and_then(|r| r.path_passes)
+                .map(|_| gates + gate_mode.count() * (d + 1)),
         }
     }
 
     pub fn end(&self) -> usize {
-        self.bias + self.gate_mode.count()
+        self.path_start
+            .map_or(self.bias + self.gate_mode.count(), |offset| {
+                offset + crate::typed_lookup::parameters(self.d)
+            })
     }
 
     pub fn prototype<'a>(&self, w: &'a [f32], slot: usize) -> &'a [f32] {
@@ -274,7 +288,7 @@ impl Routing {
         self.install(l, bank, geometry.priority);
     }
 
-    fn nearest(&self, l: &Layout, w: &[f32], v: &[f32]) -> Option<usize> {
+    pub(crate) fn nearest(&self, l: &Layout, w: &[f32], v: &[f32]) -> Option<usize> {
         let mut best = 0.;
         let mut winner = None;
         for (i, &inv) in self.inverse.iter().enumerate() {
