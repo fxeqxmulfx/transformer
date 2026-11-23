@@ -4,6 +4,31 @@ use super::*;
 use std::collections::BTreeSet;
 use std::collections::HashSet;
 pub(super) const NAME: &str = "study-lookup-disjoint-layers";
+
+#[derive(Clone, Copy)]
+pub(super) struct Training {
+    name: &'static str,
+    depths: &'static [usize],
+}
+impl Training {
+    pub(super) fn named(name: &str) -> Option<Self> {
+        match name {
+            NAME => Some(Self {
+                name: NAME,
+                depths: &[1, 2, 3, 4, 5],
+            }),
+            "study-lookup-disjoint-through-10" => Some(Self {
+                name: "study-lookup-disjoint-through-10",
+                depths: &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            }),
+            "study-lookup-disjoint-through-20" => Some(Self {
+                name: "study-lookup-disjoint-through-20",
+                depths: &[1, 2, 3, 4, 5, 8, 10, 12, 16, 20],
+            }),
+            _ => None,
+        }
+    }
+}
 const WORDS: &str = "<pad> <bos> <eos> Table → Starting at , what do you get ? A . B C D E";
 const LETTERS: [&str; 5] = ["A", "B", "C", "D", "E"];
 const NAMES: usize = 210;
@@ -48,7 +73,7 @@ fn sample(hops: usize, rng: &mut random::Random) -> Result<Set> {
     })
 }
 impl Set {
-    fn rows(&self, ids: &BTreeMap<&str, i64>) -> [Example; 5] {
+    fn rows(&self, ids: &BTreeMap<&str, i64>, task: &str) -> [Example; 5] {
         let mut prefix = vec![ids["<bos>"]];
         for t in &self.tables {
             prefix.push(ids["Table"]);
@@ -72,7 +97,7 @@ impl Set {
             for (letter, key) in LETTERS.into_iter().zip(self.options) {
                 prompt.extend([ids[letter], ids["."], key]);
             }
-            Example::generation(NAME, prompt, vec![ids[LETTERS[self.answers[lane]]]])
+            Example::generation(task, prompt, vec![ids[LETTERS[self.answers[lane]]]])
         })
     }
 }
@@ -84,7 +109,7 @@ fn digest(rows: &[Example]) -> Result<String> {
             .collect::<Vec<_>>(),
     )?))
 }
-pub(super) fn dataset() -> Result<(Value, Task)> {
+pub(super) fn dataset(training: Training) -> Result<(Value, Task)> {
     let words = vocabulary();
     let ids = words
         .iter()
@@ -94,19 +119,15 @@ pub(super) fn dataset() -> Result<(Value, Task)> {
     let mut splits = BTreeMap::new();
     let mut hashes = BTreeMap::new();
     let mut seen = HashSet::new();
-    for (name, per_depth, seed) in [("train", 200u32, 3_011_713), ("validation", 40, 3_090_937)] {
+    for (name, count, seed) in [("train", 1000, 3_011_713), ("validation", 200, 3_090_937)] {
         let mut rng = random::Random::new(seed);
         let mut rows = Vec::new();
-        for h in 1..=5 {
-            for i in 0..per_depth {
+        for &h in training.depths {
+            for i in 0..count / training.depths.len() {
                 let set = sample(h, &mut rng)?;
                 // Uniform row and choice permutations keep the starting key independent of the outer letter quota.
-                let lane = set
-                    .answers
-                    .iter()
-                    .position(|&k| k == i as usize % 5)
-                    .unwrap();
-                let r = set.rows(&ids).into_iter().nth(lane).unwrap();
+                let lane = set.answers.iter().position(|&k| k == i % 5).unwrap();
+                let r = set.rows(&ids, training.name).into_iter().nth(lane).unwrap();
                 if !seen.insert(r.prompt.clone()) {
                     return Err("duplicate synthetic prompt".into());
                 }
@@ -119,14 +140,14 @@ pub(super) fn dataset() -> Result<(Value, Task)> {
     }
     let case = json!({"width":64,"heads":2,"layers":2,"batch":16,"max_updates":3000,"observe":50});
     let spec = hash(&serde_json::to_vec(&(
-        NAME,
+        training.name,
         &words,
         &hashes,
         &case,
         "validation",
     ))?);
     Ok((
-        json!({"name":NAME,"tier":"synthetic-study","catalog_sha256":spec,"case":case,"selection":"validation",
+        json!({"name":training.name,"tier":"synthetic-study","catalog_sha256":spec,"case":case,"selection":"validation",
         "train_examples":1000,"heldout_examples":200,"split_sha256":hashes}),
         Task {
             vocab: words.len(),
@@ -135,7 +156,7 @@ pub(super) fn dataset() -> Result<(Value, Task)> {
         },
     ))
 }
-fn probes(hops: usize) -> Result<Vec<Example>> {
+fn probes(hops: usize, task: &str) -> Result<Vec<Example>> {
     if !(1..=40).contains(&hops) {
         return Err("expected one through forty tables".into());
     }
@@ -148,15 +169,17 @@ fn probes(hops: usize) -> Result<Vec<Example>> {
     let mut rng = random::Random::new(3_107_419 + hops as u32);
     let mut rows = Vec::new();
     for _ in 0..20 {
-        rows.extend(sample(hops, &mut rng)?.rows(&ids));
+        rows.extend(sample(hops, &mut rng)?.rows(&ids, task));
     }
     Ok(rows)
 }
-pub fn score(seed: u32, out: &Path, hops: usize, passes: usize) -> Result<()> {
-    let (case, task) = dataset()?;
+pub fn score(seed: u32, out: &Path, hops: usize, passes: usize, name: Option<&str>) -> Result<()> {
+    let training =
+        Training::named(name.unwrap_or(NAME)).ok_or("unknown disjoint-layer training study")?;
+    let (case, task) = dataset(training)?;
     let mut cfg = task_config(&case, &task, true)?;
     let (weights, point) = checkpoint(seed, out, &case, &cfg)?;
-    let rows = probes(hops)?;
+    let rows = probes(hops, training.name)?;
     cfg.max_batch = task_config(&case, &task, false)?.max_batch;
     cfg.max_length = rows[0].prompt.len().max(cfg.max_length);
     let trained = cfg.head.peer_read().and_then(|r| r.path).map(|r| r.passes);
@@ -188,19 +211,68 @@ pub fn score(seed: u32, out: &Path, hops: usize, passes: usize) -> Result<()> {
         sets[right] += 1;
         constant += usize::from(r.iter().all(|p| *p == r[0]));
     }
-    println!(
-        "{}",
-        json!({"study":NAME,"model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
+    let mut report = json!({"study":training.name,"model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
         "weights_sha256":weight_digest(&weights),"protocol_sha256":case["catalog_sha256"],
         "hops":hops,"shared_reads":passes,"trained_reads":trained,"validation":{"correct":score,"total":val.len()},
         "vocabulary":task.vocab,"name_count":NAMES,"split_sha256":digest(&rows)?,"total":rows.len(),"correct":sets.iter().enumerate().map(|(i,n)|i*n).sum::<usize>(),
-        "table_sets":20,"sets_by_correct_answers":sets,"constant_response_sets":constant,"prompt_length":rows[0].prompt.len()})
-    );
+        "table_sets":20,"sets_by_correct_answers":sets,"constant_response_sets":constant,"prompt_length":rows[0].prompt.len()});
+    if training.name != NAME {
+        report["training_hops"] = json!(training.depths);
+    }
+    println!("{report}");
     Ok(())
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn curricula_balance_hops_and_letters_and_reuse_independent_table_sets() {
+        for name in [
+            NAME,
+            "study-lookup-disjoint-through-10",
+            "study-lookup-disjoint-through-20",
+        ] {
+            let training = Training::named(name).unwrap();
+            let (manifest, task) = dataset(training).unwrap();
+            if name == NAME {
+                assert_eq!(
+                    manifest["catalog_sha256"],
+                    "0bd7bf4cf889a8b6bdecab3e02a9dcaa19f43a4d7a3f2c008f2bcf23accd287b"
+                );
+            }
+            let mut seen = HashSet::new();
+            for (split, total) in [("train", 1000), ("validation", 200)] {
+                let mut cells = BTreeMap::new();
+                assert_eq!(task.splits[split].len(), total);
+                for row in &task.splits[split] {
+                    let hops = (row.prompt.len() - 25) / 16;
+                    assert!(training.depths.contains(&hops));
+                    assert_eq!(row.task, name);
+                    assert_eq!(row.targets.iter().filter(|&&v| v != -100).count(), 1);
+                    assert!(seen.insert(row.prompt.clone()));
+                    *cells.entry((hops, row.answer[0])).or_insert(0usize) += 1;
+                }
+                assert_eq!(cells.len(), training.depths.len() * 5);
+                assert!(
+                    cells
+                        .values()
+                        .all(|&n| n == total / (5 * training.depths.len()))
+                );
+            }
+            let test = probes(10, name).unwrap();
+            assert_eq!(
+                digest(&test).unwrap(),
+                "e268a2ab58511be4644952327ecc7db74b20107b5f410f313f9a7410564aa4fb"
+            );
+            assert!(test.iter().all(|r| !seen.contains(&r.prompt)));
+            assert!(
+                probes(40, name)
+                    .unwrap()
+                    .iter()
+                    .all(|r| !seen.contains(&r.prompt))
+            );
+        }
+    }
     #[test]
     fn forty_hops_use_205_different_names_and_only_the_final_letter_as_target() {
         let t = sample(40, &mut random::Random::new(58)).unwrap();
@@ -218,7 +290,7 @@ mod tests {
             }
             assert_eq!(key, t.options[t.answers[lane]]);
         }
-        for g in probes(40).unwrap().as_chunks::<5>().0 {
+        for g in probes(40, NAME).unwrap().as_chunks::<5>().0 {
             assert_eq!(
                 g.iter().map(|r| r.answer[0]).collect::<BTreeSet<_>>().len(),
                 5

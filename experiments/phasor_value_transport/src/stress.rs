@@ -160,8 +160,8 @@ pub fn routes() -> Result<()> {
 }
 
 fn load(name: &str) -> Result<(Value, Task)> {
-    if name == disjoint_lookup::NAME {
-        return disjoint_lookup::dataset();
+    if let Some(training) = disjoint_lookup::Training::named(name) {
+        return disjoint_lookup::dataset(training);
     }
     if name == ordinal_dialogue::NAME {
         return ordinal_dialogue::dataset();

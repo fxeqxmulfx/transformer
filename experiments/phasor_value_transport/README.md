@@ -2429,6 +2429,29 @@ ten, twenty or forty shared passes. Each has its own checkpoint identity.
 The scorer takes the number of actual tables and the evaluation read
 budget separately.
 
+On seed 0, training on one through five tables with 10, 20 or 40 reads
+gave **byte-identical weight files**. The three runs had 0, 39, 73, 193
+and 199 correct validation answers out of 200 at updates 0, 50, 100,
+150 and 200. Each generated 999/1,000 training answers correctly at its
+first validation crossing. With weights from the ten-read run, ten reads
+scored 93/100 on ten previously unseen tables per question. Twenty reads
+scored 77/100 on twenty tables and solved all five starts in ten sets.
+
+Once a path terminates, more reads preserve its endpoint. On a path
+of twenty different links, ten reads can still end at a different key
+from twenty. For a deterministic optimizer, equal gradients at every
+scheduled update imply equal optimizer states. The weight-file comparison
+establishes equality of the final parameters in these three measured runs.
+[Read budgets and optimizer trajectories](../../src/Transformer/Phasor/TripleTransport/TrainingReadDepth.lean)
+
+Two longer training distributions keep the vocabulary, grammar, 1,000
+training questions, 200 validation questions, batch schedule and held-out
+table sets fixed. The first trains equally often on depths one through
+ten. The second uses depths 1, 2, 3, 4, 5, 8, 10, 12, 16 and 20.
+Every included depth has 100 training and 20 validation questions,
+balanced over the five correct letters. Depths 30 and 40 are held out
+from both training distributions.
+
 ```sh
 export PHASOR_EVAL_BATCH_CAP=4
 for depth in 10 20 40; do
@@ -2442,6 +2465,20 @@ for depth in 10 20 40; do
         "$bin" disjoint-lookup-depth "$seed" "$out" 10 "$depth"
         for hops in 20 40; do "$bin" disjoint-lookup-depth "$seed" "$out" "$hops" "$hops"; done
     done
+done
+```
+
+To train with twenty shared reads on the longer distribution, select its
+study name when training and when reloading the checkpoint.
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup-20
+bin=./target/release/phasor-value-transport
+study=study-lookup-disjoint-through-20
+out=runs/disjoint-lookup/through-20-r20
+"$bin" advance "$study" 0 "$out" 250
+for hops in 10 20 30 40; do
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-depth 0 "$out" "$hops" "$hops" "$study"
 done
 ```
 
