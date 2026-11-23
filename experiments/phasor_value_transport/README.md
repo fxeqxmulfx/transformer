@@ -2459,6 +2459,11 @@ at this observation. Independent reloads reproduced both counts. On
 the separate ten-hop questions the full models generated 91/100 and
 96/100 correct answers at their respective training budgets.
 
+At update 750 the twenty-read model again generated 188/200 on validation.
+An independent reload gave 94/100 on the separate ten-hop questions.
+Another 500 updates therefore left the validation count unchanged and
+lost two ten-hop answers on this seed.
+
 The table compares their isolated learned path reads at the same
 evaluation budget, one read per displayed table. Each of the 100
 questions is paired with a last-link edit that changes its answer.
