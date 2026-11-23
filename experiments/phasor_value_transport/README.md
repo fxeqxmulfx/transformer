@@ -2549,6 +2549,16 @@ futures, with a source target of 99% decoded accuracy.
 | MASH-half, decoded futures | 3,323 | 3,253 | 3,361 |
 | MASH-half, native tokens | 3,318 | 3,244 | 3,355 |
 
+At update 1,000 all six independent reloads reproduced the counts below.
+Seed 0 at update 3,000 scored 4,115/4,704 on MASH, one more decoded
+future than at update 1,000. These runs remain below the 99% source target.
+
+| Codec and score at update 1,000 | Seed 0 | Seed 1 | Seed 2 |
+| --- | ---: | ---: | ---: |
+| MASH, decoded futures and native tokens | 4,114 | 4,102 | 4,146 |
+| MASH-half, decoded futures | 3,340 | 3,260 | 3,515 |
+| MASH-half, native tokens | 3,333 | 3,254 | 3,505 |
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TemporalRecurrenceScore Transformer.Phasor.PastGridScore
 cd experiments/phasor_value_transport
@@ -2563,6 +2573,14 @@ for task in recurrence-division-k1-c4-lgt recurrence-division-k2-c4-lgt \
         "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog
     done
 done
+for codec in mash mash-half; do
+    for seed in 0 1 2; do
+        task="recurrence-fibonacci-k1-c2-$codec"
+        "$bin" catalog-target "$task" "$seed" 1000 runs/main-catalog > /dev/null
+        "$bin" catalog-target "$task" "$seed" 1000 runs/main-catalog
+    done
+done
+"$bin" catalog-target recurrence-fibonacci-k1-c2-mash 0 3000 runs/main-catalog
 ```
 
 #### Fashion-MNIST image classification
