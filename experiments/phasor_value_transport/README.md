@@ -2160,6 +2160,11 @@ hop splits, and it generated C on Mira. Seed 2 first crossed at update
 200 with 200/200 validation. It scored 100, 100, 100, 99 and 15 using
 five reads. All three checkpoints passed independent reloads.
 
+The five-read normalized architecture also passed the separate NV11 regression.
+On three fresh seeds, ordinary training first reached 4,704/4,704 training
+pairs and 4,705/4,705 held-out pairs at update 250. On reload, the minimum
+held-out true-class margin was 0.762, 1.074 and 1.319 for seeds 0, 1 and 2.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.EndpointScale
 cd experiments/phasor_value_transport
@@ -2170,6 +2175,10 @@ export PHASOR_EVAL_BATCH_CAP=16
 "$bin" check
 "$bin" advance study-lookup-questions 0 "$out" 250
 "$bin" lookup-study-score 0 "$out" ablations
+for seed in 0 1 2; do
+    "$bin" advance arithmetic-cubic-product "$seed" "$out" 250
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done
 ```
 
 #### Read budget and every interior edge
