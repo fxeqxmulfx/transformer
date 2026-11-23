@@ -151,8 +151,21 @@ At every tested depth above three, the same checkpoint recovered the
 one missed novel validation example and retained all 512 independent
 test answers at the source length. On the doubled inputs, ten passes
 improved accuracy by 104/256 and fell short of the 99% target.
-At 20 bits, three passes scored 228/256. Ten and forty passes each scored
-255/256, gaining 28 and losing one of the originally correct rows.
+The same checkpoint met the 99% target with ten passes on the 20-, 21-
+and 22-bit panels. At 23 and 24 bits it fell below that target. Each row
+uses 256 distinct words and compares the complete generated label and EOS
+for each word at both evaluation depths.
+
+| Input bits | Correct at three passes | Correct at ten passes | Gained | Lost |
+| ---: | ---: | ---: | ---: | ---: |
+| 20 | 228 | 255 | 28 | 1 |
+| 21 | 206 | 254 | 48 | 0 |
+| 22 | 194 | 255 | 61 | 0 |
+| 23 | 201 | 252 | 52 | 1 |
+| 24 | 172 | 249 | 79 | 2 |
+
+At 20 and 24 bits, forty passes reproduced the ten-pass counts of correct,
+gained and lost answers.
 
 On seed 0 the first positive scheduled observation gave 52/4,705 on
 modular addition at update 19, 79/4,705 on absolute difference at update
@@ -278,6 +291,9 @@ target/release/inkling-stress depth suite-boolean-and-shift 0 runs/canonical 1,2
 target/release/inkling-stress extend basis-depth-easy 0 runs/canonical depth-length 128,256
 for passes in 3 5 10 20 40; do
     target/release/inkling-stress extend basis-parity16 0 runs/canonical parity-length 32 "$passes"
+done
+for passes in 3 10; do
+    target/release/inkling-stress extend basis-parity16 0 runs/canonical parity-length 20,21,22,23,24 "$passes"
 done
 target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 0,32,64,128
 target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 128 40
