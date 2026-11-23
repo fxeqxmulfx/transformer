@@ -21,7 +21,7 @@ causality. [Release configuration](https://huggingface.co/thinkingmachines/Inkli
 [Reference forward](https://github.com/huggingface/transformers/blob/046bdb8cc2cee29d233964bb77fe6fd37cfe4aa3/src/transformers/models/inkling2_loop/modeling_inkling2_loop.py)
 [Lean proof](../../src/Transformer/InklingLoop.lean)
 
-| Component | Released text model | Stress-test model |
+| Component | Released text model | Eight-layer comparison |
 | --- | --- | --- |
 | Stored layers and applications per token | 24 and 48 | 8 and 16 |
 | Layers per block | Five local, one global | One local, one global |
@@ -83,12 +83,22 @@ observations within 100,000-update budgets. Phasor's main comparator
 independently replayed all 75 short and 30 long threshold crossings.
 The two models used different compute backends. [Phasor cohort](../phasor_value_transport/README.md#canonical-gpt-stress-tiers)
 
-With the released topology, seed 0 scored 78/4,705 on absolute difference
-at update 19 and 52/4,704 on decoded Fibonacci at update 10. The 24-layer
-models had 81,116,992 and 81,137,344 trainable parameters respectively.
-On Boolean shift the same topology had 21,481,088 parameters and scored
-0/7 on each seed at update 40. These observations precede the original
-budgets. Each architecture has its own cohort counters and checkpoints.
+The 24-layer topology reached the shifted Boolean threshold earlier than
+the eight-layer comparison on every seed. All three independently reloaded
+checkpoints also solved every example on the independent test.
+
+| Seed | First 24-layer update | Primary | Independent test | Length 32 | Length 64 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 112 | 7/7 | 64/64 | 56/64 | 33/64 |
+| 1 | 80 | 7/7 | 64/64 | 17/64 | 3/64 |
+| 2 | 92 | 7/7 | 64/64 | 52/64 | 34/64 |
+
+This model used 21,481,088 parameters for Boolean shift. At 40 updates
+it still scored 0/7 on each seed. On absolute difference the 81,116,992-
+parameter model went from 78/4,705 at update 19 to 79/4,705 at update 76
+on seed 0. On decoded Fibonacci the 81,137,344-parameter model went from
+52/4,704 at update 10 to 53/4,704 at update 40 on seed 0. The original
+100,000-update budgets are still open for these two cells.
 
 ## Reproduction
 
