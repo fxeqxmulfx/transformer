@@ -127,7 +127,7 @@ unset LIBTORCH_USE_PYTORCH
 cargo +stable test --release --locked --offline -- --test-threads=1
 cargo +stable clippy --release --locked --offline --all-targets -- -D warnings
 cargo +stable build --release --locked --offline
-INKLING_JOBS=6 INKLING_THREADS=2 ./cohort.sh run runs/canonical
+INKLING_ROLLING=1 INKLING_JOBS=6 INKLING_THREADS=2 ./cohort.sh run runs/canonical
 ./cohort.sh report runs/canonical
 ```
 
@@ -139,13 +139,20 @@ export CARGO_TARGET_DIR="$PWD/target/release-topology"
 cargo +stable test --release --locked --offline --features release-topology -- --test-threads=1
 cargo +stable build --release --locked --offline --features release-topology
 export INKLING_BIN="$CARGO_TARGET_DIR/release/inkling-stress"
-INKLING_JOBS=2 INKLING_THREADS=2 ./cohort.sh run runs/release-topology 1
+INKLING_ROLLING=1 INKLING_JOBS=2 INKLING_THREADS=2 ./cohort.sh run runs/release-topology
 ./cohort.sh report runs/release-topology
 ```
 
 The optional final argument limits the cohort to a multiple of the original
 observation interval. Omitting it advances the saved states through the full
 original budgets or first threshold crossing.
+
+`INKLING_ROLLING=1` keeps the latest weights, both AdamW moments, and every
+scheduled observation for each cell. It replaces its preceding rolling file
+after the new weights and their digest have been published. Regular snapshots
+use the `at-STEP.safetensors` filename and can be kept for depth sweeps.
+On Boolean shift, rolling through updates 4, 8 and 12 produced the same
+checkpoint bytes and observations as training directly to update 12.
 
 A single cell can also be advanced and replayed directly.
 

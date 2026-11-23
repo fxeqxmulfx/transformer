@@ -14,7 +14,13 @@ mod metrics;
 #[path = "../../../.lake/reproduction/gpt/research/main_model/wsd_suite_native/src/schedule.rs"]
 mod schedule;
 use serde_json::{Value, json};
-use std::{env, fs, io::Write, path::Path, time::Instant};
+use sha2::{Digest, Sha256};
+use std::{
+    env, fs,
+    io::{Read, Write},
+    path::{Path, PathBuf},
+    time::Instant,
+};
 const SUITE: &str = include_str!("../../convex_stress/suite.json");
 const SCORER: &str = include_str!(
     "../../../.lake/reproduction/gpt/research/complex_geometry_suite/native/src/metrics.rs"
@@ -33,6 +39,28 @@ fn publish(file: &Path, body: &[u8]) -> Result<()> {
     fs::rename(temp, file)?;
     fs::File::open(file.parent().ok_or("missing output directory")?)?.sync_all()?;
     Ok(())
+}
+
+fn checkpoint_path(dir: &Path, step: usize, rolling: bool) -> PathBuf {
+    let prefix = if rolling { "rolling" } else { "at" };
+    dir.join(format!("{prefix}-{step}.safetensors"))
+}
+
+fn file_hash(path: &Path) -> Result<String> {
+    let mut input = fs::File::open(path)?;
+    let mut digest = Sha256::new();
+    let mut buffer = [0u8; 65536];
+    loop {
+        let count = input.read(&mut buffer)?;
+        if count == 0 {
+            return Ok(digest
+                .finalize()
+                .iter()
+                .map(|x| format!("{x:02x}"))
+                .collect());
+        }
+        digest.update(&buffer[..count]);
+    }
 }
 
 fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<Value> {
@@ -92,10 +120,14 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
     let mut history = Vec::new();
     let mut elapsed = 0.;
     let primary = &task.splits[&task.selection];
+    let previous_rolling = previous
+        .as_ref()
+        .is_some_and(|v| v["rolling_checkpoint"] == true);
+    let rolling = env::var("INKLING_ROLLING").as_deref() == Ok("1");
     if let Some(v) = &previous {
         first = v["step"].as_u64().ok_or("missing checkpoint step")? as usize;
-        let checkpoint = dir.join(format!("at-{first}.safetensors"));
-        if v["binding"] != bind || v["checkpoint_sha256"] != hash(&fs::read(&checkpoint)?) {
+        let checkpoint = checkpoint_path(&dir, first, previous_rolling);
+        if v["binding"] != bind || v["checkpoint_sha256"] != file_hash(&checkpoint)? {
             return Err("checkpoint or protocol changed".into());
         }
         net.variables.load(&checkpoint)?;
@@ -159,19 +191,25 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
             let pass = exact * 100 >= 99 * primary.len();
             history.push(json!({"step":step,"exact":exact,"total":primary.len()}));
             if pass || step == until {
-                let checkpoint = dir.join(format!("at-{step}.safetensors"));
+                let checkpoint = checkpoint_path(&dir, step, rolling);
                 let temp = dir.join("writing.safetensors");
                 net.variables.save(&temp)?;
                 fs::File::open(&temp)?.sync_all()?;
                 fs::rename(&temp, &checkpoint)?;
-                let record = json!({"model":text::MODEL,"case":name,"tier":row["tier"],"seed":seed,
+                let mut record = json!({"model":text::MODEL,"case":name,"tier":row["tier"],"seed":seed,
                         "status":if pass{"passed"}else if step==budget{"budget miss"}else{"in progress"},
                         "step":step,"exact":exact,"total":primary.len(),"primary":task.selection,
                         "original_cap":budget,"cadence":every,"parameters":parameters,
                     "stored_layers":4*text::GROUP,"layer_applications":8*text::GROUP,"passes":text::PASSES,"experts":text::EXPERTS,"top_k":text::TOP,
-                        "binding":bind,"checkpoint_sha256":hash(&fs::read(&checkpoint)?),"observations":history,
+                        "binding":bind,"checkpoint_sha256":file_hash(&checkpoint)?,"observations":history,
                         "seconds":elapsed+started.elapsed().as_secs_f64(),"kernite":"0.6.0","libtorch":"2.9.0 CPU"});
+                if rolling {
+                    record["rolling_checkpoint"] = json!(true);
+                }
                 publish(&latest, &serde_json::to_vec_pretty(&record)?)?;
+                if rolling && previous_rolling && first != step {
+                    fs::remove_file(checkpoint_path(&dir, first, true))?;
+                }
                 return Ok(record);
             }
         }
