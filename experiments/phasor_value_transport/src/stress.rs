@@ -459,6 +459,17 @@ fn prepare_evaluation(
     name: &str,
     probes: ProbeSet,
 ) -> Result<(Value, Task, BTreeMap<String, String>)> {
+    let (row, mut task) = load(name)?;
+    let fingerprints = add_probes(name, probes, &row, &mut task)?;
+    Ok((row, task, fingerprints))
+}
+
+fn add_probes(
+    name: &str,
+    probes: ProbeSet,
+    row: &Value,
+    task: &mut Task,
+) -> Result<BTreeMap<String, String>> {
     let test_splits = probes != ProbeSet::Validation;
     let extended = probes.extended();
     let parity_task = parity_case(name);
@@ -477,11 +488,10 @@ fn prepare_evaluation(
     if probes == ProbeSet::Extended && !parity_task && !name.starts_with("language-l") {
         return Err("extended probes require a source block language or Basis parity task".into());
     }
-    let (row, mut task) = load(name)?;
     let mut probe_hashes = BTreeMap::new();
     if let ProbeSet::DepthLength(length) = probes {
         let (split, digest) =
-            language_probes::depth_length(&mut task, &row, length).map_err(|e| e.to_string())?;
+            language_probes::depth_length(task, row, length).map_err(|e| e.to_string())?;
         probe_hashes.insert(split, digest);
     }
     if let ProbeSet::RecallGap(gap) = probes {
@@ -509,7 +519,7 @@ fn prepare_evaluation(
         );
     }
     if test_splits && parity_task {
-        catalog::add_parity_probes(&mut task)?;
+        catalog::add_parity_probes(task)?;
         if extended {
             let lengths: &[usize] = match probes {
                 ProbeSet::Parity1024 => &[128, 256, 512, 1024],
@@ -517,14 +527,14 @@ fn prepare_evaluation(
                 ProbeSet::ParityLength(ref bits) => std::slice::from_ref(bits),
                 _ => &[128, 256],
             };
-            probe_hashes = catalog::add_extended_parity_probes(&mut task, lengths)
+            probe_hashes = catalog::add_extended_parity_probes(task, lengths)
                 .map_err(|err| -> Box<dyn std::error::Error> { err })?;
         }
     }
     if test_splits && name.starts_with("language-l") {
-        language_probes::add(&mut task, name, extended).map_err(|err| err.to_string())?;
+        language_probes::add(task, name, extended).map_err(|err| err.to_string())?;
     }
-    Ok((row, task, probe_hashes))
+    Ok(probe_hashes)
 }
 
 pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {

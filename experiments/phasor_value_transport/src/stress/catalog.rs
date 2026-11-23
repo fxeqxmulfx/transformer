@@ -353,7 +353,7 @@ fn with_identity(
     ]))?);
     let row = json!({"name":name,"tier":"catalog","selection":task.selection,
         "train_examples":task.splits["train"].len(),"heldout_examples":task.splits[&task.selection].len(),
-        "case":case,"catalog_sha256":identity});
+        "case":case,"catalog_sha256":identity,"data_fingerprints":fingerprints});
     Ok((row, task))
 }
 

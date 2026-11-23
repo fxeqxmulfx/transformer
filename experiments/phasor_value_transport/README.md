@@ -104,6 +104,14 @@ full budget if no crossing has occurred. Repeating the command reloads
 and scores the first and final weights, including available test splits.
 Training uses Phasor's original WSD AdamW throughout.
 
+For sequence-accuracy cases, `target-probes CASE SEED SEARCH_UPDATES RUN_DIR PROBE`
+scores the same transfer examples at the first crossing and at the end
+of the source retention window. It reloads the completed source run,
+checks each checkpoint digest and reproduces its original split scores.
+After an unsuccessful search it reports the final checkpoint and a null
+first crossing. Recall delay, parity length and the supported block-language
+probes use the same generators as the canonical evaluator.
+
 For the four numeric mechanism probes, the target is MSE at most 0.001
 on freely generated outputs. The scorer compares each decoded component
 with the original unquantized binary64 teacher and charges squared error
@@ -1683,19 +1691,20 @@ gate and the earlier value through the ordinary sequence loss.
 
 All three dense-induction checkpoints answered all 4,096 queries with
 128 extra tokens. Seed 0 also answered all 4,096 with delays of 256,
-512, 1,024 and 2,048 extra tokens. Keeping the seed-0 checkpoint fixed
+512, 1,024, 2,048, 3,072 and 3,800 extra tokens. Keeping the seed-0 checkpoint fixed
 and disabling the dense read
 reduced novel validation, independent test and the 64-token-delay test
 from 512/512 to 0/512 each. Keeping only the structural read scored
 512/512 on each split.
 
-On the broader hard-recall case, which allows key overwrites, seeds 0
-and 1 first scored 512/512 on novel validation at update 50. Their
+On the broader hard-recall case, which allows key overwrites, all three
+seeds first scored 512/512 on novel validation at update 50. Their
 independently reloaded checkpoints also scored 512/512 on the source
 test. Both splits stayed at 512/512 at update 550, after the original
-500-update retention window. From the same initial weights the main
-model finished its 3,000-update budget at 0/512 and 83/512 on novel
-validation for these seeds.
+500-update retention window. For seed 0, both checkpoints also solved
+all 512 independent sequences with 64, 128, 256, 512 and 1,024 extra tokens.
+From the same three initializations the main model finished its
+3,000-update budget at 0/512, 83/512 and 503/512 on novel validation.
 
 On the canonical short key-value binding probe, the first passing
 updates were 192, 128 and 128, compared with 640, 768 and 640 for the
@@ -1734,13 +1743,16 @@ for seed in 0 1 2; do
     "$bin" cell arithmetic-cubic-product "$seed" "$out"
     "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
     "$bin" cell basis-recall-easy "$seed" "$out"
-    for gap in 64 128 256 512 1024 2048; do
+    for gap in 64 128 256 512 1024 2048 3072 3800; do
         cap=4
         if [ "$gap" -ge 1024 ]; then cap=1; fi
         PHASOR_EVAL_BATCH_CAP=$cap "$bin" probes basis-recall-easy "$seed" "$out" recall-gap "$gap"
     done
     "$bin" slot-ablate basis-recall-easy "$seed" "$out" recall-gap 64
     "$bin" catalog-target basis-recall-hard "$seed" 100 "$out/catalog"
+    for gap in 64 128 256 512 1024; do
+        PHASOR_EVAL_BATCH_CAP=2 "$bin" target-probes basis-recall-hard "$seed" 100 "$out/catalog" recall-gap "$gap"
+    done
 done
 ```
 

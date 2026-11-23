@@ -142,10 +142,10 @@ fn weight_bytes(e: &Engine) -> Result<Vec<u8>> {
     Ok(values.iter().flat_map(|v| v.to_le_bytes()).collect())
 }
 
-fn replayed_weights(result: &Value, dir: &Path) -> Result<Vec<u8>> {
-    let bytes = fs::read(dir.join("weights.f32"))?;
-    if result["weights_sha256"] != hash(&bytes) {
-        return Err("fixed-budget weights changed after replay".into());
+fn verified_file(path: &Path, digest: &Value) -> Result<Vec<u8>> {
+    let bytes = fs::read(path)?;
+    if digest != &hash(&bytes) {
+        return Err(format!("checkpoint digest differs at {}", path.display()).into());
     }
     Ok(bytes)
 }
@@ -158,7 +158,8 @@ pub(super) fn replay_catalog(
     out: &Path,
 ) -> Result<(Value, Vec<u8>)> {
     let result = measure(Source::Catalog, name, seed, updates, out, false)?;
-    let bytes = replayed_weights(&result, &directory(out, MODEL, name, seed, updates))?;
+    let file = directory(out, MODEL, name, seed, updates).join("weights.f32");
+    let bytes = verified_file(&file, &result["weights_sha256"])?;
     Ok((result, bytes))
 }
 
@@ -177,21 +178,89 @@ pub fn fixed_probes(
     let mut cfg = task_config(&row, &task, false)?;
     cfg.head = Head::parse(arm)?;
     let result = measure(Source::ComparedHead(arm), name, seed, updates, out, false)?;
-    let bytes = replayed_weights(&result, &directory(out, arm, name, seed, updates))?;
-    let (scores, _) = score_checkpoint(cfg, &task, &bytes)?;
-    for (split, expected) in result["scores"]
-        .as_object()
-        .ok_or("missing fixed-budget scores")?
-    {
-        if scores.get(split) != Some(expected) {
-            return Err(format!("fixed-budget transfer replay differs on {split}").into());
-        }
-    }
+    let file = directory(out, arm, name, seed, updates).join("weights.f32");
+    let scores = transfer_scores(
+        cfg,
+        &task,
+        &file,
+        &result["weights_sha256"],
+        &result["scores"],
+    )?;
     println!(
         "{}",
         json!({"protocol":result["protocol"],"first_99":result["first_99"],
             "weights_sha256":result["weights_sha256"],"scored_with_kernite":KERNITE_VERSION,
             "probe_fingerprints":fingerprints,"scores":scores})
+    );
+    Ok(())
+}
+
+fn transfer_scores(
+    cfg: Config,
+    task: &Task,
+    file: &Path,
+    digest: &Value,
+    original: &Value,
+) -> Result<Value> {
+    let bytes = verified_file(file, digest)?;
+    let (scores, _) = score_checkpoint(cfg, task, &bytes)?;
+    for (split, expected) in original
+        .as_object()
+        .ok_or("missing original split scores")?
+    {
+        if scores.get(split) != Some(expected) {
+            return Err(
+                format!("transfer replay disagrees on {split} at {}", file.display()).into(),
+            );
+        }
+    }
+    Ok(scores)
+}
+
+/// Evaluate the first crossing and the final scheduled checkpoint on the same
+/// transfer examples, including the final checkpoint after an unsuccessful search.
+pub fn target_probes(
+    name: &str,
+    seed: u32,
+    updates: usize,
+    out: &Path,
+    probes: ProbeSet,
+) -> Result<()> {
+    let result = measure(Source::DeclaredTarget, name, seed, updates, out, false)?;
+    let (row, mut task, teachers) = catalog::load_declared(name)?;
+    if teachers.is_some() {
+        return Err("these transfer probes require a sequence-accuracy case".into());
+    }
+    let fingerprints = add_probes(name, probes, &row, &mut task)?;
+    let cfg = task_config(&row, &task, false)?;
+    let dir = directory(out, MODEL, name, seed, updates).join("declared-target");
+    let checkpoint =
+        |file: &str, step: &Value, digest: &Value, original: &Value| -> Result<Value> {
+            let scores = transfer_scores(cfg.clone(), &task, &dir.join(file), digest, original)?;
+            Ok(json!({"step":step,"weights_sha256":digest,"scores":scores}))
+        };
+    let target = &result["source_target"];
+    let first = &target["first"];
+    let first = if first.is_null() {
+        Value::Null
+    } else {
+        checkpoint(
+            "first-target.f32",
+            &first["step"],
+            &first["weights_sha256"],
+            &first["scores"],
+        )?
+    };
+    let last = checkpoint(
+        "weights.f32",
+        &target["final_step"],
+        &result["weights_sha256"],
+        &result["scores"],
+    )?;
+    println!(
+        "{}",
+        json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
+        "probe_fingerprints":fingerprints,"first":first,"final":last})
     );
     Ok(())
 }
