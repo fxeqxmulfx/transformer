@@ -10,6 +10,9 @@ use serde_json::{Value, json};
 use source_codec::{Difference, Domain, Matrix, Tokenizer, encode};
 use std::{cmp::Reverse, collections::BTreeMap};
 
+#[path = "register_programs.rs"]
+mod programs;
+
 const HALF: usize = 4_656;
 const PRIME: u32 = 97;
 
@@ -127,17 +130,21 @@ fn contexts(
 
 pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
     let data = &case["data"];
-    if case["kind"] != "associative" || case["data_seed"] != 1 || data["compute"] != 1 {
-        return Err("expected the original single-compute equation protocol".into());
+    let compute = data["compute"]
+        .as_u64()
+        .ok_or("missing number of compute rows")?;
+    if case["kind"] != "associative" || case["data_seed"] != 1 {
+        return Err("expected the original fixed-context equation protocol".into());
     }
     // Independent NumPy C distribution routines and the native source LGT
     // encoder produce these full input, supervision and padding fingerprints.
     let (loads, extra, random, expected) = match (
+        compute,
         data["loads"].as_u64(),
         data["overwrites"].as_u64(),
         data["labels"].as_str(),
     ) {
-        (Some(2), Some(0), Some("division")) => (
+        (1, Some(2), Some(0), Some("division")) => (
             2,
             0,
             false,
@@ -146,7 +153,7 @@ pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
                 "999c21cc00c3db91bce8f3d791ef6392b8ca1db39018c96f4196f3649ba344af",
             ],
         ),
-        (Some(2), Some(0), Some("random")) => (
+        (1, Some(2), Some(0), Some("random")) => (
             2,
             0,
             true,
@@ -155,7 +162,7 @@ pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
                 "0f9ede69f35a28284d3e66ce79deef49ede078c80a03c052a46d598d63544c0b",
             ],
         ),
-        (Some(8), Some(0), Some("division")) => (
+        (1, Some(8), Some(0), Some("division")) => (
             8,
             0,
             false,
@@ -164,7 +171,7 @@ pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
                 "234336e7c0c0ba1cd9afe5a4c9c81a51aa847665571e081439b5cb42dd4737f0",
             ],
         ),
-        (Some(8), Some(4), Some("division")) => (
+        (1, Some(8), Some(4), Some("division")) => (
             8,
             4,
             false,
@@ -173,7 +180,25 @@ pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
                 "54f8deb7d54a1a7970c675681aa86d5b829a3330461435d9275ce9ec2874ffb0",
             ],
         ),
-        _ => return Err("unrecognized single-compute equation configuration".into()),
+        (2, Some(8), Some(0), Some("division")) => (
+            8,
+            0,
+            false,
+            [
+                "7e4769756de0e69a08b80254e0ef28c9838dcb732d7530911d93bf6cc46258d4",
+                "6f03f8b19194d02d9301d6e9268d67d1142dd01f590532e5f87de30be522fbbc",
+            ],
+        ),
+        (4, Some(8), Some(0), Some("division")) => (
+            8,
+            0,
+            false,
+            [
+                "7a000d4b6d6bcc1e7d8f99ab26a060accc0161860178cda9c9a24c21400bf9ae",
+                "7346c5bda1519edddcd2a262207596bd076de3adb0a88a47904a1a39c9ab4318",
+            ],
+        ),
+        _ => return Err("unrecognized register equation configuration".into()),
     };
     let levels = Matrix::new(1, (-96..=96).map(f64::from).collect())?;
     let code = encode(
@@ -190,7 +215,11 @@ pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
         .into_iter()
         .zip(rows.as_chunks::<HALF>().0.iter().zip(expected))
     {
-        let examples = contexts(loads, extra, equations, stream, code.tokens.values());
+        let examples = if compute == 1 {
+            contexts(loads, extra, equations, stream, code.tokens.values())
+        } else {
+            programs::examples(compute as usize, equations, stream, code.tokens.values())
+        };
         let actual = wire::tensor_hash(&examples);
         if actual != hash {
             return Err(format!("equation-frame fingerprint differs on {name}: {actual}").into());

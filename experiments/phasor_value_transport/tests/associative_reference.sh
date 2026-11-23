@@ -18,5 +18,12 @@ for config in '2 0 0' '2 0 1' '8 0 0' '8 4 0'; do
         "$tmp/source" "$loads" "$extra" "$split" "$random" > "$tmp/frames-$loads-$extra-$split-$random.i16"
     done
 done
+c++ -std=c++20 -O2 -Wall -Wextra -Werror -I"$pcg" -I"$NUMPY_SOURCE/_core/include" \
+    tests/reference/register_program_numpy.cpp "$tmp/pcg.o" "$NUMPY_RANDOM_ARCHIVE" -lm -o "$tmp/programs"
+for steps in 2 4; do
+    for split in 0 1; do
+        "$tmp/programs" "$steps" "$split" > "$tmp/program-$steps-$split.i16"
+    done
+done
 PHASOR_EQUATION_REFERENCE="$tmp" cargo +stable test --locked --release --offline \
     --test associative_equations -- --include-ignored

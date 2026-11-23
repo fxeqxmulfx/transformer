@@ -122,3 +122,98 @@ fn every_context_matches_numpy_c_and_the_pinned_source_codec() {
         }
     }
 }
+
+#[test]
+fn register_programs_read_prior_results_and_keep_every_equation_in_its_source_split() {
+    let pairs = original_order();
+    let levels: BTreeMap<_, _> = (-96..=96).map(|x| (token(x), x)).collect();
+    for (steps, counts) in [(2, [2305, 2303]), (4, [1153, 1152])] {
+        let mut case = settings(8, 0, "division");
+        case["data"]["compute"] = steps.into();
+        let (task, _) = associative_equations::build(&case).unwrap();
+        for (i, name) in ["train", "validation"].into_iter().enumerate() {
+            let allowed: BTreeSet<_> = pairs[i * 4656..(i + 1) * 4656]
+                .iter()
+                .copied()
+                .filter(|&(a, _)| a > 0)
+                .collect();
+            let mut reused = 0;
+            let examples = &task.splits[name];
+            assert_eq!(examples.len(), counts[i]);
+            assert_eq!(examples.len(), allowed.len().div_ceil(steps));
+            for ex in examples {
+                assert_eq!(ex.tokens.len(), 3 * (8 + steps) - 1);
+                assert_eq!(ex.tokens.len(), ex.targets.len());
+                assert!(ex.changes.iter().all(|v| !v));
+                let mut registers = BTreeMap::new();
+                for row in ex.tokens[..24].as_chunks::<3>().0 {
+                    assert!((-32..=-1).contains(&levels[&row[0]]));
+                    assert_eq!(levels[&row[1]], -96);
+                    let value = levels[&row[2]];
+                    assert!((1..97).contains(&value));
+                    assert!(registers.insert(row[0], value).is_none());
+                }
+                let mut written = BTreeSet::new();
+                let mut used = BTreeSet::new();
+                for step in 0..steps {
+                    let q = 3 * (8 + step);
+                    let (k, j) = (ex.tokens[q], ex.tokens[q + 1]);
+                    assert_ne!(k, j);
+                    let pair = (registers[&k], registers[&j]);
+                    assert!(allowed.contains(&pair) && used.insert(pair));
+                    let y = levels[&ex.targets[q + 1]];
+                    assert_eq!((pair.1 * y) % 97, pair.0);
+                    if step + 1 < steps {
+                        assert_eq!(ex.tokens[q + 2], ex.targets[q + 1]);
+                    }
+                    reused += usize::from(written.contains(&k) || written.contains(&j));
+                    written.insert(k);
+                    registers.insert(k, y);
+                }
+                for (col, &target) in ex.targets.iter().enumerate() {
+                    assert_eq!(target >= 0, col >= 24 && (col - 24) % 3 == 1);
+                }
+            }
+            assert!(reused > examples.len() / 10);
+        }
+    }
+}
+
+#[test]
+#[ignore = "requires original NumPy C draws for every source register program"]
+fn every_program_token_and_answer_matches_the_independent_reference() {
+    let folder = PathBuf::from(std::env::var_os("PHASOR_EQUATION_REFERENCE").unwrap());
+    for steps in [2usize, 4] {
+        let mut case = settings(8, 0, "division");
+        case["data"]["compute"] = steps.into();
+        let (task, _) = associative_equations::build(&case).unwrap();
+        for (i, split) in ["train", "validation"].into_iter().enumerate() {
+            let bytes = fs::read(folder.join(format!("program-{steps}-{i}.i16"))).unwrap();
+            let width = 3 * (8 + steps);
+            let raw: Vec<_> = bytes
+                .as_chunks::<2>()
+                .0
+                .iter()
+                .map(|&b| i64::from(i16::from_le_bytes(b)))
+                .collect();
+            let examples = &task.splits[split];
+            assert_eq!(raw.len(), width * examples.len());
+            for (row, ex) in raw.chunks_exact(width).zip(examples) {
+                assert!(
+                    ex.tokens
+                        .iter()
+                        .copied()
+                        .eq(row[..width - 1].iter().copied().map(token))
+                );
+                for (c, &stored) in ex.targets.iter().enumerate() {
+                    let expected = if c >= 24 && (c - 24) % 3 == 1 {
+                        token(row[c + 1])
+                    } else {
+                        -100
+                    };
+                    assert_eq!(stored, expected);
+                }
+            }
+        }
+    }
+}

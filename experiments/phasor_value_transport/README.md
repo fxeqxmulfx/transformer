@@ -133,8 +133,8 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 79 have authenticated data and a supported source
-metric in this runner. For five more sequence-accuracy cases the required
+extensions and NV11, 81 have authenticated data and a supported source
+metric in this runner. For three more sequence-accuracy cases the required
 data adapter is unavailable. The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
@@ -2059,6 +2059,10 @@ between the two implementations. The register interpreter also checked
 each overwrite, each division equation, and identical input streams under
 the division and random-label controls. [Latest-register and scoring proofs](../../src/Transformer/Phasor/AssociativeEquationScore.lean)
 
+The main model scored 40/4,656 on the two-register division validation
+split at update 250 on seed 0. This was the first scheduled observation
+of a 100,000-update source budget.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.AssociativeEquationScore
 cd experiments/phasor_value_transport
@@ -2072,6 +2076,36 @@ for task in associative-division-n2-l1-w0 associative-division-n8-l1-w0 \
             associative-division-n8-l1-w4 associative-random-n2-l1-w0; do
     "$bin" catalog-target "$task" 0 250 runs/main-catalog
     "$bin" catalog-target "$task" 0 250 runs/main-catalog
+done
+```
+
+#### Register programs with successive results
+
+Two broader division cases load eight nonzero values. At each compute row,
+the source chooses two distinct registers whose current values form an unused
+equation from the frame's own split. It writes their quotient modulo 97 to
+the first register. Later queries can read that result. Two-step programs
+have 2,305 training and 2,303 validation frames. Four-step programs have
+1,153 and 1,152.
+
+The original dense scorer requires every computed result in a program to be
+correct. Its source inputs contain the recorded results of earlier completed
+rows. For a causal predictor, that exact-sequence score also equals greedy
+generation with its own earlier answers, since both executions have the same
+prefix through the first disagreement. The native reference compared all
+6,913 frames and 18,436 supervised positions with NumPy's C distribution
+routines and the frozen LGT codec. [Register execution, masks and exact-score equivalence](../../src/Transformer/Phasor/RegisterProgramScore.lean)
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.RegisterProgramScore
+cd experiments/phasor_value_transport
+cargo +stable test --release --locked --offline --test associative_equations
+bash tests/associative_reference.sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for steps in 2 4; do
+    "$bin" catalog-target "associative-division-n8-l$steps-w0" 0 250 runs/main-catalog
+    "$bin" catalog-target "associative-division-n8-l$steps-w0" 0 250 runs/main-catalog
 done
 ```
 
