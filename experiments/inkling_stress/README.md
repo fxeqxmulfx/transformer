@@ -110,12 +110,23 @@ and Inkling received exactly the same test rows at each length.
 | 1 | 512/512 | 512/512 | 512/512 | 478/512 | 341/512 |
 | 2 | 512/512 | 512/512 | 512/512 | 464/512 | 496/512 |
 
-On Basis Depth Hard, the eight-layer model first passed on seed 0 at
-update 750. It scored 511/512 on the primary split, 511/512 on the
-independent test and 512/512 at the original test length 128. Extending
-to length 256 gave 496/512, below the 99% gate for a further extension.
-Phasor first passed at update 1,000 on this seed, with 512/512 on each
-of the three original splits.
+All three eight-layer checkpoints passed Basis Depth Hard. Each scored
+512/512 on the original length-128 test. At length 256 only seed 2
+reached 99%, so its test length doubled again. It scored 481/512 at
+length 512 with the same three passes and weights.
+
+| Seed | First Inkling update | First Phasor update | Inkling primary /512 | Independent test /512 | Length 256 /512 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 750 | 1,000 | 511 | 511 | 496 |
+| 1 | 1,250 | 2,250 | 510 | 511 | 502 |
+| 2 | 1,000 | 1,000 | 512 | 512 | 512 |
+
+On seed 0, the eight-layer model reached 256/256 on both validation
+and the independent test of branch amplitudes at update 256. Main
+Phasor first passed validation at update 416 with 254/256. Both
+architectures first passed linear transport at update 224. Inkling
+scored 255/256 on validation and 256/256 on the independent test.
+These canonical scores require generating the complete answer through EOS.
 
 On seed 0 the first positive scheduled observation gave 52/4,705 on
 modular addition at update 19, 79/4,705 on absolute difference at update
