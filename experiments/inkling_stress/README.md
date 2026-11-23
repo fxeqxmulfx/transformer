@@ -76,6 +76,21 @@ Length transfer varied by seed. On shifted Boolean AND at length 32, Inkling
 improved from Phasor's 6/64 to 61/64 on seed 0. On seed 2, Phasor got
 64/64 and Inkling got 40/64.
 
+The eight-layer model reached the long-tier Basis Recall Easy threshold
+in 550–650 updates. Phasor required 2,700–4,300 updates on the same
+three seeds. Each cell below used the same training minibatches and the
+original scheduled observations. The models ran on different hardware.
+
+| Seed | First Inkling update | First Phasor update | Inkling primary | Inkling independent test |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 650 | 4,300 | 508/512 | 509/512 |
+| 1 | 550 | 2,700 | 512/512 | 512/512 |
+| 2 | 550 | 3,350 | 512/512 | 512/512 |
+
+On short-tier Basis Depth Easy, seed 0 first passed at update 250 for
+both models. Inkling's reloaded checkpoint scored 512/512 on novel
+validation, 509/512 on the independent test and 491/512 at length 128.
+
 On seed 0 the first positive scheduled observation gave 52/4,705 on
 modular addition at update 19, 79/4,705 on absolute difference at update
 19, and 44/4,704 on decoded Fibonacci at update 10. All three are early
@@ -99,6 +114,14 @@ parameter model went from 78/4,705 at update 19 to 79/4,705 at update 76
 on seed 0. On decoded Fibonacci the 81,137,344-parameter model went from
 52/4,704 at update 10 to 53/4,704 at update 40 on seed 0. The original
 100,000-update budgets are still open for these two cells.
+
+We also varied the evaluation depth of the same trained weights. For the
+24-layer Boolean-shift seed-1 checkpoint, one, two, three, five, ten,
+twenty and forty middle passes each gave 7/7 on novel validation and
+64/64 on the independent test. Its training depth was three. This
+comparison measures the generated answers. Lean gives a separate sufficient
+condition for a prefix to remain fixed at every later pass.
+[Shared-pass proof](../../src/Transformer/InklingLoop.lean)
 
 ## Reproduction
 
@@ -160,6 +183,7 @@ A single cell can also be advanced and replayed directly.
 target/release/inkling-stress run suite-boolean-and-shift 0 runs/canonical 4
 target/release/inkling-stress run suite-boolean-and-shift 0 runs/canonical 320
 target/release/inkling-stress replay suite-boolean-and-shift 0 runs/canonical
+target/release/inkling-stress depth suite-boolean-and-shift 0 runs/canonical 1,2,3,5,10,20,40
 ```
 
 Tests cover open and closed gates across three passes, causality, fixed-input

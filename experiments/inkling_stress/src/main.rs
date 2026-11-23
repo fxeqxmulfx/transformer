@@ -1,4 +1,5 @@
 //! Train one task-scaled Inkling architecture on the original 35 GPT tasks.
+mod depth;
 mod engine;
 mod optimizer;
 #[cfg(test)]
@@ -63,7 +64,13 @@ fn file_hash(path: &Path) -> Result<String> {
     }
 }
 
-fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> Result<Value> {
+enum Action {
+    Run(Option<usize>),
+    Replay,
+    Depth(Vec<usize>),
+}
+
+fn run(action: Action, name: &str, seed: u32, out: &Path) -> Result<Value> {
     let suite: Value = serde_json::from_str(SUITE)?;
     let row = suite["tasks"]
         .as_array()
@@ -76,7 +83,11 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
         number(row, "batch")?,
         number(row, "observe")?,
     );
-    let until = cutoff.unwrap_or(budget);
+    let until = if let Action::Run(Some(stop)) = action {
+        stop
+    } else {
+        budget
+    };
     if seed > 2 || until == 0 || until > budget || (until != budget && !until.is_multiple_of(every))
     {
         return Err("expected seed 0-2 and a scheduled observation within the original cap".into());
@@ -136,7 +147,10 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
             .as_array()
             .ok_or("missing checkpoint history")?
             .clone();
-        if mode == "replay" {
+        if let Action::Depth(budgets) = &action {
+            return depth::evaluate(&mut net, &task, v, budgets);
+        }
+        if matches!(action, Action::Replay) {
             let mut splits = serde_json::Map::new();
             for (key, examples) in &task.splits {
                 if key != "train" {
@@ -163,7 +177,7 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
         if until < first {
             return Err("requested observation precedes the latest checkpoint".into());
         }
-    } else if mode == "replay" {
+    } else if !matches!(action, Action::Run(_)) {
         return Err("missing training checkpoint".into());
     }
     let schedule = schedule::Schedule::new(budget)?;
@@ -264,14 +278,17 @@ fn main() -> Result<()> {
         println!("{}", text::MODEL);
         return Ok(());
     }
-    if !(args.len() == 4 || args.len() == 5)
-        || !matches!(args[0].as_str(), "run" | "replay")
-        || (args[0] == "replay" && args.len() != 4)
-    {
-        return Err(
-            "usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT".into(),
-        );
-    }
+    let (action, name, seed, out) = match args.as_slice() {
+        [op, name, seed, out] if op == "run" => (Action::Run(None), name, seed, out),
+        [op, name, seed, out, cutoff] if op == "run" => (Action::Run(Some(cutoff.parse()?)), name, seed, out),
+        [op, name, seed, out] if op == "replay" => (Action::Replay, name, seed, out),
+        [op, name, seed, out, counts] if op == "depth" => {
+            let budgets = counts.split(',').map(str::parse::<std::num::NonZeroUsize>)
+                .collect::<std::result::Result<Vec<_>,_>>()?.into_iter().map(|n| n.get()).collect();
+            (Action::Depth(budgets), name, seed, out)
+        }
+        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,...".into()),
+    };
     let threads = env::var("INKLING_THREADS")
         .unwrap_or_else(|_| "2".into())
         .parse::<i32>()?;
@@ -280,13 +297,7 @@ fn main() -> Result<()> {
     }
     tch::set_num_threads(threads);
     tch::set_num_interop_threads(1);
-    let v = run(
-        &args[0],
-        &args[1],
-        args[2].parse()?,
-        Path::new(&args[3]),
-        args.get(4).map(|s| s.parse()).transpose()?,
-    )?;
+    let v = run(action, name, seed.parse()?, Path::new(out))?;
     println!("{v}");
     Ok(())
 }

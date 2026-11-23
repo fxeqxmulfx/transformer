@@ -29,6 +29,7 @@ pub struct Engine {
     pub model: Model,
     pub predictions: Predictions,
     pub logits: Logits,
+    pub evaluation_passes: usize,
     loss: Tensor,
 }
 impl Engine {
@@ -57,6 +58,7 @@ impl Engine {
             model,
             predictions: Predictions(Tensor::new()),
             logits: Logits(Tensor::new()),
+            evaluation_passes: crate::text::PASSES,
             loss: Tensor::new(),
         })
     }
@@ -96,7 +98,10 @@ impl Engine {
         if labels.len() != tokens.len() {
             return Err("invalid evaluation label buffer".into());
         }
-        let scores = tch::no_grad(|| self.model.logits(&inputs));
+        let scores = tch::no_grad(|| {
+            self.model
+                .logits_with_passes(&inputs, self.evaluation_passes)
+        });
         self.predictions = Predictions(scores.argmax(-1, false));
         let target = self.targets(labels);
         self.loss = -scores

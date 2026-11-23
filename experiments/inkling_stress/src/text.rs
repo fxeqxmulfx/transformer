@@ -116,8 +116,11 @@ impl Model {
         rms(&read_states(&blocks, &h, &self.final_query).squeeze_dim(-2)) * &self.final_gain
     }
     pub fn logits(&self, ids: &Tensor) -> Tensor {
+        self.logits_with_passes(ids, PASSES)
+    }
+    pub fn logits_with_passes(&self, ids: &Tensor, passes: usize) -> Tensor {
         let embeddings = Tensor::embedding(&self.embedding, ids, -1, false, false);
-        let hidden = self.inner(&embeddings, PASSES);
+        let hidden = self.inner(&embeddings, passes);
         // Tied suite vocabulary, with the release's monotone final logit cap.
         softcap(&hidden.matmul(&self.embedding.transpose(0, 1)), 30.)
     }
