@@ -9,6 +9,7 @@ public import Transformer.Phasor.EmbeddingInput
 public import Transformer.Phasor.ModularChainScore
 public import Transformer.Phasor.DifferencedDivisionScore
 public import Transformer.Phasor.ImagePatchScore
+public import Transformer.Phasor.TextWindowScore
 public import Transformer.Phasor.TemporalRecurrenceScore
 public import Transformer.Phasor.NoisyAnchors
 public import Transformer.Phasor.PastGridScore
