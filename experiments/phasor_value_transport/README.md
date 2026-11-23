@@ -1871,6 +1871,42 @@ for seed in 0 1 2; do
 done
 ```
 
+#### Temporal recurrences on the LGT grid
+
+The broader catalog adds three division recurrences and second-difference
+Fibonacci. Each case keeps whole trajectories in one split. Division has
+4,603 training and 4,613 validation windows over the nonzero residues
+modulo 97. Fibonacci has 4,704 windows in each split. The model sees the
+encoded temporal differences and trains on the single final target.
+
+| Recurrence | Difference order | Context | Source score |
+| --- | ---: | ---: | --- |
+| Division | 1 | 4 or 48 | Decode the argmax token and compare the future value |
+| Division | 2 | 4 | Decode the argmax token and compare the future value |
+| Fibonacci | 2 | 2 | Pool token probabilities by decoded residue and compare the winning residue |
+
+The native reference test traverses each orbit backwards, rebuilds the
+source split order, and runs DiffGPT's public encoder and decoder. Across
+the four added cases and canonical first-difference Fibonacci it checked
+46,464 ordered windows. For every window it also constructed the decoder
+base from the observed prefix alone. All three canonical Fibonacci tensor
+digests matched the frozen suite. [Temporal difference and field readout proofs](../../src/Transformer/Phasor/TemporalRecurrenceScore.lean)
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TemporalRecurrenceScore
+cd experiments/phasor_value_transport
+cargo +stable test --release --locked --offline --test temporal
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for task in recurrence-division-k1-c4-lgt recurrence-division-k2-c4-lgt \
+            recurrence-division-k1-c48-lgt recurrence-fibonacci-k2-c2-lgt; do
+    for seed in 0 1 2; do
+        "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog > /dev/null
+        "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog
+    done
+done
+```
+
 ### Four-gate triple transport on the canonical GPT tiers
 
 The November 22 partial audit independently reloaded 55 checkpoints from

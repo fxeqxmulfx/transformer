@@ -313,6 +313,10 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
             return Err("canonical source selection changed".into());
         }
         (task, original["data_fingerprints"].clone())
+    } else if case["kind"] == "recurrence" && case["data"]["tokenizer"] == "lgt" {
+        let (task, hashes) = temporal::build(&case)
+            .map_err(|e| -> Box<dyn std::error::Error> { e })?;
+        (sequence_task(task), hashes)
     } else {
         let d = if basis::CASES.contains(&name) {
             basis::dataset::build(name).map(|(d, _)| d)

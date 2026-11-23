@@ -22,6 +22,7 @@ mod recall_gap;
 pub mod report;
 pub mod score_timing;
 mod source_target;
+mod temporal;
 
 fn cases() -> Result<Vec<Value>> {
     let suite: Value = serde_json::from_str(arithmetic::ORIGINAL35)?;

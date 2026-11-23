@@ -8,6 +8,7 @@ public import Transformer.Phasor.LearnedStreamRead
 public import Transformer.Phasor.EmbeddingInput
 public import Transformer.Phasor.ModularChainScore
 public import Transformer.Phasor.DifferencedDivisionScore
+public import Transformer.Phasor.TemporalRecurrenceScore
 public import Transformer.Phasor.AssociativeCopyScore
 public import Transformer.Phasor.BoundedMemoryRead
 public import Transformer.Phasor.CausalProductInput

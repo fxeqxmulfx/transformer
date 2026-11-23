@@ -64,7 +64,10 @@ pub fn tensor_hash(rows: &[data::Example]) -> String {
                 let x = match part {
                     0 => e.tokens.get(col).copied().unwrap_or(0),
                     1 => e.targets.get(col).copied().unwrap_or(-100),
-                    _ => i64::from(e.changes.get(col).copied().unwrap_or(false)),
+                    _ => match (col, e.row_index) {
+                        (0, Some(index)) => index,
+                        _ => i64::from(e.changes.get(col).copied().unwrap_or(false)),
+                    },
                 };
                 bytes.extend_from_slice(&x.to_le_bytes());
             }
