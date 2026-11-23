@@ -2333,6 +2333,39 @@ for schedule in fixed-ten varied-depth; do
 done
 ```
 
+#### First-token latency on identical prompt batches
+
+The native scorer calls the model for teacher metrics and for greedy
+generation. When every teacher input in a batch equals its complete
+generation prompt, the first generated token at each real row end is
+already available. The scorer reuses that prediction once. Subsequent
+steps still run on the emitted tokens. With a teacher continuation or a
+different input, the original rollout computes the first prediction as
+well. The comparison uses the raw input tokens and row positions. A CUDA
+regression compared all emitted tokens with an independent rollout that
+used only prompts and earlier predictions, including unequal prompt
+lengths, varying generation limits and batches with teacher continuations.
+[Greedy trajectory equivalence](../../src/Transformer/Phasor/TripleTransport/FirstGeneration.lean)
+
+On the GTX 1050, the frozen seed-0 mixed-length checkpoint scored the
+200 validation questions and 1,000 test questions with forty shared
+reads in **27.45 and 27.52 seconds** with the original scorer and
+**14.02 and 13.93 seconds** with reuse. Each process loaded the same
+weights. The four reports were byte-identical. Peak host memory was
+157,504–157,548 KiB for the original and 158,404–158,576 KiB with reuse.
+
+To repeat the timing, build the fixed-ten mixed-length model as above
+at commit `6cb2a584` and at the revision containing this change. Keep
+both binaries and a single trained checkpoint directory. Run them in
+the order shown below.
+
+```sh
+export PHASOR_EVAL_BATCH_CAP=16
+for scorer in "$OLD_BIN" "$NEW_BIN" "$NEW_BIN" "$OLD_BIN"; do
+    /usr/bin/time -f '%e %M' "$scorer" lookup-hop-sweep 0 "$out" 40
+done
+```
+
 #### Memory used by frozen lookup
 
 The frozen scorer adds path votes in the same order as training and

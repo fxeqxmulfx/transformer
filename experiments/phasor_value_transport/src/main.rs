@@ -21,6 +21,7 @@ mod context_rotation_checks;
 mod dense_audit;
 mod decoded_future;
 mod embedding_checks;
+mod first_generation;
 mod fourier;
 mod fourier_audit;
 mod fourier_checks;

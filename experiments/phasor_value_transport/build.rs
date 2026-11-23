@@ -56,6 +56,18 @@ fn export_completions(source: &Path, out: &Path) {
     }"#;
     let scorer = scorer.replace(score, &format!("{decoded}{score}"))
         .replace(report, &format!("{decoded_report}{report}"));
+    let first = "        let written = rollout(&examples[start..stop], |contexts| {";
+    let cached = r#"        let mut first_prediction = crate::first_generation::from_identical_prompts(
+            &examples[start..stop], length, &predictions,
+        );
+        let written = rollout(&examples[start..stop], |contexts| {
+            if let Some(tokens) = first_prediction.take() {
+                return Ok(tokens);
+            }"#;
+    assert_eq!(scorer.matches(first).count(), 1, "pinned initial generation batch changed");
+    let rollout = "fn rollout(\n";
+    assert_eq!(scorer.matches(rollout).count(), 1, "pinned free rollout changed");
+    let scorer = scorer.replace(first, cached).replace(rollout, "pub(crate) fn rollout(\n");
     fs::write(out.join("metrics.rs"), scorer).unwrap();
     println!("cargo:rerun-if-changed={}", source.display());
 }
