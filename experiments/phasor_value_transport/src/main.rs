@@ -262,6 +262,8 @@ fn cell(arm: &str, out: &Path, seed: u32, window: usize) -> Result<()> {
 fn main() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
     match args.as_slice() {
+        [op, seed, dest] if op == "lookup-fit" =>
+            stress::lookup_question::fit::run(seed.parse()?, Path::new(dest)),
         [op, seed, dest] if op == "lookup-interventions" =>
             stress::lookup_question::interventions(seed.parse()?, Path::new(dest)),
         [op, seed, dest] if op == "lookup-study-score" =>

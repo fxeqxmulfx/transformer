@@ -2,6 +2,7 @@
 use super::*;
 
 mod data;
+pub mod fit;
 use data::vocabulary;
 pub(super) use data::{NAME, data};
 

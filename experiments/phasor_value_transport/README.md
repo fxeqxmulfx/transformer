@@ -1953,6 +1953,29 @@ At update 250, the three main-model seeds scored 15, 21 and 17 on the
 Their respective mixed validation counts were 36, 30 and 38 for the
 main model and 37, 41 and 45 for the chart model, each out of 200.
 
+The `lookup-fit` command evaluates a checkpoint on all training and validation
+prompts. It returns a confusion matrix for each split. Rows are reference
+letters A–E, and columns are generated letters A–E followed by an invalid
+response column. Cross-entropy uses the full vocabulary at the supervised
+position. Both splits contain equal numbers of each reference letter.
+[Prediction concentration and exact counts](../../src/Transformer/Phasor/LookupQuestion/AnswerCounts.lean)
+
+| Main model, seed 0 | Training correct / 1,000 | Validation correct / 200 | Training cross-entropy | Validation cross-entropy |
+| --- | ---: | ---: | ---: | ---: |
+| Update 50 | 258 | 38 | 2.576 | 2.626 |
+| Update 250 | 316 | 36 | 1.537 | 1.746 |
+| Update 750 | 744 | 29 | 0.736 | 2.572 |
+
+By update 750 the model answered 74.4% of its training questions and
+14.5% of fresh validation questions correctly. It used all five letters
+on validation, including 34 D predictions. At updates 50 and 250 it
+predicted D on zero validation prompts.
+
+```sh
+# Run at each observation before resuming training in this directory.
+"$bin" lookup-fit 0 "$out"
+```
+
 The command below scores 100 additional pairs per hop count for each of
 three changes. Reversing the table rows preserves the answer. Cycling the
 first table's output column changes the correct answer while preserving

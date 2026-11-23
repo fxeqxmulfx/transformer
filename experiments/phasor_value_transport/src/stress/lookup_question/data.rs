@@ -9,7 +9,7 @@ pub(in crate::stress) const NAME: &str = "study-lookup-questions";
 const WORDS: [&str; 10] = [
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 ];
-const LETTERS: [&str; 5] = ["A", "B", "C", "D", "E"];
+pub(super) const LETTERS: [&str; 5] = ["A", "B", "C", "D", "E"];
 const NAMES: &str = "Nalo Mira Sori Tavi Yuna vek dax lum pim ros jade quartz amber onyx opal Zevo Cana Feri Leni Korza Pola Veri Zami Nuve Kiri Elsi Juma Heta Xanu Wylo Doru Teso Meli Pras Jovi Kema Orix Tuma Weda Nolvi Zuli Qago Bina Ceti Fomu Ganu Hire Ivas Joli Kupo Lava Mota Niri Oru Pavo Qera Rizu Salo Tora Umi";
 const SOURCE: &str = include_str!("../../../../../stress_tests_for_gpt.md");
 
