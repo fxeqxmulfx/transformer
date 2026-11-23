@@ -2462,7 +2462,10 @@ the separate ten-hop questions the full models generated 91/100 and
 At update 750 the twenty-read model again generated 188/200 on validation.
 An independent reload gave 94/100 on the separate ten-hop questions.
 Another 500 updates therefore left the validation count unchanged and
-lost two ten-hop answers on this seed.
+lost two ten-hop answers on this seed. At the next five scheduled
+observations, updates 800 through 1,000, validation scored 184, 183,
+186, 185 and 187 of 200. We ended this training arm there and retained
+the independently verified update-750 checkpoint.
 
 The table compares their isolated learned path reads at the same
 evaluation budget, one read per displayed table. Each of the 100
