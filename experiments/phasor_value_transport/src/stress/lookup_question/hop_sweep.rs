@@ -40,6 +40,16 @@ pub(super) fn generated(engine: &mut Engine, examples: &[Example]) -> Result<Vec
 }
 
 pub fn run(seed: u32, out: &Path, passes: Option<usize>, compare: Option<usize>) -> Result<()> {
+    run_with_power(seed, out, passes, compare, None)
+}
+
+pub fn run_with_power(
+    seed: u32,
+    out: &Path,
+    passes: Option<usize>,
+    compare: Option<usize>,
+    power: Option<u8>,
+) -> Result<()> {
     let (row, mut task) = data()?;
     let mut cfg = task_config(&row, &task, true)?;
     let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
@@ -48,6 +58,16 @@ pub fn run(seed: u32, out: &Path, passes: Option<usize>, compare: Option<usize>)
         set_budget(&mut cfg, n)?;
     }
     let evaluated = passes.or(trained);
+    if let Some(n) = power {
+        if n == 0 {
+            return Err("supply a positive coefficient exponent".into());
+        }
+        let head::Head::PeerTriplePhase(read) = &mut cfg.head else {
+            return Err("a coefficient gain requires a learned path table".into());
+        };
+        let path = read.path.as_mut().ok_or("checkpoint has no path table")?;
+        path.gain_power = n;
+    }
     let split_hashes = data::complete_hops(&mut task)?;
     let mut results = BTreeMap::new();
     let mut originals = BTreeMap::new();
@@ -71,7 +91,7 @@ pub fn run(seed: u32, out: &Path, passes: Option<usize>, compare: Option<usize>)
         }
     }
     let validation = &results[&task.selection];
-    if evaluated == trained && validation["correct"] != point["correct"] {
+    if power.is_none() && evaluated == trained && validation["correct"] != point["correct"] {
         return Err("scheduled validation changed at the saved read count".into());
     }
     let scores: BTreeMap<_, _> = split_hashes
@@ -85,6 +105,9 @@ pub fn run(seed: u32, out: &Path, passes: Option<usize>, compare: Option<usize>)
     if cfg!(feature = "triple-varied-depth-lookup") && trained.is_some() {
         report["trained_passes"] = json!(head::PathRead::TRAINING_BUDGETS);
         report["default_evaluation_passes"] = json!(trained);
+    }
+    if let Some(n) = power {
+        report["coefficient_exponent"] = json!(n);
     }
     if let Some(n) = compare {
         set_budget(&mut cfg, n)?;

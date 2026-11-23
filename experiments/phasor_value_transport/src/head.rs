@@ -58,7 +58,7 @@ impl ReadGates {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PathRead {
     pub passes: usize,
-    pub cubic: bool,
+    pub gain_power: u8,
     pub normalize_vote: bool,
 }
 
@@ -66,10 +66,10 @@ impl PathRead {
     pub const TRAINING_BUDGETS: [usize; 5] = [2, 5, 10, 20, 40];
 
     pub const fn linear(passes: usize) -> Self {
-        Self { passes, cubic: false, normalize_vote: false }
+        Self { passes, gain_power: 0, normalize_vote: false }
     }
 
-    pub const NORMALIZED: Self = Self { passes: 5, cubic: true, normalize_vote: true };
+    pub const NORMALIZED: Self = Self { passes: 5, gain_power: 1, normalize_vote: true };
 }
 
 /// Search and gate scales vary independently in fixed-weight controls.
@@ -141,6 +141,10 @@ impl PeerRead {
         path: Some(PathRead { passes: 10, ..PathRead::NORMALIZED }),
         ..Self::CHART_INDUCTION
     };
+    pub const POWER_LOOKUP: Self = Self {
+        path: Some(PathRead { passes: 10, gain_power: 4, ..PathRead::NORMALIZED }),
+        ..Self::CHART_INDUCTION
+    };
     pub const NORMALIZED_LOOKUP: Self = Self {
         path: Some(PathRead::NORMALIZED),
         ..Self::CHART_INDUCTION
@@ -169,7 +173,7 @@ impl PeerRead {
             if path == PathRead::NORMALIZED {
                 for (name, read) in [
                     ("without_vote_normalization", PathRead { normalize_vote: false, ..path }),
-                    ("without_cubic_gain", PathRead { cubic: false, ..path }),
+                    ("without_cubic_gain", PathRead { gain_power: 0, ..path }),
                     ("linear_unnormalized", PathRead::linear(path.passes)),
                 ] {
                     variants.push((name, Self { path: Some(read), ..self }));
@@ -210,6 +214,8 @@ impl PeerRead {
                     "phasor-triple-varied-depth-lookup-trunk-v1",
                 (Self::TEN_READ_LOOKUP, true) => "phasor-triple-normalized-ten-lookup-32-v1",
                 (Self::TEN_READ_LOOKUP, false) => "phasor-triple-normalized-ten-lookup-trunk-v1",
+                (Self::POWER_LOOKUP, true) => "phasor-triple-concentrated-lookup-32-v1",
+                (Self::POWER_LOOKUP, false) => "phasor-triple-concentrated-lookup-trunk-v1",
                 (Self::NORMALIZED_LOOKUP, true) => "phasor-triple-normalized-vote-lookup-32-v1",
                 (Self::NORMALIZED_LOOKUP, false) => "phasor-triple-normalized-vote-lookup-trunk-v1",
                 (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
@@ -352,6 +358,7 @@ impl Head {
             "triple-typed-lookup" => Ok(Self::PeerTriplePhase(PeerRead::TYPED_LOOKUP)),
             "triple-fixed-ten-lookup" | "triple-varied-depth-lookup" =>
                 Ok(Self::PeerTriplePhase(PeerRead::TEN_READ_LOOKUP)),
+            "triple-power-lookup" => Ok(Self::PeerTriplePhase(PeerRead::POWER_LOOKUP)),
             "triple-normalized-lookup" => Ok(Self::PeerTriplePhase(PeerRead::NORMALIZED_LOOKUP)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(

@@ -59,10 +59,10 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
 
 #[test]
 fn signed_path_sum_and_gate_differentiate_through_dense_values() {
-    for (cubic, normalize_vote) in [(false, false), (true, false), (false, true), (true, true)] {
+    for (gain_power, normalize_vote) in [(0, false), (1, false), (0, true), (1, true), (4, true)] {
         check_gradient(PathRead {
             passes: 2,
-            cubic,
+            gain_power,
             normalize_vote,
         });
     }

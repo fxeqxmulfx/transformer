@@ -2308,8 +2308,9 @@ this seed, extending the training chains from two hops to five improved
 ten-hop transfer. Cycling the read budget on the shorter training chains
 alone did not improve it.
 With the mixed training lengths, cycling the read budget cost three
-ten-hop answers on seed 0. A fresh fixed-ten run on seed 1 also crossed
-at update 150, with 200/200 validation and 100/100 ten-hop answers.
+ten-hop answers on seed 0. Fresh fixed-ten runs on seeds 1 and 2 also
+crossed at update 150, with 200/200 validation each and respectively
+100/100 and 98/100 ten-hop answers.
 
 The read schedule is shared across tasks and depends only on the global
 optimizer step. It restores the default of ten reads for evaluation and
@@ -2331,6 +2332,61 @@ for schedule in fixed-ten varied-depth; do
         ./target/release/phasor-value-transport lookup-hop-sweep "$seed" "$out" 10 40
     done
 done
+```
+
+#### Concentrating the learned relation weights
+
+At each read the model weights candidate endpoints using learned signed
+coefficients. For a coefficient $w$, maximum magnitude $M$ in the table
+and floor $b$ equal to the reciprocal of the table size, it uses
+$w((w^2+b)/(M^2+b))^p$. Increasing the common exponent preserves every
+coefficient of maximum magnitude and shrinks the absolute value of every
+smaller nonzero coefficient. The directional derivative of the table map
+at its all-zero initialization is the identity for every finite exponent.
+The ten-read architecture uses $p=4$ throughout training and evaluation.
+It adds no parameters and uses the same operations at every position.
+[Gain and derivative proofs](../../src/Transformer/Phasor/TripleTransport/PowerGain.lean)
+
+First we changed only the exponent at evaluation on the original normalized
+seed-0 checkpoint at update 250. All runs used the same ten reads, weights
+and questions. Exponents 1, 2 and 4 gave 52, 89 and 100 correct out of the
+same 100 ten-hop questions. Across all ten depths, exponent 4 missed one
+four-hop question and two nine-hop questions. This sweep informed the choice
+of exponent for fresh training.
+
+With the exponent fixed at four, seeds 0 and 1 first reached the synthetic
+validation target at updates 250 and 200. Both generated 200/200 correct
+validation answers, C on Mira, and 100/100 on each of the one-, two-, three-,
+five- and ten-hop tests after reloading. Training used only one- and two-hop
+questions and their final answer letters.
+
+The longer unnumbered probe used 20 new table sets per depth, each tested
+on all five possible starts. In the shared-permutation condition, the
+20-hop prompts contained 345 tokens and the 40-hop prompts contained 665.
+
+| Seed 0 model at its first validation crossing | Training depths | Hops and shared reads | Correct /100 | All five starts correct /20 |
+| --- | --- | ---: | ---: | ---: |
+| Original normalized gain | 1–2 | 20 | 37 | 1 |
+| Original normalized gain | 1–5 | 20 | 86 | 12 |
+| Concentrated gain | 1–2 | 20 | 96 | 16 |
+| Original normalized gain | 1–5 | 40 | 80 | 9 |
+
+To reproduce the frozen sweep, build the five-read normalized model above
+and point `normalized` at its seed-0 run directory. Then train the concentrated
+model from fresh embeddings for each seed.
+
+```sh
+export PHASOR_EVAL_BATCH_CAP=16
+bin=./target/release/phasor-value-transport
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-normalized-lookup
+for exponent in 1 2 4; do "$bin" lookup-power 0 "$normalized" 10 "$exponent"; done
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
+out=runs/concentrated-lookup
+for seed in 0 1 2; do
+    "$bin" advance study-lookup-questions "$seed" "$out" 250
+    "$bin" lookup-study-score "$seed" "$out"
+done
+PHASOR_EVAL_BATCH_CAP=4 "$bin" lookup-long-chains 0 "$out" 20 20 shared
 ```
 
 #### First-token latency on identical prompt batches

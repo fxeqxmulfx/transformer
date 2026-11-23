@@ -8,7 +8,7 @@ mod gain;
 #[path = "typed_lookup/paths.rs"]
 mod paths;
 use gain::NormalizedGain;
-pub(crate) use gain::cubic_weight;
+pub(crate) use gain::scaled_weight;
 use paths::{BINS, Store, Witness};
 
 pub fn parameters(d: usize) -> usize {
@@ -117,7 +117,8 @@ impl Tape {
         assert_eq!(w.len(), parameters(d));
         assert!(read.passes > 0);
         let mut tape = Self {
-            gain: (read.cubic && length >= 3).then(|| NormalizedGain::new(&w[..BINS])),
+            gain: (read.gain_power > 0 && length >= 3)
+                .then(|| NormalizedGain::new(&w[..BINS], read.gain_power)),
             d,
             length,
             input: if retain_adjoint && length >= 3 {
