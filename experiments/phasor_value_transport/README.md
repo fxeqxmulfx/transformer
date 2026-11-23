@@ -2482,6 +2482,53 @@ for hops in 10 20 30 40; do
 done
 ```
 
+#### Does a forty-hop question require forty reads?
+
+If each read reveals only the successor of the current key, two chains
+can share their first 39 links and give different answers on the fortieth.
+Even a decoder with the whole history of 39 reads cannot guarantee the
+right answer on both chains. A correct successor read reaches either
+endpoint at step 40. An encoder with access to the full table can compose
+links in advance. Five rounds of doubling produce jumps of length 32,
+with the length-eight jumps available after three rounds. Two lookups
+then traverse forty links. These are different assumptions about what
+one model step can access.
+[Read horizon and composed jumps](../../src/Transformer/Phasor/TripleTransport/ReadHorizon.lean)
+
+For the learned model, the probe fixes 100 disjoint-name questions with
+forty tables and the seed-0 weights trained on depths one to five at
+update 200. It pairs each question with a swap of two destinations in
+its final table. The swap changes the correct letter on all 100 pairs
+and preserves the preceding tables, row order, start and choice list.
+The model has a cue lookup, the requested number of repeated reads, and
+a final lookup that can map an endpoint to an answer letter.
+
+| Isolated learned read | Original /100 | Rewired /100 | Both correct /100 |
+| ---: | ---: | ---: | ---: |
+| 20 | 15 | 14 | 0 |
+| 39 | 13 | 13 | 0 |
+| 40 | 28 | 30 | 9 |
+| 41 | 44 | 46 | 30 |
+| 42 | 28 | 30 | 9 |
+| 80 | 28 | 30 | 9 |
+
+At every budget from one through 39 the isolated read solved zero pairs
+on both versions. Two independent sweeps reproduced every prediction.
+The isolated scorer applies the tied classifier to the learned path vote
+alone, omitting the backbone and contextual output gate. It scores over
+the entire vocabulary, including predictions outside the five letters.
+Forty reads were the first tested budget with a correct pair. No tested
+budget reached 99/100 on these questions.
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
+bin=./target/release/phasor-value-transport
+out=runs/disjoint-lookup/r10
+for mode in isolated full; do
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 "$mode"
+done
+```
+
 #### Reading writes in chronological order
 
 A shared read can carry both its current address and the time of its most

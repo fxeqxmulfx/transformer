@@ -131,41 +131,56 @@ impl Store {
         }
         self.previous = [middle, current];
     }
-    fn endpoint(&self, first: &Bindings, passes: usize) -> Edge {
+    fn endpoints(&self, first: &Bindings, budgets: &[usize], mut sample: impl FnMut(usize, Edge)) {
         let mut edge = *first.writes.read(None).expect("empty relation history");
-        for _ in 1..passes {
-            let next = self
-                .outgoing
-                .get(&edge.dest)
-                .and_then(|rels| rels.iter().find(|x| x.relation == first.relation))
-                .and_then(|xs| xs.writes.read(Some(edge.written_at)));
-            let Some(next) = next else {
-                break;
-            };
-            if !self.ordered && next.dest == edge.dest {
-                break;
+        let mut depth = 1;
+        let mut finished = false;
+        for (i, &budget) in budgets.iter().enumerate() {
+            while !finished && depth < budget {
+                let next = self
+                    .outgoing
+                    .get(&edge.dest)
+                    .and_then(|rels| rels.iter().find(|x| x.relation == first.relation))
+                    .and_then(|xs| xs.writes.read(Some(edge.written_at)));
+                match next {
+                    Some(next) if self.ordered || next.dest != edge.dest => {
+                        edge = *next;
+                        depth += 1;
+                    }
+                    _ => finished = true,
+                }
             }
-            edge = *next;
+            sample(i, edge);
         }
-        edge
     }
     pub(super) fn visit(&self, passes: usize, mut emit: impl FnMut(Witness)) {
+        self.visit_budgets(&[passes], |_, witness| emit(witness));
+    }
+
+    /// Traverse each cue and relation once, sampling in increasing budget order.
+    /// Within each budget the floating-point vote order is the single-read order.
+    pub(super) fn visit_budgets(&self, budgets: &[usize], mut emit: impl FnMut(usize, Witness)) {
+        debug_assert!(budgets.first().is_none_or(|&n| n > 0) && budgets.is_sorted());
         for (&cue, root) in &self.cues {
             let Some(firsts) = self.outgoing.get(root) else {
                 continue;
             };
             for first in firsts {
-                let end = self.endpoint(first, passes);
-                if let Some(tails) = self.outgoing.get(&end.dest) {
-                    for last in tails {
-                        if let Some(record) = last.writes.read(Some(end.written_at)) {
-                            emit(Witness {
-                                position: record.position,
-                                code: code(cue, first.relation, last.relation),
-                            });
+                self.endpoints(first, budgets, |i, end| {
+                    if let Some(tails) = self.outgoing.get(&end.dest) {
+                        for last in tails {
+                            if let Some(record) = last.writes.read(Some(end.written_at)) {
+                                emit(
+                                    i,
+                                    Witness {
+                                        position: record.position,
+                                        code: code(cue, first.relation, last.relation),
+                                    },
+                                );
+                            }
                         }
                     }
-                }
+                });
             }
         }
     }
@@ -188,15 +203,11 @@ mod tests {
             );
         }
         let first = &m.outgoing[&0][0];
-        assert_eq!(
-            (m.endpoint(first, 1).dest, m.endpoint(first, 2).dest),
-            (0, 1)
-        );
-        assert_eq!(m.endpoint(first, 3).dest, 0);
-        assert_eq!(
-            (m.endpoint(first, 40).dest, m.endpoint(first, 40).written_at),
-            (2, 8)
-        );
+        let mut observed = Vec::new();
+        m.endpoints(first, &[1, 2, 3, 40], |_, e| {
+            observed.push((e.dest, e.written_at))
+        });
+        assert_eq!(observed, [(0, 2), (1, 4), (0, 6), (2, 8)]);
         let last = &m.outgoing[&0][0];
         assert_eq!(last.writes.read(Some(2)).unwrap().position, 2);
         assert!(last.writes.read(Some(8)).is_none());

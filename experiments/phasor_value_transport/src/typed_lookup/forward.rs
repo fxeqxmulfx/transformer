@@ -2,7 +2,6 @@
 //! A worker may begin inside a sequence after replaying its earlier writes.
 use super::*;
 use std::collections::HashMap;
-use std::num::NonZeroUsize;
 use std::ops::Range;
 
 struct Batch<'a> {
@@ -81,16 +80,7 @@ impl Batch<'_> {
             return Vec::new();
         }
         let workers = if !self.retain && self.length >= 96 {
-            let limit = std::env::var("PHASOR_LOOKUP_THREADS")
-                .ok()
-                .and_then(|s| s.parse::<NonZeroUsize>().ok())
-                .map_or(16, NonZeroUsize::get);
-            std::thread::available_parallelism()
-                .map(usize::from)
-                .unwrap_or(1)
-                .min(16)
-                .min(limit)
-                .min(rows.div_ceil(64))
+            worker_limit().min(rows.div_ceil(64))
         } else {
             1
         };

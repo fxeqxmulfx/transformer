@@ -12,13 +12,7 @@ pub fn run(seed: u32, out: &Path, hops: usize) -> Result<()> {
         .and_then(|h| h.path)
         .ok_or("no local path branch")?;
     let original = &weights[coefficients::table_range(&cfg)?];
-    let floor = 1. / original.len() as f64;
-    let maximum = original.iter().copied().map(f32::abs).fold(0., f32::max);
-    let denominator = f64::from(maximum).powi(2) + floor;
-    let table: Vec<_> = original
-        .iter()
-        .map(|&w| crate::typed_lookup::scaled_weight(w, floor, denominator, path.gain_power.into()))
-        .collect();
+    let table = crate::typed_lookup::inference_table(original, path.gain_power);
     let mut conditions = BTreeMap::new();
     for mode in [
         data::long::Relations::Shared,

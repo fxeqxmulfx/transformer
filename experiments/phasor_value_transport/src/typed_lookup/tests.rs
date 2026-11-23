@@ -17,6 +17,21 @@ fn choose(w: &mut [f32], cue: usize, main: usize, tail: usize) {
 }
 
 #[test]
+fn sharing_budget_prefixes_keeps_every_floating_point_vote() {
+    // Repeated keys, missing addresses, and ties in the requested depths.
+    let keys: Vec<_> = (0..123).map(|i| (i % 23 != 0).then_some(i * (i + 3) % 17)).collect();
+    let weights: Vec<_> = (0..BINS).map(|i| (i as f32 * 0.283).sin()).collect();
+    let budgets = [1, 2, 10, 10, 20, 39, 40, 41, 80];
+    for ordered in [false, true] {
+        let together = final_vote_budgets(&keys, &budgets, &weights, ordered);
+        for (out, budget) in together.iter().zip(budgets) {
+            let separate = final_vote_budgets(&keys, &[budget], &weights, ordered);
+            assert!(out.iter().zip(&separate[0]).all(|(a, b)| a.to_bits() == b.to_bits()));
+        }
+    }
+}
+
+#[test]
 fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
     let d = 12;
     // Both occurrences of the same directed relation at address 0 are live.

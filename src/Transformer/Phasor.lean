@@ -62,6 +62,7 @@ public import Transformer.Phasor.TripleTransport.EndpointScale
 public import Transformer.Phasor.TripleTransport.PowerGain
 public import Transformer.Phasor.TripleTransport.OrderedReads
 public import Transformer.Phasor.TripleTransport.TrainingReadDepth
+public import Transformer.Phasor.TripleTransport.ReadHorizon
 public import Transformer.Phasor.TripleTransport.StreamingPathScore
 public import Transformer.Phasor.TripleTransport.OrbitInduction
 public import Transformer.Phasor.TripleTransport.PairClasses

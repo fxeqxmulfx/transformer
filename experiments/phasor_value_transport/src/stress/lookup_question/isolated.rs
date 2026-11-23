@@ -62,11 +62,27 @@ impl<'a> Geometry<'a> {
     }
 
     fn answer(&self, prompt: &[i64], passes: usize, table: &[f32], ordered: bool) -> (usize, bool) {
+        self.answers(prompt, &[passes], table, ordered)[0]
+    }
+
+    fn answers(
+        &self,
+        prompt: &[i64],
+        budgets: &[usize],
+        table: &[f32],
+        ordered: bool,
+    ) -> Vec<(usize, bool)> {
         let keys: Vec<_> = prompt
             .iter()
             .map(|&token| self.addresses[token as usize])
             .collect();
-        let votes = crate::typed_lookup::final_votes(&keys, passes, table, ordered);
+        crate::typed_lookup::final_vote_budgets(&keys, budgets, table, ordered)
+            .into_iter()
+            .map(|votes| self.project(prompt, &votes))
+            .collect()
+    }
+
+    fn project(&self, prompt: &[i64], votes: &[f32]) -> (usize, bool) {
         let mut hidden = vec![0.; self.width];
         for (&v, &token) in votes.iter().zip(prompt) {
             if v != 0. {
@@ -77,6 +93,45 @@ impl<'a> Geometry<'a> {
         }
         classify(self.embeddings, &hidden)
     }
+}
+
+pub(in crate::stress) fn budget_predictions(
+    cfg: &Config,
+    weights: &[f32],
+    examples: &[Example],
+    budgets: &[usize],
+) -> Result<Vec<Vec<Option<i64>>>> {
+    let geometry = Geometry::new(cfg, weights);
+    let path = cfg
+        .head
+        .peer_read()
+        .and_then(|r| r.path)
+        .ok_or("no discrete path branch")?;
+    let table = crate::typed_lookup::inference_table(
+        &weights[coefficients::table_range(cfg)?],
+        path.gain_power,
+    );
+    let span = examples
+        .len()
+        .div_ceil(crate::typed_lookup::worker_limit())
+        .max(1);
+    let mut rows = vec![Vec::new(); examples.len()];
+    std::thread::scope(|s| {
+        for (inputs, outputs) in examples.chunks(span).zip(rows.chunks_mut(span)) {
+            s.spawn(|| {
+                for (input, output) in inputs.iter().zip(outputs) {
+                    *output = geometry.answers(&input.prompt, budgets, &table, path.ordered);
+                }
+            });
+        }
+    });
+    let mut predictions = vec![Vec::with_capacity(examples.len()); budgets.len()];
+    for row in rows {
+        for (out, (id, _)) in predictions.iter_mut().zip(row) {
+            out.push(Some(id as i64));
+        }
+    }
+    Ok(predictions)
 }
 
 pub fn run(seed: u32, out: &Path, passes: usize, selection: &str, gain: &str) -> Result<()> {

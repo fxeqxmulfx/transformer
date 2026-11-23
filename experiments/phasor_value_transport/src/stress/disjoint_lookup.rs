@@ -1,5 +1,6 @@
 //! Vary chain length with the same grammar and single-token name strategy from one to forty hops.
 use super::*;
+pub mod budgets;
 #[cfg(test)]
 use std::collections::BTreeSet;
 use std::collections::HashSet;
@@ -39,6 +40,7 @@ fn vocabulary() -> Vec<String> {
         .chain((0..NAMES).map(|i| format!("vem{i}")))
         .collect()
 }
+#[derive(Clone)]
 struct Set {
     tables: Vec<Vec<(i64, i64)>>,
     starts: [i64; 5],

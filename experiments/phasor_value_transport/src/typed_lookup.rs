@@ -2,6 +2,7 @@
 //! See TypedLookupPaths for shared-read saturation and tied-margin gain.
 use crate::{head::PathRead, slot_memory::dot};
 use std::borrow::Cow;
+use std::num::NonZeroUsize;
 #[path = "typed_lookup/forward.rs"]
 mod forward;
 #[path = "typed_lookup/gain.rs"]
@@ -27,16 +28,41 @@ fn add(dst: &mut [f32], x: &[f32], s: f32) {
     }
 }
 
-/// The same read at the final position of an independently supplied prefix.
-pub fn final_votes(addresses: &[Option<usize>], passes: usize, table: &[f32], ordered: bool) -> Vec<f32> {
-    assert!(passes > 0 && table.len() == BINS);
+/// Final-position reads on one prefix. Each requested budget must be positive.
+pub fn final_vote_budgets(
+    addresses: &[Option<usize>],
+    budgets: &[usize],
+    table: &[f32],
+    ordered: bool,
+) -> Vec<Vec<f32>> {
+    assert!(table.len() == BINS && budgets.iter().all(|&n| n > 0) && budgets.is_sorted());
     let mut store = Store::new(ordered);
     for (t, &key) in addresses.iter().enumerate() {
         store.observe(key, t);
     }
-    let mut votes = vec![0.; addresses.len()];
-    store.visit(passes, |w| w.vote(&mut votes, table));
+    let mut votes = vec![vec![0.; addresses.len()]; budgets.len()];
+    store.visit_budgets(budgets, |i, w| w.vote(&mut votes[i], table));
     votes
+}
+
+pub fn inference_table(raw: &[f32], power: u8) -> Cow<'_, [f32]> {
+    if power == 0 {
+        Cow::Borrowed(raw)
+    } else {
+        Cow::Owned(NormalizedGain::new(raw, power).effective)
+    }
+}
+
+pub(crate) fn worker_limit() -> usize {
+    let limit = std::env::var("PHASOR_LOOKUP_THREADS")
+        .ok()
+        .and_then(|s| s.parse::<NonZeroUsize>().ok())
+        .map_or(16, NonZeroUsize::get);
+    std::thread::available_parallelism()
+        .map(usize::from)
+        .unwrap_or(1)
+        .min(16)
+        .min(limit)
 }
 
 struct Frame {
