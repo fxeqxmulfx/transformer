@@ -1820,6 +1820,55 @@ successor to the shared gate. The proof covers arbitrary dense prefixes and
 arbitrary changes after the query. Build the proof from the repository root
 with `LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.OrbitInduction`.
 
+The `triple-chart-induction` candidate combines this learned chart with the
+dense successor read and the existing shared gate. It uses the same 1,365,459
+independent parameters as the main model on modulo-97 arithmetic. Its chart
+receives the learned dictionary and trusted memory values. It searches up to
+four distinct completed permutations in each orientation. Composite dictionary
+sizes cannot supply the required field inverses, so the chart can skip that
+search. An optional control also proposes the value at a partner address.
+
+| Frozen modulo-97 task | Checkpoint | Seed 0 | Seed 1 | Seed 2 |
+| --- | ---: | ---: | ---: | ---: |
+| NV11, $a^3+ab$ | 250 | 4,705/4,705 | 4,705/4,705 | 4,705/4,705 |
+| Mixed cubic, $a^3+ab^2+b$ | 250 | 4,704/4,705 | 4,705/4,705 | 4,705/4,705 |
+| Mixed cubic, $a^3+ab^2+b$ | 750 | 4,705/4,705 | 4,705/4,705 | 4,705/4,705 |
+
+Each entry comes from an independently reloaded checkpoint. All three NV11
+runs also answered every training pair and reproduced the main model's full
+observation history and weights byte for byte. For the mixed cubic, all
+three runs crossed 99% at the first scheduled observation, then finished the
+500-update retention window with every answer correct. The main model reached
+115, 114 and 116 correct at update 500 from the same initial weights and
+ordered examples. The source provides one held-out split for each task.
+
+At fixed seed-0 weights, removing the chart reduced the mixed-cubic score
+to 142/4,705 at update 250 and 89/4,705 at 750. Substituting partner values
+alone gave 2,279 and 2,253. Giving partner values priority over chart
+predictions gave 4,702 and 4,703. Removing the dense successor read preserved
+both full scores on this two-position task. The forward checks also compared
+370 logits under label changes and checked causal outputs on arbitrary dense
+vectors.
+
+```sh
+cd experiments/phasor_value_transport
+flags=fp32-affine-reference,triple-chart-induction
+cargo +stable test --release --locked --offline --features "$flags"
+cargo +stable build --release --locked --offline --features "$flags"
+bin=./target/release/phasor-value-transport
+out=runs/chart-induction
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    "$bin" cell arithmetic-cubic-product "$seed" "$out/gpt"
+    "$bin" probes arithmetic-cubic-product "$seed" "$out/gpt"
+    "$bin" nv11-score "$out/gpt/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" catalog-target arithmetic-cubic-mixed "$seed" 250 "$out/catalog"
+    "$bin" catalog-target arithmetic-cubic-mixed "$seed" 250 "$out/catalog"
+done
+"$bin" catalog-ablate arithmetic-cubic-mixed 0 250 "$out/catalog"
+```
+
 ### Pair-class results beyond the canonical tiers
 
 The November 23 registered-extension audit through language L3 seed 1

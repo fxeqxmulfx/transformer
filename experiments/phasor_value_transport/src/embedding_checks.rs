@@ -80,7 +80,10 @@ pub fn run() -> Result<()> {
     let reference = e.infer_embeddings(&vectors, batch, length)?;
     if induction {
         let mut control = e.config.clone();
-        control.head = head::Head::PeerTriplePhase(head::PeerRead::PAIR_GRAPH);
+        control.head = head::Head::PeerTriplePhase(head::PeerRead {
+            dense_induction: false,
+            ..control.head.peer_read().unwrap()
+        });
         let baseline =
             Engine::new(control, &parameters)?.infer_embeddings(&vectors, batch, length)?;
         if reference.logits[..2 * vocab] != baseline.logits[..2 * vocab]

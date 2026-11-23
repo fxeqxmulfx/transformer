@@ -61,6 +61,7 @@ pub struct PeerRead {
     pub gates: ReadGates,
     pub pairs: Option<crate::slot_orbits::PairRead>,
     pub dense_induction: bool,
+    pub fibers: Option<crate::slot_orbits::FiberRead>,
 }
 
 impl PeerRead {
@@ -70,6 +71,7 @@ impl PeerRead {
             gates: ReadGates::WidthScaled,
             pairs: None,
             dense_induction: false,
+            fibers: None,
         }
     }
 
@@ -80,6 +82,7 @@ impl PeerRead {
         gates: ReadGates::Unit,
         pairs: None,
         dense_induction: false,
+        fibers: None,
     };
 
     pub const SHARED_GRAPH: Self = Self {
@@ -105,11 +108,42 @@ impl PeerRead {
         dense_induction: true,
         ..Self::PAIR_GRAPH
     };
+    pub const CHART_INDUCTION: Self = Self {
+        fibers: Some(crate::slot_orbits::FiberRead::Chart),
+        ..Self::DENSE_INDUCTION
+    };
+
+    /// Change only the retrieved value. All arms use the original parameter layout.
+    pub fn induction_controls(self) -> Vec<(&'static str, Self)> {
+        use crate::slot_orbits::FiberRead;
+        let mut variants = Vec::new();
+        if self.fibers == Some(FiberRead::Chart) {
+            for (name, fibers) in [
+                ("without_chart", None),
+                ("partner_values_only", Some(FiberRead::PartnerValues)),
+                ("with_partner_values", Some(FiberRead::PartnerThenChart)),
+            ] {
+                variants.push((name, Self { fibers, ..self }));
+            }
+        }
+        if self.dense_induction {
+            variants.push((
+                "without_dense_induction",
+                Self {
+                    dense_induction: false,
+                    ..self
+                },
+            ));
+        }
+        variants
+    }
 
     const fn id(self, with_phase: bool) -> &'static str {
         use crate::slot_orbits::RoleEvidence;
         if self.pairs.is_some() {
             return match (self, with_phase) {
+                (Self::CHART_INDUCTION, true) => "phasor-triple-chart-induction-32-v1",
+                (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
                 (Self::DENSE_INDUCTION, true) => "phasor-triple-dense-induction-32-v1",
                 (Self::DENSE_INDUCTION, false) => "phasor-triple-dense-induction-trunk-v1",
                 (Self::PAIR_GRAPH, true) => "phasor-triple-pair-classes-current-32-v1",
@@ -245,6 +279,7 @@ impl Head {
             "triple-current-graph" => Ok(Self::PeerTriplePhase(PeerRead::CURRENT_GRAPH)),
             "triple-pair-classes" => Ok(Self::PeerTriplePhase(PeerRead::PAIR_GRAPH)),
             "triple-dense-induction" => Ok(Self::PeerTriplePhase(PeerRead::DENSE_INDUCTION)),
+            "triple-chart-induction" => Ok(Self::PeerTriplePhase(PeerRead::CHART_INDUCTION)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,

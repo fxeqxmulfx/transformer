@@ -144,6 +144,7 @@ pub struct Routing {
     priority: Vec<usize>,
     reads: Option<slot_orbits::Reads>,
     graph: slot_orbits::TripleGraph,
+    fibers: Option<([slot_orbits::TripleGraph; 2], slot_orbits::FiberRead)>,
     peer_search: Option<crate::head::PeerSearch>,
     pairs: Option<slot_orbits::PairRead>,
     pub(crate) mute_proposals: [bool; 2],
@@ -160,6 +161,10 @@ impl Routing {
     pub fn new(head: crate::head::Head) -> Self {
         Self {
             graph: slot_orbits::TripleGraph::new(head.separates_triple_roles()),
+            fibers: head
+                .peer_read()
+                .and_then(|r| r.fibers)
+                .map(|mode| (Default::default(), mode)),
             peer_search: head.peer_search(),
             pairs: head.peer_read().and_then(|r| r.pairs),
             ..Self::default()
@@ -239,6 +244,17 @@ impl Routing {
                     &reads.constant,
                     &mut reads.transport,
                     pairs,
+                );
+            }
+            if let Some((graphs, mode)) = &mut self.fibers {
+                slot_orbits::fill_from_fibers(
+                    l.slots,
+                    &bank,
+                    &priority,
+                    &reads.constant,
+                    &mut reads.transport,
+                    graphs,
+                    *mode,
                 );
             }
             self.reads = Some(reads);

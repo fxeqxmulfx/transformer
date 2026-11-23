@@ -20,6 +20,9 @@ mod pair_index;
 #[path = "slot_values.rs"]
 mod values;
 pub use pair_classes::{PairRead, extend as fill_from_pair_classes};
+#[path = "slot_fibers.rs"]
+mod fibers;
+pub use fibers::{FiberRead, extend as fill_from_fibers};
 
 pub const ABSENT: u32 = u32::MAX;
 

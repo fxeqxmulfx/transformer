@@ -239,6 +239,19 @@ pub fn target_probes(
             let scores = transfer_scores(cfg.clone(), &task, &dir.join(file), digest, original)?;
             Ok(json!({"step":step,"weights_sha256":digest,"scores":scores}))
         };
+    let (first, last) = at_target_checkpoints(&result, checkpoint)?;
+    println!(
+        "{}",
+        json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
+        "probe_fingerprints":fingerprints,"first":first,"final":last})
+    );
+    Ok(())
+}
+
+fn at_target_checkpoints(
+    result: &Value,
+    checkpoint: impl Fn(&str, &Value, &Value, &Value) -> Result<Value>,
+) -> Result<(Value, Value)> {
     let target = &result["source_target"];
     let first = &target["first"];
     let first = if first.is_null() {
@@ -257,10 +270,48 @@ pub fn target_probes(
         &result["weights_sha256"],
         &result["scores"],
     )?;
+    Ok((first, last))
+}
+
+/// Replay the declared source scorer on both saved weight arrays, then change
+/// one induction rule at a time without retraining or changing the examples.
+pub fn target_ablation(name: &str, seed: u32, updates: usize, out: &Path) -> Result<()> {
+    let result = measure(Source::DeclaredTarget, name, seed, updates, out, false)?;
+    let (row, mut task, teachers) = catalog::load_declared(name)?;
+    if parity_case(name) {
+        catalog::add_parity_probes(&mut task)?;
+    }
+    let cfg = task_config(&row, &task, false)?;
+    let Head::PeerTriplePhase(read) = cfg.head else {
+        return Err("catalog-ablate requires an induction head".into());
+    };
+    let variants = read.induction_controls();
+    if variants.is_empty() {
+        return Err("the selected head has no induction read".into());
+    }
+    let dir = directory(out, MODEL, name, seed, updates).join("declared-target");
+    let (first, last) = at_target_checkpoints(&result, |file, step, digest, original| {
+        let bytes = verified_file(&dir.join(file), digest)?;
+        let score = |head| {
+            let mut control = cfg.clone();
+            control.head = head;
+            score_checkpoint_with(control, &task, &bytes, teachers.as_ref())
+                .map(|(scores, _)| scores)
+        };
+        let baseline = score(cfg.head)?;
+        if &baseline != original {
+            return Err(format!("original checkpoint scores changed for {file}").into());
+        }
+        let mut ablations = BTreeMap::new();
+        for &(name, variant) in &variants {
+            ablations.insert(name, score(Head::PeerTriplePhase(variant))?);
+        }
+        Ok(json!({"step":step,"weights_sha256":digest,"scores":baseline,"ablations":ablations}))
+    })?;
     println!(
         "{}",
         json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
-        "probe_fingerprints":fingerprints,"first":first,"final":last})
+        "first":first,"final":last})
     );
     Ok(())
 }
