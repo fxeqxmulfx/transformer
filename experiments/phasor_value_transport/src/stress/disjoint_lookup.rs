@@ -1,4 +1,4 @@
-//! Vary chain length with the same grammar and single-token name strategy from one to forty hops.
+//! Vary chain length up to the capacity of one fixed, single-token name alphabet.
 use super::*;
 pub mod budgets;
 #[cfg(test)]
@@ -33,6 +33,7 @@ impl Training {
 const WORDS: &str = "<pad> <bos> <eos> Table → Starting at , what do you get ? A . B C D E";
 const LETTERS: [&str; 5] = ["A", "B", "C", "D", "E"];
 const NAMES: usize = 210;
+const MAX_HOPS: usize = NAMES / LETTERS.len() - 1;
 fn vocabulary() -> Vec<String> {
     WORDS
         .split_whitespace()
@@ -48,8 +49,8 @@ struct Set {
     answers: [usize; 5],
 }
 fn sample(hops: usize, rng: &mut random::Random) -> Result<Set> {
-    if !(1..=40).contains(&hops) {
-        return Err("expected 1 to 40 actual tables".into());
+    if !(1..=MAX_HOPS).contains(&hops) {
+        return Err(format!("expected one through {MAX_HOPS} disjoint tables").into());
     }
     let first = WORDS.split_whitespace().count() as i64;
     let mut names: Vec<_> = (first..first + NAMES as i64).collect();
@@ -159,9 +160,6 @@ pub(super) fn dataset(training: Training) -> Result<(Value, Task)> {
     ))
 }
 fn probes(hops: usize, task: &str) -> Result<Vec<Example>> {
-    if !(1..=40).contains(&hops) {
-        return Err("expected one through forty tables".into());
-    }
     let words = vocabulary();
     let ids = words
         .iter()
@@ -275,6 +273,20 @@ mod tests {
             );
         }
     }
+    #[test]
+    fn the_last_supported_length_uses_the_entire_frozen_alphabet() {
+        let mut rng = random::Random::new(58);
+        let set = sample(41, &mut rng).unwrap();
+        let names: BTreeSet<_> = set.starts.into_iter()
+            .chain(set.tables.iter().flatten().map(|&(_, dest)| dest)).collect();
+        assert_eq!(names.len(), NAMES);
+        let questions = probes(41, NAME).unwrap();
+        assert_eq!(questions.len(), 100);
+        assert!(questions.iter().all(|r| r.prompt.len() == 681));
+        assert!(sample(42, &mut rng).is_err());
+        assert!(probes(0, NAME).is_err());
+    }
+
     #[test]
     fn forty_hops_use_205_different_names_and_only_the_final_letter_as_target() {
         let t = sample(40, &mut random::Random::new(58)).unwrap();

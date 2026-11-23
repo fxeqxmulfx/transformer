@@ -2700,6 +2700,15 @@ architecture development.
 | 40 | 100 | 100 | 100 |
 | 41 | 100 | 100 | 100 |
 
+The same 210-name vocabulary permits one more disjoint table. Forty-one
+tables use all 210 names and produce a 681-token question. A forty-second
+table would require five additional names. On 20 newly drawn 41-table
+sets, the frozen seed-0 checkpoint's isolated learned read scored 18/100
+originals and 19/100 last-link edits with 40 reads. It solved both
+versions on 1/100 pairs. With 41, 42 or 80 reads it solved both versions
+on 100/100 pairs, with identical generated letters at all three budgets.
+[Exact fixed-alphabet capacity](../../src/Transformer/Phasor/LookupQuestion/DistinctLayers.lean)
+
 On the separate NV11 regression the same architecture trained from
 scratch on seeds 0, 1 and 2. At update 250 each reloaded checkpoint scored
 4,704/4,704 training pairs and 4,705/4,705 held-out pairs in Kernite
@@ -2715,6 +2724,7 @@ for hops in 10 20 40; do
     "$bin" disjoint-lookup-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" isolated
 done
 PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 requested
+"$bin" disjoint-lookup-budget-study 0 "$out" 41 40,41,42,80 isolated
 for edge in $(seq 1 40); do
     "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 39,40,41 isolated
 done

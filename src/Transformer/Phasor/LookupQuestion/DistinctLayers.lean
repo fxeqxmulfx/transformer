@@ -27,4 +27,17 @@ example : ¬∃ labels : Fin 21 × Fin 5 → Fin 60, Function.Injective labels :
 example : ∃ labels : Fin 41 × Fin 5 → Fin 205, Function.Injective labels :=
   (capacity 40 5 205).mpr (by decide)
 
+/-- With the original 210 single-token names and five lanes in the disjoint-table study,
+41 is the largest chain length whose layer names can all be disjoint. -/
+theorem fixed_alphabet (h : ℕ) :
+    (∃ labels : Fin (h+1) × Fin 5 → Fin 210, Function.Injective labels) ↔ h ≤ 41 := by
+  rw [capacity]
+  omega
+
+example : ∃ labels : Fin 42 × Fin 5 → Fin 210, Function.Injective labels :=
+  (fixed_alphabet 41).mpr (by decide)
+
+example : ¬∃ labels : Fin 43 × Fin 5 → Fin 210, Function.Injective labels :=
+  mt (fixed_alphabet 42).mp (by decide)
+
 end Transformer.Phasor.LookupQuestion.DistinctLayers
