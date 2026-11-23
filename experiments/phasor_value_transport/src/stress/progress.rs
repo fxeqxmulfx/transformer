@@ -28,6 +28,71 @@ fn protocol(row: &Value, seed: u32, cfg: &Config, gpu: &str) -> Value {
         "tf32_backward":precision::TF32_BACKWARD})
 }
 
+/// Before 850c3cb2 the catalog row stored its authenticated digest without
+/// repeating the underlying data fingerprints in the checkpoint header.
+fn matches_protocol(saved: &Value, mut expected: Value) -> Result<bool> {
+    if saved == &expected {
+        return Ok(true);
+    }
+    let row = &expected["case"];
+    if row["tier"] != "catalog" || saved["case"].get("data_fingerprints").is_some() {
+        return Ok(false);
+    }
+    let Some(fingerprints) = row.get("data_fingerprints") else {
+        return Ok(false);
+    };
+    let identity = catalog::identity(&row["case"], fingerprints, &row["selection"])?;
+    if row["catalog_sha256"] != identity || expected["suite_sha256"] != identity {
+        return Ok(false);
+    }
+    expected["case"]
+        .as_object_mut()
+        .ok_or("invalid catalog row")?
+        .remove("data_fingerprints");
+    Ok(saved == &expected)
+}
+
+#[test]
+fn legacy_catalog_header_authenticates_the_same_data_and_training_protocol() -> Result<()> {
+    let definition = json!({"name":"fixture","batch":32});
+    let hashes = json!({"train":"a","validation":"b"});
+    let selection = json!("validation");
+    let checksum = catalog::identity(&definition, &hashes, &selection)?;
+    let row =
+        json!({"tier":"catalog","case":definition,"selection":selection,"catalog_sha256":checksum});
+    let legacy = json!({"case":row,"suite_sha256":checksum,"seed":2});
+    let mut current = legacy.clone();
+    current["case"]["data_fingerprints"] = hashes;
+    assert!(matches_protocol(&legacy, current.clone())?);
+    assert!(matches_protocol(&current, current.clone())?);
+    let mut changed = current.clone();
+    changed["case"]["data_fingerprints"]["train"] = json!("different");
+    assert!(!matches_protocol(&legacy, changed)?);
+    let mut wrong = legacy.clone();
+    wrong["seed"] = json!(0);
+    assert!(!matches_protocol(&wrong, current.clone())?);
+    wrong = legacy.clone();
+    wrong["case"]["data_fingerprints"] = Value::Null;
+    assert!(!matches_protocol(&wrong, current)?);
+    Ok(())
+}
+
+#[test]
+#[ignore = "requires an archived pre-850c3cb2 Blocks seed-2 progress file"]
+fn restore_archived_catalog_weights_and_optimizer_state() -> Result<()> {
+    let root = std::env::var("PHASOR_LEGACY_CATALOG_RUN")?;
+    let (row, task) = catalog::load("suite-blocks")?;
+    let cfg = task_config(&row, &task, false)?;
+    let dir = Path::new(&root).join("suite-blocks/seed2");
+    let (progress, state) = Progress::read(&dir, &row, 2, &cfg, None)?.ok_or("missing archived state")?;
+    let point = progress.observation(progress.completed)?;
+    assert_eq!(progress.completed, 750);
+    assert_eq!(point["correct"], 27);
+    assert_eq!(point["total"], 28);
+    assert_eq!(state.len(), 3 * layout::total_count(&cfg));
+    Ok(())
+}
+
 pub(super) fn save(
     dir: &Path,
     row: &Value,
@@ -107,7 +172,7 @@ impl Progress {
                 .ok_or("invalid training batch reservation")?;
             expected["max_batch"] = json!(saved);
         }
-        if header["protocol"] != expected || state.len() != 12 * n {
+        if !matches_protocol(&header["protocol"], expected)? || state.len() != 12 * n {
             return Err("progress belongs to a different model, training protocol or shape".into());
         }
         let completed = usize::try_from(

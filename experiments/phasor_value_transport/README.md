@@ -3754,6 +3754,14 @@ of each epoch. It rechecks the saved held-out count before continuing.
 The first crossing or full-budget miss uses the ordinary checkpoint and
 the same independent replay. A pre-budget cutoff remains pending.
 
+Catalog checkpoints written before `850c3cb2` store a digest of the case,
+the selected split and the original data fingerprints. The reader recomputes
+that digest when restoring the older header. An archived Blocks seed-2 run
+at update 750 restored its weights, both AdamW moments and its 27/28
+observation. To repeat the check, set `PHASOR_LEGACY_CATALOG_RUN` to the
+directory containing `suite-blocks/seed2/progress.bin` and run
+`cargo +stable test --release --locked --offline --features fp32-affine-reference --bin phasor-value-transport restore_archived_catalog_weights_and_optimizer_state -- --ignored`.
+
 Lean proves that splitting a step-dependent update schedule preserves
 the full state and the list of scheduled observations. On seed 0 the
 windowed and uninterrupted graph runs produced identical weights,

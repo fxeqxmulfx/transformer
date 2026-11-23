@@ -365,17 +365,21 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
     with_identity(name, case, fingerprints, task)
 }
 
+pub(super) fn identity(case: &Value, fingerprints: &Value, selection: &Value) -> Result<String> {
+    Ok(hash(&serde_json::to_vec(&json!([
+        case,
+        fingerprints,
+        selection
+    ]))?))
+}
+
 fn with_identity(
     name: &str,
     case: Value,
     fingerprints: Value,
     task: Task,
 ) -> Result<(Value, Task)> {
-    let identity = hash(&serde_json::to_vec(&json!([
-        case,
-        fingerprints,
-        task.selection
-    ]))?);
+    let identity = identity(&case, &fingerprints, &json!(task.selection))?;
     let row = json!({"name":name,"tier":"catalog","selection":task.selection,
         "train_examples":task.splits["train"].len(),"heldout_examples":task.splits[&task.selection].len(),
         "case":case,"catalog_sha256":identity,"data_fingerprints":fingerprints});
