@@ -6,6 +6,7 @@ public import Transformer.Phasor.FFN
 public import Transformer.Phasor.Forward
 public import Transformer.Phasor.LearnedStreamRead
 public import Transformer.Phasor.EmbeddingInput
+public import Transformer.Phasor.ModularChainScore
 public import Transformer.Phasor.BoundedMemoryRead
 public import Transformer.Phasor.CausalProductInput
 public import Transformer.Phasor.CompactFFN

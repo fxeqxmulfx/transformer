@@ -65,8 +65,7 @@ pub(super) fn sequence_example(e: basis::data::Example) -> Example {
     }
 }
 
-fn sequence_task(d: sequences::dataset::Dataset) -> Task {
-    let source = d.task;
+fn sequence_task(source: basis::data::Task) -> Task {
     let splits = source
         .splits
         .into_iter()
@@ -77,6 +76,45 @@ fn sequence_task(d: sequences::dataset::Dataset) -> Task {
         vocab: source.vocab,
         selection: source.selection,
     }
+}
+
+/// Reuse the original modular-chain generator and check its three dense
+/// tensor fingerprints against the independently audited seed-one record.
+fn modular_chain(name: &str, case: &Value) -> Result<(Task, Value)> {
+    use composed_retrieval::chain_data;
+
+    let number = |field: &str| -> Result<usize> {
+        Ok(usize::try_from(
+            case["data"][field]
+                .as_u64()
+                .ok_or("missing chain dimension")?,
+        )?)
+    };
+    let prime = number("prime")?;
+    let steps = number("steps")?;
+    let seed = case["data_seed"]
+        .as_u64()
+        .ok_or("missing chain data seed")?;
+    let protocol: Value = serde_json::from_str(composed_retrieval::data::CHAIN_PROTOCOL)?;
+    let expected = protocol["cases"][name]
+        .as_str()
+        .ok_or("missing chain tensor fingerprint")?;
+    if protocol["data_seed"] != seed
+        || protocol["chain_source_manifest_sha256"] != hash(chain_data::SOURCES.as_bytes())
+    {
+        return Err("modular-chain source provenance differs".into());
+    }
+    let source = chain_data::build(prime, steps, seed).map_err(|e| e.to_string())?;
+    let mut fingerprints = BTreeMap::new();
+    for (split, rows) in &source.splits {
+        let pin = chain_data::fingerprints(rows, source.vocab).map_err(|e| e.to_string())?;
+        fingerprints.insert(split, pin.dense_tensor_sha256);
+    }
+    let fingerprints = json!(fingerprints);
+    if hash(&serde_json::to_vec(&fingerprints)?) != expected {
+        return Err("modular-chain tensors differ from the original source".into());
+    }
+    Ok((sequence_task(source), fingerprints))
 }
 
 /// The reviewed GPT probe port validates both original tensor fingerprints
@@ -239,6 +277,8 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
             arithmetic_task(data),
             entry["history"]["data_fingerprints"].clone(),
         )
+    } else if case["kind"] == "chain" {
+        modular_chain(name, &case)?
     } else if case["kind"] == "probe" {
         let (task, hashes, teachers) = mechanism_probe(&case).map_err(|err| err.to_string())?;
         if teachers.is_some() {
@@ -274,7 +314,7 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
         }
         .map_err(|e| -> Box<dyn std::error::Error> { e })?;
         let fingerprints = json!(d.original_fingerprints);
-        (sequence_task(d), fingerprints)
+        (sequence_task(d.task), fingerprints)
     };
     with_identity(name, case, fingerprints, task)
 }

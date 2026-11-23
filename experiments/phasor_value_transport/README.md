@@ -1696,6 +1696,33 @@ done > "$out/catalog-replays.jsonl"
 jq -es --slurpfile inventory "$out/catalog-inventory.json" -f catalog_results.jq "$out/catalog-replays.jsonl"
 ```
 
+#### Original modular chains
+
+The default Phasor can train and score all twelve original modular-chain
+cases. Each training example supplies the initial residue and the ordered
+coefficient pairs. The generator computes the final residue and masks every
+earlier target. On each of the 36 splits, the independent Rust check reproduced
+the original row order, all dense target masks and the tensor digest. The
+49,152 seed-one examples include 1,024 doubled-length examples per case.
+The data audit also reproduced 72 archived hashes from a separate data seed.
+[Source data audit](../composed_retrieval/chain_data/README.md) ·
+[Final-answer scoring proof](../../src/Transformer/Phasor/ModularChainScore.lean)
+
+These twelve cases bring the broader catalog to 68 runnable cases out of
+108. The remaining 40 have a recorded data or scoring limitation in
+`catalog-inventory`. Each chain uses 2,048 training examples and selects
+on 1,024 validation examples. The primary criterion is 99% exact at a
+250-update observation. After a crossing, the runner trains for the
+source's additional 500 updates and scores both checkpoints on validation
+and the doubled-length test.
+
+```sh
+for seed in 0 1 2; do
+    "$bin" catalog-target modular-chain-p17-l1 "$seed" 250 "$out/catalog" > /dev/null
+    "$bin" catalog-target modular-chain-p17-l1 "$seed" 250 "$out/catalog"
+done
+```
+
 ### Four-gate triple transport on the canonical GPT tiers
 
 The November 22 partial audit independently reloaded 55 checkpoints from

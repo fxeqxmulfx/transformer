@@ -86,6 +86,7 @@ test = false
 [dependencies]
 arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
 basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
+composed-retrieval = { path = "../composed_retrieval", features = ["chain-data"] }
 frequency = { package = "convex-stress-frequency-data", path = "../convex_stress_frequency_data" }
 parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
 probes = { package = "convex-stress-probe-data", path = "../convex_stress_probe_data" }
