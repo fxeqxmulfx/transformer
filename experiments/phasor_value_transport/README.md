@@ -2160,9 +2160,9 @@ unique-symbol copying scored 0/32 on each seed. Their source budgets
 are 100,000 updates.
 
 The November 23 main-model audit including Fashion-MNIST covered
-32 of the 108 broader cases, with 76 independently reloaded case and seed
+32 of the 108 broader cases, with 80 independently reloaded case and seed
 results. Four retained the source target, two crossed and subsequently
-dropped below it, and three exhausted the source budget. The other 67
+dropped below it, and three exhausted the source budget. The other 71
 were measured before their source budget ended.
 
 On hard recall all three seeds exhausted the 3,000-update source budget.
@@ -2457,10 +2457,11 @@ set. The 10,000 official test images keep their source order. With these
 archives available, the native runner can load 84 of 108 broader catalog
 cases. [Fashion-MNIST archives](https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion)
 
-At the first scheduled observation, update 250, main-model seed 0
-classified 6,237 of 10,000 validation images and 6,199 of 10,000
-independent test images correctly. Reloading its checkpoint reproduced
-both counts. The original training budget is 30,000 updates.
+At update 250 the three main-model seeds classified 6,237, 6,015 and
+6,197 of 10,000 validation images correctly. On the 10,000 independent
+test images they scored 6,199, 5,937 and 6,268. Each count reproduced
+from the saved weights. All three searches ended at the first scheduled
+observation, below the 90% target and the 30,000-update source budget.
 
 ```sh
 # From the repository root, download and verify the original IDX files.
