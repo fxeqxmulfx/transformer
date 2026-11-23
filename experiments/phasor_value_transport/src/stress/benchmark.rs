@@ -3,6 +3,7 @@ use super::source_target::SourceTarget;
 use super::*;
 use crate::head::Head;
 use std::io::{BufRead, BufReader};
+mod read_budgets;
 mod split;
 use split::SplitScorer;
 mod write_order;
@@ -277,9 +278,15 @@ fn at_target_checkpoints(
     Ok((first, last))
 }
 
-/// Replay the declared source scorer on both saved weight arrays, then change
-/// one induction rule at a time without retraining or changing the examples.
-pub fn target_ablation(name: &str, seed: u32, updates: usize, out: &Path) -> Result<()> {
+/// Replay the original checkpoints and examples under individual induction
+/// controls or the requested fixed-weight read budgets.
+pub fn target_ablation(
+    name: &str,
+    seed: u32,
+    updates: usize,
+    out: &Path,
+    budgets: Option<&str>,
+) -> Result<()> {
     let result = measure(Source::DeclaredTarget, name, seed, updates, out, false)?;
     let (row, mut task, teachers) = catalog::load_declared(name)?;
     if parity_case(name) {
@@ -289,7 +296,13 @@ pub fn target_ablation(name: &str, seed: u32, updates: usize, out: &Path) -> Res
     let Head::PeerTriplePhase(read) = cfg.head else {
         return Err("catalog-ablate requires an induction head".into());
     };
-    let variants = read.induction_controls();
+    let variants = match budgets {
+        Some(requested) => read_budgets::controls(read, requested)?,
+        None => read.induction_controls()
+            .into_iter()
+            .map(|(name, control)| (name.to_owned(), control))
+            .collect(),
+    };
     if variants.is_empty() {
         return Err("the selected head has no induction read".into());
     }
@@ -307,16 +320,22 @@ pub fn target_ablation(name: &str, seed: u32, updates: usize, out: &Path) -> Res
             return Err(format!("original checkpoint scores changed for {file}").into());
         }
         let mut ablations = BTreeMap::new();
-        for &(name, variant) in &variants {
-            ablations.insert(name, score(Head::PeerTriplePhase(variant))?);
+        for (name, variant) in &variants {
+            let scores = if *variant == read {
+                baseline.clone()
+            } else {
+                score(Head::PeerTriplePhase(*variant))?
+            };
+            ablations.insert(name, scores);
         }
         Ok(json!({"step":step,"weights_sha256":digest,"scores":baseline,"ablations":ablations}))
     })?;
-    println!(
-        "{}",
-        json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
-        "first":first,"final":last})
-    );
+    let mut report = json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
+        "first":first,"final":last});
+    if budgets.is_some() {
+        report["trained_reads"] = json!(read.path.map(|path| path.passes));
+    }
+    println!("{report}");
     Ok(())
 }
 

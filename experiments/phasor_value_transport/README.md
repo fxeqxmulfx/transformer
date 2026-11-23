@@ -2771,10 +2771,10 @@ final-answer loss at initialization.
 [Agreement gain and initial derivative](../../src/Transformer/Phasor/TripleTransport/AgreementGain.lean)
 
 The two-bank architecture learned the original GPT multi-query associative
-recall task on seeds 0 and 1. A sequence counts only when both queried values
-are correct. Both seeds reached the declared 95% validation target at update
-500 and retained it at update 1,000. The main triple-transport model had zero
-exact validation sequences through update 5,000. The source
+recall task on seeds 0, 1 and 2. A sequence counts only when both queried
+values are correct. All three seeds reached the declared 95% validation target
+at update 500 and retained it at update 1,000. The main triple-transport
+model had zero exact validation sequences through update 5,000 on seed 0. The source
 budget is 100,000. All rows below were scored again from saved weights.
 
 | Checkpoint | Novel validation /32 | Test /64 | Length 48 /64 | Length 96 /64 |
@@ -2783,7 +2783,17 @@ budget is 100,000. All rows below were scored again from saved weights.
 | Two banks, seed 0, update 1,000 | 31 | 63 | 61 | 62 |
 | Two banks, seed 1, update 500 | 32 | 64 | 61 | 64 |
 | Two banks, seed 1, update 1,000 | 31 | 64 | 60 | 64 |
+| Two banks, seed 2, update 500 | 32 | 64 | 64 | 64 |
+| Two banks, seed 2, update 1,000 | 32 | 63 | 64 | 64 |
 | Main, seed 0, update 5,000 | 0 | 0 | 0 | 0 |
+
+The model trained with ten local associative reads. On seed 0, scoring
+those same weights with 1, 5, 10, 20 or 40 reads gave identical exact counts
+on all four splits at both checkpoints. Bypassing the local read at update
+500 kept validation at 32/32 and increased both the independent and
+length-48 test scores from 63/64 to 64/64. At update 1,000 bypassing it
+preserved all four counts. The rest of the trained architecture sufficed
+for the validation target at both checkpoints.
 
 The same two-bank architecture trained from fresh weights on NV11 with
 seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
@@ -2808,6 +2818,8 @@ On seed 0 at update 500 the two-bank checkpoint answered both orders
 correctly for 125/128 queried-key pairs and 126/128 controls. At update
 1,000 it scored 122/128 and 126/128. Every pair counted in these four
 results also had both answers right on the unmodified source row.
+Seed 1 scored 126/128 queried and 127/128 unqueried pairs at update 500,
+then 127/128 and 128/128 at update 1,000.
 
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-agreement-lookup
@@ -2816,6 +2828,7 @@ bin=./target/release/phasor-value-transport
 "$bin" catalog-target suite-mqar 0 1500 runs/agreement-catalog
 "$bin" target-probes suite-mqar 0 1500 runs/agreement-catalog recall-gap 168
 "$bin" target-writes suite-mqar 0 1500 runs/agreement-catalog
+"$bin" catalog-ablate suite-mqar 0 1500 runs/agreement-catalog 0,1,5,10,20,40
 ```
 
 Both seed-0 models trained from scratch on the same one- to five-table
