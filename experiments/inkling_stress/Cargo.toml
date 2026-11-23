@@ -13,6 +13,7 @@ release-topology = []
 basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
 kernite-macros = "=0.6.0"
 minibatch = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
+parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"
 tch = "=0.22.0"

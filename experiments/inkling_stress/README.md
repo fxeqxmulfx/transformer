@@ -121,12 +121,38 @@ length 512 with the same three passes and weights.
 | 1 | 1,250 | 2,250 | 510 | 511 | 502 |
 | 2 | 1,000 | 1,000 | 512 | 512 | 512 |
 
+On the identical length-256 tests, main Phasor scored 509, 512 and 507
+out of 512 in seed order. At length 512 it scored 342, 512 and 293.
+
 On seed 0, the eight-layer model reached 256/256 on both validation
 and the independent test of branch amplitudes at update 256. Main
 Phasor first passed validation at update 416 with 254/256. Both
 architectures first passed linear transport at update 224. Inkling
 scored 255/256 on validation and 256/256 on the independent test.
 These canonical scores require generating the complete answer through EOS.
+
+On long-tier Basis Parity 16, the eight-layer seed-0 checkpoint first
+passed at update 2,500 with 156/157 novel sequences and 512/512 on the
+independent test. Main Phasor reached 157/157 at update 1,250 and scored
+512/512 on that test. Doubling the input to 32 bits gave the following
+results on the same 256 distinct prompts. Each correct generation had
+to emit both the parity label and EOS. The first Phasor checkpoint
+scored 234/256. [Parity and EOS specification](../../src/Transformer/Basis/Parity.lean)
+
+| Inkling passes at evaluation | Correct /256 | Gained vs. three passes | Lost vs. three passes |
+| ---: | ---: | ---: | ---: |
+| 3 (training depth) | 127 | 0 | 0 |
+| 5 | 179 | 76 | 24 |
+| 10 | 231 | 111 | 7 |
+| 20 | 231 | 111 | 7 |
+| 40 | 231 | 111 | 7 |
+
+At every tested depth above three, the same checkpoint recovered the
+one missed novel validation example and retained all 512 independent
+test answers at the source length. On the doubled inputs, ten passes
+improved accuracy by 104/256 and fell short of the 99% target.
+At 20 bits, three passes scored 228/256. Ten and forty passes each scored
+255/256, gaining 28 and losing one of the originally correct rows.
 
 On seed 0 the first positive scheduled observation gave 52/4,705 on
 modular addition at update 19, 79/4,705 on absolute difference at update
@@ -250,6 +276,9 @@ target/release/inkling-stress run suite-boolean-and-shift 0 runs/canonical 320
 target/release/inkling-stress replay suite-boolean-and-shift 0 runs/canonical
 target/release/inkling-stress depth suite-boolean-and-shift 0 runs/canonical 1,2,3,5,10,20,40
 target/release/inkling-stress extend basis-depth-easy 0 runs/canonical depth-length 128,256
+for passes in 3 5 10 20 40; do
+    target/release/inkling-stress extend basis-parity16 0 runs/canonical parity-length 32 "$passes"
+done
 target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 0,32,64,128
 target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 128 40
 ```

@@ -295,14 +295,15 @@ fn main() -> Result<()> {
             let probe = match kind.as_str() {
                 "recall-gap" => transfer::Probe::RecallGap,
                 "depth-length" => transfer::Probe::DepthLength,
-                _ => return Err("expected recall-gap or depth-length".into()),
+                "parity-length" => transfer::Probe::ParityLength,
+                _ => return Err("expected recall-gap, depth-length or parity-length".into()),
             };
             let sizes = counts.split(',').map(str::parse::<usize>).collect::<std::result::Result<_,_>>()?;
             let passes = extra.first().map(|s| s.parse::<std::num::NonZeroUsize>())
                 .transpose()?.map_or(text::PASSES, std::num::NonZeroUsize::get);
             (Action::Transfer(probe,sizes,passes),name,seed,out)
         }
-        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,... | extend CASE SEED OUT {recall-gap|depth-length} SIZES,... [EVAL_PASSES]".into()),
+        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,... | extend CASE SEED OUT {recall-gap|depth-length|parity-length} SIZES,... [EVAL_PASSES]".into()),
     };
     let threads = env::var("INKLING_THREADS")
         .unwrap_or_else(|_| "2".into())

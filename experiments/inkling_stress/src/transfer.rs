@@ -10,11 +10,14 @@ use serde_json::{Map, Value, json};
 
 #[path = "../../phasor_value_transport/src/stress/recall_gap.rs"]
 mod recall_gap;
+#[path = "../../phasor_value_transport/src/stress/parity_length.rs"]
+mod parity_length;
 
 #[derive(Clone, Copy)]
 pub enum Probe {
     RecallGap,
     DepthLength,
+    ParityLength,
 }
 
 fn scorer_example(row: basis::data::Example) -> Example {
@@ -76,6 +79,12 @@ pub fn evaluate(
                     .ok_or("missing reference length fingerprint")?;
                 basis::length::verified_rows(spec, reference, count, expected, size)?
             }
+            Probe::ParityLength => {
+                if !matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
+                    return Err("parity-length requires a Basis parity checkpoint".into());
+                }
+                parity_length::rows(size)?
+            }
         };
         let examples: Vec<_> = examples.into_iter().map(scorer_example).collect();
         engine.evaluation_passes = passes;
@@ -93,6 +102,7 @@ pub fn evaluate(
     record["probe"] = json!(match probe {
         Probe::RecallGap => "recall-gap",
         Probe::DepthLength => "depth-length",
+        Probe::ParityLength => "parity-length",
     });
     record["extended"] = json!(scores);
     if !paired.is_empty() {

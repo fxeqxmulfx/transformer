@@ -218,28 +218,11 @@ pub(super) fn add_extended_parity_probes(
     task: &mut Task,
     lengths: &[usize],
 ) -> basis::Result<BTreeMap<String, String>> {
-    let protocol: Value = serde_json::from_str(parity::PROTOCOL)?;
-    let mut spec = protocol["definitions"]["suite-parity-none"].clone();
-    spec.as_object_mut()
-        .and_then(|s| s.remove("longer_lengths"))
-        .filter(|lengths| lengths == &json!([32, 64]))
-        .ok_or("unexpected source parity probe lengths")?;
-    spec["min_length"] = Value::Null;
     let mut hashes = BTreeMap::new();
     for &length in lengths {
-        spec["length"] = json!(length);
-        // The source generator validates this bound even without index hints.
-        spec["number_limit"] = json!(length);
-        let rows = parity::dataset::generate(&spec, "test", 256)?;
-        for row in &rows {
-            basis::independent::check(&spec, row)?;
-        }
-        let distinct: std::collections::BTreeSet<_> = rows.iter().map(|r| &r.prompt).collect();
-        if distinct.len() != rows.len() {
-            return Err("duplicate extended parity test prompt".into());
-        }
+        let (digest, rows) = super::parity_length::rows(length)?;
         let split = format!("test/extended-parity-{length}");
-        hashes.insert(split.clone(), basis::wire::split_hash(&spec, "test", &rows));
+        hashes.insert(split.clone(), digest);
         task.splits
             .insert(split, rows.into_iter().map(sequence_example).collect());
     }
