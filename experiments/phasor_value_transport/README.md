@@ -1871,8 +1871,8 @@ done
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit through language L3 seed 1
-verified nine of 51 short runs and six of 12 long runs.
+The November 23 registered-extension audit through language L4 seed 2
+verified nine of 51 short runs and seven of 12 long runs.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 Dyck also passed all three seeds at update 250 with 32/32 on validation.
 The independent Dyck test scores were 62, 63 and 64 out of 64.
@@ -1893,6 +1893,9 @@ independent and length-128 tests. Its ten-letter exhaustive score was
 L3 seed 1 passed at update 1,000 with 509/512 on validation. It scored
 512/512 on the independent test, 510/512 at length 128, 1,024/1,024 on
 the ten-letter test and 64/64 on the alternating tail.
+L4 seed 2 first passed at update 1,000 with 512/512 on validation and the
+independent test. It scored 511/512 at length 128, 1,006/1,024 on the
+ten-letter test and 53/64 on the alternating tail.
 
 The main model's easy-depth checkpoints scored 428, 341 and 496 of 512
 on length-256 inputs. The 20-bit parity checkpoints scored 0, 58 and
