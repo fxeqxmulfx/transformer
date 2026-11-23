@@ -2232,6 +2232,26 @@ score for an undefined answer.
 "$bin" lookup-weight-score 0 "$out" keep:1 linear
 ```
 
+The longer-chain probe uses the checkpoint's existing vocabulary. It
+prints unnumbered tables in order and asks about each of five starting
+keys on the same tables and choices. Each set has five different correct
+letters. The `shared` condition uses one fresh random permutation per
+set, with consistent bindings wherever a key reappears. The `rebound`
+condition samples a fresh ordered pool at each table, so a repeated key
+may have a different successor. The scorer reports exact answers out
+of 100, the number of sets solved for all five starts, and the full
+distribution across the 20 sets. Comparing five and ten hops in this
+format gives a reference for the 20- and 40-hop extension.
+[Lookup paths and starting-key dependence](../../src/Transformer/Phasor/LookupQuestion/LongChains.lean)
+
+```sh
+for hops in 5 10 20 40; do
+    for relation in shared rebound; do
+        PHASOR_EVAL_BATCH_CAP=4 "$bin" lookup-long-chains 0 "$out" "$hops" "$hops" "$relation"
+    done
+done
+```
+
 #### Memory used by frozen lookup
 
 The frozen scorer adds path votes in the same order as training and

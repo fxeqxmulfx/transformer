@@ -4,6 +4,7 @@ use super::super::*;
 use std::collections::{BTreeSet, HashSet};
 mod paired;
 pub(super) mod interior;
+pub(super) mod long;
 pub(super) mod memory;
 pub(super) use paired::paired;
 
@@ -229,7 +230,7 @@ fn balanced(
     Ok(rows)
 }
 
-fn split_digest(rows: &[Example]) -> Result<String> {
+pub(super) fn split_digest(rows: &[Example]) -> Result<String> {
     let payload: Vec<_> = rows.iter().map(|r| (&r.prompt, &r.answer)).collect();
     Ok(hash(&serde_json::to_vec(&payload)?))
 }
