@@ -141,9 +141,9 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 84 have native data and a supported source
+extensions and NV11, 91 have native data and a supported source
 metric in this runner when the original Fashion-MNIST archives are available.
-The other 24 need a different source scorer
+The other 17 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
 
@@ -3668,6 +3668,35 @@ for family in div97 fibonacci; do
         "$bin" catalog-target "noise-$family-$fraction" 0 10 runs/noisy-anchors
         "$bin" catalog-target "noise-$family-$fraction" 0 10 runs/noisy-anchors
     done
+done
+```
+
+#### Tiny Shakespeare next-character prediction
+
+The original 65-character corpus is split chronologically 80/10/10.
+The source samples windows of 128 characters with 50,000 fixed starts for
+training and 1,024 each for validation and test. Every position predicts the
+following character. The Rust data loader matched the ordered inputs, targets
+and zero change masks from a separate native LibTorch reconstruction on
+all three splits. The original summary reports validation CE 1.60218 at
+update 3,000 for the source GPT on seed 1. Its first crossing was at 2,500.
+[Original GPT results](https://github.com/fxeqxmulfx/diff-gpt/blob/5a37c515639f23037d191b0659a5a0853984328d/research/current_grokking/results/progress_snapshot.json)
+[Window and score proof](../../src/Transformer/Phasor/TextWindowScore.lean)
+
+Each Phasor observation uses the sum of supervised token losses divided by
+131,072 validation targets. The native scorer accumulates individual FP32
+losses in FP64. The source selects at CE ≤ 1.63, observes every 250 updates,
+and retains 500 additional updates after the first crossing, within the
+10,000-update budget. Reports also retain exact rows and correct tokens.
+The reproduction script accepts a native LibTorch installation via `LIBTORCH`.
+
+```sh
+bash tests/text_window_reference.sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for seed in 0 1 2; do
+    "$bin" catalog-target tiny-shakespeare-gpt "$seed" 250 runs/main-catalog
+    "$bin" catalog-target tiny-shakespeare-gpt "$seed" 250 runs/main-catalog
 done
 ```
 

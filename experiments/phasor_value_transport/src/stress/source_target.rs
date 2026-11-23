@@ -29,7 +29,7 @@ pub fn observation_interval(case: &Value, training_examples: usize) -> Result<us
 #[derive(Clone, Copy)]
 enum Metric {
     Accuracy,
-    NegativeMse,
+    NegativeError,
 }
 
 #[derive(Clone, Copy)]
@@ -47,7 +47,14 @@ impl SourceTarget {
             Some("accuracy") if is_scalar_anchor(case) && threshold > 0. && threshold <= 1. => {
                 Metric::Accuracy
             }
-            Some("negative_mse") if threshold.is_finite() && threshold <= 0. => Metric::NegativeMse,
+            Some("negative_mse") if threshold.is_finite() && threshold <= 0. => {
+                Metric::NegativeError
+            }
+            Some("negative_loss")
+                if case["kind"] == "text" && threshold.is_finite() && threshold <= 0. =>
+            {
+                Metric::NegativeError
+            }
             _ => return Err("unsupported source metric or invalid threshold"),
         };
         Ok(Self {
@@ -60,12 +67,12 @@ impl SourceTarget {
         })
     }
 
-    pub fn met(self, correct: u64, total: u64, mse: Option<f64>) -> Result<bool, &'static str> {
-        match (self.metric, mse) {
+    pub fn met(self, correct: u64, total: u64, scalar: Option<f64>) -> Result<bool, &'static str> {
+        match (self.metric, scalar) {
             (Metric::Accuracy, None) => {
                 Ok(total > 0 && correct as f64 / total as f64 >= self.threshold)
             }
-            (Metric::NegativeMse, Some(value)) if value.is_finite() && value >= 0. => {
+            (Metric::NegativeError, Some(value)) if value.is_finite() && value >= 0. => {
                 Ok(-value >= self.threshold)
             }
             _ => Err("observation differs from the declared source metric"),

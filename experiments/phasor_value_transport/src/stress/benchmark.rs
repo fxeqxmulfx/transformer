@@ -3,40 +3,22 @@ use super::source_target::SourceTarget;
 use super::*;
 use crate::head::Head;
 use std::io::{BufRead, BufReader};
-
-fn score_split(
-    engine: &mut Engine,
-    examples: &[Example],
-    split: &str,
-    teachers: Option<&numeric_probe::Teachers>,
-) -> Result<Value> {
-    if let Some(teachers) = teachers {
-        return teachers.score(engine, split, examples);
-    }
-    let score = metrics::evaluate(engine, examples, true)?;
-    let correct = score["exact"]
-        .as_u64()
-        .ok_or("missing exact-sequence score")?;
-    let mut counts = json!({"correct":correct,"total":examples.len()});
-    if examples[0].decoder.is_some() {
-        counts["native_correct"] = json!(score["native_correct"].as_u64().ok_or("missing native token count")?);
-    }
-    Ok(counts)
-}
+mod split;
+use split::SplitScorer;
 
 pub(super) fn score_checkpoint(
     cfg: Config,
     task: &Task,
     bytes: &[u8],
 ) -> Result<(Value, Option<Value>)> {
-    score_checkpoint_with(cfg, task, bytes, None)
+    score_checkpoint_with(cfg, task, bytes, SplitScorer::Exact)
 }
 
 fn score_checkpoint_with(
     cfg: Config,
     task: &Task,
     bytes: &[u8],
-    teachers: Option<&numeric_probe::Teachers>,
+    scorer: SplitScorer<'_>,
 ) -> Result<(Value, Option<Value>)> {
     if bytes.len() != layout::total_count(&cfg) * 4 {
         return Err("fixed-budget checkpoint shape mismatch".into());
@@ -52,7 +34,7 @@ fn score_checkpoint_with(
     let mut scores = BTreeMap::new();
     for (split, examples) in &task.splits {
         if split == &task.selection || split == "test" || split.starts_with("test/") {
-            scores.insert(split, score_split(&mut engine, examples, split, teachers)?);
+            scores.insert(split, scorer.score(&mut engine, examples, split)?);
         }
     }
     let causality = if matches!(
@@ -190,6 +172,7 @@ pub fn fixed_probes(
         &file,
         &result["weights_sha256"],
         &result["scores"],
+        SplitScorer::Exact,
     )?;
     println!(
         "{}",
@@ -206,9 +189,10 @@ fn transfer_scores(
     file: &Path,
     digest: &Value,
     original: &Value,
+    scorer: SplitScorer<'_>,
 ) -> Result<Value> {
     let bytes = verified_file(file, digest)?;
-    let (scores, _) = score_checkpoint(cfg, task, &bytes)?;
+    let (scores, _) = score_checkpoint_with(cfg, task, &bytes, scorer)?;
     for (split, expected) in original
         .as_object()
         .ok_or("missing original split scores")?
@@ -237,6 +221,7 @@ pub fn target_probes(
     if teachers.is_some() {
         return Err("these transfer probes require a sequence-accuracy case".into());
     }
+    let scorer = SplitScorer::new(&row["case"], teachers.as_ref());
     let fingerprints = add_probes(name, probes, &row, &mut task)?;
     let mut cfg = task_config(&row, &task, false)?;
     let part = if let Some(range) = rows {
@@ -248,7 +233,7 @@ pub fn target_probes(
     let dir = directory(out, MODEL, name, seed, updates).join("declared-target");
     let checkpoint =
         |file: &str, step: &Value, digest: &Value, original: &Value| -> Result<Value> {
-            let scores = transfer_scores(cfg.clone(), &task, &dir.join(file), digest, original)?;
+            let scores = transfer_scores(cfg.clone(), &task, &dir.join(file), digest, original, scorer)?;
             Ok(json!({"step":step,"weights_sha256":digest,"scores":scores}))
         };
     let (first, last) = at_target_checkpoints(&result, checkpoint)?;
@@ -308,7 +293,7 @@ pub fn target_ablation(name: &str, seed: u32, updates: usize, out: &Path) -> Res
         let score = |head| {
             let mut control = cfg.clone();
             control.head = head;
-            score_checkpoint_with(control, &task, &bytes, teachers.as_ref())
+            score_checkpoint_with(control, &task, &bytes, SplitScorer::new(&row["case"], teachers.as_ref()))
                 .map(|(scores, _)| scores)
         };
         let baseline = score(cfg.head)?;
@@ -352,6 +337,7 @@ fn measure(
             (architecture::HEAD, MODEL, MODEL, row, task, teachers)
         }
     };
+    let scorer = SplitScorer::new(&row["case"], teachers.as_ref());
     let schedule = row["case"]["max_updates"].as_u64().unwrap() as usize;
     let observe = super::source_target::observation_interval(&row["case"], task.splits["train"].len())?;
     let batch = row["case"]["batch"].as_u64().unwrap() as usize;
@@ -441,19 +427,19 @@ fn measure(
         let mut first_hit = false;
         for step in 0..=schedule {
             if step.is_multiple_of(observe) || step == stop {
-                let score = score_split(&mut e, held, &task.selection, teachers.as_ref())?;
+                let score = scorer.score(&mut e, held, &task.selection)?;
                 let correct = score["correct"]
                     .as_u64()
                     .ok_or("missing exact-sequence score")?;
-                let mse = score["mse"].as_f64();
+                let scalar = scorer.scalar(&score)?;
                 let mut point =
                     json!({"step":step,"correct":correct,"examples_seen":training.seen});
-                if let Some(value) = mse {
-                    point["mse"] = json!(value);
+                if let Some(field) = scorer.field() {
+                    point[field] = score[field].clone();
                 }
                 if let Some(rule) = target
                     && !first_hit
-                    && rule.met(correct, held.len() as u64, mse)?
+                    && rule.met(correct, held.len() as u64, scalar)?
                 {
                     first_hit = true;
                     stop = rule.stop_after_crossing(step, observe, schedule);
@@ -478,7 +464,7 @@ fn measure(
     let mut cfg = task_config(&row, &task, false)?;
     cfg.head = head;
     let bytes = fs::read(weights_file)?;
-    let (scores, causality) = score_checkpoint_with(cfg.clone(), &task, &bytes, teachers.as_ref())?;
+    let (scores, causality) = score_checkpoint_with(cfg.clone(), &task, &bytes, scorer)?;
     let train = task.splits["train"].len();
     let held = task.splits[&task.selection].len() as u64;
     let epoch = train.div_ceil(batch);
@@ -487,7 +473,7 @@ fn measure(
         .chain(std::iter::once(final_step));
     let mut history = BufReader::new(fs::File::open(history_file)?).lines();
     let (mut first_99, mut initial, mut last) = (None, 0, 0);
-    let mut last_mse = None;
+    let mut last_scalar = None;
     let mut crossing = None;
     for step in steps {
         let point: Value = serde_json::from_str(&history.next().ok_or("missing observation")??)?;
@@ -495,16 +481,7 @@ fn measure(
             .as_u64()
             .filter(|&n| n <= held)
             .ok_or("invalid score")?;
-        last_mse = match (teachers.is_some(), point.get("mse")) {
-            (false, None) => None,
-            (true, Some(value)) => Some(
-                value
-                    .as_f64()
-                    .filter(|mse| mse.is_finite() && *mse >= 0.)
-                    .ok_or("invalid numeric observation")?,
-            ),
-            _ => return Err("observation metric differs from the source protocol".into()),
-        };
+        last_scalar = scorer.scalar(&point)?;
         if point["step"] != step
             || point["examples_seen"] != step / epoch * train + step % epoch * batch
         {
@@ -518,7 +495,7 @@ fn measure(
         }
         if let Some(rule) = target
             && crossing.is_none()
-            && rule.met(last, held, last_mse)?
+            && rule.met(last, held, last_scalar)?
         {
             if step > updates {
                 return Err("first source target lies beyond the search window".into());
@@ -526,12 +503,12 @@ fn measure(
             let digest = point["target_weights_sha256"]
                 .as_str()
                 .ok_or("first source target is missing its recorded weights digest")?;
-            crossing = Some((step, last, last_mse, digest.to_owned()));
+            crossing = Some((step, last, last_scalar, digest.to_owned()));
         }
     }
     if history.next().is_some()
         || scores[&task.selection]["correct"] != last
-        || scores[&task.selection]["mse"].as_f64() != last_mse
+        || scorer.scalar(&scores[&task.selection])? != last_scalar
     {
         return Err("history failed final held-out checkpoint replay".into());
     }
@@ -544,14 +521,14 @@ fn measure(
         if final_step != expected {
             return Err("checkpoint did not stop at the declared observation".into());
         }
-        let first = if let Some((step, count, recorded_mse, digest)) = crossing {
+        let first = if let Some((step, count, recorded_scalar, digest)) = crossing {
             let first_bytes = fs::read(dir.join("first-target.f32"))?;
             if hash(&first_bytes) != digest {
                 return Err("first source target checkpoint digest mismatch".into());
             }
-            let (scores, _) = score_checkpoint_with(cfg, &task, &first_bytes, teachers.as_ref())?;
+            let (scores, _) = score_checkpoint_with(cfg, &task, &first_bytes, scorer)?;
             if scores[&task.selection]["correct"] != count
-                || scores[&task.selection]["mse"].as_f64() != recorded_mse
+                || scorer.scalar(&scores[&task.selection])? != recorded_scalar
             {
                 return Err("first source target checkpoint score mismatch".into());
             }
@@ -560,7 +537,7 @@ fn measure(
             Value::Null
         };
         result["source_target"] = json!({"first":first,"final_step":final_step,
-            "final_target_met":rule.met(last,held,last_mse)?,"budget_exhausted":final_step == schedule});
+            "final_target_met":rule.met(last,held,last_scalar)?,"budget_exhausted":final_step == schedule});
     }
     if let Some(probe) = causality {
         result["causality"] = probe;

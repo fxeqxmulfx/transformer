@@ -5,6 +5,9 @@ def meets($c; $s):
   if ($c.metric == "sequence_accuracy" or $c.metric == "accuracy") then $s.correct / $s.total >= $c.target
   elif $c.metric == "negative_mse" then
     ($s.mse|type=="number" and isfinite and .>=0) and (-$s.mse >= $c.target)
+  elif $c.metric == "negative_loss" then
+    ($s.loss|type=="number" and isfinite and .>=0) and ($s.targets > 0)
+      and ($s.correct_tokens >= 0 and $s.correct_tokens <= $s.targets) and (-$s.loss >= $c.target)
   else error("unsupported recorded metric") end;
 def source_summary:
   . as $r | .source_target as $t | .protocol as $p

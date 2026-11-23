@@ -263,6 +263,11 @@ pub(super) fn load_declared(name: &str) -> Result<(Value, Task, Option<numeric_p
         let (row, task) = with_identity(name, case, fingerprints, sequence_task(source))?;
         return Ok((row, task, None));
     }
+    if case["kind"] == "text" && case["metric"] == "negative_loss" {
+        let (source, fingerprints) = text_window::build(&case).map_err(|e| e.to_string())?;
+        let (row, task) = with_identity(name, case, fingerprints, sequence_task(source))?;
+        return Ok((row, task, None));
+    }
     if case["metric"] != "negative_mse" || case["kind"] != "probe" {
         return Err(format!("unsupported source metric {}", case["metric"]).into());
     }
