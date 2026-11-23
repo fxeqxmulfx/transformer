@@ -145,4 +145,30 @@ example : 11≠12 := rewire_changes [[(1,11),(2,12)]]
   (by intro t h; rw [List.mem_singleton] at h; exact h ▸ fork) 1 2 11 12 (by decide)
     (by decide) (by decide)
 
+/-- Synthetic lookup intervention at any displayed hop, including the last.
+Keep every preceding and following table fixed. Replacing the reached edge
+with a different value changes the final answer whenever the remaining
+tables have unique preimages and both routes finish. The alternatives may
+each edit other, unreached rows to preserve the printed token counts. -/
+theorem interior_rewire {A : Type*} [BEq A] (pre post : List (List (A × A)))
+    (before after : List (A × A)) (start key x y : A)
+    (prefix_ok : follow pre start = some key)
+    (old_edge : before.lookup key = some x) (new_edge : after.lookup key = some y)
+    (different : x ≠ y) (unique : ∀ t ∈ post, UniquePreimage t)
+    (a b : A) (old_end : follow post x = some a) (new_end : follow post y = some b) :
+    follow (pre ++ before :: post) start = some a ∧
+    follow (pre ++ after :: post) start = some b ∧ a ≠ b := by
+  refine ⟨?_, ?_, rewire_changes post unique x y a b different old_end new_end⟩
+  · simpa only [append, prefix_ok, Option.bind_some, follow, old_edge] using old_end
+  · simpa only [append, prefix_ok, Option.bind_some, follow, new_edge] using new_end
+
+example : follow ([[(0,4)]] ++ [(4,1),(5,2)] :: [[(1,11),(2,12)]]) 0 = some 11 ∧
+    follow ([[(0,4)]] ++ [(4,2),(5,1)] :: [[(1,11),(2,12)]]) 0 = some 12 ∧ 11 ≠ 12 := by
+  apply interior_rewire _ _ _ _ 0 4 1 2 (by decide) (by decide) (by decide) (by decide)
+  · intro t ht
+    rw [List.mem_singleton] at ht
+    exact ht ▸ fork
+  · decide
+  · decide
+
 end Transformer.Phasor.LookupQuestion
