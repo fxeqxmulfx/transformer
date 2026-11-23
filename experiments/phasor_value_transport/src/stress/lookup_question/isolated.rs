@@ -1,6 +1,7 @@
 //! Final-position votes at unit gain, projected against the entire tied
 //! vocabulary. Inputs pass through the learned geometric dictionary.
 use super::*;
+pub(in crate::stress) mod aliases;
 pub mod long;
 
 /// Use the pinned DiffGPT base_ops::rms warp's sum order. The host

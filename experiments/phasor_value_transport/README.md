@@ -2530,12 +2530,40 @@ The isolated sweep recorded every budget from one to 42, plus 60 and
 seconds. With up to 16 workers they took 12.11 and 11.83 seconds. All four
 reports had identical predictions and counts at every budget.
 
+All 229 vocabulary embeddings had distinct nearest learned addresses.
+However, the model hashes a tuple of three roles into one of 32,768
+learned coefficients. Keeping only the largest coefficient reproduced
+every isolated prediction at the tested twenty- and forty-hop budgets.
+At forty reads, **817 distinct role tuples** used that same coefficient
+across the 200 original and rewired inputs. Each input contained at
+least one other tuple alongside the frequent training tuple.
+
+To measure that collision, the diagnostic counts each tuple at most once
+per training prompt, using the checkpoint's trained budget of ten reads.
+Of 65 tuples in the leading bucket, one appeared in **1,000/1,000**
+training prompts. The next appeared in seven. After retaining just the
+most frequent tuple, the isolated read gave the following matched results.
+This attribution uses training-prompt counts and frozen weights. The
+ordinary learned forward still uses every tuple in each bucket.
+[Effect of refining a coefficient address](../../src/Transformer/Phasor/TripleTransport/RefinedPathAddress.lean)
+
+| Actual tables | Both correct one read early /100 | Both correct at depth /100 | Both correct with one extra read /100 |
+| ---: | ---: | ---: | ---: |
+| 10 | 0 | 100 | 100 |
+| 20 | 0 | 100 | 100 |
+| 40 | 0 | 100 | 100 |
+
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
 bin=./target/release/phasor-value-transport
 out=runs/disjoint-lookup/r10
 for mode in isolated full; do
     PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 "$mode"
+done
+for h in 10 20 40; do
+    for mode in isolated-leading isolated-refined; do
+        "$bin" disjoint-lookup-budget-study 0 "$out" "$h" "$((h-1)),$h,$((h+1))" "$mode"
+    done
 done
 ```
 

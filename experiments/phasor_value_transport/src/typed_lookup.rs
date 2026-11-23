@@ -53,6 +53,27 @@ pub fn inference_table(raw: &[f32], power: u8) -> Cow<'_, [f32]> {
     }
 }
 
+/// Enumerate all exact role tuples sharing one signed coefficient bucket.
+/// The ordinary forward keeps just the packed hash in its gradient tape.
+pub(crate) fn visit_final_bucket(
+    addresses: &[Option<usize>],
+    budgets: &[usize],
+    ordered: bool,
+    bucket: usize,
+    mut found: impl FnMut(usize, [usize; 3], usize, f32),
+) {
+    let mut store = Store::new(ordered);
+    for (t, &key) in addresses.iter().enumerate() {
+        store.observe(key, t);
+    }
+    store.visit_roles(budgets, |i, w, roles| {
+        let (bin, sign) = w.weight();
+        if bin == bucket {
+            found(i, roles, w.position, sign);
+        }
+    });
+}
+
 pub(crate) fn worker_limit() -> usize {
     let limit = std::env::var("PHASOR_LOOKUP_THREADS")
         .ok()

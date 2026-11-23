@@ -78,7 +78,20 @@ pub fn run(
     let n = original.len();
     let hashes = [digest(&original)?, digest(&edited)?];
     let examples: Vec<_> = original.into_iter().chain(edited).collect();
+    let mut alias_details = None;
     let preds = match mode {
+        "isolated-leading" | "isolated-refined" => {
+            let audit = lookup_question::isolated::aliases::run(
+                &cfg,
+                &weights,
+                &task.splits["train"],
+                &examples,
+                &budgets,
+                mode == "isolated-refined",
+            )?;
+            alias_details = Some(audit.details);
+            audit.predictions
+        }
         "isolated" => {
             lookup_question::isolated::budget_predictions(&cfg, &weights, &examples, &budgets)?
         }
@@ -96,7 +109,7 @@ pub fn run(
             }
             outputs
         }
-        _ => return Err("choose full or isolated".into()),
+        _ => return Err("choose full, isolated, isolated-leading or isolated-refined".into()),
     };
     let reference = &preds[budgets.binary_search(&hops).unwrap()];
     let letters: BTreeSet<_> = examples[..n].iter().map(|e| e.answer[0]).collect();
@@ -144,12 +157,13 @@ pub fn run(
             }),
         );
     }
-    println!(
-        "{}",
-        json!({"study":study.name,"mode":mode,"model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
+    let mut result = json!({"study":study.name,"mode":mode,"model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
         "trained_reads":trained,"hops":hops,"pairs":n,"weights_sha256":weight_digest(&weights),"protocol_sha256":row["catalog_sha256"],
-        "original_split_sha256":hashes[0],"edited_split_sha256":hashes[1],"budgets":results})
-    );
+        "original_split_sha256":hashes[0],"edited_split_sha256":hashes[1],"budgets":results});
+    if let Some(audit) = alias_details {
+        result["role_aliases"] = audit;
+    }
+    println!("{result}");
     Ok(())
 }
 

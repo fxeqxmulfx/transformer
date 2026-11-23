@@ -160,6 +160,14 @@ impl Store {
     /// Traverse each cue and relation once, sampling in increasing budget order.
     /// Within each budget the floating-point vote order is the single-read order.
     pub(super) fn visit_budgets(&self, budgets: &[usize], mut emit: impl FnMut(usize, Witness)) {
+        self.visit_roles(budgets, |i, witness, _| emit(i, witness));
+    }
+
+    pub(super) fn visit_roles(
+        &self,
+        budgets: &[usize],
+        mut emit: impl FnMut(usize, Witness, [usize; 3]),
+    ) {
         debug_assert!(budgets.first().is_none_or(|&n| n > 0) && budgets.is_sorted());
         for (&cue, root) in &self.cues {
             let Some(firsts) = self.outgoing.get(root) else {
@@ -176,6 +184,7 @@ impl Store {
                                         position: record.position,
                                         code: code(cue, first.relation, last.relation),
                                     },
+                                    [cue, first.relation, last.relation],
                                 );
                             }
                         }
