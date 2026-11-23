@@ -2452,6 +2452,26 @@ Every included depth has 100 training and 20 validation questions,
 balanced over the five correct letters. Depths 30 and 40 are held out
 from both training distributions.
 
+At update 250 on the distribution through twenty hops, the seed-0
+ten-read model generated 143/200 validation answers correctly. The
+twenty-read model generated 188/200. Both missed the 198/200 target
+at this observation. Independent reloads reproduced both counts. On
+the separate ten-hop questions the full models generated 91/100 and
+96/100 correct answers at their respective training budgets.
+
+The table compares their isolated learned path reads at the same
+evaluation budget, one read per displayed table. Each of the 100
+questions is paired with a last-link edit that changes its answer.
+Each cell gives the number of original answers, edited answers and
+pairs with both answers correct, out of 100 each.
+
+| Tables and evaluation reads | Trained with 10 reads | Trained with 20 reads |
+| ---: | ---: | ---: |
+| 10 | 91 / 93 / 90 | 97 / 97 / 94 |
+| 20 | 73 / 71 / 62 | 75 / 75 / 66 |
+| 30 | 44 / 47 / 33 | 56 / 56 / 41 |
+| 40 | 30 / 29 / 11 | 40 / 42 / 16 |
+
 ```sh
 export PHASOR_EVAL_BATCH_CAP=4
 for depth in 10 20 40; do
@@ -2468,17 +2488,22 @@ for depth in 10 20 40; do
 done
 ```
 
-To train with twenty shared reads on the longer distribution, select its
-study name when training and when reloading the checkpoint.
+To reproduce the matched update on the longer distribution, select its
+study name when training and reloading each checkpoint.
 
 ```sh
-cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup-20
-bin=./target/release/phasor-value-transport
 study=study-lookup-disjoint-through-20
-out=runs/disjoint-lookup/through-20-r20
-"$bin" advance "$study" 0 "$out" 250
-for hops in 10 20 30 40; do
-    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-depth 0 "$out" "$hops" "$hops" "$study"
+for depth in 10 20; do
+    feature=triple-power-lookup
+    if [ "$depth" = 20 ]; then feature=triple-power-lookup-20; fi
+    cargo +stable build --release --locked --offline --features "fp32-affine-reference,$feature"
+    bin=./target/release/phasor-value-transport
+    out=runs/disjoint-lookup/through-20-r$depth
+    "$bin" advance "$study" 0 "$out" 250
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-depth 0 "$out" 10 "$depth" "$study"
+    for hops in 10 20 30 40; do
+        "$bin" disjoint-lookup-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" isolated "$study"
+    done
 done
 ```
 
