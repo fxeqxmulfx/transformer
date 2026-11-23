@@ -544,7 +544,7 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
     let cfg = task_config(&row, &task, !probes.extended())?;
     let dest = out.join(name).join(format!("seed{seed}"));
     let (result, mut values) = embedding::verified_weights(&row, seed, &cfg, &dest)?;
-    let mut e = Engine::new(cfg, &values)?;
+    let mut e = Engine::for_scoring(cfg, &values)?;
     let held = &task.splits[&task.selection];
     let correct = metrics::evaluate(&mut e, held, true)?["exact"].clone();
     if correct != result["observation"]["correct"] || result["observation"]["total"] != held.len() {

@@ -59,7 +59,7 @@ pub fn run(name: &str, seed: u32, out: &Path, input_file: &Path) -> Result<()> {
     let vocab = cfg.vocab;
     let dir = out.join(name).join(format!("seed{seed}"));
     let (saved, weights) = verified_weights(&row, seed, &cfg, &dir)?;
-    let mut e = Engine::new(cfg, &weights)?;
+    let mut e = Engine::for_scoring(cfg, &weights)?;
     let y = e.infer_embeddings(&input.into_iter().flatten().collect::<Vec<_>>(), 1, length)?;
     println!(
         "{}",

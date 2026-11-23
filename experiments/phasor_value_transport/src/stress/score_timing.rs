@@ -9,7 +9,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     let dir = out.join(name).join(format!("seed{seed}"));
     let (saved, weights) = embedding::verified_weights(&row, seed, &cfg, &dir)?;
     let held = &task.splits[&task.selection];
-    let mut engine = Engine::new(cfg, &weights)?;
+    let mut engine = Engine::for_scoring(cfg, &weights)?;
     let reference = metrics::evaluate_batches(&mut engine, held, true, |_, _| Ok(()))?;
     if reference["exact"] != saved["observation"]["correct"]
         || reference != metrics::evaluate(&mut engine, held, true)?

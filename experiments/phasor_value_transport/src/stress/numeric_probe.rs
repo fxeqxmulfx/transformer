@@ -92,13 +92,13 @@ pub fn audit(name: &str, file: &Path, limit: Option<usize>) -> Result<()> {
         .collect();
     layout::validate(&cfg, &weights)?;
     let batched = {
-        let mut engine = Engine::new(cfg.clone(), &weights)?;
+        let mut engine = Engine::for_scoring(cfg.clone(), &weights)?;
         teachers.score(&mut engine, split, &task.splits[split][..count])?
     };
     let mut scalar_cfg = cfg;
     scalar_cfg.max_batch = 1;
     let vocab = scalar_cfg.vocab;
-    let mut engine = Engine::new(scalar_cfg, &weights)?;
+    let mut engine = Engine::for_scoring(scalar_cfg, &weights)?;
     let mut predict = |prefix: &[i64]| -> probes::Result<Vec<f64>> {
         let tokens: Vec<_> = prefix.iter().map(|&t| t as u32).collect();
         engine

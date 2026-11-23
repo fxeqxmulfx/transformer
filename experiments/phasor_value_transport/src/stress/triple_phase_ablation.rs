@@ -41,12 +41,12 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: Option<ProbeSet>) -> Resul
     if span.end != layout::frequency_offset(&cfg) {
         return Err("phase projections do not end at the expected parameter boundary".into());
     }
-    let mut model = Engine::new(cfg.clone(), &original)?;
+    let mut model = Engine::for_scoring(cfg.clone(), &original)?;
     let mut dense_cfg = cfg.clone();
     dense_cfg.max_batch = 1;
     dense_cfg.max_length = cfg.max_length.min(4);
     let len = dense_cfg.max_length;
-    let mut dense_model = Engine::new(dense_cfg.clone(), &original)?;
+    let mut dense_model = Engine::for_scoring(dense_cfg.clone(), &original)?;
     let mut rng = random::Random::new(73251);
     let input: Vec<_> = (0..len * cfg.width)
         .map(|_| rng.gauss(0., 1.) as f32)
@@ -143,7 +143,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: Option<ProbeSet>) -> Resul
     if base_weights.len() != layout::total_count(&dense_cfg) {
         return Err("phase removal produced an invalid trunk checkpoint".into());
     }
-    let mut base = Engine::new(dense_cfg, &base_weights)?;
+    let mut base = Engine::for_scoring(dense_cfg, &base_weights)?;
     let baseline = base.infer_embeddings(&input, 1, len)?;
     if baseline.hidden != b.hidden || baseline.logits != b.logits {
         return Err("zeroed projections differ from the corresponding triple trunk".into());

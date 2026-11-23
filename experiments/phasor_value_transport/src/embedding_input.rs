@@ -121,6 +121,7 @@ impl Engine {
         length: usize,
         cotangent: &[f32],
     ) -> Result<Vec<f32>> {
+        self.require_training_tape()?;
         let device_input = self.forward_vector_batch(input, batch, length)?;
         let rows = batch * length;
         if cotangent.len() != rows * self.config.vocab || !cotangent.iter().all(|v| v.is_finite()) {

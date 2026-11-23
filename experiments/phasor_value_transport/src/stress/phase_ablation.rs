@@ -59,7 +59,7 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     let infer = |mut cfg: Config, weights: &[f32]| {
         cfg.max_batch = 1;
         cfg.max_length = length;
-        Engine::new(cfg, weights)?.infer_embeddings(&dense, 1, length)
+        Engine::for_scoring(cfg, weights)?.infer_embeddings(&dense, 1, length)
     };
     let actual = infer(cfg, &removed)?;
     let control = infer(stream, &stream_weights)?;

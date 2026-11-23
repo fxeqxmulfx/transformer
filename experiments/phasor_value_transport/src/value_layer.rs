@@ -195,6 +195,7 @@ impl ValueLayer {
     }
 
     fn pull_back(&self, e: &Engine, batch: usize, length: usize, product: bool) -> Result<()> {
+        e.require_training_tape()?;
         let (rows, p, d) = (batch * length, e.config.vocab, e.config.width);
         e.mm_backward(
             self.dnormalized.ptr(),
@@ -392,6 +393,7 @@ impl Engine {
         Ok(())
     }
     pub fn backward(&mut self, batch: usize, length: usize) -> Result<()> {
+        self.require_training_tape()?;
         if self.uses_embedding_backbone() && self.supervised_shape != Some((batch, length)) {
             return Err("supervised backward needs the latest labeled forward with the same shape".into());
         }

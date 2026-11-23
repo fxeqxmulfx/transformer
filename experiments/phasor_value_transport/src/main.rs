@@ -77,6 +77,9 @@ const OBSERVE: usize = 250;
 const WINDOW: usize = 2000;
 const KERNITE_VERSION: &str = env!("KERNITE_CUDA_VERSION");
 
+#[cfg(test)]
+mod scoring_scratch_test;
+
 fn config(batch: usize) -> Result<Config> {
     Ok(Config {
         width: 128,

@@ -1,6 +1,7 @@
 //! Compile the upstream trainer at the same revision as the Phasor CPU oracle.
 mod build_compact;
 mod build_embedding;
+mod build_scoring;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
 // Expose the actual completions of the frozen batched EOS scorer to external
@@ -274,6 +275,7 @@ fn main() {
         engine.push_str(&format!("#[path={path:?}] mod {name};\n"));
         println!("cargo:rerun-if-changed={file}");
     }
+    build_scoring::prepare(&mut engine);
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
     export_completions(&geometry.join("native/src/metrics.rs"), &out);

@@ -9,7 +9,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
     let cfg = task_config(&row, &task, false)?;
     let dir = out.join(name).join(format!("seed{seed}"));
     let (saved, original) = embedding::verified_weights(&row, seed, &cfg, &dir)?;
-    let mut engine = Engine::new(cfg.clone(), &original)?;
+    let mut engine = Engine::for_scoring(cfg.clone(), &original)?;
     let score = |engine: &mut Engine, weights: &[f32]| -> Result<Value> {
         engine.parameters.write(weights)?;
         let mut splits = BTreeMap::new();
@@ -50,7 +50,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
     if cfg.head == head::Head::BipartiteTriple {
         let mut shared_cfg = cfg.clone();
         shared_cfg.head = head::Head::TripleTransport;
-        let mut shared = Engine::new(shared_cfg, &original)?;
+        let mut shared = Engine::for_scoring(shared_cfg, &original)?;
         results.insert("shared_roles", score(&mut shared, &original)?);
     }
     if let Some(read) = cfg.head.peer_read() {
@@ -59,7 +59,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
             control.head = head::Head::PeerTriplePhase(variant);
             results.insert(
                 name,
-                score(&mut Engine::new(control, &original)?, &original)?,
+                score(&mut Engine::for_scoring(control, &original)?, &original)?,
             );
         }
         if read.pairs.is_some() {
@@ -74,7 +74,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
                 control.head = head::Head::PeerTriplePhase(head::PeerRead { pairs, ..read });
                 results.insert(
                     name,
-                    score(&mut Engine::new(control, &original)?, &original)?,
+                    score(&mut Engine::for_scoring(control, &original)?, &original)?,
                 );
             }
         }
@@ -83,7 +83,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
             search: None,
             ..read
         });
-        let mut plain = Engine::new(control, &original)?;
+        let mut plain = Engine::for_scoring(control, &original)?;
         results.insert("without_peers", score(&mut plain, &original)?);
     }
     if let Some(
@@ -98,7 +98,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
             search: Some(head::PeerSearch::Witnesses),
             ..read
         });
-        let mut single = Engine::new(single_cfg, &original)?;
+        let mut single = Engine::for_scoring(single_cfg, &original)?;
         results.insert("one_round", score(&mut single, &original)?);
     }
     if let Some(
@@ -144,7 +144,7 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
             });
             results.insert(
                 name,
-                score(&mut Engine::new(control, &original)?, &original)?,
+                score(&mut Engine::for_scoring(control, &original)?, &original)?,
             );
         }
     }

@@ -43,7 +43,7 @@ fn score_checkpoint_with(
         .map(|b| f32::from_le_bytes(*b))
         .collect();
     layout::validate(&cfg, &weights)?;
-    let mut engine = Engine::new(cfg, &weights)?;
+    let mut engine = Engine::for_scoring(cfg, &weights)?;
     let mut scores = BTreeMap::new();
     for (split, examples) in &task.splits {
         if split == &task.selection || split == "test" || split.starts_with("test/") {

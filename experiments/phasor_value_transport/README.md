@@ -1769,8 +1769,9 @@ donor as a backward scan even when several neighborhoods overlap.
 For the easy-recall seed-0 checkpoint, the indexed and scanning evaluators
 produced byte-identical score reports at delays of 64, 128, 256 and 512 tokens.
 At delay 256, median wall time for loading the checkpoint and scoring validation,
-test and transfer fell from 3.13 to 2.53 seconds on the GTX 1050. The indexed
-evaluator was faster in all six alternating-order pairs at a batch cap of four.
+test and transfer fell from 3.13 to 2.53 seconds on the GTX 1050. At delay 512
+the median fell from 5.95 to 3.90 seconds. The indexed evaluator was faster in
+all six alternating-order pairs at each delay with a batch cap of four.
 
 Build both executables with `fp32-affine-reference,triple-dense-induction`.
 Use commit `77a9f8b1` for the scanning executable and the same saved run for
@@ -1780,13 +1781,49 @@ both measurements.
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.IndexedInduction
 cd experiments/phasor_value_transport
 export PHASOR_EVAL_BATCH_CAP=4
-for round in 0 1 2 3 4 5; do
-    arms=("$scan" "$indexed")
-    if (( round % 2 )); then arms=("$indexed" "$scan"); fi
-    for exe in "${arms[@]}"; do
-        /usr/bin/time -f '%e' "$exe" probes basis-recall-easy 0 "$out" recall-gap 256
+for gap in 256 512; do
+    for round in 0 1 2 3 4 5; do
+        arms=("$scan" "$indexed")
+        if (( round % 2 )); then arms=("$indexed" "$scan"); fi
+        for exe in "${arms[@]}"; do
+            /usr/bin/time -f '%e' "$exe" probes basis-recall-easy 0 "$out" recall-gap "$gap"
+        done
     done
 done
+```
+
+#### Memory used by the frozen scorer
+
+Each forward layer overwrites its active attention scores. A frozen checkpoint
+can therefore share those buffers across layers, including when greedy generation
+changes the batch size or prefix length. Let $P = B H L^2$ for the allocated
+batch, head count and length, and let $D$ be the layer count. For phase attention
+the training engine allocates $3DP$ floats for its three score buffers. The
+frozen scorer allocates $2P+D$. With phase scores disabled the counts are
+$D(2P+1)$ and $P+1+D$. These counts cover the attention scores only.
+[Forward and generation equivalence](../../src/Transformer/Phasor/TripleTransport/ScoreScratch.lean)
+
+The device regression compares every hidden coordinate and output logit with
+the training engine at fixed weights, over three layers and five changes of
+batch shape. It also counts the distinct allocated score buffers.
+
+On the 2 GiB GTX 1050, seed 0 of dense induction recalled the latest overwritten
+value on all 512 examples at a delay of 2,048 tokens, for both the first
+passing checkpoint (update 50) and the retention checkpoint (update 550).
+The previous evaluator exhausted device memory at that delay. At delay 1,536
+the two evaluators produced byte-identical reports for both checkpoints.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ScoreScratch
+cd experiments/phasor_value_transport
+flags=fp32-affine-reference,triple-chart-induction
+cargo +stable test --release --locked --features "$flags" --bin phasor-value-transport \
+    frozen_scoring_reuses -- --ignored
+cargo +stable build --release --locked --features fp32-affine-reference,triple-dense-induction
+bin=./target/release/phasor-value-transport
+out=runs/dense-induction/catalog
+"$bin" catalog-target basis-recall-hard 0 100 "$out"
+PHASOR_EVAL_BATCH_CAP=1 "$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap 2048
 ```
 
 ### Memory and repeated computation for lookup tasks
