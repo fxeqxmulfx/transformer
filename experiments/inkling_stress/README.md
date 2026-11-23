@@ -88,10 +88,16 @@ original scheduled observations. The models ran on different hardware.
 | 2 | 550 | 3,350 | 512/512 | 512/512 |
 
 Inserting additional filler after the table keeps the original test
-queries and answers fixed. With 0, 32, 64 and 128 extra tokens the
-seed-0 checkpoint scored 509, 487, 141 and 35 out of 512. Seed 1 scored
-512, 511, 510 and 509. On the identical 64-token gap, Phasor scored
-504/512 on seed 0 and 319/512 on seed 1. [Gap invariant](../../src/Transformer/Basis/RecallParsed.lean)
+queries and answers fixed. The columns below give exact sequences out
+of 512. Both models used the same rows at the 64-token gap. The
+zero-gap fingerprints match the independent test.
+[Gap invariant](../../src/Transformer/Basis/RecallParsed.lean)
+
+| Seed | Inkling gap 0 | Gap 32 | Gap 64 | Gap 128 | Phasor gap 64 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 509 | 487 | 141 | 35 | 504 |
+| 1 | 512 | 511 | 510 | 509 | 319 |
+| 2 | 512 | 512 | 512 | 512 | 359 |
 
 On short-tier Basis Depth Easy, the eight-layer checkpoints first passed
 at updates 250, 500 and 500. The original length-128 test was regenerated
@@ -135,10 +141,11 @@ For the 24-layer Boolean-shift checkpoints, one, two, three, five, ten,
 twenty and forty passes each gave 7/7 on novel validation and 64/64 on
 the independent test on seeds 0 and 1. Seed 2 scored 6/7 and 62/64 with
 one pass, then 7/7 and 64/64 at every tested budget from two through forty.
-On eight-layer Basis Recall Easy, one pass gave 485/512 and 466/512 on
-novel validation for seeds 0 and 1. Two passes recovered the three-pass
-scores of 508/512 and 512/512. Both held through forty passes. Lean gives
-a sufficient condition for an entire hidden prefix to remain fixed.
+On eight-layer Basis Recall Easy, one pass gave 485, 466 and 512 of 512
+on novel validation and 498, 472 and 512 on the independent test.
+Two passes recovered the three-pass scores on every seed. These counts
+held at five, ten, twenty and forty passes. Lean gives a sufficient
+condition for an entire hidden prefix to remain fixed.
 [Shared-pass proof](../../src/Transformer/InklingLoop.lean)
 
 ## Reproduction
