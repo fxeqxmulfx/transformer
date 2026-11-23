@@ -6,6 +6,9 @@ publish = false
 
 [workspace]
 
+[features]
+release-topology = []
+
 [dependencies]
 kernite-macros = "=0.6.0"
 minibatch = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }

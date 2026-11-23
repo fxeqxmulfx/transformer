@@ -168,7 +168,7 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
                         "status":if pass{"passed"}else if step==budget{"budget miss"}else{"in progress"},
                         "step":step,"exact":exact,"total":primary.len(),"primary":task.selection,
                         "original_cap":budget,"cadence":every,"parameters":parameters,
-                        "stored_layers":8,"layer_applications":16,"passes":text::PASSES,"experts":8,"top_k":2,
+                    "stored_layers":4*text::GROUP,"layer_applications":8*text::GROUP,"passes":text::PASSES,"experts":text::EXPERTS,"top_k":text::TOP,
                         "binding":bind,"checkpoint_sha256":hash(&fs::read(&checkpoint)?),"observations":history,
                         "seconds":elapsed+started.elapsed().as_secs_f64(),"kernite":"0.6.0","libtorch":"2.9.0 CPU"});
                 publish(&latest, &serde_json::to_vec_pretty(&record)?)?;
@@ -180,9 +180,41 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
         }
         let lo = (step % per_epoch) * batch;
         let indices = &epoch[lo..(lo + batch).min(epoch.len())];
-        packed.fill(train, indices);
-        let loss = net.train_loss(&packed, indices.len())?;
-        loss.backward();
+        if text::RELEASE {
+            let length = indices
+                .iter()
+                .map(|&i| train[i as usize].tokens.len())
+                .max()
+                .unwrap();
+            let total: usize = indices
+                .iter()
+                .map(|&i| {
+                    train[i as usize]
+                        .targets
+                        .iter()
+                        .filter(|&&y| y >= 0)
+                        .count()
+                })
+                .sum();
+            if total == 0 {
+                return Err("training minibatch has no targets".into());
+            }
+            for micro in indices.chunks((256 / length).max(1)) {
+                packed.fill(train, micro);
+                let targets = packed
+                    .labels
+                    .iter()
+                    .filter(|&&y| (y as usize) < task.vocab)
+                    .count();
+                if targets > 0 {
+                    (net.train_loss(&packed, micro.len())? * (targets as f64 / total as f64))
+                        .backward();
+                }
+            }
+        } else {
+            packed.fill(train, indices);
+            net.train_loss(&packed, indices.len())?.backward();
+        }
         adam.step(schedule.rate(step), step)?;
     }
     unreachable!()
@@ -190,6 +222,10 @@ fn run(mode: &str, name: &str, seed: u32, out: &Path, cutoff: Option<usize>) -> 
 
 fn main() -> Result<()> {
     let args: Vec<_> = env::args().skip(1).collect();
+    if args == ["model-id"] {
+        println!("{}", text::MODEL);
+        return Ok(());
+    }
     if !(args.len() == 4 || args.len() == 5)
         || !matches!(args[0].as_str(), "run" | "replay")
         || (args[0] == "replay" && args.len() != 4)

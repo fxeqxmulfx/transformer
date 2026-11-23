@@ -50,11 +50,16 @@ fn shared_core_backpropagates_through_three_passes() -> Result<()> {
             if name.ends_with(".admit") {
                 let _ = value.shallow_clone().fill_(0.3);
             }
+            // Keep the selected experts constant on both sides of this finite
+            // difference. The dispatch test checks the expert and router-weight adjoints.
+            if name.ends_with(".router") {
+                let _ = value.shallow_clone().zero_();
+            }
         }
     });
     let ids = Tensor::from_slice(&[1i64, 2, 4, 5]).view([1, 4]);
     let objective = || engine.model.logits(&ids).select(-1, 3).sum(Kind::Float);
-    let weight = &params["layer3.attn.out"];
+    let weight = &params[&format!("layer{}.attn.out", text::GROUP + 1)];
     objective().backward();
     let gradient = weight.grad().view([-1]);
     let coordinate = gradient.abs().argmax(None, false).int64_value(&[]);

@@ -20,6 +20,10 @@ impl Experts {
         let scores = x.matmul(&self.router).sigmoid();
         let (selected, indices) = scores.topk(TOP, -1, true, false);
         let selected = &selected / (selected.sum_dim_intlist(-1, true, Kind::Float) + 1e-20) * 8.;
+        if RELEASE {
+            return super::routing::dispatch(&x, &self.gate_up, &self.down, &indices, &selected)
+                .view([b, t, w]);
+        }
         let mix = Tensor::zeros_like(&scores).scatter(-1, &indices, &selected);
         // Evaluate the small bank as two GEMMs; only the selected experts contribute.
         let gate_up = x.matmul(&self.gate_up).view([-1, EXPERTS, w]);

@@ -1,4 +1,4 @@
-//! Text-only, task-scaled Inkling 2 Mini. Four blocks with two layers each.
+//! Text-only Inkling 2 Mini at the vocabulary and width of each GPT task.
 //! See the experiment README for the pinned release, dimensions and precision.
 use tch::{Kind, Tensor, nn};
 
@@ -6,15 +6,22 @@ use tch::{Kind, Tensor, nn};
 mod attention;
 #[path = "text/block.rs"]
 mod block;
+#[path = "text/routing.rs"]
+mod routing;
 use block::Layer;
 
-pub const MODEL: &str = "inkling2-text-8layer-8expert-top2-3pass-tied-fp32-v1";
+pub const RELEASE: bool = cfg!(feature = "release-topology");
+pub const MODEL: &str = if RELEASE {
+    "inkling2-text-24layer-128expert-top8-3pass-tied-fp32-v1"
+} else {
+    "inkling2-text-8layer-8expert-top2-3pass-tied-fp32-v1"
+};
 pub const PASSES: usize = 3;
-const GROUP: usize = 2;
+pub const GROUP: usize = if RELEASE { 6 } else { 2 };
 const BEGIN: usize = GROUP;
 const END: usize = 3 * GROUP;
-const EXPERTS: i64 = 8;
-const TOP: i64 = 2;
+pub const EXPERTS: i64 = if RELEASE { 128 } else { 8 };
+pub const TOP: i64 = if RELEASE { 8 } else { 2 };
 const EPS: f64 = 1e-6;
 
 fn weights(p: &nn::Path, name: &str, shape: &[i64]) -> Tensor {
@@ -44,7 +51,7 @@ struct Gate {
 }
 impl Gate {
     fn new(p: &nn::Path, width: i64) -> Self {
-        let rank = (width / 16).max(1);
+        let rank = if RELEASE { 64 } else { (width / 16).max(1) };
         Self {
             down: weights(p, "down", &[2 * width, rank]),
             forget: p.zeros("forget", &[rank, width]),

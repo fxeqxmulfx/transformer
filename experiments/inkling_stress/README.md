@@ -1,10 +1,11 @@
 # Inkling 2 Mini on the GPT stress tests
 
 How well does Inkling's three-pass text architecture learn the original
-short and long tasks when trained from scratch? The benchmark uses one
-task-scaled architecture across all 35 cases, with separate random weights
-for each case and seed. Its model ID is
-`inkling2-text-8layer-8expert-top2-3pass-tied-fp32-v1`.
+short and long tasks when trained from scratch? The release-topology run keeps
+the published 24 layers, 128 experts, routing fan-out and attention head counts
+at the original GPT task widths. An eight-layer comparison measures a smaller
+instance. Each configuration stays fixed across tasks and trains fresh weights
+on seeds 0, 1 and 2.
 [Canonical GPT protocol](../../rule.md)
 
 ## Model
@@ -31,6 +32,17 @@ causality. [Release configuration](https://huggingface.co/thinkingmachines/Inkli
 | Message gate rank | 64 | Model width divided by 16 |
 | Training and vocabulary | Pretrained multimodal weights, production mixed precision | Fresh FP32 text model with the task's symbol vocabulary and tied embeddings |
 
+The eight-layer comparison in the table has model ID
+`inkling2-text-8layer-8expert-top2-3pass-tied-fp32-v1`. The
+`release-topology` build has ID `inkling2-text-24layer-128expert-top8-3pass-tied-fp32-v1`.
+It keeps all six layers per block, the original five-local/one-global
+attention pattern, 24 query heads, eight KV heads and gate rank 64. Head
+width is the nearest integer to the task width divided by 18, reproducing
+head width 128 at published width 2,304. It groups the selected expert
+computations by expert and accumulates gradients by supervised-token count
+over smaller chunks of each original optimizer batch. A dense numerical
+reference checks the outputs and all gradients of the grouped calculation.
+
 The Rust text model includes attention over block residuals, grouped-query
 causal attention with a learned sink, content-dependent relative bias, static
 and dynamic four-tap causal convolutions, gated attention output and
@@ -45,7 +57,7 @@ scaled architecture.
 
 ## Results
 
-The first Boolean checkpoints reached the 99% primary threshold below.
+The eight-layer Boolean checkpoints reached the 99% primary threshold below.
 Each row comes from an independently reloaded checkpoint. Training uses a
 different initialization on each seed. The primary denominator is seven
 or eight novel examples. The independent test and length probes each
@@ -70,6 +82,13 @@ modular addition at update 19, 79/4,705 on absolute difference at update
 observations within 100,000-update budgets. Phasor's main comparator
 independently replayed all 75 short and 30 long threshold crossings.
 The two models used different compute backends. [Phasor cohort](../phasor_value_transport/README.md#canonical-gpt-stress-tiers)
+
+With the released topology, seed 0 scored 78/4,705 on absolute difference
+at update 19 and 52/4,704 on decoded Fibonacci at update 10. The 24-layer
+models had 81,116,992 and 81,137,344 trainable parameters respectively.
+On Boolean shift the same topology had 21,481,088 parameters and scored
+0/7 on each seed at update 40. These observations precede the original
+budgets. Each architecture has its own cohort counters and checkpoints.
 
 ## Reproduction
 
@@ -101,6 +120,22 @@ cargo +stable build --release --locked --offline
 INKLING_JOBS=6 INKLING_THREADS=2 ./cohort.sh run runs/canonical
 ./cohort.sh report runs/canonical
 ```
+
+Build the 24-layer topology in its own target directory and give its
+checkpoints a separate output directory.
+
+```sh
+export CARGO_TARGET_DIR="$PWD/target/release-topology"
+cargo +stable test --release --locked --offline --features release-topology -- --test-threads=1
+cargo +stable build --release --locked --offline --features release-topology
+export INKLING_BIN="$CARGO_TARGET_DIR/release/inkling-stress"
+INKLING_JOBS=2 INKLING_THREADS=2 ./cohort.sh run runs/release-topology 1
+./cohort.sh report runs/release-topology
+```
+
+The optional final argument limits the cohort to a multiple of the original
+observation interval. Omitting it advances the saved states through the full
+original budgets or first threshold crossing.
 
 A single cell can also be advanced and replayed directly.
 

@@ -44,6 +44,7 @@ case "${1:-}" in
     ;;
   report)
     out=${2:?usage: cohort.sh report OUT}
+    model=$("$bin" model-id)
     jq -r '.tasks[]|. as $c|range(0;3)|[$c.name,$c.tier,.]|@tsv' "$suite" |
       while IFS=$'\t' read -r case_name tier seed; do
         dir="$out/$case_name/seed$seed"
@@ -54,9 +55,9 @@ case "${1:-}" in
         fi
         replay=/dev/null
         if [[ -s "$dir/replay.json" ]]; then replay="$dir/replay.json"; fi
-        jq -ce --slurpfile replay "$replay" --arg name "$case_name" --arg tier "$tier" --argjson seed "$seed" '
+        jq -ce --slurpfile replay "$replay" --arg name "$case_name" --arg tier "$tier" --arg model "$model" --argjson seed "$seed" '
           . as $v | ($replay[0]//{}) as $r |
-          if ([$v.case,$v.tier,$v.seed,$v.model]!=[$name,$tier,$seed,"inkling2-text-8layer-8expert-top2-3pass-tied-fp32-v1"]
+          if ([$v.case,$v.tier,$v.seed,$v.model]!=[$name,$tier,$seed,$model]
               or $v.total<=0 or $v.exact<0 or $v.exact>$v.total
               or ($v.status=="passed")!=($v.exact*100>=$v.total*99)
               or ([$v.observations[] | select(.exact*100>=.total*99)|.step] != (if $v.status=="passed" then [$v.step] else [] end))

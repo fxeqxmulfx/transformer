@@ -70,8 +70,12 @@ pub(super) struct Attention {
 }
 impl Attention {
     pub(super) fn new(p: &nn::Path, width: i64, heads: i64, full: bool) -> Self {
-        let kv_heads = 1;
-        let head_dim = width / heads;
+        let (heads, kv_heads, head_dim) = if RELEASE {
+            (24, 8, ((width + 9) / 18).max(1))
+        } else {
+            (heads, 1, width / heads)
+        };
+        let attention_width = heads * head_dim;
         let channels = kv_heads * head_dim;
         let dynamic = full.then_some((width, kv_heads));
         Self {
@@ -79,11 +83,11 @@ impl Attention {
             kv_heads,
             head_dim,
             full,
-            q: weights(p, "q", &[width, width]),
+            q: weights(p, "q", &[width, attention_width]),
             k: weights(p, "k", &[width, channels]),
             v: weights(p, "v", &[width, channels]),
-            out: weights(p, "out", &[width, width]),
-            out_gate: weights(p, "out_gate", &[width, width]),
+            out: weights(p, "out", &[attention_width, width]),
+            out_gate: weights(p, "out_gate", &[width, attention_width]),
             sink: weights(p, "sink", &[width, heads]),
             q_scale: p.ones("q_scale", &[heads, head_dim]),
             rel_scale: p.ones("rel_scale", &[heads, 16]),
@@ -94,7 +98,7 @@ impl Attention {
         }
     }
     pub(super) fn forward(&self, query: &Tensor, key: &Tensor, value: &Tensor) -> Tensor {
-        let [b, t, w] = <[i64; 3]>::try_from(query.size()).unwrap();
+        let [b, t, _] = <[i64; 3]>::try_from(query.size()).unwrap();
         let (h, d) = (self.heads, self.head_dim);
         let positions = Tensor::arange(t, (Kind::Int64, query.device()));
         let delta = positions.unsqueeze(1) - positions.unsqueeze(0);
@@ -127,7 +131,14 @@ impl Attention {
             .values
             .apply(&value.matmul(&self.v), value)
             .view([b, t, self.kv_heads, d]);
-        let repeat = |s: Tensor| s.transpose(1, 2).expand([b, h, t, d], false);
+        let repeat = |s: Tensor| {
+            let s = s.transpose(1, 2);
+            if self.kv_heads == 1 {
+                s.expand([b, h, t, d], false)
+            } else {
+                s.repeat_interleave_self_int(h / self.kv_heads, 1, None)
+            }
+        };
         let scores = q.matmul(&repeat(clip(&k, 2. * (d as f64).sqrt())).transpose(-2, -1))
             / (d as f64).sqrt();
         let extent = t.min(1024);
@@ -157,7 +168,7 @@ impl Attention {
         let values = weights
             .matmul(&repeat(rms(&v)))
             .transpose(1, 2)
-            .reshape([b, t, w]);
+            .reshape([b, t, h * d]);
         (values * query.matmul(&self.out_gate).sigmoid()).matmul(&self.out)
     }
 }

@@ -51,7 +51,7 @@ impl Engine {
         Ok(Self {
             config: Config {
                 vocab,
-                max_batch: 64,
+                max_batch: if crate::text::RELEASE { 32 } else { 64 },
             },
             variables,
             model,
