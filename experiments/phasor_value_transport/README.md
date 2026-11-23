@@ -2181,8 +2181,14 @@ depth has 20 questions for each of the five correct letters.
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 5 | 100 | 100 | 98 | 93 | 85 | 17 | 15 | 23 | 22 | 17 |
 | 10 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 52 |
+| 20 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 51 |
+| 40 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 52 |
 
-Validation was 199/200 at both budgets. With all other lookup
+Going from five to ten reads retained all 570 correct answers across the
+1,000 test questions and recovered 244. Validation was 199/200 at all
+four budgets. Fresh seed-0 training with ten reads also reached 199/200
+at update 250 and produced the same weight digest as five-read training
+on the one- and two-hop examples. With all other lookup
 coefficients masked by their learned magnitude, the complete ten-read
 model gave 100/100 at each of the original test depths 1, 2, 3, 5
 and 10, and 200/200 on validation. The full five-read checkpoint under
