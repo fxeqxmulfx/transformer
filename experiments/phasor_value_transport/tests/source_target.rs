@@ -5,6 +5,21 @@ use serde_json::json;
 use source_target::SourceTarget;
 
 #[test]
+fn noisy_anchor_uses_one_scalar_per_row_and_observes_each_epoch() {
+    let case = json!({"kind":"series","metric":"accuracy","data":{"dataset":"fibonacci"},
+        "observe":0,"batch":512,"after_target":500,"target":0.99});
+    let rule = SourceTarget::from_case(&case).unwrap();
+    assert!(rule.met(4657, 4704, None).unwrap());
+    assert!(!rule.met(4656, 4704, None).unwrap());
+    assert_eq!(source_target::observation_interval(&case, 4704), Ok(10));
+    assert_eq!(source_target::observation_interval(&case, 4656), Ok(10));
+    assert_eq!(rule.stop_after_crossing(10, 10, 100_000), 510);
+    let mut multicolumn = case.clone();
+    multicolumn["data"]["dataset"] = json!("weather");
+    assert!(SourceTarget::from_case(&multicolumn).is_err());
+}
+
+#[test]
 fn declared_accuracy_and_retention_use_the_source_observations() {
     let rule = SourceTarget::from_case(&json!({
         "metric":"sequence_accuracy","target":0.95,"after_target":500

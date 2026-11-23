@@ -353,7 +353,7 @@ fn measure(
         }
     };
     let schedule = row["case"]["max_updates"].as_u64().unwrap() as usize;
-    let observe = row["case"]["observe"].as_u64().unwrap() as usize;
+    let observe = super::source_target::observation_interval(&row["case"], task.splits["train"].len())?;
     let batch = row["case"]["batch"].as_u64().unwrap() as usize;
     let target = matches!(source, Source::DeclaredTarget)
         .then(|| SourceTarget::from_case(&row["case"]))

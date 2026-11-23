@@ -18,6 +18,7 @@ pub mod embedding;
 mod induction_gain;
 mod language_probes;
 mod length_transfer;
+mod noisy_anchors;
 pub mod probe_rows;
 pub mod lookup_question;
 pub mod ordinal_dialogue;

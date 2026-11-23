@@ -10,6 +10,17 @@ pub(super) struct Source {
     pub fingerprints: [String; 2],
 }
 
+pub(super) fn division_rows(seed: u64) -> Vec<[u32; 3]> {
+    let mut rows = Vec::with_capacity(97 * 96);
+    for a in 0..97 {
+        for b in 1..97 {
+            rows.push([a, b, a * power(b, 95, 97) % 97]);
+        }
+    }
+    SplitMix64(seed ^ 0x7370_6c69_7473_0002).shuffle(&mut rows);
+    rows
+}
+
 pub(super) fn build(order: u32, seed: u64) -> arithmetic::Result<Source> {
     // tests/differenced.rs reconstructs every token with the source codec.
     let (vocabulary, expected) = match order {
@@ -33,18 +44,16 @@ pub(super) fn build(order: u32, seed: u64) -> arithmetic::Result<Source> {
         return Err("differenced division requires original data seed one".into());
     }
     let offset = vocabulary / 2;
-    let mut rows = Vec::with_capacity(97 * 96);
-    for a in 0..97 {
-        for b in 1..97 {
-            let q = a * power(b, 95, 97) % 97;
-            rows.push([
+    let mut rows: Vec<_> = division_rows(seed)
+        .into_iter()
+        .map(|[a, b, q]| {
+            [
                 offset + a,
                 offset + b - order * a,
                 offset + q + order * (order - 1) / 2 * a - order * b,
-            ]);
-        }
-    }
-    SplitMix64(seed ^ 0x7370_6c69_7473_0002).shuffle(&mut rows);
+            ]
+        })
+        .collect();
     let validation = rows.split_off(rows.len() / 2);
     let fingerprints = [fingerprint(&rows), fingerprint(&validation)];
     if fingerprints != expected {

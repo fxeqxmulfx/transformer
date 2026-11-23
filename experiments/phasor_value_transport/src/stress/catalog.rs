@@ -258,6 +258,11 @@ pub(super) fn load_declared(name: &str) -> Result<(Value, Task, Option<numeric_p
         let (row, task) = load_sequence(name, case)?;
         return Ok((row, task, None));
     }
+    if source_target::is_scalar_anchor(&case) {
+        let (source, fingerprints) = noisy_anchors::build(&case).map_err(|e| e.to_string())?;
+        let (row, task) = with_identity(name, case, fingerprints, sequence_task(source))?;
+        return Ok((row, task, None));
+    }
     if case["metric"] != "negative_mse" || case["kind"] != "probe" {
         return Err(format!("unsupported source metric {}", case["metric"]).into());
     }
@@ -412,6 +417,9 @@ pub fn inventory(registry: &str) -> Result<()> {
         match load_declared(name) {
             Ok((row, _, _)) => {
                 record["source_adapter"] = json!("ready");
+                record["effective_observe"] = json!(source_target::observation_interval(
+                    case, row["train_examples"].as_u64().ok_or("missing training row count")? as usize
+                )?);
                 record["selection"] = row["selection"].clone();
                 record["heldout_examples"] = row["heldout_examples"].clone();
                 record["catalog_sha256"] = row["catalog_sha256"].clone();

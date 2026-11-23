@@ -3613,6 +3613,41 @@ done
 "$bin" catalog-target recurrence-fibonacci-k1-c2-mash 0 3000 runs/main-catalog
 ```
 
+#### Training-answer noise on division and Fibonacci
+
+The native source-target runner supports the six original `noise-div97`
+and `noise-fibonacci` cases. Each has one supervised answer per example,
+a 99% validation accuracy target and 500 updates of retention training.
+The source's zero observation interval means one epoch, ten updates at
+batch size 512. Each search has an original budget of 100,000 updates.
+
+| Case family | Training rows | Validation rows | Answers selected at 1%, 5%, 20% | Held-out readout |
+| --- | ---: | ---: | --- | --- |
+| Division mod 97 | 4,656 | 4,656 | 47, 233, 931 | Highest-scoring LGT token |
+| Fibonacci mod 97 | 4,704 | 4,700 | 47, 235, 941 | Highest total probability over tokens decoding to the same residue |
+
+The source builds the validation vocabulary from clean training tokens
+before it replaces training answers. On data seed 1, four of the 4,704
+original Fibonacci validation windows contain an unsupported token. The
+same four windows are removed at every noise level. NumPy 2.5.4's native C
+distributions independently reproduced every selected index and replacement
+residue for the six cases. With these adapters, 90 of 108 broader cases
+can be evaluated at their declared metric. [Lean noise invariants](../../src/Transformer/Phasor/NoisyAnchors.lean)
+
+```sh
+cd experiments/phasor_value_transport
+# NUMPY_SOURCE and NUMPY_RANDOM_ARCHIVE point to NumPy 2.5.4's numpy directory and libnpyrandom.a.
+bash tests/noisy_anchor_reference.sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for family in div97 fibonacci; do
+    for fraction in 0.01 0.05 0.2; do
+        "$bin" catalog-target "noise-$family-$fraction" 0 10 runs/noisy-anchors
+        "$bin" catalog-target "noise-$family-$fraction" 0 10 runs/noisy-anchors
+    done
+done
+```
+
 #### Fashion-MNIST image classification
 
 The original GPT protocol converts each 28×28 image into 196 patch tokens.
@@ -3625,9 +3660,8 @@ embedding lookup. The source target is 90% validation accuracy.
 The native adapter verified the four published archive hashes and reproduced
 all three original dense tensor fingerprints. The seed-1 shuffle takes
 50,000 training and 10,000 validation images from the official training
-set. The 10,000 official test images keep their source order. With these
-archives available, the native runner can load 84 of 108 broader catalog
-cases. [Fashion-MNIST archives](https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion)
+set. The 10,000 official test images keep their source order.
+[Fashion-MNIST archives](https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion)
 
 At update 250 the three main-model seeds classified 6,237, 6,015 and
 6,197 of 10,000 validation images correctly. On the 10,000 independent

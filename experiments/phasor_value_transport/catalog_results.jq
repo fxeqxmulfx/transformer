@@ -2,7 +2,7 @@
 def observation($r; $scores):
   $scores[$r.protocol.selection];
 def meets($c; $s):
-  if $c.metric == "sequence_accuracy" then $s.correct / $s.total >= $c.target
+  if ($c.metric == "sequence_accuracy" or $c.metric == "accuracy") then $s.correct / $s.total >= $c.target
   elif $c.metric == "negative_mse" then
     ($s.mse|type=="number" and isfinite and .>=0) and (-$s.mse >= $c.target)
   else error("unsupported recorded metric") end;
@@ -28,7 +28,7 @@ if ($inventory|length) != 1 then error("expected one catalog inventory") else . 
            and $p.source_target.metric == $c.metric and $p.source_target.threshold == $c.target
            and $p.source_target.after_target == $c.after_target
            and $p.source_target.search_updates == $p.updates and $p.schedule_updates == $c.budget
-           and $p.selection == $c.selection and $p.observe == $c.observe
+           and $p.selection == $c.selection and $p.observe == ($c.effective_observe // $c.observe)
            and $p.heldout_examples == $c.heldout_examples
            and ($p.seed==0 or $p.seed==1 or $p.seed==2)
            and ($r.scores[$c.selection].total==$c.heldout_examples)
