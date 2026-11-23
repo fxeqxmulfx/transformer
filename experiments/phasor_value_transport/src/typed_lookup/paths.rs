@@ -43,6 +43,24 @@ pub(super) struct Witness {
 }
 
 impl Witness {
+    #[cfg(test)]
+    pub(super) fn at_code(code: u32) -> Self {
+        Self { position: 0, code }
+    }
+
+    /// The low and high halves independently address disjoint banks. Each
+    /// half uses fourteen address bits and its own sign bit.
+    pub(super) fn addresses(self) -> [(usize, f64); 2] {
+        let half = BINS / 2;
+        let slot = |bits: u32| bits as usize & (half - 1);
+        let sign = |bits: u32| if bits & (1 << 15) == 0 { 1. } else { -1. };
+        let high = self.code >> 16;
+        [
+            (slot(self.code), sign(self.code)),
+            (half + slot(high), sign(high)),
+        ]
+    }
+
     pub(super) fn weight(self) -> (usize, f32) {
         (
             (self.code as usize) % BINS,

@@ -71,6 +71,7 @@ const _: () = {
         + cfg!(feature = "triple-normalized-lookup") as u8
         + cfg!(feature = "triple-fixed-ten-lookup") as u8
         + cfg!(feature = "triple-power-lookup") as u8
+        + cfg!(feature = "triple-agreement-lookup") as u8
         + cfg!(feature = "triple-soft-address-memory") as u8
         + cfg!(feature = "triple-power-lookup-20") as u8
         + cfg!(feature = "triple-power-lookup-40") as u8
@@ -123,6 +124,8 @@ pub const HEAD: Head = if FOURIER {
     Head::PeerTriplePhase(crate::head::PeerRead::TEN_READ_LOOKUP)
 } else if cfg!(feature = "triple-soft-address-memory") {
     Head::PeerTriplePhase(crate::head::PeerRead::SOFT_ADDRESS)
+} else if cfg!(feature = "triple-agreement-lookup") {
+    Head::PeerTriplePhase(crate::head::PeerRead::AGREEMENT_LOOKUP)
 } else if cfg!(feature = "triple-power-lookup") {
     Head::PeerTriplePhase(crate::head::PeerRead::POWER_LOOKUP)
 } else if cfg!(feature = "triple-power-lookup-20") {

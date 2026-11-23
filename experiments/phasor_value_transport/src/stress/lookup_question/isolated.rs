@@ -63,7 +63,7 @@ impl<'a> Geometry<'a> {
     }
 
     fn answer(&self, prompt: &[i64], passes: usize, table: &[f32], ordered: bool) -> (usize, bool) {
-        self.answers(prompt, &[passes], table, ordered)[0]
+        self.answers(prompt, &[passes], table, ordered, None)[0]
     }
 
     fn answers(
@@ -72,12 +72,13 @@ impl<'a> Geometry<'a> {
         budgets: &[usize],
         table: &[f32],
         ordered: bool,
+        agreement_power: Option<u8>,
     ) -> Vec<(usize, bool)> {
         let keys: Vec<_> = prompt
             .iter()
             .map(|&token| self.addresses[token as usize])
             .collect();
-        crate::typed_lookup::final_vote_budgets(&keys, budgets, table, ordered)
+        crate::typed_lookup::final_vote_budgets(&keys, budgets, table, ordered, agreement_power)
             .into_iter()
             .map(|votes| self.project(prompt, &votes))
             .collect()
@@ -109,8 +110,8 @@ pub(in crate::stress) fn budget_predictions(
         .and_then(|r| r.path)
         .ok_or("no discrete path branch")?;
     let table = crate::typed_lookup::inference_table(
-        &weights[coefficients::table_range(cfg)?],
-        path.gain_power,
+        &weights[coefficients::trained_range(cfg)?],
+        path,
     );
     let span = examples
         .len()
@@ -121,7 +122,13 @@ pub(in crate::stress) fn budget_predictions(
         for (inputs, outputs) in examples.chunks(span).zip(rows.chunks_mut(span)) {
             s.spawn(|| {
                 for (input, output) in inputs.iter().zip(outputs) {
-                    *output = geometry.answers(&input.prompt, budgets, &table, path.ordered);
+                    *output = geometry.answers(
+                        &input.prompt,
+                        budgets,
+                        &table,
+                        path.ordered,
+                        path.agreement.then_some(path.gain_power),
+                    );
                 }
             });
         }

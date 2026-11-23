@@ -3,6 +3,9 @@
 use crate::{head::PathRead, slot_memory::dot};
 use std::borrow::Cow;
 use std::num::NonZeroUsize;
+#[path = "typed_lookup/agreement.rs"]
+mod agreement;
+use agreement::Agreement;
 #[path = "typed_lookup/forward.rs"]
 mod forward;
 #[path = "typed_lookup/gain.rs"]
@@ -28,12 +31,21 @@ fn add(dst: &mut [f32], x: &[f32], s: f32) {
     }
 }
 
+fn vote(witness: Witness, votes: &mut [f32], table: &[f32], agreement: Option<&Agreement>) {
+    if let Some(rule) = agreement {
+        votes[witness.position] += rule.weight(table, witness);
+    } else {
+        witness.vote(votes, table);
+    }
+}
+
 /// Final-position reads on one prefix. Each requested budget must be positive.
 pub fn final_vote_budgets(
     addresses: &[Option<usize>],
     budgets: &[usize],
     table: &[f32],
     ordered: bool,
+    agreement_power: Option<u8>,
 ) -> Vec<Vec<f32>> {
     assert!(table.len() == BINS && budgets.iter().all(|&n| n > 0) && budgets.is_sorted());
     let mut store = Store::new(ordered);
@@ -41,15 +53,16 @@ pub fn final_vote_budgets(
         store.observe(key, t);
     }
     let mut votes = vec![vec![0.; addresses.len()]; budgets.len()];
-    store.visit_budgets(budgets, |i, w| w.vote(&mut votes[i], table));
+    let rule = agreement_power.map(|power| Agreement::new(table, power));
+    store.visit_budgets(budgets, |i, w| vote(w, &mut votes[i], table, rule.as_ref()));
     votes
 }
 
-pub fn inference_table(raw: &[f32], power: u8) -> Cow<'_, [f32]> {
-    if power == 0 {
+pub fn inference_table(raw: &[f32], read: PathRead) -> Cow<'_, [f32]> {
+    if read.agreement || read.gain_power == 0 {
         Cow::Borrowed(raw)
     } else {
-        Cow::Owned(NormalizedGain::new(raw, power).effective)
+        Cow::Owned(NormalizedGain::new(raw, read.gain_power).effective)
     }
 }
 
@@ -146,6 +159,7 @@ impl Frame {
 
 pub struct Tape {
     gain: Option<NormalizedGain>,
+    agreement: Option<Agreement>,
     d: usize,
     length: usize,
     input: Vec<f32>,
@@ -177,6 +191,7 @@ impl Tape {
         let (table_gradient, gates) = dw.split_at_mut(BINS);
         let mut cubic_gradient = self.gain.as_ref().map(|_| vec![0.; BINS]);
         let coordinate_gradient = cubic_gradient.as_deref_mut().unwrap_or(table_gradient);
+        let mut radial = 0.;
         for (r, frame) in self.frames.iter().enumerate() {
             if frame.witnesses.is_empty() {
                 continue;
@@ -193,8 +208,12 @@ impl Tape {
                 let g = effect[path.position].get_or_insert_with(|| {
                     dot(&value_gradient, row(&self.input, base + path.position, d)) * gain
                 });
-                let (idx, sign) = path.weight();
-                coordinate_gradient[idx] += sign * *g;
+                if let Some(rule) = &self.agreement {
+                    rule.add_gradient(&w[..BINS], path, *g, coordinate_gradient, &mut radial);
+                } else {
+                    let (idx, sign) = path.weight();
+                    coordinate_gradient[idx] += sign * *g;
+                }
             }
             for &(pos, weight) in &frame.terminals {
                 add(row_mut(dx, base + pos, d), &value_gradient, weight * gain);
@@ -202,6 +221,9 @@ impl Tape {
         }
         if let (Some(gain), Some(gradient)) = (&self.gain, cubic_gradient) {
             gain.backward(&w[..BINS], &gradient, table_gradient);
+        }
+        if let Some(rule) = &self.agreement {
+            rule.maximum_gradient(&w[..BINS], radial, table_gradient);
         }
     }
 }

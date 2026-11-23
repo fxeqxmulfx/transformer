@@ -9,6 +9,7 @@ struct Batch<'a> {
     hidden: &'a [f32],
     w: &'a [f32],
     table: &'a [f32],
+    agreement: Option<&'a Agreement>,
     keys: Vec<Option<usize>>,
     shared: Vec<usize>,
     d: usize,
@@ -44,7 +45,7 @@ impl Batch<'_> {
         } else {
             let mut votes = vec![0.; t + 1];
             store.visit(self.read.passes, |path| {
-                path.vote(&mut votes, self.table);
+                vote(path, &mut votes, self.table, self.agreement);
                 if self.retain {
                     witnesses.push(path);
                 }
@@ -184,8 +185,10 @@ impl Tape {
         assert_eq!(w.len(), parameters(d));
         assert!(read.passes > 0);
         let mut tape = Self {
-            gain: (read.gain_power > 0 && length >= 3)
+            gain: (!read.agreement && read.gain_power > 0 && length >= 3)
                 .then(|| NormalizedGain::new(&w[..BINS], read.gain_power)),
+            agreement: (read.agreement && length >= 3)
+                .then(|| Agreement::new(&w[..BINS], read.gain_power)),
             d,
             length,
             input: if retain_adjoint && length >= 3 {
@@ -230,6 +233,7 @@ impl Tape {
             hidden,
             w,
             table,
+            agreement: tape.agreement.as_ref(),
             keys,
             shared,
             d,

@@ -2654,6 +2654,76 @@ for edge in $(seq 1 40); do
 done
 ```
 
+#### Learning two coordinates for each path
+
+Each path already supplies three geometric addresses from the causal
+embedding prefix. The new lookup uses two parts of their hash to select
+one signed weight from each of two banks of 16,384. The original lookup
+has one bank of 32,768. For signed weights $a,c$, maximum magnitude $M$
+across both banks and $b=1/32768$, the path vote uses
+$((a+c)/2)((ac+b)/(M^2+b))^4$. Equal signed weights recover the
+original power gain. When just one coordinate matches a large coefficient,
+its contribution shrinks. Both coordinates receive gradients from the
+final-answer loss at initialization.
+[Agreement gain and initial derivative](../../src/Transformer/Phasor/TripleTransport/AgreementGain.lean)
+
+Both seed-0 models trained from scratch on the same one- to five-table
+questions with ten reads. The one-bank model first reached 199/200
+validation at update 200. The two-bank model first passed at update
+250 with 200/200 validation and 1,000/1,000 training answers correct.
+Both models have 3,548,496 parameters. Each checkpoint used every learned
+path coordinate during the following isolated-read evaluation.
+
+| Held-out tables and evaluation reads | One bank, both versions correct /100 | Two banks, both versions correct /100 |
+| ---: | ---: | ---: |
+| 10 | 91 | 100 |
+| 20 | 59 | 100 |
+| 40 | 9 | 100 |
+
+Changing each of the forty links in turn produced 4,000 edited questions
+paired with the same 100 originals. The two-bank read answered both
+versions on **0/4,000** pairs at 39 reads and **4,000/4,000** at each of
+40 and 41 reads. These scores use the tied classifier on the learned path
+vote alone. Training supplied only the final answer letter of each prompt.
+
+The complete model also generated every correct answer at forty reads.
+It solved all five starting keys on each of the 20 table sets. One more
+read preserved every generated answer on the 200 prompts. An independent
+dense free-generation run at forty reads reproduced the prediction hash.
+The earlier one-bank collision analysis used these table sets during
+architecture development.
+
+| Repeated reads in the complete two-bank model | Original /100 | Last link edited /100 | Both correct /100 |
+| ---: | ---: | ---: | ---: |
+| 20 | 19 | 22 | 2 |
+| 39 | 19 | 22 | 2 |
+| 40 | 100 | 100 | 100 |
+| 41 | 100 | 100 | 100 |
+
+On the separate NV11 regression the same architecture trained from
+scratch on seeds 0, 1 and 2. At update 250 each reloaded checkpoint scored
+4,704/4,704 training pairs and 4,705/4,705 held-out pairs in Kernite
+0.6.0. The embedding interface check also reproduced all 370 logits after
+changing labels, and passed the arbitrary-vector and causal-prefix checks.
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-agreement-lookup
+bin=./target/release/phasor-value-transport
+out=runs/agreement-disjoint
+"$bin" advance study-lookup-disjoint-layers 0 "$out" 250
+for hops in 10 20 40; do
+    "$bin" disjoint-lookup-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" isolated
+done
+PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 requested
+for edge in $(seq 1 40); do
+    "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 39,40,41 isolated
+done
+for seed in 0 1 2; do
+    "$bin" advance arithmetic-cubic-product "$seed" runs/agreement-nv11 250
+    "$bin" nv11-score "runs/agreement-nv11/arithmetic-cubic-product/seed$seed/weights.f32"
+done
+```
+
 #### Reading writes in chronological order
 
 A shared read can carry both its current address and the time of its most

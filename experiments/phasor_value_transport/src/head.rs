@@ -60,6 +60,7 @@ pub struct PathRead {
     pub passes: usize,
     pub ordered: bool,
     pub soft_address: bool,
+    pub agreement: bool,
     pub gain_power: u8,
     pub normalize_vote: bool,
 }
@@ -68,10 +69,10 @@ impl PathRead {
     pub const TRAINING_BUDGETS: [usize; 5] = [2, 5, 10, 20, 40];
 
     pub const fn linear(passes: usize) -> Self {
-        Self { passes, ordered: false, soft_address: false, gain_power: 0, normalize_vote: false }
+        Self { passes, ordered: false, soft_address: false, agreement: false, gain_power: 0, normalize_vote: false }
     }
 
-    pub const NORMALIZED: Self = Self { passes: 5, ordered: false, soft_address: false, gain_power: 1, normalize_vote: true };
+    pub const NORMALIZED: Self = Self { passes: 5, ordered: false, soft_address: false, agreement: false, gain_power: 1, normalize_vote: true };
 
     pub fn parameters(self, width: usize) -> usize {
         if self.soft_address {
@@ -155,6 +156,10 @@ impl PeerRead {
         Self { path: Some(PathRead { passes, gain_power: 4, ..PathRead::NORMALIZED }), ..Self::CHART_INDUCTION }
     }
     pub const POWER_LOOKUP: Self = Self::concentrated(10);
+    pub const AGREEMENT_LOOKUP: Self = Self {
+        path: Some(PathRead { passes: 10, agreement: true, gain_power: 4, ..PathRead::NORMALIZED }),
+        ..Self::CHART_INDUCTION
+    };
     pub const SOFT_ADDRESS: Self = Self {
         path: Some(PathRead { soft_address: true, ..PathRead::linear(10) }),
         ..Self::CHART_INDUCTION
@@ -234,6 +239,8 @@ impl PeerRead {
                     "phasor-triple-varied-depth-lookup-trunk-v1",
                 (Self::TEN_READ_LOOKUP, true) => "phasor-triple-normalized-ten-lookup-32-v1",
                 (Self::TEN_READ_LOOKUP, false) => "phasor-triple-normalized-ten-lookup-trunk-v1",
+                (Self::AGREEMENT_LOOKUP, true) => "phasor-triple-agreement-lookup-32-v1",
+                (Self::AGREEMENT_LOOKUP, false) => "phasor-triple-agreement-lookup-trunk-v1",
                 (Self::POWER_LOOKUP, true) => "phasor-triple-concentrated-lookup-32-v1",
                 (Self::SOFT_ADDRESS, true) => "phasor-triple-soft-address-memory-32-v1",
                 (Self::SOFT_ADDRESS, false) => "phasor-triple-soft-address-memory-trunk-v1",
@@ -386,6 +393,7 @@ impl Head {
             "triple-typed-lookup" => Ok(Self::PeerTriplePhase(PeerRead::TYPED_LOOKUP)),
             "triple-fixed-ten-lookup" | "triple-varied-depth-lookup" =>
                 Ok(Self::PeerTriplePhase(PeerRead::TEN_READ_LOOKUP)),
+            "triple-agreement-lookup" => Ok(Self::PeerTriplePhase(PeerRead::AGREEMENT_LOOKUP)),
             "triple-power-lookup" => Ok(Self::PeerTriplePhase(PeerRead::POWER_LOOKUP)),
             "triple-soft-address-memory" => Ok(Self::PeerTriplePhase(PeerRead::SOFT_ADDRESS)),
             "triple-power-lookup-20" => Ok(Self::PeerTriplePhase(PeerRead::POWER_TWENTY)),

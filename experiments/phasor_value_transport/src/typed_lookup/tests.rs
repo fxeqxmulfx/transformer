@@ -23,9 +23,9 @@ fn sharing_budget_prefixes_keeps_every_floating_point_vote() {
     let weights: Vec<_> = (0..BINS).map(|i| (i as f32 * 0.283).sin()).collect();
     let budgets = [1, 2, 10, 10, 20, 39, 40, 41, 80];
     for ordered in [false, true] {
-        let together = final_vote_budgets(&keys, &budgets, &weights, ordered);
+        let together = final_vote_budgets(&keys, &budgets, &weights, ordered, None);
         for (out, budget) in together.iter().zip(budgets) {
-            let separate = final_vote_budgets(&keys, &[budget], &weights, ordered);
+            let separate = final_vote_budgets(&keys, &[budget], &weights, ordered, None);
             assert!(out.iter().zip(&separate[0]).all(|(a, b)| a.to_bits() == b.to_bits()));
         }
     }
@@ -82,8 +82,22 @@ fn signed_path_sum_and_gate_differentiate_through_dense_values() {
                 normalize_vote,
                 ordered,
                 soft_address: false,
+                agreement: false,
             });
         }
+    }
+}
+
+#[test]
+fn paired_addresses_differentiate_through_inputs_hidden_gate_and_both_banks() {
+    for ordered in [false, true] {
+        check_gradient(PathRead {
+            passes: 2,
+            gain_power: 4,
+            ordered,
+            agreement: true,
+            ..PathRead::NORMALIZED
+        });
     }
 }
 
@@ -102,6 +116,21 @@ fn check_gradient(read: PathRead) {
         .collect();
     w[3] = 0.29;
     w[5] = -0.225;
+    if read.agreement {
+        // Activate both coordinates of a path present in the input. With
+        // uncorrelated random coordinates the contextual gate can be tiny.
+        let mut store = Store::new(read.ordered);
+        for (i, v) in x[..length * d].chunks_exact(d).enumerate() {
+            store.observe(nearest(v), i);
+        }
+        let mut first = None;
+        store.visit(read.passes, |path| {
+            first.get_or_insert(path);
+        });
+        let [(a, s), (b, t)] = first.expect("fixture must contain a path").addresses();
+        w[a] = (0.24 * s) as f32;
+        w[b] = (0.22 * t) as f32;
+    }
     let tape = Tape::new(&x, &h, &w, (d, length), read, true, nearest);
     let mut dx = vec![0.; x.len()];
     let mut dh = vec![0.; x.len()];
@@ -139,6 +168,10 @@ fn check_gradient(read: PathRead) {
         );
     }
     assert!(dw[..BINS].iter().any(|v| v.abs() > 0.01));
+    if read.agreement {
+        assert!(dw[..BINS / 2].iter().any(|v| v.abs() > 0.01));
+        assert!(dw[BINS / 2..BINS].iter().any(|v| v.abs() > 0.01));
+    }
     assert!(dh.iter().any(|v| v.abs() > 0.0001));
 }
 

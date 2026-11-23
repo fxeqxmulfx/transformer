@@ -11,8 +11,8 @@ pub fn run(seed: u32, out: &Path, hops: usize) -> Result<()> {
         .peer_read()
         .and_then(|h| h.path)
         .ok_or("no local path branch")?;
-    let original = &weights[coefficients::table_range(&cfg)?];
-    let table = crate::typed_lookup::inference_table(original, path.gain_power);
+    let original = &weights[coefficients::trained_range(&cfg)?];
+    let table = crate::typed_lookup::inference_table(original, path);
     let mut conditions = BTreeMap::new();
     for mode in [
         data::long::Relations::Shared,
@@ -28,7 +28,13 @@ pub fn run(seed: u32, out: &Path, hops: usize) -> Result<()> {
                 let predictions: Vec<_> = rows
                     .iter()
                     .map(|e| {
-                        let (token, tied) = geometry.answer(&e.prompt, passes, &table, ordered);
+                        let (token, tied) = geometry.answers(
+                            &e.prompt,
+                            &[passes],
+                            &table,
+                            ordered,
+                            path.agreement.then_some(path.gain_power),
+                        )[0];
                         ties += usize::from(tied);
                         token as i64
                     })
