@@ -2271,6 +2271,12 @@ Each checkpoint scored 512/512 on validation, the independent test and
 the length-128 test. The three scored 992, 998 and 1,024 of 1,024 on all
 ten-letter words and 62, 62 and 64 of 64 on the alternating tail.
 
+On all 4,096 twelve-letter words, the three L2 checkpoints scored 3,968,
+3,985 and 4,096 in seed order. Repeating each letter of an eight-letter
+word 32 times gave 256, 233 and 256 correct out of 256. Each checkpoint
+was independently reloaded for both tests. On 512 length-256 inputs from
+the original generator, seeds 0 and 1 scored 369 and 338.
+
 Depth-one C-RASP first scored 32/32 on validation at updates 10,250,
 500 and 11,750 in seed order. The three checkpoints scored 64, 62 and 64
 of 64 on the independent test, 60, 56 and 56 at length 32, and 56, 53
@@ -2307,6 +2313,7 @@ C-RASP prefix on the extended inputs. [Prefix semantics and exact sequence scori
 ```sh
 # Use the directory containing the main model's first-crossing checkpoints.
 for seed in 0 1 2; do
+    PHASOR_EVAL_BATCH_CAP=8 "$bin" probes language-l2 "$seed" "$out" extended
     PHASOR_EVAL_BATCH_CAP=8 "$bin" probes language-l2 "$seed" "$out" depth-length 256
     PHASOR_EVAL_BATCH_CAP=8 "$bin" probes suite-crasp-depth-1 "$seed" "$out" depth-length 128
 done
@@ -2319,10 +2326,10 @@ searches, the mixed cubic scored 115, 114 and 116 out of 4,705, and
 unique-symbol copying scored 0/32 on each seed. Their source budgets
 are 100,000 updates.
 
-The November 23 main-model audit including Fashion-MNIST covered
-32 of the 108 broader cases, with 80 independently reloaded case and seed
+The November 23 12:01 UTC main-model audit including Fashion-MNIST covered
+34 of the 108 broader cases, with 84 independently reloaded case and seed
 results. Four retained the source target, two crossed and subsequently
-dropped below it, and three exhausted the source budget. The other 71
+dropped below it, and three exhausted the source budget. The other 75
 were measured before their source budget ended.
 
 On hard recall all three seeds exhausted the 3,000-update source budget.
