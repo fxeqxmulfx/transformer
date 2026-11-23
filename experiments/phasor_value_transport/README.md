@@ -2742,6 +2742,24 @@ All score denominators are 512. On hard depth, the two-gate seed-1 model
 first passed at update 2,750, compared with 2,250 for three gates. Both
 scored 512/512 on validation, the independent test and at length 128.
 
+To compare the two recall models at equal training exposure, train each
+for the number of updates at which the three-gate model first passed.
+The new two-gate runs reproduced every scheduled primary count through
+their earlier crossings. On seeds 1 and 2, the delay advantage at
+matched updates was 179 and 70 exact sequences. Seed 0 fell below
+the primary target at update 4,300.
+
+| Recall seed | Matched update | Novel validation, three / two | Independent test, three / two | 64-token delay, three / two |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 4,300 | 507 / 504 | 503 / 498 | 504 / pending |
+| 1 | 2,700 | 508 / 512 | 505 / 511 | 319 / 498 |
+| 2 | 3,350 | 509 / 511 | 502 / 512 | 359 / 429 |
+
+Each split contains 512 sequences. The read-only `fixed-probes` command
+checks the fixed-budget record, reloads its weights, scores the original
+splits and fingerprints the requested transfer inputs. The 64-token delay
+uses the same prompts at both checkpoints for each seed.
+
 At the seed-0 Fibonacci checkpoint, removing the contextual residual
 gave 4,674 correct. Removing the direct read gave 4,661 and removing the
 transported proposal gave 49. The context alone scored 48 and the
@@ -2767,6 +2785,9 @@ for arm in triple-pair-classes triple-context-residual; do
         "$bin" nv11-score "runs/$arm/arithmetic-cubic-product/seed$seed/weights.f32"
         "$bin" cell basis-recall-easy "$seed" "runs/$arm"
         "$bin" probes basis-recall-easy "$seed" "runs/$arm" recall-gap 64
+        case "$seed" in 0) step=4300 ;; 1) step=2700 ;; 2) step=3350 ;; esac
+        "$bin" memory-bench "$arm" basis-recall-easy "$seed" "$step" runs/matched-recall
+        "$bin" fixed-probes "$arm" basis-recall-easy "$seed" "$step" runs/matched-recall recall-gap 64
         for task in gpt-probe-key-value-binding recurrence-fibonacci-k1-c2-lgt; do
             "$bin" slot-ablate "$task" "$seed" "runs/$arm"
             "$bin" slot-phase-ablate "$task" "$seed" "runs/$arm"

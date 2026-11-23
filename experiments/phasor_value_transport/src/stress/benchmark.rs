@@ -142,6 +142,14 @@ fn weight_bytes(e: &Engine) -> Result<Vec<u8>> {
     Ok(values.iter().flat_map(|v| v.to_le_bytes()).collect())
 }
 
+fn replayed_weights(result: &Value, dir: &Path) -> Result<Vec<u8>> {
+    let bytes = fs::read(dir.join("weights.f32"))?;
+    if result["weights_sha256"] != hash(&bytes) {
+        return Err("fixed-budget weights changed after replay".into());
+    }
+    Ok(bytes)
+}
+
 /// Replay the frozen catalog record and return the very bytes it authenticates.
 pub(super) fn replay_catalog(
     name: &str,
@@ -150,11 +158,42 @@ pub(super) fn replay_catalog(
     out: &Path,
 ) -> Result<(Value, Vec<u8>)> {
     let result = measure(Source::Catalog, name, seed, updates, out, false)?;
-    let bytes = fs::read(directory(out, MODEL, name, seed, updates).join("weights.f32"))?;
-    if result["weights_sha256"] != hash(&bytes) {
-        return Err("catalog weights changed after replay".into());
-    }
+    let bytes = replayed_weights(&result, &directory(out, MODEL, name, seed, updates))?;
     Ok((result, bytes))
+}
+
+/// Score transfer inputs at a completed fixed optimizer budget, including
+/// observations after the first passing update. See RecallParsed and
+/// TripleTransport.FixedEvaluation for the delayed-recall case.
+pub fn fixed_probes(
+    arm: &str,
+    name: &str,
+    seed: u32,
+    updates: usize,
+    out: &Path,
+    probes: ProbeSet,
+) -> Result<()> {
+    let (row, task, fingerprints) = prepare_evaluation(name, probes)?;
+    let mut cfg = task_config(&row, &task, false)?;
+    cfg.head = Head::parse(arm)?;
+    let result = measure(Source::ComparedHead(arm), name, seed, updates, out, false)?;
+    let bytes = replayed_weights(&result, &directory(out, arm, name, seed, updates))?;
+    let (scores, _) = score_checkpoint(cfg, &task, &bytes)?;
+    for (split, expected) in result["scores"]
+        .as_object()
+        .ok_or("missing fixed-budget scores")?
+    {
+        if scores.get(split) != Some(expected) {
+            return Err(format!("fixed-budget transfer replay differs on {split}").into());
+        }
+    }
+    println!(
+        "{}",
+        json!({"protocol":result["protocol"],"first_99":result["first_99"],
+            "weights_sha256":result["weights_sha256"],"scored_with_kernite":KERNITE_VERSION,
+            "probe_fingerprints":fingerprints,"scores":scores})
+    );
+    Ok(())
 }
 
 fn measure(
@@ -226,7 +265,7 @@ fn measure(
     if train_missing {
         fs::create_dir_all(&dir)?;
     } else if !result_file.is_file() {
-        return Err("catalog comparison requires a completed fixed-budget cell".into());
+        return Err("replay requires a completed fixed-budget cell".into());
     }
     let lock = fs::File::options()
         .read(true)

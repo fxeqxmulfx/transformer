@@ -276,6 +276,10 @@ fn main() -> Result<()> {
         [op] if op == "memory-check" => memory_checks::run(),
         [op, head, name, seed, updates, out] if op == "memory-bench" =>
             stress::benchmark::run(stress::benchmark::Source::ComparedHead(head), name, seed.parse()?, updates.parse()?, Path::new(out)),
+        [op, head, name, seed, updates, out, extra @ ..] if op == "fixed-probes" => {
+            let probes = stress::ProbeSet::parse(extra)?.unwrap_or(stress::ProbeSet::Tests);
+            stress::benchmark::fixed_probes(head, name, seed.parse()?, updates.parse()?, Path::new(out), probes)
+        }
         [op, name, seed, updates, out] if op == "catalog-bench" =>
             stress::benchmark::run(stress::benchmark::Source::Catalog, name, seed.parse()?, updates.parse()?, Path::new(out)),
         [op, name, seed, updates, out] if op == "catalog-target" =>
@@ -346,6 +350,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Rows),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | numeric-audit CASE WEIGHTS [ROWS] | catalog-inventory [REGISTRY.tsv] | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay|time-score} CASE SEED RUN_DIR | {probes|slot-ablate|slot-phase-ablate} CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | {screen|advance} CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | fixed-probes HEAD CASE SEED UPDATES RUN_DIR [PROBE] | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | numeric-audit CASE WEIGHTS [ROWS] | catalog-inventory [REGISTRY.tsv] | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay|time-score} CASE SEED RUN_DIR | {probes|slot-ablate|slot-phase-ablate} CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | {screen|advance} CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }
