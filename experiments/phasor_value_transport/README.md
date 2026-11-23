@@ -1899,7 +1899,8 @@ export PHASOR_EVAL_BATCH_CAP=16
 
 For the chart and dense-induction model, build with
 `--features fp32-affine-reference,triple-chart-induction` and use a separate
-run directory. Pass 250 to `advance` to resume to the next reported checkpoint.
+run directory. Resume with update limits 250 and 750, scoring each checkpoint
+before advancing it further.
 The following counts come from independently reloaded seed-0 weights.
 Each hop column has 100 fresh questions. A uniformly guessed letter has
 20% expected accuracy.
@@ -1908,12 +1909,17 @@ Each hop column has 100 fresh questions. A uniformly guessed letter has
 | --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: |
 | Main triple transport | 50 | 38 | A | 17 | 16 | 22 | 20 | 17 |
 | Main triple transport | 250 | 36 | A | 22 | 15 | 20 | 22 | 17 |
+| Main triple transport | 750 | 29 | C | 26 | 26 | 20 | 26 | 26 |
 | Chart and dense induction | 50 | 32 | E | 20 | 17 | 29 | 23 | 19 |
 | Chart and dense induction | 250 | 37 | D | 23 | 26 | 21 | 23 | 18 |
+| Chart and dense induction | 750 | 37 | D | 22 | 25 | 23 | 26 | 20 |
 
-Both models missed Mira at both observations. Across the 500 fresh
-questions at update 250, the main model answered 96 correctly and the
-chart model answered 111 correctly.
+At update 750 the main model produced C on Mira and answered 124 of the
+500 fresh questions correctly. The chart model answered 116 correctly.
+At update 250, the three main-model seeds scored 15, 21 and 17 on the
+100 fresh two-hop questions. The chart seeds scored 26, 27 and 25.
+Their respective mixed validation counts were 36, 30 and 38 for the
+main model and 37, 41 and 45 for the chart model, each out of 200.
 
 The command below scores 100 additional pairs per hop count for each of
 three changes. Reversing the table rows preserves the answer. Cycling the
@@ -1941,6 +1947,12 @@ even though every reference answer changed. Rotating the choices produced
 the expected letter shift on 15/100 pairs, with both answers correct on
 2/100. The checkpoint produced valid letters on all 100 pairs for each
 change.
+
+At update 250 the main model answered 20/100 original paired two-hop
+questions correctly. Reversing the rows preserved its prediction on
+100/100 pairs. Rewiring the first table changed its prediction on
+0/100. Rotating the choices gave the expected shift on 14/100 pairs,
+with both answers correct on 2/100.
 
 ### Interpolation in a learned cyclic order
 
