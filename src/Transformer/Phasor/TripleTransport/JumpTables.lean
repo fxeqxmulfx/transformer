@@ -47,6 +47,18 @@ theorem from_query {Q E : Type*} (first : Q → E) (next : E → E) (q : Q) (n :
   | zero => rfl
   | succ n ih => rw [Function.iterate_succ_apply', ih, Function.iterate_succ_apply']; rfl
 
+/-- For the repeated causal lookup in `typed_lookup/paths`, keep the
+complete edge cursor from the earlier budget. Composing a jump of any
+additional length reaches the same state as starting the whole query
+again. Only the successor on edges needs a table of powers. -/
+theorem carry_reads {Q E : Type*} (first : Q → E) (next : E → E) (q : Q) (n k : ℕ) :
+    (step first next)^[n+k+1] (.inl q) = .inr (next^[k] (next^[n] (first q))) := by
+  rw [from_query, Nat.add_comm n k, Function.iterate_add_apply]
+
+example : (step (fun _ : Unit => (0 : Fin 41)) (fun x => x + 1))^[41] (.inl ()) =
+    .inr (((fun x : Fin 41 => x + 1)^[1]) (((fun x : Fin 41 => x + 1)^[39]) 0)) :=
+  carry_reads _ _ () 39 1
+
 example : (level (fun x : Fin 41 => x + 1) 5).get ((level (fun x => x + 1) 3).get 0) = 40 := by
   decide
 
