@@ -2736,6 +2736,10 @@ paired with the same 100 originals. The two-bank read answered both
 versions on **0/4,000** pairs at 39 reads and **4,000/4,000** at each of
 40 and 41 reads. These scores use the tied classifier on the learned path
 vote alone. Training supplied only the final answer letter of each prompt.
+The complete model was also rescored separately on every edited split at
+40 reads. It generated both correct answers on **4,000/4,000 pairs**,
+including 100/100 for each of the forty edited tables. All forty splits
+reuse the same 100 original questions.
 
 The complete model also generated every correct answer at forty reads.
 It solved all five starting keys on each of the 20 table sets. One more
@@ -2815,6 +2819,7 @@ for hops in 40 41; do
 done
 for edge in $(seq 1 40); do
     "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 39,40,41 isolated
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 40 requested
 done
 for seed in 0 1 2; do
     "$bin" advance arithmetic-cubic-product "$seed" runs/agreement-nv11 250
