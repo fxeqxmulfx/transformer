@@ -2,6 +2,7 @@
 mod depth;
 mod engine;
 mod optimizer;
+mod paired;
 #[cfg(test)]
 mod tests;
 mod text;
@@ -10,8 +11,7 @@ use minibatch::{Result, arithmetic_data, blake, hash, pcg, random::Random};
 #[path = "../../convex_stress/src/vendor/data.rs"]
 pub mod data;
 use minibatch::random;
-#[path = "../../../.lake/reproduction/gpt/research/complex_geometry_suite/native/src/metrics.rs"]
-mod metrics;
+include!(concat!(env!("OUT_DIR"), "/score_module.rs"));
 #[path = "../../../.lake/reproduction/gpt/research/main_model/wsd_suite_native/src/schedule.rs"]
 mod schedule;
 use serde_json::{Value, json};

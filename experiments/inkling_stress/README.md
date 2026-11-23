@@ -163,6 +163,20 @@ an equal number of gains and losses. Retaining every previously correct
 answer requires zero losses on the matched rows.
 [Paired exact-count identity](../../src/Transformer/InklingLoop.lean)
 
+Pairing the 512 exact-sequence decisions against the three-pass run
+revealed an exchange on seed 0. At forty passes the model recovered one
+previously missed row and lost one previously correct row. Its score
+stayed at 35/512. Seeds 1 and 2 kept every previously correct row. The
+scorer records each outcome after dense prediction or after free generation
+and the original termination check, and verifies its sum against the
+original aggregate score.
+
+| Seed | Three passes correct | One pass gained / lost | Forty passes gained / lost |
+| ---: | ---: | ---: | ---: |
+| 0 | 35 | 9 / 16 | 1 / 1 |
+| 1 | 509 | 0 / 79 | 0 / 0 |
+| 2 | 512 | 0 / 0 | 0 / 0 |
+
 ## Reproduction
 
 Use the existing pinned GPT checkout at `.lake/reproduction/gpt`, commit

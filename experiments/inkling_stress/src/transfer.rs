@@ -3,7 +3,7 @@ use crate::{
     data::{Example, Task},
     depth,
     engine::Engine,
-    metrics,
+    paired::RowScore,
 };
 use minibatch::Result;
 use serde_json::{Map, Value, json};
@@ -42,11 +42,11 @@ pub fn evaluate(
 ) -> Result<Value> {
     let name = row["name"].as_str().ok_or("missing task name")?;
     let mut record = depth::evaluate(engine, task, trained, &[])?;
-    engine.evaluation_passes = passes;
     if passes != crate::text::PASSES {
         record["probe_passes"] = json!(passes);
     }
     let mut scores = Map::new();
+    let mut paired = Map::new();
     for &size in sizes {
         let (digest, examples) = match probe {
             Probe::RecallGap => {
@@ -78,10 +78,16 @@ pub fn evaluate(
             }
         };
         let examples: Vec<_> = examples.into_iter().map(scorer_example).collect();
-        let score = metrics::evaluate(engine, &examples, true)?;
+        engine.evaluation_passes = passes;
+        let score = RowScore::measure(engine, &examples)?;
+        if passes != crate::text::PASSES {
+            engine.evaluation_passes = crate::text::PASSES;
+            let baseline = RowScore::measure(engine, &examples)?;
+            paired.insert(size.to_string(), baseline.compare(&score)?);
+        }
         scores.insert(
             size.to_string(),
-            json!({"exact":score["exact"],"total":score["examples"],"split_sha256":digest}),
+            json!({"exact":score.exact,"total":score.total,"split_sha256":digest}),
         );
     }
     record["probe"] = json!(match probe {
@@ -89,5 +95,8 @@ pub fn evaluate(
         Probe::DepthLength => "depth-length",
     });
     record["extended"] = json!(scores);
+    if !paired.is_empty() {
+        record["probe_paired_vs_trained"] = json!(paired);
+    }
     Ok(record)
 }
