@@ -1847,6 +1847,71 @@ question is whether Phasor can learn useful keys and chain the reads from
 the task loss alone.
 [N-Hop Lookup protocol and example](../../stress_tests_for_gpt.md#n-hop-lookup)
 
+We formalized a smaller memory that uses two neighboring vector cells per
+address. A learned projection maps each dense key to a real coordinate.
+The read linearly interpolates its neighboring cells. The write distributes
+the difference between the requested and current value across those cells.
+Lean proves that this is the least squared change that makes an immediate
+reread exact. Later writes with disjoint cell pairs preserve that value.
+[Fractional writes and their cost](../../src/Transformer/Phasor/TripleTransport/LocalMemory.lean)
+
+Both passes read the same causal memory with the same projection. A learned
+gain mixes the first result into the next query. At unit gain the next pass
+can follow a second link. In a three-dimensional example, two memories have
+the same projection, starting vector and first read, but different second
+answers. The proof establishes a benefit of a second memory access under
+this information limit. Learning the addresses and both gains from the task
+loss is an empirical question.
+[Causality and the two-read example](../../src/Transformer/Phasor/TripleTransport/LocalReadLoop.lean)
+
+#### Synthetic lookup questions
+
+The native study holds out the catalog's exact Mira prompt. It trains on 1,000
+distinct questions with one or two tables, validates on 200, and tests on 100
+fresh questions at each of 1, 2, 3, 5 and 10 hops. Every table is a fresh
+bijection on five fictional names per side. Across questions, the same 60
+names can play any role. Table rows and answer choices are shuffled, and
+each split is balanced over the five letters within each hop count.
+[Authored example and official Think Fast protocol](../../stress_tests_for_gpt.md#n-hop-lookup)
+
+The model receives the complete printed question as word and punctuation
+embeddings. It predicts one token over the entire vocabulary. Only the final
+position contributes to cross-entropy. The external scorer follows the
+printed tables to obtain the answer letter. The seeded protocol uses width
+64, two layers, two heads, batch 16, a 3,000-update WSD horizon, and an
+observation every 50 updates. Scores for these generated questions are
+reported separately from official Think Fast and canonical GPT results.
+[Oracle and row-shuffle invariance](../../src/Transformer/Phasor/LookupQuestion.lean)
+
+```sh
+cd experiments/phasor_value_transport
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+out=runs/lookup-questions/default
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" advance study-lookup-questions 0 "$out" 50
+"$bin" lookup-study-score 0 "$out"
+"$bin" lookup-study-score 0 "$out" ablations
+```
+
+For the chart and dense-induction model, build with
+`--features fp32-affine-reference,triple-chart-induction` and use a separate
+run directory. Pass 250 to `advance` to resume to the next reported checkpoint.
+The following counts come from independently reloaded seed-0 weights.
+Each hop column has 100 fresh questions. A uniformly guessed letter has
+20% expected accuracy.
+
+| Model | Update | Validation / 200 | Mira (correct C) | 1 hop | 2 hops | 3 hops | 5 hops | 10 hops |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| Main triple transport | 50 | 38 | A | 17 | 16 | 22 | 20 | 17 |
+| Main triple transport | 250 | 36 | A | 22 | 15 | 20 | 22 | 17 |
+| Chart and dense induction | 50 | 32 | E | 20 | 17 | 29 | 23 | 19 |
+| Chart and dense induction | 250 | 37 | D | 23 | 26 | 21 | 23 | 18 |
+
+Both models missed Mira at both observations. Across the 500 fresh
+questions at update 250, the main model answered 96 correctly and the
+chart model answered 111 correctly.
+
 ### Interpolation in a learned cyclic order
 
 Every memory address and value refers to a prototype in the learned dense

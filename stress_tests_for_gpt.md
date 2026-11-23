@@ -515,6 +515,10 @@ A. jade   B. quartz   C. amber   D. onyx   E. opal
 The chain is `Mira → dax → amber`, so the expected model answer is `C`.
 [Memory and looping in Phasor](experiments/phasor_value_transport/README.md#memory-and-repeated-computation-for-lookup-tasks)
 
+The native synthetic study holds this question out of training and reports
+the generated letter alongside accuracy on freshly sampled tables at five
+hop counts. [Training and scoring commands](experiments/phasor_value_transport/README.md#synthetic-lookup-questions)
+
 ## Sources and reproducibility
 
 The native Phasor runner trains the default pair-class triple-transport architecture

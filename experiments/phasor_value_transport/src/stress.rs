@@ -16,6 +16,7 @@ pub mod embedding;
 #[cfg(all(test, feature = "triple-dense-induction"))]
 mod induction_gain;
 mod language_probes;
+pub mod lookup_question;
 pub mod numeric_probe;
 pub mod phase_ablation;
 mod progress;
@@ -152,6 +153,9 @@ pub fn routes() -> Result<()> {
 }
 
 fn load(name: &str) -> Result<(Value, Task)> {
+    if name == lookup_question::NAME {
+        return lookup_question::data();
+    }
     if name == "arithmetic-cubic-product" {
         return nv11();
     }
