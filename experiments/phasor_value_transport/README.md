@@ -2441,6 +2441,10 @@ and 199 correct validation answers out of 200 at updates 0, 50, 100,
 first validation crossing. With weights from the ten-read run, ten reads
 scored 93/100 on ten previously unseen tables per question. Twenty reads
 scored 77/100 on twenty tables and solved all five starts in ten sets.
+Independent evaluations of the ten- and twenty-read training runs each
+gave 77/100 at twenty tables and 36/100 at forty tables with one read
+per table. At forty tables both solved all five starts on one of the
+twenty sets and generated a constant answer on twelve.
 
 Once a path terminates, more reads preserve its endpoint. On a path
 of twenty different links, ten reads can still end at a different key
@@ -2985,7 +2989,11 @@ reached a best of 194/200 validation at update 950. At the 3,000-update
 limit, independent replay scored 81/200. On the original forty-table
 development panel this final checkpoint scored 21/100 original, 16/100
 edited and 1/100 paired at forty reads. The successful seed-0 depth
-transfer therefore has a training-seed limitation.
+transfer therefore has a training-seed limitation. Seed 2 peaked at
+182/200 validation at update 1,200 and ended at 46/200 at update 3,000.
+On the same forty-table panel its final checkpoint generated 20/100
+original and 19/100 edited answers correctly, with 1/100 pairs correct
+on both. It generated identical predictions at 39, 40 and 41 reads.
 
 On the separate NV11 regression the same architecture trained from
 scratch on seeds 0, 1 and 2. At update 250 each reloaded checkpoint scored
