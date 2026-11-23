@@ -2734,7 +2734,41 @@ sets, the frozen seed-0 checkpoint's isolated learned read scored 18/100
 originals and 19/100 last-link edits with 40 reads. It solved both
 versions on 1/100 pairs. With 41, 42 or 80 reads it solved both versions
 on 100/100 pairs, with identical generated letters at all three budgets.
+On the same 41-table questions the complete model generated 20/100
+originals and 18/100 edits at 40 reads, with zero pairs correct on both.
+At 41, 42 and 80 reads it generated all 200 correct letters.
 [Exact fixed-alphabet capacity](../../src/Transformer/Phasor/LookupQuestion/DistinctLayers.lean)
+
+For a larger holdout, the checkpoint, generator seed, lengths, and
+three budgets were fixed before scoring. At each length, 100 fresh
+table sets give 500 questions, one for each of five starts per set.
+Each question also has a version with its final link rewired. The tests
+check that the printed tables are disjoint from the development panels
+and that all 1,000 prompts at each length are distinct. The table gives
+complete-model free generation on the frozen seed-0 checkpoint.
+
+| Actual tables | Repeated reads | Original /500 | Last link edited /500 | Both correct /500 |
+| ---: | ---: | ---: | ---: | ---: |
+| 40 | 39 | 100 | 105 | 9 |
+| 40 | 40 | 497 | 497 | 494 |
+| 40 | 41 | 497 | 497 | 494 |
+| 41 | 40 | 99 | 95 | 2 |
+| 41 | 41 | 498 | 498 | 496 |
+| 41 | 42 | 498 | 498 | 496 |
+
+At the matching budget, every output was a valid answer letter. One
+extra read preserved all 1,000 predictions at each length. The isolated
+learned path solved 500/500 pairs at each matching budget. On the
+earlier 40-table panel the indexed full scorer also reproduced all four
+sequential prediction hashes in 49.29 seconds, versus 52.92 seconds
+for sequential execution at batch cap four.
+
+Training a second seed on the original one- to five-table curriculum
+reached a best of 194/200 validation at update 950. At the 3,000-update
+limit, independent replay scored 81/200. On the original forty-table
+development panel this final checkpoint scored 21/100 original, 16/100
+edited and 1/100 paired at forty reads. The successful seed-0 depth
+transfer therefore has a training-seed limitation.
 
 On the separate NV11 regression the same architecture trained from
 scratch on seeds 0, 1 and 2. At update 250 each reloaded checkpoint scored
@@ -2752,6 +2786,9 @@ for hops in 10 20 40; do
 done
 PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 requested
 "$bin" disjoint-lookup-budget-study 0 "$out" 41 40,41,42,80 isolated
+for hops in 40 41; do
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-holdout 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" requested
+done
 for edge in $(seq 1 40); do
     "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 39,40,41 isolated
 done

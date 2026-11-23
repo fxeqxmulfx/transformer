@@ -14,7 +14,28 @@ fn follow(tables: &[Vec<(i64, i64)>], mut key: i64) -> Result<i64> {
     Ok(key)
 }
 
-fn pairs(hops: usize, edge: usize, task: &str) -> Result<(Vec<Example>, Vec<Example>)> {
+#[derive(Clone, Copy)]
+pub enum Questions {
+    Final,
+    Edge(usize),
+    Holdout,
+}
+
+impl Questions {
+    fn panel(self, hops: usize) -> (u32, usize) {
+        let (base, sets) = match self {
+            Self::Final | Self::Edge(_) => (3_107_419, 20),
+            Self::Holdout => (2_795_083, 100),
+        };
+        (u32::wrapping_add(base, hops as u32), sets)
+    }
+}
+
+fn pairs(hops: usize, questions: Questions, task: &str) -> Result<(Vec<Example>, Vec<Example>)> {
+    let edge = match questions {
+        Questions::Edge(edge) => edge,
+        Questions::Final | Questions::Holdout => hops,
+    };
     if !(1..=hops).contains(&edge) {
         return Err("the edited table must lie on the displayed chain".into());
     }
@@ -24,10 +45,11 @@ fn pairs(hops: usize, edge: usize, task: &str) -> Result<(Vec<Example>, Vec<Exam
         .enumerate()
         .map(|(i, s)| (s.as_str(), i as i64))
         .collect();
-    let mut rng = random::Random::new(3_107_419 + hops as u32);
+    let (seed, sets) = questions.panel(hops);
+    let mut rng = random::Random::new(seed);
     let mut original = Vec::new();
     let mut rewired = Vec::new();
-    for set_index in 0..20 {
+    for set_index in 0..sets {
         let set = sample(hops, &mut rng)?;
         original.extend(set.rows(&ids, task));
         for lane in 0..5 {
@@ -64,7 +86,7 @@ pub fn run(
     budgets: &str,
     mode: &str,
     case: Option<&str>,
-    edited_edge: Option<usize>,
+    questions: Questions,
 ) -> Result<()> {
     let budgets: Vec<usize> = budgets
         .split(',')
@@ -81,7 +103,7 @@ pub fn run(
     let mut cfg = task_config(&row, &task, true)?;
     let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
     let trained = cfg.head.peer_read().and_then(|r| r.path).map(|r| r.passes);
-    let (original, edited) = pairs(hops, edited_edge.unwrap_or(hops), study.name)?;
+    let (original, edited) = pairs(hops, questions, study.name)?;
     let n = original.len();
     let hashes = [digest(&original)?, digest(&edited)?];
     let examples: Vec<_> = original.into_iter().chain(edited).collect();
@@ -189,8 +211,14 @@ pub fn run(
     if let Some(audit) = alias_details {
         result["role_aliases"] = audit;
     }
-    if let Some(edge) = edited_edge {
-        result["edited_edge"] = json!(edge);
+    match questions {
+        Questions::Edge(edge) => result["edited_edge"] = json!(edge),
+        Questions::Holdout => {
+            let (seed, sets) = questions.panel(hops);
+            result["table_seed"] = json!(seed);
+            result["table_sets"] = json!(sets);
+        }
+        Questions::Final => {}
     }
     println!("{result}");
     Ok(())
@@ -202,10 +230,11 @@ mod tests {
     #[test]
     fn edits_keep_the_start_choices_and_all_other_tables() {
         let h = 40;
-        assert!(pairs(h, 0, NAME).is_err());
-        assert!(pairs(h, h + 1, NAME).is_err());
+        assert!(pairs(h, Questions::Edge(0), NAME).is_err());
+        assert!(pairs(usize::MAX, Questions::Final, NAME).is_err());
+        assert!(pairs(h, Questions::Edge(h + 1), NAME).is_err());
         for edge in [1, h / 2, h] {
-            let (a, b) = pairs(h, edge, NAME).unwrap();
+            let (a, b) = pairs(h, Questions::Edge(edge), NAME).unwrap();
             assert_eq!(
                 digest(&a).unwrap(),
                 digest(&probes(h, NAME).unwrap()).unwrap()
@@ -229,6 +258,49 @@ mod tests {
                 assert_eq!(x.prompt[differences[0]], y.prompt[differences[1]]);
                 assert_eq!(x.prompt[differences[1]], y.prompt[differences[0]]);
             }
+        }
+    }
+
+    #[test]
+    fn reserved_tables_and_queries_are_fresh_at_both_lengths() {
+        for h in [40, 41] {
+            let prefix_len = 1 + 16 * h;
+            let (standard, edits) = pairs(h, Questions::Final, NAME).unwrap();
+            let prior: BTreeSet<_> = standard
+                .iter()
+                .chain(&edits)
+                .map(|r| &r.prompt[..prefix_len])
+                .collect();
+            let (original, edited) = pairs(h, Questions::Holdout, NAME).unwrap();
+            let prefixes: BTreeSet<_> = original.iter().map(|r| &r.prompt[..prefix_len]).collect();
+            assert_eq!(
+                (prefixes.len(), original.len(), edited.len()),
+                (100, 500, 500)
+            );
+            assert!(
+                original
+                    .iter()
+                    .chain(&edited)
+                    .all(|r| !prior.contains(&r.prompt[..prefix_len]))
+            );
+            let unique: BTreeSet<_> = original.iter().chain(&edited).map(|r| &r.prompt).collect();
+            assert_eq!(unique.len(), 1000);
+            for lanes in original.as_chunks::<5>().0 {
+                let letters: BTreeSet<_> = lanes.iter().map(|r| &r.answer).collect();
+                let starts: BTreeSet<_> = lanes.iter().map(|r| r.prompt[prefix_len + 2]).collect();
+                assert_eq!((letters.len(), starts.len()), (5, 5));
+                assert!(
+                    lanes
+                        .iter()
+                        .all(|r| r.prompt[..prefix_len] == lanes[0].prompt[..prefix_len])
+                );
+            }
+            assert!(
+                original
+                    .iter()
+                    .zip(edited)
+                    .all(|(a, b)| a.answer != b.answer)
+            );
         }
     }
 }
