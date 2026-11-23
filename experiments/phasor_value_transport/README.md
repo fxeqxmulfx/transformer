@@ -2061,9 +2061,14 @@ done
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit through the 3,000-update L4
-screen verified nine of 51 short runs and eight of 12 long runs.
+The November 23 registered-extension audit through the 5,500-update L4
+screen verified 12 of 51 short runs and eight of 12 long runs. Including
+the 105 canonical runs gives 125 independently verified checkpoints.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
+On `arithmetic-square-product` the three seeds also passed at update
+250. Each recovered all 4,704 training pairs and all 4,705 held-out pairs.
+Independent reload reproduced every held-out answer, including all 51
+held-out pairs in the zero row.
 Dyck also passed all three seeds at update 250 with 32/32 on validation.
 The independent Dyck test scores were 62, 63 and 64 out of 64.
 Language L1 passed at update 250 on all three seeds. Every checkpoint
@@ -2089,7 +2094,7 @@ ten-letter test and 53/64 on the alternating tail.
 L4 seed 0 first passed at update 2,000. It scored 512/512 on validation,
 the independent test and length 128, 1,012/1,024 on ten-letter words,
 and 57/64 on the alternating tail. Seed 1 scored 190/512 on validation
-at the 3,000-update screen.
+at update 3,000 and 243/512 at update 5,500.
 
 The main model's easy-depth checkpoints scored 428, 341 and 496 of 512
 on length-256 inputs. The 20-bit parity checkpoints scored 0, 58 and
@@ -2102,6 +2107,12 @@ Separate processes reloaded the first and final weights. In 500-update
 searches, the mixed cubic scored 115, 114 and 116 out of 4,705, and
 unique-symbol copying scored 0/32 on each seed. Their source budgets
 are 100,000 updates.
+
+The November 23 main-model audit including both MASH decoders covered
+29 of the 108 broader cases, with 65 independently reloaded case and seed
+results. Four retained the source target, two crossed and subsequently
+dropped below it, and three exhausted the source budget. The other 56
+were measured before their source budget ended.
 
 On hard recall all three seeds exhausted the 3,000-update source budget.
 Their final novel-validation scores were 0, 83 and 503 of 512. The
@@ -2342,9 +2353,11 @@ MASH-half admitted one additional correct token on 48 training windows
 and 48 validation windows. The native regression reconstructed the split
 by reversing the orbits and checked the full public decoder on all 256
 proposals for every such window and the endpoints of both splits.
-On MASH, seed 0 recovered 4,098 of 4,704 validation futures at the
-250-update observation. Independent reload reproduced both the decoded
-and native-token counts. The source target is 99%.
+On MASH, seeds 0 and 1 recovered 4,098 and 4,081 of 4,704 validation
+futures at update 250. The native-token counts matched. On MASH-half,
+seed 0 recovered 3,323 decoded futures and predicted 3,318 original target
+tokens. Independent reload reproduced both counts. The source target
+is 99%.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TemporalRecurrenceScore Transformer.Phasor.PastGridScore
