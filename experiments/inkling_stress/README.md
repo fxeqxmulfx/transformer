@@ -157,8 +157,11 @@ condition for an entire hidden prefix to remain fixed.
 
 The same depth comparison at a 128-token recall gap gave 28, 430 and
 512 exact sequences out of 512 at one pass. Three passes gave 35, 509
-and 512. Ten passes gave the same three counts. Every budget used the
-same weights and extended examples.
+and 512. Ten and forty passes gave the same three counts. Every budget
+used the same weights and extended examples. Two identical totals allow
+an equal number of gains and losses. Retaining every previously correct
+answer requires zero losses on the matched rows.
+[Paired exact-count identity](../../src/Transformer/InklingLoop.lean)
 
 ## Reproduction
 

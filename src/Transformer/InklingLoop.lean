@@ -124,4 +124,21 @@ example (v : Fin 4 → Fin 2 → ℝ) (j : Fin 2) :
   simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
   simp [hi.1, hi.2]
 
+/-- Fixed-checkpoint depth comparison in the Inkling stress experiment.
+On a common set of example indices, gains balance losses whenever the
+two exact counts agree. Preservation of every previously correct answer
+is equivalent to having no lost rows. -/
+theorem paired_exact {ι : Type*} [DecidableEq ι] (trained deeper : Finset ι) :
+    (trained \ deeper).card + deeper.card = trained.card + (deeper \ trained).card ∧
+      ((trained \ deeper).card = 0 ↔ trained ⊆ deeper) := by
+  have before := Finset.card_sdiff_add_card_inter trained deeper
+  have after := Finset.card_sdiff_add_card_inter deeper trained
+  rw [Finset.inter_comm deeper trained] at after
+  exact ⟨by omega, Finset.card_eq_zero.trans Finset.sdiff_eq_empty_iff_subset⟩
+
+/-- A two-row split with equal exact counts can lose its only correct
+answer at the deeper budget. The two scoring events need to be paired. -/
+example : ({0} : Finset ℕ).card = ({1} : Finset ℕ).card ∧
+    (({0} : Finset ℕ) \ {1}).card = 1 ∧ (({1} : Finset ℕ) \ {0}).card = 1 := by decide
+
 end Transformer.InklingLoop
