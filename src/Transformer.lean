@@ -7,6 +7,7 @@ public import Transformer.SmoothApprox
 public import Transformer.ContinuityEq
 public import Transformer.Wiener
 public import Transformer.ALM
+public import Transformer.InklingLoop
 public import Transformer.RASP
 public import Transformer.RASPL
 public import Transformer.CRASP
