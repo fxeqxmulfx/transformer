@@ -1672,9 +1672,10 @@ scored 512/512 on the independent test. At length 128 they scored 512,
 512 and 506 out of 512. The same checkpoints scored 509, 512 and 507
 of 512 at length 256, then 342, 512 and 293 at length 512. Only seed 1
 met the 99% threshold at length 512. At length 1,024 it again classified
-every prefix correctly on all 512 sequences. Training used lengths 32–64.
-To repeat the extension, use
-`PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-depth-hard 1 "$out" depth-length 1024`.
+every prefix correctly on all 512 sequences. Doubling the length again
+gave 485/512 at 2,048 tokens, below the 507/512 target. Training used
+lengths 32–64. To repeat either extension, set `length` to 1024 or 2048
+and run `PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-depth-hard 1 "$out" depth-length "$length"`.
 
 The native report records every first crossing, held-out count and
 checkpoint digest. To reproduce the delay column, run
