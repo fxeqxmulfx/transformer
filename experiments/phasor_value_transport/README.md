@@ -1746,8 +1746,8 @@ done
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit through language L2 seed 1
-verified nine of 51 short runs and five of 12 long runs.
+The November 23 registered-extension audit through language L3 seed 1
+verified nine of 51 short runs and six of 12 long runs.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 Dyck also passed all three seeds at update 250 with 32/32 on validation.
 The independent Dyck test scores were 62, 63 and 64 out of 64.
@@ -1765,6 +1765,14 @@ C-RASP seed 1 first passed at update 500 with 32/32 on validation,
 Language L3 seed 2 passed at update 500, also scoring 512/512 on the
 independent and length-128 tests. Its ten-letter exhaustive score was
 863/1,024 and its alternating-tail score was 44/64.
+L3 seed 1 passed at update 1,000 with 509/512 on validation. It scored
+512/512 on the independent test, 510/512 at length 128, 1,024/1,024 on
+the ten-letter test and 64/64 on the alternating tail.
+
+The main model's easy-depth checkpoints scored 428, 341 and 496 of 512
+on length-256 inputs. The 20-bit parity checkpoints scored 0, 58 and
+256 of 256 at length 128. Both probes use the three canonical
+first-crossing checkpoints in seed order.
 
 Under the broader catalog protocol, division modulo 17 reached 136/136
 at update 250 on every seed and retained 136/136 through update 750.
@@ -1773,28 +1781,31 @@ searches, the mixed cubic scored 115, 114 and 116 out of 4,705, and
 unique-symbol copying scored 0/32 on each seed. Their source budgets
 are 100,000 updates.
 
-On hard recall the seed-0 model exhausted the 3,000-update source budget.
-It solved 0/512 novel validation sequences at all 61 observations, and
-the final checkpoint scored 0/512 on the independent test. Each sequence
+On hard recall all three seeds exhausted the 3,000-update source budget.
+Their final novel-validation scores were 0, 83 and 503 of 512. The
+independent test scores were 0, 72 and 506 of 512. Each sequence
 requires eight correct answers after repeated writes to the same keys.
+Seed 2 came closest, with 506/512 on novel validation at update 2,900.
+The source threshold requires 507.
 
 For conditional amplitudes the source threshold is a validation MSE of
-0.001 over 8,192 freely generated components. Two seeds reached it
-within 2,500 updates. Seed 0 retained the target for the required 500
-additional updates. Seed 1 lost it during that window. On seed 2 the
-final validation generation had 19 missing or invalid components, each
-charged 64 squared-error units by the source scorer.
+0.001 over 8,192 freely generated components. All three seeds reached
+it by update 3,250. Seed 0 retained the target after the required 500
+additional updates. Seeds 1 and 2 exceeded the MSE threshold at
+their retention checkpoints.
 
 | Seed | First target update | First validation MSE | Final update | Final validation MSE | Final test MSE |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | 0 | 1,750 | 0.000549 | 2,250 | 0.000610 | 0.000671 |
 | 1 | 2,500 | 0.000092 | 3,000 | 0.004120 | 0.002960 |
-| 2 | Pending at cutoff | — | 2,500 | 0.152100 | 0.004486 |
+| 2 | 3,250 | 0.000641 | 3,750 | 0.004913 | 0.001801 |
 
 Independent checkpoint reloads reproduced the table. A second scorer
 generated one prefix at a time from seed 0's first checkpoint. It matched
 the summed squared error over 8,192 components and the 247/256 exact
-validation sequences.
+validation sequences. On seed 2 the scalar scorer also reproduced
+validation MSE and the 251/256 and 236/256 exact sequences at the
+first and final checkpoints.
 
 With the default binary, the registered runner uses the 99% criterion.
 The broader command reads the metric, target and retention window from
@@ -1811,12 +1822,18 @@ for task in division-p17 arithmetic-cubic-mixed suite-copy-unique; do
         "$bin" catalog-target "$task" "$seed" 500 "$out/catalog"
     done
 done > "$out/catalog-replays.jsonl"
-"$bin" catalog-target basis-recall-hard 0 3000 "$out/catalog" > /dev/null
-"$bin" catalog-target basis-recall-hard 0 3000 "$out/catalog" >> "$out/catalog-replays.jsonl"
 for seed in 0 1 2; do
-    "$bin" catalog-target gpt-probe-conditional-amplitudes "$seed" 2500 "$out/catalog" > /dev/null
-    "$bin" catalog-target gpt-probe-conditional-amplitudes "$seed" 2500 "$out/catalog"
+    "$bin" catalog-target basis-recall-hard "$seed" 3000 "$out/catalog" > /dev/null
+    "$bin" catalog-target basis-recall-hard "$seed" 3000 "$out/catalog"
+    limit=2500
+    if [ "$seed" = 2 ]; then limit=5000; fi
+    "$bin" catalog-target gpt-probe-conditional-amplitudes "$seed" "$limit" "$out/catalog" > /dev/null
+    "$bin" catalog-target gpt-probe-conditional-amplitudes "$seed" "$limit" "$out/catalog"
 done >> "$out/catalog-replays.jsonl"
+for seed in 0 1 2; do
+    PHASOR_EVAL_BATCH_CAP=2 "$bin" probes basis-depth-easy "$seed" "$out" depth-length 256
+    "$bin" probes basis-parity20 "$seed" "$out" parity-length 128
+done
 "$bin" catalog-inventory extensions.tsv > "$out/catalog-inventory.json"
 jq -es --slurpfile inventory "$out/catalog-inventory.json" -f catalog_results.jq "$out/catalog-replays.jsonl"
 ```
