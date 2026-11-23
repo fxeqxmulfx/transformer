@@ -20,9 +20,108 @@ pub(crate) fn from_identical_prompts(
     Some(tokens)
 }
 
+/// The pinned greedy rollout requests a single next token for each active
+/// prefix. The embedding lookup and the EOS/length rules remain external.
+pub(crate) fn requested_rollout(
+    engine: &mut crate::Engine,
+    embeddings: &[f32],
+    examples: &[Example],
+) -> crate::Result<Vec<Vec<u32>>> {
+    let width = engine.config.width;
+    if embeddings.len() != width * engine.config.vocab {
+        return Err("external embedding matrix has the wrong shape".into());
+    }
+    let batch = engine.config.max_batch;
+    engine.with_fixed_slot_weights(|engine| {
+        let mut result = Vec::with_capacity(examples.len());
+        for block in examples.chunks(batch) {
+            result.extend(crate::metrics::rollout(block, |contexts| {
+                let length = contexts.iter().map(|c| c.len()).max().unwrap_or(0);
+                if length == 0
+                    || length > engine.config.max_length
+                    || contexts.iter().any(|c| c.is_empty())
+                {
+                    return Err("greedy prefixes must be nonempty and fit in the engine".into());
+                }
+                let mut input = Vec::with_capacity(contexts.len() * length * width);
+                let mut ends = Vec::with_capacity(contexts.len());
+                for context in contexts {
+                    for i in 0..length {
+                        let id = context.get(i).copied().unwrap_or(0) as usize;
+                        if id >= engine.config.vocab {
+                            return Err(
+                                "greedy prefix contains an ID outside the vocabulary".into()
+                            );
+                        }
+                        input.extend_from_slice(&embeddings[id * width..(id + 1) * width]);
+                    }
+                    ends.push(context.len() - 1);
+                }
+                engine.requested_predictions(&input, length, &ends)
+            })?);
+        }
+        Ok(result)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    #[ignore = "requires Kernite CUDA"]
+    fn requested_logits_equal_full_logits_on_unequal_padded_dense_prefixes() -> crate::Result<()> {
+        use crate::{Engine, config, layout};
+        let mut cfg = config(3)?;
+        cfg.width = 64;
+        cfg.heads = 2;
+        cfg.layers = 2;
+        cfg.vocab = 37;
+        cfg.max_length = 16;
+        let mut weights = layout::initialize_model(&cfg, 9);
+        if let Some(path) = cfg.head.peer_read().and_then(|r| r.path)
+            && !path.soft_address
+        {
+            let layout = crate::slot_memory::Layout::new(&cfg);
+            let offset = crate::architecture::memory_start(&cfg);
+            for (i, value) in weights[offset + layout.path_start.unwrap()..offset + layout.end()]
+                .iter_mut()
+                .enumerate()
+            {
+                *value = (i as f32 * 0.17).cos() * 0.21;
+            }
+        }
+        let mut engine = Engine::for_scoring(cfg.clone(), &weights)?;
+        let length = 12;
+        let input: Vec<_> = (0..3 * length)
+            .flat_map(|i| {
+                let id = (i * (i + 1)) % 9;
+                weights[id * cfg.width..(id + 1) * cfg.width]
+                    .iter()
+                    .map(move |&x| x * (1. + (i % 3) as f32 / 32.))
+            })
+            .collect();
+        let dense = engine.infer_embeddings(&input, 3, length)?;
+        for ends in [[0, 5, 11], [11, 3, 2]] {
+            let predictions = engine.requested_predictions(&input, length, &ends)?;
+            let logits = engine.logits.read()?;
+            for (b, (&t, &prediction)) in ends.iter().zip(&predictions).enumerate() {
+                let i = (b * length + t) * cfg.vocab;
+                let full = &dense.logits[i..i + cfg.vocab];
+                assert!(
+                    full.iter()
+                        .zip(&logits[i..i + cfg.vocab])
+                        .all(|(a, b)| a.to_bits() == b.to_bits())
+                );
+                assert!(full.iter().all(|&v| v <= full[prediction as usize]));
+            }
+        }
+        assert_eq!(
+            dense.logits,
+            engine.infer_embeddings(&input, 3, length)?.logits
+        );
+        Ok(())
+    }
 
     #[test]
     fn gather_real_row_ends_skip_padding_and_depend_only_on_the_inputs() {

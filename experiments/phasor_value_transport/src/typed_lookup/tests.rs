@@ -290,6 +290,16 @@ fn shared_prefixes_match_independent_rows_with_their_own_hidden_gates() {
         ] {
             let mut actual = vec![0.; x.len()];
             Tape::new(&x, &h, &w, (d, keys.len()), read, false, nearest).add_output(&mut actual);
+            for positions in [[0, keys.len() / 2, keys.len() - 1, 4], [2, 1, 0, 3]] {
+                let mut requested = vec![0.; x.len()];
+                Tape::with_outputs(&x, &h, &w, (d, keys.len()), read, Outputs::Positions(&positions), nearest)
+                    .add_output(&mut requested);
+                for (b, t) in positions.into_iter().enumerate() {
+                    let i = b * stride + t * d;
+                    assert!(actual[i..i+d].iter().zip(&requested[i..i+d])
+                        .all(|(full, selected)| full.to_bits() == selected.to_bits()));
+                }
+            }
             for (batch, (input, hidden)) in x
                 .chunks_exact(stride)
                 .zip(h.chunks_exact(stride))

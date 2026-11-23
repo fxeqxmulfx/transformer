@@ -18,6 +18,23 @@ struct Batch<'a> {
 }
 
 impl Batch<'_> {
+    /// Only the emission is lazy. Every earlier write reaches the store at
+    /// the row's requested position, independently of the other sequences.
+    fn frames_at(&self, positions: &[usize]) -> Vec<Frame> {
+        let mut frames: Vec<_> = std::iter::repeat_with(Frame::default)
+            .take(self.keys.len())
+            .collect();
+        for (b, &t) in positions.iter().enumerate() {
+            let base = b * self.length;
+            let mut store = Store::new(self.read.ordered);
+            for (i, &key) in self.keys[base..=base + t].iter().enumerate() {
+                store.observe(key, i);
+            }
+            frames[base + t] = self.frame(base, t, &store, false);
+        }
+        frames
+    }
+
     fn frame(&self, base: usize, t: usize, store: &Store, reuse: bool) -> Frame {
         let d = self.d;
         let mut witnesses = Vec::new();
@@ -121,6 +138,7 @@ impl Batch<'_> {
 }
 
 impl Tape {
+    #[cfg(test)]
     pub fn new(
         input: &[f32],
         hidden: &[f32],
@@ -130,8 +148,38 @@ impl Tape {
         retain_adjoint: bool,
         address: impl Fn(&[f32]) -> Option<usize>,
     ) -> Self {
+        Self::with_outputs(
+            input,
+            hidden,
+            w,
+            shape,
+            read,
+            Outputs::All { retain_adjoint },
+            address,
+        )
+    }
+
+    pub(crate) fn with_outputs(
+        input: &[f32],
+        hidden: &[f32],
+        w: &[f32],
+        shape: (usize, usize),
+        read: PathRead,
+        outputs: Outputs<'_>,
+        address: impl Fn(&[f32]) -> Option<usize>,
+    ) -> Self {
         let (d, length) = shape;
+        let (retain_adjoint, positions) = match outputs {
+            Outputs::All { retain_adjoint } => (retain_adjoint, None),
+            Outputs::Positions(positions) => (false, Some(positions)),
+        };
         assert!(d > 0 && length > 0 && input.len().is_multiple_of(length * d));
+        if let Some(positions) = positions {
+            assert!(
+                positions.len() == input.len() / (length * d)
+                    && positions.iter().all(|&t| t < length)
+            );
+        }
         assert_eq!(input.len(), hidden.len());
         assert_eq!(w.len(), parameters(d));
         assert!(read.passes > 0);
@@ -164,7 +212,7 @@ impl Tape {
             .collect();
         let stride = length * d;
         let mut shared = vec![0; input.len() / stride];
-        if !retain_adjoint {
+        if !retain_adjoint && positions.is_none() {
             for (i, (prev, next)) in input
                 .chunks_exact(stride)
                 .zip(input.chunks_exact(stride).skip(1))
@@ -177,7 +225,7 @@ impl Tape {
                     .count();
             }
         }
-        tape.frames = Batch {
+        let batch = Batch {
             input,
             hidden,
             w,
@@ -188,8 +236,11 @@ impl Tape {
             length,
             read,
             retain: retain_adjoint,
-        }
-        .frames();
+        };
+        tape.frames = match positions {
+            Some(positions) => batch.frames_at(positions),
+            None => batch.frames(),
+        };
         tape
     }
 }

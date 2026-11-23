@@ -102,21 +102,34 @@ pub fn run(
         "isolated" => {
             lookup_question::isolated::budget_predictions(&cfg, &weights, &examples, &budgets)?
         }
-        "full" => {
+        "full" | "requested" => {
             cfg.max_batch = task_config(&row, &task, false)?.max_batch;
             cfg.max_length = cfg.max_length.max(examples[0].prompt.len());
             let mut outputs = Vec::new();
             for &depth in &budgets {
                 lookup_question::hop_sweep::set_budget(&mut cfg, depth)?;
                 let mut engine = Engine::for_scoring(cfg.clone(), &weights)?;
-                outputs.push(lookup_question::hop_sweep::generated(
-                    &mut engine,
-                    &examples,
-                )?);
+                let predictions = if mode == "requested" {
+                    let embeddings = &weights[..cfg.width * cfg.vocab];
+                    crate::first_generation::requested_rollout(&mut engine, embeddings, &examples)?
+                        .into_iter()
+                        .map(|tokens| match tokens.as_slice() {
+                            [token] => Some(i64::from(*token)),
+                            _ => None,
+                        })
+                        .collect()
+                } else {
+                    lookup_question::hop_sweep::generated(&mut engine, &examples)?
+                };
+                outputs.push(predictions);
             }
             outputs
         }
-        _ => return Err("choose full, isolated, isolated-leading or isolated-refined".into()),
+        _ => {
+            return Err(
+                "choose full, requested, isolated, isolated-leading or isolated-refined".into(),
+            );
+        }
     };
     let reference = &preds[budgets.binary_search(&hops).unwrap()];
     let letters: BTreeSet<_> = examples[..n].iter().map(|e| e.answer[0]).collect();

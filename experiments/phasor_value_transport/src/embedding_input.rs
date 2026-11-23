@@ -18,6 +18,10 @@ impl Engine {
     }
 
     fn encode_embedding_sequence(&mut self, input: P, batch: usize, length: usize) -> Result<()> {
+        self.encode_with_outputs(input, batch, length, None)
+    }
+
+    fn encode_with_outputs(&mut self, input: P, batch: usize, length: usize, positions: Option<&[usize]>) -> Result<()> {
         self.supervised_shape = None;
         let rows = batch * length;
         self.prepare_positions(length)?;
@@ -28,7 +32,11 @@ impl Engine {
         };
         self.forward_mhc(features, batch, length)?;
         self.rms(self.last.ptr(), self.shared.ptr(), rows)?;
-        self.transform_context(rows, length)
+        match (positions, &self.context_layer) {
+            (Some(requested), Some(context_layer::ContextLayer::Slots(layer))) =>
+                layer.forward_at(self, rows, length, Some(requested)),
+            _ => self.transform_context(rows, length),
+        }
     }
 
     fn transform_context(&self, rows: usize, length: usize) -> Result<()> {
@@ -75,6 +83,10 @@ impl Engine {
     }
 
     fn forward_vector_batch(&mut self, input: &[f32], batch: usize, length: usize) -> Result<F> {
+        self.forward_vector_outputs(input, batch, length, None)
+    }
+
+    fn forward_vector_outputs(&mut self, input: &[f32], batch: usize, length: usize, positions: Option<&[usize]>) -> Result<F> {
         if !self.uses_embedding_backbone() {
             return Err("the selected historical head requires token-addressed features".into());
         }
@@ -92,9 +104,25 @@ impl Engine {
         }
         let rows = batch * length;
         let device_input = self.cuda.upload(input)?;
-        self.encode_embedding_sequence(device_input.ptr(), batch, length)?;
+        if let Some(requested) = positions {
+            if !self.scoring_only || requested.len() != batch || requested.iter().any(|&i| i >= length) {
+                return Err("requested outputs require a frozen engine and one valid position per sequence".into());
+            }
+        }
+        self.encode_with_outputs(device_input.ptr(), batch, length, positions)?;
         self.classify_features(rows)?;
         Ok(device_input)
+    }
+
+    /// Return one greedy token per requested position. Each dense row still
+    /// passes through the same backbone, frozen weights, classifier and argmax.
+    pub(crate) fn requested_predictions(&mut self, input: &[f32], length: usize, positions: &[usize]) -> Result<Vec<u32>> {
+        let batch = positions.len();
+        let _input = self.forward_vector_outputs(input, batch, length, Some(positions))?;
+        let rows = batch * length;
+        self.loss_for_logits(&vec![u32::MAX; rows], rows)?;
+        let predictions = self.predictions.read()?;
+        Ok(positions.iter().enumerate().map(|(row,&t)| predictions[row * length + t]).collect())
     }
 
     /// Run the same embedding-input backbone used in training on arbitrary real vectors.

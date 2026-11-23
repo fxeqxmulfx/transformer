@@ -65,9 +65,18 @@ pub fn run(seed: u32, out: &Path, hops: usize) -> Result<()> {
 
 /// Time only the CPU path branch on actual printed prompts, with a fixed
 /// synthetic hidden context and the checkpoint's normalized input embeddings.
-pub fn time(out: &Path, hops: usize, passes: usize, batch: usize) -> Result<()> {
+pub fn time(
+    out: &Path,
+    hops: usize,
+    passes: usize,
+    batch: usize,
+    gather: Option<&str>,
+) -> Result<()> {
     if batch == 0 || passes == 0 {
         return Err("expected positive batch and pass counts".into());
+    }
+    if !matches!(gather, None | Some("dense-ends" | "requested-ends")) {
+        return Err("choose dense-ends or requested-ends for a last-position timing".into());
     }
     let (case, task) = data()?;
     let cfg = task_config(&case, &task, true)?;
@@ -106,18 +115,43 @@ pub fn time(out: &Path, hops: usize, passes: usize, batch: usize) -> Result<()> 
             .map(|(i, &v)| v * (1. + (i % 19) as f32 / 130.))
             .collect();
         let mut z = vec![0.; context.len()];
+        let ends = vec![length - 1; block.len()];
+        let outputs = match gather {
+            Some("requested-ends") => crate::typed_lookup::Outputs::Positions(&ends),
+            _ => crate::typed_lookup::Outputs::All {
+                retain_adjoint: false,
+            },
+        };
         let start = std::time::Instant::now();
-        crate::typed_lookup::Tape::new(&x, &context, path, (cfg.width, length), read, false, |v| {
-            router.nearest(&layout, store, v)
-        })
+        crate::typed_lookup::Tape::with_outputs(
+            &x,
+            &context,
+            path,
+            (cfg.width, length),
+            read,
+            outputs,
+            |v| router.nearest(&layout, store, v),
+        )
         .add_output(&mut z);
         elapsed += start.elapsed();
-        output.extend(z.into_iter().flat_map(f32::to_le_bytes));
+        if gather.is_some() {
+            for sequence in z.chunks_exact(cfg.width * length) {
+                output.extend(
+                    sequence[cfg.width * (length - 1)..]
+                        .iter()
+                        .copied()
+                        .flat_map(f32::to_le_bytes),
+                );
+            }
+        } else {
+            output.extend(z.into_iter().flat_map(f32::to_le_bytes));
+        }
     }
-    println!(
-        "{}",
-        json!({"step":point["step"],"hops":hops,"passes":passes,"examples":20,"batch":batch,
-       "digest":hash(&output),"typed_read_seconds":elapsed.as_secs_f64()})
-    );
+    let mut result = json!({"step":point["step"],"hops":hops,"passes":passes,"examples":20,"batch":batch,
+       "digest":hash(&output),"typed_read_seconds":elapsed.as_secs_f64()});
+    if let Some(gather) = gather {
+        result["positions"] = json!(gather);
+    }
+    println!("{result}");
     Ok(())
 }

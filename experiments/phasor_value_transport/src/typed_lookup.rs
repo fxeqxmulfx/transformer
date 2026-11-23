@@ -86,6 +86,7 @@ pub(crate) fn worker_limit() -> usize {
         .min(limit)
 }
 
+#[derive(Default)]
 struct Frame {
     witnesses: Vec<Witness>,
     terminals: Vec<(usize, f32)>,
@@ -149,6 +150,11 @@ pub struct Tape {
     length: usize,
     input: Vec<f32>,
     frames: Vec<Frame>,
+}
+
+pub(crate) enum Outputs<'a> {
+    All { retain_adjoint: bool },
+    Positions(&'a [usize]),
 }
 impl Tape {
     pub fn add_output(&self, out: &mut [f32]) {

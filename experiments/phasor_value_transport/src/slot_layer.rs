@@ -237,6 +237,10 @@ impl SlotLayer {
     }
 
     pub(super) fn forward(&self, e: &Engine, rows: usize, length: usize) -> Result<()> {
+        self.forward_at(e, rows, length, None)
+    }
+
+    pub(super) fn forward_at(&self, e: &Engine, rows: usize, length: usize, positions: Option<&[usize]>) -> Result<()> {
         let l = &self.layout;
         let mut tape = self.tape.borrow_mut();
         if self.access.get() != WeightAccess::Reuse {
@@ -283,13 +287,17 @@ impl SlotLayer {
                     &input, &h, weights, l.d, length, mode.passes, !e.scoring_only,
                 ));
             }
-            LocalTape::Paths(crate::typed_lookup::Tape::new(
+            let outputs = match positions {
+                Some(positions) => crate::typed_lookup::Outputs::Positions(positions),
+                None => crate::typed_lookup::Outputs::All { retain_adjoint: !e.scoring_only },
+            };
+            LocalTape::Paths(crate::typed_lookup::Tape::with_outputs(
                 &input,
                 &h,
                 weights,
                 (l.d, length),
                 mode,
-                !e.scoring_only,
+                outputs,
                 |v| tape.routing.nearest(l, &tape.weights, v),
             ))
         });

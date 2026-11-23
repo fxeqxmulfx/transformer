@@ -2520,15 +2520,60 @@ the entire vocabulary, including predictions outside the five letters.
 Forty reads were the first tested budget with a correct pair. No tested
 budget reached 99/100 on these questions.
 
-The complete model at forty reads generated **36/100** original answers
-correctly. It solved all five starts on one of the 20 sets and generated
-one constant answer across all five starts on 12 sets. The independent
-replay scored 199/200 on the original short validation.
+The complete model generated the following answers on the same pairs.
+The weights, forty printed tables, start keys and answer choices were
+fixed across read budgets. The independent replay scored 199/200 on
+the original short validation.
+
+| Repeated reads in the complete model | Original /100 | Rewired /100 | Both correct /100 |
+| ---: | ---: | ---: | ---: |
+| 20 | 18 | 18 | 0 |
+| 39 | 20 | 16 | 0 |
+| 40 | 36 | 36 | 14 |
+| 41 | 51 | 51 | 29 |
+
+At 39 reads the full model gave one constant letter across all five
+starts on 19 of 20 table sets. At forty reads it did so on twelve sets
+and solved all five starts on one. A forty-first read changed the
+original response on 36/100 questions. It increased paired accuracy
+from 14/100 to 29/100.
 
 The isolated sweep recorded every budget from one to 42, plus 60 and
 80, on all 200 prompts. Two single-worker CPU runs took 132.17 and 132.64
 seconds. With up to 16 workers they took 12.11 and 11.83 seconds. All four
 reports had identical predictions and counts at every budget.
+
+The `requested` scorer runs the complete backbone, learned path read,
+tied classifier and greedy rollout. At each generation step it evaluates
+the path vote only at the last real position of each active sequence.
+Every earlier embedding still updates that sequence's store. This also
+covers unequal-length prompts and compaction after EOS.
+[Requested outputs of a causal read](../../src/Transformer/Phasor/TripleTransport/RequestedReads.lean)
+
+The full dense sweep above took 973.20 seconds. Computing the final path
+read at the requested positions took 36.16 seconds on the same GPU with
+the same evaluation batch cap of four. The prediction hashes agreed at
+each of the four budgets across all 200 prompts. Two kernel tests also
+compared every requested logit bit for bit on unequal dense prefixes,
+using both latest-write and chronological reads.
+
+On 20 prompts per depth, computing the path vote only at the requested
+positions preserved every bit of the final dense vectors. The host
+timings below use the seed-0 concentrated checkpoint at update 250 and
+include the gate, normalization and causal store scan. They exclude the
+backbone and external classifier. Each cell gives two interleaved runs.
+
+| Tables and reads | Batch | All positions (s) | Requested positions (s) |
+| ---: | ---: | ---: | ---: |
+| 10 | 4 | 0.195, 0.195 | 0.0146, 0.0148 |
+| 40 | 4 | 2.794, 2.794 | 0.0674, 0.0666 |
+| 80 | 2 | 12.565, 12.310 | 0.1458, 0.1439 |
+
+```sh
+for mode in dense-ends requested-ends requested-ends dense-ends; do
+    PHASOR_LOOKUP_THREADS=16 "$bin" lookup-time-reads runs/concentrated-lookup 40 40 4 "$mode"
+done
+```
 
 All 229 vocabulary embeddings had distinct nearest learned addresses.
 However, the model hashes a tuple of three roles into one of 32,768
@@ -2569,7 +2614,7 @@ distinct originals.
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
 bin=./target/release/phasor-value-transport
 out=runs/disjoint-lookup/r10
-for mode in isolated full; do
+for mode in isolated full requested; do
     PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 "$mode"
 done
 for h in 10 20 40; do
