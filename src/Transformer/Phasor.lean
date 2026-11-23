@@ -50,6 +50,8 @@ public import Transformer.Phasor.TripleTransport.PrefixTruncation
 public import Transformer.Phasor.TripleTransport.InductionGain
 public import Transformer.Phasor.TripleTransport.IndexedInduction
 public import Transformer.Phasor.TripleTransport.LocalReadLoop
+public import Transformer.Phasor.TripleTransport.MessageLoop
+public import Transformer.Phasor.TripleTransport.FractionalWriteGate
 public import Transformer.Phasor.TripleTransport.TypedLookupPaths
 public import Transformer.Phasor.TripleTransport.PathCoefficients
 public import Transformer.Phasor.TripleTransport.EndpointScale
