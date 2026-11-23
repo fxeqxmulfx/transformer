@@ -2784,6 +2784,15 @@ complete-model free generation on the frozen seed-0 checkpoint.
 | 41 | 41 | 498 | 498 | 496 |
 | 41 | 42 | 498 | 498 | 496 |
 
+A subsequent comparison evaluated the same weights at the ten inner
+steps used throughout training and at forty inner steps. On the original
+one- to five-hop validation split, both budgets generated **200/200**
+correct answers. On the reserved forty-table split, ten steps gave
+**100/500** original, **105/500** edited and **9/500** paired successes.
+Forty steps gave **497/500**, **497/500** and **494/500**, respectively.
+The isolated learned read rose from 0/500 to 500/500 paired successes
+on these questions. The evaluator supplied the loop count in each run.
+
 At the matching budget, every output was a valid answer letter. One
 extra read preserved all 1,000 predictions at each length. The isolated
 learned path solved 500/500 pairs at each matching budget. On the
@@ -2817,6 +2826,10 @@ PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40
 for hops in 40 41; do
     PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-holdout 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" requested
 done
+for reads in 10 40; do
+    PHASOR_EVAL_BATCH_CAP=16 "$bin" disjoint-lookup-depth 0 "$out" 1 "$reads"
+done
+PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-holdout 0 "$out" 40 10,40 requested
 for edge in $(seq 1 40); do
     "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 39,40,41 isolated
     PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 40 requested
