@@ -6,6 +6,13 @@ pub struct EmbeddingOutput {
 }
 
 impl Engine {
+    #[cfg(all(test, feature = "triple-dense-induction"))]
+    pub(crate) fn normalized_input_for_test(&self, rows: usize) -> Result<Vec<f32>> {
+        let mut input = self.embed_norm.read()?;
+        input.truncate(rows * self.config.width);
+        Ok(input)
+    }
+
     fn uses_embedding_backbone(&self) -> bool {
         self.mhc.is_some() && self.config.head != crate::head::Head::Relations
     }

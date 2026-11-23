@@ -12,6 +12,8 @@ mod class_translation;
 mod differenced;
 pub mod compare_shifts;
 pub mod embedding;
+#[cfg(all(test, feature = "triple-dense-induction"))]
+mod induction_gain;
 mod language_probes;
 pub mod numeric_probe;
 pub mod phase_ablation;

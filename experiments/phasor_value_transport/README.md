@@ -1672,32 +1672,59 @@ learns from the current causal hidden state. Gradients reach both the
 gate and the earlier value through the ordinary sequence loss.
 [Dense read and causality proofs](../../src/Transformer/Phasor/TripleTransport/DenseInduction.lean)
 
-| Easy recall, seed 0 | First passing update | Novel validation | Independent test | Test with 64 extra tokens |
+| Easy recall | First passing update | Novel validation | Independent test | Test with 64 extra tokens |
 | --- | ---: | ---: | ---: | ---: |
-| Main triple transport | 4,300 | 507/512 | 503/512 | 504/512 |
-| Dense induction | 150 | 512/512 | 512/512 | 512/512 |
+| Main triple transport, seed 0 | 4,300 | 507/512 | 503/512 | 504/512 |
+| Dense induction, seed 0 | 150 | 512/512 | 512/512 | 512/512 |
+| Main triple transport, seed 1 | 2,700 | 508/512 | 505/512 | 319/512 |
+| Dense induction, seed 1 | 150 | 512/512 | 512/512 | 512/512 |
+| Main triple transport, seed 2 | 3,350 | 509/512 | 502/512 | 359/512 |
+| Dense induction, seed 2 | 150 | 512/512 | 512/512 | 512/512 |
 
-The same dense-induction checkpoint scored 512/512 with both 128 and
-256 extra tokens. On the broader hard-recall case, which allows key
-overwrites, seed 0 first scored 512/512 on novel validation at update 50.
-The independently reloaded checkpoint also scored 512/512 on the source
-test. Both scores stayed at 512/512 at update 550, after the original
+All three dense-induction checkpoints answered all 4,096 queries with
+128 extra tokens. Seed 0 also answered all 4,096 with delays of 256,
+512, 1,024 and 2,048 extra tokens. Keeping the seed-0 checkpoint fixed
+and disabling the dense read
+reduced novel validation, independent test and the 64-token-delay test
+from 512/512 to 0/512 each. Keeping only the structural read scored
+512/512 on each split.
+
+On the broader hard-recall case, which allows key overwrites, seeds 0
+and 1 first scored 512/512 on novel validation at update 50. Their
+independently reloaded checkpoints also scored 512/512 on the source
+test. Both splits stayed at 512/512 at update 550, after the original
 500-update retention window. From the same initial weights the main
-model finished its 3,000-update budget at 0/512 on each split.
-On the canonical short key-value binding probe, seed 0 reached 512/512
-on validation and the independent test at update 192. The main model
-first crossed at update 640 with 510/512 on validation.
+model finished its 3,000-update budget at 0/512 and 83/512 on novel
+validation for these seeds.
+
+On the canonical short key-value binding probe, the first passing
+updates were 192, 128 and 128, compared with 640, 768 and 640 for the
+main model. Dense induction scored 512, 509 and 509 of 512 on
+validation and 512, 509 and 512 on the independent test.
+
+At initialization the gain bias is zero. If the retrieved value scores
+the target at least as high as every other tied classifier row and
+strictly higher than one, increasing the gain decreases cross-entropy.
+The same holds for the mean across supervised positions when each
+position satisfies this condition. The native check tests the condition
+on all 512 supervised positions in the first original minibatch of
+each recall case on all three seeds. The measured bias gradients ranged
+from −10.190 to −10.037 on easy recall and from −29.045 to −28.628 on
+hard recall. Central differences agreed within 0.000020. The first
+positive WSD learning rate raised the gain on all six runs.
+[Tied gain and minibatch descent](../../src/Transformer/Phasor/TripleTransport/InductionGain.lean)
 
 At two input positions the prefix search has no completed donor. The
-fresh seed-0 NV11 run reproduced the main model's observation history
-and weights byte for byte, including all 4,704 training and 4,705
+three fresh NV11 runs reproduced the main model's observation
+histories and weights byte for byte, including all 4,704 training and 4,705
 held-out answers at update 250.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.DenseInduction
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.InductionGain
 cd experiments/phasor_value_transport
 flags=fp32-affine-reference,triple-dense-induction
 cargo +stable test --release --locked --bin phasor-value-transport --features "$flags"
+cargo +stable test --release --locked --bin phasor-value-transport --features "$flags" first_minibatch_gain -- --ignored --nocapture
 cargo +stable build --release --locked --features "$flags"
 bin=./target/release/phasor-value-transport
 out=runs/dense-induction
@@ -1707,8 +1734,10 @@ for seed in 0 1 2; do
     "$bin" cell arithmetic-cubic-product "$seed" "$out"
     "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
     "$bin" cell basis-recall-easy "$seed" "$out"
-    for gap in 64 128 256; do
-        "$bin" probes basis-recall-easy "$seed" "$out" recall-gap "$gap"
+    for gap in 64 128 256 512 1024 2048; do
+        cap=4
+        if [ "$gap" -ge 1024 ]; then cap=1; fi
+        PHASOR_EVAL_BATCH_CAP=$cap "$bin" probes basis-recall-easy "$seed" "$out" recall-gap "$gap"
     done
     "$bin" slot-ablate basis-recall-easy "$seed" "$out" recall-gap 64
     "$bin" catalog-target basis-recall-hard "$seed" 100 "$out/catalog"
