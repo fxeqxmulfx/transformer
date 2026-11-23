@@ -1841,10 +1841,11 @@ Two independent executions at delay 3,072 produced byte-identical reports.
 The previous evaluator exhausted device memory at delay 2,048. At delay 1,536
 the two evaluators produced byte-identical reports for both checkpoints.
 
-With the backward-only buffers released, the same checkpoints also scored
-512/512 at a delay of 4,608 extra tokens. Each sequence required all eight
-answers. The run finished in 1,217 seconds with evaluation batch one.
-Tiling the scores alone had exhausted memory at this delay.
+With the backward-only buffers released, both seed-0 checkpoints scored
+512/512 at delays of 4,608 and 6,144 extra tokens. Each sequence required
+all eight answers. Scoring both checkpoints took 1,217 and 2,104 seconds,
+respectively, with evaluation batch one. Tiling the scores alone had
+exhausted memory at 4,608 extra tokens.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.AdjointStorage
@@ -1856,7 +1857,7 @@ cargo +stable build --release --locked --features fp32-affine-reference,triple-d
 bin=./target/release/phasor-value-transport
 out=runs/dense-induction/catalog
 "$bin" catalog-target basis-recall-hard 0 100 "$out"
-for gap in 2048 3072 3800 4608; do
+for gap in 2048 3072 3800 4608 6144; do
     PHASOR_EVAL_BATCH_CAP=1 "$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap "$gap"
 done
 ```
