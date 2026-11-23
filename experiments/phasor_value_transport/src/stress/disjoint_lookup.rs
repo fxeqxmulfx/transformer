@@ -56,10 +56,38 @@ fn sample(hops: usize, rng: &mut random::Random) -> Result<Set> {
     let mut names: Vec<_> = (first..first + NAMES as i64).collect();
     rng.shuffle(&mut names);
     let starts: [i64; 5] = names[..5].try_into()?;
+    Ok(tables_from_layers(starts, hops, rng, |step| {
+        std::array::from_fn(|lane| names[5 * step + lane])
+    }))
+}
+
+fn sample_cycle(hops: usize, rng: &mut random::Random) -> Result<Set> {
+    if !(1..NAMES).contains(&hops) {
+        return Err(format!(
+            "a first traversal of the name cycle uses 1 through {} tables",
+            NAMES - 1
+        )
+        .into());
+    }
+    let first = WORDS.split_whitespace().count() as i64;
+    let mut names: Vec<_> = (first..first + NAMES as i64).collect();
+    rng.shuffle(&mut names);
+    let mut offsets: Vec<_> = (0..NAMES).collect();
+    rng.shuffle(&mut offsets);
+    let layer = |step: usize| std::array::from_fn(|lane| names[(offsets[lane] + step) % NAMES]);
+    Ok(tables_from_layers(layer(0), hops, rng, layer))
+}
+
+fn tables_from_layers(
+    starts: [i64; 5],
+    hops: usize,
+    rng: &mut random::Random,
+    layer_at: impl Fn(usize) -> [i64; 5],
+) -> Set {
     let mut layer = starts;
-    let mut tables = Vec::new();
+    let mut tables = Vec::with_capacity(hops);
     for step in 1..=hops {
-        let next: [i64; 5] = names[5 * step..5 * step + 5].try_into()?;
+        let next = layer_at(step);
         let mut table: Vec<_> = layer.into_iter().zip(next).collect();
         rng.shuffle(&mut table);
         tables.push(table);
@@ -68,12 +96,12 @@ fn sample(hops: usize, rng: &mut random::Random) -> Result<Set> {
     let mut options = layer;
     rng.shuffle(&mut options);
     let answers = std::array::from_fn(|i| options.iter().position(|&x| x == layer[i]).unwrap());
-    Ok(Set {
+    Set {
         tables,
         starts,
         options,
         answers,
-    })
+    }
 }
 impl Set {
     fn rows(&self, ids: &BTreeMap<&str, i64>, task: &str) -> [Example; 5] {
@@ -226,6 +254,31 @@ pub fn score(seed: u32, out: &Path, hops: usize, passes: usize, name: Option<&st
 mod tests {
     use super::*;
     #[test]
+    fn each_lane_first_reaches_its_endpoint_at_the_stated_cycle_depth() {
+        let mut rng = random::Random::new(4_708_407);
+        assert!(sample_cycle(0, &mut rng).is_err());
+        assert!(sample_cycle(NAMES, &mut rng).is_err());
+        for hops in [1, 40, 80, 160, NAMES - 1] {
+            let set = sample_cycle(hops, &mut rng).unwrap();
+            let edges: BTreeMap<_, _> = set.tables.iter().flatten().copied().collect();
+            assert_eq!(set.tables.len(), hops);
+            for table in &set.tables {
+                assert_eq!(table.len(), 5);
+                assert!(table.iter().all(|&(source, next)| edges[&source] == next));
+            }
+            for (lane, &start) in set.starts.iter().enumerate() {
+                let mut key = start;
+                let mut visited = BTreeSet::from([key]);
+                for table in &set.tables {
+                    key = table.iter().find(|(at, _)| *at == key).unwrap().1;
+                    assert!(visited.insert(key));
+                }
+                assert_eq!(key, set.options[set.answers[lane]]);
+                assert_eq!(visited.len(), hops + 1);
+            }
+        }
+    }
+    #[test]
     fn curricula_balance_hops_and_letters_and_reuse_independent_table_sets() {
         for name in [
             NAME,
@@ -277,8 +330,11 @@ mod tests {
     fn the_last_supported_length_uses_the_entire_frozen_alphabet() {
         let mut rng = random::Random::new(58);
         let set = sample(41, &mut rng).unwrap();
-        let names: BTreeSet<_> = set.starts.into_iter()
-            .chain(set.tables.iter().flatten().map(|&(_, dest)| dest)).collect();
+        let names: BTreeSet<_> = set
+            .starts
+            .into_iter()
+            .chain(set.tables.iter().flatten().map(|&(_, dest)| dest))
+            .collect();
         assert_eq!(names.len(), NAMES);
         let questions = probes(41, NAME).unwrap();
         assert_eq!(questions.len(), 100);

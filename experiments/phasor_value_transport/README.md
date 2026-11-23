@@ -2822,6 +2822,44 @@ for seed in 0 1 2; do
 done
 ```
 
+#### Eighty tables with the original name vocabulary
+
+A separate length test reuses the 210 names across layers. Each of
+20 table sets has its own random 210-name cycle and five distinct
+starting keys. At each step the five displayed rows advance once around
+that cycle. Rows and answer letters are independently shuffled. Along
+each individual path the requested endpoint first appears at the stated
+depth for every depth below 210. A last-table swap can now overwrite an
+association that appeared in an earlier table. Training data, weights
+and vocabulary are the same as in the one- to five-table study above.
+[First arrival under arbitrary renaming](../../src/Transformer/Phasor/LookupQuestion/CycleDepth.lean)
+
+The isolated two-bank read answered all 100 original questions at the
+matching budget for both lengths. In the fixed-weight chronological
+intervention, each subsequent lookup used the first matching write
+after its cursor. This change improved responses to the edited last
+table and to excess reads.
+
+| Tables | Write selection at evaluation | Original /100 | Edited /100 | Both /100 | Both with one extra read /100 |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 40 | Latest | 100 | 83 | 83 | 23 |
+| 40 | Chronological | 100 | 97 | 97 | 95 |
+| 80 | Latest | 100 | 69 | 69 | 2 |
+| 80 | Chronological | 100 | 99 | 99 | 98 |
+
+On the reserved disjoint 40- and 41-table sets, the chronological
+intervention retained 500/500 paired answers at both the matching
+budget and one extra read. The checkpoint used latest writes during
+training. The report records the intervention and the weight hash.
+
+```sh
+for hops in 40 80; do
+    for mode in isolated-jumps ordered-isolated-jumps; do
+        "$bin" lookup-cycle-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" "$mode"
+    done
+done
+```
+
 #### Reading writes in chronological order
 
 A shared read can carry both its current address and the time of its most

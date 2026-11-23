@@ -19,6 +19,7 @@ pub enum Questions {
     Final,
     Edge(usize),
     Holdout,
+    Cycle,
 }
 
 impl Questions {
@@ -26,6 +27,7 @@ impl Questions {
         let (base, sets) = match self {
             Self::Final | Self::Edge(_) => (3_107_419, 20),
             Self::Holdout => (2_795_083, 100),
+            Self::Cycle => (4_708_407, 20),
         };
         (u32::wrapping_add(base, hops as u32), sets)
     }
@@ -34,7 +36,7 @@ impl Questions {
 fn pairs(hops: usize, questions: Questions, task: &str) -> Result<(Vec<Example>, Vec<Example>)> {
     let edge = match questions {
         Questions::Edge(edge) => edge,
-        Questions::Final | Questions::Holdout => hops,
+        Questions::Final | Questions::Holdout | Questions::Cycle => hops,
     };
     if !(1..=hops).contains(&edge) {
         return Err("the edited table must lie on the displayed chain".into());
@@ -50,7 +52,10 @@ fn pairs(hops: usize, questions: Questions, task: &str) -> Result<(Vec<Example>,
     let mut original = Vec::new();
     let mut rewired = Vec::new();
     for set_index in 0..sets {
-        let set = sample(hops, &mut rng)?;
+        let set = match questions {
+            Questions::Cycle => sample_cycle(hops, &mut rng)?,
+            _ => sample(hops, &mut rng)?,
+        };
         original.extend(set.rows(&ids, task));
         for lane in 0..5 {
             let mut changed = set.clone();
@@ -103,6 +108,20 @@ pub fn run(
     let mut cfg = task_config(&row, &task, true)?;
     let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
     let trained = cfg.head.peer_read().and_then(|r| r.path).map(|r| r.passes);
+    let evaluation = mode;
+    let ordered_mode = mode.strip_prefix("ordered-");
+    let trained_order = cfg.head.peer_read().and_then(|r| r.path).map(|r| r.ordered);
+    if ordered_mode.is_some() {
+        let head::Head::PeerTriplePhase(routing) = &mut cfg.head else {
+            return Err("the chronological intervention needs an associative read".into());
+        };
+        routing
+            .path
+            .as_mut()
+            .ok_or("missing repeated read")?
+            .ordered = true;
+    }
+    let mode = ordered_mode.unwrap_or(mode);
     let (original, edited) = pairs(hops, questions, study.name)?;
     let n = original.len();
     let hashes = [digest(&original)?, digest(&edited)?];
@@ -127,9 +146,9 @@ pub fn run(
             alias_details = Some(audit.details);
             audit.predictions
         }
-        "isolated" | "isolated-jumps" => {
-            lookup_question::isolated::budget_predictions(&cfg, &weights, &examples, &budgets, walk)?
-        }
+        "isolated" | "isolated-jumps" => lookup_question::isolated::budget_predictions(
+            &cfg, &weights, &examples, &budgets, walk,
+        )?,
         "full" | "requested" => {
             cfg.max_batch = task_config(&row, &task, false)?.max_batch;
             cfg.max_length = cfg.max_length.max(examples[0].prompt.len());
@@ -205,18 +224,26 @@ pub fn run(
             }),
         );
     }
-    let mut result = json!({"study":study.name,"mode":mode,"model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
+    let mut result = json!({"study":study.name,"mode":evaluation,"model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
         "trained_reads":trained,"hops":hops,"pairs":n,"weights_sha256":weight_digest(&weights),"protocol_sha256":row["catalog_sha256"],
         "original_split_sha256":hashes[0],"edited_split_sha256":hashes[1],"budgets":results});
     if let Some(audit) = alias_details {
         result["role_aliases"] = audit;
     }
+    if ordered_mode.is_some() {
+        result["trained_ordered"] = json!(trained_order);
+        result["evaluation_ordered"] = json!(true);
+    }
     match questions {
         Questions::Edge(edge) => result["edited_edge"] = json!(edge),
-        Questions::Holdout => {
+        Questions::Holdout | Questions::Cycle => {
             let (seed, sets) = questions.panel(hops);
             result["table_seed"] = json!(seed);
             result["table_sets"] = json!(sets);
+            if matches!(questions, Questions::Cycle) {
+                result["topology"] = json!("single-name-cycle");
+                result["name_count"] = json!(NAMES);
+            }
         }
         Questions::Final => {}
     }
