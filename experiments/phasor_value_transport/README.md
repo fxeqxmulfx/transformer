@@ -2773,9 +2773,9 @@ final-answer loss at initialization.
 The two-bank architecture learned the original GPT multi-query associative
 recall task on seeds 0, 1 and 2. A sequence counts only when both queried
 values are correct. All three seeds reached the declared 95% validation target
-at update 500 and retained it at update 1,000. The main triple-transport
-model had zero exact validation sequences through update 5,000 on seed 0. The source
-budget is 100,000. All rows below were scored again from saved weights.
+at update 500 and retained it at update 1,000. Main triple transport had
+zero exact validation sequences through update 5,000 on seeds 0 and 1.
+The source budget is 100,000. All rows below were scored again from saved weights.
 
 | Checkpoint | Novel validation /32 | Test /64 | Length 48 /64 | Length 96 /64 |
 | --- | ---: | ---: | ---: | ---: |
@@ -2786,6 +2786,9 @@ budget is 100,000. All rows below were scored again from saved weights.
 | Two banks, seed 2, update 500 | 32 | 64 | 64 | 64 |
 | Two banks, seed 2, update 1,000 | 32 | 63 | 64 | 64 |
 | Main, seed 0, update 5,000 | 0 | 0 | 0 | 0 |
+| Main, seed 1, update 5,000 | 0 | 0 | 1 | 0 |
+| Dense induction, seed 0, update 500 | 32 | 64 | 64 | 63 |
+| Dense induction, seed 0, update 1,000 | 32 | 64 | 64 | 62 |
 
 The model trained with ten local associative reads. On seed 0, scoring
 those same weights with 1, 5, 10, 20 or 40 reads gave identical exact counts
@@ -2795,6 +2798,23 @@ length-48 test scores from 63/64 to 64/64. At update 1,000 bypassing it
 preserved all four counts. The rest of the trained architecture sufficed
 for the validation target at both checkpoints.
 
+Removing the dense induction read from the seed-0 two-bank checkpoint
+dropped all four exact counts to zero at both updates. Removing the chart
+preserved all four counts. The dense-induction variant trained from fresh
+random weights on the same examples and reached the target at the same
+first update. It used 1,823,051 trainable parameters, compared with
+1,855,884 for the two-bank model. The dense read retrieves the successor
+of the latest matching embedding in the causal prefix.
+[Dense read definition](../../src/Transformer/Phasor/TripleTransport/DenseInduction.lean)
+
+On Basis Recall Hard, each original sequence has 16 writes to eight keys
+and eight queries. On all three seeds the two-bank model reached 512/512
+on novel validation and 512/512 on the independent test at update 50.
+Both counts stayed at 512 after 500 additional updates. At both seed-0
+checkpoints, evaluating with zero, one or ten local reads gave 512/512
+on both splits. The earlier dense-induction variant also solved all
+three seeds at updates 50 and 550. [Hard-recall protocol](../convex_stress_basis_data/README.md)
+
 The same two-bank architecture trained from fresh weights on NV11 with
 seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
 4,704/4,704 on training and 4,705/4,705 on the held-out split.
@@ -2803,7 +2823,10 @@ The paired recall-gap probe inserts value tokens between the four writes
 and the two queries of each original MQAR test row. It checks every target
 against the source table. At a zero gap it reproduces the source test
 fingerprint. A 168-token gap extends the original 24 tokens to 192 while
-keeping both queries fixed. [Gap preservation proof](../../src/Transformer/Basis/RecallParsed.lean)
+keeping both queries fixed. Seed 0 scored 62/64 at update 500 and 61/64
+at update 1,000 at length 192. Doubling to 384 tokens gave 59/64 and
+55/64, both below the 95% source threshold.
+[Gap preservation proof](../../src/Transformer/Basis/RecallParsed.lean)
 
 The write-order probe adds a conflicting value for each original table key.
 It places that write first in one version and last in the other. The two
@@ -2820,6 +2843,10 @@ correctly for 125/128 queried-key pairs and 126/128 controls. At update
 results also had both answers right on the unmodified source row.
 Seed 1 scored 126/128 queried and 127/128 unqueried pairs at update 500,
 then 127/128 and 128/128 at update 1,000.
+Seed 2 scored 127/128 and 128/128 at update 500, then 127/128 on both
+groups at update 1,000. At that last checkpoint 126/128 in each group
+also had the unmodified row correct. Main Phasor at update 5,000 solved
+zero paired examples in either group on seed 0.
 
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-agreement-lookup
@@ -2829,6 +2856,14 @@ bin=./target/release/phasor-value-transport
 "$bin" target-probes suite-mqar 0 1500 runs/agreement-catalog recall-gap 168
 "$bin" target-writes suite-mqar 0 1500 runs/agreement-catalog
 "$bin" catalog-ablate suite-mqar 0 1500 runs/agreement-catalog 0,1,5,10,20,40
+"$bin" catalog-ablate suite-mqar 0 1500 runs/agreement-catalog
+for seed in 0 1 2; do
+    "$bin" catalog-target basis-recall-hard "$seed" 250 runs/agreement-catalog
+    "$bin" catalog-target basis-recall-hard "$seed" 250 runs/agreement-catalog
+done
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-dense-induction
+"$bin" catalog-target suite-mqar 0 500 runs/dense-mqar
+"$bin" catalog-target suite-mqar 0 500 runs/dense-mqar
 ```
 
 Both seed-0 models trained from scratch on the same one- to five-table
