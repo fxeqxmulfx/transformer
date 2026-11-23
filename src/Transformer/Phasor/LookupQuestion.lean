@@ -96,4 +96,53 @@ example (k : ℕ) : [(0, 1), (1, 2)].lookup k = [(1, 2), (0, 1)].lookup k := by
   rw [List.mem_cons, List.mem_singleton] at hp
   rcases hp with rfl | rfl <;> decide
 
+
+/-- Each displayed value has at most one key that retrieves it. -/
+def UniquePreimage {A : Type*} [BEq A] (table : List (A × A)) : Prop :=
+  ∀ a b v, table.lookup a = some v → table.lookup b = some v → a = b
+
+/-- In the synthetic lookup study, every printed table is a bijection.
+Following any suffix of tables whose values have unique preimages makes
+the starting key recoverable from a successful result. -/
+theorem recover_start {A : Type*} [BEq A] (tables : List (List (A × A)))
+    (unique : ∀ t ∈ tables, UniquePreimage t) (a b result : A)
+    (left : follow tables a = some result) (right : follow tables b = some result) : a = b := by
+  induction tables generalizing a b with
+  | nil => simpa only [follow,Option.some.injEq] using left.trans right.symm
+  | cons t ts ih =>
+    cases ha : t.lookup a with
+    | none => simp [follow,ha] at left
+    | some x =>
+      cases hb : t.lookup b with
+      | none => simp [follow,hb] at right
+      | some y =>
+        have eq : x=y := ih (fun t ht => unique t (List.mem_cons_of_mem _ ht)) x y
+          (by simpa [follow,ha] using left) (by simpa [follow,hb] using right)
+        exact unique t List.mem_cons_self a b x ha (by simpa only [eq] using hb)
+
+/-- The study cycles the first table's output column. When this supplies
+a different intermediate value, both successful chains have different
+reference answers through any suffix with unique preimages. -/
+theorem rewire_changes {A : Type*} [BEq A] (suffix : List (List (A × A)))
+    (unique : ∀ t ∈ suffix, UniquePreimage t) (x y a b : A)
+    (rewired : x ≠ y) (left : follow suffix x=some a) (right : follow suffix y=some b) : a≠b := by
+  rintro rfl
+  exact rewired (recover_start suffix unique x y a left right)
+
+private theorem one (k v : ℕ) : UniquePreimage [(k,v)] := by
+  intro x y z hx hy
+  by_cases hx' : x=k <;> by_cases hy' : y=k <;> simp_all [List.lookup_singleton]
+
+example (x y : ℕ) (a : follow [[(11,27)]] x=some 27) (b : follow [[(11,27)]] y=some 27) : x=y :=
+  recover_start _ (by intro t ht; rw [List.mem_singleton] at ht; exact ht ▸ one _ _) _ _ _ a b
+
+private theorem fork : UniquePreimage [(1,11),(2,12)] := by
+  intro a b v ha hb
+  by_cases h₁ : a=1 <;> by_cases h₂ : a=2 <;> by_cases h₃ : b=1 <;> by_cases h₄ : b=2 <;>
+    simp_all [List.lookup_cons,beq_eq_false_iff_ne.mpr] <;> omega
+
+example : 11≠12 := rewire_changes [[(1,11),(2,12)]]
+  (by intro t h; rw [List.mem_singleton] at h; exact h ▸ fork) 1 2 11 12 (by decide)
+    (by decide) (by decide)
+
 end Transformer.Phasor.LookupQuestion

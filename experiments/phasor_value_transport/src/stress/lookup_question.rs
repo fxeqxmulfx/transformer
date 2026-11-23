@@ -5,9 +5,7 @@ mod data;
 use data::vocabulary;
 pub(super) use data::{NAME, data};
 
-pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
-    let (row, task) = data()?;
-    let cfg = task_config(&row, &task, true)?;
+fn checkpoint(seed: u32, out: &Path, row: &Value, cfg: &Config) -> Result<(Vec<f32>, Value)> {
     let dir = out.join(NAME).join(format!("seed{seed}"));
     let reader = match fs::File::open(dir.join("cell.lock")) {
         Ok(file) => {
@@ -18,11 +16,11 @@ pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
         Err(e) => return Err(e.into()),
     };
     let (weights, point) = if dir.join("result.json").try_exists()? {
-        let (result, weights) = embedding::verified_weights(&row, seed, &cfg, &dir)?;
+        let (result, weights) = embedding::verified_weights(row, seed, cfg, &dir)?;
         (weights, result["observation"].clone())
     } else {
-        let mut engine = Engine::new(cfg.clone(), &layout::initialize_model(&cfg, seed))?;
-        let state = progress::Progress::load(&dir, &row, seed, &mut engine)?
+        let mut engine = Engine::new(cfg.clone(), &layout::initialize_model(cfg, seed))?;
+        let state = progress::Progress::load(&dir, row, seed, &mut engine)?
             .ok_or("missing question checkpoint")?;
         (
             engine.parameters.read()?,
@@ -30,12 +28,23 @@ pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
         )
     };
     drop(reader);
-    let hash = hash(
+    Ok((weights, point))
+}
+
+fn weight_digest(weights: &[f32]) -> String {
+    hash(
         &weights
             .iter()
             .flat_map(|x| x.to_le_bytes())
             .collect::<Vec<_>>(),
-    );
+    )
+}
+
+pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
+    let (row, task) = data()?;
+    let cfg = task_config(&row, &task, true)?;
+    let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
+    let hash = weight_digest(&weights);
     let words = vocabulary();
     let mut controls = vec![("full", cfg.head)];
     if ablations && let Some(read) = cfg.head.peer_read() {
@@ -81,6 +90,78 @@ pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
         "{}",
         json!({"study":NAME,"model":MODEL,"seed":seed,"step":point["step"],"weights_sha256":hash,
         "protocol_sha256":row["catalog_sha256"],"kernite":KERNITE_VERSION,"scores":results})
+    );
+    Ok(())
+}
+
+pub fn interventions(seed: u32, out: &Path) -> Result<()> {
+    let (row, task) = data()?;
+    let cfg = task_config(&row, &task, true)?;
+    let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
+    let digest = weight_digest(&weights);
+    let mut e = Engine::for_scoring(cfg, &weights)?;
+    let paired = data::paired(&task)?;
+    let letter = |token: i64| paired.letters.iter().position(|&v| v == token);
+    let mut totals = BTreeMap::new();
+    for (hops, group) in paired.groups {
+        let mut output = Vec::new();
+        for rows in &group {
+            let mut labels = Vec::with_capacity(rows.len());
+            let metric = metrics::evaluate_with_completions(&mut e, rows, true, |i, tokens| {
+                if i != labels.len() {
+                    return Err("paired predictions changed example order".into());
+                }
+                labels.push(match tokens {
+                    [v] => letter(i64::from(*v)),
+                    _ => None,
+                });
+                Ok(())
+            })?;
+            let count = labels
+                .iter()
+                .zip(rows)
+                .filter(|(p, row)| p.is_some() && **p == letter(row.answer[0]))
+                .count();
+            if rows.len() != labels.len() || metric["exact"] != count {
+                return Err("paired metric disagrees with original exact scorer".into());
+            }
+            output.push(labels);
+        }
+        let base = &output[0];
+        let mut scores = BTreeMap::new();
+        for (arm, name) in [
+            "original",
+            "rows_reversed",
+            "first_table_rewired",
+            "choices_rotated",
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let mut correct = 0;
+            let mut both_correct = 0;
+            let mut relation = 0;
+            let mut valid_pairs = 0;
+            for (i, &prediction) in output[arm].iter().enumerate() {
+                let ok = prediction.is_some() && prediction == letter(group[arm][i].answer[0]);
+                correct += usize::from(ok);
+                both_correct += usize::from(ok && base[i] == letter(group[0][i].answer[0]));
+                if let (Some(a), Some(b)) = (base[i], prediction) {
+                    valid_pairs += 1;
+                    relation += usize::from(match arm {
+                        2 => a != b,
+                        3 => (a + 4) % 5 == b,
+                        _ => a == b,
+                    });
+                }
+            }
+            scores.insert(name,json!({"correct":correct,"both_correct":both_correct,"expected_relation":relation,"valid_letter_pairs":valid_pairs,"total":base.len()}));
+        }
+        totals.insert(hops, scores);
+    }
+    println!(
+        "{}",
+        json!({"model":MODEL,"seed":seed,"step":point["step"],"weights_sha256":digest,"suite_sha256":row["catalog_sha256"],"paired_sha256":paired.digest,"scored_with_kernite":KERNITE_VERSION,"by_hop":totals})
     );
     Ok(())
 }

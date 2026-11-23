@@ -1912,6 +1912,33 @@ Both models missed Mira at both observations. Across the 500 fresh
 questions at update 250, the main model answered 96 correctly and the
 chart model answered 111 correctly.
 
+The command below scores 100 additional pairs per hop count for each of
+three changes. Reversing the table rows preserves the answer. Cycling the
+first table's output column changes the correct answer while preserving
+every printed token count. Rotating the choices one position to the left
+moves each correct letter back one place, wrapping A to E. The original
+questions are letter-balanced and disjoint from the training, validation
+and ordinary test splits.
+[Why a rewired answer changes](../../src/Transformer/Phasor/LookupQuestion.lean)
+
+```sh
+"$bin" lookup-interventions 0 "$out"
+```
+
+Each result counts correct responses on the changed prompt, pairs where
+both answers are correct, and pairs where the two predicted letters have
+the expected relation. On the rewiring test any two different valid
+letters satisfy that relation. Independent uniform guesses satisfy it
+80% of the time and get both answers right 4% of the time.
+
+The seed-0 main checkpoint at update 50 got 21/100 of the original two-hop
+questions right. Reversing all rows preserved its predicted letter on
+99/100 pairs. Rewiring the first table changed its letter on 0/100 pairs,
+even though every reference answer changed. Rotating the choices produced
+the expected letter shift on 15/100 pairs, with both answers correct on
+2/100. The checkpoint produced valid letters on all 100 pairs for each
+change.
+
 ### Interpolation in a learned cyclic order
 
 Every memory address and value refers to a prototype in the learned dense

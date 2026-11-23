@@ -2,6 +2,8 @@
 //! question is encoded for the model. The table oracle supplies the outer target.
 use super::super::*;
 use std::collections::{BTreeSet, HashSet};
+mod paired;
+pub(super) use paired::paired;
 
 pub(in crate::stress) const NAME: &str = "study-lookup-questions";
 const WORDS: [&str; 10] = [
@@ -42,6 +44,7 @@ fn lex(text: &str) -> Vec<String> {
 }
 
 type Table = Vec<(String, String)>;
+#[derive(Clone)]
 struct Question {
     tables: Vec<Table>,
     start: String,
