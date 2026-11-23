@@ -80,4 +80,23 @@ example (n : ℕ) : passes (fun (p : ℕ → ℕ) (_ : ℕ → Option ℕ) t => 
   apply closed_replay
   exact fun _ => rfl
 
+/-- The text decoder's sparse MoE sums only the router's selected experts.
+At fixed routing, summing their coordinate outputs gives exactly the dense
+weighted mixture with zeros outside the selected set. The signed output of
+each expert can be arbitrary. Source: `Inkling2LoopExperts.forward`. -/
+theorem routed_sum {e d : ℕ} (selected : Finset (Fin e)) (weight : Fin e → ℝ)
+    (value : Fin e → Fin d → ℝ) (outside : ∀ i ∉ selected, weight i = 0) (j : Fin d) :
+    ∑ i ∈ selected, weight i * value i j = ∑ i, weight i * value i j := by
+  apply Finset.sum_subset (Finset.subset_univ selected)
+  intro i _ hi
+  rw [outside i hi, zero_mul]
+
+example (v : Fin 4 → Fin 2 → ℝ) (j : Fin 2) :
+    ∑ i ∈ ({1, 3} : Finset (Fin 4)), (if i = 1 then 3 else if i = 3 then 5 else 0) * v i j =
+      ∑ i, (if i = 1 then 3 else if i = 3 then 5 else 0) * v i j := by
+  apply routed_sum
+  intro i hi
+  simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
+  simp [hi.1, hi.2]
+
 end Transformer.InklingLoop
