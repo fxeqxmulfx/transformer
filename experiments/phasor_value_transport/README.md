@@ -1824,6 +1824,16 @@ of every hidden coordinate and logit at head widths 16, 32 and 128,
 including lengths on both sides of tile boundaries and incomplete final
 tiles. [Indexing and forward equivalence](../../src/Transformer/Phasor/TripleTransport/ScoreTiles.lean)
 
+Frozen scoring also reduces buffers used exclusively by backpropagation
+to one float each. The build checks the read sites in the pinned forward
+kernels. With batch 2, length 37, width 64 and three layers, a phase
+model allocated 66 floats across these buffers, down from 690,420 for
+training. The corresponding counts were 66 versus 689,979 for the
+multi-stream complex model and 42 versus 356,091 for the complex-linear
+model. On the GPU, both engines returned equal logits, masked losses
+and predicted classes at four batch shapes for each model.
+[Forward-data dependency proof](../../src/Transformer/Phasor/TripleTransport/AdjointStorage.lean)
+
 On the 2 GiB GTX 1050, seed 0 of dense induction recalled all eight latest
 values on all 512 examples at delays of 2,048, 3,072 and 3,800 tokens, for both the first
 passing checkpoint (update 50) and the retention checkpoint (update 550).
@@ -1832,7 +1842,7 @@ The previous evaluator exhausted device memory at delay 2,048. At delay 1,536
 the two evaluators produced byte-identical reports for both checkpoints.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ScoreTiles
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.AdjointStorage
 cd experiments/phasor_value_transport
 flags=fp32-affine-reference,triple-chart-induction
 cargo +stable test --release --locked --features "$flags" --bin phasor-value-transport \

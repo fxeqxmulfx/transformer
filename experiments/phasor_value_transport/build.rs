@@ -1,4 +1,5 @@
 //! Compile the upstream trainer at the same revision as the Phasor CPU oracle.
+mod build_adjoint_storage;
 mod build_compact;
 mod build_embedding;
 mod build_score_tiles;
@@ -281,7 +282,7 @@ fn main() {
         ),
     )
     .unwrap();
-    fs::write(out.join("engine_mhc.rs"), stream_engine(&src)).unwrap();
+    let mut router = stream_engine(&src);
     engine.push_str(&embedding_helpers);
     for file in [
         "src/value_layer.rs",
@@ -312,6 +313,8 @@ fn main() {
     }
     build_scoring::prepare(&mut engine);
     build_score_tiles::dispatch(&mut engine);
+    build_adjoint_storage::prepare(&mut engine, &mut router);
+    fs::write(out.join("engine_mhc.rs"), router).unwrap();
     build_score_tiles::kernel(&src, &out);
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");

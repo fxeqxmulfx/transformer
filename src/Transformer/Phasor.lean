@@ -54,6 +54,7 @@ public import Transformer.Phasor.TripleTransport.MaskRank
 public import Transformer.Phasor.TripleTransport.FixedEvaluation
 public import Transformer.Phasor.TripleTransport.ScoreScratch
 public import Transformer.Phasor.TripleTransport.ScoreTiles
+public import Transformer.Phasor.TripleTransport.AdjointStorage
 public import Transformer.Phasor.TripleTransport.ResumeSchedule
 public import Transformer.Phasor.TripleTransport.RowAdjoint
 public import Transformer.Phasor.TripleTransport.PhaseResidual

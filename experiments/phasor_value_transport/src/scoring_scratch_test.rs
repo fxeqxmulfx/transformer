@@ -49,6 +49,67 @@ fn frozen_scoring_reuses_scores_across_depth_and_changing_batches() -> Result<()
     Ok(())
 }
 
+/// Compare the supervised forward, including its loss kernel on masked rows.
+/// Some buffers with derivative names are also launch arguments during forward.
+#[test]
+#[ignore = "requires Kernite CUDA"]
+fn frozen_adjoint_buffers_preserve_supervised_predictions_and_losses() -> Result<()> {
+    for backbone in [
+        "complex-linear",
+        "complex-mhc-lerope",
+        "complex-phase-score-lerope",
+    ] {
+        let mut cfg = config(2)?;
+        cfg.architecture = backbone.into();
+        cfg.head = if backbone == "complex-phase-score-lerope" {
+            architecture::HEAD
+        } else {
+            head::Head::Original
+        };
+        cfg.width = 64;
+        cfg.heads = 2;
+        cfg.layers = 3;
+        cfg.max_length = 37;
+        cfg.gain = 2. / 64.;
+        cfg.vocab = 37;
+        let weights = layout::initialize_model(&cfg, 117);
+        let mut training = Engine::new(cfg.clone(), &weights)?;
+        let mut frozen = Engine::for_scoring(cfg, &weights)?;
+        let (before, fields) = training.adjoint_storage();
+        assert_eq!(frozen.adjoint_storage(), (fields, fields));
+        assert!(before > 600 * fields);
+        println!(
+            "adjoint arrays {backbone}: {fields}, training floats {before}, frozen floats {fields}"
+        );
+        for (batch, len) in [(2, 37), (1, 5), (2, 1), (1, 29)] {
+            let n = batch * len;
+            let tokens: Vec<_> = (0..n).map(|i| ((i * 23 + len) % 37) as u32).collect();
+            let labels: Vec<_> = (0..n)
+                .map(|i| {
+                    if i % 3 == 0 {
+                        u32::MAX
+                    } else {
+                        ((i * 7 + 11) % 37) as u32
+                    }
+                })
+                .collect();
+            training.forward(&tokens, &labels, batch, len)?;
+            frozen.forward(&tokens, &labels, batch, len)?;
+            assert_eq!(training.losses(n)?, frozen.losses(n)?);
+            assert_eq!(
+                training.predictions.read()?[..n],
+                frozen.predictions.read()?[..n]
+            );
+            assert_eq!(
+                training.logits.read()?[..n * 37],
+                frozen.logits.read()?[..n * 37]
+            );
+        }
+        assert!(frozen.backward(1, 29).is_err());
+    }
+    Ok(())
+}
+
 #[test]
 #[ignore = "requires Kernite CUDA"]
 fn tiled_phase_rows_match_every_float_across_tiles_and_sequences() -> Result<()> {
