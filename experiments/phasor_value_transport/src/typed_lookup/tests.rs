@@ -17,6 +17,41 @@ fn choose(w: &mut [f32], cue: usize, main: usize, tail: usize) {
 }
 
 #[test]
+fn missing_consecutive_addresses_preserve_outputs_and_all_three_adjoints() {
+    // Both sequences end and start with addressed pairs. No triple may cross rows.
+    let (d, length) = (4, 8);
+    let keys = [1, 0, d, 2, 0, d, 1, 3];
+    let input = make(&keys.repeat(2), d);
+    let address = |v: &[f32]| nearest(v).filter(|&i| v[i] > 0.);
+    let weights: Vec<_> = (0..parameters(d))
+        .map(|i| ((i % 17) as f32 - 8.) / 19.)
+        .collect();
+    let ordered = PathRead {
+        ordered: true,
+        agreement: true,
+        ..PathRead::NORMALIZED
+    };
+    for read in [PathRead::linear(3), ordered] {
+        let tape = Tape::new(&input, &input, &weights, (d, length), read, true, address);
+        assert!(
+            tape.frames
+                .iter()
+                .all(|f| f.witnesses.is_empty() && f.terminals.is_empty())
+        );
+        let mut out = vec![-0.0; input.len()];
+        tape.add_output(&mut out);
+        assert!(out.iter().all(|x| x.to_bits() == 0.0f32.to_bits()));
+        let mut dx = vec![2.; input.len()];
+        let mut dh = vec![3.; input.len()];
+        let mut dw = vec![4.; weights.len()];
+        tape.backward(&input, &weights, &input, &mut dx, &mut dh, &mut dw);
+        assert!(dx.iter().all(|&x| x == 2.));
+        assert!(dh.iter().all(|&x| x == 3.));
+        assert!(dw.iter().all(|&x| x == 4.));
+    }
+}
+
+#[test]
 fn sharing_budget_prefixes_keeps_every_floating_point_vote() {
     // Repeated keys, missing addresses, and ties in the requested depths.
     let keys: Vec<_> = (0..123).map(|i| (i % 23 != 0).then_some(i * (i + 3) % 17)).collect();

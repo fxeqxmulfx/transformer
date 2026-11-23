@@ -1,0 +1,71 @@
+diff --git a/experiments/phasor_value_transport/src/slot_layer.rs b/experiments/phasor_value_transport/src/slot_layer.rs
+index a0465ac7..96aed3df 100644
+--- a/experiments/phasor_value_transport/src/slot_layer.rs
++++ b/experiments/phasor_value_transport/src/slot_layer.rs
+@@ -269,10 +269,13 @@ impl SlotLayer {
+         h.truncate(rows * l.d);
+         let read = e.config.head.peer_read();
+         let dense = read.is_some_and(|r| r.dense_induction);
+-        let local = read.and_then(|r| r.path).filter(|mode| mode.passes > 0);
+         let enabled = !tape.routing.mute_proposals[1];
+         let use_induction = dense && enabled && length > 2;
+-        let local = local.filter(|_| enabled);
++        let local = read.and_then(|r| r.path).filter(|mode| {
++            let can_finish_triple = length >= 3
++                && positions.is_none_or(|requested| requested.iter().any(|&t| t >= 2));
++            enabled && mode.passes > 0 && (mode.soft_address || can_finish_triple)
++        });
+         let input = if use_induction || local.is_some() {
+             let mut input = e.embed_norm.read()?;
+             input.truncate(rows * l.d);
+diff --git a/experiments/phasor_value_transport/src/typed_lookup/forward.rs b/experiments/phasor_value_transport/src/typed_lookup/forward.rs
+index e61d3d94..c13ebe51 100644
+--- a/experiments/phasor_value_transport/src/typed_lookup/forward.rs
++++ b/experiments/phasor_value_transport/src/typed_lookup/forward.rs
+@@ -48,18 +48,21 @@ impl Batch<'_> {
+         let (raw, norm) = if reuse {
+             (Vec::new(), None)
+         } else {
+-            let mut votes = vec![0.; t + 1];
+-            store.visit_budgets(&[self.read.passes], walk, |_, path| {
+-                vote(path, &mut votes, self.table, self.agreement);
+-                if self.retain {
+-                    witnesses.push(path);
+-                }
+-            });
+             let mut raw = vec![0.; d];
+-            for (pos, weight) in votes.into_iter().enumerate().filter(|&(_, v)| v != 0.) {
+-                add(&mut raw, row(self.input, base + pos, d), weight);
+-                if self.retain {
+-                    terminals.push((pos, weight));
++            // Every witness starts with a completed write in this causal prefix.
++            if store.has_writes() {
++                let mut votes = vec![0.; t + 1];
++                store.visit_budgets(&[self.read.passes], walk, |_, path| {
++                    vote(path, &mut votes, self.table, self.agreement);
++                    if self.retain {
++                        witnesses.push(path);
++                    }
++                });
++                for (pos, weight) in votes.into_iter().enumerate().filter(|&(_, v)| v != 0.) {
++                    add(&mut raw, row(self.input, base + pos, d), weight);
++                    if self.retain {
++                        terminals.push((pos, weight));
++                    }
+                 }
+             }
+             let norm = self.read.normalize_vote.then(|| VoteNorm::new(&raw));
+diff --git a/experiments/phasor_value_transport/src/typed_lookup/paths.rs b/experiments/phasor_value_transport/src/typed_lookup/paths.rs
+index 5d33a7dd..d68fef1d 100644
+--- a/experiments/phasor_value_transport/src/typed_lookup/paths.rs
++++ b/experiments/phasor_value_transport/src/typed_lookup/paths.rs
+@@ -112,6 +112,9 @@ impl Store {
+             ..Self::default()
+         }
+     }
++    pub(super) fn has_writes(&self) -> bool {
++        !self.outgoing.is_empty()
++    }
+     fn write(&mut self, source: usize, relation: usize, edge: Edge) {
+         let list = self.outgoing.entry(source).or_default();
+         if let Some(old) = list.iter_mut().find(|p| p.relation == relation) {

@@ -2824,6 +2824,25 @@ The same two-bank architecture trained from fresh weights on NV11 with
 seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
 4,704/4,704 on training and 4,705/4,705 on the held-out split.
 
+We tested skipping the associative read when its causal prefix contains
+no completed write. A write needs three consecutive addressable vectors.
+Before the third position this follows from the prefix length alone. At
+later positions an empty write history also implies a zero path vote and
+zero gradient contribution. The native regression checks the output and
+the gradients for inputs, hidden states and parameters on two sequences
+with missing addresses.
+[Empty-write proof](../../src/Transformer/Phasor/TripleTransport/PrefixTruncation.lean)
+
+In six fresh paired NV11 runs on the GTX 1050, both builds reached exact
+recovery at update 250 with byte-identical weights and observation histories.
+Each seed ran in both orders. Median wall time was 5.27 seconds for the
+existing implementation and 5.42 seconds for the shortcut. The shortcut
+won two pairs and took 2.25% longer by the geometric mean of the six
+paired time ratios. We kept the existing implementation. To reproduce,
+build and save the two-bank binary before and after applying the patch,
+then run `PHASOR_EVAL_BATCH_CAP=16 ./time_screens.sh --first-pass BEFORE_BIN AFTER_BIN runs/empty-write-timing 250 arithmetic-cubic-product`.
+[Trial source](trials/empty-write-prefix.patch)
+
 The paired recall-gap probe inserts value tokens between the four writes
 and the two queries of each original MQAR test row. It checks every target
 against the source table. At a zero gap it reproduces the source test
