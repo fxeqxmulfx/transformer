@@ -3848,6 +3848,13 @@ vectors and logits. The next scoring call reads the current weights again.
 Lean proves that this gives the same greedy output through termination when
 the prepared weights agree throughout the scoring window. [Fixed-weight evaluation proof](../../src/Transformer/Phasor/TripleTransport/FixedEvaluation.lean)
 
+For the two-bank read, a coefficient depends on the complete signed
+relation code and the fixed agreement weights. A direct-mapped cache can
+check the full code, recompute on a collision and still add every vote
+at its original position in its original order. Lean proves that any
+such cache preserves the whole accumulation, including when individual
+additions round. [Coefficient reuse proof](../../src/Transformer/Phasor/TripleTransport/FixedEvaluation.lean)
+
 On a GTX 1050 with Kernite v0.6.0, six alternating-order pairs timed the
 complete `probes` command, including startup and the supplied test splits.
 All paired score records matched byte for byte.

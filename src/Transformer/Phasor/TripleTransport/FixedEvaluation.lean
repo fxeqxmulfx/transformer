@@ -56,6 +56,57 @@ theorem reuse_preparation (prepare : W → H) (read : H → List A → A)
 
 private def readAt (w : ℕ) (p : List ℕ) := w + p.length
 
+/-- A slot of the fixed-weight witness-coefficient cache also stores the
+complete key. On a collision it evaluates the coefficient on the live key. -/
+def cachedCoefficient {K I V : Type*} [DecidableEq K] (slot : K → I)
+    (cells : I → Option (K × V)) (weight : K → V) (k : K) : V :=
+  match cells (slot k) with
+  | some (tag, value) => if tag = k then value else weight k
+  | none => weight k
+
+/-- Consequence of the fixed-weight evaluation rule above for the two-bank
+agreement read. An arbitrary slot collision or empty cell preserves the
+coefficient. The stored value only has to belong to its own complete key. -/
+theorem cachedCoefficient_eq {K I V : Type*} [DecidableEq K] (slot : K → I)
+    (cells : I → Option (K × V)) (weight : K → V)
+    (sound : ∀ i tag v, cells i = some (tag, v) → v = weight tag) (k : K) :
+    cachedCoefficient slot cells weight k = weight k := by
+  cases h : cells (slot k) with
+  | none => simp [cachedCoefficient, h]
+  | some entry =>
+    obtain ⟨tag, value⟩ := entry
+    by_cases same : tag = k
+    · subst k
+      simp [cachedCoefficient, h, sound _ _ _ h]
+    · simp [cachedCoefficient, h, same]
+
+/-- Caching the coefficient leaves the complete ordered scatter-add
+unchanged. The accumulator can in particular be a floating-point vector,
+with arbitrary rounding in each individual addition. -/
+theorem cached_scatter {K I P V S : Type*} [DecidableEq K] (slot : K → I)
+    (cells : I → Option (K × V)) (weight : K → V)
+    (sound : ∀ i tag v, cells i = some (tag, v) → v = weight tag)
+    (add : S → P → V → S) (writes : List (K × P)) (initial : S) :
+    writes.foldl (fun a w => add a w.2 (cachedCoefficient slot cells weight w.1)) initial =
+    writes.foldl (fun a w => add a w.2 (weight w.1)) initial := by
+  simp only [cachedCoefficient_eq slot cells weight sound]
+
+example (k : ℕ) : cachedCoefficient (fun i => i % 2) (fun _ => some (1, 7))
+    (fun i => 7*i) k = 7*k := by
+  apply cachedCoefficient_eq
+  intro _ tag v h
+  cases h
+  rfl
+
+example (w : List (ℕ × ℕ)) :
+    w.foldl (fun a p => 5*a + p.2 + cachedCoefficient (fun k => k % 2)
+      (fun _ => some (1, 7)) (fun k => 7*k) p.1) 0 =
+    w.foldl (fun a p => 5*a + p.2 + 7*p.1) 0 := by
+  apply cached_scatter (add := fun a p v => 5*a + p + v)
+  intro _ tag v h
+  cases h
+  rfl
+
 example : rollout (fun i => readAt (if i < 4 then 3 else i)) 5 4 0 [] =
     [3, 4, 5] := by decide
 
