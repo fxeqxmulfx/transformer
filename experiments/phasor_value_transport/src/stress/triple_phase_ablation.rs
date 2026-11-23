@@ -24,14 +24,16 @@ fn partition_error(full: &[f32], base: &[f32], sine: &[f32], cosine: &[f32]) -> 
     Ok(worst)
 }
 
-pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
+pub fn run(name: &str, seed: u32, out: &Path, probes: Option<ProbeSet>) -> Result<()> {
     if !architecture::HEAD.has_triple_phase() {
         return Err("phase projection removal requires a triple phase read".into());
     }
-    let (row, mut task) = load(name)?;
-    if matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24") {
-        catalog::add_parity_probes(&mut task)?;
-    }
+    let default = if parity_case(name) {
+        ProbeSet::Tests
+    } else {
+        ProbeSet::Validation
+    };
+    let (row, task, fingerprints) = prepare_evaluation(name, probes.unwrap_or(default))?;
     let cfg = task_config(&row, &task, false)?;
     let dir = out.join(name).join(format!("seed{seed}"));
     let (saved, original) = embedding::verified_weights(&row, seed, &cfg, &dir)?;
@@ -146,13 +148,14 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     if baseline.hidden != b.hidden || baseline.logits != b.logits {
         return Err("zeroed projections differ from the corresponding triple trunk".into());
     }
-    println!(
-        "{}",
-        json!({"case":name,"seed":seed,"model":MODEL,"weights_sha256":saved["weights_sha256"],
+    let mut report = json!({"case":name,"seed":seed,"model":MODEL,"weights_sha256":saved["weights_sha256"],
         "kernite_version":trained_with(&saved)?,"scored_with_kernite":KERNITE_VERSION,
         "step":saved["observation"]["step"],"selection":task.selection,"scores":scores,
         "dense":{"hidden":a.hidden.len(),"logits":a.logits.len(),"hidden_relative_error":hidden_error,"logit_relative_error":logit_error,
-        "zero_projection_trunk":base_head.id(),"matches_trunk":true}})
-    );
+        "zero_projection_trunk":base_head.id(),"matches_trunk":true}});
+    if !fingerprints.is_empty() {
+        report["probe_fingerprints"] = json!(fingerprints);
+    }
+    println!("{report}");
     Ok(())
 }

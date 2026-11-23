@@ -2625,11 +2625,21 @@ model reached 4,703, 4,705 and 4,705 out of 4,705 at update 228.
 On the quartic sum, it reached 4,691, 4,705 and 4,694 out of 4,705 at
 updates 209, 228 and 209.
 
-On easy recall, the two-gate model first passed seed 1 at update 1,350
-with 510/512 on novel validation, 506/512 on the independent test and
-450/512 after inserting 64 filler tokens. The three-gate model passed
-at update 2,700 with 508, 505 and 319 correct on the same splits.
-Both delay probes used the same eight queries per sequence.
+On easy recall, the two-gate model crossed earlier on all three seeds.
+Both models used the same eight queries per sequence for the independent
+test and the 64-token delay. The two-gate delay score improved on seed 1
+and fell on seeds 0 and 2. Each measurement uses that model's first
+passing checkpoint.
+
+| Recall seed | First update, three / two gates | Novel validation, three / two | Independent test, three / two | 64-token delay, three / two |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 4,300 / 1,400 | 507 / 507 | 503 / 505 | 504 / 198 |
+| 1 | 2,700 / 1,350 | 508 / 510 | 505 / 506 | 319 / 450 |
+| 2 | 3,350 / 1,000 | 509 / 508 | 502 / 502 | 359 / 172 |
+
+All score denominators are 512. On hard depth, the two-gate seed-1 model
+first passed at update 2,750, compared with 2,250 for three gates. Both
+scored 512/512 on validation, the independent test and at length 128.
 
 At the seed-0 Fibonacci checkpoint, removing the contextual residual
 gave 4,674 correct. Removing the direct read gave 4,661 and removing the
@@ -2654,14 +2664,54 @@ for arm in triple-pair-classes triple-context-residual; do
             "$bin" probes "$task" "$seed" "runs/$arm"
         done
         "$bin" nv11-score "runs/$arm/arithmetic-cubic-product/seed$seed/weights.f32"
+        "$bin" cell basis-recall-easy "$seed" "runs/$arm"
+        "$bin" probes basis-recall-easy "$seed" "runs/$arm" recall-gap 64
         for task in gpt-probe-key-value-binding recurrence-fibonacci-k1-c2-lgt; do
             "$bin" slot-ablate "$task" "$seed" "runs/$arm"
             "$bin" slot-phase-ablate "$task" "$seed" "runs/$arm"
         done
     done
-    "$bin" cell basis-recall-easy 1 "runs/$arm"
-    "$bin" probes basis-recall-easy 1 "runs/$arm" recall-gap 64
+    "$bin" cell basis-depth-hard 1 "runs/$arm"
+    "$bin" probes basis-depth-hard 1 "runs/$arm"
 done
+```
+
+### Read removals on length-transfer examples
+
+The `slot-ablate` and `slot-phase-ablate` commands accept the same
+optional length probes as `probes`. The three scorers construct the
+same examples, verify the saved checkpoint and use the frozen task's
+exact-sequence criterion. The report includes a fingerprint for an
+explicitly requested recall gap, depth length or parity length.
+
+For the default three-gate recall checkpoint at seed 1 and update 2,700,
+removing the contextual read lost every exact sequence on all three
+splits. Keeping just the context reduced the delayed score by eight
+sequences. Removing phase reduced it by seven and raised the original
+test score by one.
+
+| Fixed-weight read | Novel validation | Independent test | 64-token delay |
+| --- | ---: | ---: | ---: |
+| Full | 508/512 | 505/512 | 319/512 |
+| Without context | 0/512 | 0/512 | 0/512 |
+| Context alone | 508/512 | 505/512 | 311/512 |
+| Without direct memory | 508/512 | 505/512 | 316/512 |
+| Without phase | 507/512 | 506/512 | 312/512 |
+| Phase alone | 0/512 | 0/512 | 0/512 |
+
+At the seed-2 24-bit parity checkpoint, the full read scored 306/306
+on novel validation and 42/256 on the 65-bit probe. Removing the sine
+projection reduced validation to 281/306 and raised the 65-bit score to
+145/256. Removing both phase projections gave 161/306 and 128/256.
+
+To reproduce these interventions with the opening build and run
+directory, score the same delay under each command.
+
+```sh
+for command in probes slot-ablate slot-phase-ablate; do
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" "$command" basis-recall-easy 1 "$out" recall-gap 64
+done
+PHASOR_EVAL_BATCH_CAP=4 "$bin" slot-phase-ablate basis-parity24 2 "$out" parity-length 65
 ```
 
 ### Representing the two anchor orders

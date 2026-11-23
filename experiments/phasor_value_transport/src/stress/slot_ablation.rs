@@ -1,11 +1,11 @@
 //! Matched removals of the triple transport read, scored on the frozen task splits.
 use super::*;
 
-pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
+pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
     if !architecture::TRIPLE_TRANSPORT {
         return Err("read removal requires triple transport".into());
     }
-    let (row, task) = load(name)?;
+    let (row, task, fingerprints) = prepare_evaluation(name, probes)?;
     let cfg = task_config(&row, &task, false)?;
     let dir = out.join(name).join(format!("seed{seed}"));
     let (saved, original) = embedding::verified_weights(&row, seed, &cfg, &dir)?;
@@ -140,11 +140,12 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
             );
         }
     }
-    println!(
-        "{}",
-        json!({"case":name,"seed":seed,"model":MODEL,"weights_sha256":saved["weights_sha256"],
+    let mut report = json!({"case":name,"seed":seed,"model":MODEL,"weights_sha256":saved["weights_sha256"],
         "kernite_version":trained_with(&saved)?,"scored_with_kernite":KERNITE_VERSION,
-        "step":saved["observation"]["step"],"selection":task.selection,"baseline":baseline,"ablations":results})
-    );
+        "step":saved["observation"]["step"],"selection":task.selection,"baseline":baseline,"ablations":results});
+    if !fingerprints.is_empty() {
+        report["probe_fingerprints"] = json!(fingerprints);
+    }
+    println!("{report}");
     Ok(())
 }

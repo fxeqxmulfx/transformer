@@ -412,18 +412,37 @@ pub enum ProbeSet {
     DepthLength(usize),
 }
 
-pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
+impl ProbeSet {
+    pub fn parse(args: &[String]) -> Result<Option<Self>> {
+        let mode = match args {
+            [] => return Ok(None),
+            [s] if s == "extended" => Self::Extended,
+            [s] if s == "parity-1024" => Self::Parity1024,
+            [s] if s == "parity-neighbors" => Self::ParityNeighbors,
+            [s, n] if s == "parity-length" => Self::ParityLength(n.parse()?),
+            [s, n] if s == "recall-gap" => Self::RecallGap(n.parse()?),
+            [s, n] if s == "depth-length" => Self::DepthLength(n.parse()?),
+            _ => return Err("unsupported transfer probe or arguments".into()),
+        };
+        Ok(Some(mode))
+    }
+
+    fn extended(self) -> bool {
+        !matches!(self, Self::Validation | Self::Tests)
+    }
+}
+
+fn parity_case(name: &str) -> bool {
+    matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24")
+}
+
+fn prepare_evaluation(
+    name: &str,
+    probes: ProbeSet,
+) -> Result<(Value, Task, BTreeMap<String, String>)> {
     let test_splits = probes != ProbeSet::Validation;
-    let extended = matches!(
-        probes,
-        ProbeSet::Extended
-            | ProbeSet::Parity1024
-            | ProbeSet::ParityNeighbors
-            | ProbeSet::ParityLength(_)
-            | ProbeSet::RecallGap(_)
-            | ProbeSet::DepthLength(_)
-    );
-    let parity_task = matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24");
+    let extended = probes.extended();
+    let parity_task = parity_case(name);
     if matches!(
         probes,
         ProbeSet::Parity1024 | ProbeSet::ParityNeighbors | ProbeSet::ParityLength(_)
@@ -486,7 +505,13 @@ pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> 
     if test_splits && name.starts_with("language-l") {
         language_probes::add(&mut task, name, extended).map_err(|err| err.to_string())?;
     }
-    let cfg = task_config(&row, &task, !extended)?;
+    Ok((row, task, probe_hashes))
+}
+
+pub fn score_checkpoint(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
+    let test_splits = probes != ProbeSet::Validation;
+    let (row, task, probe_hashes) = prepare_evaluation(name, probes)?;
+    let cfg = task_config(&row, &task, !probes.extended())?;
     let dest = out.join(name).join(format!("seed{seed}"));
     let (result, mut values) = embedding::verified_weights(&row, seed, &cfg, &dest)?;
     let mut e = Engine::new(cfg, &values)?;
