@@ -1,7 +1,7 @@
 //! Compare free generation on the same synthetic questions at different read budgets.
 use super::*;
 
-pub(super) fn set_budget(cfg: &mut Config, passes: usize) -> Result<()> {
+pub(in crate::stress) fn set_budget(cfg: &mut Config, passes: usize) -> Result<()> {
     let head::Head::PeerTriplePhase(read) = &mut cfg.head else {
         return Err("a read-count change requires a repeated associative read".into());
     };
@@ -16,7 +16,7 @@ pub(super) fn set_budget(cfg: &mut Config, passes: usize) -> Result<()> {
     Ok(())
 }
 
-pub(super) fn generated(engine: &mut Engine, examples: &[Example]) -> Result<Vec<Option<i64>>> {
+pub(in crate::stress) fn generated(engine: &mut Engine, examples: &[Example]) -> Result<Vec<Option<i64>>> {
     let mut predictions = Vec::with_capacity(examples.len());
     let metric = metrics::evaluate_with_completions(engine, examples, true, |i, tokens| {
         if i != predictions.len() {

@@ -141,10 +141,12 @@ impl PeerRead {
         path: Some(PathRead { passes: 10, ..PathRead::NORMALIZED }),
         ..Self::CHART_INDUCTION
     };
-    pub const POWER_LOOKUP: Self = Self {
-        path: Some(PathRead { passes: 10, gain_power: 4, ..PathRead::NORMALIZED }),
-        ..Self::CHART_INDUCTION
-    };
+    const fn concentrated(passes: usize) -> Self {
+        Self { path: Some(PathRead { passes, gain_power: 4, ..PathRead::NORMALIZED }), ..Self::CHART_INDUCTION }
+    }
+    pub const POWER_LOOKUP: Self = Self::concentrated(10);
+    pub const POWER_TWENTY: Self = Self::concentrated(20);
+    pub const POWER_FORTY: Self = Self::concentrated(40);
     pub const NORMALIZED_LOOKUP: Self = Self {
         path: Some(PathRead::NORMALIZED),
         ..Self::CHART_INDUCTION
@@ -216,6 +218,10 @@ impl PeerRead {
                 (Self::TEN_READ_LOOKUP, false) => "phasor-triple-normalized-ten-lookup-trunk-v1",
                 (Self::POWER_LOOKUP, true) => "phasor-triple-concentrated-lookup-32-v1",
                 (Self::POWER_LOOKUP, false) => "phasor-triple-concentrated-lookup-trunk-v1",
+                (Self::POWER_TWENTY, true) => "phasor-triple-concentrated-lookup-20-32-v1",
+                (Self::POWER_TWENTY, false) => "phasor-triple-concentrated-lookup-20-trunk-v1",
+                (Self::POWER_FORTY, true) => "phasor-triple-concentrated-lookup-40-32-v1",
+                (Self::POWER_FORTY, false) => "phasor-triple-concentrated-lookup-40-trunk-v1",
                 (Self::NORMALIZED_LOOKUP, true) => "phasor-triple-normalized-vote-lookup-32-v1",
                 (Self::NORMALIZED_LOOKUP, false) => "phasor-triple-normalized-vote-lookup-trunk-v1",
                 (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
@@ -359,6 +365,8 @@ impl Head {
             "triple-fixed-ten-lookup" | "triple-varied-depth-lookup" =>
                 Ok(Self::PeerTriplePhase(PeerRead::TEN_READ_LOOKUP)),
             "triple-power-lookup" => Ok(Self::PeerTriplePhase(PeerRead::POWER_LOOKUP)),
+            "triple-power-lookup-20" => Ok(Self::PeerTriplePhase(PeerRead::POWER_TWENTY)),
+            "triple-power-lookup-40" => Ok(Self::PeerTriplePhase(PeerRead::POWER_FORTY)),
             "triple-normalized-lookup" => Ok(Self::PeerTriplePhase(PeerRead::NORMALIZED_LOOKUP)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(

@@ -2389,6 +2389,50 @@ done
 PHASOR_EVAL_BATCH_CAP=4 "$bin" lookup-long-chains 0 "$out" 20 20 shared
 ```
 
+#### Forty tables and excess passes
+
+Giving the seed-0 mixed-length checkpoint eighty reads on the same forty
+shared-permutation tables reduced accuracy from **80/100 to 16/100**. At
+forty reads it solved all five starts on nine sets. At eighty reads it
+solved all five on zero sets and gave a constant answer on twelve. The
+learned addresses can recur in these prompts. On the independent forty-hop
+test with fresh bindings at every table, forty reads scored **17/100**
+and solved all five starts on zero sets. The original and accelerated
+greedy scorers produced identical forty-read shared-permutation reports,
+in 234.53 and 120.24 seconds respectively at evaluation batch size four.
+
+To distinguish increasing the length from rebinding a name, the disjoint-layer
+study uses the same unnumbered grammar at all depths and assigns a different
+single-token name to every key in every layer. With five starts and forty
+tables this requires at least 205 names. The study uses 210 names in one
+fixed vocabulary from the first training example. It independently samples
+the table order of rows and the choice letters. Training has 200 examples
+per depth from one to five and validation has 40 per depth. The independent
+test at each depth uses 20 new table sets and all five starts per set.
+Each example supplies only its final answer letter to the loss.
+[Exact vocabulary requirement for disjoint layers](../../src/Transformer/Phasor/LookupQuestion/DistinctLayers.lean)
+
+The fixed-depth builds train the same concentrated lookup operation with
+ten, twenty or forty shared passes. Each has its own checkpoint identity.
+The scorer takes the number of actual tables and the evaluation read
+budget separately.
+
+```sh
+export PHASOR_EVAL_BATCH_CAP=4
+for depth in 10 20 40; do
+    feature=triple-power-lookup
+    if [ "$depth" != 10 ]; then feature="triple-power-lookup-$depth"; fi
+    cargo +stable build --release --locked --offline --features "fp32-affine-reference,$feature"
+    bin=./target/release/phasor-value-transport
+    out=runs/disjoint-lookup/r$depth
+    for seed in 0 1 2; do
+        "$bin" advance study-lookup-disjoint-layers "$seed" "$out" 250
+        "$bin" disjoint-lookup-depth "$seed" "$out" 10 "$depth"
+        for hops in 20 40; do "$bin" disjoint-lookup-depth "$seed" "$out" "$hops" "$hops"; done
+    done
+done
+```
+
 #### Selecting the eighth or an earlier matching reply
 
 The synthetic ordinal study asks for the first through eighth response

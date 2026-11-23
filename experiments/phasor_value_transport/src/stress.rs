@@ -21,6 +21,7 @@ mod length_transfer;
 pub mod probe_rows;
 pub mod lookup_question;
 pub mod ordinal_dialogue;
+pub mod disjoint_lookup;
 pub mod numeric_probe;
 pub mod phase_ablation;
 mod progress;
@@ -159,6 +160,9 @@ pub fn routes() -> Result<()> {
 }
 
 fn load(name: &str) -> Result<(Value, Task)> {
+    if name == disjoint_lookup::NAME {
+        return disjoint_lookup::dataset();
+    }
     if name == ordinal_dialogue::NAME {
         return ordinal_dialogue::dataset();
     }
