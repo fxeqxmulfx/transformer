@@ -26,7 +26,7 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
     let mut w = vec![0.; parameters(d)];
     choose(&mut w, 7, 2, 11);
     for (mode, exists) in [(1, false), (2, true), (5, true)] {
-        let tape = Tape::new(&x, &x, &w, d, keys.len(), mode, nearest);
+        let tape = Tape::new(&x, &x, &w, (d, keys.len()), mode, true, nearest);
         let mut out = vec![0.; x.len()];
         tape.add_output(&mut out);
         let last = row(&out, keys.len() - 1, d);
@@ -34,7 +34,8 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
         assert_eq!(last.iter().copied().sum::<f32>(), f32::from(exists));
         for n in 1..keys.len() {
             let mut prefix = vec![0.; n * d];
-            Tape::new(&x[..n * d], &x[..n * d], &w, d, n, mode, nearest).add_output(&mut prefix);
+            Tape::new(&x[..n * d], &x[..n * d], &w, (d, n), mode, true, nearest)
+                .add_output(&mut prefix);
             assert_eq!(prefix, out[..n * d]);
         }
     }
@@ -54,14 +55,14 @@ fn signed_path_sum_and_gate_differentiate_through_dense_values() {
     let w: Vec<_> = (0..parameters(d))
         .map(|i| ((i * 17 % 113) as f32 - 50.) / 299.)
         .collect();
-    let tape = Tape::new(&x, &h, &w, d, length, 2, nearest);
+    let tape = Tape::new(&x, &h, &w, (d, length), 2, true, nearest);
     let mut dx = vec![0.; x.len()];
     let mut dh = vec![0.; x.len()];
     let mut dw = vec![0.; w.len()];
     tape.backward(&h, &w, &y, &mut dx, &mut dh, &mut dw);
     let objective = |a: &[f32], b: &[f32], c: &[f32]| {
         let mut out = vec![0.; a.len()];
-        Tape::new(a, b, c, d, length, 2, nearest).add_output(&mut out);
+        Tape::new(a, b, c, (d, length), 2, true, nearest).add_output(&mut out);
         out.iter()
             .zip(&y)
             .map(|(&v, &k)| f64::from(v) * f64::from(k))
@@ -92,4 +93,97 @@ fn signed_path_sum_and_gate_differentiate_through_dense_values() {
     }
     assert!(dw[..BINS].iter().any(|v| v.abs() > 0.01));
     assert!(dh.iter().any(|v| v.abs() > 0.0001));
+}
+
+#[test]
+fn frozen_path_votes_match_every_training_row_without_retaining_adjoint_entries() {
+    let d = 16;
+    let mut state = 3581u32;
+    let w: Vec<_> = (0..parameters(d))
+        .map(|i| ((i * 17 % 113) as f32 - 50.) / 299.)
+        .collect();
+    for length in [2, 17, 96] {
+        let keys: Vec<_> = (0..2 * length)
+            .map(|_| {
+                state = state.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+                (state >> 24) as usize % d
+            })
+            .collect();
+        let mut x = make(&keys, d);
+        for row in x.chunks_exact_mut(d).step_by(13) {
+            row.fill(0.);
+        }
+        let address = |v: &[f32]| nearest(v).filter(|&i| v[i] > 0.);
+        for passes in [1, 5, 10] {
+            let train = Tape::new(&x, &x, &w, (d, length), passes, true, address);
+            let score = Tape::new(&x, &x, &w, (d, length), passes, false, address);
+            let mut expected = x.clone();
+            let mut actual = x.clone();
+            train.add_output(&mut expected);
+            score.add_output(&mut actual);
+            assert!(
+                expected
+                    .iter()
+                    .zip(&actual)
+                    .all(|(a, b)| a.to_bits() == b.to_bits())
+            );
+            assert!(score.input.is_empty());
+            assert!(
+                score
+                    .frames
+                    .iter()
+                    .all(|r| r.witnesses.capacity() == 0 && r.terminals.capacity() == 0)
+            );
+            if length > 2 {
+                assert!(
+                    train
+                        .frames
+                        .iter()
+                        .any(|r| !r.witnesses.is_empty() && !r.terminals.is_empty())
+                );
+            }
+        }
+    }
+}
+
+/// Run the test executable once per mode so peak resident memory is measured
+/// in a fresh process. Every row goes through the same five-pass read.
+#[test]
+#[ignore = "benchmarks host path storage at length 512"]
+fn measure_path_storage() {
+    let retain = match std::env::var("PHASOR_PATH_STORAGE").as_deref() {
+        Ok("adjoint") => true,
+        Ok("frozen") => false,
+        _ => panic!("set PHASOR_PATH_STORAGE to adjoint or frozen"),
+    };
+    let (d, length, batch) = (64, 512, 4);
+    let mut state = 0x17b4d67au32;
+    let mut x = vec![0.; batch * length * d];
+    for (i, row) in x.chunks_exact_mut(d).enumerate() {
+        state = state.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+        let key = if i % 3 == 1 {
+            (state >> 28) % 4
+        } else {
+            4 + (state >> 26) % 48
+        };
+        row[key as usize] = 1.;
+    }
+    let w: Vec<_> = (0..parameters(d))
+        .map(|i| ((i * 17 % 113) as f32 - 50.) / 299.)
+        .collect();
+    let address = |v: &[f32]| v.iter().position(|&x| x == 1.);
+    let mut times = Vec::new();
+    let mut entries = 0;
+    let mut out = x.clone();
+    for _ in 0..6 {
+        out.copy_from_slice(&x);
+        let now = std::time::Instant::now();
+        let tape = Tape::new(&x, &x, &w, (d, length), 5, retain, address);
+        tape.add_output(&mut out);
+        times.push(now.elapsed().as_secs_f64());
+        entries = tape.frames.iter().map(|r| r.witnesses.len()).sum::<usize>();
+    }
+    let digest = crate::hash(&out.iter().flat_map(|v| v.to_le_bytes()).collect::<Vec<_>>());
+    println!("witnesses={entries} output={digest} seconds={times:?}");
+    assert_eq!(entries > 0, retain);
 }

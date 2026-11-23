@@ -259,9 +259,9 @@ impl SlotLayer {
                 &input,
                 &h,
                 &tape.weights[l.path_start.unwrap()..l.end()],
-                l.d,
-                length,
+                (l.d, length),
                 mode,
+                !e.scoring_only,
                 |v| tape.routing.nearest(l, &tape.weights, v),
             )
         });

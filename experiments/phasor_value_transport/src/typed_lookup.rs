@@ -21,15 +21,6 @@ fn add(dst: &mut [f32], x: &[f32], s: f32) {
     }
 }
 
-fn votes(rows: usize, witnesses: &[Witness], table: &[f32]) -> Vec<f32> {
-    let mut votes = vec![0.; rows];
-    for &witness in witnesses {
-        let (bin, sign) = witness.weight();
-        votes[witness.position] += sign * table[bin];
-    }
-    votes
-}
-
 /// The same read at the final position of an independently supplied prefix.
 pub fn final_votes(addresses: &[Option<usize>], passes: usize, table: &[f32]) -> Vec<f32> {
     assert!(passes > 0 && table.len() == BINS);
@@ -37,7 +28,9 @@ pub fn final_votes(addresses: &[Option<usize>], passes: usize, table: &[f32]) ->
     for (t, &key) in addresses.iter().enumerate() {
         store.observe(key, t);
     }
-    votes(addresses.len(), &store.witnesses(passes), table)
+    let mut votes = vec![0.; addresses.len()];
+    store.visit(passes, |w| w.vote(&mut votes, table));
+    votes
 }
 
 struct Frame {
@@ -59,11 +52,12 @@ impl Tape {
         input: &[f32],
         hidden: &[f32],
         w: &[f32],
-        d: usize,
-        length: usize,
+        shape: (usize, usize),
         passes: usize,
+        retain_adjoint: bool,
         address: impl Fn(&[f32]) -> Option<usize>,
     ) -> Self {
+        let (d, length) = shape;
         assert!(d > 0 && length > 0 && input.len().is_multiple_of(length * d));
         assert_eq!(input.len(), hidden.len());
         assert_eq!(w.len(), parameters(d));
@@ -71,7 +65,11 @@ impl Tape {
         let mut tape = Self {
             d,
             length,
-            input: input.to_vec(),
+            input: if retain_adjoint && length >= 3 {
+                input.to_vec()
+            } else {
+                Vec::new()
+            },
             frames: vec![],
         };
         if length < 3 {
@@ -85,15 +83,21 @@ impl Tape {
                 let bits: Vec<_> = vector.iter().map(|x| x.to_bits()).collect();
                 let key = *known.entry(bits).or_insert_with(|| address(vector));
                 store.observe(key, t);
-                let witnesses = store.witnesses(passes);
-                let terminals: Vec<_> = votes(t + 1, &witnesses, w)
-                    .into_iter()
-                    .enumerate()
-                    .filter(|&(_, v)| v != 0.)
-                    .collect();
+                let mut witnesses = Vec::new();
+                let mut votes = vec![0.; t + 1];
+                store.visit(passes, |path| {
+                    path.vote(&mut votes, w);
+                    if retain_adjoint {
+                        witnesses.push(path);
+                    }
+                });
                 let mut raw = vec![0.; d];
-                for &(pos, weight) in &terminals {
+                let mut terminals = Vec::new();
+                for (pos, weight) in votes.into_iter().enumerate().filter(|&(_, v)| v != 0.) {
                     add(&mut raw, row(sequence, pos, d), weight);
+                    if retain_adjoint {
+                        terminals.push((pos, weight));
+                    }
                 }
                 let h = row(hidden, batch * length + t, d);
                 let g = (w[BINS + d] + scale * dot(h, &w[BINS..][..d])).tanh();

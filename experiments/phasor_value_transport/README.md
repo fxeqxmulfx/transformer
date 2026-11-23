@@ -2133,6 +2133,27 @@ has identity directional derivative at zero. [Coefficient masks, margin bounds a
 "$bin" lookup-weight-score 0 "$out" keep:1 linear
 ```
 
+#### Memory used by frozen lookup
+
+The frozen scorer adds path votes in the same order as training and
+discards the witnesses after each prefix. In a host benchmark with four
+sequences of 512 vectors at width 64, training retained 25,261,501 path
+witnesses. Frozen scoring retained zero. Both modes returned the same
+SHA-256 digest over every output coordinate. Across four processes per
+mode, with six reads per process, median read time fell from 558 ms to
+379 ms. Median peak resident memory fell from 546 MiB to 7 MiB.
+[Ordered vote and per-prefix equivalence](../../src/Transformer/Phasor/TripleTransport/StreamingPathScore.lean)
+
+```sh
+test_bin=$(cargo +stable test --release --locked --offline --features fp32-affine-reference,triple-typed-lookup \
+    --bin phasor-value-transport --no-run --message-format=json | \
+    jq -r 'select(.reason=="compiler-artifact" and .target.name=="phasor-value-transport" and .profile.test and .executable!=null)|.executable')
+for mode in adjoint frozen; do
+    PHASOR_PATH_STORAGE="$mode" /usr/bin/time -f '%e seconds, %M KiB peak RSS' "$test_bin" \
+        --ignored --exact typed_lookup::tests::measure_path_storage --nocapture
+done
+```
+
 ### Interpolation in a learned cyclic order
 
 Every memory address and value refers to a prototype in the learned dense

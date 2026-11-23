@@ -18,7 +18,7 @@ pub(super) struct Witness {
 }
 
 impl Witness {
-    pub fn weight(self) -> (usize, f32) {
+    pub(super) fn weight(self) -> (usize, f32) {
         (
             (self.code as usize) % BINS,
             if self.code & BINS as u32 == 0 {
@@ -27,6 +27,11 @@ impl Witness {
                 -1.
             },
         )
+    }
+
+    pub(super) fn vote(self, votes: &mut [f32], table: &[f32]) {
+        let (bin, sign) = self.weight();
+        votes[self.position] += sign * table[bin];
     }
 }
 
@@ -88,8 +93,7 @@ impl Store {
         self.previous = [middle, current];
     }
 
-    pub fn witnesses(&self, passes: usize) -> Vec<Witness> {
-        let mut result = Vec::new();
+    pub(super) fn visit(&self, passes: usize, mut emit: impl FnMut(Witness)) {
         for (&cue, root) in &self.cues {
             let Some(firsts) = self.outgoing.get(root) else {
                 continue;
@@ -111,7 +115,7 @@ impl Store {
                 }
                 if let Some(tails) = self.outgoing.get(&key) {
                     for last in tails {
-                        result.push(Witness {
+                        emit(Witness {
                             position: last.position,
                             code: code(cue, first.relation, last.relation),
                         });
@@ -119,6 +123,5 @@ impl Store {
                 }
             }
         }
-        result
     }
 }
