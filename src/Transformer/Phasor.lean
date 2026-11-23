@@ -10,6 +10,7 @@ public import Transformer.Phasor.ModularChainScore
 public import Transformer.Phasor.DifferencedDivisionScore
 public import Transformer.Phasor.ImagePatchScore
 public import Transformer.Phasor.TemporalRecurrenceScore
+public import Transformer.Phasor.NoisyAnchors
 public import Transformer.Phasor.PastGridScore
 public import Transformer.Phasor.AssociativeCopyScore
 public import Transformer.Phasor.AssociativeEquationScore
