@@ -2156,7 +2156,9 @@ beyond the one and two hops used in training.
 Training seed 0 afresh reproduced the full weight digest and every
 answer count. Seed 1 reached 200/200 validation at update 250. Its five
 reads gave 100, 100, 100, 96 and 18 correct on the same five independent
-hop splits, and it generated C on Mira.
+hop splits, and it generated C on Mira. Seed 2 first crossed at update
+200 with 200/200 validation. It scored 100, 100, 100, 99 and 15 using
+five reads. All three checkpoints passed independent reloads.
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.EndpointScale
@@ -2194,6 +2196,12 @@ model gave 100/100 at each of the original test depths 1, 2, 3, 5
 and 10, and 200/200 on validation. The full five-read checkpoint under
 that same mask gave 18/100 at ten hops. Read budget and interference
 among the learned coefficients both affected the result.
+
+Two end-to-end runs in opposite budget orders reproduced every count
+with identical reports. The five-read grid took 27.31 and 27.66 s,
+ten reads took 26.56 and 28.39 s, twenty took 27.07 and 27.07 s,
+and forty took 27.88 and 29.21 s on the GTX 1050. Each time includes
+startup, the 200 validation questions and all 1,000 test questions.
 
 The optional second budget scores the same individual prompts again and
 counts answers retained, lost and gained. The interior test changes the
