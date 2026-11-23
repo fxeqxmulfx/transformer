@@ -171,4 +171,26 @@ example : follow ([[(0,4)]] ++ [(4,1),(5,2)] :: [[(1,11),(2,12)]]) 0 = some 11 �
   · decide
   · decide
 
+/-- The printed query can request fewer lookups than the number of tables
+shown. Appending any distractor tables beyond the requested horizon preserves
+the result, including in the presence of repeated keys and failed lookups. -/
+theorem after_horizon {A : Type*} [BEq A] (tables extra : List (List (A × A)))
+    (n : ℕ) (in_range : n ≤ tables.length) (start : A) :
+    follow ((tables ++ extra).take n) start = follow (tables.take n) start := by
+  rw [List.take_append_of_le_length in_range]
+
+/-- Removing the reached edge makes the full oracle undefined, even if the
+key appears again in a later table. The traversed prefix still identifies
+the last reachable key, which can be offered as a diagnostic choice. -/
+theorem missing_interior {A : Type*} [BEq A] (pre post : List (List (A × A)))
+    (t : List (A × A)) (start key : A) (reached : follow pre start = some key)
+    (missing : t.lookup key = none) : follow (pre ++ t :: post) start = none := by
+  rw [append,reached,Option.bind_some,follow,missing]
+  rfl
+
+example : follow (([miraFirst,miraSecond] ++ [[("Mira","jade")]]).take 2) "Mira" =
+    follow ([miraFirst,miraSecond].take 2) "Mira" := after_horizon _ _ _ (by decide) _
+example : follow ([miraFirst] ++ [("ros","opal")] :: [miraSecond]) "Mira" = none := by
+  apply missing_interior _ _ _ _ "dax" (by decide) (by decide)
+
 end Transformer.Phasor.LookupQuestion
