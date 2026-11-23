@@ -1,12 +1,12 @@
 # Embedding-input Phasor on the GPT stress suite and NV11
 
-**Triple transport is the default Phasor architecture.** It solved all
-4,704 training and 4,705 held-out NV11 pairs on seeds 0, 1 and 2 at update
-250. The same model is trained separately on each GPT task, starting from
-the original random embeddings with ordinary AdamW. [Triple transport](#triple-transport) · [Model and scoring rules](../../rule.md)
-
-A partial audit of the default verified **46/75 short runs and 6/30 long
-runs** alongside all three exact NV11 checkpoints. [Default GPT results](#triple-transport-on-the-canonical-gpt-tiers)
+**Pair-class triple transport is the default Phasor architecture.**
+The November 23 audit verified **66/75 canonical short runs, 29/30 long
+runs and three exact NV11 checkpoints** under model identifier
+`phasor-triple-pair-classes-current-32-v1`. Each NV11 seed solved all
+4,704 training and 4,705 held-out pairs at update 250. Every task trains
+fresh weights from the original random embeddings with ordinary AdamW.
+[Default GPT results](#pair-class-triple-transport-on-the-canonical-gpt-tiers) · [Model and scoring rules](../../rule.md)
 
 The input-phase comparison reached 75/75 short and 30/30 long runs. Its
 best NV11 result at updates 250 and 3,000 was 90/4,705 held-out pairs.
@@ -18,16 +18,20 @@ gives a count for each tier. The NV11 check requires exact recovery of
 every training and held-out pair.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.PairClasses
 cd experiments/phasor_value_transport
 cargo +stable build --locked --release --features fp32-affine-reference
 bin=./target/release/phasor-value-transport
-out=runs/main-triple
+out=runs/main-pair-classes
 export PHASOR_EVAL_BATCH_CAP=16
 "$bin" check
-./run_stress.sh cell "$out"
+./run_stress.sh --gpt-only cell "$out"
+./run_stress.sh --gpt-only probes "$out" > "$out/replays.jsonl"
+for seed in 0 1 2; do
+    "$bin" cell arithmetic-cubic-product "$seed" "$out"
+    "$bin" probes arithmetic-cubic-product "$seed" "$out" >> "$out/replays.jsonl"
+done
 "$bin" report "$out" > "$out/report.json"
-./run_stress.sh replay "$out" > "$out/replays.jsonl"
 for seed in 0 1 2; do
     "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
 done > "$out/nv11-scores.jsonl"
@@ -1361,6 +1365,10 @@ geometry audit applies to Fourier checkpoints.
 
 ## Triple transport
 
+The default adds learned prefix-phase and pair-class reads to triple
+transport. The original four-gate model described below is available
+with `--features triple-transport`. [Pair-class search and NV11 results](#pair-classes-on-the-fibonacci-orbit-split)
+
 A context can learn a partial map between a dictionary of hidden vectors.
 Three distinct correspondences from one map relate two ordered triples.
 Joining these relations across contexts gives a graph of triples. Given two
@@ -1464,7 +1472,7 @@ On modulo-193 division with 193 learned prototypes, the 292 updates to
 the first perfect held-out score took 143.68 / 159.47 / 142.68 seconds
 with full graph rebuilds and 30.53 / 31.93 / 30.78 seconds with incremental
 updates on the same GTX 1050. The two implementations produced identical
-checkpoint bytes for each seed. On NV11 with the default 128 prototypes,
+checkpoint bytes for each seed. On NV11 with the original 128 prototypes,
 seed 0 took 15.31 seconds with full rebuilds and 7.99 seconds with the
 incremental graph. The independently reloaded weights recovered all 9,409
 pairs. These times cover training and scheduled observations.
@@ -1597,7 +1605,49 @@ matched checkpoint.
 PHASOR_EVAL_BATCH_CAP=16 "$bin" memory-bench triple-transport basis-parity16 0 250 runs/triple-bench
 ```
 
-### Triple transport on the canonical GPT tiers
+### Pair-class triple transport on the canonical GPT tiers
+
+One set of forward rules and one checkpoint format serve all 35 tasks.
+Three affine gates use the current causal hidden state to weight the
+context, the addressed memory value and the structural proposal. A
+learned phase projection also reads the embedding prefix. The classifier
+scores the resulting dense vector against the trainable input embedding
+matrix. The contract check compared all 370 logits after relabeling
+fixed inputs and checked causal-prefix agreement on arbitrary dense
+inputs. [Gate controls](../../src/Transformer/Phasor/TripleTransport/StructuralGate.lean) · [Pair search](#pair-classes-on-the-fibonacci-orbit-split)
+
+The November 23 partial audit reloaded 98 passing checkpoints on
+Kernite v0.6.0. Of those, 66 belong to the original short tier, 29 to
+the long tier and three to NV11. Twenty-two short and nine long cases
+passed all three seeds. Ten canonical runs remained pending and
+none had exhausted its source budget. All counts use the same model
+identifier as the opening commands.
+
+| Easy recall seed | First passing update | Novel validation | Independent test | Test with 64 extra tokens |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 4,300 | 507/512 | 503/512 | 504/512 |
+| 1 | 2,700 | 508/512 | 505/512 | 319/512 |
+| 2 | 3,350 | 509/512 | 502/512 | 359/512 |
+
+Each recall example contains eight queries. On the same delayed examples
+the original four-gate model scored 360, 499 and 178 correct. The change
+improved long-delay accuracy on seeds 0 and 2 and reduced it on seed 1.
+On 16-bit parity, all three pair-class checkpoints scored 157/157 on
+novel validation. Their independent scores were 512, 512 and 505 out of
+512, and their 64-bit transfer scores were 47, 64 and 64 out of 64.
+On GPT linear transport all three seeds reached 256/256 on validation
+and test at update 224. On associative division the first crossings
+were updates 836, 836 and 722 with 4,612, 4,614 and 4,610 of 4,656.
+Hard depth crossed at 1,000, 2,250 and 1,000 updates. All three seeds
+scored 512/512 on the independent test. At length 128 they scored 512,
+512 and 506 out of 512.
+
+The native report records every first crossing, held-out count and
+checkpoint digest. To reproduce the delay column, run
+`"$bin" probes basis-recall-easy SEED "$out" recall-gap 64` for each
+seed with the opening build and run directory.
+
+### Four-gate triple transport on the canonical GPT tiers
 
 The November 22 partial audit independently reloaded 55 checkpoints from
 Kernite v0.6.0. Triple transport passed 46/75 short runs and 6/30 long
@@ -1655,11 +1705,18 @@ intervention and uses the original sequence scorer. The dense contributions
 of any partition of the gates add to the original output at a fixed prefix.
 [Read partition proof](../../src/Transformer/Phasor/TripleTransport.lean)
 
-To reproduce a partial audit, use the default binary and run directory
-from the opening commands. Each replay records the first passing update,
-exact count, denominator, checkpoint digest and supplied test splits.
+To reproduce the four-gate audit, build its explicit architecture
+and point the commands at its run directory. Each replay records the
+first passing update, exact count, denominator, checkpoint digest and
+supplied test splits.
 
 ```sh
+cargo +stable build --release --locked --features fp32-affine-reference,triple-transport
+bin=./target/release/phasor-value-transport
+out=runs/main-triple
+for seed in 0 1 2; do
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+done > "$out/nv11-scores.jsonl"
 "$bin" report "$out" > "$out/report.json"
 jq -r '.tasks[] as $t | $t.seeds[] | select(.status=="pass") | [$t.case,.seed] | @tsv' \
     "$out/report.json" | while read -r task seed; do
@@ -1718,7 +1775,7 @@ On a GTX 1050 with Kernite v0.6.0, six alternating-order pairs timed the
 complete `probes` command, including startup and the supplied test splits.
 All paired score records matched byte for byte.
 
-| Default model | Mean seconds before | Mean seconds with reuse |
+| Four-gate model | Mean seconds before | Mean seconds with reuse |
 | --- | ---: | ---: |
 | NV11 | 0.535 | 0.465 |
 | GPT linear transport | 2.580 | 2.335 |
@@ -1744,7 +1801,7 @@ emits the checkpoint digest, batch capacity and individual times in seconds.
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.FixedEvaluation
 cd experiments/phasor_value_transport
-cargo +stable build --locked --release --features fp32-affine-reference
+cargo +stable build --locked --release --features fp32-affine-reference,triple-transport
 bin=./target/release/phasor-value-transport
 out=runs/main-triple
 export PHASOR_EVAL_BATCH_CAP=16
@@ -1776,7 +1833,7 @@ NV11 pairs at update 250 on each seed. On the original short-tier
 `division-p193` case, its first passing observation was update 292 on
 all three seeds. Independent checkpoint reloads reproduced 18,528/18,528
 held-out answers for each seed. The source supplies one validation split
-for this task. At the same update, the default scored 110, 85 and 107 out
+for this task. At the same update, the 128-slot model scored 110, 85 and 107 out
 of 18,528. Seed 0 scored 90/18,528 at update 730.
 
 ```sh
@@ -1830,7 +1887,7 @@ must match in full.
 | 20-bit parity | 0 | 1,000 | 284/284 | 512/512 | 64/64 | 64/64 |
 | 24-bit parity | 0 | 750 | 306/306 | 512/512 | 64/64 | 64/64 |
 
-At update 3,000 the default triple model scored 117, 95 and 97 out of
+At update 3,000 the original four-gate model scored 117, 95 and 97 out of
 157 on 16-bit parity. To measure the trained phase residual, we zeroed
 each output projection in turn and re-scored the same checkpoints with
 the original scorer. All columns below give correct novel sequences.
@@ -1889,7 +1946,7 @@ slots it scans that short list directly. Lean proves that restoring the
 query's own image gives exactly the candidates of the original scan.
 [Candidate index proof](../../src/Transformer/Phasor/TripleTransport/CandidateIndex.lean)
 
-On the default NV11 run, wall time to update 250 fell on every seed.
+On the four-gate NV11 run, wall time to update 250 fell on every seed.
 The table includes process startup and training on the same GTX 1050.
 All three pairs produced byte-identical checkpoints. Independent scoring
 recovered 4,704/4,704 training and 4,705/4,705 held-out pairs for both
@@ -2692,10 +2749,10 @@ startup. Each row compares the same model and the same training endpoint.
 
 | Model and endpoint | Dense transfer | Addressed transfer |
 | --- | --- | --- |
-| Default triple transport, exact NV11 checkpoint at update 250 | 5.50 / 5.58 / 5.66 | 4.91 / 5.01 / 5.07 |
+| Four-gate triple transport, exact NV11 checkpoint at update 250 | 5.50 / 5.58 / 5.66 | 4.91 / 5.01 / 5.07 |
 | Four unit gates, first 100 Fibonacci updates | 12.74 / 12.44 / 12.39 | 10.13 / 10.12 / 9.89 |
 | Four unit gates, first 192 GPT key/value updates | 2.41 / 2.45 / 2.45 | 2.34 / 2.32 / 2.36 |
-| Default triple transport, shifted Boolean AND crossing | 1.39 / 1.11 / 1.19 | 1.36 / 1.14 / 1.16 |
+| Four-gate triple transport, shifted Boolean AND crossing | 1.39 / 1.11 / 1.19 | 1.36 / 1.14 / 1.16 |
 
 In the unfinished cells, the saved parameters, both optimizer moments
 and scheduled observations agreed byte for byte. The completed NV11

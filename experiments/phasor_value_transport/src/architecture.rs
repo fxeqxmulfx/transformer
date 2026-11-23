@@ -159,7 +159,7 @@ pub const HEAD: Head = if FOURIER {
 } else if cfg!(feature = "learned-stream-read") {
     Head::Stream
 } else if STREAM_READ {
-    Head::TripleTransport
+    Head::PeerTriplePhase(crate::head::PeerRead::PAIR_GRAPH)
 } else if RAW {
     Head::Original
 } else {
