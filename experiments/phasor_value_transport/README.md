@@ -3306,10 +3306,24 @@ pending, with zero recorded budget misses. On `suite-blocks`, seeds 0,
 checkpoint resumed from 27/28 at update 750. Its independent test gave
 64/64, followed by 26/64 at length 32 and 22/64 at length 64.
 
+Across the 108 broader cases, the November 23 combined source replay
+covered 42 cases and 102 case/seed combinations. Nine retained the
+source target through its post-crossing window, two crossed and then fell
+below it, and three used their full budget without crossing. The other
+88 ended at an earlier observation. The three full-budget misses were
+Basis Recall Hard at 3,000 updates, with 0, 83 and 503 of 512 novel
+validation sequences correct on seeds 0, 1 and 2. The target requires
+507. The two lost crossings were on conditional amplitudes, whose source
+scorer measures unquantized MSE. These counts use the longest
+independently replayed search for each case and seed.
+[Source reporting rules](catalog_results.jq)
+
 In the broader source catalog, `power-division-p17-k0` reached 136/136
 on all three seeds at update 250 and retained 136/136 at update 750.
 The exponent is zero, so this task measures a constant output for every
-allowed numerator and denominator.
+allowed numerator and denominator. On the nonconstant exponent-three
+case, seeds 0 and 1 likewise reached 136/136 at update 250 and retained
+all 136 answers at update 750.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 On `arithmetic-square-product` the three seeds also passed at update
 250. Each recovered all 4,704 training pairs and all 4,705 held-out pairs.
