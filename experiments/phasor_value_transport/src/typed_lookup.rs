@@ -6,6 +6,9 @@ use std::num::NonZeroUsize;
 #[path = "typed_lookup/agreement.rs"]
 mod agreement;
 use agreement::Agreement;
+#[path = "typed_lookup/coefficients.rs"]
+mod coefficients;
+use coefficients::Coefficients;
 #[path = "typed_lookup/forward.rs"]
 mod forward;
 #[path = "typed_lookup/gain.rs"]
@@ -61,7 +64,16 @@ pub fn final_vote_budgets(
     }
     let mut votes = vec![vec![0.; addresses.len()]; budgets.len()];
     let rule = agreement_power.map(|power| Agreement::new(table, power));
-    store.visit_budgets(budgets, walk, |i, w| vote(w, &mut votes[i], table, rule.as_ref()));
+    if let Some(rule) = &rule
+        && ordered
+        && walk == Walk::JumpTables
+        && budgets.len() > 1
+    {
+        let mut coefficients = Coefficients::new(table, rule);
+        store.visit_budgets(budgets, walk, |i, w| coefficients.vote(w, &mut votes[i]));
+    } else {
+        store.visit_budgets(budgets, walk, |i, w| vote(w, &mut votes[i], table, rule.as_ref()));
+    }
     votes
 }
 

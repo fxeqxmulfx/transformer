@@ -23,14 +23,16 @@ fn sharing_budget_prefixes_keeps_every_floating_point_vote() {
     let weights: Vec<_> = (0..BINS).map(|i| (i as f32 * 0.283).sin()).collect();
     let budgets = [1, 2, 10, 10, 20, 39, 40, 41, 80];
     for ordered in [false, true] {
-        let together = final_vote_budgets(&keys, &budgets, &weights, ordered, None, Walk::Sequential);
-        let jumped = final_vote_budgets(&keys, &budgets, &weights, ordered, None, Walk::JumpTables);
-        for (a, b) in together.iter().zip(&jumped) {
-            assert!(a.iter().zip(b).all(|(u,v)| u.to_bits() == v.to_bits()));
-        }
-        for (out, budget) in together.iter().zip(budgets) {
-            let separate = final_vote_budgets(&keys, &[budget], &weights, ordered, None, Walk::Sequential);
-            assert!(out.iter().zip(&separate[0]).all(|(a, b)| a.to_bits() == b.to_bits()));
+        for power in [None, Some(0), Some(4)] {
+            let together = final_vote_budgets(&keys, &budgets, &weights, ordered, power, Walk::Sequential);
+            let jumped = final_vote_budgets(&keys, &budgets, &weights, ordered, power, Walk::JumpTables);
+            for ((direct, indexed), budget) in together.iter().zip(&jumped).zip(budgets) {
+                let single = final_vote_budgets(&keys, &[budget], &weights, ordered, power, Walk::Sequential);
+                for ((a, b), c) in direct.iter().zip(indexed).zip(&single[0]) {
+                    assert_eq!(a.to_bits(), b.to_bits());
+                    assert_eq!(a.to_bits(), c.to_bits());
+                }
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ impl Writes {
 #[cfg_attr(test, derive(Debug, Eq, PartialEq))]
 pub(super) struct Witness {
     pub position: usize,
-    code: u32,
+    pub(super) code: u32,
 }
 
 impl Witness {

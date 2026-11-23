@@ -2575,6 +2575,27 @@ before and after applying the trial patch. Run the `lookup-cycle-budget-study`
 commands below with `isolated-jumps` and `ordered-isolated-jumps` on the
 same weights and compare the complete JSON records.
 
+Chronological indexed reads now reuse a two-bank coefficient when the
+same role tuple occurs across requested budgets. The 1,024-entry cache
+checks the full packed role code, and each vote is still added at its
+original FP32 accumulation position. On the fixed seed-0 checkpoint,
+every score and prediction digest matched the uncached scorer across all
+100 original/edited pairs at each budget. Four interleaved runs after
+warm-up gave the following median elapsed times for complete processes.
+[Coefficient reuse proof](../../src/Transformer/Phasor/TripleTransport/FixedEvaluation.lean)
+
+| Actual tables | Requested read budgets | Direct weights (s) | Cached weights (s) |
+| ---: | --- | ---: | ---: |
+| 40 | 39, 40, 41 | 8.785 | 8.095 |
+| 160 | 159, 160, 161 | 50.585 | 48.475 |
+
+With latest-write selection, a separate matched comparison took
+15.95 versus 16.60 seconds at 40 tables and 79.21 versus 84.43 at 160.
+The cache is enabled for chronological, multi-budget indexed evaluation.
+To reproduce the timings, build `fp32-affine-reference,triple-agreement-lookup`
+at this change and its parent and run `lookup-cycle-budget-study` with
+`ordered-isolated-jumps` as above on both binaries.
+
 For the learned model, the probe fixes 100 disjoint-name questions with
 forty tables and the seed-0 weights trained on depths one to five at
 update 200. It pairs each question with a swap of two destinations in
