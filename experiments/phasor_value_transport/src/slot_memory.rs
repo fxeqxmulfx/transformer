@@ -325,10 +325,12 @@ impl Row {
         l: &Layout,
         w: &'a [f32],
         h: &'a [f32],
+        prefix_value: Option<&'a [f32]>,
     ) -> Option<&'a [f32]> {
         match branch {
             0 => Some(h),
             1 => self.cell.map(|i| l.row(w, i)),
+            2 if prefix_value.is_some() => prefix_value,
             2 | 3 => self
                 .structural(branch, l.gate_mode.shared())
                 .map(|i| l.prototype(w, i)),
@@ -377,6 +379,7 @@ pub fn forward(
     cells: &[u32],
     hidden: &[f32],
     length: usize,
+    prefix: Option<&crate::slot_induction::Prefix>,
 ) -> (Vec<Row>, Vec<f32>) {
     let d = l.d;
     assert_eq!(cells.len() * d, hidden.len());
@@ -419,8 +422,13 @@ pub fn forward(
             row.transport = (!route.mute_proposals[1] && reads.transport[cell] != ABSENT)
                 .then_some(reads.transport[cell] as usize);
         }
+        let prior = prefix.and_then(|p| p.read(r)).map(|(_, value)| value);
+        if prior.is_some() {
+            row.constant = None;
+            row.transport = None;
+        }
         for (i, &c) in row.coefficients[..l.gate_mode.reads()].iter().enumerate() {
-            if let Some(value) = row.read(i, l, w, h) {
+            if let Some(value) = row.read(i, l, w, h, prior) {
                 for (y, &v) in dst.iter_mut().zip(value) {
                     *y += c * v;
                 }
@@ -431,6 +439,12 @@ pub fn forward(
     (tape, out)
 }
 
+pub struct Backward {
+    pub hidden: Vec<f32>,
+    pub parameters: crate::slot_adjoint::Adjoint,
+    pub input: Vec<f32>,
+}
+
 pub fn backward(
     l: &Layout,
     w: &[f32],
@@ -438,17 +452,25 @@ pub fn backward(
     rows: &[Row],
     dy: &[f32],
     length: usize,
-) -> (Vec<f32>, crate::slot_adjoint::Adjoint) {
+    prefix: Option<&crate::slot_induction::Prefix>,
+) -> Backward {
     let d = l.d;
     let scale = l.gate_scales;
     let units = (d as f32).sqrt().recip();
     let mut dh = vec![0.; rows.len() * d];
+    let mut input = if prefix.is_some() {
+        vec![0.; rows.len() * d]
+    } else {
+        vec![]
+    };
     let mut adjoint = crate::slot_adjoint::Adjoint::new(l, rows);
     for (r, row) in rows.iter().enumerate() {
         let v = &dy[r * d..(r + 1) * d];
         let h = &hidden[r * d..(r + 1) * d];
+        let prior = prefix.and_then(|p| p.read(r));
+        let prefix_value = prior.map(|(_, value)| value);
         for (i, &c) in row.coefficients[..l.gate_mode.reads()].iter().enumerate() {
-            let Some(value) = row.read(i, l, w, h) else {
+            let Some(value) = row.read(i, l, w, h, prefix_value) else {
                 continue;
             };
             if let Some(gate) = i.checked_sub(l.gate_mode.first_learned()) {
@@ -462,10 +484,11 @@ pub fn backward(
                     }
                 }
             }
-            let dst = match i {
-                0 => &mut dh[r * d..(r + 1) * d],
-                1 => adjoint.row(l.slots + row.cell.unwrap(), d),
-                2 | 3 => {
+            let dst = match (i, prior) {
+                (0, _) => &mut dh[r * d..(r + 1) * d],
+                (1, _) => adjoint.row(l.slots + row.cell.unwrap(), d),
+                (2, Some((source, _))) => &mut input[source * d..][..d],
+                (2 | 3, _) => {
                     let slot = row.structural(i, l.gate_mode.shared()).unwrap();
                     adjoint.row(slot, d)
                 }
@@ -476,7 +499,11 @@ pub fn backward(
             }
         }
     }
-    (dh, adjoint)
+    Backward {
+        hidden: dh,
+        parameters: adjoint,
+        input,
+    }
 }
 #[cfg(test)]
 mod capacity_tests {

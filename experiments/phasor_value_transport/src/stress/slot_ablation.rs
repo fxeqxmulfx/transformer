@@ -54,6 +54,17 @@ pub fn run(name: &str, seed: u32, out: &Path, probes: ProbeSet) -> Result<()> {
         results.insert("shared_roles", score(&mut shared, &original)?);
     }
     if let Some(read) = cfg.head.peer_read() {
+        if read.dense_induction {
+            let mut control = cfg.clone();
+            control.head = head::Head::PeerTriplePhase(head::PeerRead {
+                dense_induction: false,
+                ..read
+            });
+            results.insert(
+                "without_dense_induction",
+                score(&mut Engine::new(control, &original)?, &original)?,
+            );
+        }
         if read.pairs.is_some() {
             for (name, pairs) in [
                 ("without_pair_classes", None),

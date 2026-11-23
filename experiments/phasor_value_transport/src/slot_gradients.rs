@@ -121,15 +121,16 @@ fn mixture(delta: f64) -> Result<()> {
     let g: Vec<_> = (0..x.len()).map(|_| rng.gauss(0., 0.17) as f32).collect();
     let routing = route(&l, &w);
     let cells = slot_memory::scalar_cells(&l, &w, &routing, &x, &h, 3);
-    let (tape, _) = slot_memory::forward(&l, &w, &routing, &cells, &h, 3);
+    let (tape, _) = slot_memory::forward(&l, &w, &routing, &cells, &h, 3, None);
     if l.gate_mode.first_learned() != 0 && tape.iter().any(|row| row.coefficients[0] != 1.) {
         return Err("the context residual changed gain with the hidden input".into());
     }
     if tape[1].transport != Some(4) || tape[4].constant != Some(2) {
         return Err("structural gradient fixture missed the transported or constant branch".into());
     }
-    let (dh, adjoint) = slot_memory::backward(&l, &w, &h, &tape, &g, 3);
-    let dw = adjoint.dense(&l);
+    let grad = slot_memory::backward(&l, &w, &h, &tape, &g, 3, None);
+    let dh = grad.hidden;
+    let dw = grad.parameters.dense(&l);
     for (name, range) in [
         ("prototypes", 0..l.values),
         ("direct_values", l.values..l.gates),
@@ -154,7 +155,7 @@ fn mixture(delta: f64) -> Result<()> {
             }
             let routing = route(&l, &p);
             let cells = slot_memory::scalar_cells(&l, &p, &routing, &x, &state, 3);
-            let (changed, output) = slot_memory::forward(&l, &p, &routing, &cells, &state, 3);
+            let (changed, output) = slot_memory::forward(&l, &p, &routing, &cells, &state, 3, None);
             for (old, new) in tape.iter().zip(changed) {
                 if (old.cell, old.constant, old.transport)
                     != (new.cell, new.constant, new.transport)

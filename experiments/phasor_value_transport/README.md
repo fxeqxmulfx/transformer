@@ -1660,6 +1660,61 @@ checkpoint digest. To reproduce the delay column, run
 `"$bin" probes basis-recall-easy SEED "$out" recall-gap 64` for each
 seed with the opening build and run directory.
 
+### Dense induction on the causal embedding prefix
+
+The `triple-dense-induction` variant uses the same three gates and
+trainable parameters as pair-class triple transport. At each position it
+searches the earlier normalized input vectors for the most recent key with
+cosine similarity above 1/√2. The key's successor must also precede
+the query. When a match exists, the shared structural gate reads that
+successor vector. Otherwise it reads the usual static proposal. The gate
+learns from the current causal hidden state. Gradients reach both the
+gate and the earlier value through the ordinary sequence loss.
+[Dense read and causality proofs](../../src/Transformer/Phasor/TripleTransport/DenseInduction.lean)
+
+| Easy recall, seed 0 | First passing update | Novel validation | Independent test | Test with 64 extra tokens |
+| --- | ---: | ---: | ---: | ---: |
+| Main triple transport | 4,300 | 507/512 | 503/512 | 504/512 |
+| Dense induction | 150 | 512/512 | 512/512 | 512/512 |
+
+The same dense-induction checkpoint scored 512/512 with both 128 and
+256 extra tokens. On the broader hard-recall case, which allows key
+overwrites, seed 0 first scored 512/512 on novel validation at update 50.
+The independently reloaded checkpoint also scored 512/512 on the source
+test. Both scores stayed at 512/512 at update 550, after the original
+500-update retention window. From the same initial weights the main
+model finished its 3,000-update budget at 0/512 on each split.
+On the canonical short key-value binding probe, seed 0 reached 512/512
+on validation and the independent test at update 192. The main model
+first crossed at update 640 with 510/512 on validation.
+
+At two input positions the prefix search has no completed donor. The
+fresh seed-0 NV11 run reproduced the main model's observation history
+and weights byte for byte, including all 4,704 training and 4,705
+held-out answers at update 250.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.DenseInduction
+cd experiments/phasor_value_transport
+flags=fp32-affine-reference,triple-dense-induction
+cargo +stable test --release --locked --bin phasor-value-transport --features "$flags"
+cargo +stable build --release --locked --features "$flags"
+bin=./target/release/phasor-value-transport
+out=runs/dense-induction
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+for seed in 0 1 2; do
+    "$bin" cell arithmetic-cubic-product "$seed" "$out"
+    "$bin" nv11-score "$out/arithmetic-cubic-product/seed$seed/weights.f32"
+    "$bin" cell basis-recall-easy "$seed" "$out"
+    for gap in 64 128 256; do
+        "$bin" probes basis-recall-easy "$seed" "$out" recall-gap "$gap"
+    done
+    "$bin" slot-ablate basis-recall-easy "$seed" "$out" recall-gap 64
+    "$bin" catalog-target basis-recall-hard "$seed" 100 "$out/catalog"
+done
+```
+
 ### Pair-class results beyond the canonical tiers
 
 The November 23 registered-extension audit through language L2 seed 1

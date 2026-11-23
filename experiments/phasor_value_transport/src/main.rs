@@ -51,6 +51,7 @@ mod slot_bank_checks;
 mod slot_checks;
 mod slot_copy;
 mod slot_gradients;
+mod slot_induction;
 mod slot_memory;
 mod slot_orbits;
 mod toeplitz;

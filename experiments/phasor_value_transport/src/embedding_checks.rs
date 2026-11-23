@@ -59,6 +59,17 @@ pub fn run() -> Result<()> {
             }
         }
     }
+    let induction = e.config.head.peer_read().is_some_and(|r| r.dense_induction);
+    if induction {
+        // Keep a tolerant match away from the angular routing boundary.
+        // The full pullback below then includes a gradient to an earlier value.
+        vectors.copy_within(..width, 2 * width);
+        vectors[2 * width] += 0.05;
+        let prefix = crate::slot_induction::Prefix::new(vectors.clone(), width, length);
+        if prefix.source(2) != Some(1) {
+            return Err("dense induction derivative missed the earlier value".into());
+        }
+    }
     if vectors.chunks_exact(width).any(|v| {
         parameters[..vocab * width]
             .chunks_exact(width)
@@ -67,6 +78,17 @@ pub fn run() -> Result<()> {
         return Err("arbitrary-vector fixture accidentally hit an embedding row".into());
     }
     let reference = e.infer_embeddings(&vectors, batch, length)?;
+    if induction {
+        let mut control = e.config.clone();
+        control.head = head::Head::PeerTriplePhase(head::PeerRead::PAIR_GRAPH);
+        let baseline =
+            Engine::new(control, &parameters)?.infer_embeddings(&vectors, batch, length)?;
+        if reference.logits[..2 * vocab] != baseline.logits[..2 * vocab]
+            || reference.logits[2 * vocab..3 * vocab] == baseline.logits[2 * vocab..3 * vocab]
+        {
+            return Err("dense induction failed its positive or two-position control".into());
+        }
+    }
     let cotangent: Vec<_> = (0..rows * vocab)
         .map(|_| rng.gauss(0., 0.12) as f32)
         .collect();

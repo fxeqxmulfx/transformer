@@ -33,6 +33,7 @@ impl Drop for EvaluationScope {
 }
 
 struct Tape {
+    prefix: Option<crate::slot_induction::Prefix>,
     weights: Vec<f32>,
     hidden: Vec<f32>,
     rows: Vec<Row>,
@@ -87,6 +88,7 @@ impl Engine {
 }
 
 pub(super) struct SlotLayer {
+    input_gradient: RefCell<Option<F>>,
     access: Rc<Cell<WeightAccess>>,
     phase: Option<super::hidden_layer::HiddenLayer>,
     layout: Layout,
@@ -109,6 +111,7 @@ impl SlotLayer {
         let layout = Layout::new(&e.config);
         let count = layout.end();
         Ok(Self {
+            input_gradient: RefCell::default(),
             access: Rc::default(),
             phase: e
                 .config
@@ -131,6 +134,7 @@ impl SlotLayer {
                 .cuda
                 .alloc(e.config.max_length * e.config.max_batch * e.config.width)?,
             tape: RefCell::new(Tape {
+                prefix: None,
                 weights: vec![],
                 hidden: vec![],
                 rows: vec![],
@@ -235,8 +239,26 @@ impl SlotLayer {
         let cells = self.cells.read()?;
         let mut h = e.last.read()?;
         h.truncate(rows * l.d);
-        let (choices, out) =
-            slot_memory::forward(l, &tape.weights, &tape.routing, &cells[..rows], &h, length);
+        let prefix = if length > 2
+            && !tape.routing.mute_proposals[1]
+            && e.config.head.peer_read().is_some_and(|r| r.dense_induction)
+        {
+            let mut input = e.embed_norm.read()?;
+            input.truncate(rows * l.d);
+            Some(crate::slot_induction::Prefix::new(input, l.d, length))
+        } else {
+            None
+        };
+        let (choices, out) = slot_memory::forward(
+            l,
+            &tape.weights,
+            &tape.routing,
+            &cells[..rows],
+            &h,
+            length,
+            prefix.as_ref(),
+        );
+        tape.prefix = prefix;
         let device = e.cuda.upload(&out)?;
         self.copy(self.output.ptr(), device.ptr(), out.len())?;
         if let Some(phase) = &self.phase {
@@ -304,20 +326,32 @@ impl SlotLayer {
             phase.backward(e, rows, length)?;
         }
         let dy = e.dlast.read()?;
-        let (dh, gradient) = slot_memory::backward(
+        let gradient = slot_memory::backward(
             &self.layout,
             &tape.weights,
             &tape.hidden,
             &tape.rows,
             &dy,
             length,
+            tape.prefix.as_ref(),
         );
-        self.write_adjoint(e, &gradient)?;
-        let device = e.cuda.upload(&dh)?;
-        self.copy(e.dlast.ptr(), device.ptr(), dh.len())
+        self.write_adjoint(e, &gradient.parameters)?;
+        *self.input_gradient.borrow_mut() = if gradient.input.is_empty() {
+            None
+        } else {
+            Some(e.cuda.upload(&gradient.input)?)
+        };
+        let device = e.cuda.upload(&gradient.hidden)?;
+        self.copy(e.dlast.ptr(), device.ptr(), gradient.hidden.len())
     }
 
     pub(super) fn add_input_gradient(&self, e: &Engine, target: P, rows: usize) -> Result<()> {
+        if let Some(input) = self.input_gradient.borrow().as_ref() {
+            let n = rows * self.layout.d;
+            unsafe {
+                e.ops.add(grid(n), target, target, input.ptr(), n as u32)?;
+            }
+        }
         if let Some(phase) = &self.phase {
             phase.add_projection_gradient(e, target, rows)?;
         }

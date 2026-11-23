@@ -60,6 +60,7 @@ pub struct PeerRead {
     pub search: Option<PeerSearch>,
     pub gates: ReadGates,
     pub pairs: Option<crate::slot_orbits::PairRead>,
+    pub dense_induction: bool,
 }
 
 impl PeerRead {
@@ -68,6 +69,7 @@ impl PeerRead {
             search: Some(search),
             gates: ReadGates::WidthScaled,
             pairs: None,
+            dense_induction: false,
         }
     }
 
@@ -77,6 +79,7 @@ impl PeerRead {
         ))),
         gates: ReadGates::Unit,
         pairs: None,
+        dense_induction: false,
     };
 
     pub const SHARED_GRAPH: Self = Self {
@@ -98,10 +101,17 @@ impl PeerRead {
         ..Self::PAIR_GRAPH
     };
 
+    pub const DENSE_INDUCTION: Self = Self {
+        dense_induction: true,
+        ..Self::PAIR_GRAPH
+    };
+
     const fn id(self, with_phase: bool) -> &'static str {
         use crate::slot_orbits::RoleEvidence;
         if self.pairs.is_some() {
             return match (self, with_phase) {
+                (Self::DENSE_INDUCTION, true) => "phasor-triple-dense-induction-32-v1",
+                (Self::DENSE_INDUCTION, false) => "phasor-triple-dense-induction-trunk-v1",
                 (Self::PAIR_GRAPH, true) => "phasor-triple-pair-classes-current-32-v1",
                 (Self::PAIR_GRAPH, false) => "phasor-triple-pair-classes-current-trunk-v1",
                 (Self::CONTEXT_RESIDUAL, true) => "phasor-triple-context-residual-32-v1",
@@ -234,6 +244,7 @@ impl Head {
             "triple-shared-graph" => Ok(Self::PeerTriplePhase(PeerRead::SHARED_GRAPH)),
             "triple-current-graph" => Ok(Self::PeerTriplePhase(PeerRead::CURRENT_GRAPH)),
             "triple-pair-classes" => Ok(Self::PeerTriplePhase(PeerRead::PAIR_GRAPH)),
+            "triple-dense-induction" => Ok(Self::PeerTriplePhase(PeerRead::DENSE_INDUCTION)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,
