@@ -2522,6 +2522,51 @@ for arm in triple-pair-classes triple-current-graph; do
 done
 ```
 
+### Representing the two anchor orders
+
+Every triple match survives exchanging its first two anchors on both
+sides. The component table stores one unordered anchor pair and the
+remaining slot. An edge carries one bit recording whether the two sorted
+anchor pairs have opposite orders in the match. Two queries in the same
+component remain distinct when their path parities differ, unless a
+closed path reverses the order. In that case both orientations connect.
+Lean proves that this test gives exactly the connectivity of the original
+ordered triples. The argument applies to arbitrary learned partial maps.
+[Signed paths and original triple connectivity](../../src/Transformer/Phasor/TripleTransport/OrientedAnchors.lean)
+
+At 193 slots this reduces the number of component records per role from
+7,189,057 to 3,575,904. The implementation visits each pair of anchors
+once when adding a triple match. Both implementations reached update 292
+on the original cubic-power division task modulo 193 for every seed. Their
+checkpoint bytes, observation histories and independently reloaded scores
+agreed.
+
+| Seed | Correct out of 18,528 | Full ordered table, seconds | One pair with orientation, seconds |
+| --- | ---: | ---: | ---: |
+| 0 | 18,526 | 27.22 | 24.67 |
+| 1 | 18,528 | 25.97 | 25.15 |
+| 2 | 18,528 | 25.00 | 23.95 |
+
+On ordinary division modulo 193, all three seeds also crossed at update
+292. The checkpoints scored 18,453, 18,522 and 18,520 out of 18,528
+with either representation. Training took 34.54, 34.72 and 33.50 seconds
+with the full table and 30.66, 31.80 and 31.50 seconds with the compact
+table.
+
+These GTX 1050 timings use dense gradient transfer and the hash-based
+pair-class lookup in both arms. To reproduce them, start both builds at
+`2e8229ef` and apply the changes to `slot_orbits.rs` and `slot_oriented.rs`
+from this commit to the candidate. For the same comparison with addressed
+gradient transfer and bitmap lookup, build `BEFORE_BIN` at `f340000f`.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.OrientedAnchors
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,triple-pair-classes
+PHASOR_EVAL_BATCH_CAP=16 bash time_screens.sh --first-pass "$BEFORE_BIN" \
+    ./target/release/phasor-value-transport runs/anchor-order-timing 438 power-division-p193-k3 division-p193
+```
+
 ### Indexing the pair-class images
 
 Given one observed prototype and a pair class, the search asks which
@@ -2537,8 +2582,9 @@ Fresh Fibonacci training on a GTX 1050 took 57.13, 55.66 and 58.78
 seconds with the hash index on seeds 0, 1 and 2. The bitmap index took
 52.05, 50.24 and 52.65 seconds. The first crossings were at updates 240,
 240 and 250. Each pair had identical weights, scheduled observations
-and reloaded scores. These timings use dense gradient transfer in both
-arms.
+and reloaded scores. To reproduce the dense-transfer comparison, start
+both builds at `2e8229ef`. In the candidate take `slot_orbits.rs`,
+`slot_pair_classes.rs` and `slot_pair_index.rs` from `f340000f`.
 
 Build `BEFORE_BIN` from `1ef96fd4` with the same features
 to measure the index with addressed gradient transfer in both arms.

@@ -6,6 +6,8 @@ mod candidates;
 use candidates::RowCandidates;
 #[path = "slot_aligned.rs"]
 mod aligned;
+#[path = "slot_oriented.rs"]
+mod oriented;
 pub use aligned::fill_from_peers;
 #[path = "slot_witnesses.rs"]
 mod witnesses;
@@ -77,7 +79,7 @@ pub struct TripleGraph {
     separate_images: bool,
     slots: usize,
     supported: Vec<u32>,
-    components: Option<Components>,
+    components: Option<oriented::OrientedComponents>,
 }
 
 impl TripleGraph {
@@ -90,7 +92,7 @@ impl TripleGraph {
 
     fn image_offset(&self, slots: usize) -> usize {
         if self.separate_images {
-            slots.pow(3)
+            oriented::role_size(slots)
         } else {
             0
         }
@@ -121,9 +123,8 @@ impl TripleGraph {
                 self.components = None;
                 self.supported = vec![ABSENT; supported.len()];
             }
-            let role_size = slots.pow(3);
+            let role_size = oriented::role_size(slots);
             let image_offset = self.image_offset(slots);
-            let triple = |a, b, c| (a * slots + b) * slots + c;
             for (r, points) in maps.iter().filter(|(_, p)| p.len() >= 3) {
                 let old = &self.supported[r * slots..(r + 1) * slots];
                 let fresh: Vec<_> = points
@@ -134,14 +135,14 @@ impl TripleGraph {
                 if fresh.is_empty() {
                     continue;
                 }
-                let components = self
-                    .components
-                    .get_or_insert_with(|| Components::new(image_offset + role_size));
-                for &(u, s) in points {
-                    for &(v, t) in points {
-                        if u == v {
-                            continue;
-                        }
+                let components = self.components.get_or_insert_with(|| {
+                    oriented::OrientedComponents::new(image_offset + role_size)
+                });
+                for (i, &(u, s)) in points.iter().enumerate() {
+                    for &(v, t) in &points[i + 1..] {
+                        let source = oriented::pair(u, v, slots);
+                        let target = image_offset + oriented::pair(s, t, slots);
+                        let reverse = (u > v) != (s > t);
                         // If both anchors already existed, only a new third point adds an edge.
                         let thirds = if old[u] == ABSENT || old[v] == ABSENT {
                             points
@@ -150,7 +151,7 @@ impl TripleGraph {
                         };
                         for &(x, y) in thirds {
                             if x != u && x != v {
-                                components.join(triple(u, v, x), image_offset + triple(s, t, y));
+                                components.join(source + x, target + y, reverse);
                             }
                         }
                     }
@@ -162,7 +163,7 @@ impl TripleGraph {
             self.slots = slots;
             self.supported = supported;
         }
-        self.components.as_ref().map(|c| c.parent.as_slice())
+        self.components.as_ref().map(|c| c.classes.as_slice())
     }
 
     /// The same two output arrays serve every position and every sequence length.
@@ -205,7 +206,6 @@ impl TripleGraph {
         let Some(component) = self.update(slots, bank, &maps) else {
             return reads;
         };
-        let pair = |x, y| (x * slots + y) * slots;
         for (r, points) in maps {
             let row = &bank[r * slots..(r + 1) * slots];
             let mut available = RowCandidates::new(slots, &points);
@@ -228,8 +228,11 @@ impl TripleGraph {
                 'anchors: for i in 0..count {
                     let (u, s) = anchors[i];
                     for &(v, t) in &anchors[i + 1..count] {
-                        let key = component[pair(u, v) + x];
-                        let dst = image_offset + pair(s, t);
+                        let key = oriented::reorient(
+                            component[oriented::pair(u, v, slots) + x],
+                            (u > v) != (s > t),
+                        );
+                        let dst = image_offset + oriented::pair(s, t, slots);
                         if let Some(y) =
                             available.unique(dst, &component[dst..dst + slots], key, row[x], (s, t))
                         {
