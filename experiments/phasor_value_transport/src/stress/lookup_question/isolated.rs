@@ -1,6 +1,7 @@
 //! Final-position votes at unit gain, projected against the entire tied
 //! vocabulary. Inputs pass through the learned geometric dictionary.
 use super::*;
+pub mod long;
 
 /// Use the pinned DiffGPT base_ops::rms warp's sum order. The host
 /// reciprocal square root can round differently from CUDA rsqrt.approx.
@@ -33,6 +34,51 @@ fn classify(embeddings: &[f32], hidden: &[f32]) -> (usize, bool) {
     winner
 }
 
+struct Geometry<'a> {
+    embeddings: &'a [f32],
+    values: Vec<Vec<f32>>,
+    addresses: Vec<Option<usize>>,
+    width: usize,
+}
+
+impl<'a> Geometry<'a> {
+    fn new(cfg: &Config, weights: &'a [f32]) -> Self {
+        let layout = crate::slot_memory::Layout::new(cfg);
+        let store = &weights[architecture::memory_start(cfg)..];
+        let mut routing = crate::slot_memory::Routing::new(cfg.head);
+        routing.geometry(&layout, store);
+        let embeddings = &weights[..cfg.vocab * cfg.width];
+        let values: Vec<_> = embeddings.chunks_exact(cfg.width).map(normalized).collect();
+        let addresses = values
+            .iter()
+            .map(|v| routing.nearest(&layout, store, v))
+            .collect();
+        Self {
+            embeddings,
+            values,
+            addresses,
+            width: cfg.width,
+        }
+    }
+
+    fn answer(&self, prompt: &[i64], passes: usize, table: &[f32], ordered: bool) -> (usize, bool) {
+        let keys: Vec<_> = prompt
+            .iter()
+            .map(|&token| self.addresses[token as usize])
+            .collect();
+        let votes = crate::typed_lookup::final_votes(&keys, passes, table, ordered);
+        let mut hidden = vec![0.; self.width];
+        for (&v, &token) in votes.iter().zip(prompt) {
+            if v != 0. {
+                for (dst, &x) in hidden.iter_mut().zip(&self.values[token as usize]) {
+                    *dst += v * x;
+                }
+            }
+        }
+        classify(self.embeddings, &hidden)
+    }
+}
+
 pub fn run(seed: u32, out: &Path, passes: usize, selection: &str, gain: &str) -> Result<()> {
     if passes == 0 {
         return Err("an isolated read requires a positive pass count".into());
@@ -44,17 +90,12 @@ pub fn run(seed: u32, out: &Path, passes: usize, selection: &str, gain: &str) ->
     let range = coefficients::table_range(&cfg)?;
     let params = coefficients::transform(&mut weights[range.clone()], selection, gain)?;
     let table = &weights[range];
-    let layout = crate::slot_memory::Layout::new(&cfg);
-    let store = &weights[architecture::memory_start(&cfg)..];
-    let mut routing = crate::slot_memory::Routing::new(cfg.head);
-    routing.geometry(&layout, store);
-    let d = cfg.width;
-    let embeddings = &weights[..cfg.vocab * d];
-    let values: Vec<_> = embeddings.chunks_exact(d).map(normalized).collect();
-    let addresses: Vec<_> = values
-        .iter()
-        .map(|v| routing.nearest(&layout, store, v))
-        .collect();
+    let geometry = Geometry::new(&cfg, &weights);
+    let ordered = cfg
+        .head
+        .peer_read()
+        .and_then(|r| r.path)
+        .is_some_and(|p| p.ordered);
     let names = vocabulary();
     let mut scores = BTreeMap::new();
     for (split, rows) in &task.splits {
@@ -62,21 +103,7 @@ pub fn run(seed: u32, out: &Path, passes: usize, selection: &str, gain: &str) ->
         let mut ties = 0;
         let mut fixture = None;
         for example in rows {
-            let prompt = &example.prompt;
-            let keys: Vec<_> = prompt
-                .iter()
-                .map(|&token| addresses[token as usize])
-                .collect();
-            let votes = crate::typed_lookup::final_votes(&keys, passes, table);
-            let mut hidden = vec![0.; d];
-            for (&v, &token) in votes.iter().zip(prompt) {
-                if v != 0. {
-                    for (dst, &x) in hidden.iter_mut().zip(&values[token as usize]) {
-                        *dst += v * x;
-                    }
-                }
-            }
-            let (predicted, tied) = classify(embeddings, &hidden);
+            let (predicted, tied) = geometry.answer(&example.prompt, passes, table, ordered);
             correct += usize::from(example.answer.as_slice() == [predicted as i64]);
             ties += usize::from(tied);
             if split == "test/mira" {

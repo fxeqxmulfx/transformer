@@ -7,6 +7,7 @@ pub fn run(
     passes: usize,
     relation: &str,
     selection: Option<&str>,
+    ordered: bool,
 ) -> Result<()> {
     let mode = data::long::Relations::parse(relation)?;
     let (row, task) = data()?;
@@ -26,6 +27,12 @@ pub fn run(
     let rows = data::long::long(hops, mode)?;
     let question_hash = data::split_digest(&rows)?;
     hop_sweep::set_budget(&mut cfg, passes)?;
+    let head::Head::PeerTriplePhase(routing) = &mut cfg.head else {
+        return Err("a path store is required".into());
+    };
+    let path = routing.path.as_mut().ok_or("missing path store")?;
+    path.ordered |= ordered;
+    let ordered = path.ordered;
     cfg.max_length = rows
         .iter()
         .map(|e| e.prompt.len())
@@ -57,13 +64,14 @@ pub fn run(
         .enumerate()
         .map(|(n, &count)| n * count)
         .sum::<usize>();
-    println!(
-        "{}",
-        json!({"study":"synthetic-long-lookup","model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
+    let mut report = json!({"study":"synthetic-long-lookup","model":MODEL,"seed":seed,"step":point["step"],"kernite":KERNITE_VERSION,
         "training_protocol_sha256":row["catalog_sha256"],"weights_sha256":digest,"effective_weights_sha256":effective,
         "coefficient_intervention":intervention,"relations":mode.name(),"hops":hops,"evaluated_passes":passes,
         "prompt_length":length,"split_sha256":question_hash,"correct":exact,"total":rows.len(),"table_sets":rows.len()/5,
-        "sets_by_correct_answers":histogram,"constant_response_sets":constant})
-    );
+        "sets_by_correct_answers":histogram,"constant_response_sets":constant});
+    if ordered {
+        report["ordered_writes"] = json!(true);
+    }
+    println!("{report}");
     Ok(())
 }

@@ -73,6 +73,7 @@ const _: () = {
         + cfg!(feature = "triple-power-lookup") as u8
         + cfg!(feature = "triple-power-lookup-20") as u8
         + cfg!(feature = "triple-power-lookup-40") as u8
+        + cfg!(feature = "triple-ordered-lookup") as u8
         + cfg!(feature = "triple-varied-depth-lookup") as u8
         + cfg!(feature = "triple-context-residual") as u8
         + cfg!(feature = "learned-stream-read") as u8
@@ -123,6 +124,8 @@ pub const HEAD: Head = if FOURIER {
     Head::PeerTriplePhase(crate::head::PeerRead::POWER_LOOKUP)
 } else if cfg!(feature = "triple-power-lookup-20") {
     Head::PeerTriplePhase(crate::head::PeerRead::POWER_TWENTY)
+} else if cfg!(feature = "triple-ordered-lookup") {
+    Head::PeerTriplePhase(crate::head::PeerRead::ORDERED_LOOKUP)
 } else if cfg!(feature = "triple-power-lookup-40") {
     Head::PeerTriplePhase(crate::head::PeerRead::POWER_FORTY)
 } else if cfg!(feature = "triple-normalized-lookup") {

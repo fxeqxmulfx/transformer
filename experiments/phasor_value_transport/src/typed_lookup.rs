@@ -27,9 +27,9 @@ fn add(dst: &mut [f32], x: &[f32], s: f32) {
 }
 
 /// The same read at the final position of an independently supplied prefix.
-pub fn final_votes(addresses: &[Option<usize>], passes: usize, table: &[f32]) -> Vec<f32> {
+pub fn final_votes(addresses: &[Option<usize>], passes: usize, table: &[f32], ordered: bool) -> Vec<f32> {
     assert!(passes > 0 && table.len() == BINS);
-    let mut store = Store::default();
+    let mut store = Store::new(ordered);
     for (t, &key) in addresses.iter().enumerate() {
         store.observe(key, t);
     }
@@ -138,7 +138,7 @@ impl Tape {
         let mut known = HashMap::<Vec<u32>, Option<usize>>::new();
         let scale = (d as f32).sqrt().recip();
         for (batch, sequence) in input.chunks_exact(d * length).enumerate() {
-            let mut store = Store::default();
+            let mut store = Store::new(read.ordered);
             for (t, vector) in sequence.chunks_exact(d).enumerate() {
                 let bits: Vec<_> = vector.iter().map(|x| x.to_bits()).collect();
                 let key = *known.entry(bits).or_insert_with(|| address(vector));

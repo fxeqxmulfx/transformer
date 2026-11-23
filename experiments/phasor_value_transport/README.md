@@ -2359,6 +2359,9 @@ validation target at updates 250 and 200. Both generated 200/200 correct
 validation answers, C on Mira, and 100/100 on each of the one-, two-, three-,
 five- and ten-hop tests after reloading. Training used only one- and two-hop
 questions and their final answer letters.
+Seed 2 had 79/200 validation and 39/100 ten-hop answers at update
+250, and generated D on Mira. The early ten-hop result depended on the
+training seed.
 
 The longer unnumbered probe used 20 new table sets per depth, each tested
 on all five possible starts. In the shared-permutation condition, the
@@ -2431,6 +2434,51 @@ for depth in 10 20 40; do
         for hops in 20 40; do "$bin" disjoint-lookup-depth "$seed" "$out" "$hops" "$hops"; done
     done
 done
+```
+
+#### Reading writes in chronological order
+
+A shared read can carry both its current address and the time of its most
+recent matching write. The first read starts at the earliest available
+binding for its relation. Each later read takes the first matching write
+strictly after that time. A self-link consumes a write, and a missing
+link leaves the state in place. The final relation can differ from the
+repeated relation and must also occur later. A reversed triple uses the
+time at which the entire triple became visible. The key, relation and
+value are addresses or vectors obtained from the learned geometry.
+The additional state uses no new parameters.
+[Chronological path and excess-read proof](../../src/Transformer/Phasor/TripleTransport/OrderedReads.lean)
+
+On the same 100 unnumbered twenty-hop questions with rebound keys,
+the concentrated seed-0 checkpoint scored **20/100** with latest-write
+reads and **60/100** with chronological reads. Both used twenty passes
+and the same weights from update 250. Neither solved all five starting
+keys on any of the twenty table sets. The chronological arm solved four
+of five on six sets.
+
+The CPU diagnostic isolates the learned path vote, projects it against
+the entire tied vocabulary at unit gain and records paired predictions.
+On forty shared-permutation tables, the mixed-length seed-0 checkpoint's
+isolated latest-write read scored 63/100 with forty passes, 5/100 with
+eighty, and 63/100 with 160. All 100 generated tokens matched between
+forty and 160 passes. Chronological reads on the same weights scored 67,
+61 and 61. On eighty shared-permutation tables the concentrated seed-0
+checkpoint's isolated chronological read scored 92/100 with eighty passes
+and 86/100 with 160. The isolated vote omits the trunk and learned output
+gate. The table above gives the complete model's forty-hop scores.
+
+```sh
+export PHASOR_EVAL_BATCH_CAP=4
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
+bin=./target/release/phasor-value-transport
+out=runs/concentrated-lookup
+"$bin" lookup-long-chains 0 "$out" 20 20 rebound
+"$bin" lookup-ordered-long 0 "$out" 20 20 rebound
+"$bin" lookup-isolated-long-budgets 0 "$out" 80
+# Train the same chronological rule from initialization.
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-ordered-lookup
+"$bin" advance study-lookup-questions 0 runs/chronological-lookup 250
+"$bin" lookup-study-score 0 runs/chronological-lookup
 ```
 
 #### Selecting the eighth or an earlier matching reply

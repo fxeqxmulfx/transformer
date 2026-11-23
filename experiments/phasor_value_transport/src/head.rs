@@ -58,6 +58,7 @@ impl ReadGates {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PathRead {
     pub passes: usize,
+    pub ordered: bool,
     pub gain_power: u8,
     pub normalize_vote: bool,
 }
@@ -66,10 +67,10 @@ impl PathRead {
     pub const TRAINING_BUDGETS: [usize; 5] = [2, 5, 10, 20, 40];
 
     pub const fn linear(passes: usize) -> Self {
-        Self { passes, gain_power: 0, normalize_vote: false }
+        Self { passes, ordered: false, gain_power: 0, normalize_vote: false }
     }
 
-    pub const NORMALIZED: Self = Self { passes: 5, gain_power: 1, normalize_vote: true };
+    pub const NORMALIZED: Self = Self { passes: 5, ordered: false, gain_power: 1, normalize_vote: true };
 }
 
 /// Search and gate scales vary independently in fixed-weight controls.
@@ -147,6 +148,10 @@ impl PeerRead {
     pub const POWER_LOOKUP: Self = Self::concentrated(10);
     pub const POWER_TWENTY: Self = Self::concentrated(20);
     pub const POWER_FORTY: Self = Self::concentrated(40);
+    pub const ORDERED_LOOKUP: Self = Self {
+        path: Some(PathRead { passes: 10, ordered: true, gain_power: 4, ..PathRead::NORMALIZED }),
+        ..Self::CHART_INDUCTION
+    };
     pub const NORMALIZED_LOOKUP: Self = Self {
         path: Some(PathRead::NORMALIZED),
         ..Self::CHART_INDUCTION
@@ -222,6 +227,8 @@ impl PeerRead {
                 (Self::POWER_TWENTY, false) => "phasor-triple-concentrated-lookup-20-trunk-v1",
                 (Self::POWER_FORTY, true) => "phasor-triple-concentrated-lookup-40-32-v1",
                 (Self::POWER_FORTY, false) => "phasor-triple-concentrated-lookup-40-trunk-v1",
+                (Self::ORDERED_LOOKUP, true) => "phasor-triple-ordered-lookup-32-v1",
+                (Self::ORDERED_LOOKUP, false) => "phasor-triple-ordered-lookup-trunk-v1",
                 (Self::NORMALIZED_LOOKUP, true) => "phasor-triple-normalized-vote-lookup-32-v1",
                 (Self::NORMALIZED_LOOKUP, false) => "phasor-triple-normalized-vote-lookup-trunk-v1",
                 (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
@@ -367,6 +374,7 @@ impl Head {
             "triple-power-lookup" => Ok(Self::PeerTriplePhase(PeerRead::POWER_LOOKUP)),
             "triple-power-lookup-20" => Ok(Self::PeerTriplePhase(PeerRead::POWER_TWENTY)),
             "triple-power-lookup-40" => Ok(Self::PeerTriplePhase(PeerRead::POWER_FORTY)),
+            "triple-ordered-lookup" => Ok(Self::PeerTriplePhase(PeerRead::ORDERED_LOOKUP)),
             "triple-normalized-lookup" => Ok(Self::PeerTriplePhase(PeerRead::NORMALIZED_LOOKUP)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
