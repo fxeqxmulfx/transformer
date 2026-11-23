@@ -3409,6 +3409,11 @@ pending, with zero recorded budget misses. On `suite-blocks`, seeds 0,
 checkpoint resumed from 27/28 at update 750. Its independent test gave
 64/64, followed by 26/64 at length 32 and 22/64 at length 64.
 
+Two seed-0 arithmetic extensions were still below their 4,658/4,705
+threshold at the following scheduled observations. The eighth power of
+the modular sum scored 2,464/4,705 at update 10,000. The interval test
+on that sum scored 4,644/4,705 at update 15,000.
+
 Across the 108 broader cases, the November 23 combined source replay
 covered 42 cases and 102 case/seed combinations. Nine retained the
 source target through its post-crossing window, two crossed and then fell
@@ -3468,7 +3473,8 @@ ten-letter test and 53/64 on the alternating tail.
 L4 seed 0 first passed at update 2,000. It scored 512/512 on validation,
 the independent test and length 128, 1,012/1,024 on ten-letter words,
 and 57/64 on the alternating tail. Seed 1 scored 190/512 on validation
-at update 3,000, 243/512 at update 5,500 and 218/512 at update 11,000.
+at update 3,000, 243/512 at update 5,500, 218/512 at update 11,000
+and 428/512 at update 30,000. Its threshold is 507/512.
 
 The main model's easy-depth checkpoints scored 428, 341 and 496 of 512
 on length-256 inputs. The 20-bit parity checkpoints scored 0, 58 and
