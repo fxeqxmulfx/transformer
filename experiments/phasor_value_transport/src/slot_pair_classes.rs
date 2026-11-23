@@ -98,12 +98,12 @@ pub fn extend(
         'constraints: for (axis, (query, anchors)) in
             [(k, &rows[r]), (r, &columns[k])].into_iter().enumerate()
         {
+            let query_classes = images.classes_for(axis, query);
             for &(key, u) in anchors {
                 if key == query {
                     continue;
                 }
-                let root = classes[(axis * n + key) * n + query];
-                if let Some(allowed) = images.get(u, root)
+                if let Some(allowed) = images.get(u, query_classes[key])
                     && allowed != observed
                 {
                     options.intersect(allowed);

@@ -1,5 +1,6 @@
 module
 
+public import Mathlib.Logic.Equiv.Fin.Basic
 public import Transformer.Phasor.TripleTransport.PairClasses
 
 /-!
@@ -8,6 +9,8 @@ public import Transformer.Phasor.TripleTransport.PairClasses
 Source: “Indexing the pair-class images” in the triple-transport experiment.
 Each present key stores one candidate set. The bitmap determines whether
 the key is present and locates the set in the packed array.
+The section “Storing image classes in query order” groups the compact source
+classes by query before scanning candidate masks.
 -/
 
 @[expose] public section
@@ -48,3 +51,50 @@ example : rank ([some true,none,some false] ++ [none,some false]) (3+1) =
   block_rank _ _ _
 
 end Transformer.Phasor.TripleTransport.MaskRank
+
+namespace Transformer.Phasor.TripleTransport.MaskRank.QueryClasses
+
+variable {n : ℕ} {R I V S : Type*}
+
+/-- The native flat array stores its minor coordinate contiguously. -/
+abbrev address (major minor : Fin n) : Fin (n * n) := finProdFinEquiv (major, minor)
+
+/-- Store the compact image class with the query as the major coordinate.
+The component table supplies its root with the anchor as the major coordinate. -/
+def prepare (roots : Fin (n * n) → R) (imageClass : R → Option I) : Array (Option I) :=
+  Array.ofFn fun index : Fin (n * n) =>
+    let p := finProdFinEquiv.symm index
+    imageClass (roots (address p.2 p.1))
+
+def read (roots : Fin (n * n) → R) (imageClass : R → Option I) (query anchor : Fin n) : Option I :=
+  (prepare roots imageClass)[(address query anchor).val]'(by
+    simpa [prepare] using (address query anchor).isLt)
+
+/-- Transposing the two finite coordinates and ranking during construction
+recovers the original optional image class at every anchor and query. -/
+theorem correct (roots : Fin (n * n) → R) (imageClass : R → Option I) (q k : Fin n) :
+    read roots imageClass q k = imageClass (roots (address k q)) := by
+  simp only [read, prepare, Array.getElem_ofFn]
+  change imageClass (roots (address (finProdFinEquiv.symm (finProdFinEquiv (q,k))).2
+    (finProdFinEquiv.symm (finProdFinEquiv (q,k))).1)) = _
+  rw [Equiv.symm_apply_apply]
+
+/-- For any ordered constraint scan, both layouts supply exactly the same
+classes. Its accumulator may track candidate intersections, support counts
+and an absorbing state for an empty intersection. -/
+theorem scan (roots : Fin (n * n) → R) (imageClass : R → Option I) (q : Fin n)
+    (anchors : List (Fin n × V)) (step : S → V → Option I → S) (start : S) :
+    anchors.foldl (fun s a => step s a.2 (read roots imageClass q a.1)) start =
+    anchors.foldl (fun s a => step s a.2 (imageClass (roots (address a.1 q)))) start := by
+  apply congrArg (fun reduce : S → Fin n × V → S => anchors.foldl reduce start)
+  funext s a
+  rw [correct]
+
+private def exampleRoots (i : Fin (3 * 3)) := i.val
+private def exampleClass (i : ℕ) : Option ℕ := if i < 7 then some (i + 1) else none
+
+example : [((0 : Fin 3), true), (2, true), (1, false)].foldl
+    (fun s a => (read exampleRoots exampleClass 1 a.1, a.2) :: s) [] =
+    [(some 5, false), (none, true), (some 2, true)] := by decide
+
+end Transformer.Phasor.TripleTransport.MaskRank.QueryClasses

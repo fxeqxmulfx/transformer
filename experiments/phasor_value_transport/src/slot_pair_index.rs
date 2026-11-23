@@ -2,7 +2,8 @@
 use super::values::Values;
 
 pub(super) struct ImageIndex {
-    classes: Vec<u32>,
+    slots: usize,
+    query_classes: Vec<u32>,
     words_per_image: usize,
     present: Vec<u64>,
     starts: Vec<u32>,
@@ -41,8 +42,20 @@ impl ImageIndex {
                 start
             })
             .collect();
+        // Source roots use (anchor, query). Visit each fixed query with
+        // its compact image classes contiguous in anchor order.
+        let mut query_classes = vec![0; 2 * n * n];
+        for axis in 0..2 {
+            for query in 0..n {
+                for key in 0..n {
+                    let root = representatives[(axis * n + key) * n + query];
+                    query_classes[(axis * n + query) * n + key] = classes[root as usize];
+                }
+            }
+        }
         let mut index = Self {
-            classes,
+            slots: n,
+            query_classes,
             words_per_image: stride,
             present,
             starts,
@@ -51,7 +64,7 @@ impl ImageIndex {
         for &u in &active {
             for &v in &active {
                 let at = index
-                    .position(u, pairs[u * n + v])
+                    .position(u, classes[pairs[u * n + v] as usize])
                     .expect("indexed an observed output pair");
                 index.values[at].insert(v);
             }
@@ -59,8 +72,12 @@ impl ImageIndex {
         index
     }
 
-    fn position(&self, image: usize, root: u32) -> Option<usize> {
-        let id = self.classes[root as usize];
+    pub fn classes_for(&self, axis: usize, query: usize) -> &[u32] {
+        let offset = (axis * self.slots + query) * self.slots;
+        &self.query_classes[offset..offset + self.slots]
+    }
+
+    fn position(&self, image: usize, id: u32) -> Option<usize> {
         if id == u32::MAX {
             return None;
         }
@@ -74,8 +91,8 @@ impl ImageIndex {
         Some((self.starts[block] + (present & (mask - 1)).count_ones()) as usize)
     }
 
-    pub fn get(&self, image: usize, root: u32) -> Option<Values> {
-        self.position(image, root).map(|i| self.values[i])
+    pub fn get(&self, image: usize, class: u32) -> Option<Values> {
+        self.position(image, class).map(|i| self.values[i])
     }
 }
 
@@ -99,7 +116,9 @@ mod tests {
                     state as usize
                 };
                 let entries = 3 * n * n;
-                let roots: Vec<u32> = (0..entries).map(|_| (next() % entries) as u32).collect();
+                let mut roots: Vec<u32> = (0..entries).map(|_| (next() % entries) as u32).collect();
+                // Expose every observed image class on the first source axis.
+                roots.copy_within(2 * n * n.., 0);
                 let index = ImageIndex::new(n, &roots, observed);
                 let mut masks: HashMap<(usize, u32), Values> = HashMap::new();
                 for a in observed.members() {
@@ -110,12 +129,19 @@ mod tests {
                             .insert(b);
                     }
                 }
-                for (&(a, root), &mask) in &masks {
-                    assert!(index.get(a, root) == Some(mask));
+                for a in observed.members() {
+                    for b in observed.members() {
+                        let root = roots[2 * n * n + a * n + b];
+                        let class = index.classes_for(0, b)[a];
+                        assert!(index.get(a, class) == masks.get(&(a, root)).copied());
+                    }
                 }
-                for _ in 0..5_000 {
-                    let k = (next() % n, (next() % entries) as u32);
-                    assert!(index.get(k.0, k.1) == masks.get(&k).copied());
+                for sample in 0..5_000 {
+                    let (axis, key, query, image) =
+                        (sample % 2, next() % n, next() % n, next() % n);
+                    let root = roots[(axis * n + key) * n + query];
+                    let class = index.classes_for(axis, query)[key];
+                    assert!(index.get(image, class) == masks.get(&(image, root)).copied());
                 }
             }
         }

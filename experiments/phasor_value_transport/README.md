@@ -2731,6 +2731,38 @@ PHASOR_EVAL_BATCH_CAP=16 bash time_screens.sh --first-pass "$BEFORE_BIN" \
     ./target/release/phasor-value-transport runs/pair-index-timing 250 recurrence-fibonacci-k1-c2-lgt
 ```
 
+### Storing image classes in query order
+
+Each missing bank entry fixes one query while the search visits its
+anchors. For each of the two source roles, the index stores the compact
+image classes of those anchors contiguously by query. This moves root
+lookup and class ranking into index construction. A missing class still
+supplies no constraint. Lean proves equality at every query and anchor
+and for every ordered scan of the resulting classes. [Query and scan proof](../../src/Transformer/Phasor/TripleTransport/MaskRank.lean)
+
+On the 256-slot Fibonacci task, the time to the first passing checkpoint
+fell in all six paired runs on a GTX 1050. The geometric mean reduction
+was 6.4%. Both execution orders used fresh weights for every seed. Each
+pair produced identical checkpoint bytes, observation histories and
+independently reloaded scores.
+
+| Seed | First update | Control first, old / new seconds | Candidate first, old / new seconds |
+| --- | ---: | ---: | ---: |
+| 0 | 240 | 46.84 / 43.35 | 45.63 / 43.43 |
+| 1 | 240 | 47.38 / 43.78 | 43.42 / 42.15 |
+| 2 | 250 | 47.79 / 43.99 | 48.21 / 44.66 |
+
+To reproduce the comparison, build `BEFORE_BIN` from `52d3c821`
+with the same features as the candidate.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.MaskRank
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --features fp32-affine-reference,triple-pair-classes
+PHASOR_EVAL_BATCH_CAP=16 bash time_screens.sh --first-pass "$BEFORE_BIN" \
+    ./target/release/phasor-value-transport runs/query-class-timing 250 recurrence-fibonacci-k1-c2-lgt
+```
+
 ### Addressed row gradients
 
 Each backward tape identifies the dense rows it read from the dictionary
