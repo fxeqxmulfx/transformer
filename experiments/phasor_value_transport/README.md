@@ -2205,12 +2205,30 @@ The scorer reports the number of pairs with both generated letters
 correct. The table oracle runs outside the model.
 [Effect of changing an interior edge](../../src/Transformer/Phasor/LookupQuestion.lean)
 
+On 100 paired two-hop questions the intact seed-0 checkpoint answered
+all original questions correctly. It got both answers right on 99 pairs
+when the first link changed and 99 pairs when the second link changed.
+It answered all 100 correctly after shuffling rows and after shuffling
+choices. Shuffling choices changed the correct letter on 78 questions.
+
+The memory probe appends a conflicting row inside a requested table or
+places the same row in a supplementary table beyond the requested hop
+count. The latest binding inside a requested table determines the answer.
+Crossing the active table with an agreeing or conflicting supplementary
+table tests both effects. Removing an off-path edge leaves an answer.
+Removing the reached edge leaves the complete-chain oracle undefined.
+For that arm the report counts selections of the last reachable key and
+of the intact answer. These are observed choices, with no correctness
+score for an undefined answer.
+
 ```sh
 "$bin" lookup-hop-sweep 0 "$out" 5 10
 "$bin" lookup-hop-sweep 0 "$out" 10 20
 "$bin" lookup-hop-sweep 0 "$out" 20 40
 "$bin" lookup-interior 0 "$out" 5 5
 "$bin" lookup-interior 0 "$out" 10 10
+"$bin" lookup-memory-probes 0 "$out" 2 1 5
+"$bin" lookup-memory-probes 0 "$out" 5 3 20
 "$bin" lookup-weight-score 0 "$out" keep:1 linear
 ```
 

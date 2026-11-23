@@ -7,7 +7,7 @@ pub(in crate::stress::lookup_question) struct Group {
 }
 
 impl Question {
-    fn reached_key(&self, depth: usize) -> Result<&str> {
+    pub(super) fn reached_key(&self, depth: usize) -> Result<&str> {
         let mut key = self.start.as_str();
         for table in &self.tables[..depth] {
             key = &table
@@ -21,7 +21,7 @@ impl Question {
 
     // Swap one on-path output with one off-path output. Exactly two printed cells
     // change, and the off-path input is unreachable before this intervention.
-    fn change_edge(&self, depth: usize, target: usize) -> Result<Self> {
+    pub(super) fn change_edge(&self, depth: usize, target: usize) -> Result<Self> {
         let key = self.reached_key(depth)?;
         let table = &self.tables[depth];
         let row = table

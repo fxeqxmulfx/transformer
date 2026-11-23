@@ -4,6 +4,7 @@ use super::super::*;
 use std::collections::{BTreeSet, HashSet};
 mod paired;
 pub(super) mod interior;
+pub(super) mod memory;
 pub(super) use paired::paired;
 
 pub(in crate::stress) const NAME: &str = "study-lookup-questions";
