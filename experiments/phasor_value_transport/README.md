@@ -2220,6 +2220,13 @@ fingerprint matched the Rust data adapter. The raw shuffle also matched
 the six original browser digests for seeds 11, 17 and 23. The runs use
 the catalog's data seed 1 and vary the model seed.
 
+At update 3,000 the main model answered 51 / 54 / 46 of the 4,656
+first-difference equations correctly on seeds 0 / 1 / 2. At update
+10,000 the counts were 51 / 53 / 44. The second-difference scores at
+3,000 were 34 / 31 / 25. Independently loading the weights reproduced
+all nine results. These screens stopped below the source's 100,000-update
+budget.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.DifferencedDivisionScore
 cd experiments/phasor_value_transport
@@ -2228,8 +2235,12 @@ cargo +stable build --release --locked --offline --features fp32-affine-referenc
 bin=./target/release/phasor-value-transport
 for task in differenced-division-k1 differenced-division-k2; do
     for seed in 0 1 2; do
-        "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog > /dev/null
-        "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog
+        caps="250 3000"
+        if test "$task" = differenced-division-k1; then caps="$caps 10000"; fi
+        for cap in $caps; do
+            "$bin" catalog-target "$task" "$seed" "$cap" runs/main-catalog > /dev/null
+            "$bin" catalog-target "$task" "$seed" "$cap" runs/main-catalog
+        done
     done
 done
 ```
@@ -2361,11 +2372,15 @@ MASH-half admitted one additional correct token on 48 training windows
 and 48 validation windows. The native regression reconstructed the split
 by reversing the orbits and checked the full public decoder on all 256
 proposals for every such window and the endpoints of both splits.
-On MASH, seeds 0 and 1 recovered 4,098 and 4,081 of 4,704 validation
-futures at update 250. The native-token counts matched. On MASH-half,
-seed 0 recovered 3,323 decoded futures and predicted 3,318 original target
-tokens. Independent reload reproduced both counts. The source target
-is 99%.
+The main model reached the following counts at update 250. Independent
+reloads reproduced all six checkpoints. Each split has 4,704 validation
+futures, with a source target of 99% decoded accuracy.
+
+| Codec and score | Seed 0 | Seed 1 | Seed 2 |
+| --- | ---: | ---: | ---: |
+| MASH, decoded futures and native tokens | 4,098 | 4,081 | 4,119 |
+| MASH-half, decoded futures | 3,323 | 3,253 | 3,361 |
+| MASH-half, native tokens | 3,318 | 3,244 | 3,355 |
 
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TemporalRecurrenceScore Transformer.Phasor.PastGridScore
