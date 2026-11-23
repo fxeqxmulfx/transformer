@@ -2073,6 +2073,51 @@ for seed in 0 1 2; do
 done
 ```
 
+#### Which learned coefficients carry the answer?
+
+At the seed-0 update-250 checkpoint, 32,086 of 32,768 coefficients were
+nonzero. The largest absolute coefficient was 0.202595. Selecting it used
+only the trained weights. For an isolated read, the scorer sums the signed
+endpoint vectors at unit gain and chooses the largest tied logit over the
+full vocabulary. It recomputes embedding RMS on the CPU with the CUDA
+warp's summation order and the host reciprocal square root. Every score
+below counts whole answer letters on the same synthetic questions.
+
+| Isolated read, update 250 | Validation /200 | 1 hop /100 | 2 hops /100 | 3 hops /100 | 5 hops /100 | 10 hops /100 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| All coefficients, five reads | 117 | 67 | 57 | 44 | 26 | 18 |
+| Largest coefficient removed, five reads | 65 | 34 | 38 | 32 | 24 | 18 |
+| Largest coefficient alone, five reads | 200 | 100 | 100 | 100 | 100 | 2 |
+| Largest coefficient alone, ten reads | 200 | 100 | 100 | 100 | 100 | 98 |
+| Cubic gain on all coefficients, five reads | 200 | 100 | 100 | 100 | 99 | 20 |
+| Cubic gain on all coefficients, ten reads | 200 | 100 | 100 | 100 | 99 | 72 |
+
+The largest coefficient alone answered all 1,000 training questions and
+generated C for Mira. All of its ten-read predictions had a unique maximum.
+At update 750 the same magnitude selection with ten reads scored
+100, 100, 100, 99 and 99 on the independent hop splits.
+
+In the complete update-250 model, keeping just the largest coefficient
+gave 119/200 validation and 67, 70, 75, 69 and 24 correct with five
+reads. With ten reads its ten-hop score rose to 54/100. Both complete
+model measurements retain the trained gate, the backbone and the tied
+classifier. The checkpoint learns a path whose contribution is easier
+to decode in isolation than in the complete forward pass.
+
+For a coefficient $w$, the cubic gain is $w(w^2+b)/(M^2+b)$, where $M$
+is the largest absolute coefficient and $b$ is the reciprocal of the
+table size. It preserves the leader, increases relative separation, and
+has identity directional derivative at zero. [Coefficient masks, margin bounds and initial derivative](../../src/Transformer/Phasor/TripleTransport/PathCoefficients.lean)
+
+```sh
+# Use the experimental binary and update-250 run directory from the preceding commands.
+"$bin" lookup-isolated 0 "$out" 5 all linear
+"$bin" lookup-isolated 0 "$out" 5 drop:1 linear
+"$bin" lookup-isolated 0 "$out" 10 keep:1 linear
+"$bin" lookup-isolated 0 "$out" 10 all cubic
+"$bin" lookup-weight-score 0 "$out" keep:1 linear
+```
+
 ### Interpolation in a learned cyclic order
 
 Every memory address and value refers to a prototype in the learned dense

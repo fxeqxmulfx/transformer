@@ -1,8 +1,10 @@
 //! Reload a synthetic word-tokenized lookup checkpoint and score its generated answer letters.
 use super::*;
 
+mod coefficients;
 mod data;
 pub mod fit;
+pub mod isolated;
 use data::vocabulary;
 pub(super) use data::{NAME, data};
 
@@ -20,13 +22,7 @@ fn checkpoint(seed: u32, out: &Path, row: &Value, cfg: &Config) -> Result<(Vec<f
         let (result, weights) = embedding::verified_weights(row, seed, cfg, &dir)?;
         (weights, result["observation"].clone())
     } else {
-        let mut engine = Engine::new(cfg.clone(), &layout::initialize_model(cfg, seed))?;
-        let state = progress::Progress::load(&dir, row, seed, &mut engine)?
-            .ok_or("missing question checkpoint")?;
-        (
-            engine.parameters.read()?,
-            state.observation(state.completed)?,
-        )
+        progress::Progress::frozen(&dir, row, seed, cfg)?
     };
     drop(reader);
     Ok((weights, point))
@@ -42,10 +38,26 @@ fn weight_digest(weights: &[f32]) -> String {
 }
 
 pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
+    score_with(seed, out, ablations, None)
+}
+
+pub fn score_with(
+    seed: u32,
+    out: &Path,
+    ablations: bool,
+    transform: Option<(&str, &str)>,
+) -> Result<()> {
     let (row, task) = data()?;
     let cfg = task_config(&row, &task, true)?;
-    let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
+    let (mut weights, point) = checkpoint(seed, out, &row, &cfg)?;
     let hash = weight_digest(&weights);
+    let mut intervention = None;
+    if let Some((selection, gain)) = transform {
+        let range = coefficients::table_range(&cfg)?;
+        let mut info = coefficients::transform(&mut weights[range], selection, gain)?;
+        info["effective_weights_sha256"] = json!(weight_digest(&weights));
+        intervention = Some(info);
+    }
     let words = vocabulary();
     let mut controls = vec![("full", cfg.head)];
     if ablations && let Some(read) = cfg.head.peer_read() {
@@ -85,16 +97,20 @@ pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
             }
             scores.insert(split, entry);
         }
-        if name == "full" && scores[&task.selection]["correct"] != point["correct"] {
+        if transform.is_none()
+            && name == "full"
+            && scores[&task.selection]["correct"] != point["correct"]
+        {
             return Err("held-out replay changed".into());
         }
         results.insert(name, scores);
     }
-    println!(
-        "{}",
-        json!({"study":NAME,"model":MODEL,"seed":seed,"step":point["step"],"weights_sha256":hash,
-        "protocol_sha256":row["catalog_sha256"],"kernite":KERNITE_VERSION,"scores":results})
-    );
+    let mut report = json!({"study":NAME,"model":MODEL,"seed":seed,"step":point["step"],"weights_sha256":hash,
+        "protocol_sha256":row["catalog_sha256"],"kernite":KERNITE_VERSION,"scores":results});
+    if let Some(info) = intervention {
+        report["coefficients"] = info;
+    }
+    println!("{report}");
     Ok(())
 }
 

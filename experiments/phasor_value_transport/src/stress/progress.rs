@@ -20,10 +20,10 @@ pub(super) struct Progress {
     pub history: String,
 }
 
-fn protocol(row: &Value, seed: u32, e: &Engine) -> Value {
+fn protocol(row: &Value, seed: u32, cfg: &Config, gpu: &str) -> Value {
     json!({"case":row,"seed":seed,"model":MODEL,"suite_sha256":suite_hash(row),
-        "kernite_version":KERNITE_VERSION,"gpu":e.cuda.name(),"max_batch":e.config.max_batch,
-        "max_length":e.config.max_length,"vocab":e.config.vocab,"parameter_count":e.parameters.len(),
+        "kernite_version":KERNITE_VERSION,"gpu":gpu,"max_batch":cfg.max_batch,
+        "max_length":cfg.max_length,"vocab":cfg.vocab,"parameter_count":layout::total_count(cfg),
         "fp32_affines":precision::FP32_AFFINE_REFERENCE,"bf16":precision::BF16,
         "tf32_backward":precision::TF32_BACKWARD})
 }
@@ -37,8 +37,10 @@ pub(super) fn save(
     elapsed: f64,
 ) -> Result<()> {
     let history = fs::read_to_string(dir.join("observations.jsonl"))?;
-    let header = serde_json::to_vec(&json!({"protocol":protocol(row,seed,e),"point":point,
-        "elapsed_seconds":elapsed,"history":history}))?;
+    let header = serde_json::to_vec(
+        &json!({"protocol":protocol(row,seed,&e.config,e.cuda.name()),"point":point,
+        "elapsed_seconds":elapsed,"history":history}),
+    )?;
     e.cuda.sync()?;
     let params = e.parameters.read()?;
     let first = e.first_moment.read()?;
@@ -57,7 +59,13 @@ pub(super) fn save(
 }
 
 impl Progress {
-    pub(super) fn load(dir: &Path, row: &Value, seed: u32, e: &mut Engine) -> Result<Option<Self>> {
+    fn read(
+        dir: &Path,
+        row: &Value,
+        seed: u32,
+        cfg: &Config,
+        gpu: Option<&str>,
+    ) -> Result<Option<(Self, Vec<f32>)>> {
         let path = dir.join(FILE);
         if !path.try_exists()? {
             return Ok(None);
@@ -81,8 +89,25 @@ impl Progress {
             .split_at_checked(usize::try_from(header_length)?)
             .ok_or("truncated progress header")?;
         let header: Value = serde_json::from_slice(header)?;
-        let n = e.parameters.len();
-        if header["protocol"] != protocol(row, seed, e) || state.len() != 12 * n {
+        let n = layout::total_count(cfg);
+        let saved_gpu = header["protocol"]["gpu"]
+            .as_str()
+            .filter(|name| !name.is_empty())
+            .ok_or("missing training device in progress")?;
+        let mut expected = protocol(row, seed, cfg, gpu.unwrap_or(saved_gpu));
+        if gpu.is_none() {
+            // Scoring may use a different batch cap. Authenticate the original
+            // training minibatch through the case and check its reservation.
+            let batch = row["case"]["batch"]
+                .as_u64()
+                .ok_or("missing original minibatch")?;
+            let saved = header["protocol"]["max_batch"]
+                .as_u64()
+                .filter(|&v| v >= batch && v > 0 && usize::try_from(v).is_ok())
+                .ok_or("invalid training batch reservation")?;
+            expected["max_batch"] = json!(saved);
+        }
+        if header["protocol"] != expected || state.len() != 12 * n {
             return Err("progress belongs to a different model, training protocol or shape".into());
         }
         let completed = usize::try_from(
@@ -114,11 +139,38 @@ impl Progress {
             .iter()
             .map(|b| f32::from_le_bytes(*b))
             .collect();
-        layout::validate_state(&e.config, &data[..n], &data[n..2 * n], &data[2 * n..])?;
+        layout::validate_state(cfg, &data[..n], &data[n..2 * n], &data[2 * n..])?;
+        Ok(Some((restore, data)))
+    }
+
+    pub(super) fn load(dir: &Path, row: &Value, seed: u32, e: &mut Engine) -> Result<Option<Self>> {
+        let Some((restore, data)) = Self::read(dir, row, seed, &e.config, Some(e.cuda.name()))?
+        else {
+            return Ok(None);
+        };
+        let n = e.parameters.len();
         e.parameters.write(&data[..n])?;
         e.first_moment.write(&data[n..2 * n])?;
         e.second_moment.write(&data[2 * n..])?;
         Ok(Some(restore))
+    }
+
+    /// Read a frozen observation without copying the two optimizer moments
+    /// to the GPU. Resuming training still requires the original device.
+    pub(super) fn frozen(
+        dir: &Path,
+        row: &Value,
+        seed: u32,
+        cfg: &Config,
+    ) -> Result<(Vec<f32>, Value)> {
+        let (state, mut data) =
+            Self::read(dir, row, seed, cfg, None)?.ok_or("missing question checkpoint")?;
+        let history = fs::read_to_string(dir.join("observations.jsonl"))?;
+        if !history.starts_with(&state.history) {
+            return Err("frozen checkpoint disagrees with its observation history".into());
+        }
+        data.truncate(layout::total_count(cfg));
+        Ok((data, state.observation(state.completed)?))
     }
 
     pub(super) fn observation(&self, at: usize) -> Result<Value> {

@@ -21,6 +21,25 @@ fn add(dst: &mut [f32], x: &[f32], s: f32) {
     }
 }
 
+fn votes(rows: usize, witnesses: &[Witness], table: &[f32]) -> Vec<f32> {
+    let mut votes = vec![0.; rows];
+    for &witness in witnesses {
+        let (bin, sign) = witness.weight();
+        votes[witness.position] += sign * table[bin];
+    }
+    votes
+}
+
+/// The same read at the final position of an independently supplied prefix.
+pub fn final_votes(addresses: &[Option<usize>], passes: usize, table: &[f32]) -> Vec<f32> {
+    assert!(passes > 0 && table.len() == BINS);
+    let mut store = Store::default();
+    for (t, &key) in addresses.iter().enumerate() {
+        store.observe(key, t);
+    }
+    votes(addresses.len(), &store.witnesses(passes), table)
+}
+
 struct Frame {
     witnesses: Vec<Witness>,
     terminals: Vec<(usize, f32)>,
@@ -67,12 +86,7 @@ impl Tape {
                 let key = *known.entry(bits).or_insert_with(|| address(vector));
                 store.observe(key, t);
                 let witnesses = store.witnesses(passes);
-                let mut votes = vec![0.; t + 1];
-                for &path in &witnesses {
-                    let (idx, sign) = path.weight();
-                    votes[path.position] += sign * w[idx];
-                }
-                let terminals: Vec<_> = votes
+                let terminals: Vec<_> = votes(t + 1, &witnesses, w)
                     .into_iter()
                     .enumerate()
                     .filter(|&(_, v)| v != 0.)
