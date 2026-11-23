@@ -10,6 +10,7 @@ publish = false
 release-topology = []
 
 [dependencies]
+basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
 kernite-macros = "=0.6.0"
 minibatch = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }

@@ -87,9 +87,22 @@ original scheduled observations. The models ran on different hardware.
 | 1 | 550 | 2,700 | 512/512 | 512/512 |
 | 2 | 550 | 3,350 | 512/512 | 512/512 |
 
-On short-tier Basis Depth Easy, seed 0 first passed at update 250 for
-both models. Inkling's reloaded checkpoint scored 512/512 on novel
-validation, 509/512 on the independent test and 491/512 at length 128.
+Inserting additional filler after the table keeps the original test
+queries and answers fixed. With 0, 32, 64 and 128 extra tokens the
+seed-0 checkpoint scored 509, 487, 141 and 35 out of 512. Seed 1 scored
+512, 511, 510 and 509. On the identical 64-token gap, Phasor scored
+504/512 on seed 0 and 319/512 on seed 1. [Gap invariant](../../src/Transformer/Basis/RecallParsed.lean)
+
+On short-tier Basis Depth Easy, the eight-layer checkpoints first passed
+at updates 250, 500 and 500. The original length-128 test was regenerated
+and its fingerprint verified before extending it to length 256. Phasor
+and Inkling received exactly the same test rows at each length.
+
+| Seed | Inkling primary | Independent test | Inkling length 128 | Inkling length 256 | Phasor length 256 |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 512/512 | 509/512 | 491/512 | 252/512 | 428/512 |
+| 1 | 512/512 | 512/512 | 512/512 | 478/512 | 341/512 |
+| 2 | 512/512 | 512/512 | 512/512 | 464/512 | 496/512 |
 
 On seed 0 the first positive scheduled observation gave 52/4,705 on
 modular addition at update 19, 79/4,705 on absolute difference at update
@@ -98,15 +111,17 @@ observations within 100,000-update budgets. Phasor's main comparator
 independently replayed all 75 short and 30 long threshold crossings.
 The two models used different compute backends. [Phasor cohort](../phasor_value_transport/README.md#canonical-gpt-stress-tiers)
 
-The 24-layer topology reached the shifted Boolean threshold earlier than
-the eight-layer comparison on every seed. All three independently reloaded
-checkpoints also solved every example on the independent test.
+The 24-layer topology reached the threshold earlier than the eight-layer
+comparison on all six Boolean runs. Each checkpoint was separately reloaded.
 
-| Seed | First 24-layer update | Primary | Independent test | Length 32 | Length 64 |
-| ---: | ---: | ---: | ---: | ---: | ---: |
-| 0 | 112 | 7/7 | 64/64 | 56/64 | 33/64 |
-| 1 | 80 | 7/7 | 64/64 | 17/64 | 3/64 |
-| 2 | 92 | 7/7 | 64/64 | 52/64 | 34/64 |
+| Boolean task | Seed | First 24-layer update | Primary | Independent test | Length 32 | Length 64 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Shifted | 0 | 112 | 7/7 | 64/64 | 56/64 | 33/64 |
+| Shifted | 1 | 80 | 7/7 | 64/64 | 17/64 | 3/64 |
+| Shifted | 2 | 92 | 7/7 | 64/64 | 52/64 | 34/64 |
+| Random | 0 | 92 | 8/8 | 58/64 | 39/64 | 28/64 |
+| Random | 1 | 84 | 8/8 | 64/64 | 7/64 | 0/64 |
+| Random | 2 | 88 | 8/8 | 52/64 | 42/64 | 0/64 |
 
 This model used 21,481,088 parameters for Boolean shift. At 40 updates
 it still scored 0/7 on each seed. On absolute difference the 81,116,992-
@@ -115,12 +130,15 @@ on seed 0. On decoded Fibonacci the 81,137,344-parameter model went from
 52/4,704 at update 10 to 53/4,704 at update 40 on seed 0. The original
 100,000-update budgets are still open for these two cells.
 
-We also varied the evaluation depth of the same trained weights. For the
-24-layer Boolean-shift seed-1 checkpoint, one, two, three, five, ten,
-twenty and forty middle passes each gave 7/7 on novel validation and
-64/64 on the independent test. Its training depth was three. This
-comparison measures the generated answers. Lean gives a separate sufficient
-condition for a prefix to remain fixed at every later pass.
+We varied the evaluation depth at fixed weights after three-pass training.
+For the 24-layer Boolean-shift checkpoints, one, two, three, five, ten,
+twenty and forty passes each gave 7/7 on novel validation and 64/64 on
+the independent test on seeds 0 and 1. Seed 2 scored 6/7 and 62/64 with
+one pass, then 7/7 and 64/64 at every tested budget from two through forty.
+On eight-layer Basis Recall Easy, one pass gave 485/512 and 466/512 on
+novel validation for seeds 0 and 1. Two passes recovered the three-pass
+scores of 508/512 and 512/512. Both held through forty passes. Lean gives
+a sufficient condition for an entire hidden prefix to remain fixed.
 [Shared-pass proof](../../src/Transformer/InklingLoop.lean)
 
 ## Reproduction
@@ -184,6 +202,8 @@ target/release/inkling-stress run suite-boolean-and-shift 0 runs/canonical 4
 target/release/inkling-stress run suite-boolean-and-shift 0 runs/canonical 320
 target/release/inkling-stress replay suite-boolean-and-shift 0 runs/canonical
 target/release/inkling-stress depth suite-boolean-and-shift 0 runs/canonical 1,2,3,5,10,20,40
+target/release/inkling-stress extend basis-depth-easy 0 runs/canonical depth-length 128,256
+target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 0,32,64,128
 ```
 
 Tests cover open and closed gates across three passes, causality, fixed-input

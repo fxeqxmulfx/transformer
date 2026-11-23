@@ -5,11 +5,11 @@ mod optimizer;
 #[cfg(test)]
 mod tests;
 mod text;
-use minibatch::{Result, hash};
-use minibatch::{arithmetic_data, blake, pcg, random};
-use random::Random;
+mod transfer;
+use minibatch::{Result, arithmetic_data, blake, hash, pcg, random::Random};
 #[path = "../../convex_stress/src/vendor/data.rs"]
 pub mod data;
+use minibatch::random;
 #[path = "../../../.lake/reproduction/gpt/research/complex_geometry_suite/native/src/metrics.rs"]
 mod metrics;
 #[path = "../../../.lake/reproduction/gpt/research/main_model/wsd_suite_native/src/schedule.rs"]
@@ -68,6 +68,7 @@ enum Action {
     Run(Option<usize>),
     Replay,
     Depth(Vec<usize>),
+    Transfer(transfer::Probe, Vec<usize>),
 }
 
 fn run(action: Action, name: &str, seed: u32, out: &Path) -> Result<Value> {
@@ -149,6 +150,9 @@ fn run(action: Action, name: &str, seed: u32, out: &Path) -> Result<Value> {
             .clone();
         if let Action::Depth(budgets) = &action {
             return depth::evaluate(&mut net, &task, v, budgets);
+        }
+        if let Action::Transfer(probe, sizes) = &action {
+            return transfer::evaluate(&mut net, &task, row, v, *probe, sizes);
         }
         if matches!(action, Action::Replay) {
             let mut splits = serde_json::Map::new();
@@ -287,7 +291,16 @@ fn main() -> Result<()> {
                 .collect::<std::result::Result<Vec<_>,_>>()?.into_iter().map(|n| n.get()).collect();
             (Action::Depth(budgets), name, seed, out)
         }
-        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,...".into()),
+        [op, name, seed, out, kind, counts] if op == "extend" => {
+            let probe = match kind.as_str() {
+                "recall-gap" => transfer::Probe::RecallGap,
+                "depth-length" => transfer::Probe::DepthLength,
+                _ => return Err("expected recall-gap or depth-length".into()),
+            };
+            let sizes = counts.split(',').map(str::parse::<usize>).collect::<std::result::Result<_,_>>()?;
+            (Action::Transfer(probe,sizes),name,seed,out)
+        }
+        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,... | extend CASE SEED OUT {recall-gap|depth-length} SIZES,...".into()),
     };
     let threads = env::var("INKLING_THREADS")
         .unwrap_or_else(|_| "2".into())
