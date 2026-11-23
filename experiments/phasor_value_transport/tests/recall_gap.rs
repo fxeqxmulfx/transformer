@@ -5,6 +5,31 @@ use basis::{generator, wire};
 use std::collections::BTreeSet;
 
 #[test]
+fn suite_mqar_gap_preserves_both_queries_and_matches_the_frozen_test() -> basis::Result<()> {
+    let name = "suite-mqar";
+    let original = basis::sequences::dataset::build(name)?;
+    let spec = recall_gap::source_spec(name)?;
+    let rows = generator::generate(&spec, "test", 64, &BTreeSet::new(), false)?;
+    let (hash, unchanged) = recall_gap::delay(name, &rows, 0)?;
+    assert_eq!(hash, original.original_fingerprints["test"]);
+    let (_, longer) = recall_gap::delay(name, &rows, 192)?;
+    for ((a, b), frozen) in unchanged
+        .iter()
+        .zip(longer)
+        .zip(&original.task.splits["test"])
+    {
+        assert_eq!((&a.tokens, &a.targets), (&frozen.tokens, &frozen.targets));
+        assert_eq!(b.tokens.len(), 216);
+        assert_eq!(&a.tokens[..9], &b.tokens[..9]);
+        assert_eq!(&a.tokens[9..], &b.tokens[201..]);
+        assert!(b.targets[9..201].iter().all(|&label| label == -100));
+        assert_eq!(&a.targets[9..], &b.targets[201..]);
+        assert_eq!(b.targets.iter().filter(|&&label| label >= 0).count(), 2);
+    }
+    Ok(())
+}
+
+#[test]
 fn zero_gap_reproduces_the_frozen_easy_test() -> basis::Result<()> {
     let name = "basis-recall-easy";
     let spec = recall_gap::source_spec(name)?;

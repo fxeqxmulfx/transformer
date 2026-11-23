@@ -506,11 +506,6 @@ fn add_probes(
     {
         return Err("long parity probes require a Basis parity checkpoint".into());
     }
-    if matches!(probes, ProbeSet::RecallGap(_))
-        && !matches!(name, "basis-recall-easy" | "basis-recall-hard")
-    {
-        return Err("recall-gap requires a Basis recall checkpoint".into());
-    }
     if probes == ProbeSet::Extended && !parity_task && !name.starts_with("language-l") {
         return Err("extended probes require a source block language or Basis parity task".into());
     }

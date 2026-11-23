@@ -1,9 +1,21 @@
-//! Paired relative-delay probes from the frozen Basis MQAR test inputs.
+//! Paired relative-delay probes from the frozen GPT and Basis MQAR test inputs.
 //! Basis.recallAnswer_insert_gap proves that the added tokens preserve every answer.
 use basis::{Result, data::Example, generator::number, independent, wire};
 use serde_json::{Value, json};
 
 pub fn source_spec(name: &str) -> Result<Value> {
+    if name == "suite-mqar" {
+        let catalog: Value = serde_json::from_str(basis::sequences::CATALOG)?;
+        let mut spec = catalog["first_cohort_definitions"][name].clone();
+        let fields = spec
+            .as_object_mut()
+            .ok_or("missing original MQAR specification")?;
+        fields.remove("longer_lengths");
+        if fields.remove("overwrites") != Some(json!(0)) {
+            return Err("the source MQAR generator expects zero overwrites".into());
+        }
+        return Ok(spec);
+    }
     let mut spec = basis::dataset::specification("basis-recall-hard")?;
     match name {
         "basis-recall-hard" => {}
@@ -14,7 +26,7 @@ pub fn source_spec(name: &str) -> Result<Value> {
                 .ok_or("invalid MQAR specification")?
                 .remove("overwrites");
         }
-        _ => return Err("recall-gap requires a Basis recall checkpoint".into()),
+        _ => return Err("recall-gap requires an MQAR checkpoint".into()),
     }
     Ok(spec)
 }

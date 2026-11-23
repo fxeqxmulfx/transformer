@@ -2746,6 +2746,37 @@ its contribution shrinks. Both coordinates receive gradients from the
 final-answer loss at initialization.
 [Agreement gain and initial derivative](../../src/Transformer/Phasor/TripleTransport/AgreementGain.lean)
 
+The two-bank architecture learned the original GPT multi-query associative
+recall task on seed 0. A sequence counts only when both queried values
+are correct. It reached the declared 95% validation target at update 500
+and retained it at update 1,000. The main triple-transport model had zero
+exact validation sequences through the 1,500-update screen. The source
+budget is 100,000. All rows below were scored again from saved weights.
+
+| Seed 0 checkpoint | Novel validation /32 | Test /64 | Length 48 /64 | Length 96 /64 |
+| --- | ---: | ---: | ---: | ---: |
+| Two banks, update 500 | 32 | 63 | 63 | 63 |
+| Two banks, update 1,000 | 31 | 63 | 61 | 62 |
+| Main, update 1,500 | 0 | 0 | 0 | 0 |
+
+The same two-bank architecture trained from fresh weights on NV11 with
+seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
+4,704/4,704 on training and 4,705/4,705 on the held-out split.
+
+The paired recall-gap probe inserts value tokens between the four writes
+and the two queries of each original MQAR test row. It checks every target
+against the source table. At a zero gap it reproduces the source test
+fingerprint. A 168-token gap extends the original 24 tokens to 192 while
+keeping both queries fixed. [Gap preservation proof](../../src/Transformer/Basis/RecallParsed.lean)
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-agreement-lookup
+bin=./target/release/phasor-value-transport
+"$bin" catalog-target suite-mqar 0 1500 runs/agreement-catalog
+"$bin" catalog-target suite-mqar 0 1500 runs/agreement-catalog
+"$bin" target-probes suite-mqar 0 1500 runs/agreement-catalog recall-gap 168
+```
+
 Both seed-0 models trained from scratch on the same one- to five-table
 questions with ten reads. The one-bank model first reached 199/200
 validation at update 200. The two-bank model first passed at update
