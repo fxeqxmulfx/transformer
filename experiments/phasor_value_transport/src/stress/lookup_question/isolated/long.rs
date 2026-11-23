@@ -68,3 +68,59 @@ pub fn run(seed: u32, out: &Path, hops: usize) -> Result<()> {
     );
     Ok(())
 }
+
+/// Time only the CPU path branch on actual printed prompts, with a fixed
+/// synthetic hidden context and the checkpoint's normalized input embeddings.
+pub fn time(out: &Path, hops: usize, passes: usize, batch: usize) -> Result<()> {
+    if batch == 0 || passes == 0 {
+        return Err("expected positive batch and pass counts".into());
+    }
+    let (case, task) = data()?;
+    let cfg = task_config(&case, &task, true)?;
+    let (w, point) = checkpoint(0, out, &case, &cfg)?;
+    let rows = data::long::long(hops, data::long::Relations::Shared)?;
+    let geometry = Geometry::new(&cfg, &w);
+    let layout = crate::slot_memory::Layout::new(&cfg);
+    let store = &w[architecture::memory_start(&cfg)..];
+    let mut router = crate::slot_memory::Routing::new(cfg.head);
+    router.geometry(&layout, store);
+    let mut read = cfg
+        .head
+        .peer_read()
+        .and_then(|h| h.path)
+        .ok_or("no path branch")?;
+    read.passes = passes;
+    let path = &store[layout.path_start.ok_or("no path weights")?..layout.end()];
+    let mut output = Vec::new();
+    let mut elapsed = std::time::Duration::ZERO;
+    for block in rows[..20].chunks(batch) {
+        let length = block[0].prompt.len();
+        let x: Vec<_> = block
+            .iter()
+            .flat_map(|e| {
+                e.prompt
+                    .iter()
+                    .flat_map(|&t| geometry.values[t as usize].iter().copied())
+            })
+            .collect();
+        let context: Vec<_> = x
+            .iter()
+            .enumerate()
+            .map(|(i, &v)| v * (1. + (i % 19) as f32 / 130.))
+            .collect();
+        let mut z = vec![0.; context.len()];
+        let start = std::time::Instant::now();
+        crate::typed_lookup::Tape::new(&x, &context, path, (cfg.width, length), read, false, |v| {
+            router.nearest(&layout, store, v)
+        })
+        .add_output(&mut z);
+        elapsed += start.elapsed();
+        output.extend(z.into_iter().flat_map(f32::to_le_bytes));
+    }
+    println!(
+        "{}",
+        json!({"step":point["step"],"hops":hops,"passes":passes,"examples":20,"batch":batch,
+       "digest":hash(&output),"typed_read_seconds":elapsed.as_secs_f64()})
+    );
+    Ok(())
+}

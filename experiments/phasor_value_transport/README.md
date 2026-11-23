@@ -2481,6 +2481,38 @@ cargo +stable build --release --locked --offline --features fp32-affine-referenc
 "$bin" lookup-study-score 0 runs/chronological-lookup
 ```
 
+#### Cost of deeper shared reads
+
+At inference the associative read computes one address per distinct dense
+vector in the batch. Consecutive examples can reuse raw votes on a
+bit-identical prefix. Each position applies its own hidden-state gate.
+Workers can start inside a long sequence by replaying the preceding writes.
+The regression test compares every output coordinate with independently
+processed rows, including rows that diverge and later contain equal tokens.
+[Shared prefixes](../../src/Transformer/Phasor/TripleTransport/SharedRowReads.lean) · [Causal block boundaries](../../src/Transformer/Phasor/TripleTransport/BlockReads.lean)
+
+The host benchmark used 20 held-out prompts, the mixed-length
+seed-0 weights at update 150, and a fixed dense hidden context. Each cell
+shows two timings of the associative branch in seconds, with the four
+runs interleaved. Both settings reuse identical dense prefixes. All four
+output arrays had the same SHA-256 digest in each row.
+
+| Tables | Shared reads | Batch | One worker | Up to 16 workers |
+| ---: | ---: | ---: | ---: | ---: |
+| 10 | 10 | 4 | 0.496, 0.479 | 0.204, 0.196 |
+| 40 | 40 | 4 | 11.469, 11.285 | 2.863, 2.835 |
+| 40 | 80 | 4 | 14.229, 14.050 | 3.631, 3.681 |
+| 80 | 80 | 1 | 108.834, 109.100 | 12.826, 12.692 |
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-fixed-ten-lookup,study-mixed-depths
+bin=./target/release/phasor-value-transport
+mixed=runs/mixed-depth/fixed-ten
+for workers in 1 16 16 1; do
+    PHASOR_LOOKUP_THREADS="$workers" "$bin" lookup-time-reads "$mixed" 40 80 4
+done
+```
+
 #### Selecting the eighth or an earlier matching reply
 
 The synthetic ordinal study asks for the first through eighth response

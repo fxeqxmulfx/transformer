@@ -61,7 +61,12 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
 fn signed_path_sum_and_gate_differentiate_through_dense_values() {
     for (gain_power, normalize_vote) in [(0, false), (1, false), (0, true), (1, true), (4, true)] {
         for ordered in [false, true] {
-            check_gradient(PathRead { passes: 2, gain_power, normalize_vote, ordered });
+            check_gradient(PathRead {
+                passes: 2,
+                gain_power,
+                normalize_vote,
+                ordered,
+            });
         }
     }
 }
@@ -236,4 +241,55 @@ fn measure_path_storage() {
     let digest = crate::hash(&out.iter().flat_map(|v| v.to_le_bytes()).collect::<Vec<_>>());
     println!("witnesses={entries} output={digest} seconds={times:?}");
     assert_eq!(entries > 0, retain);
+}
+
+#[test]
+fn shared_prefixes_match_independent_rows_with_their_own_hidden_gates() {
+    let d = 12;
+    let base = [0, 1, 9, 11, 0, 1, 2, 11, 2, 1, 3, 10, 4, 5, 3, 11, 7, 0];
+    for repeats in [1, 9] {
+        let keys = base.repeat(repeats);
+        let mut changed = keys.clone();
+        changed[keys.len() / 2] = 8;
+        let mut x = make(&keys, d);
+        for seq in [&changed, &changed, &keys] {
+            x.extend(make(seq, d));
+        }
+        let h: Vec<_> = (0..x.len())
+            .map(|i| ((i * 37 % 137) as f32 - 68.) / 42.)
+            .collect();
+        let w: Vec<_> = (0..parameters(d))
+            .map(|i| ((i * 17 % 113) as f32 - 50.) / 40.)
+            .collect();
+        let stride = keys.len() * d;
+        for read in [
+            PathRead::linear(1),
+            PathRead::NORMALIZED,
+            PathRead {
+                passes: 40,
+                ordered: true,
+                gain_power: 4,
+                ..PathRead::NORMALIZED
+            },
+        ] {
+            let mut actual = vec![0.; x.len()];
+            Tape::new(&x, &h, &w, (d, keys.len()), read, false, nearest).add_output(&mut actual);
+            for (batch, (input, hidden)) in x
+                .chunks_exact(stride)
+                .zip(h.chunks_exact(stride))
+                .enumerate()
+            {
+                let mut independent = vec![0.; stride];
+                Tape::new(input, hidden, &w, (d, keys.len()), read, true, nearest)
+                    .add_output(&mut independent);
+                assert!(
+                    independent
+                        .iter()
+                        .zip(&actual[batch * stride..])
+                        .all(|(a, b)| a.to_bits() == b.to_bits())
+                );
+            }
+            assert_ne!(&actual[stride..2 * stride], &actual[2 * stride..3 * stride]);
+        }
+    }
 }

@@ -2,7 +2,8 @@
 //! See TypedLookupPaths for shared-read saturation and tied-margin gain.
 use crate::{head::PathRead, slot_memory::dot};
 use std::borrow::Cow;
-use std::collections::HashMap;
+#[path = "typed_lookup/forward.rs"]
+mod forward;
 #[path = "typed_lookup/gain.rs"]
 mod gain;
 #[path = "typed_lookup/paths.rs"]
@@ -48,6 +49,7 @@ struct Frame {
 }
 
 /// EndpointScale gives the bounded energy and the derivative at zero.
+#[derive(Clone, Copy)]
 struct VoteNorm {
     inverse_energy: f64,
     scale: f32,
@@ -102,77 +104,6 @@ pub struct Tape {
     frames: Vec<Frame>,
 }
 impl Tape {
-    pub fn new(
-        input: &[f32],
-        hidden: &[f32],
-        w: &[f32],
-        shape: (usize, usize),
-        read: PathRead,
-        retain_adjoint: bool,
-        address: impl Fn(&[f32]) -> Option<usize>,
-    ) -> Self {
-        let (d, length) = shape;
-        assert!(d > 0 && length > 0 && input.len().is_multiple_of(length * d));
-        assert_eq!(input.len(), hidden.len());
-        assert_eq!(w.len(), parameters(d));
-        assert!(read.passes > 0);
-        let mut tape = Self {
-            gain: (read.gain_power > 0 && length >= 3)
-                .then(|| NormalizedGain::new(&w[..BINS], read.gain_power)),
-            d,
-            length,
-            input: if retain_adjoint && length >= 3 {
-                input.to_vec()
-            } else {
-                Vec::new()
-            },
-            frames: vec![],
-        };
-        if length < 3 {
-            return tape;
-        }
-        let table = tape
-            .gain
-            .as_ref()
-            .map_or(&w[..BINS], |g| g.effective.as_slice());
-        let mut known = HashMap::<Vec<u32>, Option<usize>>::new();
-        let scale = (d as f32).sqrt().recip();
-        for (batch, sequence) in input.chunks_exact(d * length).enumerate() {
-            let mut store = Store::new(read.ordered);
-            for (t, vector) in sequence.chunks_exact(d).enumerate() {
-                let bits: Vec<_> = vector.iter().map(|x| x.to_bits()).collect();
-                let key = *known.entry(bits).or_insert_with(|| address(vector));
-                store.observe(key, t);
-                let mut witnesses = Vec::new();
-                let mut votes = vec![0.; t + 1];
-                store.visit(read.passes, |path| {
-                    path.vote(&mut votes, table);
-                    if retain_adjoint {
-                        witnesses.push(path);
-                    }
-                });
-                let mut raw = vec![0.; d];
-                let mut terminals = Vec::new();
-                for (pos, weight) in votes.into_iter().enumerate().filter(|&(_, v)| v != 0.) {
-                    add(&mut raw, row(sequence, pos, d), weight);
-                    if retain_adjoint {
-                        terminals.push((pos, weight));
-                    }
-                }
-                let h = row(hidden, batch * length + t, d);
-                let g = (w[BINS + d] + scale * dot(h, &w[BINS..][..d])).tanh();
-                tape.frames.push(Frame {
-                    witnesses,
-                    terminals,
-                    norm: read.normalize_vote.then(|| VoteNorm::new(&raw)),
-                    raw,
-                    gate: 1. + g,
-                    derivative: 1. - g * g,
-                });
-            }
-        }
-        tape
-    }
     pub fn add_output(&self, out: &mut [f32]) {
         for (frame, dest) in self.frames.iter().zip(out.chunks_exact_mut(self.d)) {
             let scale = frame.norm.as_ref().map_or(1., |n| n.scale);
