@@ -1662,8 +1662,8 @@ seed with the opening build and run directory.
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit through language L3 seed 2
-verified nine of 51 short runs and four of 12 long runs.
+The November 23 registered-extension audit through language L2 seed 1
+verified nine of 51 short runs and five of 12 long runs.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 Dyck also passed all three seeds at update 250 with 32/32 on validation.
 The independent Dyck test scores were 62, 63 and 64 out of 64.
@@ -1671,9 +1671,10 @@ Language L1 passed at update 250 on all three seeds. Every checkpoint
 scored 512/512 on the independent and length-128 tests, 1,024/1,024 on
 all ten-letter words and 64/64 on the alternating-tail probe.
 
-Language L2 seed 0 passed at update 250. It scored 512/512 on validation,
-the independent test and the length-128 test, and 992/1,024 on all
-ten-letter words. Language L3 seed 0 passed at update 750, with 512/512
+Language L2 seeds 0 and 1 passed at updates 250 and 500. Both scored
+512/512 on validation, the independent test and the length-128 test.
+They scored 992 and 998 out of 1,024 on all ten-letter words. Language
+L3 seed 0 passed at update 750, with 512/512
 on each source split and 1,024/1,024 on the exhaustive probe. Depth-one
 C-RASP seed 1 first passed at update 500 with 32/32 on validation,
 62/64 on the independent test and 53/64 at length 64.
@@ -1687,6 +1688,11 @@ Separate processes reloaded the first and final weights. In 500-update
 searches, the mixed cubic scored 115, 114 and 116 out of 4,705, and
 unique-symbol copying scored 0/32 on each seed. Their source budgets
 are 100,000 updates.
+
+On hard recall the seed-0 model exhausted the 3,000-update source budget.
+It solved 0/512 novel validation sequences at all 61 observations, and
+the final checkpoint scored 0/512 on the independent test. Each sequence
+requires eight correct answers after repeated writes to the same keys.
 
 For conditional amplitudes the source threshold is a validation MSE of
 0.001 over 8,192 freely generated components. Two seeds reached it
@@ -1721,6 +1727,8 @@ for task in division-p17 arithmetic-cubic-mixed suite-copy-unique; do
         "$bin" catalog-target "$task" "$seed" 500 "$out/catalog"
     done
 done > "$out/catalog-replays.jsonl"
+"$bin" catalog-target basis-recall-hard 0 3000 "$out/catalog" > /dev/null
+"$bin" catalog-target basis-recall-hard 0 3000 "$out/catalog" >> "$out/catalog-replays.jsonl"
 for seed in 0 1 2; do
     "$bin" catalog-target gpt-probe-conditional-amplitudes "$seed" 2500 "$out/catalog" > /dev/null
     "$bin" catalog-target gpt-probe-conditional-amplitudes "$seed" 2500 "$out/catalog"
@@ -2774,12 +2782,14 @@ To compare the two recall models at equal training exposure, train each
 for the number of updates at which the three-gate model first passed.
 The new two-gate runs reproduced every scheduled primary count through
 their earlier crossings. On seeds 1 and 2, the delay advantage at
-matched updates was 179 and 70 exact sequences. Seed 0 fell below
-the primary target at update 4,300.
+matched updates was 179 and 70 exact sequences. At update 4,300 the
+two-gate seed-0 model lost 383 delayed sequences and fell below the
+primary target. The fresh three-gate seed-2 run reproduced the original
+checkpoint byte for byte.
 
 | Recall seed | Matched update | Novel validation, three / two | Independent test, three / two | 64-token delay, three / two |
 | --- | ---: | ---: | ---: | ---: |
-| 0 | 4,300 | 507 / 504 | 503 / 498 | 504 / pending |
+| 0 | 4,300 | 507 / 504 | 503 / 498 | 504 / 121 |
 | 1 | 2,700 | 508 / 512 | 505 / 511 | 319 / 498 |
 | 2 | 3,350 | 509 / 511 | 502 / 512 | 359 / 429 |
 
