@@ -9,6 +9,7 @@ public import Transformer.Basis.Requirements
 public import Transformer.Basis.Encoding
 public import Transformer.Basis.RecallAnswer
 public import Transformer.Basis.RecallParsed
+public import Transformer.Basis.RecallWriteIntervention
 public import Transformer.Basis.RecallTablePositions
 public import Transformer.Basis.RecallPrefixPositions
 
