@@ -1,0 +1,132 @@
+diff --git a/experiments/phasor_value_transport/src/typed_lookup/paths.rs b/experiments/phasor_value_transport/src/typed_lookup/paths.rs
+index 6317f9d8..14bdd226 100644
+--- a/experiments/phasor_value_transport/src/typed_lookup/paths.rs
++++ b/experiments/phasor_value_transport/src/typed_lookup/paths.rs
+@@ -200,10 +200,13 @@ impl Store {
+         mut emit: impl FnMut(usize, Witness, [usize; 3]),
+     ) {
+         debug_assert!(budgets.first().is_none_or(|&n| n > 0) && budgets.is_sorted());
+-        let Some(&largest) = budgets.last() else {
++        if budgets.is_empty() {
+             return;
++        }
++        let index = match walk {
++            Walk::Sequential => None,
++            Walk::JumpTables => Jumps::build(self, budgets),
+         };
+-        let index = (walk == Walk::JumpTables).then(|| Jumps::build(self, largest));
+         for (&cue, root) in &self.cues {
+             let Some(firsts) = self.outgoing.get(root) else {
+                 continue;
+diff --git a/experiments/phasor_value_transport/src/typed_lookup/paths/jumps.rs b/experiments/phasor_value_transport/src/typed_lookup/paths/jumps.rs
+index 2ee2c1b8..fa0f2f16 100644
+--- a/experiments/phasor_value_transport/src/typed_lookup/paths/jumps.rs
++++ b/experiments/phasor_value_transport/src/typed_lookup/paths/jumps.rs
+@@ -1,6 +1,5 @@
+-//! Materialize powers of the transition on one observed causal prefix.
+-//! A start state enters its first edge. A cursor state carries the complete
+-//! directed write, including the time needed by ordered reads.
++//! Materialize powers of the edge transition on one observed causal prefix.
++//! A cursor carries the full directed write, including time for ordered reads.
+ use super::{Bindings, Edge, Store, Writes};
+ 
+ pub(super) struct Jumps {
+@@ -15,8 +14,17 @@ impl Jumps {
+         2 * edge.written_at + relation % 2
+     }
+ 
+-    pub(super) fn build(store: &Store, budget: usize) -> Self {
+-        assert!(budget > 0);
++    pub(super) fn build(store: &Store, budgets: &[usize]) -> Option<Self> {
++        // The query supplies its first edge. Later requests continue from the
++        // last emitted cursor, so the largest gap bounds every required power.
++        let largest_gap = budgets
++            .iter()
++            .zip(std::iter::once(&1).chain(budgets))
++            .map(|(budget, previous)| budget - previous)
++            .max()?;
++        if largest_gap == 0 {
++            return None;
++        }
+         let mut by_time = Vec::new();
+         let mut edges = Vec::new();
+         let mut relations = Vec::new();
+@@ -36,7 +44,7 @@ impl Jumps {
+                 relations.push(bindings.relation);
+             }
+         }
+-        let mut one = Vec::with_capacity(2 * edges.len());
++        let mut one = Vec::with_capacity(edges.len());
+         for (i, (&edge, &relation)) in edges.iter().zip(&relations).enumerate() {
+             one.push(
+                 store
+@@ -44,18 +52,16 @@ impl Jumps {
+                     .map_or(i, |e| by_time[Self::stamp(e, relation)]),
+             );
+         }
+-        // The second half of level zero represents a query before its first read.
+-        one.extend(0..edges.len());
+         let mut levels = vec![one];
+-        for j in 0..budget.ilog2() as usize {
++        for j in 0..largest_gap.ilog2() as usize {
+             let prev = &levels[j];
+             levels.push(prev.iter().map(|&i| prev[i]).collect());
+         }
+-        Self {
++        Some(Self {
+             edges,
+             by_time,
+             levels,
+-        }
++        })
+     }
+ 
+     pub(super) fn endpoints(
+@@ -65,15 +71,16 @@ impl Jumps {
+         mut sample: impl FnMut(usize, Edge),
+     ) {
+         let edge = *first.writes.read(None).expect("empty relation history");
+-        let query = self.edges.len() + self.by_time[Self::stamp(edge, first.relation)];
++        let mut cursor = self.by_time[Self::stamp(edge, first.relation)];
++        let mut previous = 1;
+         for (i, &budget) in budgets.iter().enumerate() {
+-            let mut cursor = query;
+-            let mut remaining = budget;
++            let mut remaining = budget - previous;
+             while remaining > 0 {
+                 cursor = self.levels[remaining.trailing_zeros() as usize][cursor];
+                 remaining &= remaining - 1;
+             }
+             sample(i, self.edges[cursor]);
++            previous = budget;
+         }
+     }
+ }
+@@ -81,6 +88,27 @@ impl Jumps {
+ #[cfg(test)]
+ mod tests {
+     use super::*;
++    #[test]
++    fn only_edges_and_requested_gaps_occupy_jump_levels() {
++        let mut store = Store::new(true);
++        for (i, name) in [1, 4, 2, 4, 3, 4, 1].into_iter().enumerate() {
++            store.observe(Some(name), i);
++        }
++        assert!(Jumps::build(&store, &[1, 1]).is_none());
++        let index = Jumps::build(&store, &[2, 3, 3, 4]).unwrap();
++        assert!(!index.edges.is_empty());
++        assert_eq!(index.levels.len(), 1);
++        assert_eq!(index.levels[0].len(), index.edges.len());
++        let index = Jumps::build(&store, &[4, 8]).unwrap();
++        assert_eq!(index.levels.len(), 3);
++        assert!(
++            index
++                .levels
++                .iter()
++                .all(|level| level.len() == index.edges.len())
++        );
++    }
++
+     #[test]
+     fn every_prefix_keeps_all_directed_witnesses_and_their_order() {
+         let budgets = [1, 2, 3, 3, 8, 11, 39, 40, 41, 80];

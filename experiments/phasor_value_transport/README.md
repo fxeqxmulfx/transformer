@@ -2547,6 +2547,29 @@ same weights. For complete free generation, add the Cargo feature
 `indexed-final-reads` to the model's existing features and run the
 same `requested` command. The index adds no learned parameters.
 
+A second implementation carried the previous indexed endpoint between
+increasing read budgets and built levels only for the largest increment.
+The seed-0 two-bank checkpoint trained with ten reads gave byte-identical
+score records on all 100 original/edited pairs for both write rules at
+39/40/41 and 159/160/161 reads. Each time below is the median of four
+whole-process runs on the same CPU affinity after a warm-up, alternating
+the order within pairs. Chronological reads at forty hops took longer
+with the change, so the original implementation remains in use.
+[Cursor composition proof](../../src/Transformer/Phasor/TripleTransport/JumpTables.lean)
+[Trial source](trials/incremental-jump-budgets.patch)
+
+| Cycle length | Write rule | Separate budgets (s) | Incremental budgets (s) |
+| ---: | --- | ---: | ---: |
+| 40 | Latest | 4.610 | 4.505 |
+| 40 | Chronological | 3.340 | 3.460 |
+| 160 | Latest | 25.930 | 23.775 |
+| 160 | Chronological | 18.830 | 18.540 |
+
+To repeat these measurements, build `fp32-affine-reference,triple-agreement-lookup`
+before and after applying the trial patch. Run the `lookup-cycle-budget-study`
+commands below with `isolated-jumps` and `ordered-isolated-jumps` on the
+same weights and compare the complete JSON records.
+
 For the learned model, the probe fixes 100 disjoint-name questions with
 forty tables and the seed-0 weights trained on depths one to five at
 update 200. It pairs each question with a swap of two destinations in
