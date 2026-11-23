@@ -61,6 +61,7 @@ pub(super) fn sequence_example(e: basis::data::Example) -> Example {
         answer: e.answer,
         limit: e.limit,
         field: e.field,
+        decoder: None,
         row_index: e.row_index,
     }
 }
@@ -163,6 +164,7 @@ fn mechanism_probe(case: &Value) -> basis::Result<(Task, Value, Option<numeric_p
                     answer: row.answer,
                     limit: row.generation_limit,
                     field: None,
+                    decoder: None,
                     row_index: None,
                 })
                 .collect();
@@ -318,7 +320,17 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
             return Err("canonical source selection changed".into());
         }
         (task, original["data_fingerprints"].clone())
-    } else if case["kind"] == "recurrence" && case["data"]["tokenizer"] == "lgt" {
+    } else if case["kind"] == "recurrence"
+        && matches!(case["data"]["tokenizer"].as_str(), Some("mash" | "mash-half")) {
+        let (source, hashes, decoders) = temporal::build_mash(&case)
+            .map_err(|e| -> Box<dyn std::error::Error> { e })?;
+        let mut task = sequence_task(source);
+        for row in task.splits.values_mut().flatten() {
+            let index = usize::try_from(row.row_index.ok_or("missing temporal decoder index")?)?;
+            row.decoder = Some(*decoders.get(index).ok_or("bad temporal decoder index")?);
+        }
+        (task, hashes)
+    } else if case["kind"] == "recurrence" {
         let (task, hashes) = temporal::build(&case)
             .map_err(|e| -> Box<dyn std::error::Error> { e })?;
         (sequence_task(task), hashes)

@@ -5,6 +5,10 @@ use basis::{data::Task, wire};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
+#[path = "temporal/mash.rs"]
+mod mash;
+pub(crate) use mash::build as build_mash;
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Recurrence {
     Fibonacci,
@@ -20,6 +24,15 @@ impl Recurrence {
             Self::Division => a * power(b, 95, 97) % 97,
         };
         (b, y)
+    }
+
+    fn window(self, mut state: State, length: usize) -> Vec<i64> {
+        let mut values = vec![i64::from(state.0), i64::from(state.1)];
+        while values.len() < length {
+            state = self.next(state);
+            values.push(i64::from(state.1));
+        }
+        values
     }
 
     /// Lexicographically first unseen state fixes each orbit's origin.
@@ -90,13 +103,8 @@ pub(super) fn build(case: &Value) -> basis::Result<(Task, Value)> {
     let mut index = 0;
     for (name, states) in ["train", "validation"].into_iter().zip(states) {
         let mut rows = Vec::with_capacity(states.len());
-        for (a, b) in states {
-            let mut state = (a, b);
-            let mut values = vec![i64::from(a), i64::from(b)];
-            while values.len() < raw_length {
-                state = recurrence.next(state);
-                values.push(i64::from(state.1));
-            }
+        for state in states {
+            let mut values = recurrence.window(state, raw_length);
             raw.extend(values.iter().flat_map(|v| v.to_le_bytes()));
             let future = values[raw_length - 1];
             let last = values[raw_length - 2];

@@ -13,10 +13,15 @@ fn score_split(
     if let Some(teachers) = teachers {
         return teachers.score(engine, split, examples);
     }
-    let correct = metrics::evaluate(engine, examples, true)?["exact"]
+    let score = metrics::evaluate(engine, examples, true)?;
+    let correct = score["exact"]
         .as_u64()
         .ok_or("missing exact-sequence score")?;
-    Ok(json!({"correct":correct,"total":examples.len()}))
+    let mut counts = json!({"correct":correct,"total":examples.len()});
+    if examples[0].decoder.is_some() {
+        counts["native_correct"] = json!(score["native_correct"].as_u64().ok_or("missing native token count")?);
+    }
+    Ok(counts)
 }
 
 pub(super) fn score_checkpoint(

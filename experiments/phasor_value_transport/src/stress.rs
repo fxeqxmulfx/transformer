@@ -111,6 +111,7 @@ fn pair_task(
                 answer: vec![],
                 limit: 0,
                 field: None,
+                decoder: None,
                 row_index: None,
             })
             .collect()

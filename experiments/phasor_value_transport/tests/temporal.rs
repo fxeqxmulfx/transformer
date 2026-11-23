@@ -1,6 +1,8 @@
 //! Check both split order and the actual DiffGPT temporal codec and decoder.
 //! Reconstruct each orbit backwards using the inverse transition. Decode a
 //! center-token continuation using only prefix observations, as in the source.
+#[path = "../src/decoded_future.rs"]
+mod decoded_future;
 #[path = "../src/stress/temporal.rs"]
 mod temporal;
 use arithmetic::{hash, reference::SplitMix64};
@@ -199,4 +201,131 @@ fn complete_orbit_splits_match_the_public_tokens_masks_and_decoded_futures() {
         cases += 1;
     }
     assert_eq!(cases, 5);
+}
+
+#[test]
+fn mash_uses_the_published_prefix_decoder_on_every_orbit() {
+    let plan: Value = serde_json::from_str(include_str!(
+        "../../../.lake/reproduction/gpt/research/current_grokking/plan.json"
+    ))
+    .unwrap();
+    for name in [
+        "recurrence-fibonacci-k1-c2-mash",
+        "recurrence-fibonacci-k1-c2-mash-half",
+    ] {
+        let case = plan["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|case| case["name"] == name)
+            .unwrap();
+        let (task, hashes, decoders) = temporal::build_mash(case).unwrap();
+        assert_eq!(task.splits["train"].len(), 4704);
+        assert_eq!(task.splits["validation"].len(), 4704);
+        let states = inverse_orbits(true).concat();
+        let n = states.len();
+        let raw = trajectories(&states, 4, true);
+        let tokenizer = if name.ends_with("c2-mash") {
+            Tokenizer::Mash
+        } else {
+            Tokenizer::MashHalf
+        };
+        let full = encode(
+            &raw,
+            256,
+            &vec![Domain::symmetric(127.); n],
+            &vec![Difference::order(1).unwrap(); n],
+            tokenizer,
+        )
+        .unwrap();
+        let canonical: Value = serde_json::from_str(arithmetic::ORIGINAL35).unwrap();
+        let original = canonical["tasks"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|r| r["name"] == "recurrence-fibonacci-k1-c2-lgt")
+            .unwrap();
+        assert_eq!(hashes["raw"], original["data_fingerprints"]["raw"]);
+        if tokenizer == Tokenizer::Mash {
+            assert_eq!(hashes, original["data_fingerprints"]);
+        }
+        let mut aliases = [0; 2];
+        let mut selected = vec![0, 4703, 4704, n - 1];
+        for (i, row) in task.splits["train"]
+            .iter()
+            .chain(&task.splits["validation"])
+            .enumerate()
+        {
+            assert_eq!(
+                row.tokens,
+                [full.tokens.values()[i], full.tokens.values()[n + i]]
+            );
+            assert_eq!(row.targets, [-100, full.tokens.values()[2 * n + i]]);
+            assert_eq!(row.row_index, Some(i as i64));
+            assert!(row.field.is_none());
+            assert!(row.changes.iter().all(|&changed| !changed));
+            let decoder = decoders[i];
+            assert_eq!(decoder.future, raw.values()[3 * n + i] as i64);
+            assert!(decoder.accepts(row.targets[1]));
+            let extra = (0..256)
+                .filter(|&t| t != row.targets[1] && decoder.accepts(t))
+                .count();
+            aliases[usize::from(i >= 4704)] += extra;
+            if extra > 0 {
+                selected.push(i);
+            }
+        }
+        assert_eq!(
+            aliases.iter().sum::<usize>(),
+            if tokenizer == Tokenizer::Mash { 0 } else { 96 }
+        );
+        selected.sort_unstable();
+        selected.dedup();
+        check_all_decoded_proposals(&states, &selected, &decoders, tokenizer);
+        eprintln!("{name} {hashes} alternative tokens by split={aliases:?}");
+    }
+}
+
+// Test all native tokens on endpoints of both splits and every row with an
+// alternate correct answer. The public decoder reconstructs each proposal from
+// its actual level history, independently of the outer scorer's affine formula.
+fn check_all_decoded_proposals(
+    states: &[State],
+    selected: &[usize],
+    decoders: &[decoded_future::Decoder],
+    tokenizer: Tokenizer,
+) {
+    for &i in selected {
+        let repeated = vec![states[i]; 256];
+        let past = trajectories(&repeated, 3, true);
+        let ops = vec![Difference::order(1).unwrap(); 256];
+        let coded = encode(
+            &past,
+            256,
+            &vec![Domain::symmetric(127.); 256],
+            &ops,
+            tokenizer,
+        )
+        .unwrap();
+        let mut proposal = coded.tokens.values().to_vec();
+        proposal.extend(0..256);
+        let decoded = decode(
+            &coded.prefix,
+            &coded.grid,
+            &Matrix::new(256, proposal).unwrap(),
+            256,
+            &ops,
+            tokenizer,
+        )
+        .unwrap();
+        for token in 0..256 {
+            let expected =
+                decoded.values()[3 * 256 + token].round_ties_even() as i64 == decoders[i].future;
+            assert_eq!(
+                decoders[i].accepts(token as i64),
+                expected,
+                "row {i} token {token}"
+            );
+        }
+    }
 }

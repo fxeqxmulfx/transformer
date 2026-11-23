@@ -19,6 +19,7 @@ mod causal_values;
 mod context_rotation;
 mod context_rotation_checks;
 mod dense_audit;
+mod decoded_future;
 mod embedding_checks;
 mod fourier;
 mod fourier_audit;

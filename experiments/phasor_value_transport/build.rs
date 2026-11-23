@@ -4,6 +4,19 @@ mod build_embedding;
 mod build_scoring;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
+fn export_example_decoders(source: &Path, out: &Path) {
+    let mut data = fs::read_to_string(source).unwrap();
+    for (old, new) in [
+        ("    pub field: Option<(i64, i64)>,", "    pub decoder: Option<crate::decoded_future::Decoder>,\n    pub field: Option<(i64, i64)>,"),
+        ("            field: None,", "            decoder: None,\n            field: None,"),
+    ] {
+        assert_eq!(data.matches(old).count(), 1, "pinned example layout changed");
+        data = data.replace(old, new);
+    }
+    fs::write(out.join("data.rs"), data).unwrap();
+    println!("cargo:rerun-if-changed={}", source.display());
+}
+
 // Expose the actual completions of the frozen batched EOS scorer to external
 // metrics. The existing entry point uses the same rollout with an empty sink.
 fn export_completions(source: &Path, out: &Path) {
@@ -20,6 +33,27 @@ fn export_completions(source: &Path, out: &Path) {
          pub(crate) fn evaluate_batches(engine: &mut Engine, examples: &[Example], generate: bool, \
          mut emitted: impl FnMut(usize, &[u32]) -> Result<()>) -> Result<Value> {{"
     )).replace(emitted, &format!("{emitted}\n            emitted(start + i, tokens)?;"));
+    let score = "            teacher.exact += usize::from(exact);";
+    let report = "\n    if field {";
+    assert_eq!(scorer.matches(score).count(), 1);
+    assert_eq!(scorer.matches(report).count(), 1);
+    let decoded = r#"            if let Some(decoder) = e.decoder {
+                let [token] = written.as_slice() else {
+                    return Err("a temporal decoder requires one supervised token".into());
+                };
+                native_correct += usize::from(exact);
+                exact = decoder.accepts(i64::from(*token));
+            }
+"#;
+    let decoded_report = r#"
+    if examples[0].decoder.is_some() {
+        result["decoded_accuracy"] = result["sequence_accuracy"].clone();
+        result["native_correct"] = native_correct.into();
+        result["native_token_accuracy"] = (native_correct as f64 / examples.len() as f64).into();
+        result["token_accuracy"] = result["native_token_accuracy"].clone();
+    }"#;
+    let scorer = scorer.replace(score, &format!("{decoded}{score}"))
+        .replace(report, &format!("{decoded_report}{report}"));
     fs::write(out.join("metrics.rs"), scorer).unwrap();
     println!("cargo:rerun-if-changed={}", source.display());
 }
@@ -278,6 +312,7 @@ fn main() {
     build_scoring::prepare(&mut engine);
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
+    export_example_decoders(&geometry.join("native/src/data.rs"), &out);
     export_completions(&geometry.join("native/src/metrics.rs"), &out);
     let mut mods = String::new();
     // The pinned stable-loss tests use the scalar oracle declared inline in
@@ -298,10 +333,10 @@ fn main() {
         ),
         (
             geometry.join("native/src"),
-            "blake complex data gemm pcg random sequence_ops",
+            "blake complex gemm pcg random sequence_ops",
         ),
         (geometry.join("diagnostic/src"), "plain_product"),
-        (out.clone(), "engine layout metrics schedule"),
+        (out.clone(), "data engine layout metrics schedule"),
     ] {
         for name in names.split_whitespace() {
             let path = dir.join(format!("{name}.rs"));

@@ -133,9 +133,9 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 81 have authenticated data and a supported source
-metric in this runner. For three more sequence-accuracy cases the required
-data adapter is unavailable. The other 24 need a different source scorer
+extensions and NV11, 83 have native data and a supported source
+metric in this runner. Fashion-MNIST still needs a native data adapter.
+The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
 
@@ -2285,7 +2285,7 @@ for steps in 2 4; do
 done
 ```
 
-#### Temporal recurrences on the LGT grid
+#### Temporal recurrences and prefix-based decoding
 
 The broader catalog adds three division recurrences and second-difference
 Fibonacci. Each case keeps whole trajectories in one split. Division has
@@ -2306,14 +2306,34 @@ the four added cases and canonical first-difference Fibonacci it checked
 base from the observed prefix alone. All three canonical Fibonacci tensor
 digests matched the frozen suite. [Temporal difference and field readout proofs](../../src/Transformer/Phasor/TemporalRecurrenceScore.lean)
 
+The two first-difference Fibonacci cases with MASH and MASH-half use the
+pinned native DiffGPT codec on all 9,408 windows. They train on the
+source target token and score the rounded raw future from unrestricted
+argmax. The scorer gets its decoder base by appending a center token to
+the observed prefix. For one proposal `t` it rounds
+`base + (t - center) / scale` to the nearest integer with ties to even,
+using the source's stored reciprocal scale. The result reports both
+decoded and native-token correct counts.
+[Prefix-grid separation and rounding](../../src/Transformer/Phasor/PastGridScore.lean)
+
+All possible MASH predictions scored identically under the two counts.
+MASH-half admitted one additional correct token on 48 training windows
+and 48 validation windows. The native regression reconstructed the split
+by reversing the orbits and checked the full public decoder on all 256
+proposals for every such window and the endpoints of both splits.
+On MASH, seed 0 recovered 4,098 of 4,704 validation futures at the
+250-update observation. Independent reload reproduced both the decoded
+and native-token counts. The source target is 99%.
+
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TemporalRecurrenceScore
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TemporalRecurrenceScore Transformer.Phasor.PastGridScore
 cd experiments/phasor_value_transport
 cargo +stable test --release --locked --offline --test temporal
 cargo +stable build --release --locked --offline --features fp32-affine-reference
 bin=./target/release/phasor-value-transport
 for task in recurrence-division-k1-c4-lgt recurrence-division-k2-c4-lgt \
-            recurrence-division-k1-c48-lgt recurrence-fibonacci-k2-c2-lgt; do
+            recurrence-division-k1-c48-lgt recurrence-fibonacci-k2-c2-lgt \
+            recurrence-fibonacci-k1-c2-mash recurrence-fibonacci-k1-c2-mash-half; do
     for seed in 0 1 2; do
         "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog > /dev/null
         "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog
