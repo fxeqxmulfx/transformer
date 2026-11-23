@@ -8,47 +8,6 @@ const REPEATS: usize = 32;
 pub(super) const EXHAUSTIVE: &str = "test/exhaustive-10-letters";
 pub(super) const STUTTER: &str = "test/stutter-8x32";
 
-pub(super) fn depth_length(
-    task: &mut Task,
-    row: &Value,
-    length: usize,
-) -> basis::Result<(String, String)> {
-    let language = match row["name"].as_str() {
-        Some("basis-depth-easy") => "language-l2",
-        Some("basis-depth-hard") => "language-l4",
-        _ => return Err("depth-length requires a canonical Basis depth task".into()),
-    };
-    let mut spec = basis::dataset::specification(language)?;
-    spec["neutral_fraction"] = json!(0.25);
-    spec["min_length"] = Value::Null;
-    let count = task
-        .splits
-        .get("test/length-128")
-        .ok_or("missing original depth test")?
-        .len();
-    let rows_at = |size: usize| -> basis::Result<_> {
-        let mut at = spec.clone();
-        at["length"] = json!(size);
-        let rows = basis::generator::generate(&at, "test", count, &Default::default(), false)?;
-        let digest = basis::wire::split_hash(&at, "test", &rows);
-        Ok((digest, rows))
-    };
-    let (anchor, original) = rows_at(128)?;
-    if row["data_fingerprints"]["test/length-128"] != anchor {
-        return Err("depth generator does not reproduce the original length-128 test".into());
-    }
-    let (digest, rows) = if length == 128 {
-        (anchor, original)
-    } else {
-        rows_at(length)?
-    };
-    let split = format!("test/depth-length-{length}");
-    task.splits.insert(
-        split.clone(),
-        rows.into_iter().map(catalog::sequence_example).collect(),
-    );
-    Ok((split, digest))
-}
 
 fn word(bits: usize, width: usize) -> Vec<i64> {
     (0..width)

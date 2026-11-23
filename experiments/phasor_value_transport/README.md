@@ -2152,6 +2152,21 @@ on length-256 inputs. The 20-bit parity checkpoints scored 0, 58 and
 256 of 256 at length 128. Both probes use the three canonical
 first-crossing checkpoints in seed order.
 
+The `depth-length` probe also accepts the four registered block languages
+and the three source C-RASP depths. It reproduces the original test
+fingerprint at length 128 for the languages or 64 for C-RASP before
+changing the length. It uses the same source generator, alphabet, test
+seed and example count. A separate interpreter recounts every supervised
+C-RASP prefix on the extended inputs. [Prefix semantics and exact sequence scoring](../../src/Transformer/Phasor/CraspLengthScore.lean)
+
+```sh
+# Use the directory containing the main model's first-crossing checkpoints.
+for seed in 0 1 2; do
+    PHASOR_EVAL_BATCH_CAP=8 "$bin" probes language-l2 "$seed" "$out" depth-length 256
+    PHASOR_EVAL_BATCH_CAP=8 "$bin" probes suite-crasp-depth-1 "$seed" "$out" depth-length 128
+done
+```
+
 Under the broader catalog protocol, division modulo 17 reached 136/136
 at update 250 on every seed and retained 136/136 through update 750.
 Separate processes reloaded the first and final weights. In 500-update

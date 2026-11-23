@@ -17,6 +17,7 @@ pub mod embedding;
 #[cfg(all(test, feature = "triple-dense-induction"))]
 mod induction_gain;
 mod language_probes;
+mod length_transfer;
 pub mod lookup_question;
 pub mod numeric_probe;
 pub mod phase_ablation;
@@ -498,7 +499,7 @@ fn add_probes(
     let mut probe_hashes = BTreeMap::new();
     if let ProbeSet::DepthLength(length) = probes {
         let (split, digest) =
-            language_probes::depth_length(task, row, length).map_err(|e| e.to_string())?;
+            length_transfer::add(task, row, length).map_err(|e| e.to_string())?;
         probe_hashes.insert(split, digest);
     }
     if let ProbeSet::RecallGap(gap) = probes {
@@ -539,7 +540,7 @@ fn add_probes(
         }
     }
     if test_splits && name.starts_with("language-l") {
-        language_probes::add(task, name, extended).map_err(|err| err.to_string())?;
+        language_probes::add(task, name, probes == ProbeSet::Extended).map_err(|err| err.to_string())?;
     }
     Ok(probe_hashes)
 }
