@@ -2107,9 +2107,9 @@ done
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit through update 11,000 verified
-12 of 51 short runs and 10 of 12 long runs. Including the 105 canonical
-runs gives 127 independently verified checkpoints.
+The November 23 registered-extension audit verified 12 of 51 short runs
+and 11 of 12 long runs. Including the 105 canonical runs gives 128
+independently verified checkpoints.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 On `arithmetic-square-product` the three seeds also passed at update
 250. Each recovered all 4,704 training pairs and all 4,705 held-out pairs.
@@ -2126,10 +2126,10 @@ Each checkpoint scored 512/512 on validation, the independent test and
 the length-128 test. The three scored 992, 998 and 1,024 of 1,024 on all
 ten-letter words and 62, 62 and 64 of 64 on the alternating tail.
 
-Depth-one C-RASP seeds 0 and 1 first scored 32/32 on validation at
-updates 10,250 and 500. They scored 64 and 62 of 64 on the independent
-test, 60 and 56 at length 32, and 56 and 53 at length 64. Seed 2 scored
-31/32 on validation at update 11,000.
+Depth-one C-RASP first scored 32/32 on validation at updates 10,250,
+500 and 11,750 in seed order. The three checkpoints scored 64, 62 and 64
+of 64 on the independent test, 60, 56 and 56 at length 32, and 56, 53
+and 48 at length 64. Sequence accuracy fell with length on every seed.
 
 Language L3 seed 0 passed at update 750, with 512/512 on each source
 split and 1,024/1,024 on the exhaustive probe.
