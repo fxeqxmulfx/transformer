@@ -2219,6 +2219,14 @@ mode, with six reads per process, median read time fell from 558 ms to
 379 ms. Median peak resident memory fell from 546 MiB to 7 MiB.
 [Ordered vote and per-prefix equivalence](../../src/Transformer/Phasor/TripleTransport/StreamingPathScore.lean)
 
+Four alternating end-to-end runs per implementation reloaded the same
+seed-0 typed-lookup checkpoint at update 250 and scored the full synthetic
+evaluation on Kernite. All eight JSON reports were byte-identical.
+Median peak host memory was 1,606,504 KiB before streaming and
+161,020 KiB with streaming. Median elapsed time was 10.79 s and 10.78 s,
+respectively. This comparison uses the complete scorer, including startup
+and GPU work.
+
 ```sh
 test_bin=$(cargo +stable test --release --locked --offline --features fp32-affine-reference,triple-typed-lookup \
     --bin phasor-value-transport --no-run --message-format=json | \
