@@ -387,13 +387,19 @@ impl Training {
         let end = (self.offset + batch).min(self.epoch.len());
         let indices = &self.epoch[self.offset..end];
         self.packed.fill(train, indices);
-        engine.forward(
-            &self.packed.tokens,
-            &self.packed.labels,
-            indices.len(),
-            self.packed.length,
-        )?;
-        engine.backward(indices.len(), self.packed.length)?;
+        let evaluation_head = engine.config.head;
+        if cfg!(feature = "triple-varied-depth-lookup")
+            && let head::Head::PeerTriplePhase(read) = &mut engine.config.head
+            && let Some(path) = &mut read.path
+        {
+            let budgets = head::PathRead::TRAINING_BUDGETS;
+            path.passes = budgets[step % budgets.len()];
+        }
+        let gradients = engine
+            .forward(&self.packed.tokens, &self.packed.labels, indices.len(), self.packed.length)
+            .and_then(|()| engine.backward(indices.len(), self.packed.length));
+        engine.config.head = evaluation_head;
+        gradients?;
         self.optimizer.step(engine, step)?;
         self.seen += indices.len();
         self.offset = end;

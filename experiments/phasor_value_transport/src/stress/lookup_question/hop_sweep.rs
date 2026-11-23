@@ -82,6 +82,10 @@ pub fn run(seed: u32, out: &Path, passes: Option<usize>, compare: Option<usize>)
         "weights_sha256":weight_digest(&weights),"training_protocol_sha256":row["catalog_sha256"],
         "trained_passes":trained,"evaluated_passes":evaluated,"split_sha256":split_hashes,
         "validation":validation,"synthetic_by_hop":scores});
+    if cfg!(feature = "triple-varied-depth-lookup") && trained.is_some() {
+        report["trained_passes"] = json!(head::PathRead::TRAINING_BUDGETS);
+        report["default_evaluation_passes"] = json!(trained);
+    }
     if let Some(n) = compare {
         set_budget(&mut cfg, n)?;
         let mut engine = Engine::for_scoring(cfg, &weights)?;

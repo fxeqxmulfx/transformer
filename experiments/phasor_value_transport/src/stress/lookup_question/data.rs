@@ -8,7 +8,11 @@ pub(super) mod long;
 pub(super) mod memory;
 pub(super) use paired::paired;
 
-pub(in crate::stress) const NAME: &str = "study-lookup-questions";
+pub(in crate::stress) const NAME: &str = if cfg!(feature = "study-mixed-depths") {
+    "study-lookup-mixed-depths"
+} else {
+    "study-lookup-questions"
+};
 const WORDS: [&str; 10] = [
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 ];
@@ -288,6 +292,17 @@ pub(in crate::stress) fn data() -> Result<(Value, Task)> {
             balanced(hops, 20, 378_609 + hops as u32, &ids, &mut seen)?,
         );
     }
+    if cfg!(feature = "study-mixed-depths") {
+        splits.insert("test/short-validation".into(), splits["validation"].clone());
+        for (name, per_letter, seed) in [("train", 40, 1_012_901), ("validation", 8, 1_075_277)] {
+            let mut mixed = Vec::new();
+            for hops in 1..=5 {
+                mixed.extend(balanced(hops, per_letter, seed + hops as u32, &ids, &mut seen)?);
+            }
+            random::Random::new(seed + 6).shuffle(&mut mixed);
+            splits.insert(name.to_owned(), mixed);
+        }
+    }
     let mut digests = BTreeMap::new();
     for (name, rows) in &splits {
         digests.insert(name, split_digest(rows)?);
@@ -381,9 +396,20 @@ mod tests {
             let decoded = Question::parse(&q.render()).unwrap();
             assert_eq!(decoded.answer().unwrap(), q.answer().unwrap());
         }
-        assert_eq!(
-            row["catalog_sha256"],
-            "ba0868a867169e9ef4601eb37076159e779fc72c70abf26c5fa44b5aea307f31"
-        );
+        if cfg!(feature = "study-mixed-depths") {
+            let table = words.iter().position(|w| w == "Table").unwrap() as i64;
+            for (split, count) in [("train", 200), ("validation", 40)] {
+                let mut counts = [0; 5];
+                for example in &t.splits[split] {
+                    let tables = example.prompt.iter().filter(|&&token| token == table).count();
+                    counts[tables - 1] += 1;
+                }
+                assert_eq!(counts, [count; 5]);
+            }
+            assert_eq!(t.splits["test/short-validation"].len(), 200);
+            assert_eq!(row["catalog_sha256"], "ba3dbe1388229e379e081ee62160ee348cdd21f07865084f5f062f55afa6ad36");
+        } else {
+            assert_eq!(row["catalog_sha256"], "ba0868a867169e9ef4601eb37076159e779fc72c70abf26c5fa44b5aea307f31");
+        }
     }
 }

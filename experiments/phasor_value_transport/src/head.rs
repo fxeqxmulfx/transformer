@@ -63,6 +63,8 @@ pub struct PathRead {
 }
 
 impl PathRead {
+    pub const TRAINING_BUDGETS: [usize; 5] = [2, 5, 10, 20, 40];
+
     pub const fn linear(passes: usize) -> Self {
         Self { passes, cubic: false, normalize_vote: false }
     }
@@ -135,6 +137,10 @@ impl PeerRead {
         path: Some(PathRead::linear(5)),
         ..Self::CHART_INDUCTION
     };
+    pub const TEN_READ_LOOKUP: Self = Self {
+        path: Some(PathRead { passes: 10, ..PathRead::NORMALIZED }),
+        ..Self::CHART_INDUCTION
+    };
     pub const NORMALIZED_LOOKUP: Self = Self {
         path: Some(PathRead::NORMALIZED),
         ..Self::CHART_INDUCTION
@@ -198,6 +204,12 @@ impl PeerRead {
                 (Self::CHART_INDUCTION, true) => "phasor-triple-chart-induction-32-v1",
                 (Self::TYPED_LOOKUP, true) => "phasor-triple-typed-lookup-32-v1",
                 (Self::TYPED_LOOKUP, false) => "phasor-triple-typed-lookup-trunk-v1",
+                (Self::TEN_READ_LOOKUP, true) if cfg!(feature = "triple-varied-depth-lookup") =>
+                    "phasor-triple-varied-depth-lookup-32-v1",
+                (Self::TEN_READ_LOOKUP, false) if cfg!(feature = "triple-varied-depth-lookup") =>
+                    "phasor-triple-varied-depth-lookup-trunk-v1",
+                (Self::TEN_READ_LOOKUP, true) => "phasor-triple-normalized-ten-lookup-32-v1",
+                (Self::TEN_READ_LOOKUP, false) => "phasor-triple-normalized-ten-lookup-trunk-v1",
                 (Self::NORMALIZED_LOOKUP, true) => "phasor-triple-normalized-vote-lookup-32-v1",
                 (Self::NORMALIZED_LOOKUP, false) => "phasor-triple-normalized-vote-lookup-trunk-v1",
                 (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
@@ -338,6 +350,8 @@ impl Head {
             "triple-dense-induction" => Ok(Self::PeerTriplePhase(PeerRead::DENSE_INDUCTION)),
             "triple-chart-induction" => Ok(Self::PeerTriplePhase(PeerRead::CHART_INDUCTION)),
             "triple-typed-lookup" => Ok(Self::PeerTriplePhase(PeerRead::TYPED_LOOKUP)),
+            "triple-fixed-ten-lookup" | "triple-varied-depth-lookup" =>
+                Ok(Self::PeerTriplePhase(PeerRead::TEN_READ_LOOKUP)),
             "triple-normalized-lookup" => Ok(Self::PeerTriplePhase(PeerRead::NORMALIZED_LOOKUP)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(

@@ -2260,6 +2260,52 @@ for hops in 5 10 20 40; do
 done
 ```
 
+#### Training on more chain lengths
+
+The mixed-length study uses 1,000 training questions, with 200 at each
+of depths one through five. Its 200 validation questions include 40 at
+each training depth. Every depth is balanced over answer letters. The
+one- and two-hop validation set from the original study is an additional
+test. The ten independent per-depth test sets are the same in both
+studies. Depths six through ten are held out of training and checkpoint
+selection. Only the generated answer letter supplies a training target.
+
+| Seed 0, evaluated with ten shared reads | First 99% validation update | Validation /200 | Original short validation /200 | 5 hops /100 | 10 hops /100 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Train on one or two hops, fixed ten reads | 250 | 199 | 199 | 85 | 52 |
+| Train on one or two hops, cycle 2, 5, 10, 20, 40 reads | 250 | 199 | 199 | 83 | 49 |
+| Train on one through five hops, fixed ten reads | 150 | 200 | 200 | 100 | 100 |
+
+The mixed-length checkpoint scored 1,000/1,000 on training, answered C
+on Mira and generated all 1,000 independent test letters correctly,
+including all 500 at held-out depths six through ten. Giving the same
+checkpoint forty reads preserved every validation and test answer. For
+this seed, extending the training chains from two hops to five improved
+ten-hop transfer. Cycling the read budget on the shorter training chains
+alone did not improve it.
+
+The read schedule is shared across tasks and depends only on the global
+optimizer step. It restores the default of ten reads for evaluation and
+resumes at the same place in the cycle from a saved optimizer state.
+The dataset feature selects the synthetic study independently of the read
+schedule. Both use the existing vocabulary, random embedding lookup, tied
+classifier and original AdamW/WSD trainer. [Shared-state updates and budget averaging](../../src/Transformer/Phasor/TripleTransport/MessageLoop.lean)
+
+```sh
+# From experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+for schedule in fixed-ten varied-depth; do
+    flags=fp32-affine-reference,triple-$schedule-lookup,study-mixed-depths
+    cargo +stable build --release --locked --offline --features "$flags"
+    out=runs/mixed-depth/$schedule
+    for seed in 0 1 2; do
+        ./target/release/phasor-value-transport advance study-lookup-mixed-depths "$seed" "$out" 750
+        ./target/release/phasor-value-transport lookup-study-score "$seed" "$out"
+        ./target/release/phasor-value-transport lookup-hop-sweep "$seed" "$out" 10 40
+    done
+done
+```
+
 #### Memory used by frozen lookup
 
 The frozen scorer adds path votes in the same order as training and
