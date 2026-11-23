@@ -2520,6 +2520,16 @@ the entire vocabulary, including predictions outside the five letters.
 Forty reads were the first tested budget with a correct pair. No tested
 budget reached 99/100 on these questions.
 
+The complete model at forty reads generated **36/100** original answers
+correctly. It solved all five starts on one of the 20 sets and generated
+one constant answer across all five starts on 12 sets. The independent
+replay scored 199/200 on the original short validation.
+
+The isolated sweep recorded every budget from one to 42, plus 60 and
+80, on all 200 prompts. Two single-worker CPU runs took 132.17 and 132.64
+seconds. With up to 16 workers they took 12.11 and 11.83 seconds. All four
+reports had identical predictions and counts at every budget.
+
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
 bin=./target/release/phasor-value-transport
