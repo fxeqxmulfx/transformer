@@ -2389,6 +2389,41 @@ done
 PHASOR_EVAL_BATCH_CAP=4 "$bin" lookup-long-chains 0 "$out" 20 20 shared
 ```
 
+#### Selecting the eighth or an earlier matching reply
+
+The synthetic ordinal study asks for the first through eighth response
+matching both a topic and a requested form. Each transcript has eight
+distinct one-word answers. Its eight questions differ by a single ordinal
+word. Distracting turns match just the topic or just the form. The request,
+reply and final question each have two phrasings. Only the final generated
+word receives a training label. The scorer reports exact words by ordinal
+and the number of transcripts with all eight answers correct.
+
+The 1,000 training examples come from 125 transcripts. Validation and
+each independent test use 25 new transcripts and 200 examples. Training,
+validation and the first test use four distracting turns per transcript.
+The second test uses twelve. On seed 0 at update 250 the fixed-ten normalized
+model generated **18/200** correct validation words, **15/200** on the
+fresh test and **8/200** with twelve distractors. It solved all eight
+queries on zero transcripts in each split. Two independent scorings
+reproduced every count. Official MRCR V2 uses full text responses and
+its own match-ratio metric.
+
+The error bound for a causal occurrence counter separates missed mass
+on matching writes from spurious mass on other writes. If the query and
+stored-count errors together stay below half an occurrence, nearest-count
+selection strictly prefers the intended ordinal to each different ordinal.
+This is conditional on the learned addresses and writes.
+[Causal count and selection margin](../../src/Transformer/Phasor/OrdinalCounter.lean)
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-fixed-ten-lookup
+bin=./target/release/phasor-value-transport
+out=runs/ordinal-dialogue/fixed-ten
+PHASOR_EVAL_BATCH_CAP=8 "$bin" advance study-ordinal-dialogue 0 "$out" 250
+PHASOR_EVAL_BATCH_CAP=8 "$bin" ordinal-study-score 0 "$out"
+```
+
 #### First-token latency on identical prompt batches
 
 The native scorer calls the model for teacher metrics and for greedy

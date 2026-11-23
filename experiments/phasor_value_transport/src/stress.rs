@@ -20,9 +20,11 @@ mod language_probes;
 mod length_transfer;
 pub mod probe_rows;
 pub mod lookup_question;
+pub mod ordinal_dialogue;
 pub mod numeric_probe;
 pub mod phase_ablation;
 mod progress;
+use progress::{checkpoint, weight_digest};
 pub mod slot_ablation;
 pub mod triple_phase_ablation;
 mod recall_gap;
@@ -157,6 +159,9 @@ pub fn routes() -> Result<()> {
 }
 
 fn load(name: &str) -> Result<(Value, Task)> {
+    if name == ordinal_dialogue::NAME {
+        return ordinal_dialogue::dataset();
+    }
     if name == lookup_question::NAME {
         return lookup_question::data();
     }

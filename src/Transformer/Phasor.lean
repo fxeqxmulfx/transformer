@@ -17,6 +17,7 @@ public import Transformer.Phasor.RegisterProgramScore
 public import Transformer.Phasor.LookupQuestion
 public import Transformer.Phasor.LookupQuestion.AnswerCounts
 public import Transformer.Phasor.LookupQuestion.LongChains
+public import Transformer.Phasor.OrdinalCounter
 public import Transformer.Phasor.BoundedMemoryRead
 public import Transformer.Phasor.CausalProductInput
 public import Transformer.Phasor.CompactFFN

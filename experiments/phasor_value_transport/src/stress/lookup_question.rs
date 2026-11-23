@@ -12,35 +12,6 @@ pub mod isolated;
 use data::vocabulary;
 pub(super) use data::{NAME, data};
 
-fn checkpoint(seed: u32, out: &Path, row: &Value, cfg: &Config) -> Result<(Vec<f32>, Value)> {
-    let dir = out.join(NAME).join(format!("seed{seed}"));
-    let reader = match fs::File::open(dir.join("cell.lock")) {
-        Ok(file) => {
-            file.lock_shared()?;
-            Some(file)
-        }
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => None,
-        Err(e) => return Err(e.into()),
-    };
-    let (weights, point) = if dir.join("result.json").try_exists()? {
-        let (result, weights) = embedding::verified_weights(row, seed, cfg, &dir)?;
-        (weights, result["observation"].clone())
-    } else {
-        progress::Progress::frozen(&dir, row, seed, cfg)?
-    };
-    drop(reader);
-    Ok((weights, point))
-}
-
-fn weight_digest(weights: &[f32]) -> String {
-    hash(
-        &weights
-            .iter()
-            .flat_map(|x| x.to_le_bytes())
-            .collect::<Vec<_>>(),
-    )
-}
-
 pub fn score(seed: u32, out: &Path, ablations: bool) -> Result<()> {
     score_with(seed, out, ablations, None)
 }
