@@ -2750,14 +2750,14 @@ The two-bank architecture learned the original GPT multi-query associative
 recall task on seed 0. A sequence counts only when both queried values
 are correct. It reached the declared 95% validation target at update 500
 and retained it at update 1,000. The main triple-transport model had zero
-exact validation sequences through the 1,500-update screen. The source
+exact validation sequences through update 5,000. The source
 budget is 100,000. All rows below were scored again from saved weights.
 
 | Seed 0 checkpoint | Novel validation /32 | Test /64 | Length 48 /64 | Length 96 /64 |
 | --- | ---: | ---: | ---: | ---: |
 | Two banks, update 500 | 32 | 63 | 63 | 63 |
 | Two banks, update 1,000 | 31 | 63 | 61 | 62 |
-| Main, update 1,500 | 0 | 0 | 0 | 0 |
+| Main, update 5,000 | 0 | 0 | 0 | 0 |
 
 The same two-bank architecture trained from fresh weights on NV11 with
 seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
@@ -3298,9 +3298,18 @@ done
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit verified 12 of 51 short runs
-and 11 of 12 long runs. Including the 105 canonical runs gives 128
-independently verified checkpoints.
+The November 23 registered-extension audit verified 15 of 51 short runs
+and 11 of 12 long runs. Including the 105 canonical runs gives 131
+independently verified checkpoints. The 37 remaining extension runs are
+pending, with zero recorded budget misses. On `suite-blocks`, seeds 0,
+1 and 2 first reached 28/28 at updates 750, 500 and 1,000. The seed-2
+checkpoint resumed from 27/28 at update 750. Its independent test gave
+64/64, followed by 26/64 at length 32 and 22/64 at length 64.
+
+In the broader source catalog, `power-division-p17-k0` reached 136/136
+on all three seeds at update 250 and retained 136/136 at update 750.
+The exponent is zero, so this task measures a constant output for every
+allowed numerator and denominator.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 On `arithmetic-square-product` the three seeds also passed at update
 250. Each recovered all 4,704 training pairs and all 4,705 held-out pairs.
@@ -3725,6 +3734,12 @@ losses in FP64. The source selects at CE ≤ 1.63, observes every 250 updates,
 and retains 500 additional updates after the first crossing, within the
 10,000-update budget. Reports also retain exact rows and correct tokens.
 The reproduction script accepts a native LibTorch installation via `LIBTORCH`.
+
+At the first positive observation on seed 0, update 250, main Phasor
+scored validation CE 2.14021 and test CE 2.14133. Token counts were
+50,152/131,072 and 50,516/131,072, respectively. No complete window was
+exact on either split, and this checkpoint was above the 1.63 target.
+An independent reload reproduced both scores.
 
 ```sh
 bash tests/text_window_reference.sh
