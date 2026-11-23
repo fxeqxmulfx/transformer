@@ -2627,6 +2627,30 @@ for mode in dense-ends requested-ends requested-ends dense-ends; do
 done
 ```
 
+During training each worker can build the retained path frames for
+whole sequences in the minibatch. The backward pass consumes these
+frames in their original order. Joining two or five workers reproduced
+every frame and every input, hidden-state and weight gradient bit in
+the native tests, for both coefficient rules and both write policies.
+[Sequence ordering and the shared gradient](../../src/Transformer/Phasor/TripleTransport/TrainingRows.lean)
+
+On twenty real 20-table prompts with ten reads and batch size 16,
+the path's training forward took 20.17 and 21.61 seconds on one worker
+and 3.54 and 3.73 seconds with a limit of sixteen. The output and all
+three gradient arrays had identical hashes. In a fresh 50-update
+seed-0 run of the one-bank model, wall time fell from 9.55 to 5.91
+seconds. Peak resident memory grew from 381 to 503 MiB. Both runs
+produced identical weights, Adam moments and observation histories,
+including 39/200 validation at update 50.
+
+```sh
+# Use the concentrated one-bank model trained on the disjoint one- to five-table study.
+for workers in 1 16; do
+    PHASOR_LOOKUP_THREADS="$workers" "$bin" lookup-time-reads "$out" 20 10 16 training
+    PHASOR_LOOKUP_THREADS="$workers" "$bin" advance study-lookup-disjoint-layers 0 "runs/worker-test-$workers" 50
+done
+```
+
 All 229 vocabulary embeddings had distinct nearest learned addresses.
 However, the model hashes a tuple of three roles into one of 32,768
 learned coefficients. Keeping only the largest coefficient reproduced

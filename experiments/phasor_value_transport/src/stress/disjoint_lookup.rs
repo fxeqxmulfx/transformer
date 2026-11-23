@@ -159,14 +159,14 @@ pub(super) fn dataset(training: Training) -> Result<(Value, Task)> {
         },
     ))
 }
-fn probes(hops: usize, task: &str) -> Result<Vec<Example>> {
+pub(super) fn probes(hops: usize, task: &str) -> Result<Vec<Example>> {
     let words = vocabulary();
     let ids = words
         .iter()
         .enumerate()
         .map(|(i, s)| (s.as_str(), i as i64))
         .collect();
-    let mut rng = random::Random::new(3_107_419 + hops as u32);
+    let mut rng = random::Random::new(3_107_419u32.wrapping_add(hops as u32));
     let mut rows = Vec::new();
     for _ in 0..20 {
         rows.extend(sample(hops, &mut rng)?.rows(&ids, task));

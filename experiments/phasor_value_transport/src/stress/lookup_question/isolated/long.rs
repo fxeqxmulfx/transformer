@@ -82,13 +82,27 @@ pub fn time(
     if batch == 0 || passes == 0 {
         return Err("expected positive batch and pass counts".into());
     }
-    if !matches!(gather, None | Some("dense-ends" | "requested-ends")) {
-        return Err("choose dense-ends or requested-ends for a last-position timing".into());
+    if !matches!(
+        gather,
+        None | Some("dense-ends" | "requested-ends" | "training")
+    ) {
+        return Err("choose dense-ends, requested-ends or training".into());
     }
-    let (case, task) = data()?;
+    let training = gather == Some("training");
+    let (case, task, rows) = if training {
+        use crate::stress::disjoint_lookup::{self, NAME, Training};
+        let (case, task) = disjoint_lookup::dataset(Training::named(NAME).unwrap())?;
+        (case, task, disjoint_lookup::probes(hops, NAME)?)
+    } else {
+        let (case, task) = data()?;
+        (
+            case,
+            task,
+            data::long::long(hops, data::long::Relations::Shared)?,
+        )
+    };
     let cfg = task_config(&case, &task, true)?;
     let (w, point) = checkpoint(0, out, &case, &cfg)?;
-    let rows = data::long::long(hops, data::long::Relations::Shared)?;
     let geometry = Geometry::new(&cfg, &w);
     let layout = crate::slot_memory::Layout::new(&cfg);
     let store = &w[architecture::memory_start(&cfg)..];
@@ -106,6 +120,7 @@ pub fn time(
     let path = &store[layout.path_start.ok_or("no path weights")?..layout.end()];
     let mut output = Vec::new();
     let mut elapsed = std::time::Duration::ZERO;
+    let mut adjoint = std::time::Duration::ZERO;
     for block in rows[..20].chunks(batch) {
         let length = block[0].prompt.len();
         let x: Vec<_> = block
@@ -126,11 +141,11 @@ pub fn time(
         let outputs = match gather {
             Some("requested-ends") => crate::typed_lookup::Outputs::Positions(&ends),
             _ => crate::typed_lookup::Outputs::All {
-                retain_adjoint: false,
+                retain_adjoint: training,
             },
         };
         let start = std::time::Instant::now();
-        crate::typed_lookup::Tape::with_outputs(
+        let tape = crate::typed_lookup::Tape::with_outputs(
             &x,
             &context,
             path,
@@ -138,10 +153,23 @@ pub fn time(
             read,
             outputs,
             |v| router.nearest(&layout, store, v),
-        )
-        .add_output(&mut z);
+        );
+        tape.add_output(&mut z);
         elapsed += start.elapsed();
-        if gather.is_some() {
+        if training {
+            let dy: Vec<_> = (0..x.len())
+                .map(|i| ((i * 17 % 113) as f32 - 50.) / 67.)
+                .collect();
+            let mut dx = vec![0.; x.len()];
+            let mut dh = dx.clone();
+            let mut dw = vec![0.; path.len()];
+            let start = std::time::Instant::now();
+            tape.backward(&context, path, &dy, &mut dx, &mut dh, &mut dw);
+            adjoint += start.elapsed();
+            for value in [&z, &dx, &dh, &dw] {
+                output.extend(value.iter().copied().flat_map(f32::to_le_bytes));
+            }
+        } else if gather.is_some() {
             for sequence in z.chunks_exact(cfg.width * length) {
                 output.extend(
                     sequence[cfg.width * (length - 1)..]
@@ -158,6 +186,11 @@ pub fn time(
        "digest":hash(&output),"typed_read_seconds":elapsed.as_secs_f64()});
     if let Some(gather) = gather {
         result["positions"] = json!(gather);
+    }
+    if training {
+        result["backward_seconds"] = json!(adjoint.as_secs_f64());
+        result["weights_sha256"] = json!(weight_digest(&w));
+        result["workers"] = json!(crate::typed_lookup::worker_limit());
     }
     println!("{result}");
     Ok(())

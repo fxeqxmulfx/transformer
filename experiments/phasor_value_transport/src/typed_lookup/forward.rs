@@ -97,20 +97,24 @@ impl Batch<'_> {
         frames
     }
 
-    fn frames(&self) -> Vec<Frame> {
+    fn frames(&self, limit: usize) -> Vec<Frame> {
         let rows = self.keys.len();
         if rows == 0 {
             return Vec::new();
         }
-        let workers = if !self.retain && self.length >= 96 {
-            worker_limit().min(rows.div_ceil(64))
+        let span = if self.retain && self.length >= 32 {
+            // Each sequence starts with an empty association store. Keep its
+            // entire adjoint tape on one worker and join in minibatch order.
+            let sequences = rows / self.length;
+            sequences.div_ceil(limit) * self.length
+        } else if !self.retain && self.length >= 96 {
+            rows.div_ceil(limit.min(rows.div_ceil(64)))
         } else {
-            1
+            rows
         };
-        let mut frames = if workers == 1 {
+        let mut frames = if span >= rows {
             self.block(0..rows)
         } else {
-            let span = rows.div_ceil(workers);
             std::thread::scope(|scope| {
                 let handles: Vec<_> = (0..rows)
                     .step_by(span)
@@ -248,8 +252,103 @@ impl Tape {
         };
         tape.frames = match positions {
             Some(positions) => batch.frames_at(positions),
-            None => batch.frames(),
+            None => batch.frames(worker_limit()),
         };
         tape
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn joining_retained_sequences_preserves_witnesses_and_all_three_pullbacks() {
+        let (d, length, sequences) = (9, 43, 7);
+        let rows = sequences * length;
+        let keys: Vec<_> = (0..rows)
+            .map(|i| (i % 17 != 0).then_some((i * 7 + i / 13 + i / length) % d))
+            .collect();
+        let x: Vec<_> = keys
+            .iter()
+            .flat_map(|&key| (0..d).map(move |j| f32::from(key == Some(j))))
+            .collect();
+        let hidden: Vec<_> = (0..x.len())
+            .map(|i| ((i * 17 % 83) as f32 - 40.) / 61.)
+            .collect();
+        let slope: Vec<_> = (0..x.len())
+            .map(|i| ((i * 53 % 97) as f32 - 48.) / 73.)
+            .collect();
+        let w: Vec<_> = (0..parameters(d))
+            .map(|i| ((i * 17 % 113) as f32 - 50.) / 83.)
+            .collect();
+        let bits = |v: &[f32]| v.iter().map(|x| x.to_bits()).collect::<Vec<_>>();
+        for (ordered, paired) in [(false, false), (true, false), (false, true), (true, true)] {
+            let read = PathRead {
+                passes: 10,
+                gain_power: 4,
+                agreement: paired,
+                ordered,
+                ..PathRead::NORMALIZED
+            };
+            let gain = NormalizedGain::new(&w[..BINS], read.gain_power);
+            let agreement = paired.then(|| Agreement::new(&w[..BINS], read.gain_power));
+            let batch = Batch {
+                input: &x,
+                hidden: &hidden,
+                w: &w,
+                table: if paired { &w[..BINS] } else { &gain.effective },
+                agreement: agreement.as_ref(),
+                keys: keys.clone(),
+                shared: vec![0; sequences],
+                d,
+                length,
+                read,
+                retain: true,
+            };
+            let tape = |limit| Tape {
+                gain: (!paired).then(|| NormalizedGain::new(&w[..BINS], read.gain_power)),
+                agreement: paired.then(|| Agreement::new(&w[..BINS], read.gain_power)),
+                d,
+                length,
+                input: x.clone(),
+                frames: batch.frames(limit),
+            };
+            let run = |t: &Tape| {
+                let mut out = hidden.clone();
+                let mut dx = vec![0.; x.len()];
+                let mut dh = dx.clone();
+                let mut dw = vec![0.; w.len()];
+                t.add_output(&mut out);
+                t.backward(&hidden, &w, &slope, &mut dx, &mut dh, &mut dw);
+                assert!([&dx, &dh, &dw].iter().all(|v| v.iter().any(|&g| g != 0.)));
+                [bits(&out), bits(&dx), bits(&dh), bits(&dw)]
+            };
+            let serial = tape(1);
+            let expected = run(&serial);
+            for limit in [2, 5] {
+                let joined = tape(limit);
+                assert_eq!(joined.frames.len(), serial.frames.len());
+                for (a, b) in joined.frames.iter().zip(&serial.frames) {
+                    assert_eq!(a.witnesses, b.witnesses);
+                    let terminals = |f: &Frame| {
+                        f.terminals
+                            .iter()
+                            .map(|(j, w)| (*j, w.to_bits()))
+                            .collect::<Vec<_>>()
+                    };
+                    assert_eq!(terminals(a), terminals(b));
+                    assert_eq!(bits(&a.raw), bits(&b.raw));
+                    let norm = |f: &Frame| {
+                        f.norm
+                            .map(|n| (n.inverse_energy.to_bits(), n.scale.to_bits()))
+                    };
+                    assert_eq!(norm(a), norm(b));
+                    assert_eq!(a.gate.to_bits(), b.gate.to_bits());
+                    assert_eq!(a.derivative.to_bits(), b.derivative.to_bits());
+                }
+                assert_eq!(run(&joined), expected);
+            }
+        }
     }
 }
