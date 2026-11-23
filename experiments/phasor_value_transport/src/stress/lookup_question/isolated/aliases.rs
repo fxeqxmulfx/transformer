@@ -15,6 +15,7 @@ pub(in crate::stress) fn run(
     examples: &[Example],
     budgets: &[usize],
     refined: bool,
+    walk: crate::typed_lookup::Walk,
 ) -> Result<Audit> {
     let geometry = Geometry::new(cfg, weights);
     let path = cfg
@@ -48,6 +49,7 @@ pub(in crate::stress) fn run(
             &[path.passes],
             path.ordered,
             bucket,
+            walk,
             |_, roles, _, _| {
                 seen.insert(roles);
             },
@@ -73,6 +75,7 @@ pub(in crate::stress) fn run(
             budgets,
             path.ordered,
             bucket,
+            walk,
             |i, roles, pos, sign| {
                 seen[i].insert(roles);
                 if !refined || roles == selected {

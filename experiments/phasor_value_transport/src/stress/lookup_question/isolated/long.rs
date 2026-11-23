@@ -34,6 +34,7 @@ pub fn run(seed: u32, out: &Path, hops: usize) -> Result<()> {
                             &table,
                             ordered,
                             path.agreement.then_some(path.gain_power),
+                            crate::typed_lookup::Walk::Sequential,
                         )[0];
                         ties += usize::from(tied);
                         token as i64

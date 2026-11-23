@@ -1,6 +1,10 @@
 //! Causal association store. The middle embedding of every consecutive
 //! triple names a relation; both orientations share the same storage rules.
 use std::collections::BTreeMap;
+#[path = "paths/jumps.rs"]
+mod jumps;
+use super::Walk;
+use jumps::Jumps;
 
 pub(super) const BINS: usize = 1 << 15;
 
@@ -37,6 +41,7 @@ impl Writes {
 }
 
 #[derive(Clone, Copy)]
+#[cfg_attr(test, derive(Debug, Eq, PartialEq))]
 pub(super) struct Witness {
     pub position: usize,
     code: u32,
@@ -149,20 +154,26 @@ impl Store {
         }
         self.previous = [middle, current];
     }
+    fn successor(&self, relation: usize, edge: Edge) -> Option<Edge> {
+        self.outgoing
+            .get(&edge.dest)?
+            .iter()
+            .find(|b| b.relation == relation)?
+            .writes
+            .read(Some(edge.written_at))
+            .copied()
+            .filter(|next| self.ordered || next.dest != edge.dest)
+    }
+
     fn endpoints(&self, first: &Bindings, budgets: &[usize], mut sample: impl FnMut(usize, Edge)) {
         let mut edge = *first.writes.read(None).expect("empty relation history");
         let mut depth = 1;
         let mut finished = false;
         for (i, &budget) in budgets.iter().enumerate() {
             while !finished && depth < budget {
-                let next = self
-                    .outgoing
-                    .get(&edge.dest)
-                    .and_then(|rels| rels.iter().find(|x| x.relation == first.relation))
-                    .and_then(|xs| xs.writes.read(Some(edge.written_at)));
-                match next {
-                    Some(next) if self.ordered || next.dest != edge.dest => {
-                        edge = *next;
+                match self.successor(first.relation, edge) {
+                    Some(next) => {
+                        edge = next;
                         depth += 1;
                     }
                     _ => finished = true,
@@ -171,28 +182,34 @@ impl Store {
             sample(i, edge);
         }
     }
-    pub(super) fn visit(&self, passes: usize, mut emit: impl FnMut(Witness)) {
-        self.visit_budgets(&[passes], |_, witness| emit(witness));
-    }
-
     /// Traverse each cue and relation once, sampling in increasing budget order.
     /// Within each budget the floating-point vote order is the single-read order.
-    pub(super) fn visit_budgets(&self, budgets: &[usize], mut emit: impl FnMut(usize, Witness)) {
-        self.visit_roles(budgets, |i, witness, _| emit(i, witness));
+    pub(super) fn visit_budgets(
+        &self,
+        budgets: &[usize],
+        walk: Walk,
+        mut emit: impl FnMut(usize, Witness),
+    ) {
+        self.visit_roles(budgets, walk, |i, witness, _| emit(i, witness));
     }
 
     pub(super) fn visit_roles(
         &self,
         budgets: &[usize],
+        walk: Walk,
         mut emit: impl FnMut(usize, Witness, [usize; 3]),
     ) {
         debug_assert!(budgets.first().is_none_or(|&n| n > 0) && budgets.is_sorted());
+        let Some(&largest) = budgets.last() else {
+            return;
+        };
+        let index = (walk == Walk::JumpTables).then(|| Jumps::build(self, largest));
         for (&cue, root) in &self.cues {
             let Some(firsts) = self.outgoing.get(root) else {
                 continue;
             };
             for first in firsts {
-                self.endpoints(first, budgets, |i, end| {
+                let mut tail = |i, end: Edge| {
                     if let Some(tails) = self.outgoing.get(&end.dest) {
                         for last in tails {
                             if let Some(record) = last.writes.read(Some(end.written_at)) {
@@ -207,7 +224,11 @@ impl Store {
                             }
                         }
                     }
-                });
+                };
+                match &index {
+                    Some(jumps) => jumps.endpoints(first, budgets, &mut tail),
+                    None => self.endpoints(first, budgets, &mut tail),
+                }
             }
         }
     }

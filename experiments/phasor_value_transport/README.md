@@ -2520,6 +2520,33 @@ then traverse forty links. These are different assumptions about what
 one model step can access.
 [Read horizon and composed jumps](../../src/Transformer/Phasor/TripleTransport/ReadHorizon.lean)
 
+Phasor can build this index from the writes visible at the requested
+output position. Each indexed state retains the directed write and its
+timestamp, so the same lookup supports latest-write and chronological
+reads. The initial query and the terminal answer-letter lookup still
+run. For the forty repeated transitions between them, the index makes
+two dependent table lookups after five rounds of table construction.
+On the seed-0 two-bank checkpoint, sequential and indexed execution
+returned the same 200 isolated predictions at each of 20, 39, 40 and
+41 reads. Both solved all 100 original/edited pairs at forty reads.
+[Materialized jump tables and cursor proof](../../src/Transformer/Phasor/TripleTransport/JumpTables.lean)
+
+The timings below include checkpoint loading, building the index and
+scoring all 200 prompts with the one-bank seed-0 isolated read. Each
+pair gives two interleaved, single-thread runs on identical questions.
+
+| Tables and repeated reads | Sequential (s) | Indexed (s) |
+| ---: | ---: | ---: |
+| 10 | 0.38, 0.40 | 0.38, 0.40 |
+| 20 | 1.39, 1.42 | 1.31, 1.29 |
+| 40 | 8.85, 9.09 | 7.19, 7.06 |
+
+Use `isolated` and `isolated-jumps` as the last argument of
+`disjoint-lookup-budget-study` to compare both implementations on the
+same weights. For complete free generation, add the Cargo feature
+`indexed-final-reads` to the model's existing features and run the
+same `requested` command. The index adds no learned parameters.
+
 For the learned model, the probe fixes 100 disjoint-name questions with
 forty tables and the seed-0 weights trained on depths one to five at
 update 200. It pairs each question with a swap of two destinations in

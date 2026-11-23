@@ -31,12 +31,17 @@ impl Batch<'_> {
             for (i, &key) in self.keys[base..=base + t].iter().enumerate() {
                 store.observe(key, i);
             }
-            frames[base + t] = self.frame(base, t, &store, false);
+            let walk = if cfg!(feature = "indexed-final-reads") {
+                Walk::JumpTables
+            } else {
+                Walk::Sequential
+            };
+            frames[base + t] = self.frame(base, t, &store, false, walk);
         }
         frames
     }
 
-    fn frame(&self, base: usize, t: usize, store: &Store, reuse: bool) -> Frame {
+    fn frame(&self, base: usize, t: usize, store: &Store, reuse: bool, walk: Walk) -> Frame {
         let d = self.d;
         let mut witnesses = Vec::new();
         let mut terminals = Vec::new();
@@ -44,7 +49,7 @@ impl Batch<'_> {
             (Vec::new(), None)
         } else {
             let mut votes = vec![0.; t + 1];
-            store.visit(self.read.passes, |path| {
+            store.visit_budgets(&[self.read.passes], walk, |_, path| {
                 vote(path, &mut votes, self.table, self.agreement);
                 if self.retain {
                     witnesses.push(path);
@@ -85,7 +90,7 @@ impl Batch<'_> {
             for (t, &key) in self.keys[base..base + stop].iter().enumerate() {
                 store.observe(key, t);
                 if t >= start {
-                    frames.push(self.frame(base, t, &store, t < common));
+                    frames.push(self.frame(base, t, &store, t < common, Walk::Sequential));
                 }
             }
         }

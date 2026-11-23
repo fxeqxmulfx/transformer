@@ -86,21 +86,27 @@ pub fn run(
     let hashes = [digest(&original)?, digest(&edited)?];
     let examples: Vec<_> = original.into_iter().chain(edited).collect();
     let mut alias_details = None;
+    let walk = if matches!(mode, "isolated-jumps" | "isolated-refined-jumps") {
+        crate::typed_lookup::Walk::JumpTables
+    } else {
+        crate::typed_lookup::Walk::Sequential
+    };
     let preds = match mode {
-        "isolated-leading" | "isolated-refined" => {
+        "isolated-leading" | "isolated-refined" | "isolated-refined-jumps" => {
             let audit = lookup_question::isolated::aliases::run(
                 &cfg,
                 &weights,
                 &task.splits["train"],
                 &examples,
                 &budgets,
-                mode == "isolated-refined",
+                mode != "isolated-leading",
+                walk,
             )?;
             alias_details = Some(audit.details);
             audit.predictions
         }
-        "isolated" => {
-            lookup_question::isolated::budget_predictions(&cfg, &weights, &examples, &budgets)?
+        "isolated" | "isolated-jumps" => {
+            lookup_question::isolated::budget_predictions(&cfg, &weights, &examples, &budgets, walk)?
         }
         "full" | "requested" => {
             cfg.max_batch = task_config(&row, &task, false)?.max_batch;
@@ -127,7 +133,7 @@ pub fn run(
         }
         _ => {
             return Err(
-                "choose full, requested, isolated, isolated-leading or isolated-refined".into(),
+                "choose full, requested, isolated, isolated-jumps, isolated-leading, isolated-refined or isolated-refined-jumps".into(),
             );
         }
     };

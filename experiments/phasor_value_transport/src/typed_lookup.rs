@@ -16,6 +16,12 @@ use gain::NormalizedGain;
 pub(crate) use gain::scaled_weight;
 use paths::{BINS, Store, Witness};
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Walk {
+    Sequential,
+    JumpTables,
+}
+
 pub fn parameters(d: usize) -> usize {
     BINS + d + 1
 }
@@ -46,6 +52,7 @@ pub fn final_vote_budgets(
     table: &[f32],
     ordered: bool,
     agreement_power: Option<u8>,
+    walk: Walk,
 ) -> Vec<Vec<f32>> {
     assert!(table.len() == BINS && budgets.iter().all(|&n| n > 0) && budgets.is_sorted());
     let mut store = Store::new(ordered);
@@ -54,7 +61,7 @@ pub fn final_vote_budgets(
     }
     let mut votes = vec![vec![0.; addresses.len()]; budgets.len()];
     let rule = agreement_power.map(|power| Agreement::new(table, power));
-    store.visit_budgets(budgets, |i, w| vote(w, &mut votes[i], table, rule.as_ref()));
+    store.visit_budgets(budgets, walk, |i, w| vote(w, &mut votes[i], table, rule.as_ref()));
     votes
 }
 
@@ -73,13 +80,14 @@ pub(crate) fn visit_final_bucket(
     budgets: &[usize],
     ordered: bool,
     bucket: usize,
+    walk: Walk,
     mut found: impl FnMut(usize, [usize; 3], usize, f32),
 ) {
     let mut store = Store::new(ordered);
     for (t, &key) in addresses.iter().enumerate() {
         store.observe(key, t);
     }
-    store.visit_roles(budgets, |i, w, roles| {
+    store.visit_roles(budgets, walk, |i, w, roles| {
         let (bin, sign) = w.weight();
         if bin == bucket {
             found(i, roles, w.position, sign);

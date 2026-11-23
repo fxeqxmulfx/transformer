@@ -64,6 +64,7 @@ public import Transformer.Phasor.TripleTransport.AgreementGain
 public import Transformer.Phasor.TripleTransport.OrderedReads
 public import Transformer.Phasor.TripleTransport.TrainingReadDepth
 public import Transformer.Phasor.TripleTransport.ReadHorizon
+public import Transformer.Phasor.TripleTransport.JumpTables
 public import Transformer.Phasor.TripleTransport.RefinedPathAddress
 public import Transformer.Phasor.TripleTransport.RequestedReads
 public import Transformer.Phasor.TripleTransport.StreamingPathScore

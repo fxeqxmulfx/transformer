@@ -63,7 +63,7 @@ impl<'a> Geometry<'a> {
     }
 
     fn answer(&self, prompt: &[i64], passes: usize, table: &[f32], ordered: bool) -> (usize, bool) {
-        self.answers(prompt, &[passes], table, ordered, None)[0]
+        self.answers(prompt, &[passes], table, ordered, None, crate::typed_lookup::Walk::Sequential)[0]
     }
 
     fn answers(
@@ -73,12 +73,13 @@ impl<'a> Geometry<'a> {
         table: &[f32],
         ordered: bool,
         agreement_power: Option<u8>,
+        walk: crate::typed_lookup::Walk,
     ) -> Vec<(usize, bool)> {
         let keys: Vec<_> = prompt
             .iter()
             .map(|&token| self.addresses[token as usize])
             .collect();
-        crate::typed_lookup::final_vote_budgets(&keys, budgets, table, ordered, agreement_power)
+        crate::typed_lookup::final_vote_budgets(&keys, budgets, table, ordered, agreement_power, walk)
             .into_iter()
             .map(|votes| self.project(prompt, &votes))
             .collect()
@@ -102,6 +103,7 @@ pub(in crate::stress) fn budget_predictions(
     weights: &[f32],
     examples: &[Example],
     budgets: &[usize],
+    walk: crate::typed_lookup::Walk,
 ) -> Result<Vec<Vec<Option<i64>>>> {
     let geometry = Geometry::new(cfg, weights);
     let path = cfg
@@ -128,6 +130,7 @@ pub(in crate::stress) fn budget_predictions(
                         &table,
                         path.ordered,
                         path.agreement.then_some(path.gain_power),
+                        walk,
                     );
                 }
             });
