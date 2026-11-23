@@ -2771,17 +2771,19 @@ final-answer loss at initialization.
 [Agreement gain and initial derivative](../../src/Transformer/Phasor/TripleTransport/AgreementGain.lean)
 
 The two-bank architecture learned the original GPT multi-query associative
-recall task on seed 0. A sequence counts only when both queried values
-are correct. It reached the declared 95% validation target at update 500
-and retained it at update 1,000. The main triple-transport model had zero
+recall task on seeds 0 and 1. A sequence counts only when both queried values
+are correct. Both seeds reached the declared 95% validation target at update
+500 and retained it at update 1,000. The main triple-transport model had zero
 exact validation sequences through update 5,000. The source
 budget is 100,000. All rows below were scored again from saved weights.
 
-| Seed 0 checkpoint | Novel validation /32 | Test /64 | Length 48 /64 | Length 96 /64 |
+| Checkpoint | Novel validation /32 | Test /64 | Length 48 /64 | Length 96 /64 |
 | --- | ---: | ---: | ---: | ---: |
-| Two banks, update 500 | 32 | 63 | 63 | 63 |
-| Two banks, update 1,000 | 31 | 63 | 61 | 62 |
-| Main, update 5,000 | 0 | 0 | 0 | 0 |
+| Two banks, seed 0, update 500 | 32 | 63 | 63 | 63 |
+| Two banks, seed 0, update 1,000 | 31 | 63 | 61 | 62 |
+| Two banks, seed 1, update 500 | 32 | 64 | 61 | 64 |
+| Two banks, seed 1, update 1,000 | 31 | 64 | 60 | 64 |
+| Main, seed 0, update 5,000 | 0 | 0 | 0 | 0 |
 
 The same two-bank architecture trained from fresh weights on NV11 with
 seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
@@ -2793,12 +2795,27 @@ against the source table. At a zero gap it reproduces the source test
 fingerprint. A 168-token gap extends the original 24 tokens to 192 while
 keeping both queries fixed. [Gap preservation proof](../../src/Transformer/Basis/RecallParsed.lean)
 
+The write-order probe adds a conflicting value for each original table key.
+It places that write first in one version and last in the other. The two
+versions have the same token multiset and identical query positions. Every
+original test row supplies two queried keys and two unqueried controls.
+Moving a queried write changes exactly one answer. Moving an unqueried
+write preserves both answers. The independent source oracle checks every
+query in each generated row.
+[Write-order proof](../../src/Transformer/Basis/RecallWriteIntervention.lean)
+
+On seed 0 at update 500 the two-bank checkpoint answered both orders
+correctly for 125/128 queried-key pairs and 126/128 controls. At update
+1,000 it scored 122/128 and 126/128. Every pair counted in these four
+results also had both answers right on the unmodified source row.
+
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-agreement-lookup
 bin=./target/release/phasor-value-transport
 "$bin" catalog-target suite-mqar 0 1500 runs/agreement-catalog
 "$bin" catalog-target suite-mqar 0 1500 runs/agreement-catalog
 "$bin" target-probes suite-mqar 0 1500 runs/agreement-catalog recall-gap 168
+"$bin" target-writes suite-mqar 0 1500 runs/agreement-catalog
 ```
 
 Both seed-0 models trained from scratch on the same one- to five-table

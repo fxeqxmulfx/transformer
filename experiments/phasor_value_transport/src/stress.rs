@@ -31,6 +31,7 @@ use progress::{checkpoint, weight_digest};
 pub mod slot_ablation;
 pub mod triple_phase_ablation;
 mod recall_gap;
+mod recall_writes;
 pub mod report;
 pub mod score_timing;
 mod source_target;
@@ -481,6 +482,17 @@ fn parity_case(name: &str) -> bool {
     matches!(name, "basis-parity16" | "basis-parity20" | "basis-parity24")
 }
 
+fn recall_test(name: &str, original: &[Example]) -> basis::Result<(Value, Vec<basis::data::Example>)> {
+    let spec = recall_gap::source_spec(name)?;
+    let rows = basis::generator::generate(&spec, "test", original.len(), &Default::default(), false)?;
+    if rows.len() != original.len() || !rows.iter().zip(original).all(|(a, b)| {
+        a.tokens == b.tokens && a.targets == b.targets && a.changes == b.changes
+    }) {
+        return Err("MQAR generator differs from the checkpoint's source test inputs".into());
+    }
+    Ok((spec, rows))
+}
+
 fn prepare_evaluation(
     name: &str,
     probes: ProbeSet,
@@ -516,21 +528,11 @@ fn add_probes(
         probe_hashes.insert(split, digest);
     }
     if let ProbeSet::RecallGap(gap) = probes {
-        let spec = recall_gap::source_spec(name).map_err(|e| e.to_string())?;
         let original = task
             .splits
             .get("test")
             .ok_or("missing original recall test split")?;
-        let rows =
-            basis::generator::generate(&spec, "test", original.len(), &Default::default(), false)
-                .map_err(|e| e.to_string())?;
-        if !rows
-            .iter()
-            .zip(original)
-            .all(|(a, b)| a.tokens == b.tokens && a.targets == b.targets && a.changes == b.changes)
-        {
-            return Err("MQAR generator differs from the checkpoint's source test inputs".into());
-        }
+        let (_, rows) = recall_test(name, original).map_err(|e| e.to_string())?;
         let (digest, delayed) = recall_gap::delay(name, &rows, gap).map_err(|e| e.to_string())?;
         let key = format!("test/recall-gap-{gap}");
         probe_hashes.insert(key.clone(), digest);

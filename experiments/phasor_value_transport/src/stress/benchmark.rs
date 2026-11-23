@@ -5,6 +5,8 @@ use crate::head::Head;
 use std::io::{BufRead, BufReader};
 mod split;
 use split::SplitScorer;
+mod write_order;
+pub use write_order::target_writes;
 
 pub(super) fn score_checkpoint(
     cfg: Config,
@@ -14,12 +16,7 @@ pub(super) fn score_checkpoint(
     score_checkpoint_with(cfg, task, bytes, SplitScorer::Exact)
 }
 
-fn score_checkpoint_with(
-    cfg: Config,
-    task: &Task,
-    bytes: &[u8],
-    scorer: SplitScorer<'_>,
-) -> Result<(Value, Option<Value>)> {
+fn checkpoint_engine(cfg: Config, bytes: &[u8]) -> Result<Engine> {
     if bytes.len() != layout::total_count(&cfg) * 4 {
         return Err("fixed-budget checkpoint shape mismatch".into());
     }
@@ -30,7 +27,16 @@ fn score_checkpoint_with(
         .map(|b| f32::from_le_bytes(*b))
         .collect();
     layout::validate(&cfg, &weights)?;
-    let mut engine = Engine::for_scoring(cfg, &weights)?;
+    Engine::for_scoring(cfg, &weights)
+}
+
+fn score_checkpoint_with(
+    cfg: Config,
+    task: &Task,
+    bytes: &[u8],
+    scorer: SplitScorer<'_>,
+) -> Result<(Value, Option<Value>)> {
+    let mut engine = checkpoint_engine(cfg, bytes)?;
     let mut scores = BTreeMap::new();
     for (split, examples) in &task.splits {
         if split == &task.selection || split == "test" || split.starts_with("test/") {
