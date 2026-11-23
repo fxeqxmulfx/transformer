@@ -2865,6 +2865,19 @@ table and to excess reads.
 | 80 | Latest | 100 | 69 | 69 | 2 |
 | 80 | Chronological | 100 | 99 | 99 | 98 |
 
+The complete model generated the answer letter and terminator for the same
+100 original and 100 edited questions per length. The middle columns give
+the counts at the matching read budget. A paired success requires both
+generations to be correct. All four evaluations used the same seed-0
+update-250 weights, trained with ten reads on one- to five-table questions.
+
+| Tables | Write selection at evaluation | Original /100 | Edited /100 | Paired /100 | Paired with one fewer read /100 | Paired with one extra read /100 |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| 40 | Latest | 98 | 82 | 80 | 2 | 19 |
+| 40 | Chronological | 98 | 96 | 94 | 2 | 92 |
+| 80 | Latest | 100 | 71 | 71 | 2 | 7 |
+| 80 | Chronological | 100 | 99 | 99 | 2 | 98 |
+
 On the reserved disjoint 40- and 41-table sets, the chronological
 intervention retained 500/500 paired answers at both the matching
 budget and one extra read. The checkpoint used latest writes during
@@ -2872,7 +2885,7 @@ training. The report records the intervention and the weight hash.
 
 ```sh
 for hops in 40 80; do
-    for mode in isolated-jumps ordered-isolated-jumps; do
+    for mode in isolated-jumps ordered-isolated-jumps requested ordered-requested; do
         "$bin" lookup-cycle-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" "$mode"
     done
 done
