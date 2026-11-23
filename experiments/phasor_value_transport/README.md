@@ -2807,6 +2807,12 @@ length-48 test scores from 63/64 to 64/64. At update 1,000 bypassing it
 preserved all four counts. The rest of the trained architecture sufficed
 for the validation target at both checkpoints.
 
+Bypassing the local read also preserved the 95% validation target on
+seeds 1 and 2 at both updates. On seed 1 all six budgets gave the same
+counts at update 500. At update 1,000 bypassing the local read raised
+validation from 31/32 to 32/32 and length-48 accuracy from 60/64 to
+61/64. On seed 2 all six budgets gave the same four counts at both updates.
+
 Removing the dense induction read from the seed-0 two-bank checkpoint
 dropped all four exact counts to zero at both updates. Removing the chart
 preserved all four counts. The dense-induction variant trained from fresh
@@ -2816,13 +2822,21 @@ first update. It used 1,823,051 trainable parameters, compared with
 of the latest matching embedding in the causal prefix.
 [Dense read definition](../../src/Transformer/Phasor/TripleTransport/DenseInduction.lean)
 
+Training the chart-induction variant from scratch on seed 0 yielded
+the same weight digests as dense induction at updates 500 and 1,000.
+All four split scores matched at each update. Both variants have
+1,823,051 parameters in this task configuration.
+
 On Basis Recall Hard, each original sequence has 16 writes to eight keys
 and eight queries. On all three seeds the two-bank model reached 512/512
 on novel validation and 512/512 on the independent test at update 50.
 Both counts stayed at 512 after 500 additional updates. At both seed-0
 checkpoints, evaluating with zero, one or ten local reads gave 512/512
 on both splits. The earlier dense-induction variant also solved all
-three seeds at updates 50 and 550. [Hard-recall protocol](../convex_stress_basis_data/README.md)
+three seeds at updates 50 and 550. Removing dense induction from the
+two-bank seed-0 checkpoint reduced both split scores to 0/512 at both
+updates. Removing the chart preserved 512/512 on both splits.
+[Hard-recall protocol](../convex_stress_basis_data/README.md)
 
 The same two-bank architecture trained from fresh weights on NV11 with
 seeds 0, 1 and 2. Each independently reloaded update-250 checkpoint scored
