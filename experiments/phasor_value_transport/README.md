@@ -2363,6 +2363,14 @@ Seed 2 had 79/200 validation and 39/100 ten-hop answers at update
 250, and generated D on Mira. The early ten-hop result depended on the
 training seed.
 
+The seed-0 checkpoint at update 250 also answered 100/100 ten-hop questions
+with a new set of counterfactuals at each table. At each of the ten link
+positions it answered **both questions on all 100 pairs** after the edit
+changed the correct answer letter. It kept all 100 answers correct on the
+separate row-shuffle and choice-shuffle controls. Shuffling choices changed
+the correct letter in 82 questions. The same 100 original questions were
+reused across the ten interventions.
+
 The longer unnumbered probe used 20 new table sets per depth, each tested
 on all five possible starts. In the shared-permutation condition, the
 20-hop prompts contained 345 tokens and the 40-hop prompts contained 665.
@@ -2390,6 +2398,7 @@ for seed in 0 1 2; do
     "$bin" lookup-study-score "$seed" "$out"
 done
 PHASOR_EVAL_BATCH_CAP=4 "$bin" lookup-long-chains 0 "$out" 20 20 shared
+"$bin" lookup-interior 0 "$out" 10 10
 ```
 
 #### Forty tables and excess passes
@@ -2456,6 +2465,15 @@ and the same weights from update 250. Neither solved all five starting
 keys on any of the twenty table sets. The chronological arm solved four
 of five on six sets.
 
+On the shared-permutation twenty-hop split the same chronological intervention
+reached **99/100**, with all five starts correct in 19 of the 20 table sets.
+The latest-write control scored 96/100 on those questions. Training the
+chronological model from fresh seed-0 weights on one- and two-hop questions
+first reached the validation threshold at update 200 with 200/200,
+compared with update 250 for the concentrated latest-write model. Two
+reloads generated the correct answer for Mira and all 100 answers at each
+of one, two, three, five and ten hops.
+
 The CPU diagnostic isolates the learned path vote, projects it against
 the entire tied vocabulary at unit gain and records paired predictions.
 On forty shared-permutation tables, the mixed-length seed-0 checkpoint's
@@ -2474,6 +2492,7 @@ bin=./target/release/phasor-value-transport
 out=runs/concentrated-lookup
 "$bin" lookup-long-chains 0 "$out" 20 20 rebound
 "$bin" lookup-ordered-long 0 "$out" 20 20 rebound
+"$bin" lookup-ordered-long 0 "$out" 20 20 shared
 "$bin" lookup-isolated-long-budgets 0 "$out" 80
 # Train the same chronological rule from initialization.
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-ordered-lookup
