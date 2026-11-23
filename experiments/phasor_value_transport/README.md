@@ -1807,10 +1807,11 @@ The device regression compares every hidden coordinate and output logit with
 the training engine at fixed weights, over three layers and five changes of
 batch shape. It also counts the distinct allocated score buffers.
 
-On the 2 GiB GTX 1050, seed 0 of dense induction recalled the latest overwritten
-value on all 512 examples at a delay of 2,048 tokens, for both the first
+On the 2 GiB GTX 1050, seed 0 of dense induction recalled all eight latest
+values on all 512 examples at delays of 2,048, 3,072 and 3,800 tokens, for both the first
 passing checkpoint (update 50) and the retention checkpoint (update 550).
-The previous evaluator exhausted device memory at that delay. At delay 1,536
+Two independent executions at delay 3,072 produced byte-identical reports.
+The previous evaluator exhausted device memory at delay 2,048. At delay 1,536
 the two evaluators produced byte-identical reports for both checkpoints.
 
 ```sh
@@ -1823,7 +1824,9 @@ cargo +stable build --release --locked --features fp32-affine-reference,triple-d
 bin=./target/release/phasor-value-transport
 out=runs/dense-induction/catalog
 "$bin" catalog-target basis-recall-hard 0 100 "$out"
-PHASOR_EVAL_BATCH_CAP=1 "$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap 2048
+for gap in 2048 3072 3800; do
+    PHASOR_EVAL_BATCH_CAP=1 "$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap "$gap"
+done
 ```
 
 ### Memory and repeated computation for lookup tasks
@@ -2007,6 +2010,11 @@ independent test at updates 50 and 550 on every seed. Each hard-recall
 sequence requires all eight overwritten values. Independent checkpoint
 reloads reproduced the counts for both tasks.
 
+The same chart architecture reached the 99% target on the quadratic-linear
+case, $a^2+ab+b^2+a$ modulo 97. At update 250 it answered 4,694, 4,694
+and 4,670 of the 4,705 held-out pairs correctly on seeds 0, 1 and 2.
+Each count was retained at update 750 and reproduced from saved weights.
+
 ```sh
 cd experiments/phasor_value_transport
 flags=fp32-affine-reference,triple-chart-induction
@@ -2020,7 +2028,7 @@ for seed in 0 1 2; do
     "$bin" cell arithmetic-cubic-product "$seed" "$out/gpt"
     "$bin" probes arithmetic-cubic-product "$seed" "$out/gpt"
     "$bin" nv11-score "$out/gpt/arithmetic-cubic-product/seed$seed/weights.f32"
-    for task in arithmetic-cubic-mixed arithmetic-quadratic basis-recall-hard; do
+    for task in arithmetic-cubic-mixed arithmetic-quadratic arithmetic-quadratic-linear basis-recall-hard; do
         search=250
         if [ "$task" = basis-recall-hard ]; then search=100; fi
         "$bin" catalog-target "$task" "$seed" "$search" "$out/catalog"
