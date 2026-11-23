@@ -279,6 +279,12 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
         )
     } else if case["kind"] == "chain" {
         modular_chain(name, &case)?
+    } else if name == "associative-dividend-n2-l1-w0" {
+        let control = cases()?.into_iter().find(|r| r["name"] == associative_copy::CONTROL)
+            .ok_or("missing canonical divisor-copy reference")?;
+        let (task, hashes) = associative_copy::build(&case, &control)
+            .map_err(|e| -> Box<dyn std::error::Error> { e })?;
+        (sequence_task(task), hashes)
     } else if case["kind"] == "differenced_division" {
         let order = case["data"]["order"]
             .as_u64()

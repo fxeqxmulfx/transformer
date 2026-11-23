@@ -5,6 +5,7 @@ use data::{Example, Task};
 use std::collections::BTreeMap;
 
 pub mod alignment;
+mod associative_copy;
 pub mod benchmark;
 pub mod catalog;
 mod class_translation;

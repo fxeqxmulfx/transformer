@@ -125,8 +125,8 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 70 have authenticated data and a supported source
-metric in this runner. For 14 more sequence-accuracy cases the required
+extensions and NV11, 71 have authenticated data and a supported source
+metric in this runner. For 13 more sequence-accuracy cases the required
 data adapter is unavailable. The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
@@ -1789,6 +1789,30 @@ for task in differenced-division-k1 differenced-division-k2; do
         "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog > /dev/null
         "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog
     done
+done
+```
+
+#### Two-register dividend copy
+
+The original dividend and divisor copy tasks use the same fixed memories
+and ordered queries. Each split has 4,656 examples. The eight input tokens
+show two register writes followed by two query keys. The dividend task
+supervises the value of the first query at the last position. Within each
+four-row group, exchanging the two query keys gives its expected value from
+the frozen divisor task. This independent check reproduced every target,
+including equal keys and equal stored values. Changing the queried role
+changes 2,304 training labels and 2,302 validation labels.
+[Query and mask proof](../../src/Transformer/Phasor/AssociativeCopyScore.lean)
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.AssociativeCopyScore
+cd experiments/phasor_value_transport
+cargo +stable test --release --locked --offline --test associative_copy
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for seed in 0 1 2; do
+    "$bin" catalog-target associative-dividend-n2-l1-w0 "$seed" 250 runs/main-catalog > /dev/null
+    "$bin" catalog-target associative-dividend-n2-l1-w0 "$seed" 250 runs/main-catalog
 done
 ```
 
