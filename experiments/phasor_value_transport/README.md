@@ -1756,6 +1756,37 @@ for seed in 0 1 2; do
 done
 ```
 
+### Interpolation in a learned cyclic order
+
+Every memory address and value refers to a prototype in the learned dense
+dictionary. In a row or column, an observed value shared by exactly two keys
+pairs those keys. Triple transport can complete partial partner maps from
+other rows. If two completed permutations compose to one cycle through the
+whole dictionary, iterating that cycle from a prototype gives each prototype
+a coordinate. Renaming all prototypes carries both the cycle and the
+prediction through the same renaming.
+
+At prime cycle length these coordinates form a finite field. For a row whose
+values follow a polynomial of degree at most $d$ in a fixed learned chart,
+$d+1$ distinct correct observations determine every value. With $d$ observed
+coordinates and a missing query, the zero polynomial and the product of
+the $d$ linear factors at the observations agree there and differ at the
+query. This gives the sample requirement for this class of rows.
+
+The fit starts at zero and corrects an observed mismatch at each step. Each
+correction preserves earlier witnesses. After $d+1$ distinct corrections a
+degree-$d$ row is recovered regardless of their order. The experiment allows
+up to eight corrections, requires more than twice as many observations as
+corrections, and checks every observation. Under this surplus, deleting one
+queried observation still recovers its value in the same chart. A correct
+partner read also gives the same answer wherever that chart predicts it.
+
+The fitted prototype can fill a missing static proposal at any causal
+position. A matching predecessor in the input stream supplies its actual
+successor to the shared gate. The proof covers arbitrary dense prefixes and
+arbitrary changes after the query. Build the proof from the repository root
+with `LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.OrbitInduction`.
+
 ### Pair-class results beyond the canonical tiers
 
 The November 23 registered-extension audit through language L3 seed 1
