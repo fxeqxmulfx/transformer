@@ -2170,6 +2170,44 @@ export PHASOR_EVAL_BATCH_CAP=16
 "$bin" lookup-study-score 0 "$out" ablations
 ```
 
+#### Read budget and every interior edge
+
+The seed-0 checkpoint above trained on one- and two-hop questions with
+five shared reads. The scorer reloaded its weights at update 250 and
+generated one answer token on 100 fresh questions per depth. Each
+depth has 20 questions for each of the five correct letters.
+
+| Shared reads at evaluation | 1 hop | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 5 | 100 | 100 | 98 | 93 | 85 | 17 | 15 | 23 | 22 | 17 |
+| 10 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 52 |
+
+Validation was 199/200 at both budgets. With all other lookup
+coefficients masked by their learned magnitude, the complete ten-read
+model gave 100/100 at each of the original test depths 1, 2, 3, 5
+and 10, and 200/200 on validation. The full five-read checkpoint under
+that same mask gave 18/100 at ten hops. Read budget and interference
+among the learned coefficients both affected the result.
+
+The optional second budget scores the same individual prompts again and
+counts answers retained, lost and gained. The interior test changes the
+reached link in exactly one table and swaps a second, unreachable row
+to preserve the printed token counts. Each of the four alternative
+letters occurs five times for every original letter at each rewire
+position. Separate controls independently permute the rows and choices.
+The scorer reports the number of pairs with both generated letters
+correct. The table oracle runs outside the model.
+[Effect of changing an interior edge](../../src/Transformer/Phasor/LookupQuestion.lean)
+
+```sh
+"$bin" lookup-hop-sweep 0 "$out" 5 10
+"$bin" lookup-hop-sweep 0 "$out" 10 20
+"$bin" lookup-hop-sweep 0 "$out" 20 40
+"$bin" lookup-interior 0 "$out" 5 5
+"$bin" lookup-interior 0 "$out" 10 10
+"$bin" lookup-weight-score 0 "$out" keep:1 linear
+```
+
 #### Memory used by frozen lookup
 
 The frozen scorer adds path votes in the same order as training and

@@ -3,6 +3,7 @@
 use super::super::*;
 use std::collections::{BTreeSet, HashSet};
 mod paired;
+pub(super) mod interior;
 pub(super) use paired::paired;
 
 pub(in crate::stress) const NAME: &str = "study-lookup-questions";
@@ -227,6 +228,40 @@ fn balanced(
     Ok(rows)
 }
 
+fn split_digest(rows: &[Example]) -> Result<String> {
+    let payload: Vec<_> = rows.iter().map(|r| (&r.prompt, &r.answer)).collect();
+    Ok(hash(&serde_json::to_vec(&payload)?))
+}
+
+/// Complete the test grid after authenticating the training checkpoint.
+/// Each depth uses its own generator seed and balances all five letters.
+pub(super) fn complete_hops(task: &mut Task) -> Result<BTreeMap<usize, String>> {
+    let words = vocabulary();
+    let ids = words
+        .iter()
+        .enumerate()
+        .map(|(i, w)| (w.as_str(), i as i64))
+        .collect();
+    let mut seen = task
+        .splits
+        .values()
+        .flatten()
+        .map(|e| e.prompt.clone())
+        .collect();
+    let mut digests = BTreeMap::new();
+    for hops in 1..=WORDS.len() {
+        let entry = task.splits.entry(format!("test/hops-{hops}"));
+        let rows = match entry {
+            std::collections::btree_map::Entry::Occupied(e) => e.into_mut(),
+            std::collections::btree_map::Entry::Vacant(e) => {
+                e.insert(balanced(hops, 20, 378_609 + hops as u32, &ids, &mut seen)?)
+            }
+        };
+        digests.insert(hops, split_digest(rows)?);
+    }
+    Ok(digests)
+}
+
 pub(in crate::stress) fn data() -> Result<(Value, Task)> {
     let words = vocabulary();
     let ids = words
@@ -253,11 +288,7 @@ pub(in crate::stress) fn data() -> Result<(Value, Task)> {
     }
     let mut digests = BTreeMap::new();
     for (name, rows) in &splits {
-        let payload = rows
-            .iter()
-            .map(|r| (&r.prompt, &r.answer))
-            .collect::<Vec<_>>();
-        digests.insert(name, hash(&serde_json::to_vec(&payload)?));
+        digests.insert(name, split_digest(rows)?);
     }
     let case = json!({"width":64,"heads":2,"layers":2,"batch":16,"max_updates":3000,"observe":50});
     let fingerprint = hash(&serde_json::to_vec(&(
@@ -283,6 +314,34 @@ pub(in crate::stress) fn data() -> Result<(Value, Task)> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn complete_grid_preserves_the_frozen_splits_and_adds_five_balanced_depths() {
+        let (base, mut task) = data().unwrap();
+        let hashes = complete_hops(&mut task).unwrap();
+        assert_eq!(hashes.len(), 10);
+        for (split, digest) in base["split_sha256"].as_object().unwrap() {
+            assert_eq!(
+                split_digest(&task.splits[split]).unwrap(),
+                digest.as_str().unwrap()
+            );
+        }
+        let words = vocabulary();
+        let mut seen = HashSet::new();
+        for (name, rows) in &task.splits {
+            for r in rows {
+                assert!(seen.insert(&r.prompt));
+            }
+            if name.starts_with("test/hops-") {
+                let mut counts = [0; 5];
+                for e in rows {
+                    let label = &words[e.answer[0] as usize];
+                    counts[LETTERS.iter().position(|x| x == label).unwrap()] += 1;
+                }
+                assert_eq!(counts, [20; 5]);
+            }
+        }
+        assert_eq!(complete_hops(&mut task).unwrap(), hashes);
+    }
     #[test]
     fn every_split_has_fresh_unannotated_questions_and_balanced_letters() {
         let (row, t) = data().unwrap();
