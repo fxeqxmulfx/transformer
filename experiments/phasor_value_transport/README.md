@@ -2227,6 +2227,10 @@ all original questions correctly. It got both answers right on 99 pairs
 when the first link changed and 99 pairs when the second link changed.
 It answered all 100 correctly after shuffling rows and after shuffling
 choices. Shuffling choices changed the correct letter on 78 questions.
+On five-hop questions the model answered 80/100 originals. The counts
+with both answers right after changing edge 1, 2, 3, 4 or 5 were 67,
+71, 66, 71 and 67 out of 100. It retained 69 correct pairs under row
+shuffling and 67 under choice shuffling.
 
 The memory probe appends a conflicting row inside a requested table or
 places the same row in a supplementary table beyond the requested hop
@@ -2237,6 +2241,16 @@ Removing the reached edge leaves the complete-chain oracle undefined.
 For that arm the report counts selections of the last reachable key and
 of the intact answer. These are observed choices, with no correctness
 score for an undefined answer.
+
+For the two-hop probe with edge one edited, the intact model got 98/100
+original questions right. Appending a legitimate overwrite produced 97/100
+correct in either write order. Moving that same conflicting row into a
+supplementary table reduced the scores to 3/100 and 0/100. With two full
+tables in conflict, both crossed conditions scored 0/100. When the reached
+edge was removed, it chose the last reachable key 23 times and the intact
+answer 20 times. On the separate off-path deletion it retained 98/100.
+Two reloads reproduced the reports for the memory probe and five-hop
+interventions.
 
 ```sh
 "$bin" lookup-hop-sweep 0 "$out" 5 10
