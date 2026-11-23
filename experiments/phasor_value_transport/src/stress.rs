@@ -11,6 +11,7 @@ pub mod benchmark;
 pub mod catalog;
 mod class_translation;
 mod differenced;
+mod fashion;
 pub mod compare_shifts;
 pub mod embedding;
 #[cfg(all(test, feature = "triple-dense-induction"))]

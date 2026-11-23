@@ -320,6 +320,14 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
             return Err("canonical source selection changed".into());
         }
         (task, original["data_fingerprints"].clone())
+    } else if case["kind"] == "fashion" {
+        let dir = std::env::var_os("PHASOR_FASHION_DATA")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("../../.lake/reproduction/fashion-mnist"));
+        let (source, hashes) = fashion::build(&case, &dir)
+            .map_err(|e| -> Box<dyn std::error::Error> { e })?;
+        (sequence_task(source), hashes)
     } else if case["kind"] == "recurrence"
         && matches!(case["data"]["tokenizer"].as_str(), Some("mash" | "mash-half")) {
         let (source, hashes, decoders) = temporal::build_mash(&case)

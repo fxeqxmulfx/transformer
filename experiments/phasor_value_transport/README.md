@@ -133,8 +133,8 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 83 have native data and a supported source
-metric in this runner. Fashion-MNIST still needs a native data adapter.
+extensions and NV11, 84 have native data and a supported source
+metric in this runner when the original Fashion-MNIST archives are available.
 The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
@@ -2159,10 +2159,10 @@ searches, the mixed cubic scored 115, 114 and 116 out of 4,705, and
 unique-symbol copying scored 0/32 on each seed. Their source budgets
 are 100,000 updates.
 
-The November 23 main-model audit including both MASH decoders covered
-29 of the 108 broader cases, with 65 independently reloaded case and seed
+The November 23 main-model audit including Fashion-MNIST covered
+32 of the 108 broader cases, with 76 independently reloaded case and seed
 results. Four retained the source target, two crossed and subsequently
-dropped below it, and three exhausted the source budget. The other 56
+dropped below it, and three exhausted the source budget. The other 67
 were measured before their source budget ended.
 
 On hard recall all three seeds exhausted the 3,000-update source budget.
@@ -2440,6 +2440,51 @@ for task in recurrence-division-k1-c4-lgt recurrence-division-k2-c4-lgt \
     done
 done
 ```
+
+#### Fashion-MNIST image classification
+
+The original GPT protocol converts each 28×28 image into 196 patch tokens.
+Each token is the nearest-even mean of four pixels. BOS precedes the
+row-major grid. Only the final output is supervised, using one of ten
+class tokens. The model receives the patches through its ordinary random
+embedding lookup. The source target is 90% validation accuracy.
+[Patch coverage, rounding and exact classification](../../src/Transformer/Phasor/ImagePatchScore.lean)
+
+The native adapter verified the four published archive hashes and reproduced
+all three original dense tensor fingerprints. The seed-1 shuffle takes
+50,000 training and 10,000 validation images from the official training
+set. The 10,000 official test images keep their source order. With these
+archives available, the native runner can load 84 of 108 broader catalog
+cases. [Fashion-MNIST archives](https://github.com/zalandoresearch/fashion-mnist/tree/master/data/fashion)
+
+At the first scheduled observation, update 250, main-model seed 0
+classified 6,237 of 10,000 validation images and 6,199 of 10,000
+independent test images correctly. Reloading its checkpoint reproduced
+both counts. The original training budget is 30,000 updates.
+
+```sh
+# From the repository root, download and verify the original IDX files.
+dir="$PWD/.lake/reproduction/fashion-mnist"
+ref=.lake/reproduction/gpt/research/current_grokking/results/fashion_seed1.json
+mkdir -p "$dir"
+jq -r '.data_metadata.source_sha256|to_entries[]|[.value,.key]|@tsv' "$ref" |
+    while read -r digest name; do
+        curl -fsSL --retry 2 -o "$dir/$name.part" \
+            "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/$name" &&
+            printf '%s  %s\n' "$digest" "$dir/$name.part" | sha256sum -c --status &&
+            mv "$dir/$name.part" "$dir/$name" || exit 1
+    done
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.ImagePatchScore
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+"$bin" catalog-inventory extensions.tsv
+"$bin" catalog-target fashion-mnist-gpt 0 250 runs/main-catalog
+"$bin" catalog-target fashion-mnist-gpt 0 250 runs/main-catalog
+```
+
+Set `PHASOR_FASHION_DATA` to use another directory containing the verified
+archives. The adapter uses the system `gzip` executable.
 
 ### Four-gate triple transport on the canonical GPT tiers
 
