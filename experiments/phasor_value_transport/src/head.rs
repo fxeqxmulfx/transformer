@@ -53,6 +53,23 @@ impl ReadGates {
     }
 }
 
+/// The same associative store supports repeated reads and independent
+/// interventions on the coefficient table and the resulting dense vote.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PathRead {
+    pub passes: usize,
+    pub cubic: bool,
+    pub normalize_vote: bool,
+}
+
+impl PathRead {
+    pub const fn linear(passes: usize) -> Self {
+        Self { passes, cubic: false, normalize_vote: false }
+    }
+
+    pub const NORMALIZED: Self = Self { passes: 5, cubic: true, normalize_vote: true };
+}
+
 /// Search and gate scales vary independently in fixed-weight controls.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PeerRead {
@@ -61,7 +78,7 @@ pub struct PeerRead {
     pub pairs: Option<crate::slot_orbits::PairRead>,
     pub dense_induction: bool,
     pub fibers: Option<crate::slot_orbits::FiberRead>,
-    pub path_passes: Option<usize>,
+    pub path: Option<PathRead>,
 }
 
 impl PeerRead {
@@ -72,7 +89,7 @@ impl PeerRead {
             pairs: None,
             dense_induction: false,
             fibers: None,
-            path_passes: None,
+            path: None,
         }
     }
 
@@ -84,7 +101,7 @@ impl PeerRead {
         pairs: None,
         dense_induction: false,
         fibers: None,
-        path_passes: None,
+        path: None,
     };
 
     pub const SHARED_GRAPH: Self = Self {
@@ -115,7 +132,11 @@ impl PeerRead {
         ..Self::DENSE_INDUCTION
     };
     pub const TYPED_LOOKUP: Self = Self {
-        path_passes: Some(5),
+        path: Some(PathRead::linear(5)),
+        ..Self::CHART_INDUCTION
+    };
+    pub const NORMALIZED_LOOKUP: Self = Self {
+        path: Some(PathRead::NORMALIZED),
         ..Self::CHART_INDUCTION
     };
 
@@ -123,7 +144,7 @@ impl PeerRead {
     pub fn induction_controls(self) -> Vec<(&'static str, Self)> {
         use crate::slot_orbits::FiberRead;
         let mut variants = Vec::new();
-        if self.path_passes == Some(5) {
+        if let Some(path) = self.path.filter(|r| r.passes == 5) {
             for (name, passes) in [
                 ("one_local_read", 1),
                 ("two_local_reads", 2),
@@ -134,10 +155,19 @@ impl PeerRead {
                 variants.push((
                     name,
                     Self {
-                        path_passes: Some(passes),
+                        path: Some(PathRead { passes, ..path }),
                         ..self
                     },
                 ));
+            }
+            if path == PathRead::NORMALIZED {
+                for (name, read) in [
+                    ("without_vote_normalization", PathRead { normalize_vote: false, ..path }),
+                    ("without_cubic_gain", PathRead { cubic: false, ..path }),
+                    ("linear_unnormalized", PathRead::linear(path.passes)),
+                ] {
+                    variants.push((name, Self { path: Some(read), ..self }));
+                }
             }
         }
         if self.fibers == Some(FiberRead::Chart) {
@@ -168,6 +198,8 @@ impl PeerRead {
                 (Self::CHART_INDUCTION, true) => "phasor-triple-chart-induction-32-v1",
                 (Self::TYPED_LOOKUP, true) => "phasor-triple-typed-lookup-32-v1",
                 (Self::TYPED_LOOKUP, false) => "phasor-triple-typed-lookup-trunk-v1",
+                (Self::NORMALIZED_LOOKUP, true) => "phasor-triple-normalized-vote-lookup-32-v1",
+                (Self::NORMALIZED_LOOKUP, false) => "phasor-triple-normalized-vote-lookup-trunk-v1",
                 (Self::CHART_INDUCTION, false) => "phasor-triple-chart-induction-trunk-v1",
                 (Self::DENSE_INDUCTION, true) => "phasor-triple-dense-induction-32-v1",
                 (Self::DENSE_INDUCTION, false) => "phasor-triple-dense-induction-trunk-v1",
@@ -306,6 +338,7 @@ impl Head {
             "triple-dense-induction" => Ok(Self::PeerTriplePhase(PeerRead::DENSE_INDUCTION)),
             "triple-chart-induction" => Ok(Self::PeerTriplePhase(PeerRead::CHART_INDUCTION)),
             "triple-typed-lookup" => Ok(Self::PeerTriplePhase(PeerRead::TYPED_LOOKUP)),
+            "triple-normalized-lookup" => Ok(Self::PeerTriplePhase(PeerRead::NORMALIZED_LOOKUP)),
             "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,

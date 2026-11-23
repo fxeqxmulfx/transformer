@@ -34,7 +34,7 @@ pub fn parameter_count(head: crate::head::Head, d: usize, k: usize) -> usize {
         0
     };
     let gates = head.read_gates().count();
-    let local = if head.peer_read().is_some_and(|r| r.path_passes.is_some()) {
+    let local = if head.peer_read().is_some_and(|r| r.path.is_some()) {
         crate::typed_lookup::parameters(d)
     } else {
         0
@@ -72,7 +72,7 @@ impl Layout {
             path_start: cfg
                 .head
                 .peer_read()
-                .and_then(|r| r.path_passes)
+                .and_then(|r| r.path)
                 .map(|_| gates + gate_mode.count() * (d + 1)),
         }
     }

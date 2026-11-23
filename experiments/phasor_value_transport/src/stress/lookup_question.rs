@@ -65,7 +65,7 @@ pub fn score_with(
             read.induction_controls()
                 .into_iter()
                 .filter(|(_, variant)| {
-                    read.path_passes.is_none() || variant.path_passes != read.path_passes
+                    read.path.is_none() || variant.path != read.path
                 })
                 .map(|(name, read)| (name, head::Head::PeerTriplePhase(read))),
         );

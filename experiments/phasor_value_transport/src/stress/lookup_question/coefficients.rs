@@ -39,8 +39,7 @@ pub(super) fn transform(w: &mut [f32], selection: &str, gain: &str) -> Result<Va
         if cutoff.is_some_and(|(mode, t)| (v.abs() >= t) != (mode == "keep")) {
             *v = 0.;
         } else if gain == "cubic" {
-            let x = f64::from(*v);
-            *v = (x * ((x * x + floor) / denominator)) as f32;
+            *v = crate::typed_lookup::cubic_weight(*v, floor, denominator);
         }
     }
     Ok(

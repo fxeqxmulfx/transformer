@@ -26,7 +26,15 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
     let mut w = vec![0.; parameters(d)];
     choose(&mut w, 7, 2, 11);
     for (mode, exists) in [(1, false), (2, true), (5, true)] {
-        let tape = Tape::new(&x, &x, &w, (d, keys.len()), mode, true, nearest);
+        let tape = Tape::new(
+            &x,
+            &x,
+            &w,
+            (d, keys.len()),
+            PathRead::linear(mode),
+            true,
+            nearest,
+        );
         let mut out = vec![0.; x.len()];
         tape.add_output(&mut out);
         let last = row(&out, keys.len() - 1, d);
@@ -34,8 +42,16 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
         assert_eq!(last.iter().copied().sum::<f32>(), f32::from(exists));
         for n in 1..keys.len() {
             let mut prefix = vec![0.; n * d];
-            Tape::new(&x[..n * d], &x[..n * d], &w, (d, n), mode, true, nearest)
-                .add_output(&mut prefix);
+            Tape::new(
+                &x[..n * d],
+                &x[..n * d],
+                &w,
+                (d, n),
+                PathRead::linear(mode),
+                true,
+                nearest,
+            )
+            .add_output(&mut prefix);
             assert_eq!(prefix, out[..n * d]);
         }
     }
@@ -43,6 +59,16 @@ fn repeated_reads_use_the_latest_link_then_a_different_final_relation() {
 
 #[test]
 fn signed_path_sum_and_gate_differentiate_through_dense_values() {
+    for (cubic, normalize_vote) in [(false, false), (true, false), (false, true), (true, true)] {
+        check_gradient(PathRead {
+            passes: 2,
+            cubic,
+            normalize_vote,
+        });
+    }
+}
+
+fn check_gradient(read: PathRead) {
     let d = 6;
     let x = make(&[0, 1, 2, 3, 4, 3, 2, 1, 0, 5, 4, 3, 2, 5, 4, 3, 1, 2], d);
     let length = 9;
@@ -52,17 +78,19 @@ fn signed_path_sum_and_gate_differentiate_through_dense_values() {
     let y: Vec<_> = (0..x.len())
         .map(|i| ((i * 17 % 83) as f32 - 40.) / 71.)
         .collect();
-    let w: Vec<_> = (0..parameters(d))
+    let mut w: Vec<_> = (0..parameters(d))
         .map(|i| ((i * 17 % 113) as f32 - 50.) / 299.)
         .collect();
-    let tape = Tape::new(&x, &h, &w, (d, length), 2, true, nearest);
+    w[3] = 0.29;
+    w[5] = -0.225;
+    let tape = Tape::new(&x, &h, &w, (d, length), read, true, nearest);
     let mut dx = vec![0.; x.len()];
     let mut dh = vec![0.; x.len()];
     let mut dw = vec![0.; w.len()];
     tape.backward(&h, &w, &y, &mut dx, &mut dh, &mut dw);
     let objective = |a: &[f32], b: &[f32], c: &[f32]| {
         let mut out = vec![0.; a.len()];
-        Tape::new(a, b, c, (d, length), 2, true, nearest).add_output(&mut out);
+        Tape::new(a, b, c, (d, length), read, true, nearest).add_output(&mut out);
         out.iter()
             .zip(&y)
             .map(|(&v, &k)| f64::from(v) * f64::from(k))
@@ -115,8 +143,24 @@ fn frozen_path_votes_match_every_training_row_without_retaining_adjoint_entries(
         }
         let address = |v: &[f32]| nearest(v).filter(|&i| v[i] > 0.);
         for passes in [1, 5, 10] {
-            let train = Tape::new(&x, &x, &w, (d, length), passes, true, address);
-            let score = Tape::new(&x, &x, &w, (d, length), passes, false, address);
+            let train = Tape::new(
+                &x,
+                &x,
+                &w,
+                (d, length),
+                PathRead::linear(passes),
+                true,
+                address,
+            );
+            let score = Tape::new(
+                &x,
+                &x,
+                &w,
+                (d, length),
+                PathRead::linear(passes),
+                false,
+                address,
+            );
             let mut expected = x.clone();
             let mut actual = x.clone();
             train.add_output(&mut expected);
@@ -178,7 +222,15 @@ fn measure_path_storage() {
     for _ in 0..6 {
         out.copy_from_slice(&x);
         let now = std::time::Instant::now();
-        let tape = Tape::new(&x, &x, &w, (d, length), 5, retain, address);
+        let tape = Tape::new(
+            &x,
+            &x,
+            &w,
+            (d, length),
+            PathRead::linear(5),
+            retain,
+            address,
+        );
         tape.add_output(&mut out);
         times.push(now.elapsed().as_secs_f64());
         entries = tape.frames.iter().map(|r| r.witnesses.len()).sum::<usize>();

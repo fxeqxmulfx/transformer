@@ -243,7 +243,7 @@ impl SlotLayer {
         h.truncate(rows * l.d);
         let read = e.config.head.peer_read();
         let dense = read.is_some_and(|r| r.dense_induction);
-        let local = read.and_then(|r| r.path_passes).filter(|&mode| mode > 0);
+        let local = read.and_then(|r| r.path).filter(|mode| mode.passes > 0);
         let enabled = !tape.routing.mute_proposals[1];
         let use_induction = dense && enabled && length > 2;
         let local = local.filter(|_| enabled);

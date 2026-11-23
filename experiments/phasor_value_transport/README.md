@@ -1879,23 +1879,21 @@ done
 
 ### Memory and repeated computation for lookup tasks
 
-- The Append-only Lookup Machine (ALM) retrieves an earlier value by key.
-  Its recency rule can return the latest value after an overwrite, which
-  could help with recall and register tasks.
+- The Append-only Lookup Machine (ALM) breaks ties between identical keys
+  by position, so the most recent matching write supplies the value.
   [Lookup and recency proofs](../../src/Transformer/ALM.lean)
-- Spotlight learns where to read and write in a growing memory. Each
-  token touches a small number of cells, which could make long-context
-  retrieval cheaper.
+- Spotlight learns continuous addresses on a growing lattice. A token
+  distributes writes over neighboring cells and interpolates their values
+  on a read.
   [Spotlight Memory](https://www.percepta.ai/blog/spotlight-memory)
-- A looped transformer runs the same block multiple times with shared
-  weights. A later pass can use the value retrieved by an earlier pass
-  as its next key, as required by N-Hop Lookup.
+- Inkling 2 Mini reuses the middle blocks across three passes. Every pass
+  sees the prelude, and a learned gate admits information from the
+  preceding pass.
   [Inkling 2 Mini evaluation](https://thinkingmachines.ai/news/inkling-2-mini/#no-cot-capabilities)
 
-These mechanisms could complement Phasor's existing reads. They may need
-simplification or adaptation to its causal embedding interface. The open
-question is whether Phasor can learn useful keys and chain the reads from
-the task loss alone.
+Phasor's synthetic lookup study tests two adaptations. One learns
+nearby cell addresses. The other records the latest value at each learned
+geometric address and repeatedly reads the resulting associations.
 [N-Hop Lookup protocol and example](../../stress_tests_for_gpt.md#n-hop-lookup)
 
 We formalized a smaller memory that uses two neighboring vector cells per
@@ -2131,6 +2129,45 @@ has identity directional derivative at zero. [Coefficient masks, margin bounds a
 "$bin" lookup-isolated 0 "$out" 10 keep:1 linear
 "$bin" lookup-isolated 0 "$out" 10 all cubic
 "$bin" lookup-weight-score 0 "$out" keep:1 linear
+```
+
+#### Normalizing the learned lookup vote
+
+The normalized model trains the cubic coefficient gain and scales the
+resulting dense vote $v$ by $\sqrt{d}/\sqrt{1+\lVert v\rVert^2}$ before
+the learned hidden-state gate. It uses the same five shared reads on every
+task. The scale bounds the vote's squared norm below the hidden width $d$.
+The Jacobian at a zero vote is $\sqrt{d}\,I$. Both models have 841,872
+trainable parameters on this study.
+[Bounded energy and initial derivative](../../src/Transformer/Phasor/TripleTransport/EndpointScale.lean)
+
+On seed 0 the first 99% synthetic validation crossing was update 250,
+with **199/200** correct and **1,000/1,000** on training. Validation had
+been 113/200 at update 200. The independent test splits include depths
+beyond the one and two hops used in training.
+
+| Seed 0, update 250 | Validation /200 | Mira | 1 hop /100 | 2 hops /100 | 3 hops /100 | 5 hops /100 | 10 hops /100 |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| Normalized vote, five reads | 199 | C | 100 | 100 | 98 | 85 | 17 |
+| Same checkpoint, two reads | 199 | C | 100 | 100 | 18 | 26 | 19 |
+| Same checkpoint, one read | 127 | D | 100 | 17 | 19 | 25 | 17 |
+| Same checkpoint, lookup disabled | 37 | D | 25 | 26 | 24 | 26 | 20 |
+
+Training seed 0 afresh reproduced the full weight digest and every
+answer count. Seed 1 reached 200/200 validation at update 250. Its five
+reads gave 100, 100, 100, 96 and 18 correct on the same five independent
+hop splits, and it generated C on Mira.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.EndpointScale
+cd experiments/phasor_value_transport
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-normalized-lookup
+bin=./target/release/phasor-value-transport
+out=runs/normalized-lookup
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" check
+"$bin" advance study-lookup-questions 0 "$out" 250
+"$bin" lookup-study-score 0 "$out" ablations
 ```
 
 #### Memory used by frozen lookup
