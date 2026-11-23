@@ -57,6 +57,12 @@ scaled architecture.
 
 ## Results
 
+The November 23 replay audit counted 20/75 short and 4/30 long passes
+for the eight-layer model. The 24-layer model had 7/75 short and 0/30
+long passes. Both cohorts were still running and neither had exhausted
+a source budget. A pass here requires a separately reloaded checkpoint
+to reproduce the first scheduled observation at or above 99%.
+
 The eight-layer Boolean checkpoints reached the 99% primary threshold below.
 Each row comes from an independently reloaded checkpoint. Training uses a
 different initialization on each seed. The primary denominator is seven
@@ -131,6 +137,10 @@ architectures first passed linear transport at update 224. Inkling
 scored 255/256 on validation and 256/256 on the independent test.
 These canonical scores require generating the complete answer through EOS.
 
+On key–value binding, eight-layer seeds 0 and 1 both first scored 508/512
+on novel validation at update 1,024. The independent test scores were
+504/512 and 507/512, respectively.
+
 On long-tier Basis Parity 16, the eight-layer seed-0 checkpoint first
 passed at update 2,500 with 156/157 novel sequences and 512/512 on the
 independent test. Main Phasor reached 157/157 at update 1,250 and scored
@@ -192,6 +202,11 @@ parameter model went from 78/4,705 at update 19 to 79/4,705 at update 76
 on seed 0. On decoded Fibonacci the 81,137,344-parameter model went from
 52/4,704 at update 10 to 53/4,704 at update 40 on seed 0. The original
 100,000-update budgets are still open for these two cells.
+
+The 24-layer model also passed Basis Depth Easy on seed 1 at update 250,
+with 512/512 on novel validation, 511/512 on the independent test and
+505/512 on the length-128 test. The eight-layer model first passed at
+update 500 on that seed and scored 512/512 on all three splits.
 
 We varied the evaluation depth at fixed weights after three-pass training.
 For the 24-layer Boolean-shift checkpoints, one, two, three, five, ten,
