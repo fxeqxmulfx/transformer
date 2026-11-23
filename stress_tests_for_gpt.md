@@ -479,8 +479,9 @@ sweep and the 35-task short/long selection retain their original membership.
 
 The native Phasor runner trains the default pair-class triple-transport architecture
 separately on each of the 25 short and ten long tasks at seeds 0, 1 and 2.
-Its audit reloads the GPT checkpoints and checks exact NV11 recovery under
-the same model identifier. The report gives extensions their own tier counts.
+The November 23 audit verified 75 short and 30 long first-passing checkpoints,
+plus three exact NV11 checkpoints under the same model identifier.
+The report gives registered extensions their own tier counts.
 [Default Phasor and reproduction commands](experiments/phasor_value_transport/README.md)
 
 - [Frozen 165-case plan](research/current_grokking/plan.json): exact IDs, task

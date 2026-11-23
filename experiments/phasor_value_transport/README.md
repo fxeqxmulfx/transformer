@@ -1,7 +1,7 @@
 # Embedding-input Phasor on the GPT stress suite and NV11
 
 **Pair-class triple transport is the default Phasor architecture.**
-The November 23 audit verified **66/75 canonical short runs, 29/30 long
+The November 23 audit verified **75/75 canonical short runs, 30/30 long
 runs and three exact NV11 checkpoints** under model identifier
 `phasor-triple-pair-classes-current-32-v1`. Each NV11 seed solved all
 4,704 training and 4,705 held-out pairs at update 250. Every task trains
@@ -1616,12 +1616,17 @@ matrix. The contract check compared all 370 logits after relabeling
 fixed inputs and checked causal-prefix agreement on arbitrary dense
 inputs. [Gate controls](../../src/Transformer/Phasor/TripleTransport/StructuralGate.lean) · [Pair search](#pair-classes-on-the-fibonacci-orbit-split)
 
-The November 23 partial audit reloaded 98 passing checkpoints on
-Kernite v0.6.0. Of those, 66 belong to the original short tier, 29 to
-the long tier and three to NV11. Twenty-two short and nine long cases
-passed all three seeds. Ten canonical runs remained pending and
-none had exhausted its source budget. All counts use the same model
-identifier as the opening commands.
+The November 23 audit verified all 108 checkpoints on Kernite v0.6.0.
+All 25 short and ten long cases passed on each of three seeds within
+their source budgets. Each of the three separate NV11 checkpoints
+recovered every training and held-out pair. Easy recall took the most
+updates on both the median seed (3,350) and the slowest seed (4,300).
+
+| Cohort | Primary passes | Runs with a separate source test | Source test passes at 99% |
+| --- | ---: | ---: | ---: |
+| Canonical short | 75/75 | 21 | 14/21 |
+| Canonical long | 30/30 | 12 | 7/12 |
+| NV11 exact | 3/3 | — | — |
 
 | Easy recall seed | First passing update | Novel validation | Independent test | Test with 64 extra tokens |
 | --- | ---: | ---: | ---: | ---: |
@@ -1635,6 +1640,9 @@ improved long-delay accuracy on seeds 0 and 2 and reduced it on seed 1.
 On 16-bit parity, all three pair-class checkpoints scored 157/157 on
 novel validation. Their independent scores were 512, 512 and 505 out of
 512, and their 64-bit transfer scores were 47, 64 and 64 out of 64.
+On 24-bit parity all three seeds scored 306/306 on novel validation.
+Their independent test scores were 512, 484 and 512 out of 512. At 64
+bits they scored 64, 64 and 16 out of 64.
 On GPT linear transport all three seeds reached 256/256 on validation
 and test at update 224. On associative division the first crossings
 were updates 836, 836 and 722 with 4,612, 4,614 and 4,610 of 4,656.
