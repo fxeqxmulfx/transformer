@@ -1908,6 +1908,13 @@ both full scores on this two-position task. The forward checks also compared
 370 logits under label changes and checked causal outputs on arbitrary dense
 vectors.
 
+On the frozen quadratic task the chart model scored 4,705/4,705 at update
+250 and after the 500-update retention interval on all three seeds. On
+hard recall it scored 512/512 on novel validation and 512/512 on the
+independent test at updates 50 and 550 on every seed. Each hard-recall
+sequence requires all eight overwritten values. Independent checkpoint
+reloads reproduced the counts for both tasks.
+
 ```sh
 cd experiments/phasor_value_transport
 flags=fp32-affine-reference,triple-chart-induction
@@ -1921,16 +1928,20 @@ for seed in 0 1 2; do
     "$bin" cell arithmetic-cubic-product "$seed" "$out/gpt"
     "$bin" probes arithmetic-cubic-product "$seed" "$out/gpt"
     "$bin" nv11-score "$out/gpt/arithmetic-cubic-product/seed$seed/weights.f32"
-    "$bin" catalog-target arithmetic-cubic-mixed "$seed" 250 "$out/catalog"
-    "$bin" catalog-target arithmetic-cubic-mixed "$seed" 250 "$out/catalog"
+    for task in arithmetic-cubic-mixed arithmetic-quadratic basis-recall-hard; do
+        search=250
+        if [ "$task" = basis-recall-hard ]; then search=100; fi
+        "$bin" catalog-target "$task" "$seed" "$search" "$out/catalog"
+        "$bin" catalog-target "$task" "$seed" "$search" "$out/catalog"
+    done
 done
 "$bin" catalog-ablate arithmetic-cubic-mixed 0 250 "$out/catalog"
 ```
 
 ### Pair-class results beyond the canonical tiers
 
-The November 23 registered-extension audit through language L4 seed 2
-verified nine of 51 short runs and seven of 12 long runs.
+The November 23 registered-extension audit through the 3,000-update L4
+screen verified nine of 51 short runs and eight of 12 long runs.
 All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
 Dyck also passed all three seeds at update 250 with 32/32 on validation.
 The independent Dyck test scores were 62, 63 and 64 out of 64.
@@ -1954,6 +1965,10 @@ the ten-letter test and 64/64 on the alternating tail.
 L4 seed 2 first passed at update 1,000 with 512/512 on validation and the
 independent test. It scored 511/512 at length 128, 1,006/1,024 on the
 ten-letter test and 53/64 on the alternating tail.
+L4 seed 0 first passed at update 2,000. It scored 512/512 on validation,
+the independent test and length 128, 1,012/1,024 on ten-letter words,
+and 57/64 on the alternating tail. Seed 1 scored 190/512 on validation
+at the 3,000-update screen.
 
 The main model's easy-depth checkpoints scored 428, 341 and 496 of 512
 on length-256 inputs. The 20-bit parity checkpoints scored 0, 58 and
