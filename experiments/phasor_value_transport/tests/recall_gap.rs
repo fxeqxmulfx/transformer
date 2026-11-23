@@ -35,6 +35,17 @@ fn longer_gaps_preserve_each_write_query_and_shorter_filler_stream() -> basis::R
         let (next_hash, next) = recall_gap::delay(name, &source, 37)?;
         assert_ne!(first_hash, next_hash);
         let table_end = 1 + 2 * generator::number(&spec, "pairs")?;
+        let limit = 8192 - generator::number(&spec, "length")?;
+        let (_, longest) = recall_gap::delay(name, &source[..1], limit)?;
+        assert_eq!(
+            &source[0].tokens[table_end..],
+            &longest[0].tokens[table_end + limit..]
+        );
+        assert_eq!(
+            &source[0].targets[table_end..],
+            &longest[0].targets[table_end + limit..]
+        );
+        assert!(recall_gap::delay(name, &source[..1], limit + 1).is_err());
         for ((a, b), c) in source.iter().zip(first).zip(next) {
             assert_eq!(&a.tokens[..table_end], &c.tokens[..table_end]);
             assert_eq!(

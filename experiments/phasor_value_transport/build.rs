@@ -1,6 +1,7 @@
 //! Compile the upstream trainer at the same revision as the Phasor CPU oracle.
 mod build_compact;
 mod build_embedding;
+mod build_score_tiles;
 mod build_scoring;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
 
@@ -310,6 +311,8 @@ fn main() {
         println!("cargo:rerun-if-changed={file}");
     }
     build_scoring::prepare(&mut engine);
+    build_score_tiles::dispatch(&mut engine);
+    build_score_tiles::kernel(&src, &out);
     fs::write(out.join("engine.rs"), engine).unwrap();
     let geometry = gpt.join("research/complex_geometry_suite");
     export_example_decoders(&geometry.join("native/src/data.rs"), &out);
@@ -336,7 +339,7 @@ fn main() {
             "blake complex gemm pcg random sequence_ops",
         ),
         (geometry.join("diagnostic/src"), "plain_product"),
-        (out.clone(), "data engine layout metrics schedule"),
+        (out.clone(), "data engine layout metrics phase_score_tiles schedule"),
     ] {
         for name in names.split_whitespace() {
             let path = dir.join(format!("{name}.rs"));

@@ -24,7 +24,7 @@ pub fn delay(name: &str, rows: &[Example], gap: usize) -> Result<(String, Vec<Ex
     let maximum = number(&source, "length")?
         .checked_add(gap)
         .ok_or("recall length overflow")?;
-    if rows.is_empty() || maximum > 4096 || rows.len() > 2_000_000 / maximum {
+    if rows.is_empty() || maximum > 8192 || rows.len() > 4_194_304 / maximum {
         return Err("recall gap exceeds the source split dimensions".into());
     }
     let table_end = 1 + 2 * number(&source, "pairs")?;

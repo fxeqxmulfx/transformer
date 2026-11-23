@@ -1798,14 +1798,23 @@ Each forward layer overwrites its active attention scores. A frozen checkpoint
 can therefore share those buffers across layers, including when greedy generation
 changes the batch size or prefix length. Let $P = B H L^2$ for the allocated
 batch, head count and length, and let $D$ be the layer count. For phase attention
-the training engine allocates $3DP$ floats for its three score buffers. The
-frozen scorer allocates $2P+D$. With phase scores disabled the counts are
+the training engine allocates $3DP$ floats for its three score buffers. Sharing
+them across frozen layers reduced the allocation to $2P+D$. With phase scores disabled the counts are
 $D(2P+1)$ and $P+1+D$. These counts cover the attention scores only.
 [Forward and generation equivalence](../../src/Transformer/Phasor/TripleTransport/ScoreScratch.lean)
 
 The device regression compares every hidden coordinate and output logit with
 the training engine at fixed weights, over three layers and five changes of
 batch shape. It also counts the distinct allocated score buffers.
+
+The frozen phase kernel now scores up to 256 batch, query and head rows per
+tile. Each row consumes the scalar scores of its own causal prefix in the
+original order. The frozen allocation is $\min(BHL,256)L+1+D$ floats.
+At batch 2, one head, length 259 and two layers, the allocation fell from
+268,326 to 66,307 floats. A second device test compared the bit patterns
+of every hidden coordinate and logit at head widths 16, 32 and 128,
+including lengths on both sides of tile boundaries and incomplete final
+tiles. [Indexing and forward equivalence](../../src/Transformer/Phasor/TripleTransport/ScoreTiles.lean)
 
 On the 2 GiB GTX 1050, seed 0 of dense induction recalled all eight latest
 values on all 512 examples at delays of 2,048, 3,072 and 3,800 tokens, for both the first
@@ -1815,11 +1824,11 @@ The previous evaluator exhausted device memory at delay 2,048. At delay 1,536
 the two evaluators produced byte-identical reports for both checkpoints.
 
 ```sh
-LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ScoreScratch
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ScoreTiles
 cd experiments/phasor_value_transport
 flags=fp32-affine-reference,triple-chart-induction
 cargo +stable test --release --locked --features "$flags" --bin phasor-value-transport \
-    frozen_scoring_reuses -- --ignored
+    scoring_scratch_test:: -- --ignored --test-threads=1
 cargo +stable build --release --locked --features fp32-affine-reference,triple-dense-induction
 bin=./target/release/phasor-value-transport
 out=runs/dense-induction/catalog

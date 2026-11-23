@@ -1,6 +1,8 @@
 //! Keep the pinned forward kernels and restrict reusable scores to frozen scoring.
 pub fn prepare(engine: &mut String) {
     let buffers = r#"
+pub(crate) const SCORE_TILE_ROWS: usize = 256;
+
 #[derive(Clone)]
 struct AttentionScores {
     probability: std::rc::Rc<F>,
@@ -8,11 +10,13 @@ struct AttentionScores {
 }
 
 impl AttentionScores {
-    fn new(cuda: &Cuda, cfg: &Config) -> Result<Self> {
-        let count = cfg.max_batch * cfg.heads * cfg.max_length * cfg.max_length;
+    fn new(cuda: &Cuda, cfg: &Config, frozen: bool) -> Result<Self> {
+        let rows = cfg.max_batch * cfg.heads * cfg.max_length;
+        let tiled = frozen && layout::phase_score(cfg);
+        let count = if tiled { rows.min(SCORE_TILE_ROWS) } else { rows } * cfg.max_length;
         Ok(Self {
             probability: std::rc::Rc::new(cuda.alloc(count)?),
-            imaginary: std::rc::Rc::new(cuda.alloc(if layout::phase_score(cfg) { count } else { 1 })?),
+            imaginary: std::rc::Rc::new(cuda.alloc(if !frozen && layout::phase_score(cfg) { count } else { 1 })?),
         })
     }
 }
@@ -61,7 +65,7 @@ impl AttentionScores {
         ),
         (
             "let scores = cfg.max_batch * cfg.heads * cfg.max_length * cfg.max_length;",
-            "let scores = cfg.max_batch * cfg.heads * cfg.max_length * cfg.max_length;\n        let forward_scores = match shared { Some(s) => s.clone(), None => AttentionScores::new(cuda, cfg)?, };",
+            "let scores = cfg.max_batch * cfg.heads * cfg.max_length * cfg.max_length;\n        let forward_scores = match shared { Some(s) => s.clone(), None => AttentionScores::new(cuda, cfg, false)?, };",
         ),
         (
             "score_imaginary: cuda.alloc(if layout::phase_score(cfg) { scores } else { 1 })?,",
@@ -93,7 +97,7 @@ impl AttentionScores {
         ),
         (
             "let mut layers = Vec::new();",
-            "let shared_scores = scoring_only.then(|| AttentionScores::new(&cuda, &config)).transpose()?;\n        let mut layers = Vec::new();",
+            "let shared_scores = scoring_only.then(|| AttentionScores::new(&cuda, &config, true)).transpose()?;\n        let mut layers = Vec::new();",
         ),
         (
             "                l,\n            )?);",
