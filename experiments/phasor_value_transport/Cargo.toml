@@ -95,5 +95,8 @@ kernite-macros = "=0.6.0"
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"
 
+[dev-dependencies]
+source-codec = { package = "diffgpt-mash-native", path = "../../.lake/reproduction/gpt/src/native_transformer/codec" }
+
 [build-dependencies]
 serde_json = "=1.0.154"

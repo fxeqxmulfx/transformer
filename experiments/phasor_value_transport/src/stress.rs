@@ -8,6 +8,7 @@ pub mod alignment;
 pub mod benchmark;
 pub mod catalog;
 mod class_translation;
+mod differenced;
 pub mod compare_shifts;
 pub mod embedding;
 mod language_probes;
@@ -79,10 +80,24 @@ fn nv11() -> Result<(Value, Task)> {
 }
 
 fn arithmetic_task(d: dataset::Dataset) -> Task {
+    pair_task(
+        "arithmetic",
+        d.training.vocabulary,
+        d.training.rows,
+        d.validation,
+    )
+}
+
+fn pair_task(
+    name: &str,
+    vocabulary: usize,
+    train: Vec<[u32; 3]>,
+    validation: Vec<[u32; 3]>,
+) -> Task {
     let examples = |rows: Vec<[u32; 3]>| {
         rows.into_iter()
             .map(|[a, b, y]| Example {
-                task: "arithmetic".into(),
+                task: name.into(),
                 tokens: vec![i64::from(a), i64::from(b)],
                 targets: vec![-100, i64::from(y)],
                 changes: vec![false; 2],
@@ -95,11 +110,11 @@ fn arithmetic_task(d: dataset::Dataset) -> Task {
             .collect()
     };
     Task {
-        vocab: d.training.vocabulary,
+        vocab: vocabulary,
         selection: "validation".into(),
         splits: BTreeMap::from([
-            ("train".into(), examples(d.training.rows)),
-            ("validation".into(), examples(d.validation)),
+            ("train".into(), examples(train)),
+            ("validation".into(), examples(validation)),
         ]),
     }
 }

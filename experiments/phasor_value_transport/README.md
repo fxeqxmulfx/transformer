@@ -125,8 +125,8 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 68 have authenticated data and a supported source
-metric in this runner. For 16 more sequence-accuracy cases the required
+extensions and NV11, 70 have authenticated data and a supported source
+metric in this runner. For 14 more sequence-accuracy cases the required
 data adapter is unavailable. The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
@@ -1741,9 +1741,7 @@ The data audit also reproduced 72 archived hashes from a separate data seed.
 [Source data audit](../composed_retrieval/chain_data/README.md) ·
 [Final-answer scoring proof](../../src/Transformer/Phasor/ModularChainScore.lean)
 
-These twelve cases bring the broader catalog to 68 runnable cases out of
-108. The remaining 40 have a recorded data or scoring limitation in
-`catalog-inventory`. Each chain uses 2,048 training examples and selects
+Each chain uses 2,048 training examples and selects
 on 1,024 validation examples. The primary criterion is 99% exact at a
 250-update observation. After a crossing, the runner trains for the
 source's additional 500 updates and scores both checkpoints on validation
@@ -1753,6 +1751,36 @@ and the doubled-length test.
 for seed in 0 1 2; do
     "$bin" catalog-target modular-chain-p17-l1 "$seed" 250 "$out/catalog" > /dev/null
     "$bin" catalog-target modular-chain-p17-l1 "$seed" 250 "$out/catalog"
+done
+```
+
+#### First- and second-difference division
+
+The two differenced-division cases each contain all 9,312 division
+equations modulo 97. The frozen shuffle assigns 4,656 equations to
+training and 4,656 to validation. The model receives two tokens from the
+original LGT codec. Its unrestricted prediction at the second position
+must match the encoded quotient. The first-order vocabulary has 256
+tokens and the second-order vocabulary has 512.
+[Input, mask and decoding proof](../../src/Transformer/Phasor/DifferencedDivisionScore.lean)
+
+DiffGPT's pinned native codec independently encoded and decoded all
+9,312 equations at both orders. Every input, target and dense split
+fingerprint matched the Rust data adapter. The raw shuffle also matched
+the six original browser digests for seeds 11, 17 and 23. The runs use
+the catalog's data seed 1 and vary the model seed.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.DifferencedDivisionScore
+cd experiments/phasor_value_transport
+cargo +stable test --release --locked --offline --test differenced
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for task in differenced-division-k1 differenced-division-k2; do
+    for seed in 0 1 2; do
+        "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog > /dev/null
+        "$bin" catalog-target "$task" "$seed" 250 runs/main-catalog
+    done
 done
 ```
 

@@ -279,6 +279,17 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
         )
     } else if case["kind"] == "chain" {
         modular_chain(name, &case)?
+    } else if case["kind"] == "differenced_division" {
+        let order = case["data"]["order"]
+            .as_u64()
+            .ok_or("missing difference order")?;
+        let seed = case["data_seed"].as_u64().ok_or("missing division data seed")?;
+        let source = differenced::build(u32::try_from(order)?, seed)?;
+        let [train, validation] = source.fingerprints;
+        (
+            pair_task(name, source.vocabulary, source.train, source.validation),
+            json!({"train": train, "validation": validation}),
+        )
     } else if case["kind"] == "probe" {
         let (task, hashes, teachers) = mechanism_probe(&case).map_err(|err| err.to_string())?;
         if teachers.is_some() {
