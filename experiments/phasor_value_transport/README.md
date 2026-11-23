@@ -2284,6 +2284,7 @@ selection. Only the generated answer letter supplies a training target.
 | Train on one or two hops, fixed ten reads | 250 | 199 | 199 | 85 | 52 |
 | Train on one or two hops, cycle 2, 5, 10, 20, 40 reads | 250 | 199 | 199 | 83 | 49 |
 | Train on one through five hops, fixed ten reads | 150 | 200 | 200 | 100 | 100 |
+| Train on one through five hops, cycle 2, 5, 10, 20, 40 reads | 150 | 200 | 200 | 100 | 97 |
 
 The mixed-length checkpoint scored 1,000/1,000 on training, answered C
 on Mira and generated all 1,000 independent test letters correctly,
@@ -2292,6 +2293,9 @@ checkpoint forty reads preserved every validation and test answer. For
 this seed, extending the training chains from two hops to five improved
 ten-hop transfer. Cycling the read budget on the shorter training chains
 alone did not improve it.
+With the mixed training lengths, cycling the read budget cost three
+ten-hop answers on seed 0. A fresh fixed-ten run on seed 1 also crossed
+at update 150, with 200/200 validation and 100/100 ten-hop answers.
 
 The read schedule is shared across tasks and depends only on the global
 optimizer step. It restores the default of ten reads for evaluation and
