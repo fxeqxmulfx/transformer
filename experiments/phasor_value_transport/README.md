@@ -2522,6 +2522,83 @@ for arm in triple-pair-classes triple-current-graph; do
 done
 ```
 
+### One context residual and two learned gates
+
+`triple-context-residual` removes the affine gate on the current hidden
+vector. The slot read becomes `h + a(c) u + b(c) v`, with one affine
+coefficient for the addressed memory value and one for the structural
+proposal. The current causal hidden state supplies both `c` and `h`.
+An absent read contributes zero. The model also learns its existing
+prefix-phase projection. At NV11 width 128, removing the gate saves
+129 parameters, giving 1,463,762 in total.
+
+The Lean result concerns the slot readout at a fixed control. Its three
+exposed values may vary independently. It commutes with every common
+linear transformation of those values, and adding a displacement to the
+context adds the same displacement to the output. At width at least two,
+these laws characterize the formula above with two arbitrary scalar
+functions of the control. Affine responses on two independent reference
+vectors characterize the native affine budget. Omitting either bank
+read loses its projection, and omitting the context violates the
+translation law at positive width. [Readout characterization and necessity](../../src/Transformer/Phasor/TripleTransport/ContextResidual.lean)
+
+Fresh ordinary AdamW runs used the same random lookup, frozen splits and
+scheduled observations as the three-gate pair-class model. Each GPT
+key/value score counts exact free generations with termination. The
+primary and independent splits have 512 sequences each.
+
+| Seed | First update, three / two gates | Reloaded primary, three / two | Independent test, three / two | Fibonacci, two gates, out of 4,704 |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 640 / 576 | 510 / 508 | 500 / 504 | 4,661 at 240 |
+| 1 | 768 / 640 | 507 / 511 | 502 / 508 | 4,660 at 240 |
+| 2 | 640 / 640 | 508 / 508 | 504 / 505 | 4,660 at 250 |
+
+All three two-gate checkpoints solved every NV11 pair at update 250,
+including 4,705 held-out pairs. Their smallest held-out margins were
+0.664, 0.993 and 1.239. On blinded absolute difference, the two-gate
+model reached 4,703, 4,705 and 4,705 out of 4,705 at update 228.
+On the quartic sum, it reached 4,691, 4,705 and 4,694 out of 4,705 at
+updates 209, 228 and 209.
+
+On easy recall, the two-gate model first passed seed 1 at update 1,350
+with 510/512 on novel validation, 506/512 on the independent test and
+450/512 after inserting 64 filler tokens. The three-gate model passed
+at update 2,700 with 508, 505 and 319 correct on the same splits.
+Both delay probes used the same eight queries per sequence.
+
+At the seed-0 Fibonacci checkpoint, removing the contextual residual
+gave 4,674 correct. Removing the direct read gave 4,661 and removing the
+transported proposal gave 49. The context alone scored 48 and the
+structural reads alone scored 4,680. Each removal reloads the same
+checkpoint and uses the original validation scorer. On key/value binding,
+removing the contextual residual from seed 0 reduced the primary score
+from 508 to 26 and the independent test from 504 to 28. The context alone
+scored 507 and 504 on those splits.
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.ContextResidual
+cd experiments/phasor_value_transport
+export PHASOR_EVAL_BATCH_CAP=16
+for arm in triple-pair-classes triple-context-residual; do
+    cargo +stable build --release --locked --features "fp32-affine-reference,$arm"
+    bin=./target/release/phasor-value-transport
+    "$bin" check
+    for seed in 0 1 2; do
+        for task in arithmetic-cubic-product gpt-probe-key-value-binding recurrence-fibonacci-k1-c2-lgt arithmetic-abs-diff-blind arithmetic-sum-pow4; do
+            "$bin" cell "$task" "$seed" "runs/$arm"
+            "$bin" probes "$task" "$seed" "runs/$arm"
+        done
+        "$bin" nv11-score "runs/$arm/arithmetic-cubic-product/seed$seed/weights.f32"
+        for task in gpt-probe-key-value-binding recurrence-fibonacci-k1-c2-lgt; do
+            "$bin" slot-ablate "$task" "$seed" "runs/$arm"
+            "$bin" slot-phase-ablate "$task" "$seed" "runs/$arm"
+        done
+    done
+    "$bin" cell basis-recall-easy 1 "runs/$arm"
+    "$bin" probes basis-recall-easy 1 "runs/$arm" recall-gap 64
+done
+```
+
 ### Representing the two anchor orders
 
 Every triple match survives exchanging its first two anchors on both

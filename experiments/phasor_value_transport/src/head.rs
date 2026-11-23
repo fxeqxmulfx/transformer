@@ -17,19 +17,33 @@ pub enum ReadGates {
     Unit,
     SharedPrevious,
     SharedCurrent,
+    ResidualCurrent,
 }
 
 impl ReadGates {
     pub const fn shared(self) -> bool {
-        matches!(self, Self::SharedPrevious | Self::SharedCurrent)
+        matches!(
+            self,
+            Self::SharedPrevious | Self::SharedCurrent | Self::ResidualCurrent
+        )
     }
 
+    /// Number of affine gates stored in the parameter array.
     pub const fn count(self) -> usize {
+        self.reads() - self.first_learned()
+    }
+
+    pub const fn reads(self) -> usize {
         if self.shared() { 3 } else { 4 }
     }
 
+    /// A unit context residual precedes the two address-dependent gates.
+    pub const fn first_learned(self) -> usize {
+        matches!(self, Self::ResidualCurrent) as usize
+    }
+
     pub fn position(self, row: usize, length: usize) -> Option<usize> {
-        if self == Self::SharedCurrent {
+        if matches!(self, Self::SharedCurrent | Self::ResidualCurrent) {
             Some(row)
         } else if row.is_multiple_of(length) {
             None
@@ -79,15 +93,21 @@ impl PeerRead {
         ..Self::CURRENT_GRAPH
     };
 
+    pub const CONTEXT_RESIDUAL: Self = Self {
+        gates: ReadGates::ResidualCurrent,
+        ..Self::PAIR_GRAPH
+    };
+
     const fn id(self, with_phase: bool) -> &'static str {
         use crate::slot_orbits::RoleEvidence;
         if self.pairs.is_some() {
-            let full = matches!(self, Self::PAIR_GRAPH);
-            return match (full, with_phase) {
-                (true, true) => "phasor-triple-pair-classes-current-32-v1",
-                (true, false) => "phasor-triple-pair-classes-current-trunk-v1",
-                (false, true) => "phasor-triple-pair-ablation-32",
-                (false, false) => "phasor-triple-pair-ablation-trunk",
+            return match (self, with_phase) {
+                (Self::PAIR_GRAPH, true) => "phasor-triple-pair-classes-current-32-v1",
+                (Self::PAIR_GRAPH, false) => "phasor-triple-pair-classes-current-trunk-v1",
+                (Self::CONTEXT_RESIDUAL, true) => "phasor-triple-context-residual-32-v1",
+                (Self::CONTEXT_RESIDUAL, false) => "phasor-triple-context-residual-trunk-v1",
+                (_, true) => "phasor-triple-pair-ablation-32",
+                (_, false) => "phasor-triple-pair-ablation-trunk",
             };
         }
         let (trunk, phase) = match (self.gates, self.search) {
@@ -214,6 +234,7 @@ impl Head {
             "triple-shared-graph" => Ok(Self::PeerTriplePhase(PeerRead::SHARED_GRAPH)),
             "triple-current-graph" => Ok(Self::PeerTriplePhase(PeerRead::CURRENT_GRAPH)),
             "triple-pair-classes" => Ok(Self::PeerTriplePhase(PeerRead::PAIR_GRAPH)),
+            "triple-context-residual" => Ok(Self::PeerTriplePhase(PeerRead::CONTEXT_RESIDUAL)),
             "triple-graph-witness" => Ok(Self::peer_phase(PeerSearch::Iterated(Some(
                 crate::slot_orbits::RoleEvidence::WITH_GRAPH,
             )))),

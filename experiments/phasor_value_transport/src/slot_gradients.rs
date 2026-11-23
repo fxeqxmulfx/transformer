@@ -31,7 +31,7 @@ fn fixed_evaluation() -> Result<()> {
     let mut weights = layout::initialize_model(&cfg, 13);
     crate::slot_checks::fixture(&cfg, &mut weights);
     let mut muted = weights.clone();
-    crate::slot_checks::disable_reads(&cfg, &mut muted, &[0, 1, 2, 3]);
+    crate::slot_checks::zero_learned_gates(&cfg, &mut muted, &[0, 1, 2, 3]);
     let input = &weights[..2 * cfg.width];
     let mut e = Engine::new(cfg.clone(), &weights)?;
     let reference = e.infer_embeddings(input, 1, 2)?;
@@ -122,6 +122,9 @@ fn mixture(delta: f64) -> Result<()> {
     let routing = route(&l, &w);
     let cells = slot_memory::scalar_cells(&l, &w, &routing, &x, &h, 3);
     let (tape, _) = slot_memory::forward(&l, &w, &routing, &cells, &h, 3);
+    if l.gate_mode.first_learned() != 0 && tape.iter().any(|row| row.coefficients[0] != 1.) {
+        return Err("the context residual changed gain with the hidden input".into());
+    }
     if tape[1].transport != Some(4) || tape[4].constant != Some(2) {
         return Err("structural gradient fixture missed the transported or constant branch".into());
     }

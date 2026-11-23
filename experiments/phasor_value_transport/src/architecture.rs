@@ -65,6 +65,7 @@ const _: () = {
         + cfg!(feature = "triple-shared-graph") as u8
         + cfg!(feature = "triple-current-graph") as u8
         + cfg!(feature = "triple-pair-classes") as u8
+        + cfg!(feature = "triple-context-residual") as u8
         + cfg!(feature = "learned-stream-read") as u8
         + FOURIER as u8
         + REFLECTION_PHASE as u8
@@ -103,6 +104,8 @@ pub const HEAD: Head = if FOURIER {
     Head::PeerTriplePhase(crate::head::PeerRead::CURRENT_GRAPH)
 } else if cfg!(feature = "triple-pair-classes") {
     Head::PeerTriplePhase(crate::head::PeerRead::PAIR_GRAPH)
+} else if cfg!(feature = "triple-context-residual") {
+    Head::PeerTriplePhase(crate::head::PeerRead::CONTEXT_RESIDUAL)
 } else if cfg!(feature = "triple-graph-witness") {
     Head::peer_phase(crate::head::PeerSearch::Iterated(Some(
         crate::slot_orbits::RoleEvidence::WITH_GRAPH,

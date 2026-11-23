@@ -147,6 +147,7 @@ pub struct Routing {
     peer_search: Option<crate::head::PeerSearch>,
     pairs: Option<slot_orbits::PairRead>,
     pub(crate) mute_proposals: [bool; 2],
+    pub(crate) mute_context: bool,
     inverse: Vec<f32>,
 }
 
@@ -394,7 +395,11 @@ pub fn forward(
             ..Row::default()
         };
         let position = l.gate_mode.position(r, length);
-        for (i, g) in row.coefficients[..l.gate_mode.count()]
+        if route.mute_context {
+            row.coefficients[0] = 0.;
+        }
+        let first = l.gate_mode.first_learned();
+        for (i, g) in row.coefficients[first..l.gate_mode.reads()]
             .iter_mut()
             .enumerate()
         {
@@ -403,7 +408,7 @@ pub fn forward(
                 let weight = l.gates + i * d;
                 value += units * dot(&w[weight..weight + d], &hidden[position * d..][..d]);
             }
-            *g += scale[i] * value;
+            *g += scale[first + i] * value;
         }
         if cell != ABSENT {
             let cell = cell as usize;
@@ -414,7 +419,7 @@ pub fn forward(
             row.transport = (!route.mute_proposals[1] && reads.transport[cell] != ABSENT)
                 .then_some(reads.transport[cell] as usize);
         }
-        for (i, &c) in row.coefficients[..l.gate_mode.count()].iter().enumerate() {
+        for (i, &c) in row.coefficients[..l.gate_mode.reads()].iter().enumerate() {
             if let Some(value) = row.read(i, l, w, h) {
                 for (y, &v) in dst.iter_mut().zip(value) {
                     *y += c * v;
@@ -442,17 +447,19 @@ pub fn backward(
     for (r, row) in rows.iter().enumerate() {
         let v = &dy[r * d..(r + 1) * d];
         let h = &hidden[r * d..(r + 1) * d];
-        for (i, &c) in row.coefficients[..l.gate_mode.count()].iter().enumerate() {
+        for (i, &c) in row.coefficients[..l.gate_mode.reads()].iter().enumerate() {
             let Some(value) = row.read(i, l, w, h) else {
                 continue;
             };
-            let dg = scale[i] * dot(value, v);
-            adjoint.gates[l.bias - l.gates + i] += dg;
-            if let Some(position) = l.gate_mode.position(r, length) {
-                for j in 0..d {
-                    let k = l.gates + i * d + j;
-                    adjoint.gates[k - l.gates] += units * dg * hidden[position * d + j];
-                    dh[position * d + j] += units * dg * w[k];
+            if let Some(gate) = i.checked_sub(l.gate_mode.first_learned()) {
+                let dg = scale[i] * dot(value, v);
+                adjoint.gates[l.bias - l.gates + gate] += dg;
+                if let Some(position) = l.gate_mode.position(r, length) {
+                    for j in 0..d {
+                        let k = l.gates + gate * d + j;
+                        adjoint.gates[k - l.gates] += units * dg * hidden[position * d + j];
+                        dh[position * d + j] += units * dg * w[k];
+                    }
                 }
             }
             let dst = match i {

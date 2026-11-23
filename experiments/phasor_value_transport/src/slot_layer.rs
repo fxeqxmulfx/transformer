@@ -57,13 +57,16 @@ impl Engine {
         score(self)
     }
 
-    /// Disable an individual structural proposal for a fixed-weight measurement.
-    pub(crate) fn mute_slot_proposals(&self, disabled: &[usize]) -> Result<()> {
+    /// Apply the fixed-weight ablation to both learned gates and fixed reads.
+    pub(crate) fn disable_slot_reads(&self, weights: &mut [f32], disabled: &[usize]) -> Result<()> {
         let Some(context_layer::ContextLayer::Slots(layer)) = &self.context_layer else {
-            return Err("proposal removal requires a dense slot layer".into());
+            return Err("read removal requires a dense slot layer".into());
         };
-        layer.tape.borrow_mut().routing.mute_proposals =
-            [disabled.contains(&2), disabled.contains(&3)];
+        crate::slot_checks::zero_learned_gates(&self.config, weights, disabled);
+        let mut tape = layer.tape.borrow_mut();
+        tape.routing.mute_proposals = [disabled.contains(&2), disabled.contains(&3)];
+        tape.routing.mute_context =
+            layer.layout.gate_mode.first_learned() != 0 && disabled.contains(&0);
         Ok(())
     }
 

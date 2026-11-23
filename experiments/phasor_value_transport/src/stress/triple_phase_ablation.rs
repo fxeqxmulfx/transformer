@@ -60,9 +60,14 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
         "phase_only",
     ] {
         weights.copy_from_slice(&original);
-        if arm == "phase_only" {
-            crate::slot_checks::disable_reads(&cfg, &mut weights, &[0, 1, 2, 3]);
+        let removed = if arm == "phase_only" {
+            &[0, 1, 2, 3][..]
         } else {
+            &[]
+        };
+        model.disable_slot_reads(&mut weights, removed)?;
+        dense_model.disable_slot_reads(&mut weights, removed)?;
+        if arm != "phase_only" {
             for outputs in weights[span.clone()]
                 .as_chunks_mut::<{ 2 * MEMORY_WIDTH }>()
                 .0
@@ -84,10 +89,8 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
             }
         }
         scores.insert(arm, json!(splits));
-        if arm != "phase_only" {
-            dense_model.parameters.write(&weights)?;
-            dense.insert(arm, dense_model.infer_embeddings(&input, 1, len)?);
-        }
+        dense_model.parameters.write(&weights)?;
+        dense.insert(arm, dense_model.infer_embeddings(&input, 1, len)?);
     }
     let full = &scores["full"][&task.selection];
     if [full["correct"].clone(), full["total"].clone()]
@@ -106,6 +109,15 @@ pub fn run(name: &str, seed: u32, out: &Path) -> Result<()> {
     );
     let hidden_error = partition_error(&a.hidden, &b.hidden, &c.hidden, &d.hidden)?;
     let logit_error = partition_error(&a.logits, &b.logits, &c.logits, &d.logits)?;
+    let phase = &dense["phase_only"];
+    for (full, trunk, projection) in [
+        (&a.hidden, &b.hidden, &phase.hidden),
+        (&a.logits, &b.logits, &phase.logits),
+    ] {
+        if partition_error(full, &vec![0.; full.len()], trunk, projection)? > 0.00005 {
+            return Err("isolated phase and slot reads do not add to the full readout".into());
+        }
+    }
     if hidden_error > 0.00005 || logit_error > 0.00005 {
         return Err(format!(
             "dense phase partition differs: hidden={hidden_error} logits={logit_error}"

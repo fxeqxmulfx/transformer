@@ -3,10 +3,11 @@ use super::*;
 
 /// Cancel both the learned gate and its fixed initial offset for each read.
 /// The external classifier, backbone, dictionary and individual reads stay fixed.
-pub(crate) fn disable_reads(cfg: &Config, weights: &mut [f32], disabled: &[usize]) {
+pub(crate) fn zero_learned_gates(cfg: &Config, weights: &mut [f32], disabled: &[usize]) {
     let l = slot_memory::Layout::new(cfg);
     let memory = &mut weights[architecture::memory_start(cfg)..];
-    for i in 0..l.gate_mode.count() {
+    for gate in 0..l.gate_mode.count() {
+        let i = gate + l.gate_mode.first_learned();
         let cancel = if l.gate_mode.shared() && i == 2 {
             disabled.contains(&2) && disabled.contains(&3)
         } else {
@@ -15,9 +16,9 @@ pub(crate) fn disable_reads(cfg: &Config, weights: &mut [f32], disabled: &[usize
         if !cancel {
             continue;
         }
-        let g = l.gates + i * l.d;
+        let g = l.gates + gate * l.d;
         memory[g..g + l.d].fill(0.);
-        memory[l.bias + i] = if i < 2 { -1. } else { 0. };
+        memory[l.bias + gate] = if i < 2 { -1. } else { 0. };
     }
 }
 
@@ -144,8 +145,7 @@ pub(super) fn audit(path: &Path) -> Result<()> {
         ("only_structural_reads", &[0, 1][..]),
     ] {
         let mut changed = w.clone();
-        disable_reads(&cfg, &mut changed, disabled);
-        engine.mute_slot_proposals(disabled)?;
+        engine.disable_slot_reads(&mut changed, disabled)?;
         if cfg.head.has_triple_phase() && name == "only_structural_reads" {
             changed[slot_memory::phase_outputs(&cfg)].fill(0.);
         }
