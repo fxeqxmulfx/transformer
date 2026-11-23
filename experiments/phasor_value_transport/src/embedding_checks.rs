@@ -78,6 +78,23 @@ pub fn run() -> Result<()> {
         return Err("arbitrary-vector fixture accidentally hit an embedding row".into());
     }
     let reference = e.infer_embeddings(&vectors, batch, length)?;
+    for sequence in 0..batch {
+        let first = sequence * length;
+        for seen in 1..=length {
+            let past = first..first + seen;
+            let dense = past.start * width..past.end * width;
+            let logits = past.start * vocab..past.end * vocab;
+            let isolated = e.infer_embeddings(&vectors[dense.clone()], 1, seen)?;
+            if reference.hidden[dense] != isolated.hidden
+                || reference.logits[logits] != isolated.logits
+            {
+                return Err(format!(
+                    "truncation at {seen} changed prefix outputs in sequence {sequence}"
+                )
+                .into());
+            }
+        }
+    }
     if induction {
         let mut control = e.config.clone();
         control.head = head::Head::PeerTriplePhase(head::PeerRead {
@@ -144,11 +161,8 @@ pub fn run() -> Result<()> {
         *x = rng.gauss(0., 0.51) as f32;
     }
     let extended = e.infer_embeddings(&changed, batch, length)?;
-    let isolated = e.infer_embeddings(&vectors[..prefix * width], 1, prefix)?;
     if reference.hidden[..prefix * width] != extended.hidden[..prefix * width]
         || reference.logits[..prefix * vocab] != extended.logits[..prefix * vocab]
-        || reference.hidden[..prefix * width] != isolated.hidden
-        || reference.logits[..prefix * vocab] != isolated.logits
         || reference.hidden[prefix * width..] == extended.hidden[prefix * width..]
     {
         return Err("future embedding vectors or another batch item influenced a prefix".into());
@@ -172,7 +186,7 @@ pub fn run() -> Result<()> {
         return Err("malformed embedding vectors were accepted".into());
     }
     println!(
-        "embedding interface positions={rows} width={width} classes={vocab} lookup_logits={} label_invariant_logits={} arbitrary_hidden={} causal_prefix={} alias_logits={}",
+        "embedding interface positions={rows} width={width} classes={vocab} lookup_logits={} label_invariant_logits={} arbitrary_hidden={} causal_prefix={} truncated_prefixes={rows} alias_logits={}",
         expected.len(),
         expected.len(),
         reference.hidden.len(),

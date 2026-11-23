@@ -1668,6 +1668,14 @@ checkpoint digest. To reproduce the delay column, run
 `"$bin" probes basis-recall-easy SEED "$out" recall-gap 64` for each
 seed with the opening build and run directory.
 
+The embedding contract check runs each of two five-vector inputs at every
+truncation from one through five positions. On the main and chart models,
+all ten isolated prefixes reproduced every corresponding hidden value and
+logit of the longer batched run. Changing the labels alone preserved all
+370 logits. The short-prefix optimization for dense induction can skip
+the search until a past key and its completed successor precede the query.
+[Truncation and the dense-induction shortcut](../../src/Transformer/Phasor/TripleTransport/PrefixTruncation.lean)
+
 ### Dense induction on the causal embedding prefix
 
 The `triple-dense-induction` variant uses the same three gates and
