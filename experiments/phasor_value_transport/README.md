@@ -112,6 +112,14 @@ After an unsuccessful search it reports the final checkpoint and a null
 first crossing. Recall delay, parity length and the supported block-language
 probes use the same generators as the canonical evaluator.
 
+For a single transfer split, append `rows START END` to score that half-open
+interval with batch one. Each part fingerprints the full ordered split and
+rechecks the source scores on the same checkpoints. `join-probe-rows`
+requires consecutive intervals covering every source row exactly once, with
+matching checkpoint digests, fingerprints and source scores. It sums the
+whole-sequence counts separately for the first and final checkpoints.
+[Exact count over ordered row groups](../../src/Transformer/Phasor/TripleTransport/ProbeRows.lean)
+
 For the four numeric mechanism probes, the target is MSE at most 0.001
 on freely generated outputs. The scorer compares each decoded component
 with the original unquantized binary64 teacher and charges squared error
@@ -1847,6 +1855,10 @@ all eight answers. Scoring both checkpoints took 1,217 and 2,104 seconds,
 respectively, with evaluation batch one. Tiling the scores alone had
 exhausted memory at 4,608 extra tokens.
 
+At a delay of 256, scoring rows 0–16 and 17–511 separately and joining
+their reports reproduced the unsplit JSON byte for byte, including all
+eight answers on all 512 sequences at both checkpoints.
+
 ```sh
 LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.TripleTransport.AdjointStorage
 cd experiments/phasor_value_transport
@@ -1860,6 +1872,9 @@ out=runs/dense-induction/catalog
 for gap in 2048 3072 3800 4608 6144; do
     PHASOR_EVAL_BATCH_CAP=1 "$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap "$gap"
 done
+"$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap 256 rows 0 17 > "$out/part-a.json"
+"$bin" target-probes basis-recall-hard 0 100 "$out" recall-gap 256 rows 17 512 > "$out/part-b.json"
+"$bin" join-probe-rows "$out/part-a.json" "$out/part-b.json"
 ```
 
 ### Memory and repeated computation for lookup tasks

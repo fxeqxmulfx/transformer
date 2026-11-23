@@ -230,6 +230,7 @@ pub fn target_probes(
     updates: usize,
     out: &Path,
     probes: ProbeSet,
+    rows: Option<std::ops::Range<usize>>,
 ) -> Result<()> {
     let result = measure(Source::DeclaredTarget, name, seed, updates, out, false)?;
     let (row, mut task, teachers) = catalog::load_declared(name)?;
@@ -237,7 +238,13 @@ pub fn target_probes(
         return Err("these transfer probes require a sequence-accuracy case".into());
     }
     let fingerprints = add_probes(name, probes, &row, &mut task)?;
-    let cfg = task_config(&row, &task, false)?;
+    let mut cfg = task_config(&row, &task, false)?;
+    let part = if let Some(range) = rows {
+        cfg.max_batch = 1;
+        Some(probe_rows::restrict(&mut task, &fingerprints, range)?)
+    } else {
+        None
+    };
     let dir = directory(out, MODEL, name, seed, updates).join("declared-target");
     let checkpoint =
         |file: &str, step: &Value, digest: &Value, original: &Value| -> Result<Value> {
@@ -245,11 +252,12 @@ pub fn target_probes(
             Ok(json!({"step":step,"weights_sha256":digest,"scores":scores}))
         };
     let (first, last) = at_target_checkpoints(&result, checkpoint)?;
-    println!(
-        "{}",
-        json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
-        "probe_fingerprints":fingerprints,"first":first,"final":last})
-    );
+    let mut report = json!({"protocol":result["protocol"],"scored_with_kernite":KERNITE_VERSION,
+        "probe_fingerprints":fingerprints,"first":first,"final":last});
+    if let Some(info) = part {
+        report["probe_rows"] = info;
+    }
+    println!("{report}");
     Ok(())
 }
 

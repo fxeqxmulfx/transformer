@@ -18,6 +18,7 @@ pub mod embedding;
 mod induction_gain;
 mod language_probes;
 mod length_transfer;
+pub mod probe_rows;
 pub mod lookup_question;
 pub mod numeric_probe;
 pub mod phase_ablation;

@@ -305,9 +305,10 @@ fn main() -> Result<()> {
         [op, name, seed, updates, out] if op == "catalog-ablate" =>
             stress::benchmark::target_ablation(name, seed.parse()?, updates.parse()?, Path::new(out)),
         [op, name, seed, updates, out, extra @ ..] if op == "target-probes" => {
-            let probes = stress::ProbeSet::parse(extra)?.ok_or("target-probes requires a transfer probe")?;
-            stress::benchmark::target_probes(name, seed.parse()?, updates.parse()?, Path::new(out), probes)
+            let (probes, rows) = stress::probe_rows::parse(extra)?;
+            stress::benchmark::target_probes(name, seed.parse()?, updates.parse()?, Path::new(out), probes, rows)
         }
+        [op, files @ ..] if op == "join-probe-rows" => stress::probe_rows::join_files(files),
         [op, name, weights] if op == "numeric-audit" =>
             stress::numeric_probe::audit(name, Path::new(weights), None),
         [op, name, weights, rows] if op == "numeric-audit" =>
@@ -374,6 +375,6 @@ fn main() -> Result<()> {
             snapshot::nv11_scores(Path::new(file), snapshot::Nv11Detail::Rows),
         [op, file, a, b] if op == "predict" => snapshot::predict(Path::new(file), None, a.parse()?, b.parse()?),
         [op, file, p, a, b] if op == "predict" => snapshot::predict(Path::new(file), Some(p.parse()?), a.parse()?, b.parse()?),
-        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | fixed-probes HEAD CASE SEED UPDATES RUN_DIR [PROBE] | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | catalog-ablate CASE SEED SEARCH_UPDATES RUN_DIR | target-probes CASE SEED SEARCH_UPDATES RUN_DIR PROBE | lookup-study-score SEED RUN_DIR [ablations] | lookup-fit SEED RUN_DIR | lookup-isolated SEED RUN_DIR PASSES SELECTION GAIN | lookup-weight-score SEED RUN_DIR SELECTION GAIN | lookup-interventions SEED RUN_DIR | numeric-audit CASE WEIGHTS [ROWS] | catalog-inventory [REGISTRY.tsv] | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay|time-score} CASE SEED RUN_DIR | {probes|slot-ablate|slot-phase-ablate} CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | {screen|advance} CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
+        _ => Err("usage: phasor-value-transport {check|routes|memory-check} | memory-bench HEAD CASE SEED UPDATES RUN_DIR | fixed-probes HEAD CASE SEED UPDATES RUN_DIR [PROBE] | catalog-bench CASE SEED UPDATES RUN_DIR | catalog-target CASE SEED SEARCH_UPDATES RUN_DIR | catalog-ablate CASE SEED SEARCH_UPDATES RUN_DIR | target-probes CASE SEED SEARCH_UPDATES RUN_DIR PROBE [rows START END] | join-probe-rows FILE... | lookup-study-score SEED RUN_DIR [ablations] | lookup-fit SEED RUN_DIR | lookup-isolated SEED RUN_DIR PASSES SELECTION GAIN | lookup-weight-score SEED RUN_DIR SELECTION GAIN | lookup-interventions SEED RUN_DIR | numeric-audit CASE WEIGHTS [ROWS] | catalog-inventory [REGISTRY.tsv] | catalog-shifts REFERENCE CASE SEED UPDATES RUN_DIR | extensions [REGISTRY.tsv] | shared-check [WIDTH] | report RUN_DIR | gpt-report RUN_DIR [REGISTRY.tsv] | extended-report RUN_DIR [REGISTRY.tsv] | catalog-report RUN_DIR CASE... | {cell|replay|time-score} CASE SEED RUN_DIR | {probes|slot-ablate|slot-phase-ablate} CASE SEED RUN_DIR [extended|parity-1024|parity-neighbors|parity-length BITS|recall-gap TOKENS|depth-length TOKENS] | {screen|advance} CASE SEED RUN_DIR LAST_OBSERVATION | nv11-train RUN_DIR [SEED [STEPS]] | nv11-score FILE [shifts|rows] | nv11-slot-audit FILE | nv11-fourier-audit FILE | phase-ablate CASE SEED RUN_DIR | embedding-forward CASE SEED RUN_DIR VECTORS.json | predict FILE [VOCAB] A B".into()),
     }
 }
