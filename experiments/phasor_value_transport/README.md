@@ -1789,6 +1789,27 @@ for round in 0 1 2 3 4 5; do
 done
 ```
 
+### Memory and repeated computation for lookup tasks
+
+- The Append-only Lookup Machine (ALM) retrieves an earlier value by key.
+  Its recency rule can return the latest value after an overwrite, which
+  could help with recall and register tasks.
+  [Lookup and recency proofs](../../src/Transformer/ALM.lean)
+- Spotlight learns where to read and write in a growing memory. Each
+  token touches a small number of cells, which could make long-context
+  retrieval cheaper.
+  [Spotlight Memory](https://www.percepta.ai/blog/spotlight-memory)
+- A looped transformer runs the same block multiple times with shared
+  weights. A later pass can use the value retrieved by an earlier pass
+  as its next key, as required by N-Hop Lookup.
+  [Inkling 2 Mini evaluation](https://thinkingmachines.ai/news/inkling-2-mini/#no-cot-capabilities)
+
+These mechanisms could complement Phasor's existing reads. They may need
+simplification or adaptation to its causal embedding interface. The open
+question is whether Phasor can learn useful keys and chain the reads from
+the task loss alone.
+[N-Hop Lookup protocol and example](../../stress_tests_for_gpt.md#n-hop-lookup)
+
 ### Interpolation in a learned cyclic order
 
 Every memory address and value refers to a prototype in the learned dense

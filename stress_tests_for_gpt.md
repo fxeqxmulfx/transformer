@@ -492,6 +492,29 @@ The original questions are available from the Think Fast authors on
 request. The Phasor evaluation awaits those questions.
 [Inkling 2 Mini evaluation](https://thinkingmachines.ai/news/inkling-2-mini/#no-cot-capabilities)
 
+### Building a synthetic example
+
+Create `N + 1` pools of fictional symbols and sample a lookup table for each
+adjacent pair of pools. Pick a starting key from the first pool and follow
+the chain through all `N` tables to compute the correct answer. Choose
+four other distinct symbols from the final pool as distractors. Shuffle
+the table rows and the answer choices. Generate fresh tables for each
+question so the model has to read the mappings in the prompt.
+
+```text
+Table 1
+Nalo → vek   Mira → dax   Sori → lum   Tavi → pim   Yuna → ros
+
+Table 2
+lum → jade   ros → opal   dax → amber   vek → quartz   pim → onyx
+
+Starting at Mira, what do you get after two lookups?
+A. jade   B. quartz   C. amber   D. onyx   E. opal
+```
+
+The chain is `Mira → dax → amber`, so the expected model answer is `C`.
+[Memory and looping in Phasor](experiments/phasor_value_transport/README.md#memory-and-repeated-computation-for-lookup-tasks)
+
 ## Sources and reproducibility
 
 The native Phasor runner trains the default pair-class triple-transport architecture
