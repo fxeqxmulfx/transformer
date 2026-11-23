@@ -2894,10 +2894,18 @@ The complete model was also rescored separately on every edited split at
 including 100/100 for each of the forty edited tables. All forty splits
 reuse the same 100 original questions.
 
-The complete model also generated every correct answer at forty reads.
-It solved all five starting keys on each of the 20 table sets. One more
-read preserved every generated answer on the 200 prompts. An independent
-dense free-generation run at forty reads reproduced the prediction hash.
+On the original disjoint-table questions, the complete two-bank model
+generated 99/100, 98/100 and 100/100 correct answers at 10, 20 and 40
+hops when given one read per table. It solved all five starting keys
+on 19, 19 and 20 of the corresponding 20 table sets. The complete
+one-bank model scored 93/100, 77/100 and 36/100 on the same questions
+and solved all five starts on 14, 10 and one set. Both checkpoints used
+ten reads during training. Each was selected at its own first passing
+update, 250 for two banks and 200 for one.
+
+One extra read preserved every generated answer on the 200 original and
+edited forty-hop prompts. An independent dense free-generation run at
+forty reads reproduced the prediction hash.
 The earlier one-bank collision analysis used these table sets during
 architecture development.
 
@@ -2972,6 +2980,7 @@ bin=./target/release/phasor-value-transport
 out=runs/agreement-disjoint
 "$bin" advance study-lookup-disjoint-layers 0 "$out" 250
 for hops in 10 20 40; do
+    PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-depth 0 "$out" "$hops" "$hops"
     "$bin" disjoint-lookup-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" isolated
 done
 PHASOR_EVAL_BATCH_CAP=4 "$bin" disjoint-lookup-budget-study 0 "$out" 40 20,39,40,41 requested
