@@ -1655,6 +1655,47 @@ checkpoint digest. To reproduce the delay column, run
 `"$bin" probes basis-recall-easy SEED "$out" recall-gap 64` for each
 seed with the opening build and run directory.
 
+### Pair-class results beyond the canonical tiers
+
+The first registered-extension audit on November 23 with a pass on
+language L3 verified eight of 51 short runs and three of 12 long runs.
+All three sixth-power sum checkpoints scored 4,705/4,705 at update 250.
+Dyck also passed all three seeds at update 250 with 32/32 on validation.
+The independent Dyck test scores were 62, 63 and 64 out of 64.
+
+Language L2 seed 0 passed at update 250. It scored 512/512 on validation,
+the independent test and the length-128 test, and 992/1,024 on all
+ten-letter words. Language L3 seed 0 passed at update 750, with 512/512
+on each source split and 1,024/1,024 on the exhaustive probe. Depth-one
+C-RASP seed 1 first passed at update 500 with 32/32 on validation,
+62/64 on the independent test and 53/64 at length 64.
+
+Under the broader catalog protocol, division modulo 17 reached 136/136
+at update 250 on every seed and retained 136/136 through update 750.
+Separate processes reloaded the first and final weights. In 500-update
+searches, the mixed cubic scored 115, 114 and 116 out of 4,705, and
+unique-symbol copying scored 0/32 on each seed. Their source budgets
+are 100,000 updates.
+
+With the default binary, the registered runner uses the 99% criterion.
+The broader command reads the metric, target and retention window from
+the source plan. These commands reproduce the corresponding cohorts.
+
+```sh
+./run_stress.sh --gpt-only cell "$out" extensions.tsv
+./run_stress.sh --gpt-only probes "$out" extensions.tsv > "$out/registered-probes.jsonl"
+"$bin" gpt-report "$out" extensions.tsv > "$out/registered-cohort.json"
+jq -es --slurpfile report "$out/registered-cohort.json" -f verify_replays.jq "$out/registered-probes.jsonl"
+for task in division-p17 arithmetic-cubic-mixed suite-copy-unique; do
+    for seed in 0 1 2; do
+        "$bin" catalog-target "$task" "$seed" 500 "$out/catalog" > /dev/null
+        "$bin" catalog-target "$task" "$seed" 500 "$out/catalog"
+    done
+done > "$out/catalog-replays.jsonl"
+"$bin" catalog-inventory extensions.tsv > "$out/catalog-inventory.json"
+jq -es --slurpfile inventory "$out/catalog-inventory.json" -f catalog_results.jq "$out/catalog-replays.jsonl"
+```
+
 ### Four-gate triple transport on the canonical GPT tiers
 
 The November 22 partial audit independently reloaded 55 checkpoints from
