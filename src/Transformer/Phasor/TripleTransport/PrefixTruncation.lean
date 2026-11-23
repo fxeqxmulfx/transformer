@@ -55,4 +55,63 @@ example : (if 2 ≤ 2 then none else DenseInduction.donor (· == ·) (fun i => i
     DenseInduction.donor (· == ·) (fun i => i % 2) 1 :=
   induction_shortcut _ _ 2 1 (by decide)
 
+/-- Phasor's directed associative store in `typed_lookup/paths.rs`. A write
+requires three consecutive geometric addresses. The prefix ends at position
+`t`, so a window beginning at `i` can enter only when `i + 2 ≤ t`. -/
+def completed (addr : ℕ → Option X) (t : ℕ) : List (X × X × X) :=
+  (List.range (t - 1)).filterMap fun i =>
+    match addr i, addr (i+1), addr (i+2) with
+    | some a, some r, some b => some (a,r,b)
+    | _, _, _ => none
+
+/-- Characterization of an empty write history in the native associative
+read. It also covers long prefixes with gaps in the learned addresses. -/
+theorem completed_eq_nil (addr : ℕ → Option X) (t : ℕ) :
+    completed addr t = [] ↔
+      ∀ i, i+2 ≤ t → addr i = none ∨ addr (i+1) = none ∨ addr (i+2) = none := by
+  simp only [completed, List.filterMap_eq_nil_iff, List.mem_range]
+  constructor
+  · intro h i hi
+    have miss := h i (by omega)
+    cases a : addr i <;> cases b : addr (i+1) <;> cases c : addr (i+2) <;>
+      simp_all
+  · intro h i hi
+    rcases h i (by omega) with a | b | c
+    · rw [a]
+    · cases a : addr i <;> simp [b]
+    · cases a : addr i <;> cases b : addr (i+1) <;> simp [c]
+
+/-- Every path vote starts with a stored directed write. With no complete
+window, enumerating continuations changes neither the forward accumulator nor
+its reverse sweep, for any learned weights and any number of repeated reads.
+The two folds permit arbitrary update operations and accumulation order. -/
+theorem empty_path_sweeps {W S G : Type*} (addr : ℕ → Option X) (t : ℕ)
+    (paths : X × X × X → List W) (emit : S → W → S) (pull : W → G → G)
+    (state : S) (adjoint : G)
+    (gap : ∀ i, i+2 ≤ t → addr i = none ∨ addr (i+1) = none ∨ addr (i+2) = none) :
+    let ws := (completed addr t).flatMap paths
+    ws.foldl emit state = state ∧ ws.foldr pull adjoint = adjoint := by
+  rw [(completed_eq_nil addr t).mpr gap]
+  exact ⟨rfl, rfl⟩
+
+example (paths : ℕ × ℕ × ℕ → List ℕ) :
+    let ws := (completed (fun i => if i=1 ∨ i=4 then none else some i) 5).flatMap paths
+    ws.foldl (·+·) 7 = 7 ∧ ws.foldr (·*·) 3 = 3 := by
+  apply empty_path_sweeps
+  intro i hi
+  have bound : i ≤ 3 := by omega
+  interval_cases i <;> decide
+
+/-- The same test can run before the addresses have been computed whenever
+the requested position cannot yet finish a triple. This holds for an early
+request inside an arbitrarily long sequence. -/
+theorem before_first_write (addr : ℕ → Option X) (t : ℕ) (early : t < 2) :
+    completed addr t = [] := by
+  apply (completed_eq_nil addr t).mpr
+  intro i hi
+  omega
+
+example : completed (fun i => some (3*i+7)) 1 = [] := before_first_write _ _ (by decide)
+example : completed (fun i => some (3*i+7)) 2 = [(7,10,13)] := by decide
+
 end Transformer.Phasor.TripleTransport.PrefixTruncation
