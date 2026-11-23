@@ -59,6 +59,7 @@ impl ReadGates {
 pub struct PathRead {
     pub passes: usize,
     pub ordered: bool,
+    pub soft_address: bool,
     pub gain_power: u8,
     pub normalize_vote: bool,
 }
@@ -67,10 +68,18 @@ impl PathRead {
     pub const TRAINING_BUDGETS: [usize; 5] = [2, 5, 10, 20, 40];
 
     pub const fn linear(passes: usize) -> Self {
-        Self { passes, ordered: false, gain_power: 0, normalize_vote: false }
+        Self { passes, ordered: false, soft_address: false, gain_power: 0, normalize_vote: false }
     }
 
-    pub const NORMALIZED: Self = Self { passes: 5, ordered: false, gain_power: 1, normalize_vote: true };
+    pub const NORMALIZED: Self = Self { passes: 5, ordered: false, soft_address: false, gain_power: 1, normalize_vote: true };
+
+    pub fn parameters(self, width: usize) -> usize {
+        if self.soft_address {
+            crate::soft_address::parameters(width)
+        } else {
+            crate::typed_lookup::parameters(width)
+        }
+    }
 }
 
 /// Search and gate scales vary independently in fixed-weight controls.
@@ -146,6 +155,10 @@ impl PeerRead {
         Self { path: Some(PathRead { passes, gain_power: 4, ..PathRead::NORMALIZED }), ..Self::CHART_INDUCTION }
     }
     pub const POWER_LOOKUP: Self = Self::concentrated(10);
+    pub const SOFT_ADDRESS: Self = Self {
+        path: Some(PathRead { soft_address: true, ..PathRead::linear(10) }),
+        ..Self::CHART_INDUCTION
+    };
     pub const POWER_TWENTY: Self = Self::concentrated(20);
     pub const POWER_FORTY: Self = Self::concentrated(40);
     pub const ORDERED_LOOKUP: Self = Self {
@@ -222,6 +235,8 @@ impl PeerRead {
                 (Self::TEN_READ_LOOKUP, true) => "phasor-triple-normalized-ten-lookup-32-v1",
                 (Self::TEN_READ_LOOKUP, false) => "phasor-triple-normalized-ten-lookup-trunk-v1",
                 (Self::POWER_LOOKUP, true) => "phasor-triple-concentrated-lookup-32-v1",
+                (Self::SOFT_ADDRESS, true) => "phasor-triple-soft-address-memory-32-v1",
+                (Self::SOFT_ADDRESS, false) => "phasor-triple-soft-address-memory-trunk-v1",
                 (Self::POWER_LOOKUP, false) => "phasor-triple-concentrated-lookup-trunk-v1",
                 (Self::POWER_TWENTY, true) => "phasor-triple-concentrated-lookup-20-32-v1",
                 (Self::POWER_TWENTY, false) => "phasor-triple-concentrated-lookup-20-trunk-v1",
@@ -372,6 +387,7 @@ impl Head {
             "triple-fixed-ten-lookup" | "triple-varied-depth-lookup" =>
                 Ok(Self::PeerTriplePhase(PeerRead::TEN_READ_LOOKUP)),
             "triple-power-lookup" => Ok(Self::PeerTriplePhase(PeerRead::POWER_LOOKUP)),
+            "triple-soft-address-memory" => Ok(Self::PeerTriplePhase(PeerRead::SOFT_ADDRESS)),
             "triple-power-lookup-20" => Ok(Self::PeerTriplePhase(PeerRead::POWER_TWENTY)),
             "triple-power-lookup-40" => Ok(Self::PeerTriplePhase(PeerRead::POWER_FORTY)),
             "triple-ordered-lookup" => Ok(Self::PeerTriplePhase(PeerRead::ORDERED_LOOKUP)),

@@ -16,6 +16,7 @@ pub struct Layout {
     pub gates: usize,
     pub bias: usize,
     pub path_start: Option<usize>,
+    pub(crate) path_size: usize,
 }
 
 pub fn capacity(head: crate::head::Head, width: usize, vocab: usize) -> usize {
@@ -34,11 +35,7 @@ pub fn parameter_count(head: crate::head::Head, d: usize, k: usize) -> usize {
         0
     };
     let gates = head.read_gates().count();
-    let local = if head.peer_read().is_some_and(|r| r.path.is_some()) {
-        crate::typed_lookup::parameters(d)
-    } else {
-        0
-    };
+    let local = head.peer_read().and_then(|r| r.path).map_or(0, |r| r.parameters(d));
     4 * d + (k + k * k + gates) * d + gates + phase + local
 }
 
@@ -69,6 +66,7 @@ impl Layout {
             values,
             gates,
             bias: gates + gate_mode.count() * d,
+            path_size: cfg.head.peer_read().and_then(|r| r.path).map_or(0, |r| r.parameters(d)),
             path_start: cfg
                 .head
                 .peer_read()
@@ -80,7 +78,7 @@ impl Layout {
     pub fn end(&self) -> usize {
         self.path_start
             .map_or(self.bias + self.gate_mode.count(), |offset| {
-                offset + crate::typed_lookup::parameters(self.d)
+                offset + self.path_size
             })
     }
 
@@ -130,6 +128,10 @@ pub fn initialize(cfg: &Config, seed: u32, w: &mut [f32]) {
         dst.copy_from_slice(&a);
     }
     w[l.values..l.end()].fill(0.);
+    if let Some(start) = l.path_start
+        && cfg.head.peer_read().and_then(|r| r.path).is_some_and(|p| p.soft_address) {
+        crate::soft_address::initialize(&mut w[start..l.end()], l.d, seed);
+    }
     if cfg.head.has_triple_phase() {
         let channels = crate::head::MEMORY_WIDTH * l.d;
         let phase = &mut w[l.end()..l.end() + 3 * channels];

@@ -90,6 +90,9 @@ pub fn time(out: &Path, hops: usize, passes: usize, batch: usize) -> Result<()> 
         .and_then(|h| h.path)
         .ok_or("no path branch")?;
     read.passes = passes;
+    if read.soft_address {
+        return Err("the read timing benchmark requires a discrete relation checkpoint".into());
+    }
     let path = &store[layout.path_start.ok_or("no path weights")?..layout.end()];
     let mut output = Vec::new();
     let mut elapsed = std::time::Duration::ZERO;

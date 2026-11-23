@@ -2545,6 +2545,49 @@ for workers in 1 16 16 1; do
 done
 ```
 
+#### Learned scalar addresses and the planar index
+
+The scalar-memory variant uses separate learned projections for write
+addresses, query addresses and full-width payloads. The causal hidden state
+controls each write's strength. On every pass the original query and a
+gated message from the preceding pass determine the next address and
+relation. An acceptance gate uses the match strength to mix the retrieved
+value with the previous state. The same parameters execute all ten passes.
+The outer loss sees only the final answer letter.
+
+For a query coordinate $q$, write coordinate $a$ and positive write
+strength $g$, the soft read weights payloads by $\operatorname{softmax}(\log g-(q-a)^2)$.
+The largest score can also be found with a planar maximum-inner-product
+query. The index keeps an upper envelope for each occupied binary bucket
+of appended writes. Ties select the latest write. Lean proves the equality
+of score gaps and bounds the error in the soft payload when the winner has
+a positive margin. [Planar scores and soft payload error](../../src/Transformer/Phasor/TripleTransport/AddressGap.lean)
+
+At update 250 the fresh seed-0 model scored **42/200** on validation and
+**19/100** on ten-hop questions. Switching the same checkpoint to the
+indexed hard read kept 42 validation answers correct and lost one ten-hop
+answer, giving **18/100**. Across 12,000 final-position read observations
+in the original evaluation, the index chose the same write as an exhaustive
+maximum-score scan every time. Of these, 4,052 met the gap bound for at
+least 99% soft mass on the winner. Each question contributed ten passes
+in each of two forwards.
+
+With 43 writes the host index took 113 ns per maximum-score query and the
+scan took 90 ns. With 196 writes the index took 141 ns, the scan took
+416 ns, and accumulating the full soft payload took 13.5 μs. Building
+the index across the latter prefix took 66.9 μs on average. These timings
+cover the memory operation. The 20- and 80-hop results above use the
+chronological relation read.
+
+```sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-soft-address-memory
+bin=./target/release/phasor-value-transport
+out=runs/soft-address/short-training
+PHASOR_EVAL_BATCH_CAP=16 "$bin" advance study-lookup-questions 0 "$out" 250
+"$bin" lookup-study-score 0 "$out"
+PHASOR_EVAL_BATCH_CAP=1 "$bin" lookup-index-comparison 0 "$out"
+```
+
 #### Selecting the eighth or an earlier matching reply
 
 The synthetic ordinal study asks for the first through eighth response

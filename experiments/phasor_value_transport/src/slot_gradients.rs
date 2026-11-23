@@ -85,6 +85,7 @@ fn mixture(delta: f64) -> Result<()> {
         gates: (k + k * k) * d,
         bias: (k + k * k + architecture::HEAD.read_gates().count()) * d,
         path_start: None,
+        path_size: 0,
     };
     let mut w = vec![0.; l.end()];
     let mut rng = random::Random::new(4147);

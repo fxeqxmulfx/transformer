@@ -66,6 +66,7 @@ fn signed_path_sum_and_gate_differentiate_through_dense_values() {
                 gain_power,
                 normalize_vote,
                 ordered,
+                soft_address: false,
             });
         }
     }

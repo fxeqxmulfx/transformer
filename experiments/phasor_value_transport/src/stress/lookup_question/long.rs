@@ -31,6 +31,9 @@ pub fn run(
         return Err("a path store is required".into());
     };
     let path = routing.path.as_mut().ok_or("missing path store")?;
+    if ordered && path.soft_address {
+        return Err("chronological relation reads require a discrete write history".into());
+    }
     path.ordered |= ordered;
     let ordered = path.ordered;
     cfg.max_length = rows

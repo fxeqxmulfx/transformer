@@ -4,6 +4,9 @@ use super::*;
 use std::ops::Range;
 
 pub(super) fn table_range(cfg: &Config) -> Result<Range<usize>> {
+    if cfg.head.peer_read().and_then(|r| r.path).is_some_and(|p| p.soft_address) {
+        return Err("the scalar address read has no discrete relation coefficient table".into());
+    }
     let layout = crate::slot_memory::Layout::new(cfg);
     let base = architecture::memory_start(cfg);
     let start = layout

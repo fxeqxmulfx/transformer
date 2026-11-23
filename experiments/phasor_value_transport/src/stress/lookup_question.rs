@@ -6,6 +6,7 @@ mod data;
 pub mod fit;
 pub mod hop_sweep;
 pub mod interior;
+pub mod index;
 pub mod long;
 pub mod memory;
 pub mod isolated;

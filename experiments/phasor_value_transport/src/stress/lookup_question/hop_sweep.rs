@@ -66,6 +66,9 @@ pub fn run_with_power(
             return Err("a coefficient gain requires a learned path table".into());
         };
         let path = read.path.as_mut().ok_or("checkpoint has no path table")?;
+        if path.soft_address {
+            return Err("a coefficient gain requires the discrete relation table".into());
+        }
         path.gain_power = n;
     }
     let split_hashes = data::complete_hops(&mut task)?;

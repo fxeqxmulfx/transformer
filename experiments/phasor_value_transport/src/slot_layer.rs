@@ -32,9 +32,31 @@ impl Drop for EvaluationScope {
     }
 }
 
+enum LocalTape {
+    Paths(crate::typed_lookup::Tape),
+    Soft(crate::soft_address::Tape),
+}
+
+impl LocalTape {
+    fn add_output(&self, out: &mut [f32]) {
+        match self {
+            Self::Paths(tape) => tape.add_output(out),
+            Self::Soft(tape) => tape.add_output(out),
+        }
+    }
+
+    fn backward(&self, hidden: &[f32], weights: &[f32], dy: &[f32],
+        dx: &mut [f32], dh: &mut [f32], dw: &mut [f32]) {
+        match self {
+            Self::Paths(tape) => tape.backward(hidden, weights, dy, dx, dh, dw),
+            Self::Soft(tape) => tape.backward(hidden, weights, dy, dx, dh, dw),
+        }
+    }
+}
+
 struct Tape {
     prefix: Option<crate::slot_induction::Prefix>,
-    local: Option<crate::typed_lookup::Tape>,
+    local: Option<LocalTape>,
     weights: Vec<f32>,
     hidden: Vec<f32>,
     rows: Vec<Row>,
@@ -255,15 +277,21 @@ impl SlotLayer {
             Vec::new()
         };
         let local_tape = local.map(|mode| {
-            crate::typed_lookup::Tape::new(
+            let weights = &tape.weights[l.path_start.unwrap()..l.end()];
+            if mode.soft_address {
+                return LocalTape::Soft(crate::soft_address::Tape::new(
+                    &input, &h, weights, l.d, length, mode.passes, !e.scoring_only,
+                ));
+            }
+            LocalTape::Paths(crate::typed_lookup::Tape::new(
                 &input,
                 &h,
-                &tape.weights[l.path_start.unwrap()..l.end()],
+                weights,
                 (l.d, length),
                 mode,
                 !e.scoring_only,
                 |v| tape.routing.nearest(l, &tape.weights, v),
-            )
+            ))
         });
         let prefix = use_induction.then(|| crate::slot_induction::Prefix::new(input, l.d, length));
         let (choices, mut out) = slot_memory::forward(
