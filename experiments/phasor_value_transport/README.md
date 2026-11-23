@@ -1669,7 +1669,12 @@ and test at update 224. On associative division the first crossings
 were updates 836, 836 and 722 with 4,612, 4,614 and 4,610 of 4,656.
 Hard depth crossed at 1,000, 2,250 and 1,000 updates. All three seeds
 scored 512/512 on the independent test. At length 128 they scored 512,
-512 and 506 out of 512.
+512 and 506 out of 512. The same checkpoints scored 509, 512 and 507
+of 512 at length 256, then 342, 512 and 293 at length 512. Only seed 1
+met the 99% threshold at length 512. At length 1,024 it again classified
+every prefix correctly on all 512 sequences. Training used lengths 32–64.
+To repeat the extension, use
+`PHASOR_EVAL_BATCH_CAP=1 "$bin" probes basis-depth-hard 1 "$out" depth-length 1024`.
 
 The native report records every first crossing, held-out count and
 checkpoint digest. To reproduce the delay column, run
