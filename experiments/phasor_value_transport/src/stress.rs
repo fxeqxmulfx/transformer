@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 
 pub mod alignment;
 mod associative_copy;
+mod associative_equations;
 pub mod benchmark;
 pub mod catalog;
 mod class_translation;

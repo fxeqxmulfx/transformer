@@ -133,8 +133,8 @@ canonical run and availability under the broader source protocol are
 separate fields in the respective reports.
 
 Of the 108 catalog cases outside the original tiers, the 21 registered
-extensions and NV11, 71 have authenticated data and a supported source
-metric in this runner. For 13 more sequence-accuracy cases the required
+extensions and NV11, 79 have authenticated data and a supported source
+metric in this runner. For five more sequence-accuracy cases the required
 data adapter is unavailable. The other 24 need a different source scorer
 or an authenticated numeric teacher. The inventory names each case and
 gives its reason.
@@ -1957,6 +1957,39 @@ bin=./target/release/phasor-value-transport
 for seed in 0 1 2; do
     "$bin" catalog-target associative-dividend-n2-l1-w0 "$seed" 250 runs/main-catalog > /dev/null
     "$bin" catalog-target associative-dividend-n2-l1-w0 "$seed" 250 runs/main-catalog
+done
+```
+
+#### Single-compute register equations
+
+Four source cases bind the operands of a frozen equation to two randomly
+chosen registers. The division cases issue two writes, eight writes, or
+eight writes and four overwrites. The random-label control uses the
+two-write layout. Each case has 4,656 training and 4,656 validation
+examples. The input ends with the ordered query keys. Only the following
+value is supervised.
+
+The Rust adapter reproduces the source's array-wide NumPy draw order,
+uses the browser equation shuffle and calls DiffGPT's native LGT encoder.
+A separate executable using NumPy's C PCG64 and distribution routines
+reconstructed all 37,248 frames. Every input token and final label matched
+between the two implementations. The register interpreter also checked
+each overwrite, each division equation, and identical input streams under
+the division and random-label controls. [Latest-register and scoring proofs](../../src/Transformer/Phasor/AssociativeEquationScore.lean)
+
+```sh
+LAKE_ARTIFACT_CACHE=false lake build Transformer.Phasor.AssociativeEquationScore
+cd experiments/phasor_value_transport
+cargo +stable test --release --locked --offline --test associative_equations
+# For the independent replay, set NUMPY_SOURCE to the numpy directory in
+# the NumPy 2.2.6 sources and NUMPY_RANDOM_ARCHIVE to libnpyrandom.a.
+bash tests/associative_reference.sh
+cargo +stable build --release --locked --offline --features fp32-affine-reference
+bin=./target/release/phasor-value-transport
+for task in associative-division-n2-l1-w0 associative-division-n8-l1-w0 \
+            associative-division-n8-l1-w4 associative-random-n2-l1-w0; do
+    "$bin" catalog-target "$task" 0 250 runs/main-catalog
+    "$bin" catalog-target "$task" 0 250 runs/main-catalog
 done
 ```
 

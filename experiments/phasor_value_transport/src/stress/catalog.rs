@@ -285,6 +285,11 @@ fn load_sequence(name: &str, case: Value) -> Result<(Value, Task)> {
         let (task, hashes) = associative_copy::build(&case, &control)
             .map_err(|e| -> Box<dyn std::error::Error> { e })?;
         (sequence_task(task), hashes)
+    } else if case["kind"] == "associative" && case["data"]["compute"] == 1
+        && matches!(case["data"]["labels"].as_str(), Some("division" | "random")) {
+        let (task, hashes) = associative_equations::build(&case)
+            .map_err(|e| -> Box<dyn std::error::Error> { e })?;
+        (sequence_task(task), hashes)
     } else if case["kind"] == "differenced_division" {
         let order = case["data"]["order"]
             .as_u64()

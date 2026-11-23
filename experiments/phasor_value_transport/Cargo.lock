@@ -606,6 +606,7 @@ dependencies = [
  "convex-stress-arithmetic-data",
  "convex-stress-basis-data",
  "convex-stress-frequency-data",
+ "convex-stress-minibatch",
  "convex-stress-parity-data",
  "convex-stress-probe-data",
  "diffgpt-mash-native",

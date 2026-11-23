@@ -87,6 +87,7 @@ test = false
 [dependencies]
 arithmetic = { package = "convex-stress-arithmetic-data", path = "../convex_stress_arithmetic_data" }
 basis = { package = "convex-stress-basis-data", path = "../convex_stress_basis_data" }
+minibatch = { package = "convex-stress-minibatch", path = "../convex_stress_minibatch" }
 composed-retrieval = { path = "../composed_retrieval", features = ["chain-data"] }
 frequency = { package = "convex-stress-frequency-data", path = "../convex_stress_frequency_data" }
 parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
@@ -95,8 +96,6 @@ kernite-cuda = "=0.6.0"
 kernite-macros = "=0.6.0"
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"
-
-[dev-dependencies]
 source-codec = { package = "diffgpt-mash-native", path = "../../.lake/reproduction/gpt/src/native_transformer/codec" }
 
 [build-dependencies]

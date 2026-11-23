@@ -10,6 +10,7 @@ public import Transformer.Phasor.ModularChainScore
 public import Transformer.Phasor.DifferencedDivisionScore
 public import Transformer.Phasor.TemporalRecurrenceScore
 public import Transformer.Phasor.AssociativeCopyScore
+public import Transformer.Phasor.AssociativeEquationScore
 public import Transformer.Phasor.BoundedMemoryRead
 public import Transformer.Phasor.CausalProductInput
 public import Transformer.Phasor.CompactFFN
