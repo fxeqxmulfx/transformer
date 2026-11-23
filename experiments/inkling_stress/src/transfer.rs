@@ -38,9 +38,14 @@ pub fn evaluate(
     trained: &Value,
     probe: Probe,
     sizes: &[usize],
+    passes: usize,
 ) -> Result<Value> {
     let name = row["name"].as_str().ok_or("missing task name")?;
     let mut record = depth::evaluate(engine, task, trained, &[])?;
+    engine.evaluation_passes = passes;
+    if passes != crate::text::PASSES {
+        record["probe_passes"] = json!(passes);
+    }
     let mut scores = Map::new();
     for &size in sizes {
         let (digest, examples) = match probe {

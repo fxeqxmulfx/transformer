@@ -68,7 +68,7 @@ enum Action {
     Run(Option<usize>),
     Replay,
     Depth(Vec<usize>),
-    Transfer(transfer::Probe, Vec<usize>),
+    Transfer(transfer::Probe, Vec<usize>, usize),
 }
 
 fn run(action: Action, name: &str, seed: u32, out: &Path) -> Result<Value> {
@@ -151,8 +151,8 @@ fn run(action: Action, name: &str, seed: u32, out: &Path) -> Result<Value> {
         if let Action::Depth(budgets) = &action {
             return depth::evaluate(&mut net, &task, v, budgets);
         }
-        if let Action::Transfer(probe, sizes) = &action {
-            return transfer::evaluate(&mut net, &task, row, v, *probe, sizes);
+        if let Action::Transfer(probe, sizes, passes) = &action {
+            return transfer::evaluate(&mut net, &task, row, v, *probe, sizes, *passes);
         }
         if matches!(action, Action::Replay) {
             let mut splits = serde_json::Map::new();
@@ -291,16 +291,18 @@ fn main() -> Result<()> {
                 .collect::<std::result::Result<Vec<_>,_>>()?.into_iter().map(|n| n.get()).collect();
             (Action::Depth(budgets), name, seed, out)
         }
-        [op, name, seed, out, kind, counts] if op == "extend" => {
+        [op, name, seed, out, kind, counts, extra @ ..] if op == "extend" && extra.len() <= 1 => {
             let probe = match kind.as_str() {
                 "recall-gap" => transfer::Probe::RecallGap,
                 "depth-length" => transfer::Probe::DepthLength,
                 _ => return Err("expected recall-gap or depth-length".into()),
             };
             let sizes = counts.split(',').map(str::parse::<usize>).collect::<std::result::Result<_,_>>()?;
-            (Action::Transfer(probe,sizes),name,seed,out)
+            let passes = extra.first().map(|s| s.parse::<std::num::NonZeroUsize>())
+                .transpose()?.map_or(text::PASSES, std::num::NonZeroUsize::get);
+            (Action::Transfer(probe,sizes,passes),name,seed,out)
         }
-        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,... | extend CASE SEED OUT {recall-gap|depth-length} SIZES,...".into()),
+        _ => return Err("usage: inkling-stress run CASE SEED OUT [CUTOFF] | replay CASE SEED OUT | depth CASE SEED OUT PASSES,... | extend CASE SEED OUT {recall-gap|depth-length} SIZES,... [EVAL_PASSES]".into()),
     };
     let threads = env::var("INKLING_THREADS")
         .unwrap_or_else(|_| "2".into())

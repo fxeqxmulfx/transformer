@@ -110,6 +110,13 @@ and Inkling received exactly the same test rows at each length.
 | 1 | 512/512 | 512/512 | 512/512 | 478/512 | 341/512 |
 | 2 | 512/512 | 512/512 | 512/512 | 464/512 | 496/512 |
 
+On Basis Depth Hard, the eight-layer model first passed on seed 0 at
+update 750. It scored 511/512 on the primary split, 511/512 on the
+independent test and 512/512 at the original test length 128. Extending
+to length 256 gave 496/512, below the 99% gate for a further extension.
+Phasor first passed at update 1,000 on this seed, with 512/512 on each
+of the three original splits.
+
 On seed 0 the first positive scheduled observation gave 52/4,705 on
 modular addition at update 19, 79/4,705 on absolute difference at update
 19, and 44/4,704 on decoded Fibonacci at update 10. All three are early
@@ -147,6 +154,11 @@ Two passes recovered the three-pass scores on every seed. These counts
 held at five, ten, twenty and forty passes. Lean gives a sufficient
 condition for an entire hidden prefix to remain fixed.
 [Shared-pass proof](../../src/Transformer/InklingLoop.lean)
+
+The same depth comparison at a 128-token recall gap gave 28, 430 and
+512 exact sequences out of 512 at one pass. Three passes gave 35, 509
+and 512. Ten passes gave the same three counts. Every budget used the
+same weights and extended examples.
 
 ## Reproduction
 
@@ -211,6 +223,7 @@ target/release/inkling-stress replay suite-boolean-and-shift 0 runs/canonical
 target/release/inkling-stress depth suite-boolean-and-shift 0 runs/canonical 1,2,3,5,10,20,40
 target/release/inkling-stress extend basis-depth-easy 0 runs/canonical depth-length 128,256
 target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 0,32,64,128
+target/release/inkling-stress extend basis-recall-easy 0 runs/canonical recall-gap 128 40
 ```
 
 Tests cover open and closed gates across three passes, causality, fixed-input
