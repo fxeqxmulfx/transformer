@@ -2864,6 +2864,8 @@ table and to excess reads.
 | 40 | Chronological | 100 | 97 | 97 | 95 |
 | 80 | Latest | 100 | 69 | 69 | 2 |
 | 80 | Chronological | 100 | 99 | 99 | 98 |
+| 160 | Latest | 100 | 34 | 34 | 0 |
+| 160 | Chronological | 100 | 99 | 99 | 99 |
 
 The complete model generated the answer letter and terminator for the same
 100 original and 100 edited questions per length. The middle columns give
@@ -2877,6 +2879,14 @@ update-250 weights, trained with ten reads on one- to five-table questions.
 | 40 | Chronological | 98 | 96 | 94 | 2 | 92 |
 | 80 | Latest | 100 | 71 | 71 | 2 | 7 |
 | 80 | Chronological | 100 | 99 | 99 | 2 | 98 |
+| 160 | Latest | 98 | 36 | 34 | 0 | 0 |
+| 160 | Chronological | 98 | 98 | 96 | 0 | 96 |
+
+We extended to 160 tables after the complete chronological model scored
+99/100 pairs at 80. At 160, two original generations and two different
+edited generations were wrong. Neither selection rule solved a pair at
+159 reads. The isolated chronological read still got 99/100 pairs at the
+matching budget.
 
 On the reserved disjoint 40- and 41-table sets, the chronological
 intervention retained 500/500 paired answers at both the matching
@@ -2884,7 +2894,7 @@ budget and one extra read. The checkpoint used latest writes during
 training. The report records the intervention and the weight hash.
 
 ```sh
-for hops in 40 80; do
+for hops in 40 80 160; do
     for mode in isolated-jumps ordered-isolated-jumps requested ordered-requested; do
         "$bin" lookup-cycle-budget-study 0 "$out" "$hops" "$((hops-1)),$hops,$((hops+1))" "$mode"
     done
