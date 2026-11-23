@@ -1,9 +1,23 @@
 //! Matched read budgets on the same checkpoint and same actual chain length.
-//! For each start, one swap of destination names in the final table changes its answer.
+//! For each start, one swap of destination names in the chosen table changes its answer.
 use super::*;
 use std::collections::BTreeSet;
 
-fn pairs(hops: usize, task: &str) -> Result<(Vec<Example>, Vec<Example>)> {
+fn follow(tables: &[Vec<(i64, i64)>], mut key: i64) -> Result<i64> {
+    for table in tables {
+        key = table
+            .iter()
+            .find(|(source, _)| *source == key)
+            .ok_or("incomplete table chain")?
+            .1;
+    }
+    Ok(key)
+}
+
+fn pairs(hops: usize, edge: usize, task: &str) -> Result<(Vec<Example>, Vec<Example>)> {
+    if !(1..=hops).contains(&edge) {
+        return Err("the edited table must lie on the displayed chain".into());
+    }
     let words = vocabulary();
     let ids = words
         .iter()
@@ -18,32 +32,24 @@ fn pairs(hops: usize, task: &str) -> Result<(Vec<Example>, Vec<Example>)> {
         original.extend(set.rows(&ids, task));
         for lane in 0..5 {
             let mut changed = set.clone();
-            let end = set.options[set.answers[lane]];
-            let last = changed.tables.last_mut().ok_or("empty chain")?;
-            let at = last
+            let source = follow(&set.tables[..edge - 1], set.starts[lane])?;
+            let table = &mut changed.tables[edge - 1];
+            let at = table
                 .iter()
-                .position(|(_, v)| *v == end)
-                .ok_or("endpoint absent")?;
-            let other = (at + 1 + set_index % 4) % last.len();
-            let next = last[other].1;
-            last[at].1 = next;
-            last[other].1 = end;
-            // Recompute this start's answer using the printed map at every level.
-            let mut key = set.starts[lane];
-            for t in &changed.tables {
-                key = t
-                    .iter()
-                    .find(|(k, _)| *k == key)
-                    .ok_or("incomplete edited path")?
-                    .1;
-            }
+                .position(|(key, _)| *key == source)
+                .ok_or("missing source at intervention")?;
+            let other = (at + 1 + set_index % 4) % table.len();
+            let before = table[at].1;
+            table[at].1 = table[other].1;
+            table[other].1 = before;
+            let key = follow(&changed.tables, set.starts[lane])?;
             changed.answers[lane] = set
                 .options
                 .iter()
                 .position(|&v| v == key)
                 .ok_or("missing edited option")?;
             if changed.answers[lane] == set.answers[lane] {
-                return Err("last-link edit kept the answer".into());
+                return Err("the edited link kept the answer".into());
             }
             rewired.push(changed.rows(&ids, task).into_iter().nth(lane).unwrap());
         }
@@ -58,6 +64,7 @@ pub fn run(
     budgets: &str,
     mode: &str,
     case: Option<&str>,
+    edited_edge: Option<usize>,
 ) -> Result<()> {
     let budgets: Vec<usize> = budgets
         .split(',')
@@ -74,7 +81,7 @@ pub fn run(
     let mut cfg = task_config(&row, &task, true)?;
     let (weights, point) = checkpoint(seed, out, &row, &cfg)?;
     let trained = cfg.head.peer_read().and_then(|r| r.path).map(|r| r.passes);
-    let (original, edited) = pairs(hops, study.name)?;
+    let (original, edited) = pairs(hops, edited_edge.unwrap_or(hops), study.name)?;
     let n = original.len();
     let hashes = [digest(&original)?, digest(&edited)?];
     let examples: Vec<_> = original.into_iter().chain(edited).collect();
@@ -163,6 +170,9 @@ pub fn run(
     if let Some(audit) = alias_details {
         result["role_aliases"] = audit;
     }
+    if let Some(edge) = edited_edge {
+        result["edited_edge"] = json!(edge);
+    }
     println!("{result}");
     Ok(())
 }
@@ -171,31 +181,35 @@ pub fn run(
 mod tests {
     use super::*;
     #[test]
-    fn last_link_pairs_keep_the_start_choices_and_earlier_tables() {
+    fn edits_keep_the_start_choices_and_all_other_tables() {
         let h = 40;
-        let (a, b) = pairs(h, NAME).unwrap();
-        assert_eq!(
-            digest(&a).unwrap(),
-            digest(&probes(h, NAME).unwrap()).unwrap()
-        );
-        for (x, y) in a.iter().zip(&b) {
-            assert_ne!(x.answer, y.answer);
-            let differences: Vec<_> = x
-                .prompt
-                .iter()
-                .zip(&y.prompt)
-                .enumerate()
-                .filter(|(_, (u, v))| u != v)
-                .map(|(i, _)| i)
-                .collect();
-            assert_eq!(differences.len(), 2);
-            assert!(
-                differences
-                    .iter()
-                    .all(|&i| i >= 1 + 16 * (h - 1) && i < 1 + 16 * h)
+        assert!(pairs(h, 0, NAME).is_err());
+        assert!(pairs(h, h + 1, NAME).is_err());
+        for edge in [1, h / 2, h] {
+            let (a, b) = pairs(h, edge, NAME).unwrap();
+            assert_eq!(
+                digest(&a).unwrap(),
+                digest(&probes(h, NAME).unwrap()).unwrap()
             );
-            assert_eq!(x.prompt[differences[0]], y.prompt[differences[1]]);
-            assert_eq!(x.prompt[differences[1]], y.prompt[differences[0]]);
+            for (x, y) in a.iter().zip(&b) {
+                assert_ne!(x.answer, y.answer);
+                let differences: Vec<_> = x
+                    .prompt
+                    .iter()
+                    .zip(&y.prompt)
+                    .enumerate()
+                    .filter(|(_, (u, v))| u != v)
+                    .map(|(i, _)| i)
+                    .collect();
+                assert_eq!(differences.len(), 2);
+                assert!(
+                    differences
+                        .iter()
+                        .all(|&i| i > 16 * (edge - 1) && i <= 16 * edge)
+                );
+                assert_eq!(x.prompt[differences[0]], y.prompt[differences[1]]);
+                assert_eq!(x.prompt[differences[1]], y.prompt[differences[0]]);
+            }
         }
     }
 }

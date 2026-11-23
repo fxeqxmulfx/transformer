@@ -2553,6 +2553,18 @@ ordinary learned forward still uses every tuple in each bucket.
 | 20 | 0 | 100 | 100 |
 | 40 | 0 | 100 | 100 |
 
+The forty-hop intervention was repeated separately at every table.
+For each of the 40 links, swapping two destinations changed the correct
+answer on all 100 pairs while preserving every other table, the query and
+the choices. With the frequent training tuple isolated, forty reads
+answered both versions correctly on **4,000/4,000 pairs**, and 39 reads
+answered both on **0/4,000**. The ordinary isolated path vote gave
+**245/4,000** at forty reads, ranging from four to ten correct pairs
+per link. At 39 reads it gave **5/4,000**. The same 100 original prompts
+are reused across interventions. These are 4,000 edited pairs with 100
+distinct originals.
+[Interior-link intervention](../../src/Transformer/Phasor/LookupQuestion.lean)
+
 ```sh
 cargo +stable build --release --locked --offline --features fp32-affine-reference,triple-power-lookup
 bin=./target/release/phasor-value-transport
@@ -2563,6 +2575,11 @@ done
 for h in 10 20 40; do
     for mode in isolated-leading isolated-refined; do
         "$bin" disjoint-lookup-budget-study 0 "$out" "$h" "$((h-1)),$h,$((h+1))" "$mode"
+    done
+done
+for edge in $(seq 1 40); do
+    for mode in isolated isolated-refined; do
+        "$bin" disjoint-lookup-edge 0 "$out" 40 "$edge" 39,40 "$mode"
     done
 done
 ```
