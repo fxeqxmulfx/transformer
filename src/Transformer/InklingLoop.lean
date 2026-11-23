@@ -66,6 +66,31 @@ theorem closed_replay {A S M : Type*} (core : (ℕ → A) → (ℕ → Option M)
 private def adding : (ℕ → ℕ) → (ℕ → Option ℕ) → ℕ → ℕ :=
   fun p m t => p t + (m t).getD 0
 
+/-- Consequence of the shared middle blocks in “Looping design”. Once two
+consecutive complete pass states agree through a token, replaying the same
+causal reader and core preserves that prefix for any further budget. -/
+theorem stable_prefix {A S M : Type*} (core : (ℕ → A) → (ℕ → Option M) → ℕ → S)
+    (read : (ℕ → S) → ℕ → M) (pre : ℕ → A) (t n : ℕ)
+    (causal : ∀ x y, Agree t x y →
+      Agree t (core pre (fun i => some (read x i))) (core pre (fun i => some (read y i))))
+    (stable : Agree t (passes core read pre (n+1)) (passes core read pre n)) (k : ℕ) :
+    Agree t (passes core read pre (n+k)) (passes core read pre n) := by
+  induction k with
+  | zero => exact fun _ _ => rfl
+  | succ k ih =>
+    have next := causal _ _ ih
+    exact fun i hi => (next i hi).trans (stable i hi)
+
+private def capped : (ℕ → ℕ) → (ℕ → Option ℕ) → ℕ → ℕ :=
+  fun cap m t => min (cap t) ((m t).getD 0 + 1)
+
+example (t k : ℕ) : Agree t (passes capped id (fun _ => 3) (2+k))
+    (passes capped id (fun _ => 3) 2) := by
+  apply stable_prefix
+  · intro x y h i hi
+    simp [capped, h i hi]
+  · exact fun _ _ => rfl
+
 example (t n : ℕ) (x y : ℕ → ℕ) (h : Agree t x y) :
     Agree t (passes adding id x n) (passes adding id y n) := by
   apply passes_agree _ _ _ _ _ _ _ h
