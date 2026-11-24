@@ -17,8 +17,8 @@ different components of `G − u` (`unbalancingClass_printed_fails`, on `twoJoin
 `IsUnrolling.unbalancingClass_eq` assumes `JointsConnected`.
 
 This module also states what the source leaves to a check by comparing circuits: `(Ĝ, B̂)` is a
-biased graph, `F(Ĝ, B̂) = F(G, B)`, and `(Ĝ, B̂) = (G, B)` when `J` is empty. All use the corrected
-`B̂` of `unrollBalanced`.
+biased graph and `F(Ĝ, B̂) = F(G, B)`. Both use the corrected `B̂` of `unrollBalanced`, which is `B`
+when `J` is empty (`Section2_UnrollingEmptyJ`).
 -/
 
 @[expose] public section
@@ -126,18 +126,6 @@ theorem IsUnrolling.isFrameCircuit_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRo
     Ω'.IsFrameCircuit X ↔ Ω.IsFrameCircuit X := by
   sorry
 
-/-- §2.5: if `J` is empty then `Ĝ = G`. -/
-theorem IsUnrolling.graph_eq_of_offJoints (h : Ω.IsUnrolling u Ω') (hJ : Ω.offJoints u = ∅) :
-    Ω'.graph = Ω.graph :=
-  eq_of_tail_head (funext h.tail_eq) (funext fun e => h.head_of_notMem (by
-    rw [hJ]
-    exact Set.notMem_empty e))
-
-/-- §2.5: "If `J` is empty, then set `(Ĝ, B̂) = (G, B)`": the corrected `B̂` is then `B`. -/
-theorem IsUnrolling.balanced_eq_of_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
-    (hJ : Ω.offJoints u = ∅) : Ω'.balanced = Ω.balanced := by
-  sorry
-
 /-- §2.5: "the unbalancing classes of `Σ_G(u)` and of `Σ_Ĝ(u)` are the same", for joints of `J` in
 one component of `G − u`. -/
 theorem IsUnrolling.unbalancingClass_eq (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
@@ -183,12 +171,6 @@ example (M : Matroid (Fin 6)) := twoJoints_isUnrolling.isFrameMatroid_iff_isLift
 example := twoJoints_isRollable.exists_isUnrolling
 
 example := twoJoints_isUnrolling.isFrameCircuit_iff twoJoints_isRollable {4}
-
-example := centreLoop_isRollable.exists_isUnrolling.imp fun _ h =>
-  h.graph_eq_of_offJoints centreLoop_offJoints
-
-example := centreLoop_isRollable.exists_isUnrolling.imp fun _ h =>
-  h.balanced_eq_of_offJoints centreLoop_isRollable centreLoop_offJoints
 
 example := centreJoint_isUnrolling.isFrameCircuit_iff centreJoint_isRollable {4}
 

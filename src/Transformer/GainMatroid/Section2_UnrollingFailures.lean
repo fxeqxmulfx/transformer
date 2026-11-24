@@ -172,18 +172,6 @@ theorem printedUnrolling_fails :
     centreJoint_unrollGraph.symm, centreJoint_printed.symm, Or.inl rfl,
     fun h => Set.notMem_empty _ (isFrameCircuit_singleton_iff.1 h)⟩
 
-/-- Two digons at `0` and a joint at `0`: a rollable graph with `J` empty. -/
-def centreLoop : OrientedGraph (Fin 3) (Fin 5) := ⟨![0, 0, 0, 0, 0], ![1, 1, 2, 2, 0]⟩
-
-theorem centreLoop_isRollable : centreLoop.contrabalanced.IsRollable 0 :=
-  isRollable_of_digons (a := 0) (a' := 1) (b := 2) (b' := 3) (Or.inl ⟨rfl, rfl⟩)
-    (Or.inl ⟨rfl, rfl⟩) (by decide) (Or.inl ⟨rfl, rfl⟩) (Or.inl ⟨rfl, rfl⟩) (by decide)
-    (by decide)
-
-theorem centreLoop_offJoints : centreLoop.contrabalanced.offJoints 0 = ∅ := by
-  have h0 : ∀ e : Fin 5, centreLoop.tail e = 0 := by decide
-  exact Set.eq_empty_of_forall_notMem fun e he => he.2 (h0 e)
-
 example := (isFrameCircuit_singleton_iff (Ω := centreJointHat.singleCycleBiased {4}
   (isCycle_singleton_of_loop rfl))).2 (Set.mem_singleton _)
 
