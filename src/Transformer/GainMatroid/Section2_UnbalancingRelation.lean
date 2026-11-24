@@ -1,6 +1,6 @@
 module
 
-public import Transformer.GainMatroid.Section2_LinkTheta
+public import Transformer.GainMatroid.Section2_PairCircuits
 
 /-!
 # The relation of §2.5 on the edges at a balancing vertex
@@ -12,9 +12,9 @@ have the same bias (`IsRollable.balanced_iff`), and `∼` is an equivalence rela
 (`IsRollable.unbalancingRel_trans`). Both are proved here: every cycle that misses `u` is balanced,
 so by `BiasedGraph.insert_mem_balanced_iff` two cycles through the same two edges at `u` have one
 bias, and a theta through three links at `u` (`BiasedGraph.exists_balanced_of_links`) makes `∼`
-transitive. The source's next sentence gives the dichotomy `IsRollable.isCircuit_or_indep`. The
-source says "each pair" of edges; these claims are for two distinct edges, since a single edge lies
-on balanced and on unbalanced cycles alike.
+transitive. The dichotomy of the source's next sentence (`IsRollable.isCircuit_or_indep`) follows
+from the first claim (`Section2_PairCircuits`). The source says "each pair" of edges; these claims
+are for two distinct edges, since a single edge lies on balanced and on unbalanced cycles alike.
 
 `isRollable_of_digons` gives the hypothesis on any graph with two digons at a vertex whose links all
 meet that vertex, and `digonJoint` is the instance used for the examples of §2.5.
@@ -63,7 +63,9 @@ theorem IsRollable.balanced_iff (h : Ω.IsRollable u) {e f : E} (he : e ∈ Ω.l
 
 /-- §2.5: for each pair of edges `e₁, e₂` of `Σ(u)`, "either every minimal path linking the
 endpoints of `e₁` and `e₂` in `G − u` together with `{e₁, e₂}` forms a circuit in `F(G, B)`, or each
-such path together with `{e₁, e₂}` is independent in `F(G, B)`". -/
+such path together with `{e₁, e₂}` is independent in `F(G, B)`". Proved here: for two links by
+`IsRollable.balanced_iff`, for a link and a joint the set is independent, and for two joints a
+circuit (`isCircuit_or_indep_of_links`, `indep_of_link_joint`, `isFrameCircuit_of_joints`). -/
 theorem IsRollable.isCircuit_or_indep {M : Matroid E} (h : Ω.IsRollable u)
     (hM : Ω.IsFrameMatroid M) {e f : E} (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u)
     (hne : e ≠ f) :
@@ -71,7 +73,12 @@ theorem IsRollable.isCircuit_or_indep {M : Matroid E} (h : Ω.IsRollable u)
         M.IsCircuit ({e, f} ∪ P.edgeSet)) ∨
       ∀ P : Ω.graph.Walk (Ω.graph.otherEnd u e) (Ω.graph.otherEnd u f), P.IsPath →
         u ∉ P.support → M.Indep ({e, f} ∪ P.edgeSet) := by
-  sorry
+  rcases he with heL | heJ <;> rcases hf with hfL | hfJ
+  · exact isCircuit_or_indep_of_links hM (joins_otherEnd heL.2) (joins_otherEnd hfL.2) hne
+      fun _ _ hC hD heC hfC heD hfD => h.balanced_iff heL hfL hne hC hD heC hfC heD hfD
+  · exact Or.inr fun _ hP huP => indep_of_link_joint hM (joins_otherEnd heL.2) hfJ.1 hP huP
+  · exact Or.inr fun _ hP huP => indep_of_joint_link hM heJ.1 (joins_otherEnd hfL.2) hP huP
+  · exact Or.inl fun _ hP _ => (hM.2 _).2 (isFrameCircuit_of_joints_otherEnd heJ.1 hfJ.1 hne hP)
 
 /-- §2.5: "`∼` is an equivalence relation", citing [AlmostBalancedReps, Lemma 1.4]. Reflexivity is
 the first clause of `UnbalancingRel` and symmetry is `UnbalancingRel.symm`. Transitivity is proved

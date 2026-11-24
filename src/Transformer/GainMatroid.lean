@@ -51,6 +51,7 @@ public import Transformer.GainMatroid.Section2_CyclePaths
 public import Transformer.GainMatroid.Section2_Rerouting
 public import Transformer.GainMatroid.Section2_RerouteBias
 public import Transformer.GainMatroid.Section2_LinkTheta
+public import Transformer.GainMatroid.Section2_PairCircuits
 public import Transformer.GainMatroid.Section2_UnbalancingRelation
 public import Transformer.GainMatroid.Section2_Unrolling
 public import Transformer.GainMatroid.Section2_UnrollingFailures
@@ -130,8 +131,10 @@ almost-balanced biased graph. `Section2_PathSurgery` cuts and joins paths, `Sect
 splits a cycle through two edges at a vertex into these edges and a path, `Section2_Rerouting`
 reroutes a cycle through a theta, and `Section2_RerouteBias` proves that if every cycle missing a
 vertex is balanced, the cycles through two edges at it have one bias. `Section2_LinkTheta` puts
-three links at a vertex on a theta. `Section2_UnbalancingRelation` states what §2.5 claims of the
-unbalancing classes and proves that their cycles have one bias and that `∼` is transitive.
+three links at a vertex on a theta, and `Section2_PairCircuits` sorts two edges at a vertex with a
+path between their other ends into frame circuits and independent sets.
+`Section2_UnbalancingRelation` proves what §2.5 claims of the unbalancing classes: their cycles
+have one bias, `∼` is transitive, and each pair of edges gives circuits or independent sets.
 `Section2_Unrolling` defines the unrolling `(Ĝ, B̂)`, `Section2_UnrollingFailures` refutes its
 printed `B̂`, and `Section2_UnrollingClasses` refutes the printed claim on its unbalancing classes
 and states the corrected claims.
