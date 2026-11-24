@@ -128,14 +128,6 @@ theorem IsUnrolling.isFrameCircuit_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRo
 
 end BiasedGraph
 
-/-- The single joint of `digonJoint` is connected to itself off `0`. -/
-theorem digonJoint_jointsConnected : digonJoint.contrabalanced.JointsConnected 0 := by
-  intro e he f hf
-  have h4 : ∀ c : Fin 5, digonJoint.tail c = digonJoint.head c → c = 4 := by decide
-  obtain rfl := h4 e he.1.1
-  obtain rfl := h4 f hf.1.1
-  exact ⟨.nil _, fun h => he.2 (List.mem_singleton.1 h).symm⟩
-
 example := jointsConnected_of_connectedOff (Ω := twoC3.contrabalanced) (u := 0)
   twoC3_isKConnected.connectedOff
 

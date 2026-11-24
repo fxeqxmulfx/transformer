@@ -1,6 +1,7 @@
 module
 
 public import Transformer.GainMatroid.Section2_RollUps
+public import Transformer.GainMatroid.Section2_UnrollingSameClasses
 
 /-!
 # What §2.5 claims of the roll-ups
@@ -17,8 +18,8 @@ not among the local sources, for the first:
 > `IsUnrolling.balanced_rollUp_offJoints`).
 
 That `J` is a class needs its joints in one component of `G − u`, by
-`unbalancingClass_printed_fails`, so the statement assumes `JointsConnected` and that `J` is
-nonempty.
+`unbalancingClass_printed_fails`, so the statement assumes `JointsConnected`, and that `J` is
+nonempty, as no class is empty (`empty_notMem_unbalancingClasses`).
 
 The source's special case is a biased graph balanced after removing its joints:
 
@@ -43,6 +44,13 @@ open OrientedGraph
 namespace BiasedGraph
 
 variable {Ω Ω' : BiasedGraph V E} {u : V}
+
+/-- No unbalancing class is empty, so an empty `J` is not one. -/
+theorem empty_notMem_unbalancingClasses : ∅ ∉ Ω.unbalancingClasses u := by
+  rintro ⟨e, he, h0⟩
+  have hmem : e ∈ Ω.unbalancingClass u e := ⟨he, Or.inl rfl⟩
+  rw [← h0] at hmem
+  exact hmem
 
 namespace IsUnrolling
 
@@ -97,11 +105,14 @@ theorem unbalancingClass_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable 
   sorry
 
 /-- §2.5: "`J` is an unbalancing class of `Σ_Ĝ(u)`", for `J` nonempty in one component of
-`G − u`; the printed claim fails otherwise (`unbalancingClass_printed_fails`). -/
+`G − u`; the printed claim fails otherwise (`unbalancingClass_printed_fails`). `J` is the class in
+`(G, B)` of each of its joints, and the unrolling keeps the classes (`unbalancingClass_eq`). -/
 theorem offJoints_mem_unbalancingClasses (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
     (hJ : Ω.JointsConnected u) (hne : (Ω.offJoints u).Nonempty) :
     Ω.offJoints u ∈ Ω'.unbalancingClasses u := by
-  sorry
+  obtain ⟨e, he⟩ := hne
+  refine ⟨e, by rw [h.sigmaStar_eq]; exact Or.inr he, ?_⟩
+  rw [h.unbalancingClass_eq hΩ hJ (Or.inr he), unbalancingClass_of_mem_offJoints he]
 
 /-- §2.5: the graph of `(G_J, B_J)` is `G`. -/
 theorem graph_rollUp_offJoints (h : Ω.IsUnrolling u Ω') :
@@ -178,9 +189,8 @@ example := twoJoints_isUnrolling.unbalancingClass_rollUp twoJoints_isRollable
   twoJointsHat_class_mem twoJointsHat_zero_mem
 example := twoJoints_isUnrolling.graph_rollUp_offJoints
 example := twoJoints_isUnrolling.balanced_rollUp_offJoints twoJoints_isRollable
-example := digonJoint_isRollable.exists_isUnrolling.imp fun _ h =>
-  h.offJoints_mem_unbalancingClasses digonJoint_isRollable digonJoint_jointsConnected
-    ⟨4, ⟨rfl, Set.notMem_empty _⟩, by decide⟩
+example := centreJoint_isUnrolling.offJoints_mem_unbalancingClasses centreJoint_isRollable
+  centreJoint_jointsConnected ⟨5, (centreJoint_mem_offJoints 5).2 rfl⟩
 example := exists_isUnrolling_of_balanced_off twoLoops_unbalanced_singleton ()
 example := isFrameCircuit_iff_unrollToNew twoLoops_unbalanced_singleton ∅
 example := IsBalanced.isFrameCircuit_rollUp (gainBiased_one_isBalanced (Γ := ℚˣ) triangle) 0 ∅
