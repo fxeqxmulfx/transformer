@@ -13,10 +13,11 @@ This agrees with the definition of the unrolling, for the corrected `B̂` of `un
 `J` is empty, `(G, B)` is its own unrolling to `u` (`IsRollable.isUnrolling_self`), so every
 unrolling has the graph `G` (`IsUnrolling.graph_eq_of_offJoints`) and the balanced cycles `B`
 (`IsUnrolling.balanced_eq_of_offJoints`). A link at `u` on a cycle meets exactly one other edge of
-the cycle at `u` (`IsCycle.exists_partner`). So a cycle through `u` that is not a loop meets
-`Σ(u) = δ(u)` in two links, and these lie in one unbalancing class exactly when the cycle is
-balanced (`IsRollable.balanced_iff`). A cycle of at least two edges that misses `u` meets no class
-and is balanced, and a loop leaves `B̂` exactly when it is a joint.
+the cycle at `u` (`IsCycle.exists_partner`). So a balanced cycle, which has no joint, meets each
+unbalancing class in zero or two edges: `B ⊆ B̂` for every `J` (`IsRollable.balanced_subset`). When
+`J` is empty, a cycle through `u` that is not a loop meets `Σ(u) = δ(u)` in two links, and these
+lie in one unbalancing class exactly when the cycle is balanced (`IsRollable.balanced_iff`). A cycle
+of at least two edges that misses `u` is balanced, and a loop leaves `B̂` exactly when it is a joint.
 -/
 
 @[expose] public section
@@ -69,17 +70,44 @@ variable {Ω Ω' : BiasedGraph V E} {u : V}
 theorem unrollGraph_of_offJoints (hJ : Ω.offJoints u = ∅) : Ω.unrollGraph u = Ω.graph :=
   eq_of_tail_head rfl (funext fun e => ite_eq_right (hJ ▸ Set.notMem_empty e))
 
+/-- `B ⊆ B̂`: a balanced cycle has no joint, so it is a cycle of `Ĝ`, and its edges in `Σ(u)` are
+two links at `u` in one class or none, so it meets each class in zero or two edges. -/
+theorem IsRollable.balanced_subset (hΩ : Ω.IsRollable u) : Ω.balanced ⊆ Ω.unrollBalanced u := by
+  intro C hCB
+  have hC := Ω.isCycle_of_mem C hCB
+  have hJ : ∀ {x}, x ∈ C → x ∉ Ω.offJoints u := fun {x} hxC hxJ =>
+    hxJ.1.not_mem_of_balanced hCB hxC
+  have hS : ∀ {x}, x ∈ C → x ∈ Ω.sigmaStar u → x ∈ Ω.linkStar u := fun {x} hxC hx =>
+    Or.resolve_right hx (hJ hxC)
+  have hC' : (Ω.unrollGraph u).IsCycle C := by
+    simpa using hC.map (G := Ω.unrollGraph u) id Function.injective_id
+      fun x hx => ⟨rfl, ite_eq_right (hJ hx)⟩
+  refine ⟨⟨hC', fun e he => ?_⟩, fun e hCe hj => hj.2 (hCe ▸ hCB)⟩
+  rcases (C ∩ Ω.unbalancingClass u e).eq_empty_or_nonempty with h0 | ⟨f, hfC, hfe⟩
+  · exact Or.inl (Set.encard_eq_zero.2 h0)
+  have hfL := hS hfC hfe.1
+  obtain ⟨g, hgC, hgf, hgu, huniq⟩ := hC.exists_partner hfC hfL.1 hfL.2
+  have hgL : g ∈ Ω.linkStar u := by
+    refine ⟨fun hll => hgf ?_, hgu⟩
+    rw [hC.eq_singleton_of_loop hgC hll] at hfC
+    exact (Set.mem_singleton_iff.1 hfC).symm
+  have hge : g ∈ Ω.unbalancingClass u e := ⟨Or.inl hgL, hΩ.unbalancingRel_trans he hfe.1
+    (Or.inl hgL) hfe.2 (Or.inr (Or.inl ⟨C, hCB, hfC, hgC⟩))⟩
+  refine Or.inr ((congrArg Set.encard (Set.ext fun x => ⟨fun hx => ?_, ?_⟩)).trans
+    (Set.encard_pair hgf.symm))
+  · exact huniq x hx.1 (hS hx.1 hx.2.1).2
+  · rintro (rfl | rfl)
+    exacts [⟨hfC, hfe⟩, ⟨hgC, hge⟩]
+
 /-- With `J` empty the corrected `B̂` is `B`: a cycle of `G` is balanced if and only if it meets
 each unbalancing class in zero or two edges and is not a joint. -/
 theorem IsRollable.unrollBalanced_eq (hΩ : Ω.IsRollable u) (hJ : Ω.offJoints u = ∅) :
     Ω.unrollBalanced u = Ω.balanced := by
-  have hG := unrollGraph_of_offJoints hJ
   have hS : ∀ {e}, e ∈ Ω.sigmaStar u → e ∈ Ω.linkStar u := fun {e} he =>
     Or.resolve_right he fun hJe => Set.notMem_empty e (hJ ▸ hJe)
-  ext C
-  constructor
-  · rintro ⟨⟨hC, hcls⟩, hjoint⟩
-    rw [hG] at hC
+  refine Set.Subset.antisymm ?_ hΩ.balanced_subset
+  · rintro C ⟨⟨hC, hcls⟩, hjoint⟩
+    rw [unrollGraph_of_offJoints hJ] at hC
     by_contra hCB
     by_cases hloop : ∃ l ∈ C, Ω.graph.tail l = Ω.graph.head l
     · obtain ⟨l, hl, hll⟩ := hloop
@@ -102,24 +130,6 @@ theorem IsRollable.unrollBalanced_eq (hΩ : Ω.IsRollable u) (hJ : Ω.offJoints 
     · exact hCB ((hΩ.balanced_iff heL (hS hgS) hge.symm hC (Ω.isCycle_of_mem D hD) heC hgC heD
         hgD).2 hD)
     · exact Set.notMem_empty e (hJ ▸ heJ)
-  · intro hCB
-    have hC := Ω.isCycle_of_mem C hCB
-    refine ⟨⟨hG ▸ hC, fun e he => ?_⟩, fun e hCe hj => hj.2 (hCe ▸ hCB)⟩
-    rcases (C ∩ Ω.unbalancingClass u e).eq_empty_or_nonempty with h0 | ⟨f, hfC, hfe⟩
-    · exact Or.inl (Set.encard_eq_zero.2 h0)
-    have hfL := hS hfe.1
-    obtain ⟨g, hgC, hgf, hgu, huniq⟩ := hC.exists_partner hfC hfL.1 hfL.2
-    have hgL : g ∈ Ω.linkStar u := by
-      refine ⟨fun hll => hgf ?_, hgu⟩
-      rw [hC.eq_singleton_of_loop hgC hll] at hfC
-      exact (Set.mem_singleton_iff.1 hfC).symm
-    have hge : g ∈ Ω.unbalancingClass u e := ⟨Or.inl hgL, hΩ.unbalancingRel_trans he hfe.1
-      (Or.inl hgL) hfe.2 (Or.inr (Or.inl ⟨C, hCB, hfC, hgC⟩))⟩
-    refine Or.inr ((congrArg Set.encard (Set.ext fun x => ⟨fun hx => ?_, ?_⟩)).trans
-      (Set.encard_pair hgf.symm))
-    · exact huniq x hx.1 (hS hx.2.1).2
-    · rintro (rfl | rfl)
-      exacts [⟨hfC, hfe⟩, ⟨hgC, hge⟩]
 
 /-- §2.5: "If `J` is empty, then set `(Ĝ, B̂) = (G, B)`": then `(G, B)` is its own unrolling. -/
 theorem IsRollable.isUnrolling_self (hΩ : Ω.IsRollable u) (hJ : Ω.offJoints u = ∅) :
@@ -158,6 +168,8 @@ example := (isCycle_pair (G := pumpkin) (e := 0) (f := 1) (Or.inl ⟨rfl, rfl⟩
   (by decide) (by decide)).exists_partner (u := 0) (f := 0) (by simp) (by decide) (Or.inl rfl)
 
 example := BiasedGraph.unrollGraph_of_offJoints centreLoop_offJoints
+
+example := centreLoop_isRollable.balanced_subset
 
 example := centreLoop_isRollable.unrollBalanced_eq centreLoop_offJoints
 

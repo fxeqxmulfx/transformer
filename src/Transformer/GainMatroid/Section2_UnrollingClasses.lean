@@ -14,7 +14,7 @@ Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5:
 The first two claims are `IsUnrolling.isBalancingVertex` and `IsUnrolling.sigmaStar_eq`. The third,
 and the source's later "`J` is an unbalancing class of `Σ_Ĝ(u)`", fail when two joints of `J` lie in
 different components of `G − u` (`unbalancingClass_printed_fails`, on `twoJoints`). The corrected
-`IsUnrolling.unbalancingClass_eq` assumes `JointsConnected`.
+`IsUnrolling.unbalancingClass_eq`, in `Section2_UnrollingSameClasses`, assumes `JointsConnected`.
 
 This module also states what the source leaves to a check by comparing circuits: `(Ĝ, B̂)` is a
 biased graph and `F(Ĝ, B̂) = F(G, B)`. Both use the corrected `B̂` of `unrollBalanced`, which is `B`
@@ -126,13 +126,6 @@ theorem IsUnrolling.isFrameCircuit_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRo
     Ω'.IsFrameCircuit X ↔ Ω.IsFrameCircuit X := by
   sorry
 
-/-- §2.5: "the unbalancing classes of `Σ_G(u)` and of `Σ_Ĝ(u)` are the same", for joints of `J` in
-one component of `G − u`. -/
-theorem IsUnrolling.unbalancingClass_eq (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
-    (hJ : Ω.JointsConnected u) {e : E} (he : e ∈ Ω.sigmaStar u) :
-    Ω'.unbalancingClass u e = Ω.unbalancingClass u e := by
-  sorry
-
 end BiasedGraph
 
 /-- The single joint of `digonJoint` is connected to itself off `0`. -/
@@ -173,8 +166,5 @@ example := twoJoints_isRollable.exists_isUnrolling
 example := twoJoints_isUnrolling.isFrameCircuit_iff twoJoints_isRollable {4}
 
 example := centreJoint_isUnrolling.isFrameCircuit_iff centreJoint_isRollable {4}
-
-example := digonJoint_isRollable.exists_isUnrolling.imp fun _ h =>
-  h.unbalancingClass_eq digonJoint_isRollable digonJoint_jointsConnected (Or.inl digonJoint_link₀)
 
 end Transformer.GainMatroid
