@@ -95,9 +95,8 @@ theorem eq_singleton_of_notMem (h : IsLoopUnrolling Ω H ι z U) {C : Set E}
 theorem tail_eq_of_mem_verts (h : IsLoopUnrolling Ω H ι z U) {e : E} (he : e ∈ U) {v : V}
     (hv : v ∈ Ω.graph.verts {e}) : Ω.graph.tail e = v := by
   obtain ⟨g, hg, hgv⟩ := mem_verts.1 hv
-  rw [Set.mem_singleton_iff] at hg
-  subst hg
-  exact hgv.elim id fun hh => (h.loop g he).trans hh
+  obtain rfl := Set.mem_singleton_iff.1 hg
+  exact hgv.elim id fun hh => (h.loop _ he).trans hh
 
 end IsLoopUnrolling
 
@@ -175,8 +174,7 @@ theorem triangle_isLoopUnrolling :
       ((triangle.gainBiased (1 : Fin 3 → ℚˣ)).linkStar 0) :=
   (gainBiased_one_isBalanced triangle).isLoopUnrolling_rollUp 0
 
-example := IsCycle.tail_eq_head_of_singleton (G := twoLoops) (e := true)
-  (isCycle_singleton_of_loop rfl)
+example := (isCycle_singleton_of_loop (G := twoLoops) (e := true) rfl).tail_eq_head_of_singleton
 
 example := triangle_isLoopUnrolling.isJoint triangle_zero_mem_linkStar
 
@@ -194,5 +192,9 @@ example := triangle_isLoopUnrolling.tail_eq_of_mem_verts triangle_zero_mem_linkS
   (mem_verts.2 ⟨0, rfl, Or.inl rfl⟩)
 
 example := isLoopUnrolling_unrollToNew twoLoops_unbalanced_singleton
+
+example := (gainBiased_one_isBalanced (Γ := ℚˣ) triangle).isLoopUnrolling_rollUp 1
+
+example := twoLoops_unbalanced_singleton {true} ⟨isCycle_singleton_of_loop rfl, Set.notMem_empty _⟩
 
 end Transformer.GainMatroid

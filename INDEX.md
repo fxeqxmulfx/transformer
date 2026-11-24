@@ -19204,7 +19204,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`isFrameCircuit_iff_unrollToNew`](src/Transformer/GainMatroid/Section2_LoopCircuits.lean#L143) | theorem | proved |
 | [`IsBalanced.isFrameCircuit_rollUp`](src/Transformer/GainMatroid/Section2_LoopCircuits.lean#L150) | theorem | proved |
 
-**[Transformer.GainMatroid.Section2_LoopUnrolling](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean)** — 198 lines
+**[Transformer.GainMatroid.Section2_LoopUnrolling](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean)** — 200 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -19215,13 +19215,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`keep_of_isLink`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L84) | theorem | proved |
 | [`eq_singleton_of_notMem`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L89) | theorem | proved |
 | [`tail_eq_of_mem_verts`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L95) | theorem | proved |
-| [`unrollToNew`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L106) | def |  |
-| [`isLoopUnrolling_unrollToNew`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L111) | theorem | proved |
-| [`IsBalanced.isLoopUnrolling_rollUp`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L133) | theorem | proved |
-| [`twoLoops_unbalanced_singleton`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L156) | theorem | proved |
-| [`triangle_zero_mem_linkStar`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L162) | theorem | proved |
-| [`triangle_one_notMem_linkStar`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L167) | theorem | proved |
-| [`triangle_isLoopUnrolling`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L172) | theorem | proved |
+| [`unrollToNew`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L105) | def |  |
+| [`isLoopUnrolling_unrollToNew`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L110) | theorem | proved |
+| [`IsBalanced.isLoopUnrolling_rollUp`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L132) | theorem | proved |
+| [`twoLoops_unbalanced_singleton`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L155) | theorem | proved |
+| [`triangle_zero_mem_linkStar`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L161) | theorem | proved |
+| [`triangle_one_notMem_linkStar`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L166) | theorem | proved |
+| [`triangle_isLoopUnrolling`](src/Transformer/GainMatroid/Section2_LoopUnrolling.lean#L171) | theorem | proved |
 
 **[Transformer.GainMatroid.Section2_MatrixContractions](src/Transformer/GainMatroid/Section2_MatrixContractions.lean)** — 189 lines
 
