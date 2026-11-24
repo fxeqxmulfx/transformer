@@ -121,10 +121,11 @@ theorem graph_rollUp_offJoints (h : Ω.IsUnrolling u Ω') :
   rw [h.graph_eq]
   exact Ω.rollUpGraph_unrollGraph u
 
-/-- §2.5: the balanced cycles of `(G_J, B_J)` are `B`. -/
+/-- §2.5: the balanced cycles of `(G_J, B_J)` are `B`, the cycles of `B̂` that avoid `J`. -/
 theorem balanced_rollUp_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) :
-    (Ω'.rollUp u (Ω.offJoints u)).balanced = Ω.balanced := by
-  sorry
+    (Ω'.rollUp u (Ω.offJoints u)).balanced = Ω.balanced :=
+  (congrArg (fun B : Set (Set E) => {C ∈ B | Disjoint C (Ω.offJoints u)}) h.balanced_eq).trans
+    hΩ.unrollBalanced_sep_disjoint
 
 end IsUnrolling
 
