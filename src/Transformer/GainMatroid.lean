@@ -47,6 +47,12 @@ public import Transformer.GainMatroid.Section2_K4Flats
 public import Transformer.GainMatroid.Section2_TriangleConnection
 public import Transformer.GainMatroid.Section2_ConnectionFlats
 public import Transformer.GainMatroid.Section2_ConnectionMatroid
+public import Transformer.GainMatroid.Section2_DualFlats
+public import Transformer.GainMatroid.Section2_K4NewColumns
+public import Transformer.GainMatroid.Section2_CoconnectionMatrix
+public import Transformer.GainMatroid.Section2_CoconnectionMaps
+public import Transformer.GainMatroid.Section2_CoconnectionFlats
+public import Transformer.GainMatroid.Section2_CoconnectionDeletion
 public import Transformer.GainMatroid.Section2_ExchangedMatrices
 public import Transformer.GainMatroid.Section2_BiasedMatroids
 public import Transformer.GainMatroid.Section2_FullRankLift
@@ -170,8 +176,14 @@ is projectively equivalent to `I(K₄)`. `Section2_MatrixMatroids` builds the ma
 reads its flats off spans, and `Section2_K4Flats` gives the flats of `M(K₄)` by its triangles.
 `Section2_TriangleConnection` adjoins `I(K₄)` to a matrix across a triangle,
 `Section2_ConnectionFlats` and `Section2_ConnectionMatroid` prove that its matroid is the
-generalized parallel connection, and `Section2_ExchangedMatrices` proves that `Δ_X A` represents
-`Δ_X M(A)` and states the same for `∇_Y A`. `Section2_BiasedMatroids` states what the source cites
+generalized parallel connection. `Section2_DualFlats` reads the flats and independent sets of the
+dual of a represented matroid off spans. `Section2_K4NewColumns` gives the edges of `K₄` on the
+rows of a split vertex, `Section2_CoconnectionMatrix` splits the vertex of a triad into a
+triangle, `Section2_CoconnectionMaps` relates the columns of the two matrices, and
+`Section2_CoconnectionFlats` and `Section2_CoconnectionDeletion` prove that the dual of its matroid
+is the generalized parallel connection of `M(A)*` and `M(K₄)`, and that deleting the triad leaves
+`M(∇_Y A)*`. `Section2_ExchangedMatrices` proves that `Δ_X A` represents `Δ_X M(A)` and `∇_Y A`
+represents `∇_Y M(A)`. `Section2_BiasedMatroids` states what the source cites
 from Zaslavsky on `F(G, B)`, `L(G, B)`, their canonical matrices and minors, and proves that the
 biased graph determines them and that they agree without vertex-disjoint unbalanced cycles.
 `Section2_FullRankLift` deletes one row per component of a canonical lift matrix, and shows that the

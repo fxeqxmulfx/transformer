@@ -1,5 +1,7 @@
 module
 
+public import Transformer.GainMatroid.Section2_CoconnectionDeletion
+public import Transformer.GainMatroid.Section2_CoconnectionFlats
 public import Transformer.GainMatroid.Section2_ConnectionMatroid
 public import Transformer.GainMatroid.Section2_K4Matrix
 
@@ -16,8 +18,11 @@ last three columns of `I(K₄)`. Then `M(∇_Y A) = ∇_Y M(A)`."
 the forms `IsTriangleForm` and `IsTriadForm`. As in the source, `Y` is a triad. Brylawski's paper is
 not among the local sources. The first is proved here: the matroid of `connectionMatrix` is the
 generalized parallel connection of `IsDeltaMatroid` (`IsTriangleForm.isFlat_connection_iff`), and
-deleting `X` from it leaves `Δ_X A` (`deltaMatrix_eq_connectionMatrix`). The second is left
-unproved.
+deleting `X` from it leaves `Δ_X A` (`deltaMatrix_eq_connectionMatrix`). The second follows by
+duality, since `∇_Y M = (Δ_Y M*)*`: the dual of the matroid of `coconnectionMatrix` is the
+generalized parallel connection of `M(A)*` and `M(K₄)` across `Y`
+(`IsTriadForm.isFlat_dual_coconnection_iff`), and deleting `Y` from it leaves `M(∇_Y A)*`
+(`IsTriadForm.dual_comap_coconnection`).
 -/
 
 @[expose] public section
@@ -49,7 +54,13 @@ theorem isNablaMatroid_of_isTriadForm [DecidableEq E] [DecidableEq R] [Finite E]
     (ht : M✶.IsCircuit {a, b, c})
     (hA' : IsMatrixRepresentation M' (nablaMatrix A a b c x y z)) :
     IsNablaMatroid M a b c M' := by
-  sorry
+  have hQ := matrixMatroid_isMatrixRepresentation (coconnectionMatrix A a b c x y z)
+  refine ⟨_, ⟨hform.a_ne_b, hform.a_ne_c, hform.b_ne_c, ht,
+    (matrixMatroid (coconnectionMatrix A a b c x y z))✶, ?_, hform.isFlat_dual_coconnection_iff hA,
+    rfl⟩, ?_⟩
+  · rw [Matroid.dual_ground, Matroid.dual_ground, hQ.1, hA.1, Set.image_univ,
+      Set.range_inl_union_range_inr]
+  · rw [hform.dual_comap_coconnection hA', Matroid.dual_dual]
 
 /-- The triangle of `U_{2,3}` over `𝔽₂`, with the last three columns of `I(K₄)`. -/
 def triangleMatrix : Matrix (Fin 3) (Fin 3) (ZMod 2) := !![1, 0, 1; 1, 1, 0; 0, 1, 1]
