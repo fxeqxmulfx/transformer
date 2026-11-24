@@ -1,6 +1,6 @@
 module
 
-public import Transformer.GainMatroid.Section2_RerouteBias
+public import Transformer.GainMatroid.Section2_LinkTheta
 
 /-!
 # The relation of §2.5 on the edges at a balancing vertex
@@ -9,9 +9,10 @@ Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5. The source cites its refe
 [AlmostBalancedReps], which is not among the local sources, for two claims about a biased graph
 with a unique balancing vertex `u` after deleting its joints: all cycles through two edges of `δ(u)`
 have the same bias (`IsRollable.balanced_iff`), and `∼` is an equivalence relation
-(`IsRollable.unbalancingRel_trans`). The first is proved here: every cycle that misses `u` is
-balanced, so by `BiasedGraph.insert_mem_balanced_iff` two cycles through the same two edges at `u`
-have one bias. The source's next sentence gives the dichotomy `IsRollable.isCircuit_or_indep`. The
+(`IsRollable.unbalancingRel_trans`). Both are proved here: every cycle that misses `u` is balanced,
+so by `BiasedGraph.insert_mem_balanced_iff` two cycles through the same two edges at `u` have one
+bias, and a theta through three links at `u` (`BiasedGraph.exists_balanced_of_links`) makes `∼`
+transitive. The source's next sentence gives the dichotomy `IsRollable.isCircuit_or_indep`. The
 source says "each pair" of edges; these claims are for two distinct edges, since a single edge lies
 on balanced and on unbalanced cycles alike.
 
@@ -73,30 +74,42 @@ theorem IsRollable.isCircuit_or_indep {M : Matroid E} (h : Ω.IsRollable u)
   sorry
 
 /-- §2.5: "`∼` is an equivalence relation", citing [AlmostBalancedReps, Lemma 1.4]. Reflexivity is
-the first clause of `UnbalancingRel` and symmetry is `UnbalancingRel.symm`. -/
+the first clause of `UnbalancingRel` and symmetry is `UnbalancingRel.symm`. Transitivity is proved
+here: no balanced cycle contains a joint, and balanced cycles through `e, f` and through `f, g`
+give one through `e` and `g` (`exists_balanced_of_links`, with `IsRollable.balanced_iff`). -/
 theorem IsRollable.unbalancingRel_trans (h : Ω.IsRollable u) {e f g : E}
     (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u) (hg : g ∈ Ω.sigmaStar u)
     (hef : Ω.UnbalancingRel u e f) (hfg : Ω.UnbalancingRel u f g) : Ω.UnbalancingRel u e g := by
-  sorry
+  have hlink : ∀ {c : E} {B : Set E}, c ∈ Ω.sigmaStar u → B ∈ Ω.balanced → c ∈ B →
+      c ∈ Ω.linkStar u := fun hc hB hcB =>
+    Or.resolve_right hc fun hJ => hJ.1.not_mem_of_balanced hB hcB
+  rcases hef with rfl | ⟨C, hC, heC, hfC⟩ | ⟨heJ, hfJ⟩
+  · exact hfg
+  · rcases hfg with rfl | ⟨D, hD, hfD, hgD⟩ | ⟨hfJ, -⟩
+    · exact Or.inr (Or.inl ⟨C, hC, heC, hfC⟩)
+    · by_cases hef : e = f
+      · subst hef
+        exact Or.inr (Or.inl ⟨D, hD, hfD, hgD⟩)
+      by_cases hfg : f = g
+      · subst hfg
+        exact Or.inr (Or.inl ⟨C, hC, heC, hfC⟩)
+      by_cases heg : e = g
+      · exact Or.inl heg
+      have heL := hlink he hC heC
+      have hfL := hlink hf hC hfC
+      have hgL := hlink hg hD hgD
+      have hC' := Ω.isCycle_of_mem _ hC
+      have hD' := Ω.isCycle_of_mem _ hD
+      exact Or.inr (Or.inl (exists_balanced_of_links hef hfg heg heL.2 hfL.2 hgL.2 hC' hD' heC hfC
+        hfD hgD (fun _ hB heB hfB => (h.balanced_iff heL hfL hef hB hC' heB hfB heC hfC).2 hC)
+        fun _ hB hfB hgB => (h.balanced_iff hfL hgL hfg hB hD' hfB hgB hfD hgD).2 hD))
+    · exact (hfJ.1.not_mem_of_balanced hC hfC).elim
+  · rcases hfg with rfl | ⟨D, hD, hfD, -⟩ | ⟨-, hgJ⟩
+    · exact Or.inr (Or.inr ⟨heJ, hfJ⟩)
+    · exact (hfJ.1.not_mem_of_balanced hD hfD).elim
+    · exact Or.inr (Or.inr ⟨heJ, hgJ⟩)
 
 end BiasedGraph
-
-/-- An edge between `x` and `y` misses every other vertex. -/
-theorem OrientedGraph.Joins.ends_ne {G : OrientedGraph V E} {c : E} {x y v : V}
-    (hc : G.Joins c x y) (hx : v ≠ x) (hy : v ≠ y) : G.tail c ≠ v ∧ G.head c ≠ v := by
-  rcases hc with ⟨h₁, h₂⟩ | ⟨h₁, h₂⟩ <;> rw [h₁, h₂]
-  · exact ⟨hx.symm, hy.symm⟩
-  · exact ⟨hy.symm, hx.symm⟩
-
-/-- Two edges between `x` and `y` miss every other vertex. -/
-theorem OrientedGraph.not_mem_verts_pair {G : OrientedGraph V E} {c d : E} {x y v : V}
-    (hc : G.Joins c x y) (hd : G.Joins d x y) (hx : v ≠ x) (hy : v ≠ y) : v ∉ G.verts {c, d} := by
-  rw [mem_verts]
-  rintro ⟨f, (rfl | rfl), hv | hv⟩
-  · exact (hc.ends_ne hx hy).1 hv
-  · exact (hc.ends_ne hx hy).2 hv
-  · exact (hd.ends_ne hx hy).1 hv
-  · exact (hd.ends_ne hx hy).2 hv
 
 /-- A contrabalanced graph on three vertices with a digon from `0` to each of the others, whose
 links all meet `0`, has `0` as its unique balancing vertex after deleting its joints. -/
