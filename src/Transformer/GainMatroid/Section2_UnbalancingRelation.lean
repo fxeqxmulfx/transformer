@@ -1,6 +1,6 @@
 module
 
-public import Transformer.GainMatroid.Section2_UnbalancingClasses
+public import Transformer.GainMatroid.Section2_RerouteBias
 
 /-!
 # The relation of §2.5 on the edges at a balancing vertex
@@ -9,9 +9,11 @@ Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5. The source cites its refe
 [AlmostBalancedReps], which is not among the local sources, for two claims about a biased graph
 with a unique balancing vertex `u` after deleting its joints: all cycles through two edges of `δ(u)`
 have the same bias (`IsRollable.balanced_iff`), and `∼` is an equivalence relation
-(`IsRollable.unbalancingRel_trans`). The source's next sentence gives the dichotomy
-`IsRollable.isCircuit_or_indep`. The source says "each pair" of edges; these claims are for two
-distinct edges, since a single edge lies on balanced and on unbalanced cycles alike.
+(`IsRollable.unbalancingRel_trans`). The first is proved here: every cycle that misses `u` is
+balanced, so by `BiasedGraph.insert_mem_balanced_iff` two cycles through the same two edges at `u`
+have one bias. The source's next sentence gives the dichotomy `IsRollable.isCircuit_or_indep`. The
+source says "each pair" of edges; these claims are for two distinct edges, since a single edge lies
+on balanced and on unbalanced cycles alike.
 
 `isRollable_of_digons` gives the hypothesis on any graph with two digons at a vertex whose links all
 meet that vertex, and `digonJoint` is the instance used for the examples of §2.5.
@@ -31,12 +33,32 @@ variable {Ω : BiasedGraph V E} {u : V}
 
 /-- §2.5: "for each pair `e, e′ ∈ δ(u)`, either all cycles containing both `e` and `e′` are
 balanced or all cycles containing both `e` and `e′` are unbalanced". The source cites
-[AlmostBalancedReps, Section 1]. -/
+[AlmostBalancedReps, Section 1]. Proved here: a cycle of two openly disjoint paths that miss `u` is
+balanced, since `u` is on every unbalanced cycle of at least two edges, and the two cycles are `e`,
+`f` and two paths between their other ends that miss `u` (`insert_mem_balanced_iff`). -/
 theorem IsRollable.balanced_iff (h : Ω.IsRollable u) {e f : E} (he : e ∈ Ω.linkStar u)
     (hf : f ∈ Ω.linkStar u) (hne : e ≠ f) {C D : Set E} (hC : Ω.graph.IsCycle C)
     (hD : Ω.graph.IsCycle D) (heC : e ∈ C) (hfC : f ∈ C) (heD : e ∈ D) (hfD : f ∈ D) :
     C ∈ Ω.balanced ↔ D ∈ Ω.balanced := by
-  sorry
+  have hbal : ∀ {a b : V} (A B : Ω.graph.Walk a b), a ≠ b → A.IsPath → B.IsPath →
+      Walk.Openly A B → u ∉ A.support → u ∉ B.support → A.edgeSet ∪ B.edgeSet ∈ Ω.balanced := by
+    intro a b A B hab hA hB hAB huA huB
+    by_contra hnot
+    obtain ⟨g, hg⟩ := List.exists_mem_of_ne_nil _ (Walk.edges_ne_nil_of_ne hab A)
+    obtain ⟨g', hg'⟩ := List.exists_mem_of_ne_nil _ (Walk.edges_ne_nil_of_ne hab B)
+    have hsub : ({g, g'} : Set E) ⊆ A.edgeSet ∪ B.edgeSet :=
+      Set.insert_subset_iff.2 ⟨Or.inl hg, Set.singleton_subset_iff.2 (Or.inr hg')⟩
+    have hgg : g ≠ g' := fun h => hAB.edges g hg (h ▸ hg')
+    have h2 : 2 ≤ (A.edgeSet ∪ B.edgeSet).encard :=
+      (Set.encard_pair hgg).symm.le.trans (Set.encard_le_encard hsub)
+    obtain ⟨c, hc, hcu⟩ := mem_verts.1 ((h.unique u).2 rfl _
+      ⟨⟨a, _, hAB.isCycleWalk hab hA hB, Walk.edgeSet_append_reverse A B⟩, hnot⟩ h2)
+    rcases hc with hc | hc
+    · exact huA (Walk.mem_support_of_mem_edges (show c ∈ A.edges from hc) hcu)
+    · exact huB (Walk.mem_support_of_mem_edges (show c ∈ B.edges from hc) hcu)
+  obtain ⟨P, hP, huP, rfl⟩ := hC.exists_isPath_of_mem hne heC hfC he.2 hf.2
+  obtain ⟨Q, hQ, huQ, rfl⟩ := hD.exists_isPath_of_mem hne heD hfD he.2 hf.2
+  exact insert_mem_balanced_iff hbal (joins_otherEnd he.2) (joins_otherEnd hf.2) hP hQ huP huQ
 
 /-- §2.5: for each pair of edges `e₁, e₂` of `Σ(u)`, "either every minimal path linking the
 endpoints of `e₁` and `e₂` in `G − u` together with `{e₁, e₂}` forms a circuit in `F(G, B)`, or each

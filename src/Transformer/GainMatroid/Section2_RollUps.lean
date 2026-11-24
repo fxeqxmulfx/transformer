@@ -51,13 +51,6 @@ theorem rollUpGraph_tail_of_notMem {u : V} {U : Set E} {e : E} (he : e ∉ U) :
 theorem rollUpGraph_head_of_notMem {u : V} {U : Set E} {e : E} (he : e ∉ U) :
     (G.rollUpGraph u U).head e = G.head e := ite_eq_right he
 
-/-- The end of a link away from `u` is not `u`. -/
-theorem otherEnd_ne {u : V} {e : E} (hl : G.IsLink e) : G.otherEnd u e ≠ u := by
-  unfold otherEnd
-  split_ifs with ht
-  · exact fun hh => hl (ht.trans hh.symm)
-  · exact ht
-
 /-- A theta whose edges have the same ends in `G` is a theta of `G`. -/
 theorem IsTheta.exists_of_agree {H : OrientedGraph V E} {x y : V} {P Q R : H.Walk x y}
     (hT : IsTheta P Q R) (hP : ∀ g ∈ P.edges, G.tail g = H.tail g ∧ G.head g = H.head g)
