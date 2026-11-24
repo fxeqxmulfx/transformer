@@ -76,6 +76,12 @@ public import Transformer.GainMatroid.Section2_RollUpForward
 public import Transformer.GainMatroid.Section2_RollUpThetas
 public import Transformer.GainMatroid.Section2_RollUpBackward
 public import Transformer.GainMatroid.Section2_RollUpCircuits
+public import Transformer.GainMatroid.Section2_ExchangePairs
+public import Transformer.GainMatroid.Section2_ExchangeCycles
+public import Transformer.GainMatroid.Section2_ExchangeLabels
+public import Transformer.GainMatroid.Section2_ExchangeBalance
+public import Transformer.GainMatroid.Section2_ExchangeSwitching
+public import Transformer.GainMatroid.Section2_ExchangeRealizes
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -132,7 +138,7 @@ small graphs, and `Section2_DeltaYMatroids` states Proposition 2.8 and shows tha
 their projective classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed
 and states it for a coindependent triangle. `Section2_ExchangeMatrices` defines `I(K₄)` and the
 exchanges of matrices and proves Proposition 2.11 for identity gains on the exchanged edges.
-`Section2_GainExchange` refutes Proposition 2.10 (i) as printed and states it for gain functions
+`Section2_GainExchange` refutes Proposition 2.10 (i) as printed and proves it for gain functions
 that are the identity on the triangle. `Section2_ExchangeForms` proves that projectively equivalent
 matrices represent the same matroid and brings a represented triangle to the last three columns of
 `I(K₄)`. `Section2_TriadForms` gives the row vector of a cocircuit, `Section2_TriadColumns` refutes
@@ -172,6 +178,11 @@ ears, and `Section2_RollUpCycles` describes the cycles, paths and handcuffs of a
 `Section2_RollUpJoints` and `Section2_RollUpForward` prove that a frame circuit of a roll-up is one
 of the biased graph rolled up, `Section2_RollUpThetas` and `Section2_RollUpBackward` the converse,
 and `Section2_RollUpCircuits` deduces `F(G_U, B_U) = F(Ĝ, B̂) = F(G, B)`.
+`Section2_ExchangePairs` collects in `IsExchange` the graphs on both sides of a Δ-Y exchange.
+`Section2_ExchangeCycles` and `Section2_ExchangeLabels` match their cycles,
+`Section2_ExchangeBalance` the balanced cycles through a balanced triangle, and
+`Section2_ExchangeSwitching` the balanced cycles of a gain function that is the identity on the
+triangle. `Section2_ExchangeRealizes` deduces Proposition 2.10 (i) for such gain functions.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

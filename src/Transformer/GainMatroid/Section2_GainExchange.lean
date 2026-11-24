@@ -1,6 +1,7 @@
 module
 
 public import Transformer.GainMatroid.Section2_ExchangeMatroids
+public import Transformer.GainMatroid.Section2_ExchangeRealizes
 
 /-!
 # Gain functions under a Δ-Y exchange: Proposition 2.10
@@ -91,13 +92,15 @@ variable {Ω : BiasedGraph V E} {Ω' : BiasedGraph (Option V) E} {a b c : E} {x 
 identity on `X`, realizing `(G, B)` and realizing `Δ_X (G, B)` are equivalent. As printed the
 statement has no hypothesis on `φ` and is false (`proposition2_10_fails`). -/
 theorem realizes_iff {Γ : Type*} [Group Γ] (h : Ω.IsDeltaExchange a b c x y z Ω') {φ : E → Γ}
-    (ha : φ a = 1) (hb : φ b = 1) (hc : φ c = 1) : Ω.Realizes φ ↔ Ω'.Realizes φ := by
-  sorry
+    (ha : φ a = 1) (hb : φ b = 1) (hc : φ c = 1) : Ω.Realizes φ ↔ Ω'.Realizes φ :=
+  h.isExchange.realizes_iff h.balanced h.balanced_eq fun e he => by
+    rcases he with rfl | rfl | rfl <;> assumption
 
 /-- **Proposition 2.10 (i)**, additive case, corrected as in `realizes_iff`. -/
 theorem addRealizes_iff {F : Type*} [Field F] (h : Ω.IsDeltaExchange a b c x y z Ω') {ψ : E → F}
-    (ha : ψ a = 0) (hb : ψ b = 0) (hc : ψ c = 0) : Ω.AddRealizes ψ ↔ Ω'.AddRealizes ψ := by
-  sorry
+    (ha : ψ a = 0) (hb : ψ b = 0) (hc : ψ c = 0) : Ω.AddRealizes ψ ↔ Ω'.AddRealizes ψ :=
+  h.isExchange.addRealizes_iff h.balanced h.balanced_eq fun e he => by
+    rcases he with rfl | rfl | rfl <;> assumption
 
 /-- **Proposition 2.10 (ii)**, multiplicative case: a bijection of switching classes that fixes the
 class of every gain function that is the identity on `X` and realizes both biased graphs. -/
