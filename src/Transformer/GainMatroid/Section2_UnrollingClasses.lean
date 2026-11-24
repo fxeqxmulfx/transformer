@@ -16,9 +16,10 @@ and the source's later "`J` is an unbalancing class of `Σ_Ĝ(u)`", fail when tw
 different components of `G − u` (`unbalancingClass_printed_fails`, on `twoJoints`). The corrected
 `IsUnrolling.unbalancingClass_eq`, in `Section2_UnrollingSameClasses`, assumes `JointsConnected`.
 
-This module also states what the source leaves to a check by comparing circuits: `(Ĝ, B̂)` is a
-biased graph and `F(Ĝ, B̂) = F(G, B)`. Both use the corrected `B̂` of `unrollBalanced`, which is `B`
-when `J` is empty (`Section2_UnrollingEmptyJ`).
+This module also states what the source leaves to a check by comparing circuits:
+`F(Ĝ, B̂) = F(G, B)`, for the corrected `B̂` of `unrollBalanced`, which is `B` when `J` is empty
+(`Section2_UnrollingEmptyJ`). That `(Ĝ, B̂)` is a biased graph is
+`IsRollable.exists_isUnrolling`, in `Section2_UnrollingTheta`.
 -/
 
 @[expose] public section
@@ -116,10 +117,6 @@ namespace BiasedGraph
 
 variable {Ω Ω' : BiasedGraph V E} {u : V}
 
-/-- §2.5: `(Ĝ, B̂)` is a biased graph, for the corrected `B̂` of `unrollBalanced`. -/
-theorem IsRollable.exists_isUnrolling (h : Ω.IsRollable u) : ∃ Ω', Ω.IsUnrolling u Ω' := by
-  sorry
-
 /-- §2.5: "`F(Ĝ, B̂) = F(G, B)`", compared by circuits as in the source, for the corrected `B̂` of
 `unrollBalanced`. -/
 theorem IsUnrolling.isFrameCircuit_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) (X : Set E) :
@@ -152,8 +149,6 @@ example := twoJoints_isUnrolling.linkStar_eq
 example := twoJoints_isUnrolling.sigmaStar_eq
 
 example (M : Matroid (Fin 6)) := twoJoints_isUnrolling.isFrameMatroid_iff_isLiftMatroid (M := M)
-
-example := twoJoints_isRollable.exists_isUnrolling
 
 example := twoJoints_isUnrolling.isFrameCircuit_iff twoJoints_isRollable {4}
 

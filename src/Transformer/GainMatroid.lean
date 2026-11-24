@@ -58,6 +58,8 @@ public import Transformer.GainMatroid.Section2_UnrollingFailures
 public import Transformer.GainMatroid.Section2_UnrollingClasses
 public import Transformer.GainMatroid.Section2_UnrollingEmptyJ
 public import Transformer.GainMatroid.Section2_UnrollingSameClasses
+public import Transformer.GainMatroid.Section2_UnrollingLinks
+public import Transformer.GainMatroid.Section2_UnrollingTheta
 public import Transformer.GainMatroid.Section2_RollUps
 public import Transformer.GainMatroid.Section2_RollUpClaims
 public import Transformer.GainMatroid.Section2_RollUpClasses
@@ -143,7 +145,8 @@ printed `B̂`, and `Section2_UnrollingClasses` refutes the printed claim on its 
 and states the corrected claims. `Section2_UnrollingEmptyJ` proves that with `J` empty a
 rollable biased graph is its own unrolling, as the source sets it, and
 `Section2_UnrollingSameClasses` that the unrolling keeps the unbalancing classes when the joints
-off the vertex are connected.
+off the vertex are connected. `Section2_UnrollingLinks` relates the cycles of `B̂` to `∼`, and
+`Section2_UnrollingTheta` proves that the unrolling is a biased graph.
 `Section2_RollUps` defines the roll-ups of an unrolling and counts them, and `Section2_RollUpClaims`
 states what §2.5 claims of them and of a biased graph balanced off its joints.
 `Section2_RollUpClasses` proves that each roll-up keeps the unbalancing classes of `(Ĝ, B̂)`.
