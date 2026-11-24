@@ -10,7 +10,8 @@ Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5. The source proves these b
 circuits" or calls them straightforward, and cites [AlmostBalancedReps, Proposition 2.2], which is
 not among the local sources, for the first:
 
-> "`F(G_U, B_U) = F(G, B) = F(Ĝ, B̂)`" (`IsUnrolling.isFrameCircuit_rollUp`);
+> "`F(G_U, B_U) = F(G, B) = F(Ĝ, B̂)`" (`IsUnrolling.isFrameCircuit_rollUp`, in
+> `Section2_RollUpCircuits`);
 > "for each unbalancing class `U`, `Σ_{G_U}(u)/∼ = Σ_Ĝ(u)/∼`" (`IsUnrolling.sigmaStar_rollUp`, and
 > `IsUnrolling.unbalancingClass_rollUp` in `Section2_RollUpClasses`);
 > "`J` is an unbalancing class of `Σ_Ĝ(u)`, and […] `(G_J, B_J) = (G, B)`"
@@ -83,13 +84,6 @@ theorem sigmaStar_rollUp (h : Ω.IsUnrolling u Ω') {U : Set E} (hU : U ∈ Ω'.
     · rw [hJ] at hj
       exact hj.elim
 
-/-- §2.5: "`F(G_U, B_U) = F(Ĝ, B̂)`", citing [AlmostBalancedReps, Proposition 2.2]. That
-`F(Ĝ, B̂) = F(G, B)` is `IsUnrolling.isFrameCircuit_iff`. -/
-theorem isFrameCircuit_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {U : Set E}
-    (hU : U ∈ Ω'.unbalancingClasses u) (X : Set E) :
-    (Ω'.rollUp u U).IsFrameCircuit X ↔ Ω'.IsFrameCircuit X := by
-  sorry
-
 /-- §2.5: "`J` is an unbalancing class of `Σ_Ĝ(u)`", for `J` nonempty in one component of
 `G − u`; the printed claim fails otherwise (`unbalancingClass_printed_fails`). `J` is the class in
 `(G, B)` of each of its joints, and the unrolling keeps the classes (`unbalancingClass_eq`). -/
@@ -142,7 +136,6 @@ example := twoJoints_isUnrolling.rollUp_injOn
 example := twoJoints_isUnrolling.rollUp_ne twoJointsHat_class_mem
 example := twoJoints_isUnrolling.ncard_rollUpFamily
 example := twoJoints_isUnrolling.sigmaStar_rollUp twoJointsHat_class_mem
-example := twoJoints_isUnrolling.isFrameCircuit_rollUp twoJoints_isRollable twoJointsHat_class_mem
 example := twoJoints_isUnrolling.graph_rollUp_offJoints
 example := twoJoints_isUnrolling.balanced_rollUp_offJoints twoJoints_isRollable
 example := centreJoint_isUnrolling.offJoints_mem_unbalancingClasses centreJoint_isRollable

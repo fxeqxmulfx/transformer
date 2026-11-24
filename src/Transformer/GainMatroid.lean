@@ -66,6 +66,16 @@ public import Transformer.GainMatroid.Section2_RollUpClasses
 public import Transformer.GainMatroid.Section2_WalkMaps
 public import Transformer.GainMatroid.Section2_LoopUnrolling
 public import Transformer.GainMatroid.Section2_LoopCircuits
+public import Transformer.GainMatroid.Section2_AgreeingGraphs
+public import Transformer.GainMatroid.Section2_CycleEars
+public import Transformer.GainMatroid.Section2_TightHandcuffs
+public import Transformer.GainMatroid.Section2_RollUpCycles
+public import Transformer.GainMatroid.Section2_RollUpClass
+public import Transformer.GainMatroid.Section2_RollUpJoints
+public import Transformer.GainMatroid.Section2_RollUpForward
+public import Transformer.GainMatroid.Section2_RollUpThetas
+public import Transformer.GainMatroid.Section2_RollUpBackward
+public import Transformer.GainMatroid.Section2_RollUpCircuits
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -144,18 +154,24 @@ path between their other ends into frame circuits and independent sets.
 `Section2_UnbalancingRelation` proves what §2.5 claims of the unbalancing classes: their cycles
 have one bias, `∼` is transitive, and each pair of edges gives circuits or independent sets.
 `Section2_Unrolling` defines the unrolling `(Ĝ, B̂)`, `Section2_UnrollingFailures` refutes its
-printed `B̂`, and `Section2_UnrollingClasses` refutes the printed claim on its unbalancing classes
-and states the corrected claims. `Section2_UnrollingEmptyJ` proves that with `J` empty a
-rollable biased graph is its own unrolling, as the source sets it, and
-`Section2_UnrollingSameClasses` that the unrolling keeps the unbalancing classes when the joints
-off the vertex are connected. `Section2_UnrollingLinks` relates the cycles of `B̂` to `∼`, and
-`Section2_UnrollingTheta` proves that the unrolling is a biased graph.
+printed `B̂`, and `Section2_UnrollingClasses` refutes the printed claim on its unbalancing classes.
+`Section2_UnrollingEmptyJ` proves that with `J` empty a rollable biased graph is its own unrolling,
+as the source sets it, and `Section2_UnrollingSameClasses` that the unrolling keeps the unbalancing
+classes when the joints off the vertex are connected. `Section2_UnrollingLinks` relates the cycles
+of `B̂` to `∼`, and `Section2_UnrollingTheta` proves that the unrolling is a biased graph.
 `Section2_RollUps` defines the roll-ups of an unrolling and counts them, and `Section2_RollUpClaims`
-states what §2.5 claims of them. `Section2_RollUpClasses` proves that each roll-up keeps the
+proves what §2.5 claims of them. `Section2_RollUpClasses` proves that each roll-up keeps the
 unbalancing classes of `(Ĝ, B̂)`. `Section2_WalkMaps` carries walks along a map of the vertices,
 `Section2_LoopUnrolling` defines the unrolling of loops to one vertex, and `Section2_LoopCircuits`
 proves that its frame circuits are the cycles of the new graph and states what §2.5 claims of a
 biased graph balanced off its joints.
+`Section2_AgreeingGraphs` compares graphs that give a set of edges the same ends,
+`Section2_CycleEars` and `Section2_TightHandcuffs` build cycles, thetas and tight handcuffs from
+ears, and `Section2_RollUpCycles` describes the cycles, paths and handcuffs of a roll-up.
+`Section2_RollUpClass` collects in `IsRollUpClass` what comparing the circuits of a roll-up uses,
+`Section2_RollUpJoints` and `Section2_RollUpForward` prove that a frame circuit of a roll-up is one
+of the biased graph rolled up, `Section2_RollUpThetas` and `Section2_RollUpBackward` the converse,
+and `Section2_RollUpCircuits` deduces `F(G_U, B_U) = F(Ĝ, B̂) = F(G, B)`.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
