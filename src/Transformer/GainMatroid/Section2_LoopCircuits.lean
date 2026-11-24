@@ -1,6 +1,7 @@
 module
 
 public import Transformer.GainMatroid.Section2_LoopUnrolling
+public import Transformer.GainMatroid.Section2_RollUpCircuits
 
 /-!
 # The frame circuits of a biased graph balanced off its joints
@@ -17,13 +18,15 @@ balanced after removing its joints:
 Matroid equalities are stated on circuits, which determine a matroid (`Matroid.ext_isCircuit`).
 `H` is `unrollToNew`, on the vertices `Option V` with `none` the new vertex. Balanced after removing
 the joints means that every unbalanced cycle meets `J`, and a cycle through a loop is that loop, so
-the hypothesis is that every unbalanced cycle has one edge. Both comparisons follow
-from `IsLoopUnrolling.isFrameCircuit_iff`: when `H` unrolls the loops `U` of `Ω` to a vertex, the
-frame circuits of `Ω` are the cycles of `H`. An unbalanced cycle of `Ω` is one loop of `U`, so a
-frame circuit with no balanced cycle is a tight or loose handcuff of two such loops, which `H`
-closes into a cycle through the vertex, and no theta has a cycle of one edge. Conversely, a cycle of
-`H` through the vertex is two links of `U` and a path, which lift to two joints and a path of `Ω`
-(`isFrameCircuit_of_joints`).
+the hypothesis is that every unbalanced cycle has one edge. Then every vertex of `G` is a balancing
+vertex after deleting the joints (`IsLinkBalancingVertex`), so the unrolling to it exists and keeps
+the frame circuits (`exists_isUnrolling_of_balanced_off`, by `Section2_RollUpCircuits`). Both
+comparisons with `M(H)` follow from `IsLoopUnrolling.isFrameCircuit_iff`: when `H` unrolls the
+loops `U` of `Ω` to a vertex, the frame circuits of `Ω` are the cycles of `H`. An unbalanced cycle
+of `Ω` is one loop of `U`, so a frame circuit with no balanced cycle is a tight or loose handcuff of
+two such loops, which `H` closes into a cycle through the vertex, and no theta has a cycle of one
+edge. Conversely, a cycle of `H` through the vertex is two links of `U` and a path, which lift to
+two joints and a path of `Ω` (`isFrameCircuit_of_joints`).
 -/
 
 @[expose] public section
@@ -134,10 +137,16 @@ end IsLoopUnrolling
 variable {Ω : BiasedGraph V E}
 
 /-- §2.5: when `(G, B)` is balanced after removing its joints, "`J` may be unrolled to any vertex
-of `G`", and the frame matroid does not change. -/
+of `G`", and the frame matroid does not change. No unbalanced cycle has two edges, so every vertex
+is a balancing vertex after deleting the joints. -/
 theorem exists_isUnrolling_of_balanced_off (hbal : ∀ C, Ω.IsUnbalancedCycle C → ∃ e, C = {e})
     (w : V) : ∃ Ω', Ω.IsUnrolling w Ω' ∧ ∀ X, Ω'.IsFrameCircuit X ↔ Ω.IsFrameCircuit X := by
-  sorry
+  have hw : Ω.IsLinkBalancingVertex w := fun C hC h2 => by
+    obtain ⟨e, rfl⟩ := hbal C hC
+    rw [Set.encard_singleton] at h2
+    exact absurd h2 (by norm_num)
+  obtain ⟨Ω', h⟩ := hw.exists_isUnrolling
+  exact ⟨Ω', h, h.isFrameCircuit_iff hw⟩
 
 /-- §2.5: "`F(G, B)` is equal to the cycle matroid `M(H)` of `H`". -/
 theorem isFrameCircuit_iff_unrollToNew (hbal : ∀ C, Ω.IsUnbalancedCycle C → ∃ e, C = {e})
