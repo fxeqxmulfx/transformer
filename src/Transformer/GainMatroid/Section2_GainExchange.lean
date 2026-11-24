@@ -1,7 +1,7 @@
 module
 
 public import Transformer.GainMatroid.Section2_ExchangeMatroids
-public import Transformer.GainMatroid.Section2_ExchangeRealizes
+public import Transformer.GainMatroid.Section2_ExchangeClasses
 
 /-!
 # Gain functions under a Δ-Y exchange: Proposition 2.10
@@ -22,7 +22,9 @@ function realizes `Δ_X (G, B)`. A gain function with non-identity value around 
 The source's proof compares the realizations "assigning identity gains to each edge in `X`". The
 corrected part (i) (`IsDeltaExchange.realizes_iff`, `IsDeltaExchange.addRealizes_iff`) takes that
 hypothesis. Part (ii) is the source's "canonical bijection": it fixes the class of each gain
-function that is the identity on `X` and realizes both biased graphs.
+function that is the identity on `X` and realizes both biased graphs. Both parts hold for every
+exchange pair (`Section2_ExchangeRealizes`, `Section2_ExchangeClasses`), and the classes of
+realizations are defined in `Section2_ExchangeClasses`.
 -/
 
 @[expose] public section
@@ -60,30 +62,6 @@ theorem OrientedGraph.IsLabelledTriangle.deltaGraph_isLabelledClaw {G : Oriented
 
 variable [DecidableEq V]
 
-/-- Switching equivalence on the `Γ`-realizations of `Ω` (§2.3). -/
-def realizationSetoid (Ω : BiasedGraph V E) (Γ : Type*) [Group Γ] :
-    Setoid {γ : E → Γ // Ω.Realizes γ} where
-  r φ ψ := SwitchEquiv Ω.graph φ.1 ψ.1
-  iseqv := ⟨fun φ => (switchEquiv_equivalence Ω.graph).refl φ.1,
-    fun h => (switchEquiv_equivalence Ω.graph).symm h,
-    fun h h' => (switchEquiv_equivalence Ω.graph).trans h h'⟩
-
-/-- The switching classes of `Γ`-realizations of `Ω` (§2.3). -/
-def RealizationClass (Ω : BiasedGraph V E) (Γ : Type*) [Group Γ] : Type _ :=
-  Quotient (realizationSetoid Ω Γ)
-
-/-- Switching-and-scaling equivalence on the `𝔽⁺`-realizations of `Ω` (§2.3). -/
-def addRealizationSetoid (Ω : BiasedGraph V E) (F : Type*) [Field F] :
-    Setoid {ψ : E → F // Ω.AddRealizes ψ} where
-  r φ ψ := SwitchScaleEquiv Ω.graph φ.1 ψ.1
-  iseqv := ⟨fun φ => (switchScaleEquiv_equivalence Ω.graph).refl φ.1,
-    fun h => (switchScaleEquiv_equivalence Ω.graph).symm h,
-    fun h h' => (switchScaleEquiv_equivalence Ω.graph).trans h h'⟩
-
-/-- The switching-and-scaling classes of `𝔽⁺`-realizations of `Ω` (§2.3). -/
-def AddRealizationClass (Ω : BiasedGraph V E) (F : Type*) [Field F] : Type _ :=
-  Quotient (addRealizationSetoid Ω F)
-
 namespace BiasedGraph.IsDeltaExchange
 
 variable {Ω : BiasedGraph V E} {Ω' : BiasedGraph (Option V) E} {a b c : E} {x y z : V}
@@ -108,8 +86,8 @@ theorem exists_realizationClass_equiv {Γ : Type*} [Group Γ]
     (h : Ω.IsDeltaExchange a b c x y z Ω') :
     ∃ e : RealizationClass Ω Γ ≃ RealizationClass Ω' Γ,
       ∀ (φ : E → Γ) (hφ : Ω.Realizes φ) (hφ' : Ω'.Realizes φ), φ a = 1 → φ b = 1 → φ c = 1 →
-        e (Quotient.mk _ ⟨φ, hφ⟩) = Quotient.mk _ ⟨φ, hφ'⟩ := by
-  sorry
+        e (Quotient.mk _ ⟨φ, hφ⟩) = Quotient.mk _ ⟨φ, hφ'⟩ :=
+  h.isExchange.exists_realizationClass_equiv h.balanced h.balanced_eq
 
 /-- **Proposition 2.10 (ii)**, additive case: a bijection of switching-and-scaling classes that
 fixes the class of every gain function that is `0` on `X` and realizes both biased graphs. -/
@@ -117,8 +95,8 @@ theorem exists_addRealizationClass_equiv {F : Type*} [Field F]
     (h : Ω.IsDeltaExchange a b c x y z Ω') :
     ∃ e : AddRealizationClass Ω F ≃ AddRealizationClass Ω' F,
       ∀ (ψ : E → F) (hψ : Ω.AddRealizes ψ) (hψ' : Ω'.AddRealizes ψ), ψ a = 0 → ψ b = 0 →
-        ψ c = 0 → e (Quotient.mk _ ⟨ψ, hψ⟩) = Quotient.mk _ ⟨ψ, hψ'⟩ := by
-  sorry
+        ψ c = 0 → e (Quotient.mk _ ⟨ψ, hψ⟩) = Quotient.mk _ ⟨ψ, hψ'⟩ :=
+  h.isExchange.exists_addRealizationClass_equiv h.balanced h.balanced_eq
 
 end BiasedGraph.IsDeltaExchange
 
