@@ -11,8 +11,8 @@ circuits" or calls them straightforward, and cites [AlmostBalancedReps, Proposit
 not among the local sources, for the first:
 
 > "`F(G_U, B_U) = F(G, B) = F(Ĝ, B̂)`" (`IsUnrolling.isFrameCircuit_rollUp`);
-> "for each unbalancing class `U`, `Σ_{G_U}(u)/∼ = Σ_Ĝ(u)/∼`" (`IsUnrolling.sigmaStar_rollUp`,
-> `IsUnrolling.unbalancingClass_rollUp`);
+> "for each unbalancing class `U`, `Σ_{G_U}(u)/∼ = Σ_Ĝ(u)/∼`" (`IsUnrolling.sigmaStar_rollUp`, and
+> `IsUnrolling.unbalancingClass_rollUp` in `Section2_RollUpClasses`);
 > "`J` is an unbalancing class of `Σ_Ĝ(u)`, and […] `(G_J, B_J) = (G, B)`"
 > (`IsUnrolling.offJoints_mem_unbalancingClasses`, `IsUnrolling.graph_rollUp_offJoints`,
 > `IsUnrolling.balanced_rollUp_offJoints`).
@@ -97,13 +97,6 @@ theorem isFrameCircuit_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
     (Ω'.rollUp u U).IsFrameCircuit X ↔ Ω'.IsFrameCircuit X := by
   sorry
 
-/-- §2.5: "`Σ_{G_U}(u)/∼ = Σ_Ĝ(u)/∼`", for each edge of `Σ(u)`; `sigmaStar_rollUp` says the two
-sets of edges agree. -/
-theorem unbalancingClass_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {U : Set E}
-    (hU : U ∈ Ω'.unbalancingClasses u) {f : E} (hf : f ∈ Ω'.sigmaStar u) :
-    (Ω'.rollUp u U).unbalancingClass u f = Ω'.unbalancingClass u f := by
-  sorry
-
 /-- §2.5: "`J` is an unbalancing class of `Σ_Ĝ(u)`", for `J` nonempty in one component of
 `G − u`; the printed claim fails otherwise (`unbalancingClass_printed_fails`). `J` is the class in
 `(G, B)` of each of its joints, and the unrolling keeps the classes (`unbalancingClass_eq`). -/
@@ -186,8 +179,6 @@ example := twoJoints_isUnrolling.rollUp_ne twoJointsHat_class_mem
 example := twoJoints_isUnrolling.ncard_rollUpFamily
 example := twoJoints_isUnrolling.sigmaStar_rollUp twoJointsHat_class_mem
 example := twoJoints_isUnrolling.isFrameCircuit_rollUp twoJoints_isRollable twoJointsHat_class_mem
-example := twoJoints_isUnrolling.unbalancingClass_rollUp twoJoints_isRollable
-  twoJointsHat_class_mem twoJointsHat_zero_mem
 example := twoJoints_isUnrolling.graph_rollUp_offJoints
 example := twoJoints_isUnrolling.balanced_rollUp_offJoints twoJoints_isRollable
 example := centreJoint_isUnrolling.offJoints_mem_unbalancingClasses centreJoint_isRollable
