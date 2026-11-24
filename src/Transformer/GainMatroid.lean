@@ -84,6 +84,12 @@ public import Transformer.GainMatroid.Section2_ExchangeSwitching
 public import Transformer.GainMatroid.Section2_ExchangeRealizes
 public import Transformer.GainMatroid.Section2_ExchangeEquivalence
 public import Transformer.GainMatroid.Section2_ExchangeClasses
+public import Transformer.GainMatroid.Section2_ExchangeWalks
+public import Transformer.GainMatroid.Section2_BalancedTripods
+public import Transformer.GainMatroid.Section2_ExchangeTransfer
+public import Transformer.GainMatroid.Section2_TransferCycles
+public import Transformer.GainMatroid.Section2_StarThetas
+public import Transformer.GainMatroid.Section2_DeltaBiased
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -129,8 +135,8 @@ defines balanced, almost-balanced, properly unbalanced and tangled biased graphs
 proves Lemma 2.5 (i), `Section2_MatrixContractions` proves it for links and refutes the printed
 frame case, `Section2_MatrixJoints` treats joints, and `Section2_MatrixEquivalence` proves that
 projective equivalence passes to minors of a matrix.
-`Section2_DeltaY` defines the Δ-Y and Y-Δ exchanges of biased graphs and states Propositions 2.6
-and 2.7, and `Section2_DeltaYExamples` shows that the printed `∇_Y B` can contain a non-cycle.
+`Section2_DeltaY` defines the Δ-Y and Y-Δ exchanges of biased graphs and states Proposition 2.7,
+and `Section2_DeltaYExamples` shows that the printed `∇_Y B` can contain a non-cycle.
 `Section2_CycleDegrees` proves that a vertex of a loopless graph meets a cycle in zero or two edges
 and lists the seven cycles of `K₄`. `Section2_FiniteMatroids` builds finite matroids from their
 independent sets and decides their flats. `Section2_MatroidExchange` defines `M(K₄)` and the Δ-Y and
@@ -184,6 +190,9 @@ and `Section2_RollUpCircuits` deduces `F(G_U, B_U) = F(Ĝ, B̂) = F(G, B)`.
 `Section2_ExchangeBalance`, `Section2_ExchangeSwitching` and `Section2_ExchangeEquivalence` match
 the cycles, balanced cycles and switching classes on both sides of a Δ-Y exchange (`IsExchange`),
 and `Section2_ExchangeRealizes` and `Section2_ExchangeClasses` prove Proposition 2.10 (i) and (ii).
+`Section2_ExchangeWalks`, `Section2_ExchangeTransfer` and `Section2_TransferCycles` carry walks,
+paths and cycles across the exchange, `Section2_BalancedTripods` and `Section2_StarThetas` treat
+thetas through the new vertex, and `Section2_DeltaBiased` deduces Proposition 2.6.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

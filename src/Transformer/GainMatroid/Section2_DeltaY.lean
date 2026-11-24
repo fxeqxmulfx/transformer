@@ -121,13 +121,6 @@ structure IsNablaExchange (Ω : BiasedGraph V E) (v : V) (a b c : E) (x y z : V)
   balanced_eq : Ω'.balanced =
     nablaBalanced (Ω.graph.nablaGraph a b c x y z) Ω.balanced {a, b, c}
 
-/-- **Proposition 2.6** (§2.4). If `X` is a balanced triangle of `(G, B)`, then
-`(Δ_X G, Δ_X B)` is a biased graph. -/
-theorem exists_isDeltaExchange (Ω : BiasedGraph V E) {a b c : E} {x y z : V}
-    (hX : Ω.graph.IsLabelledTriangle a b c x y z) (hb : ({a, b, c} : Set E) ∈ Ω.balanced) :
-    ∃ Ω' : BiasedGraph (Option V) E, Ω.IsDeltaExchange a b c x y z Ω' := by
-  sorry
-
 /-- **Proposition 2.7** (§2.4). If `Y` is a `K_{1,3}`-subgraph of `(G, B)`, then
 `(∇_Y G, ∇_Y B)` is a biased graph. -/
 theorem exists_isNablaExchange (Ω : BiasedGraph V E) {v : V} {a b c : E} {x y z : V}

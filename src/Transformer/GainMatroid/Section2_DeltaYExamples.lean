@@ -89,9 +89,6 @@ theorem nablaFamily_minimal_not_isCycle :
 
 example := triangle_isLabelledTriangle.isCycle
 
-example := BiasedGraph.exists_isDeltaExchange (triangle.gainBiased (1 : Fin 3 → ℚˣ))
-  triangle_isLabelledTriangle triangle_mem_gainBiased
-
 example := BiasedGraph.exists_isNablaExchange clawGraph.contrabalanced clawGraph_isLabelledClaw
 
 end Transformer.GainMatroid
