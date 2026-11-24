@@ -56,7 +56,7 @@ def unrollBalanced : Set (Set E) :=
   {C | C ∈ Ω.printedUnrollBalanced u ∧ ∀ e, C = {e} → ¬Ω.IsJoint e}
 
 /-- `Ω'` is the **unrolling** of `Ω` to `u` (§2.5). A relation, because that `B̂` has the theta
-property is the claim `IsRollable.exists_isUnrolling`. -/
+property is the claim `IsLinkBalancingVertex.exists_isUnrolling`. -/
 structure IsUnrolling (Ω' : BiasedGraph V E) : Prop where
   /-- The graph of the unrolling is `Ĝ`. -/
   graph_eq : Ω'.graph = Ω.unrollGraph u

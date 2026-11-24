@@ -73,7 +73,7 @@ theorem unbalancingRel_of_mem_unrollBalanced {C : Set E} (hC : C ∈ Ω.unrollBa
 
 /-- A cycle of `Ĝ` through two related edges of `Σ(u)` is in `B̂`: they are its only edges in
 `Σ(u)`, and each class contains both or neither. -/
-theorem mem_unrollBalanced_of_rel (hΩ : Ω.IsRollable u) {C : Set E}
+theorem mem_unrollBalanced_of_rel (hΩ : Ω.IsLinkBalancingVertex u) {C : Set E}
     (hC : (Ω.unrollGraph u).IsCycle C) {e f : E} (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u)
     (hne : e ≠ f) (heC : e ∈ C) (hfC : f ∈ C) (hef : Ω.UnbalancingRel u e f) :
     C ∈ Ω.unrollBalanced u := by
@@ -141,7 +141,7 @@ theorem threeJointsWalk_openly {e f : Fin 7} (he : 4 ≤ e) (hf : 4 ≤ f) (hef 
 theorem threeJoints_mem_unrollBalanced {e f : Fin 7} (he : 4 ≤ e) (hf : 4 ≤ f) (hef : e ≠ f) :
     (threeJointsWalk e he).edgeSet ∪ (threeJointsWalk f hf).edgeSet ∈
       threeJoints.contrabalanced.unrollBalanced 0 :=
-  mem_unrollBalanced_of_rel threeJoints_isRollable
+  mem_unrollBalanced_of_rel threeJoints_isRollable.balancing
     ⟨1, _, (threeJointsWalk_openly he hf hef).isCycleWalk (by decide) (threeJointsWalk_isPath e he)
       (threeJointsWalk_isPath f hf), Walk.edgeSet_append_reverse _ _⟩
     (Or.inr (threeJoints_mem_offJoints he)) (Or.inr (threeJoints_mem_offJoints hf)) hef

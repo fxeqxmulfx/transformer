@@ -15,8 +15,8 @@ The claim fails as printed (`unbalancingClass_printed_fails`); `IsUnrolling.unba
 proves it when any two joints of `J` lie in one component of `G − u` (`JointsConnected`). Two edges
 of `Σ(u)` on a balanced cycle of `(Ĝ, B̂)` are its two edges at `u`, so they lie in one class of
 `(G, B)` (`IsUnrolling.unbalancingRel_of_rel`). Conversely a balanced cycle of `(G, B)` is one of
-`(Ĝ, B̂)` (`IsRollable.balanced_subset`). Two joints of `J` joined by a path off `u` close, with
-their new links to `u`, a cycle of `Ĝ` that meets `J` in them and no other class
+`(Ĝ, B̂)` (`IsLinkBalancingVertex.balanced_subset`). Two joints of `J` joined by a path off `u`
+close, with their new links to `u`, a cycle of `Ĝ` that meets `J` in them and no other class
 (`IsUnrolling.unbalancingRel_of_offJoints`).
 -/
 
@@ -148,7 +148,7 @@ theorem unbalancingRel_of_offJoints (h : Ω.IsUnrolling u Ω') (hJ : Ω.JointsCo
 
 /-- §2.5: "the unbalancing classes of `Σ_G(u)` and of `Σ_Ĝ(u)` are the same", for joints of `J` in
 one component of `G − u`. -/
-theorem unbalancingClass_eq (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
+theorem unbalancingClass_eq (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u)
     (hJ : Ω.JointsConnected u) {e : E} (he : e ∈ Ω.sigmaStar u) :
     Ω'.unbalancingClass u e = Ω.unbalancingClass u e := by
   ext f
@@ -180,7 +180,7 @@ example := centreJoint_isUnrolling.unbalancingRel_of_rel (centreJoint_mem_sigmaS
 example := centreJoint_isUnrolling.unbalancingRel_of_offJoints centreJoint_jointsConnected
   ((centreJoint_mem_offJoints 5).2 rfl) ((centreJoint_mem_offJoints 5).2 rfl)
 
-example := centreJoint_isUnrolling.unbalancingClass_eq centreJoint_isRollable
+example := centreJoint_isUnrolling.unbalancingClass_eq centreJoint_isRollable.balancing
   centreJoint_jointsConnected (centreJoint_mem_sigmaStar (c := 5) (by decide))
 
 end Transformer.GainMatroid

@@ -19,7 +19,7 @@ different components of `G − u` (`unbalancingClass_printed_fails`, on `twoJoin
 What the source leaves to a check by comparing circuits, `F(Ĝ, B̂) = F(G, B)` for the corrected `B̂`
 of `unrollBalanced`, is `IsUnrolling.isFrameCircuit_iff`, in `Section2_RollUpCircuits`; `B̂` is `B`
 when `J` is empty (`Section2_UnrollingEmptyJ`). That `(Ĝ, B̂)` is a biased graph is
-`IsRollable.exists_isUnrolling`, in `Section2_UnrollingTheta`.
+`IsLinkBalancingVertex.exists_isUnrolling`, in `Section2_UnrollingTheta`.
 -/
 
 @[expose] public section

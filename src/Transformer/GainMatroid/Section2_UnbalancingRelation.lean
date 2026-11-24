@@ -8,13 +8,14 @@ public import Transformer.GainMatroid.Section2_PairCircuits
 Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5. The source cites its reference
 [AlmostBalancedReps], which is not among the local sources, for two claims about a biased graph
 with a unique balancing vertex `u` after deleting its joints: all cycles through two edges of `δ(u)`
-have the same bias (`IsRollable.balanced_iff`), and `∼` is an equivalence relation
-(`IsRollable.unbalancingRel_trans`). Both are proved here: every cycle that misses `u` is balanced,
-so by `BiasedGraph.insert_mem_balanced_iff` two cycles through the same two edges at `u` have one
-bias, and a theta through three links at `u` (`BiasedGraph.exists_balanced_of_links`) makes `∼`
-transitive. The dichotomy of the source's next sentence (`IsRollable.isCircuit_or_indep`) follows
-from the first claim (`Section2_PairCircuits`). The source says "each pair" of edges; these claims
-are for two distinct edges, since a single edge lies on balanced and on unbalanced cycles alike.
+have the same bias (`IsLinkBalancingVertex.balanced_iff`), and `∼` is an equivalence relation
+(`IsLinkBalancingVertex.unbalancingRel_trans`). Both hold for any balancing vertex `u` after
+deleting the joints, unique or not: a cycle missing `u` is balanced, so two cycles through the same
+two edges at `u` have one bias (`BiasedGraph.insert_mem_balanced_iff`), and a theta through three
+links at `u` (`BiasedGraph.exists_balanced_of_links`) makes `∼` transitive. The dichotomy of the
+source's next sentence follows from the first (`IsLinkBalancingVertex.isCircuit_or_indep`,
+`Section2_PairCircuits`). The source says "each pair"; the claims are for two distinct edges, since
+one edge lies on balanced and on unbalanced cycles alike.
 
 `isRollable_of_digons` gives the hypothesis on any graph with two digons at a vertex whose links all
 meet that vertex, and `digonJoint` is the instance used for the examples of §2.5.
@@ -37,10 +38,10 @@ balanced or all cycles containing both `e` and `e′` are unbalanced". The sourc
 [AlmostBalancedReps, Section 1]. Proved here: a cycle of two openly disjoint paths that miss `u` is
 balanced, since `u` is on every unbalanced cycle of at least two edges, and the two cycles are `e`,
 `f` and two paths between their other ends that miss `u` (`insert_mem_balanced_iff`). -/
-theorem IsRollable.balanced_iff (h : Ω.IsRollable u) {e f : E} (he : e ∈ Ω.linkStar u)
-    (hf : f ∈ Ω.linkStar u) (hne : e ≠ f) {C D : Set E} (hC : Ω.graph.IsCycle C)
-    (hD : Ω.graph.IsCycle D) (heC : e ∈ C) (hfC : f ∈ C) (heD : e ∈ D) (hfD : f ∈ D) :
-    C ∈ Ω.balanced ↔ D ∈ Ω.balanced := by
+theorem IsLinkBalancingVertex.balanced_iff (h : Ω.IsLinkBalancingVertex u) {e f : E}
+    (he : e ∈ Ω.linkStar u) (hf : f ∈ Ω.linkStar u) (hne : e ≠ f) {C D : Set E}
+    (hC : Ω.graph.IsCycle C) (hD : Ω.graph.IsCycle D) (heC : e ∈ C) (hfC : f ∈ C) (heD : e ∈ D)
+    (hfD : f ∈ D) : C ∈ Ω.balanced ↔ D ∈ Ω.balanced := by
   have hbal : ∀ {a b : V} (A B : Ω.graph.Walk a b), a ≠ b → A.IsPath → B.IsPath →
       Walk.Openly A B → u ∉ A.support → u ∉ B.support → A.edgeSet ∪ B.edgeSet ∈ Ω.balanced := by
     intro a b A B hab hA hB hAB huA huB
@@ -52,7 +53,7 @@ theorem IsRollable.balanced_iff (h : Ω.IsRollable u) {e f : E} (he : e ∈ Ω.l
     have hgg : g ≠ g' := fun h => hAB.edges g hg (h ▸ hg')
     have h2 : 2 ≤ (A.edgeSet ∪ B.edgeSet).encard :=
       (Set.encard_pair hgg).symm.le.trans (Set.encard_le_encard hsub)
-    obtain ⟨c, hc, hcu⟩ := mem_verts.1 ((h.unique u).2 rfl _
+    obtain ⟨c, hc, hcu⟩ := mem_verts.1 (h _
       ⟨⟨a, _, hAB.isCycleWalk hab hA hB, Walk.edgeSet_append_reverse A B⟩, hnot⟩ h2)
     rcases hc with hc | hc
     · exact huA (Walk.mem_support_of_mem_edges (show c ∈ A.edges from hc) hcu)
@@ -64,9 +65,10 @@ theorem IsRollable.balanced_iff (h : Ω.IsRollable u) {e f : E} (he : e ∈ Ω.l
 /-- §2.5: for each pair of edges `e₁, e₂` of `Σ(u)`, "either every minimal path linking the
 endpoints of `e₁` and `e₂` in `G − u` together with `{e₁, e₂}` forms a circuit in `F(G, B)`, or each
 such path together with `{e₁, e₂}` is independent in `F(G, B)`". Proved here: for two links by
-`IsRollable.balanced_iff`, for a link and a joint the set is independent, and for two joints a
-circuit (`isCircuit_or_indep_of_links`, `indep_of_link_joint`, `isFrameCircuit_of_joints`). -/
-theorem IsRollable.isCircuit_or_indep {M : Matroid E} (h : Ω.IsRollable u)
+`IsLinkBalancingVertex.balanced_iff`, for a link and a joint the set is independent, and for two
+joints a circuit (`isCircuit_or_indep_of_links`, `indep_of_link_joint`,
+`isFrameCircuit_of_joints`). -/
+theorem IsLinkBalancingVertex.isCircuit_or_indep {M : Matroid E} (h : Ω.IsLinkBalancingVertex u)
     (hM : Ω.IsFrameMatroid M) {e f : E} (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u)
     (hne : e ≠ f) :
     (∀ P : Ω.graph.Walk (Ω.graph.otherEnd u e) (Ω.graph.otherEnd u f), P.IsPath → u ∉ P.support →
@@ -81,10 +83,10 @@ theorem IsRollable.isCircuit_or_indep {M : Matroid E} (h : Ω.IsRollable u)
   · exact Or.inl fun _ hP _ => (hM.2 _).2 (isFrameCircuit_of_joints_otherEnd heJ.1 hfJ.1 hne hP)
 
 /-- §2.5: "`∼` is an equivalence relation", citing [AlmostBalancedReps, Lemma 1.4]. Reflexivity is
-the first clause of `UnbalancingRel` and symmetry is `UnbalancingRel.symm`. Transitivity is proved
-here: no balanced cycle contains a joint, and balanced cycles through `e, f` and through `f, g`
-give one through `e` and `g` (`exists_balanced_of_links`, with `IsRollable.balanced_iff`). -/
-theorem IsRollable.unbalancingRel_trans (h : Ω.IsRollable u) {e f g : E}
+the first clause of `UnbalancingRel` and symmetry is `UnbalancingRel.symm`. Transitivity: no
+balanced cycle contains a joint, and balanced cycles through `e, f` and through `f, g` give one
+through `e` and `g` (`exists_balanced_of_links`, with `IsLinkBalancingVertex.balanced_iff`). -/
+theorem IsLinkBalancingVertex.unbalancingRel_trans (h : Ω.IsLinkBalancingVertex u) {e f g : E}
     (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u) (hg : g ∈ Ω.sigmaStar u)
     (hef : Ω.UnbalancingRel u e f) (hfg : Ω.UnbalancingRel u f g) : Ω.UnbalancingRel u e g := by
   have hlink : ∀ {c : E} {B : Set E}, c ∈ Ω.sigmaStar u → B ∈ Ω.balanced → c ∈ B →
@@ -183,14 +185,16 @@ example := BiasedGraph.isFrameCircuit_of_joints (Ω := twoLoops.contrabalanced) 
   (g := false) ⟨rfl, Set.notMem_empty _⟩ ⟨rfl, Set.notMem_empty _⟩ (by decide)
   (P := Walk.nil ()) (List.nodup_singleton ())
 
-example := digonJoint_isRollable.balanced_iff digonJoint_link₀ digonJoint_link₁ (by decide)
-  digonJoint_isCycle digonJoint_isCycle (by simp) (by simp) (by simp) (by simp)
+example := digonJoint_isRollable.balancing
 
-example := digonJoint_isRollable.isCircuit_or_indep
+example := digonJoint_isRollable.balancing.balanced_iff digonJoint_link₀ digonJoint_link₁
+  (by decide) digonJoint_isCycle digonJoint_isCycle (by simp) (by simp) (by simp) (by simp)
+
+example := digonJoint_isRollable.balancing.isCircuit_or_indep
   (Classical.choose_spec digonJoint.contrabalanced.exists_isFrameMatroid)
   (Or.inl digonJoint_link₀) (Or.inl digonJoint_link₁) (by decide)
 
-example := digonJoint_isRollable.unbalancingRel_trans (Or.inl digonJoint_link₀)
+example := digonJoint_isRollable.balancing.unbalancingRel_trans (Or.inl digonJoint_link₀)
   (Or.inl digonJoint_link₀) (Or.inl digonJoint_link₀) (Or.inl rfl) (Or.inl rfl)
 
 end Transformer.GainMatroid

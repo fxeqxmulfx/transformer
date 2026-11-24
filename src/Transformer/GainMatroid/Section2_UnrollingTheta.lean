@@ -6,11 +6,12 @@ public import Transformer.GainMatroid.Section2_UnrollingLinks
 # The unrolling is a biased graph
 
 Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5, calls `(Ĝ, B̂)` a biased graph without proof.
-`IsRollable.exists_isUnrolling` proves it for the corrected `B̂` of `unrollBalanced`. In a theta
-whose two cycles through `P` are in `B̂`, the two edges at `u` of the third cycle lie on `Q`, on
-`R`, or one on each. In the last case `u` is an end of the theta, and the edge of `P` at `u` is
-related to both (`IsRollable.unrollBalanced_theta`). The third cycle has at least two edges, so it
-is not a joint.
+`IsLinkBalancingVertex.exists_isUnrolling` proves it for the corrected `B̂` of `unrollBalanced`, at
+any balancing vertex `u` after deleting the joints. In a theta whose two cycles through `P` are in
+`B̂`, the two edges at `u` of the third cycle lie on `Q`, on `R`, or one on each. In the last case
+`u` is an end of the theta, and the edge of `P` at `u` is related to both
+(`IsLinkBalancingVertex.unrollBalanced_theta`). The third cycle has at least two edges, so it is not
+a joint.
 -/
 
 @[expose] public section
@@ -40,7 +41,7 @@ variable {Ω : BiasedGraph V E} {u : V}
 
 /-- The theta property of `B̂`: if the two cycles of a theta through `P` are in `B̂`, so is the
 third. -/
-theorem IsRollable.unrollBalanced_theta (hΩ : Ω.IsRollable u) {x y : V}
+theorem IsLinkBalancingVertex.unrollBalanced_theta (hΩ : Ω.IsLinkBalancingVertex u) {x y : V}
     {P Q R : (Ω.unrollGraph u).Walk x y} (hT : IsTheta P Q R)
     (hPQ : P.edgeSet ∪ Q.edgeSet ∈ Ω.unrollBalanced u)
     (hPR : P.edgeSet ∪ R.edgeSet ∈ Ω.unrollBalanced u) :
@@ -89,8 +90,10 @@ theorem IsRollable.unrollBalanced_theta (hΩ : Ω.IsRollable u) {x y : V}
     rw [Set.mem_singleton_iff.1 hq', ← Set.mem_singleton_iff.1 hr']
     exact hr
 
-/-- §2.5: `(Ĝ, B̂)` is a biased graph, for the corrected `B̂` of `unrollBalanced`. -/
-theorem IsRollable.exists_isUnrolling (h : Ω.IsRollable u) : ∃ Ω', Ω.IsUnrolling u Ω' :=
+/-- §2.5: `(Ĝ, B̂)` is a biased graph, for the corrected `B̂` of `unrollBalanced`. The source
+unrolls to the unique balancing vertex after deleting the joints; any such vertex will do. -/
+theorem IsLinkBalancingVertex.exists_isUnrolling (h : Ω.IsLinkBalancingVertex u) :
+    ∃ Ω', Ω.IsUnrolling u Ω' :=
   ⟨⟨Ω.unrollGraph u, Ω.unrollBalanced u, fun _ hC => hC.1.1, h.unrollBalanced_theta⟩, rfl, rfl⟩
 
 end BiasedGraph
@@ -106,9 +109,9 @@ theorem threeJoints_isTheta : IsTheta (threeJointsWalk 4 (by decide))
 
 example := (pumpkinWalk 0).exists_mem_edges_start (by decide)
 
-example := threeJoints_isRollable.unrollBalanced_theta threeJoints_isTheta
+example := threeJoints_isRollable.balancing.unrollBalanced_theta threeJoints_isTheta
   (threeJoints_mem_unrollBalanced _ _ (by decide)) (threeJoints_mem_unrollBalanced _ _ (by decide))
 
-example := threeJoints_isRollable.exists_isUnrolling
+example := threeJoints_isRollable.balancing.exists_isUnrolling
 
 end Transformer.GainMatroid

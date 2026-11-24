@@ -47,7 +47,7 @@ namespace IsUnrolling
 /-- §2.5: "`F(G_U, B_U) = F(Ĝ, B̂)`", citing [AlmostBalancedReps, Proposition 2.2], compared by
 circuits: an unbalancing class of the unrolling rolls up (`IsUnrolling.isRollUpClass`). That
 `F(Ĝ, B̂) = F(G, B)` is `IsUnrolling.isFrameCircuit_iff`. -/
-theorem isFrameCircuit_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {U : Set E}
+theorem isFrameCircuit_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u) {U : Set E}
     (hU : U ∈ Ω'.unbalancingClasses u) (X : Set E) :
     (Ω'.rollUp u U).IsFrameCircuit X ↔ Ω'.IsFrameCircuit X :=
   (h.isRollUpClass hΩ hU).isFrameCircuit_rollUp_iff X
@@ -55,7 +55,7 @@ theorem isFrameCircuit_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
 /-- §2.5: "`F(Ĝ, B̂) = F(G, B)`", compared by circuits as in the source, for the corrected `B̂` of
 `unrollBalanced`: `(G, B)` is the roll-up of the unrolling along the joints `J` off `u`
 (`IsUnrolling.isRollUpClass_offJoints`). -/
-theorem isFrameCircuit_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) (X : Set E) :
+theorem isFrameCircuit_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u) (X : Set E) :
     Ω'.IsFrameCircuit X ↔ Ω.IsFrameCircuit X := by
   have h' := (h.isRollUpClass_offJoints hΩ).isFrameCircuit_rollUp_iff X
   unfold IsFrameCircuit at h' ⊢
@@ -70,10 +70,11 @@ open BiasedGraph
 
 example := pumpkin_isRollUpClass.isFrameCircuit_rollUp_iff {0}
 
-example := twoJoints_isUnrolling.isFrameCircuit_rollUp twoJoints_isRollable twoJointsHat_class_mem
+example := twoJoints_isUnrolling.isFrameCircuit_rollUp twoJoints_isRollable.balancing
+  twoJointsHat_class_mem
 
-example := twoJoints_isUnrolling.isFrameCircuit_iff twoJoints_isRollable {4}
+example := twoJoints_isUnrolling.isFrameCircuit_iff twoJoints_isRollable.balancing {4}
 
-example := centreJoint_isUnrolling.isFrameCircuit_iff centreJoint_isRollable {4}
+example := centreJoint_isUnrolling.isFrameCircuit_iff centreJoint_isRollable.balancing {4}
 
 end Transformer.GainMatroid

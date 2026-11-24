@@ -16,7 +16,10 @@ defines:
 
 The source's observation that two joints and a path between them form a frame circuit is proved
 here for any two joints (`isFrameCircuit_of_joints`). The claims about `∼` that the source cites
-from [AlmostBalancedReps] are stated in `Section2_UnbalancingRelation`.
+from [AlmostBalancedReps] are stated in `Section2_UnbalancingRelation`. They and the unrolling use
+only that `u` is a balancing vertex after deleting the joints (`IsLinkBalancingVertex`,
+`IsRollable.balancing`), not that it is unique: in the source's special case of a biased graph
+balanced after deleting its joints, every vertex is one.
 -/
 
 @[expose] public section
@@ -114,18 +117,27 @@ def UnbalancingRel (e f : E) : Prop :=
 /-- The **unbalancing class** of `e` in `Σ(u)` (§2.5). -/
 def unbalancingClass (e : E) : Set E := {f | f ∈ Ω.sigmaStar u ∧ Ω.UnbalancingRel u e f}
 
+/-- `u` is a balancing vertex of `Ω` after deleting its joints (§2.5). The cycles left by deleting
+the joints that can be unbalanced are those of at least two edges, so `u` lies on each unbalanced
+cycle of at least two edges. -/
+def IsLinkBalancingVertex : Prop :=
+  ∀ C, Ω.IsUnbalancedCycle C → 2 ≤ C.encard → u ∈ Ω.graph.verts C
+
 /-- `Ω` is almost balanced and, after deleting its joints, `u` is its unique balancing vertex
-(§2.5). The cycles left by deleting the joints that can be unbalanced are those of at least two
-edges. -/
+(§2.5). -/
 structure IsRollable : Prop where
   /-- `Ω` is almost balanced. -/
   almost : Ω.IsAlmostBalanced
-  /-- `u` is the only vertex on every unbalanced cycle of at least two edges. -/
-  unique : ∀ v, (∀ C, Ω.IsUnbalancedCycle C → 2 ≤ C.encard → v ∈ Ω.graph.verts C) ↔ v = u
+  /-- `u` is the only balancing vertex after deleting the joints. -/
+  unique : ∀ v, Ω.IsLinkBalancingVertex v ↔ v = u
 
 end Definitions
 
 variable {Ω : BiasedGraph V E} {u : V}
+
+/-- What §2.5 uses of `IsRollable`: `u` is a balancing vertex after deleting the joints. -/
+theorem IsRollable.balancing (h : Ω.IsRollable u) : Ω.IsLinkBalancingVertex u :=
+  (h.unique u).2 rfl
 
 /-- `∼` is symmetric. -/
 theorem UnbalancingRel.symm {e f : E} (h : Ω.UnbalancingRel u e f) : Ω.UnbalancingRel u f e := by

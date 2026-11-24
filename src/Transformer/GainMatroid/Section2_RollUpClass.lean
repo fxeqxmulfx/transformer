@@ -52,7 +52,7 @@ structure IsRollUpClass (Ω : BiasedGraph V E) (u : V) (U : Set E) : Prop where
   single : ∀ C ∈ Ω.balanced, ∀ e ∈ C, e ∈ U → ∀ f ∈ C, f ∈ Ω.linkStar u → f ∈ U
 
 /-- Each unbalancing class of the unrolling rolls up. -/
-theorem IsUnrolling.isRollUpClass (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
+theorem IsUnrolling.isRollUpClass (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u)
     (hU : U ∈ Ω'.unbalancingClasses u) : Ω'.IsRollUpClass u U := by
   obtain ⟨k, hk, rfl⟩ := hU
   have hS : ∀ {x}, x ∈ Ω'.sigmaStar u → x ∈ Ω.sigmaStar u := fun hx => by
@@ -68,8 +68,8 @@ theorem IsUnrolling.isRollUpClass (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollabl
 
 /-- The joints `J` off `u` roll up in the unrolling, also when they lie in several components of
 `G − u` and do not form one class (`unbalancingClass_printed_fails`). -/
-theorem IsUnrolling.isRollUpClass_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) :
-    Ω'.IsRollUpClass u (Ω.offJoints u) := by
+theorem IsUnrolling.isRollUpClass_offJoints (h : Ω.IsUnrolling u Ω')
+    (hΩ : Ω.IsLinkBalancingVertex u) : Ω'.IsRollUpClass u (Ω.offJoints u) := by
   have hL : ∀ {x}, x ∈ Ω'.linkStar u → x ∈ Ω.sigmaStar u := fun hx => by
     rw [h.linkStar_eq] at hx
     exact hx
@@ -183,17 +183,17 @@ theorem twoJointsHat_zero_mem_class :
     (0 : Fin 6) ∈ twoJointsHat.contrabalanced.unbalancingClass 0 0 :=
   ⟨twoJointsHat_zero_mem, Or.inl rfl⟩
 
-example := twoJoints_isUnrolling.isRollUpClass twoJoints_isRollable twoJointsHat_class_mem
-example := twoJoints_isUnrolling.isRollUpClass_offJoints twoJoints_isRollable
+example := twoJoints_isUnrolling.isRollUpClass twoJoints_isRollable.balancing twoJointsHat_class_mem
+example := twoJoints_isUnrolling.isRollUpClass_offJoints twoJoints_isRollable.balancing
 example := (gainBiased_one_isBalanced (Γ := ℚˣ) pumpkin).isRollUpClass 0
 example := ((gainBiased_one_isBalanced (Γ := ℚˣ) pumpkin).isRollUpClass 0).exists_of_mem_balanced
   (gainBiased_one_isBalanced pumpkin _ pumpkin_isTheta.isCycle.1) (Or.inl List.mem_cons_self)
   (pumpkin_mem_linkStar 0)
-example := (twoJoints_isUnrolling.isRollUpClass twoJoints_isRollable
+example := (twoJoints_isUnrolling.isRollUpClass twoJoints_isRollable.balancing
   twoJointsHat_class_mem).exists_of_notMem_balanced (C := {0, 1})
   (isCycle_pair (G := twoJointsHat) (e := 0) (f := 1) (Or.inl ⟨rfl, rfl⟩) (Or.inl ⟨rfl, rfl⟩)
     (by decide) (by decide)) (Set.notMem_empty _) (Or.inl rfl) twoJointsHat_zero_mem_class
-example := (twoJoints_isUnrolling.isRollUpClass twoJoints_isRollable
+example := (twoJoints_isUnrolling.isRollUpClass twoJoints_isRollable.balancing
   twoJointsHat_class_mem).notMem_balanced_of_rollUp (X := {0}) (fun _ _ _ hb => hb.1)
   fun _ he _ hf _ _ => he.trans hf.symm
 

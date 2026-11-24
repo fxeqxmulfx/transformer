@@ -41,7 +41,7 @@ theorem mem_linkStar (h : Ω.IsUnrolling u Ω') {e : E} (he : e ∈ Ω.sigmaStar
 
 /-- A cycle of `Ĝ` through two edges of `Σ(u)` is balanced exactly when they are related in
 `(G, B)`: they are its only edges in `Σ(u)`, so it meets each class in both of them or in none. -/
-theorem mem_balanced_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {e f : E}
+theorem mem_balanced_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u) {e f : E}
     (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u) (hne : e ≠ f) {C : Set E}
     (hC : Ω'.graph.IsCycle C) (heC : e ∈ C) (hfC : f ∈ C) :
     C ∈ Ω'.balanced ↔ Ω.UnbalancingRel u e f := by
@@ -76,7 +76,7 @@ theorem mem_balanced_iff (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {e f
 /-- `∼` is transitive on `Σ_Ĝ(u)`: pairs related in `Ĝ` are related in `(G, B)`, so every cycle of
 `Ĝ` through either pair is balanced, and a theta gives a balanced cycle through the outer two edges
 (`exists_balanced_of_links`). -/
-theorem unbalancingRel_trans (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {e f g : E}
+theorem unbalancingRel_trans (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u) {e f g : E}
     (he : e ∈ Ω.sigmaStar u) (hf : f ∈ Ω.sigmaStar u) (hg : g ∈ Ω.sigmaStar u)
     (hef : Ω'.UnbalancingRel u e f) (hfg : Ω'.UnbalancingRel u f g) : Ω'.UnbalancingRel u e g := by
   have hJ : ∀ {x}, x ∉ Ω'.offJoints u := fun hx => by
@@ -126,8 +126,8 @@ theorem offJoints_rollUp (h : Ω.IsUnrolling u Ω') {U : Set E} (hU : U ∈ Ω'.
 
 /-- §2.5: "`Σ_{G_U}(u)/∼ = Σ_Ĝ(u)/∼`", for each edge of `Σ(u)`; `sigmaStar_rollUp` says the two
 sets of edges agree. -/
-theorem unbalancingClass_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) {U : Set E}
-    (hU : U ∈ Ω'.unbalancingClasses u) {f : E} (hf : f ∈ Ω'.sigmaStar u) :
+theorem unbalancingClass_rollUp (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u)
+    {U : Set E} (hU : U ∈ Ω'.unbalancingClasses u) {f : E} (hf : f ∈ Ω'.sigmaStar u) :
     (Ω'.rollUp u U).unbalancingClass u f = Ω'.unbalancingClass u f := by
   have hS : ∀ {x}, x ∈ Ω'.sigmaStar u → x ∈ Ω.sigmaStar u := fun hx => by
     rw [← h.sigmaStar_eq]
@@ -182,17 +182,17 @@ theorem twoJoints_zero_mem : (0 : Fin 6) ∈ twoJoints.contrabalanced.sigmaStar 
 
 example := twoJoints_isUnrolling.mem_linkStar twoJoints_zero_mem
 
-example := twoJoints_isUnrolling.mem_balanced_iff twoJoints_isRollable twoJoints_zero_mem
+example := twoJoints_isUnrolling.mem_balanced_iff twoJoints_isRollable.balancing twoJoints_zero_mem
   (f := 1) (Or.inl ⟨by decide, Or.inl rfl⟩) (by decide) (isCycle_pair (G := twoJointsHat)
     (e := 0) (f := 1) (Or.inl ⟨rfl, rfl⟩) (Or.inl ⟨rfl, rfl⟩) (by decide) (by decide)) (by simp)
   (by simp)
 
-example := twoJoints_isUnrolling.unbalancingRel_trans twoJoints_isRollable twoJoints_zero_mem
-  twoJoints_zero_mem twoJoints_zero_mem (Or.inl rfl) (Or.inl rfl)
+example := twoJoints_isUnrolling.unbalancingRel_trans twoJoints_isRollable.balancing
+  twoJoints_zero_mem twoJoints_zero_mem twoJoints_zero_mem (Or.inl rfl) (Or.inl rfl)
 
 example := twoJoints_isUnrolling.offJoints_rollUp twoJointsHat_class_mem
 
-example := twoJoints_isUnrolling.unbalancingClass_rollUp twoJoints_isRollable
+example := twoJoints_isUnrolling.unbalancingClass_rollUp twoJoints_isRollable.balancing
   twoJointsHat_class_mem twoJointsHat_zero_mem
 
 end Transformer.GainMatroid

@@ -87,7 +87,7 @@ theorem sigmaStar_rollUp (h : Ω.IsUnrolling u Ω') {U : Set E} (hU : U ∈ Ω'.
 /-- §2.5: "`J` is an unbalancing class of `Σ_Ĝ(u)`", for `J` nonempty in one component of
 `G − u`; the printed claim fails otherwise (`unbalancingClass_printed_fails`). `J` is the class in
 `(G, B)` of each of its joints, and the unrolling keeps the classes (`unbalancingClass_eq`). -/
-theorem offJoints_mem_unbalancingClasses (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
+theorem offJoints_mem_unbalancingClasses (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u)
     (hJ : Ω.JointsConnected u) (hne : (Ω.offJoints u).Nonempty) :
     Ω.offJoints u ∈ Ω'.unbalancingClasses u := by
   obtain ⟨e, he⟩ := hne
@@ -102,7 +102,7 @@ theorem graph_rollUp_offJoints (h : Ω.IsUnrolling u Ω') :
   exact Ω.rollUpGraph_unrollGraph u
 
 /-- §2.5: the balanced cycles of `(G_J, B_J)` are `B`, the cycles of `B̂` that avoid `J`. -/
-theorem balanced_rollUp_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u) :
+theorem balanced_rollUp_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u) :
     (Ω'.rollUp u (Ω.offJoints u)).balanced = Ω.balanced :=
   (congrArg (fun B : Set (Set E) => {C ∈ B | Disjoint C (Ω.offJoints u)}) h.balanced_eq).trans
     hΩ.unrollBalanced_sep_disjoint
@@ -137,8 +137,8 @@ example := twoJoints_isUnrolling.rollUp_ne twoJointsHat_class_mem
 example := twoJoints_isUnrolling.ncard_rollUpFamily
 example := twoJoints_isUnrolling.sigmaStar_rollUp twoJointsHat_class_mem
 example := twoJoints_isUnrolling.graph_rollUp_offJoints
-example := twoJoints_isUnrolling.balanced_rollUp_offJoints twoJoints_isRollable
-example := centreJoint_isUnrolling.offJoints_mem_unbalancingClasses centreJoint_isRollable
+example := twoJoints_isUnrolling.balanced_rollUp_offJoints twoJoints_isRollable.balancing
+example := centreJoint_isUnrolling.offJoints_mem_unbalancingClasses centreJoint_isRollable.balancing
   centreJoint_jointsConnected ⟨5, (centreJoint_mem_offJoints 5).2 rfl⟩
 
 end Transformer.GainMatroid

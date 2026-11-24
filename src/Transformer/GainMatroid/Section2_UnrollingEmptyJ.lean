@@ -10,14 +10,15 @@ Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.5:
 > "If `J` is empty, then set `(Ĝ, B̂) = (G, B)`."
 
 This agrees with the definition of the unrolling, for the corrected `B̂` of `unrollBalanced`: when
-`J` is empty, `(G, B)` is its own unrolling to `u` (`IsRollable.isUnrolling_self`), so every
-unrolling has the graph `G` (`IsUnrolling.graph_eq_of_offJoints`) and the balanced cycles `B`
+`J` is empty, `(G, B)` is its own unrolling to `u` (`IsLinkBalancingVertex.isUnrolling_self`), so
+every unrolling has the graph `G` (`IsUnrolling.graph_eq_of_offJoints`) and the balanced cycles `B`
 (`IsUnrolling.balanced_eq_of_offJoints`). A link at `u` on a cycle meets exactly one other edge of
 the cycle at `u` (`IsCycle.exists_partner`). So a balanced cycle, which has no joint, meets each
-unbalancing class in zero or two edges: `B ⊆ B̂` for every `J` (`IsRollable.balanced_subset`).
-Conversely a cycle of `B̂` that avoids `J` is in `B` (`IsRollable.unrollBalanced_sep_disjoint`): a
-loop in it is not a joint, a longer cycle that misses `u` is balanced, and one through `u` meets
-`Σ(u)` in two links of one class, which lie on a balanced cycle (`IsRollable.balanced_iff`).
+unbalancing class in zero or two edges: `B ⊆ B̂` for every `J`
+(`IsLinkBalancingVertex.balanced_subset`). Conversely a cycle of `B̂` that avoids `J` is in `B`
+(`IsLinkBalancingVertex.unrollBalanced_sep_disjoint`): a loop in it is not a joint, a longer cycle
+that misses `u` is balanced, and one through `u` meets `Σ(u)` in two links of one class, which lie
+on a balanced cycle (`IsLinkBalancingVertex.balanced_iff`).
 -/
 
 @[expose] public section
@@ -72,7 +73,8 @@ theorem unrollGraph_of_offJoints (hJ : Ω.offJoints u = ∅) : Ω.unrollGraph u 
 
 /-- `B ⊆ B̂`: a balanced cycle has no joint, so it is a cycle of `Ĝ`, and its edges in `Σ(u)` are
 two links at `u` in one class or none, so it meets each class in zero or two edges. -/
-theorem IsRollable.balanced_subset (hΩ : Ω.IsRollable u) : Ω.balanced ⊆ Ω.unrollBalanced u := by
+theorem IsLinkBalancingVertex.balanced_subset (hΩ : Ω.IsLinkBalancingVertex u) :
+    Ω.balanced ⊆ Ω.unrollBalanced u := by
   intro C hCB
   have hC := Ω.isCycle_of_mem C hCB
   have hJ : ∀ {x}, x ∈ C → x ∉ Ω.offJoints u := fun {x} hxC hxJ =>
@@ -102,7 +104,7 @@ theorem IsRollable.balanced_subset (hΩ : Ω.IsRollable u) : Ω.balanced ⊆ Ω.
 /-- `B` is the set of cycles of `B̂` that avoid `J`. Such a cycle is a cycle of `G`. A loop in it
 is not a joint, so it is balanced. A longer unbalanced cycle passes through `u` in a link, meets
 that link's class in a second edge, a link at `u` too, and the two lie on a balanced cycle. -/
-theorem IsRollable.unrollBalanced_sep_disjoint (hΩ : Ω.IsRollable u) :
+theorem IsLinkBalancingVertex.unrollBalanced_sep_disjoint (hΩ : Ω.IsLinkBalancingVertex u) :
     {C ∈ Ω.unrollBalanced u | Disjoint C (Ω.offJoints u)} = Ω.balanced := by
   refine Set.Subset.antisymm ?_ fun C hCB => ⟨hΩ.balanced_subset hCB,
     Set.disjoint_left.2 fun x hx hxJ => hxJ.1.not_mem_of_balanced hCB hx⟩
@@ -119,7 +121,7 @@ theorem IsRollable.unrollBalanced_sep_disjoint (hΩ : Ω.IsRollable u) :
   push Not at hloop
   obtain ⟨c, hc⟩ := hC.nonempty
   obtain ⟨d, hdC, hdc, -⟩ := hC.exists_partner hc (hloop c hc) (Or.inl rfl)
-  obtain ⟨e, heC, heu⟩ := mem_verts.1 ((hΩ.unique u).2 rfl C ⟨hC, hCB⟩
+  obtain ⟨e, heC, heu⟩ := mem_verts.1 (hΩ C ⟨hC, hCB⟩
     ((Set.encard_pair hdc.symm).ge.trans (Set.encard_le_encard (Set.pair_subset hc hdC))))
   have heL : e ∈ Ω.linkStar u := ⟨hloop e heC, heu⟩
   obtain ⟨g, ⟨hgC, hgS, hrel⟩, hge⟩ : ∃ g ∈ C ∩ Ω.unbalancingClass u e, g ≠ e := by
@@ -135,14 +137,14 @@ theorem IsRollable.unrollBalanced_sep_disjoint (hΩ : Ω.IsRollable u) :
   · exact hJ heC heJ
 
 /-- With `J` empty the corrected `B̂` is `B`: every cycle avoids `J`. -/
-theorem IsRollable.unrollBalanced_eq (hΩ : Ω.IsRollable u) (hJ : Ω.offJoints u = ∅) :
-    Ω.unrollBalanced u = Ω.balanced := by
+theorem IsLinkBalancingVertex.unrollBalanced_eq (hΩ : Ω.IsLinkBalancingVertex u)
+    (hJ : Ω.offJoints u = ∅) : Ω.unrollBalanced u = Ω.balanced := by
   rw [← hΩ.unrollBalanced_sep_disjoint, hJ]
   exact (Set.sep_eq_self_iff_mem_true.2 fun C _ => Set.disjoint_empty C).symm
 
 /-- §2.5: "If `J` is empty, then set `(Ĝ, B̂) = (G, B)`": then `(G, B)` is its own unrolling. -/
-theorem IsRollable.isUnrolling_self (hΩ : Ω.IsRollable u) (hJ : Ω.offJoints u = ∅) :
-    Ω.IsUnrolling u Ω :=
+theorem IsLinkBalancingVertex.isUnrolling_self (hΩ : Ω.IsLinkBalancingVertex u)
+    (hJ : Ω.offJoints u = ∅) : Ω.IsUnrolling u Ω :=
   ⟨(unrollGraph_of_offJoints hJ).symm, (hΩ.unrollBalanced_eq hJ).symm⟩
 
 namespace IsUnrolling
@@ -153,7 +155,7 @@ theorem graph_eq_of_offJoints (h : Ω.IsUnrolling u Ω') (hJ : Ω.offJoints u = 
   h.graph_eq.trans (unrollGraph_of_offJoints hJ)
 
 /-- §2.5: "If `J` is empty, then set `(Ĝ, B̂) = (G, B)`": the corrected `B̂` is then `B`. -/
-theorem balanced_eq_of_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollable u)
+theorem balanced_eq_of_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsLinkBalancingVertex u)
     (hJ : Ω.offJoints u = ∅) : Ω'.balanced = Ω.balanced :=
   h.balanced_eq.trans (hΩ.unrollBalanced_eq hJ)
 
@@ -178,18 +180,19 @@ example := (isCycle_pair (G := pumpkin) (e := 0) (f := 1) (Or.inl ⟨rfl, rfl⟩
 
 example := BiasedGraph.unrollGraph_of_offJoints centreLoop_offJoints
 
-example := centreLoop_isRollable.balanced_subset
+example := centreLoop_isRollable.balancing.balanced_subset
 
-example := centreLoop_isRollable.unrollBalanced_sep_disjoint
+example := centreLoop_isRollable.balancing.unrollBalanced_sep_disjoint
 
-example := centreLoop_isRollable.unrollBalanced_eq centreLoop_offJoints
+example := centreLoop_isRollable.balancing.unrollBalanced_eq centreLoop_offJoints
 
-example := centreLoop_isRollable.isUnrolling_self centreLoop_offJoints
+example := centreLoop_isRollable.balancing.isUnrolling_self centreLoop_offJoints
 
-example := (centreLoop_isRollable.isUnrolling_self centreLoop_offJoints).graph_eq_of_offJoints
+example := (centreLoop_isRollable.balancing.isUnrolling_self
+  centreLoop_offJoints).graph_eq_of_offJoints centreLoop_offJoints
+
+example := (centreLoop_isRollable.balancing.isUnrolling_self
+  centreLoop_offJoints).balanced_eq_of_offJoints centreLoop_isRollable.balancing
   centreLoop_offJoints
-
-example := (centreLoop_isRollable.isUnrolling_self centreLoop_offJoints).balanced_eq_of_offJoints
-  centreLoop_isRollable centreLoop_offJoints
 
 end Transformer.GainMatroid
