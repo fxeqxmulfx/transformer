@@ -13,7 +13,7 @@ For a matrix whose columns on a triangle `X` are those of `I(K₄)` (`IsTriangle
 (`deltaMatrix`) adds a zero row and replaces these columns by the triad. For a matrix whose columns
 on a triad `Y` are those of `I(K₄)` (`IsTriadForm`), `∇_Y A` (`nablaMatrix`) replaces them by the
 triangle. `IsTriadForm` also asks that the row `v` vanish off `Y`, so that this row is zero in
-`∇_Y A`.
+`∇_Y A`. The source does not ask this, and `Section2_NablaZeroRow` shows that it is needed.
 
 **Proposition 2.11.** "Let `𝔽` be a field and let `(G, φ)` be a `Γ`-gain graph, where
 `Γ ∈ {𝔽ˣ, 𝔽⁺}`. Let `X` be a balanced triangle of `(G, B_φ)` and let `Y` be a `K_{1,3}`-subgraph of

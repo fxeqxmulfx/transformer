@@ -54,6 +54,7 @@ public import Transformer.GainMatroid.Section2_CoconnectionMaps
 public import Transformer.GainMatroid.Section2_CoconnectionFlats
 public import Transformer.GainMatroid.Section2_CoconnectionDeletion
 public import Transformer.GainMatroid.Section2_ExchangedMatrices
+public import Transformer.GainMatroid.Section2_NablaZeroRow
 public import Transformer.GainMatroid.Section2_BiasedMatroids
 public import Transformer.GainMatroid.Section2_FullRankLift
 public import Transformer.GainMatroid.Section2_UnbalancingClasses
@@ -183,7 +184,8 @@ triangle, `Section2_CoconnectionMaps` relates the columns of the two matrices, a
 `Section2_CoconnectionFlats` and `Section2_CoconnectionDeletion` prove that the dual of its matroid
 is the generalized parallel connection of `M(A)*` and `M(K₄)`, and that deleting the triad leaves
 `M(∇_Y A)*`. `Section2_ExchangedMatrices` proves that `Δ_X A` represents `Δ_X M(A)` and `∇_Y A`
-represents `∇_Y M(A)`. `Section2_BiasedMatroids` states what the source cites
+represents `∇_Y M(A)`, and `Section2_NablaZeroRow` proves that the latter fails as printed, without
+the zero row of `IsTriadForm`. `Section2_BiasedMatroids` states what the source cites
 from Zaslavsky on `F(G, B)`, `L(G, B)`, their canonical matrices and minors, and proves that the
 biased graph determines them and that they agree without vertex-disjoint unbalanced cycles.
 `Section2_FullRankLift` deletes one row per component of a canonical lift matrix, and shows that the

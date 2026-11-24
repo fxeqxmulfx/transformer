@@ -15,8 +15,10 @@ and "Let `∇_Y A` denote the matrix `A` obtained by replacing the columns of `Y
 last three columns of `I(K₄)`. Then `M(∇_Y A) = ∇_Y M(A)`."
 
 `isDeltaMatroid_of_isTriangleForm` and `isNablaMatroid_of_isTriadForm` state these for matrices in
-the forms `IsTriangleForm` and `IsTriadForm`. As in the source, `Y` is a triad. Brylawski's paper is
-not among the local sources. The first is proved here: the matroid of `connectionMatrix` is the
+the forms `IsTriangleForm` and `IsTriadForm`. As in the source, `Y` is a triad. `IsTriadForm` also
+asks that the row `v` vanish off `Y`, which the source omits: without it the second claim fails
+(`nablaMatrix_fails`, in `Section2_NablaZeroRow`). Brylawski's paper is not among the local
+sources. The first is proved here: the matroid of `connectionMatrix` is the
 generalized parallel connection of `IsDeltaMatroid` (`IsTriangleForm.isFlat_connection_iff`), and
 deleting `X` from it leaves `Δ_X A` (`deltaMatrix_eq_connectionMatrix`). The second follows by
 duality, since `∇_Y M = (Δ_Y M*)*`: the dual of the matroid of `coconnectionMatrix` is the
@@ -46,8 +48,11 @@ theorem isDeltaMatroid_of_isTriangleForm [DecidableEq E] [DecidableEq R] [Finite
     hA'.eq (hP.comap (deltaRelabel_injective a b c) deltaMatrix_eq_connectionMatrix)⟩
   rw [hP.1, hA.1, Set.image_univ, Set.range_inl_union_range_inr]
 
-/-- **§2.4** (Brylawski). `M(∇_Y A) = ∇_Y M(A)` when the columns of `A` on the triad
-`Y = {a, b, c}` are the first three columns of `I(K₄)`. -/
+/-- **§2.4, corrected** (Brylawski). `M(∇_Y A) = ∇_Y M(A)` when the columns of `A` on the triad
+`Y = {a, b, c}` are the first three columns of `I(K₄)`, with no row omitted, and its row `v`
+vanishes off `Y` (`IsTriadForm`). The source asks only for the columns, and then the claim fails
+(`nablaMatrix_fails`). `BiasedGraph.exists_isTriadForm` brings every independent triad to this
+form. -/
 theorem isNablaMatroid_of_isTriadForm [DecidableEq E] [DecidableEq R] [Finite E]
     {M M' : Matroid E} {A : Matrix R E F} {v : R} {a b c : E} {x y z : R}
     (hA : IsMatrixRepresentation M A) (hform : IsTriadForm A v a b c x y z)
