@@ -21,16 +21,9 @@ That `J` is a class needs its joints in one component of `G − u`, by
 `unbalancingClass_printed_fails`, so the statement assumes `JointsConnected`, and that `J` is
 nonempty, as no class is empty (`empty_notMem_unbalancingClasses`).
 
-The source's special case is a biased graph balanced after removing its joints:
-
-> "Let `x` be a new isolated vertex added to `V(G)`. Then `J` may be unrolled to any vertex of `G`,
-> including `x`. In the case that `J` is unrolled to `x`, we obtain a balanced biased graph
-> `(H, C(H))`, so `F(G, B)` is equal to the cycle matroid `M(H)` of `H`. The reverse operation may
-> be applied to any graph. Given a graph `H` and a vertex `x ∈ V(H)`, let `(G, B)` be the rollup of
-> the set of edges incident to `x` […]. Then `M(H) = F(G, B)`."
-
-`BiasedGraph.unrollToNew` is `H`, on the vertices `Option V` with `none` the new vertex. Matroid
-equalities are stated on circuits, which determine a matroid (`Matroid.ext_isCircuit`).
+Matroid equalities are stated on circuits, which determine a matroid (`Matroid.ext_isCircuit`).
+The source's special case, a biased graph balanced after removing its joints, is in
+`Section2_LoopUnrolling` and `Section2_LoopCircuits`.
 -/
 
 @[expose] public section
@@ -122,29 +115,6 @@ theorem balanced_rollUp_offJoints (h : Ω.IsUnrolling u Ω') (hΩ : Ω.IsRollabl
 
 end IsUnrolling
 
-open Classical in
-/-- `H` (§2.5): each joint of `Ω` becomes a link to the new vertex `none`. -/
-noncomputable def unrollToNew (Ω : BiasedGraph V E) : OrientedGraph (Option V) E where
-  tail e := some (Ω.graph.tail e)
-  head e := if Ω.IsJoint e then none else some (Ω.graph.head e)
-
-/-- §2.5: when `(G, B)` is balanced after removing its joints, "`J` may be unrolled to any vertex
-of `G`", and the frame matroid does not change. -/
-theorem exists_isUnrolling_of_balanced_off (hbal : ∀ C, Ω.IsUnbalancedCycle C → ∃ e, C = {e})
-    (w : V) : ∃ Ω', Ω.IsUnrolling w Ω' ∧ ∀ X, Ω'.IsFrameCircuit X ↔ Ω.IsFrameCircuit X := by
-  sorry
-
-/-- §2.5: "`F(G, B)` is equal to the cycle matroid `M(H)` of `H`". -/
-theorem isFrameCircuit_iff_unrollToNew (hbal : ∀ C, Ω.IsUnbalancedCycle C → ∃ e, C = {e})
-    (X : Set E) : Ω.IsFrameCircuit X ↔ Ω.unrollToNew.IsCycle X := by
-  sorry
-
-/-- §2.5: rolling up the links at a vertex `x` of a graph `H`, "`M(H) = F(G, B)`". A loop at `x`
-has no other end and stays. -/
-theorem IsBalanced.isFrameCircuit_rollUp (hΩ : Ω.IsBalanced) (x : V) (X : Set E) :
-    (Ω.rollUp x (Ω.linkStar x)).IsFrameCircuit X ↔ Ω.graph.IsCycle X := by
-  sorry
-
 end BiasedGraph
 
 open BiasedGraph
@@ -157,12 +127,6 @@ theorem twoJointsHat_zero_mem : (0 : Fin 6) ∈ twoJointsHat.contrabalanced.sigm
 theorem twoJointsHat_class_mem : twoJointsHat.contrabalanced.unbalancingClass 0 0 ∈
     twoJointsHat.contrabalanced.unbalancingClasses 0 :=
   ⟨0, twoJointsHat_zero_mem, rfl⟩
-
-/-- Every unbalanced cycle of `twoLoops` is one loop. -/
-theorem twoLoops_unbalanced_singleton (C : Set Bool)
-    (hC : twoLoops.contrabalanced.IsUnbalancedCycle C) : ∃ e, C = {e} := by
-  obtain ⟨c, hc⟩ := hC.1.nonempty
-  exact ⟨c, hC.1.eq_singleton_of_loop hc rfl⟩
 
 example := rollUpGraph_tail_of_mem (G := triangle) (u := 0) (U := {0}) (e := 0) rfl
 example := rollUpGraph_head_of_mem (G := triangle) (u := 0) (U := {0}) (e := 0) rfl
@@ -183,8 +147,5 @@ example := twoJoints_isUnrolling.graph_rollUp_offJoints
 example := twoJoints_isUnrolling.balanced_rollUp_offJoints twoJoints_isRollable
 example := centreJoint_isUnrolling.offJoints_mem_unbalancingClasses centreJoint_isRollable
   centreJoint_jointsConnected ⟨5, (centreJoint_mem_offJoints 5).2 rfl⟩
-example := exists_isUnrolling_of_balanced_off twoLoops_unbalanced_singleton ()
-example := isFrameCircuit_iff_unrollToNew twoLoops_unbalanced_singleton ∅
-example := IsBalanced.isFrameCircuit_rollUp (gainBiased_one_isBalanced (Γ := ℚˣ) triangle) 0 ∅
 
 end Transformer.GainMatroid

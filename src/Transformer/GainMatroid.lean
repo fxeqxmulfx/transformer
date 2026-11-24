@@ -63,6 +63,9 @@ public import Transformer.GainMatroid.Section2_UnrollingTheta
 public import Transformer.GainMatroid.Section2_RollUps
 public import Transformer.GainMatroid.Section2_RollUpClaims
 public import Transformer.GainMatroid.Section2_RollUpClasses
+public import Transformer.GainMatroid.Section2_WalkMaps
+public import Transformer.GainMatroid.Section2_LoopUnrolling
+public import Transformer.GainMatroid.Section2_LoopCircuits
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -148,8 +151,11 @@ rollable biased graph is its own unrolling, as the source sets it, and
 off the vertex are connected. `Section2_UnrollingLinks` relates the cycles of `B̂` to `∼`, and
 `Section2_UnrollingTheta` proves that the unrolling is a biased graph.
 `Section2_RollUps` defines the roll-ups of an unrolling and counts them, and `Section2_RollUpClaims`
-states what §2.5 claims of them and of a biased graph balanced off its joints.
-`Section2_RollUpClasses` proves that each roll-up keeps the unbalancing classes of `(Ĝ, B̂)`.
+states what §2.5 claims of them. `Section2_RollUpClasses` proves that each roll-up keeps the
+unbalancing classes of `(Ĝ, B̂)`. `Section2_WalkMaps` carries walks along a map of the vertices,
+`Section2_LoopUnrolling` defines the unrolling of loops to one vertex, and `Section2_LoopCircuits`
+proves that its frame circuits are the cycles of the new graph and states what §2.5 claims of a
+biased graph balanced off its joints.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
