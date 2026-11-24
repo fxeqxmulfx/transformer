@@ -42,6 +42,11 @@ public import Transformer.GainMatroid.Section2_TriadForms
 public import Transformer.GainMatroid.Section2_TriadColumns
 public import Transformer.GainMatroid.Section2_K4Forms
 public import Transformer.GainMatroid.Section2_K4Matrix
+public import Transformer.GainMatroid.Section2_MatrixMatroids
+public import Transformer.GainMatroid.Section2_K4Flats
+public import Transformer.GainMatroid.Section2_TriangleConnection
+public import Transformer.GainMatroid.Section2_ConnectionFlats
+public import Transformer.GainMatroid.Section2_ConnectionMatroid
 public import Transformer.GainMatroid.Section2_ExchangedMatrices
 public import Transformer.GainMatroid.Section2_BiasedMatroids
 public import Transformer.GainMatroid.Section2_FullRankLift
@@ -161,8 +166,12 @@ matrices represent the same matroid and brings a represented triangle to the las
 `I(K₄)`. `Section2_TriadForms` gives the row vector of a cocircuit, `Section2_TriadColumns` refutes
 the printed claim that every triad takes the first three columns of `I(K₄)`, and `Section2_K4Forms`
 proves it for an independent triad. `Section2_K4Matrix` proves that every representation of `M(K₄)`
-is projectively equivalent to `I(K₄)`, and `Section2_ExchangedMatrices` states that the exchanged
-matrices represent the exchanged matroids. `Section2_BiasedMatroids` states what the source cites
+is projectively equivalent to `I(K₄)`. `Section2_MatrixMatroids` builds the matroid of a matrix and
+reads its flats off spans, and `Section2_K4Flats` gives the flats of `M(K₄)` by its triangles.
+`Section2_TriangleConnection` adjoins `I(K₄)` to a matrix across a triangle,
+`Section2_ConnectionFlats` and `Section2_ConnectionMatroid` prove that its matroid is the
+generalized parallel connection, and `Section2_ExchangedMatrices` proves that `Δ_X A` represents
+`Δ_X M(A)` and states the same for `∇_Y A`. `Section2_BiasedMatroids` states what the source cites
 from Zaslavsky on `F(G, B)`, `L(G, B)`, their canonical matrices and minors, and proves that the
 biased graph determines them and that they agree without vertex-disjoint unbalanced cycles.
 `Section2_FullRankLift` deletes one row per component of a canonical lift matrix, and shows that the
