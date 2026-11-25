@@ -21,11 +21,18 @@ The corrected statements add that `X` is coindependent, and for a Y-Δ exchange 
 independent. The source's use in the proof of Lemma 4.6, on a star of `K₄`, satisfies this. They
 are proved from the bijection of projective classes of `Section2_ProjClassEquiv`; the binary
 representations of the counterexample are in `Section2_BinaryUniform`.
+
+Part (ii) says only that the classes are "in one-to-one correspondence". The proof of Lemma 4.6
+uses more: that the class of `A` corresponds to the class of `Δ_X A`, so that `A_F(K₄, φ)` and
+`A_F(K₄, ψ)` are projectively equivalent exactly when `A_F(2C₃, φ)` and `A_F(2C₃, ψ)` are. The
+statements of (ii) give the bijection with this property.
 -/
 
 @[expose] public section
 
 namespace Transformer.GainMatroid
+
+universe u
 
 /-- The independent sets of the generalized parallel connection of `U_{2,n}` and `M(K₄)` across
 `{0, 1, 2}`: at most three elements, at most two on the line of `U_{2,n}`, and none of the three
@@ -123,29 +130,45 @@ variable {E : Type*} [DecidableEq E] [Finite E] {M M' : Matroid E} {a b c : E} (
 
 /-- **Proposition 2.9**, Δ-Y exchange, with the added hypothesis that the triangle `{a, b, c}` is
 coindependent, without which it fails (`proposition2_9_fails`). Part (i) is the first conjunct,
-part (ii) the second. Part (ii) is `IsDeltaMatroid.nonempty_projClass_equiv`, and part (i)
-follows, as a matroid is representable exactly when it has a class of representations. -/
+part (ii) the second: a bijection of the projective classes sending the class of a representation
+`A₀` in triangle form to the class of `Δ_X A₀`. Part (ii) is
+`IsDeltaMatroid.exists_projClass_equiv`, and part (i) follows, as a matroid is representable
+exactly when it has a class of representations. -/
 theorem IsDeltaMatroid.representable_and_projClass (h : IsDeltaMatroid M a b c M')
     (hco : M✶.Indep {a, b, c}) :
-    (IsRepresentable F M ↔ IsRepresentable F M') ∧ Nonempty (ProjClass F M ≃ ProjClass F M') := by
-  obtain ⟨e⟩ := h.nonempty_projClass_equiv F hco
+    (IsRepresentable F M ↔ IsRepresentable F M') ∧
+      ∃ e : ProjClass F M ≃ ProjClass F M', ∀ (A : RepMatrix F M) (B : RepMatrix F M')
+        {R : Type u} [DecidableEq R] (A₀ : Matrix R E F) (x y z : R),
+        IsTriangleForm A₀ a b c x y z → ProjEquiv A.2.1 A₀ →
+          ProjEquiv (deltaMatrix A₀ a b c x y z) B.2.1 →
+            e (Quotient.mk (repSetoid F M) A) = Quotient.mk (repSetoid F M') B := by
+  obtain ⟨e, he⟩ := h.exists_projClass_equiv F hco
   exact ⟨(nonempty_projClass_iff (F := F) M).symm.trans
-    (e.nonempty_congr.trans (nonempty_projClass_iff M')), ⟨e⟩⟩
+    (e.nonempty_congr.trans (nonempty_projClass_iff M')), e, he⟩
 
 /-- **Proposition 2.9**, Y-Δ exchange, with the added hypothesis that the triad `{a, b, c}` is
 independent, dual to the hypothesis of `IsDeltaMatroid.representable_and_projClass`. With
 `M' = (Δ_Y M*)*`, the triad `Y` of `M` is a triangle of `M'` and `M = Δ_Y M'`
 (`IsDeltaMatroid.dual_isCircuit`, `IsDeltaMatroid.dual`), and `Y` is coindependent in `M'`, being
-independent in `Δ_Y M*` (`IsDeltaMatroid.indep_triangle`). -/
+independent in `Δ_Y M*` (`IsDeltaMatroid.indep_triangle`). The bijection is the inverse of that of
+`M = Δ_Y M'`: the class of `Δ_Y B₀` goes to the class of `B₀`, for a representation `B₀` of `M'`
+in triangle form. -/
 theorem IsNablaMatroid.representable_and_projClass (h : IsNablaMatroid M a b c M')
     (hi : M.Indep {a, b, c}) :
-    (IsRepresentable F M ↔ IsRepresentable F M') ∧ Nonempty (ProjClass F M ≃ ProjClass F M') := by
+    (IsRepresentable F M ↔ IsRepresentable F M') ∧
+      ∃ e : ProjClass F M ≃ ProjClass F M', ∀ (A : RepMatrix F M) (B : RepMatrix F M')
+        {R : Type u} [DecidableEq R] (B₀ : Matrix R E F) (x y z : R),
+        IsTriangleForm B₀ a b c x y z → ProjEquiv B.2.1 B₀ →
+          ProjEquiv (deltaMatrix B₀ a b c x y z) A.2.1 →
+            e (Quotient.mk (repSetoid F M) A) = Quotient.mk (repSetoid F M') B := by
   obtain ⟨N, hN, rfl⟩ := h
   have ht := hN.dual_isCircuit (by rwa [Matroid.dual_dual])
   have hΔ : IsDeltaMatroid N✶ a b c M := by simpa using hN.dual ht
-  obtain ⟨hr, ⟨e⟩⟩ := hΔ.representable_and_projClass F
+  obtain ⟨hr, e, he⟩ := hΔ.representable_and_projClass F
     (by rw [Matroid.dual_dual]; exact hN.indep_triangle)
-  exact ⟨hr.symm, ⟨e.symm⟩⟩
+  refine ⟨hr.symm, e.symm, ?_⟩
+  intro A B R _ B₀ x y z hform hB hA
+  exact e.symm_apply_eq.2 (he B A B₀ x y z hform hB hA).symm
 
 end Corrected
 
@@ -155,6 +178,6 @@ example := u25_dual_isNablaMatroid.representable_and_projClass ℚ u25_triangle_
 
 example := u25_isDeltaMatroid.dual_isCircuit u25_triangle_coindependent
 
-example := u25_isDeltaMatroid.nonempty_projClass_equiv ℚ u25_triangle_coindependent
+example := u25_isDeltaMatroid.exists_projClass_equiv ℚ u25_triangle_coindependent
 
 end Transformer.GainMatroid

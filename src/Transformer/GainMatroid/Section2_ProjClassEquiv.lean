@@ -1,6 +1,7 @@
 module
 
 public import Transformer.GainMatroid.Section2_DeltaTriad
+public import Transformer.GainMatroid.Section2_ExchangeClasses
 public import Transformer.GainMatroid.Section2_ExchangeExamples
 public import Transformer.GainMatroid.Section2_TriadRowSpace
 
@@ -8,14 +9,17 @@ public import Transformer.GainMatroid.Section2_TriadRowSpace
 # Projective classes across a Δ-Y exchange
 
 Funk, Pivotto and Slilaty (arXiv:1609.05574v5), §2.4, Proposition 2.9 (ii), credited to Whittle,
-for a coindependent triangle `X = {a, b, c}` of `M` (`IsDeltaMatroid.nonempty_projClass_equiv`).
+for a coindependent triangle `X = {a, b, c}` of `M` (`IsDeltaMatroid.exists_projClass_equiv`).
 A representation of `M` is projectively equivalent to one in triangle form `A`
 (`exists_isTriangleForm`), and then `Δ_X A` represents `Δ_X M`
 (`IsDeltaMatroid.deltaMatrix_represents`, by `isDeltaMatroid_of_isTriangleForm` and the uniqueness
 of `Δ_X M`). Relate a representation of `M` to the representations of `Δ_X M` projectively
 equivalent to `Δ_X A` for such an `A`. A relation between representatives that is total and
 surjective, and under which related pairs are equivalent on one side exactly when they are on the
-other, gives a bijection of the quotients (`nonempty_quotient_equiv`).
+other, gives a bijection of the quotients sending each class to the class of the related
+representatives (`exists_quotient_equiv`, from `Section2_ExchangeClasses`). So the bijection sends
+the class of every `A` in triangle form to the class of `Δ_X A`: the correspondence that the
+source's proof of Lemma 4.6 uses, not merely some bijection.
 
 * Projectively equivalent representations of `M` have projectively equivalent exchanges
   (`IsTriangleForm.projEquiv_deltaMatrix`).
@@ -36,22 +40,7 @@ A representation with a finite type of rows is projectively equivalent to one wi
 
 namespace Transformer.GainMatroid
 
-/-- **Two quotients are equivalent** when a relation between representatives is total and
-surjective, and related pairs are equivalent on one side exactly when they are on the other. -/
-theorem nonempty_quotient_equiv {α β : Type*} {s : Setoid α} {t : Setoid β} (r : α → β → Prop)
-    (htot : ∀ a, ∃ b, r a b) (hsurj : ∀ b, ∃ a, r a b)
-    (hcompat : ∀ a a' b b', r a b → r a' b' → (s.r a a' ↔ t.r b b')) :
-    Nonempty (Quotient s ≃ Quotient t) := by
-  choose f hf using htot
-  let g : Quotient s → Quotient t := Quotient.lift (fun a => Quotient.mk t (f a)) fun a a' h =>
-    Quotient.sound ((hcompat a a' (f a) (f a') (hf a) (hf a')).1 h)
-  refine ⟨Equiv.ofBijective g ⟨fun p q hpq => ?_, fun q => ?_⟩⟩
-  · revert hpq
-    refine Quotient.inductionOn₂ p q fun a a' hpq => Quotient.sound ?_
-    exact (hcompat a a' (f a) (f a') (hf a) (hf a')).2 (Quotient.exact hpq)
-  · refine Quotient.inductionOn q fun b => ?_
-    obtain ⟨a, ha⟩ := hsurj b
-    exact ⟨Quotient.mk s a, Quotient.sound ((hcompat a a (f a) b (hf a) ha).1 (s.iseqv.refl a))⟩
+universe u
 
 variable {E R F : Type*} [Field F]
 
@@ -85,18 +74,36 @@ theorem IsDeltaMatroid.nablaMatrix_represents (h : IsDeltaMatroid M a b c M')
 
 variable (F) in
 /-- **Proposition 2.9 (ii)** for a coindependent triangle: the projective classes of
-`F`-representations of `M` and of `Δ_X M` correspond. -/
-theorem IsDeltaMatroid.nonempty_projClass_equiv (h : IsDeltaMatroid M a b c M')
-    (hco : M✶.Indep {a, b, c}) : Nonempty (ProjClass F M ≃ ProjClass F M') := by
-  refine nonempty_quotient_equiv (fun (A' : RepMatrix F M) (B' : RepMatrix F M') =>
-    ∃ (n : ℕ) (A : Matrix (Fin 3 ⊕ Fin n) E F), ProjEquiv A'.2.1 A ∧
-      IsTriangleForm A a b c (.inl 0) (.inl 1) (.inl 2) ∧
-      ProjEquiv (deltaMatrix A a b c (.inl 0) (.inl 1) (.inl 2)) B'.2.1) ?_ ?_ ?_
-  · rintro ⟨m, A', hA'⟩
+`F`-representations of `M` and of `Δ_X M` correspond, the class of a representation `A₀` in
+triangle form going to the class of `Δ_X A₀`. A class is named by a representative `A`, so the
+statement reads: if `A` is projectively equivalent to `A₀` and `Δ_X A₀` to `B`, then `e` sends the
+class of `A` to that of `B`. -/
+theorem IsDeltaMatroid.exists_projClass_equiv (h : IsDeltaMatroid M a b c M')
+    (hco : M✶.Indep {a, b, c}) :
+    ∃ e : ProjClass F M ≃ ProjClass F M', ∀ (A : RepMatrix F M) (B : RepMatrix F M')
+      {R : Type u} [DecidableEq R] (A₀ : Matrix R E F) (x y z : R),
+      IsTriangleForm A₀ a b c x y z → ProjEquiv A.2.1 A₀ →
+        ProjEquiv (deltaMatrix A₀ a b c x y z) B.2.1 →
+          e (Quotient.mk (repSetoid F M) A) = Quotient.mk (repSetoid F M') B := by
+  refine (exists_quotient_equiv (repSetoid F M) (repSetoid F M')
+    (fun (A' : RepMatrix F M) (B' : RepMatrix F M') =>
+      ∃ (n : ℕ) (A : Matrix (Fin 3 ⊕ Fin n) E F), ProjEquiv A'.2.1 A ∧
+        IsTriangleForm A a b c (.inl 0) (.inl 1) (.inl 2) ∧
+        ProjEquiv (deltaMatrix A a b c (.inl 0) (.inl 1) (.inl 2)) B'.2.1)
+    ?tot ?surj ?compat).imp fun e he => ?nat
+  case nat =>
+    intro A B R _ A₀ x y z hform hA hB
+    obtain ⟨n, A₁, hpe, hform₁⟩ := exists_isTriangleForm A.2.2 h.ne_ab h.ne_ac h.ne_bc h.triangle
+    obtain ⟨B₁, hB₁⟩ := exists_repMatrix (h.deltaMatrix_represents (A.2.2.of_projEquiv hpe) hform₁)
+    exact (he A B₁ ⟨n, A₁, hpe, hform₁, hB₁⟩).trans (Quotient.sound
+      (hB₁.symm.trans ((hform₁.projEquiv_deltaMatrix hform (hpe.symm.trans hA)).trans hB)))
+  case tot =>
+    rintro ⟨m, A', hA'⟩
     obtain ⟨n, A, hpe, hform⟩ := exists_isTriangleForm hA' h.ne_ab h.ne_ac h.ne_bc h.triangle
     obtain ⟨B', hB'⟩ := exists_repMatrix (h.deltaMatrix_represents (hA'.of_projEquiv hpe) hform)
-    exact ⟨B', n, A, hpe, hform, hB'⟩
-  · rintro ⟨m, B', hB'⟩
+    exact ⟨⟨m, A', hA'⟩, B', (repSetoid F M).iseqv.refl _, n, A, hpe, hform, hB'⟩
+  case surj =>
+    rintro ⟨m, B', hB'⟩
     have ht := h.dual_isCircuit hco
     obtain ⟨n, B, hpe, hform⟩ :=
       exists_isTriadForm hB' h.ne_ab h.ne_ac h.ne_bc ht h.indep_triangle
@@ -104,11 +111,12 @@ theorem IsDeltaMatroid.nonempty_projClass_equiv (h : IsDeltaMatroid M a b c M')
       exists_repMatrix (h.nablaMatrix_represents ht (hB'.of_projEquiv hpe) hform)
     obtain ⟨n', A, hpe', hform'⟩ :=
       exists_isTriangleForm A'.2.2 h.ne_ab h.ne_ac h.ne_bc h.triangle
-    refine ⟨A', n', A, hpe', hform', ?_⟩
+    refine ⟨A', ⟨m, B', hB'⟩, (repSetoid F M').iseqv.refl _, n', A, hpe', hform', ?_⟩
     exact ((hform'.projEquiv_deltaMatrix hform.isTriangleForm_nablaMatrix
       (hpe'.symm.trans hA'.symm)).trans ⟨1, by
         rw [scaleCols_one, hform.rowSpace_deltaMatrix_nablaMatrix]⟩).trans hpe.symm
-  · rintro ⟨m₁, A'₁, hA'₁⟩ ⟨m₂, A'₂, hA'₂⟩ B'₁ B'₂ ⟨n₁, A₁, p₁, f₁, q₁⟩ ⟨n₂, A₂, p₂, f₂, q₂⟩
+  case compat =>
+    rintro ⟨m₁, A'₁, hA'₁⟩ ⟨m₂, A'₂, hA'₂⟩ B'₁ B'₂ ⟨n₁, A₁, p₁, f₁, q₁⟩ ⟨n₂, A₂, p₂, f₂, q₂⟩
     change ProjEquiv A'₁ A'₂ ↔ ProjEquiv B'₁.2.1 B'₂.2.1
     constructor
     · intro hA
@@ -122,11 +130,6 @@ theorem IsDeltaMatroid.nonempty_projClass_equiv (h : IsDeltaMatroid M a b c M')
 theorem twoOfThree_isDeltaMatroid : IsDeltaMatroid twoOfThree 1 2 0 freeThree :=
   isDeltaMatroid_of_isTriangleForm triangleMatrix_represents triangleMatrix_isTriangleForm
     deltaMatrix_triangleMatrix_represents
-
-example := nonempty_quotient_equiv (s := ⟨Eq, eq_equivalence⟩) (t := ⟨Eq, eq_equivalence⟩)
-  (fun a b : Bool => a = b) (fun a => ⟨a, rfl⟩) (fun b => ⟨b, rfl⟩) fun _ _ _ _ h h' => by
-    subst h h'
-    rfl
 
 example := exists_repMatrix iK4_represents_binary
 

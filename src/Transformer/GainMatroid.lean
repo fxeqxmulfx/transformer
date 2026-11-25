@@ -257,7 +257,8 @@ the zero row of `IsTriadForm`. `Section2_BinaryUniform` proves that `U_{2,4}` is
 projective equivalence, and `Section2_TriadRowSpace` gives the row space of `Δ_Y ∇_Y B`.
 `Section2_DeltaTriad` proves that `Δ_X M` is unique and has `X` as an independent set and, for a
 coindependent triangle, as a triad, and `Section2_ProjClassEquiv` deduces the bijection of
-projective classes of Proposition 2.9 (ii) for a coindependent triangle.
+projective classes of Proposition 2.9 (ii) for a coindependent triangle, sending the class of a
+matrix `A` in triangle form to the class of `Δ_X A`.
 `Section2_BiasedMatroids` states what the source cites from Zaslavsky on `F(G, B)`, `L(G, B)`,
 their canonical matrices and minors, and proves that the biased graph determines them and that
 they agree without vertex-disjoint unbalanced cycles.
