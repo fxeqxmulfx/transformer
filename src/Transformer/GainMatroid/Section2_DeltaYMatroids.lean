@@ -1,5 +1,8 @@
 module
 
+public import Transformer.GainMatroid.Section2_DeltaDual
+public import Transformer.GainMatroid.Section2_ExchangeAgree
+public import Transformer.GainMatroid.Section2_ExchangeDelta
 public import Transformer.GainMatroid.Section2_ExchangeMatroids
 
 /-!
@@ -11,9 +14,16 @@ balanced triangle of `(G, B)`, then `F(Δ_X(G, B)) = Δ_X F(G, B)` and `L(Δ_X(G
 remains unbalanced. Then `F(∇_Y(G, B)) = ∇_Y F(G, B)` and `L(∇_Y(G, B)) = ∇_Y L(G, B)`."
 
 The source defines `∇_Y M` only for a triad `Y` of `M`. The printed hypothesis of (ii) does not make
-`Y` a triad (`nabla_hypothesis_not_triad`), so the statements of (ii) add that hypothesis. The
+`Y` a triad (`nabla_hypothesis_not_triad`), so the statements of (ii) add that hypothesis; given
+it, the printed hypothesis on `(G, B) − E(Y)` is not needed, and the statements of (ii) drop it. The
 source assumes matroids as in Oxley's text (§2), which are finite, so these statements take
 `Finite V` and `Finite E`.
+
+The proofs: `Ω` and `Δ_X Ω`, and `∇_Y Ω` and `Ω`, are biased graphs of exchange pairs whose balanced
+cycles agree across the exchange (`IsDeltaExchange.balanceAgree`, `IsNablaExchange.balanceAgree`),
+so their frame and lift matroids differ by `Δ` of the balanced triangle
+(`IsExchange.isDeltaMatroid_frame`, `IsExchange.isDeltaMatroid_lift`). For (ii) this gives
+`F(G, B) = Δ_Y F(∇_Y(G, B))`, which `∇_Y` undoes at a triad (`IsDeltaMatroid.isNablaMatroid`).
 -/
 
 @[expose] public section
@@ -32,32 +42,34 @@ variable {V E : Type*} [DecidableEq E] [Finite V] [Finite E] {Ω : BiasedGraph V
 /-- **Proposition 2.8 (i)**, frame case: `F(Δ_X(G, B)) = Δ_X F(G, B)`. -/
 theorem IsDeltaExchange.isDeltaMatroid_frame {Ω' : BiasedGraph (Option V) E}
     (h : Ω.IsDeltaExchange a b c x y z Ω') (hM : Ω.IsFrameMatroid M)
-    (hM' : Ω'.IsFrameMatroid M') : IsDeltaMatroid M a b c M' := by
-  sorry
+    (hM' : Ω'.IsFrameMatroid M') : IsDeltaMatroid M a b c M' :=
+  h.isExchange.isDeltaMatroid_frame h.balanceAgree h.balanced hM hM'
 
 /-- **Proposition 2.8 (i)**, lift case: `L(Δ_X(G, B)) = Δ_X L(G, B)`. -/
 theorem IsDeltaExchange.isDeltaMatroid_lift {Ω' : BiasedGraph (Option V) E}
     (h : Ω.IsDeltaExchange a b c x y z Ω') (hM : Ω.IsLiftMatroid M)
-    (hM' : Ω'.IsLiftMatroid M') : IsDeltaMatroid M a b c M' := by
-  sorry
+    (hM' : Ω'.IsLiftMatroid M') : IsDeltaMatroid M a b c M' :=
+  h.isExchange.isDeltaMatroid_lift h.balanceAgree h.balanced hM hM'
 
 /-- **Proposition 2.8 (ii)**, frame case: `F(∇_Y(G, B)) = ∇_Y F(G, B)`. The hypothesis `htriad` is
-added, since the source defines `∇_Y M` only for a triad (`nabla_hypothesis_not_triad`). -/
+added, since the source defines `∇_Y M` only for a triad (`nabla_hypothesis_not_triad`). Given it,
+the source's hypothesis that `(G, B) − E(Y)` remains unbalanced if `(G, B)` is unbalanced is not
+needed, and is dropped. -/
 theorem IsNablaExchange.isNablaMatroid_frame {v : V} {Ω' : BiasedGraph V E}
     (h : Ω.IsNablaExchange v a b c x y z Ω')
-    (hunb : ¬Ω.IsBalanced → ∃ C, Ω.graph.IsCycle C ∧ C ∉ Ω.balanced ∧ Disjoint C {a, b, c})
     (hM : Ω.IsFrameMatroid M) (hM' : Ω'.IsFrameMatroid M') (htriad : M✶.IsCircuit {a, b, c}) :
-    IsNablaMatroid M a b c M' := by
-  sorry
+    IsNablaMatroid M a b c M' :=
+  (h.isExchange.isDeltaMatroid_frame h.balanceAgree h.mem_balanced hM' hM).isNablaMatroid htriad
 
 /-- **Proposition 2.8 (ii)**, lift case: `L(∇_Y(G, B)) = ∇_Y L(G, B)`. The hypothesis `htriad` is
-added, since the source defines `∇_Y M` only for a triad (`nabla_hypothesis_not_triad`). -/
+added, since the source defines `∇_Y M` only for a triad (`nabla_hypothesis_not_triad`). Given it,
+the source's hypothesis that `(G, B) − E(Y)` remains unbalanced if `(G, B)` is unbalanced is not
+needed, and is dropped. -/
 theorem IsNablaExchange.isNablaMatroid_lift {v : V} {Ω' : BiasedGraph V E}
     (h : Ω.IsNablaExchange v a b c x y z Ω')
-    (hunb : ¬Ω.IsBalanced → ∃ C, Ω.graph.IsCycle C ∧ C ∉ Ω.balanced ∧ Disjoint C {a, b, c})
     (hM : Ω.IsLiftMatroid M) (hM' : Ω'.IsLiftMatroid M') (htriad : M✶.IsCircuit {a, b, c}) :
-    IsNablaMatroid M a b c M' := by
-  sorry
+    IsNablaMatroid M a b c M' :=
+  (h.isExchange.isDeltaMatroid_lift h.balanceAgree h.mem_balanced hM' hM).isNablaMatroid htriad
 
 end BiasedGraph
 
@@ -166,13 +178,11 @@ example := triangle_isDeltaExchange.isDeltaMatroid_lift
   (triangleStar_isBalanced.isLiftMatroid rfl freeThree_isCircuit_iff')
 
 example := claw_isNablaExchange.isNablaMatroid_frame
-  (fun h => (h (gainBiased_one_isBalanced clawGraph)).elim)
   ((gainBiased_one_isBalanced clawGraph).isFrameMatroid rfl clawMatroid_isCircuit_iff)
   ((gainBiased_one_isBalanced clawNabla).isFrameMatroid rfl nablaMatroid_isCircuit_iff)
   clawMatroid_triad
 
 example := claw_isNablaExchange.isNablaMatroid_lift
-  (fun h => (h (gainBiased_one_isBalanced clawGraph)).elim)
   ((gainBiased_one_isBalanced clawGraph).isLiftMatroid rfl clawMatroid_isCircuit_iff)
   ((gainBiased_one_isBalanced clawNabla).isLiftMatroid rfl nablaMatroid_isCircuit_iff)
   clawMatroid_triad

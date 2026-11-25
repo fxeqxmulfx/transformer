@@ -221,8 +221,8 @@ contractions, `Section2_ExchangeEmbeddings` and `Section2_ExchangeContraction` c
 of an exchange pair into each other, `Section2_ExchangeIndep` and `Section2_ExchangeDelta` deduce
 that the frame and lift matroids of an exchange pair differ by `Δ_X`, `Section2_ExchangeAgree`
 checks that the `Δ_X` and `∇_Y` exchanges agree on balanced cycles, and
-`Section2_ExchangeExamples` meets their hypotheses. `Section2_DeltaYMatroids` states Proposition
-2.8 and shows that part (ii) needs `Y` to be a triad.
+`Section2_ExchangeExamples` meets their hypotheses. `Section2_DeltaYMatroids` proves Proposition
+2.8, part (ii) for a triad `Y`, which its printed hypothesis does not make `Y`.
 `Section2_Representable` defines the matrix representations of a matroid and their projective
 classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed
 and states it for a coindependent triangle. `Section2_ExchangeMatrices` defines `I(K₄)` and the
