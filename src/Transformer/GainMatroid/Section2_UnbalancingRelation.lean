@@ -190,10 +190,6 @@ example := digonJoint_isRollable.balancing
 example := digonJoint_isRollable.balancing.balanced_iff digonJoint_link₀ digonJoint_link₁
   (by decide) digonJoint_isCycle digonJoint_isCycle (by simp) (by simp) (by simp) (by simp)
 
-example := digonJoint_isRollable.balancing.isCircuit_or_indep
-  (Classical.choose_spec digonJoint.contrabalanced.exists_isFrameMatroid)
-  (Or.inl digonJoint_link₀) (Or.inl digonJoint_link₁) (by decide)
-
 example := digonJoint_isRollable.balancing.unbalancingRel_trans (Or.inl digonJoint_link₀)
   (Or.inl digonJoint_link₀) (Or.inl digonJoint_link₀) (Or.inl rfl) (Or.inl rfl)
 

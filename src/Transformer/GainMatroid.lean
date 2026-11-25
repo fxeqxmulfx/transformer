@@ -119,6 +119,11 @@ public import Transformer.GainMatroid.Section2_BicycleNullity
 public import Transformer.GainMatroid.Section2_BalancedSpan
 public import Transformer.GainMatroid.Section2_LiftIndep
 public import Transformer.GainMatroid.Section2_LiftMatroid
+public import Transformer.GainMatroid.Section2_FrameIndep
+public import Transformer.GainMatroid.Section2_FrameCircuits
+public import Transformer.GainMatroid.Section2_SpanningForests
+public import Transformer.GainMatroid.Section2_FrameAugment
+public import Transformer.GainMatroid.Section2_FrameMatroid
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -245,6 +250,11 @@ two vertex-disjoint cycles or a theta in any two distinct cycles, `Section2_Bicy
 the nullity of these and of loose handcuffs by two, and `Section2_BalancedSpan` proves that the
 cycles spanned by a forest are balanced when its fundamental cycles are. `Section2_LiftIndep` and
 `Section2_LiftMatroid` deduce that the lift circuits are the circuits of a matroid.
+`Section2_FrameIndep` characterizes the sets containing no frame circuit as those with no balanced
+cycle and no two linked cycles, `Section2_FrameCircuits` shows that no frame circuit lies in
+another, `Section2_SpanningForests` counts the edges of pseudoforests, and `Section2_FrameAugment`
+proves the exchange axiom; `Section2_FrameMatroid` deduces that the frame circuits are the circuits
+of a matroid.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
