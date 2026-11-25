@@ -7448,7 +7448,9 @@ state, one pass of one gated layer holds three copies of `x y` over `ZMod 2`, fo
 core of one layer needs two passes (LP5). Phasor's Peri-RMS, which normalizes what a sublayer reads
 and what it writes, scales the branch of a product layer by one factor of two norms. It keeps the
 count where both norms are constant on the inputs; with the ideal RMS, one pass of one such layer
-holds the same three copies (LP6).
+holds the same three copies (LP6). A SwiGLU unit is a product behind half of Phasor's gate, whose
+logit is its own first reading. With constant gate readings the block is affine; with readings of
+the state, one pass of one SwiGLU layer holds the three copies too (LP7).
 
 ### LP1. Passes count as depth
 
@@ -7751,28 +7753,61 @@ matrix has determinant `(32/25) · 2n c²`. The factor `μ` is continuous in `ε
 and `‖B z‖ ≥ 5`, so for small `ε` a readout of these four gives `(−1)^s`, with weights that depend
 on `ε`.
 
-*Not covered.* The count bounds polynomial layers. LP5 and LP6 show that a gate whose logit reads
-the state and Peri-RMS escape it. Softmax attention whose scores depend on the tokens, the SiLU of
-a SwiGLU block, the router of a mixture of experts and other normalizations, such as an RMS of the
-input alone, are not polynomial in the state either, and are not examined here. The order is
+### LP7. SiLU
+
+The feed-forward block of DiffGPT's control is a bias-free SwiGLU, `∑_u SiLU(a_u z)(b_u z) o_u`
+(`ComplexFFN.swigluFFN`), with `SiLU(t) = t/(1 + e^{−t})`. A *SwiGLU layer* adds it to the state,
+with real-linear readings `a_u` and `b_u` of the complex state. SiLU is a product with Phasor's
+write gate, `SiLU(t) = t · 2σ(t)/2`, so a SwiGLU unit is the product `(a_u z)(b_u z)` behind half
+of LP5's gate, on the logit `a_u z`.
+
+A real-linear reading reads the real and imaginary parts of the coordinates. Conjugation keeps the
+order, so real-linear readings keep it too. Where the gate readings `a_u` are constant on the
+inputs, the layer is affine in the state and keeps the order of every coordinate; it does not even
+double it.
+
+Once the gate readings depend on the state, one pass does LP5's three copies of `x y` over
+`ZMod 2`. On LP5's prelude, two SwiGLU units write into the root, both behind
+`SiLU(−s ln 2) = −s ln 2/(1 + 2^s)`: one with the value `1` and weight `6/ln 2`, one with the
+value `s` and weight `−18/ln 2`. The readout `root + 1 − 6s` is
+
+```
+1 − 6s − 6s/(1 + 2^s) + 18s²/(1 + 2^s) = (−1)^s        (s = 0, 1, 2, 3),
+```
+
+the sums `1`, `1 − 6 − 2 + 6`, `1 − 12 − 12/5 + 72/5` and `1 − 18 − 2 + 18`. So the SwiGLU core
+is no product layer of any width. The gate's input has order `2`, and `SiLU(−s ln 2)`, whose third
+difference is `−(2/15) ln 2`, reads all six operands. LP5's core needed a product unit `s · s`
+beside its gate; here the value `s` of the second unit takes its place.
+
+The construction idealizes DiffGPT's block: no normalization surrounds it here, and its readings
+are real-linear maps of the loop's complex state. The slope `ln 2` makes the values rational.
+
+*Not covered.* The count bounds polynomial layers. LP5, LP6 and LP7 show that a gate whose logit
+reads the state, Peri-RMS and the SiLU of a SwiGLU block escape it. Softmax attention whose scores
+depend on the tokens, the router of a mixture of experts and other normalizations, such as an RMS
+of the input alone, are not polynomial in the state either, and are not examined here. The order is
 defined for every function of the operands, but only a polynomial layer bounds its growth. A layer
 of products at most doubles it. In LP5 one gate on a reading of order `2` reads all six operands,
-and in LP6 one division by the branch's norm, a factor of order `4`, does the same to a root of
-order `2`. The fixed points here are exact: a loop whose state only approaches a fixed point, as a
-contraction does, is not covered.
+and so does one SiLU in LP7. In LP6 one division by the branch's norm, a factor of order `4`, does
+the same to a root of order `2`. The fixed points here are exact: a loop whose state only
+approaches a fixed point, as a contraction does, is not covered.
 
 ### Lean
 
 `ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
 `ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain`, `ProductCostUnseen`,
-`ProductLoopGate`, `ProductLoopGateParity`, `ProductLoopPeri` and `ProductLoopPeriParity` of
-`src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on
+`ProductLoopGate`, `ProductLoopGateParity`, `ProductLoopPeri`, `ProductLoopPeriParity`,
+`ProductLoopSwiGLU` and `ProductLoopSwiGLUParity` of `src/Transformer/Grokking/FlatSpectrum/`,
+namespace `Transformer.Grokking.FlatSpectrum`, on
 `InklingLoop` of `src/Transformer/`, namespace `Transformer.InklingLoop`; for LP3, `ReadHorizon`
 and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 `Transformer.Phasor.TripleTransport.ReadHorizon` and
 `Transformer.Phasor.TripleTransport.TypedLookupPaths`; for LP5, `MHC.writeGate` of
 `src/Transformer/MHC/Section4_Parameterization.lean` and `Phasor.writeGate_zero` of
-`src/Transformer/Phasor/PlainRouter.lean`. All proved without `sorry`.
+`src/Transformer/Phasor/PlainRouter.lean`; for LP7, `ComplexFFN.swigluFFN` of
+`src/Transformer/ComplexFFN/Defs.lean` and `Landscape.Neural.silu` of
+`src/Transformer/Landscape/Neural/Basic.lean`. All proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -7790,9 +7825,11 @@ and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 | LP5, three copies over `ZMod 2` | `stdAddChar_zmod_two`, `ParityFeature`, `ParityState`, `parityRoot`, `parityPair`, `parityValue`, `parityPrelude`, `isProductNet_parityPrelude`, `parityPrelude_leaf`, `parityPrelude_root`, `parityPrelude_feature`, `paritySum`, `parityOne`, `parityLogit`, `parityCore`, `isGatedLayer_parityCore`, `parityReadout`, `parityReadout_parityCore`, `parityReadout_loopState`, `not_productLoop_parity` | Only `k = 3` and `q = x y` over `ZMod 2`. The prelude is a leaf layer of `8` units; the core is one gated layer of `2` units on a stream with a message of any type, which the single pass does not read. `not_productLoop_parity` is LP1 for a prelude and a core of one layer each, no coda and one pass, at any width; its example is LP2's tree core. |
 | LP6, the Peri layer | `productBranch`, `productBranch_smul`, `rmsFactor`, `periFactor`, `stateEnergy`, `stateEnergy_smul`, `eq_zero_of_stateEnergy_eq_zero`, `periRMS`, `periLayer`, `periLayer_apply`, `periLayer_order`, `periLayer_eps_zero`, `leafOut`, `stateEnergy_features`, `productBranch_leaf_features` | The RMS is restated on complex states, as `GPTMini.rmsNormEps` on the `2n` real coordinates, and not imported from `MHC.PeriRMS`. There is no learned gain, no write gate and no stream mixing, and one RMS covers the whole stream, the loop's message included. `periLayer_order` takes both energies constant on all inputs `(x, y)`. Its example is LP2's prelude for `k` copies with characters as leaves, at any `p`, `ε` and `c`. |
 | LP6, three copies over `ZMod 2` | `neg_one_pow_eq_peri`, `peri_pythagoras`, `stateEnergy_single_add`, `stateEnergy_elim_zero`, `PeriScratch`, `PeriState`, `periRoot`, `periExtra`, `periPair`, `periValue`, `periPrelude`, `isProductNet_periPrelude`, `periPrelude_leaf`, `periPrelude_root`, `periPrelude_feature`, `periSum`, `periOne`, `periGate`, `periUp`, `periOut`, `periCore`, `periBranch_apply`, `periReadout`, `periReadout_loopState`, `not_isProductNet_periCore` | Only `k = 3`, `q = x y` over `ZMod 2` and `ε = 0`. The prelude is a leaf layer of `10` units; the core is one Peri layer of `2` units at any nonzero depth scale `c`, on a stream with a message of any type, which the single pass does not read. The readout's weight on the root is `5/(c √(2n))`, with `n = 17 + \|ν\|` the width of the stream and `ν` the message's type. |
+| LP7, the SwiGLU layer | `silu_eq_mul_writeGate`, `silu_neg_mul_log_two`, `neg_one_pow_eq_silu`, `star_mem_orderSpan`, `realLinear_mem_orderSpan`, `swigluLayer`, `swigluLayer_order` | The block is `ComplexFFN.swigluFFN` on the complex state as a real vector space, so both readings of a unit are real-linear and its output is a complex vector; no RMS surrounds it. `swigluLayer_order` takes every gate reading constant on all inputs `(x, y)`. Its example is a layer on the features of three pairs over `ZMod 2` whose gates read the features of `x₀`. |
+| LP7, three copies over `ZMod 2` | `swigluValue`, `swigluOut`, `swigluCore`, `swigluReadout`, `swigluReadout_swigluCore`, `swigluReadout_loopState`, `not_isProductNet_swigluCore` | Only `k = 3` and `q = x y` over `ZMod 2`, on LP5's prelude and stream. The core is one SwiGLU layer of `2` units whose gate readings are both LP5's logit `−(ln 2) Re s`, on a stream with a message of any type, which the single pass does not read. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of a loop in LP4 is by hand, and so is the application of `ProductCostUnseen` to its hops; for keys
 addressed by content the analog of Theorem A is open. LP5's one gated pass for every `k` is by
-hand. So are LP6's parity at a small `ε > 0`, the orders of `3(2s − 3)` and of `1/‖B z‖`, and the
-remark that the message's norm varies in LP2's loop.
+hand. So are LP6's parity at a small `ε > 0`, the orders of `3(2s − 3)`, of `1/‖B z‖` and of
+`SiLU(−s ln 2)`, and the remark that the message's norm varies in LP2's loop.
