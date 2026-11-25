@@ -72,6 +72,12 @@ public import Transformer.GainMatroid.Section2_CoconnectionFlats
 public import Transformer.GainMatroid.Section2_CoconnectionDeletion
 public import Transformer.GainMatroid.Section2_ExchangedMatrices
 public import Transformer.GainMatroid.Section2_NablaZeroRow
+public import Transformer.GainMatroid.Section2_BinaryUniform
+public import Transformer.GainMatroid.Section2_DeltaRowSpace
+public import Transformer.GainMatroid.Section2_DeltaProjEquiv
+public import Transformer.GainMatroid.Section2_TriadRowSpace
+public import Transformer.GainMatroid.Section2_DeltaTriad
+public import Transformer.GainMatroid.Section2_ProjClassEquiv
 public import Transformer.GainMatroid.Section2_BiasedMatroids
 public import Transformer.GainMatroid.Section2_FullRankLift
 public import Transformer.GainMatroid.Section2_UnbalancingClasses
@@ -225,7 +231,7 @@ checks that the `Δ_X` and `∇_Y` exchanges agree on balanced cycles, and
 2.8, part (ii) for a triad `Y`, which its printed hypothesis does not make `Y`.
 `Section2_Representable` defines the matrix representations of a matroid and their projective
 classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed
-and states it for a coindependent triangle. `Section2_ExchangeMatrices` defines `I(K₄)` and the
+and proves it for a coindependent triangle. `Section2_ExchangeMatrices` defines `I(K₄)` and the
 exchanges of matrices and proves Proposition 2.11 for identity gains on the exchanged edges.
 `Section2_GainExchange` refutes Proposition 2.10 (i) as printed and proves (i) and (ii) for gains
 that are the identity on the triangle. `Section2_ExchangeForms` proves that projectively equivalent
@@ -245,9 +251,16 @@ triangle, `Section2_CoconnectionMaps` relates the columns of the two matrices, a
 is the generalized parallel connection of `M(A)*` and `M(K₄)`, and that deleting the triad leaves
 `M(∇_Y A)*`. `Section2_ExchangedMatrices` proves that `Δ_X A` represents `Δ_X M(A)` and `∇_Y A`
 represents `∇_Y M(A)`, and `Section2_NablaZeroRow` proves that the latter fails as printed, without
-the zero row of `IsTriadForm`. `Section2_BiasedMatroids` states what the source cites
-from Zaslavsky on `F(G, B)`, `L(G, B)`, their canonical matrices and minors, and proves that the
-biased graph determines them and that they agree without vertex-disjoint unbalanced cycles.
+the zero row of `IsTriadForm`. `Section2_BinaryUniform` proves that `U_{2,4}` is not binary and
+`U_{3,4}` is. `Section2_DeltaRowSpace` reads the row space of `Δ_X A` off that of `A`,
+`Section2_DeltaProjEquiv` proves that `Δ_X` preserves and, on a coindependent triangle, reflects
+projective equivalence, and `Section2_TriadRowSpace` gives the row space of `Δ_Y ∇_Y B`.
+`Section2_DeltaTriad` proves that `Δ_X M` is unique and has `X` as an independent set and, for a
+coindependent triangle, as a triad, and `Section2_ProjClassEquiv` deduces the bijection of
+projective classes of Proposition 2.9 (ii) for a coindependent triangle.
+`Section2_BiasedMatroids` states what the source cites from Zaslavsky on `F(G, B)`, `L(G, B)`,
+their canonical matrices and minors, and proves that the biased graph determines them and that
+they agree without vertex-disjoint unbalanced cycles.
 `Section2_FullRankLift` deletes one row per component of a canonical lift matrix, and shows that the
 rows left are independent with an unbalanced cycle and need not be without one.
 `Section2_UnbalancingClasses` defines the unbalancing classes at a balancing vertex of an

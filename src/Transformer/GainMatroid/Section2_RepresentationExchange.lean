@@ -1,6 +1,7 @@
 module
 
-public import Transformer.GainMatroid.Section2_Representable
+public import Transformer.GainMatroid.Section2_BinaryUniform
+public import Transformer.GainMatroid.Section2_ProjClassEquiv
 
 /-!
 # Proposition 2.9: representations under a Δ-Y exchange
@@ -17,7 +18,9 @@ coindependent: the element `3` alone does not span the line. Whittle's paper is 
 sources of this repository, so only the printed statement is refuted here.
 
 The corrected statements add that `X` is coindependent, and for a Y-Δ exchange that `Y` is
-independent. The source's use in the proof of Lemma 4.6, on a star of `K₄`, satisfies this.
+independent. The source's use in the proof of Lemma 4.6, on a star of `K₄`, satisfies this. They
+are proved from the bijection of projective classes of `Section2_ProjClassEquiv`; the binary
+representations of the counterexample are in `Section2_BinaryUniform`.
 -/
 
 @[expose] public section
@@ -81,60 +84,6 @@ theorem u25_isDeltaMatroid :
     (fun I J hI hJ => line5_aug I hI J hJ) (by decide) (by decide) (by decide) (by decide +kernel)
     (by decide +kernel) (by decide +kernel) line5_flat (by decide +kernel)
 
-/-- `U_{2,4}` is not binary: a line over `𝔽₂` has only three nonzero vectors. -/
-theorem uniformTwoFour_not_binary : ¬IsRepresentable (ZMod 2) (finsetUniform (Fin 4) 2) := by
-  rintro ⟨m, A, -, hA⟩
-  set v : Fin 4 → Fin m → ZMod 2 := fun e r => A r e
-  have hind (I : Finset (Fin 4)) (hI : I.card ≤ 2) : LinearIndepOn (ZMod 2) v (I : Set (Fin 4)) :=
-    (hA _).1 ((finsetUniform_indep 2 I).2 hI)
-  have hdep (I : Finset (Fin 4)) (hI : ¬I.card ≤ 2) : ¬LinearIndepOn (ZMod 2) v (I : Set (Fin 4)) :=
-    fun h => hI ((finsetUniform_indep 2 I).1 ((hA _).2 h))
-  have hpair (i j : Fin 4) (hij : i ≠ j) : v i ≠ 0 ∧ v i ≠ v j := by
-    have h := hind {i, j} Finset.card_le_two
-    exact ⟨h.ne_zero (by simp), fun heq => hij (h.injOn (by simp) (by simp) heq)⟩
-  have hbit : ∀ x : ZMod 2, x = 0 ∨ x = 1 := by decide
-  have key (k : Fin 4) (hk0 : k ≠ 0) (hk1 : k ≠ 1) : v k = v 0 + v 1 := by
-    have hcard : ¬({k, 0, 1} : Finset (Fin 4)).card ≤ 2 := by
-      revert k
-      decide
-    have hset : (({k, 0, 1} : Finset (Fin 4)) : Set (Fin 4)) = insert k {0, 1} := by simp
-    have hmem : k ∉ ({0, 1} : Set (Fin 4)) := by simp [hk0, hk1]
-    have h := hdep _ hcard
-    rw [hset, linearIndepOn_insert hmem] at h
-    have h01 : LinearIndepOn (ZMod 2) v ({0, 1} : Set (Fin 4)) := by
-      simpa using hind {0, 1} (by decide)
-    have hspan : v k ∈ Submodule.span (ZMod 2) (v '' {0, 1}) := by
-      by_contra hn
-      exact h ⟨h01, hn⟩
-    rw [Set.image_pair, Submodule.mem_span_pair] at hspan
-    obtain ⟨a, b, hab⟩ := hspan
-    rcases hbit a with rfl | rfl <;> rcases hbit b with rfl | rfl
-    · exact absurd (by simpa using hab.symm) (hpair k 0 hk0).1
-    · exact absurd (by simpa using hab.symm) (hpair k 1 hk1).2
-    · exact absurd (by simpa using hab.symm) (hpair k 0 hk0).2
-    · simpa using hab.symm
-  exact (hpair 2 3 (by decide)).2
-    ((key 2 (by decide) (by decide)).trans (key 3 (by decide) (by decide)).symm)
-
-/-- The three unit vectors of `𝔽₂³` and their sum. -/
-def uniformThreeFourMatrix : Matrix (Fin 3) (Fin 4) (ZMod 2) :=
-  !![1, 0, 0, 1; 0, 1, 0, 1; 0, 0, 1, 1]
-
-set_option maxRecDepth 100000 in
-set_option synthInstance.maxSize 4096 in
-set_option synthInstance.maxHeartbeats 400000 in
-private theorem uniformThreeFourMatrix_test : ∀ I : Finset (Fin 4),
-    I.card ≤ 3 ↔ ∀ f : Fin 4 → ZMod 2,
-      ∑ i ∈ I, f i • (fun r => uniformThreeFourMatrix r i) = 0 → ∀ i ∈ I, f i = 0 := by
-  decide +kernel
-
-/-- `U_{3,4}` is binary. -/
-theorem uniformThreeFour_binary : IsRepresentable (ZMod 2) (finsetUniform (Fin 4) 3) := by
-  refine ⟨3, uniformThreeFourMatrix, rfl, fun I => ?_⟩
-  obtain ⟨I, rfl⟩ := (Set.toFinite I).exists_finset_coe
-  rw [finsetUniform_indep, linearIndepOn_finset_iff]
-  exact uniformThreeFourMatrix_test I
-
 /-- **Proposition 2.9 fails as printed.** The Δ-Y exchange of `U_{2,4}` on a triangle is `U_{3,4}`.
 Over `𝔽₂` the second has a representation and the first has none, so neither "(i) `M` is
 `𝔽`-representable if and only if `M'` is" nor the bijection of (ii) holds. -/
@@ -174,23 +123,38 @@ variable {E : Type*} [DecidableEq E] [Finite E] {M M' : Matroid E} {a b c : E} (
 
 /-- **Proposition 2.9**, Δ-Y exchange, with the added hypothesis that the triangle `{a, b, c}` is
 coindependent, without which it fails (`proposition2_9_fails`). Part (i) is the first conjunct,
-part (ii) the second. -/
+part (ii) the second. Part (ii) is `IsDeltaMatroid.nonempty_projClass_equiv`, and part (i)
+follows, as a matroid is representable exactly when it has a class of representations. -/
 theorem IsDeltaMatroid.representable_and_projClass (h : IsDeltaMatroid M a b c M')
     (hco : M✶.Indep {a, b, c}) :
     (IsRepresentable F M ↔ IsRepresentable F M') ∧ Nonempty (ProjClass F M ≃ ProjClass F M') := by
-  sorry
+  obtain ⟨e⟩ := h.nonempty_projClass_equiv F hco
+  exact ⟨(nonempty_projClass_iff (F := F) M).symm.trans
+    (e.nonempty_congr.trans (nonempty_projClass_iff M')), ⟨e⟩⟩
 
 /-- **Proposition 2.9**, Y-Δ exchange, with the added hypothesis that the triad `{a, b, c}` is
-independent, dual to the hypothesis of `IsDeltaMatroid.representable_and_projClass`. -/
+independent, dual to the hypothesis of `IsDeltaMatroid.representable_and_projClass`. With
+`M' = (Δ_Y M*)*`, the triad `Y` of `M` is a triangle of `M'` and `M = Δ_Y M'`
+(`IsDeltaMatroid.dual_isCircuit`, `IsDeltaMatroid.dual`), and `Y` is coindependent in `M'`, being
+independent in `Δ_Y M*` (`IsDeltaMatroid.indep_triangle`). -/
 theorem IsNablaMatroid.representable_and_projClass (h : IsNablaMatroid M a b c M')
     (hi : M.Indep {a, b, c}) :
     (IsRepresentable F M ↔ IsRepresentable F M') ∧ Nonempty (ProjClass F M ≃ ProjClass F M') := by
-  sorry
+  obtain ⟨N, hN, rfl⟩ := h
+  have ht := hN.dual_isCircuit (by rwa [Matroid.dual_dual])
+  have hΔ : IsDeltaMatroid N✶ a b c M := by simpa using hN.dual ht
+  obtain ⟨hr, ⟨e⟩⟩ := hΔ.representable_and_projClass F
+    (by rw [Matroid.dual_dual]; exact hN.indep_triangle)
+  exact ⟨hr.symm, ⟨e.symm⟩⟩
 
 end Corrected
 
 example := u25_isDeltaMatroid.representable_and_projClass ℚ u25_triangle_coindependent
 
 example := u25_dual_isNablaMatroid.representable_and_projClass ℚ u25_triangle_coindependent
+
+example := u25_isDeltaMatroid.dual_isCircuit u25_triangle_coindependent
+
+example := u25_isDeltaMatroid.nonempty_projClass_equiv ℚ u25_triangle_coindependent
 
 end Transformer.GainMatroid
