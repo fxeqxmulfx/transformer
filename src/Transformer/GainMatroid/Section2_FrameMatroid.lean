@@ -75,10 +75,6 @@ example : ∃ M : Matroid Bool, M.contract {true} = M.delete {true} := by
   obtain ⟨M, hM⟩ := (twoLoops.gainBiased (1 : Bool → ℚˣ)).exists_isFrameMatroid
   exact ⟨M, hM.contract_eq_delete ((singleton_mem_balancedCycles_iff _ rfl).2 rfl)⟩
 
-example : ∃ M, twoLoopsContract.IsFrameMatroid M := by
-  obtain ⟨M, hM⟩ := twoLoops.contrabalanced.exists_isFrameMatroid
-  exact ⟨_, twoLoops_isFrameContraction.isFrameMatroid hM⟩
-
 example := digonJoint_isRollable.balancing.isCircuit_or_indep
   (Classical.choose_spec digonJoint.contrabalanced.exists_isFrameMatroid)
   (Or.inl digonJoint_link₀) (Or.inl digonJoint_link₁) (by decide)

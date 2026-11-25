@@ -126,6 +126,10 @@ public import Transformer.GainMatroid.Section2_FrameAugment
 public import Transformer.GainMatroid.Section2_FrameMatroid
 public import Transformer.GainMatroid.Section2_DeletionCycles
 public import Transformer.GainMatroid.Section2_LiftContraction
+public import Transformer.GainMatroid.Section2_FrameContractGraph
+public import Transformer.GainMatroid.Section2_FrameContractIndep
+public import Transformer.GainMatroid.Section2_FrameContractCore
+public import Transformer.GainMatroid.Section2_FrameContraction
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -260,6 +264,10 @@ of a matroid.
 `Section2_DeletionCycles` identifies the cycles and forests of a deletion with those of the graph
 avoiding the deleted edges, and `Section2_LiftContraction` deduces that the lift-type contraction of
 a joint `e` gives the cycle matroid of `G \ e`.
+`Section2_FrameContractGraph` describes the cycles and reachability of the frame-type contraction
+of a joint, `Section2_FrameContractIndep` frame independence next to a joint and in a deletion, and
+`Section2_FrameContractCore` frame independence after the contraction; `Section2_FrameContraction`
+deduces that the frame-type contraction of a joint `e` agrees with `F(G, B) / e`.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

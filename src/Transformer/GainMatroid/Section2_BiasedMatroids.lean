@@ -19,9 +19,10 @@ no two vertex-disjoint unbalanced cycles, `F(G, B) = L(G, B)`."
 
 The source follows Oxley's text, whose matroids are finite, so the statements asserting a matroid
 take `V` and `E` finite. Zaslavsky's papers are not among the local sources: the facts cited from
-them are stated here and left unproved, except three, proved downstream: the frame and lift circuits
-are the circuits of matroids (`Section2_FrameMatroid`, `Section2_LiftMatroid`), and the lift-type
-contraction of a joint gives the cycle matroid of the deletion (`Section2_LiftContraction`).
+them are stated here and left unproved, except four, proved downstream: the frame and lift circuits
+are the circuits of matroids (`Section2_FrameMatroid`, `Section2_LiftMatroid`), and the two
+contractions of a joint agree with contraction in the matroids (`Section2_LiftContraction`,
+`Section2_FrameContraction`).
 `LinkMinorMap` covers deletion and the contraction of a link, `IsFrameContraction` and
 `IsLiftContraction` the two contractions of a joint, and `IsFrameMatroid.contract_eq_delete` a
 balanced loop, for which the source sets `/ e = \ e`.
@@ -113,14 +114,6 @@ theorem LinkMinorMap.isLiftMatroid [Finite V] [Finite E] {Ω' : BiasedGraph V' E
     (m : Ω.LinkMinorMap Ω') (hM : Ω.IsLiftMatroid M) :
     Ω'.IsLiftMatroid
       (((M.contract m.contractSet).delete m.deleteSet).comap fun e' => (m.edge e' : E)) := by
-  sorry
-
-/-- **§2.2** (Zaslavsky). `F(G, B) / e = F((G, B) / e)` for a joint `e`, by the frame-type
-contraction. -/
-theorem IsFrameContraction.isFrameMatroid [Finite V] [Finite E] {e : E} {v : V}
-    {Ω₂ : BiasedGraph V ↥({e}ᶜ : Set E)} (h : Ω.IsFrameContraction e v Ω₂)
-    (hM : Ω.IsFrameMatroid M) :
-    Ω₂.IsFrameMatroid ((M.contract {e}).comap (Subtype.val : ↥({e}ᶜ : Set E) → E)) := by
   sorry
 
 end BiasedGraph

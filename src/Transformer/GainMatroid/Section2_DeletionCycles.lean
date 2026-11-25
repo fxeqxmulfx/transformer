@@ -1,6 +1,7 @@
 module
 
 public import Transformer.GainMatroid.Section2_BiasedExamples
+public import Transformer.GainMatroid.Section2_Connectivity
 public import Transformer.GainMatroid.Section2_Minors
 
 /-!
@@ -13,7 +14,8 @@ A map `ι` from the edges of `H` to those of `G` keeping the ends carries each w
 of `G` (`Walk.exists_map_edge`), and a walk of `G` along edges in the range of `ι` lifts back
 (`Walk.exists_lift_edge`). With `ι` injective, cycles go both ways (`IsCycle.map_edge`,
 `IsCycle.of_map_edge`). Hence the cycles and the forests of `G \ D` are those of `G` avoiding `D`
-(`isCycle_delete_iff`, `isForest_delete_iff`).
+(`isCycle_delete_iff`, `isForest_delete_iff`), with the same vertices (`verts_delete`) and the same
+reachability (`reachableIn_delete_iff`).
 -/
 
 @[expose] public section
@@ -119,6 +121,28 @@ theorem isForest_delete_iff {I : Set ↥Dᶜ} :
   · intro hI C hC hCI
     exact hI _ (isCycle_delete_iff.1 hC) (Set.image_mono hCI)
 
+/-- The vertices of a set of edges of `G \ D` are those of its image in `G`. -/
+theorem verts_delete {C : Set ↥Dᶜ} : (G.delete D).verts C = G.verts (Subtype.val '' C) := by
+  simp only [verts, Set.image_image]
+  rfl
+
+/-- Reachability along a set of edges of `G \ D` is reachability along its image in `G`. -/
+theorem reachableIn_delete_iff {I : Set ↥Dᶜ} {u w : V} :
+    (G.delete D).ReachableIn I u w ↔ G.ReachableIn (Subtype.val '' I) u w := by
+  constructor
+  · rintro ⟨p, hp⟩
+    obtain ⟨q, hq, -⟩ := p.exists_map_edge (G := G) (ι := Subtype.val) fun _ => ⟨rfl, rfl⟩
+    refine ⟨q, fun e he => ?_⟩
+    rw [hq, List.mem_map] at he
+    obtain ⟨f, hf, rfl⟩ := he
+    exact ⟨f, hp f hf, rfl⟩
+  · rintro ⟨q, hq⟩
+    obtain ⟨p, hp, -⟩ := q.exists_lift_edge (H := G.delete D) (ι := Subtype.val)
+      (fun _ => ⟨rfl, rfl⟩) fun e he => Set.image_subset_range _ _ (hq e he)
+    refine ⟨p, fun f hf => Subtype.val_injective.mem_set_image.1 (hq _ ?_)⟩
+    rw [← hp]
+    exact List.mem_map_of_mem hf
+
 /-- The edge `0` of `pumpkin` after deleting the edge `2`. -/
 def pumpkinDeleteZero : ↥(({2} : Set (Fin 3))ᶜ) := ⟨0, by simp⟩
 
@@ -146,6 +170,8 @@ example := pumpkin_delete_isCycle.map_edge (G := pumpkin) Subtype.val_injective
 example := IsCycle.of_map_edge (G := pumpkin) (H := pumpkin.delete {2})
   (C := Subtype.val ⁻¹' ({0, 1} : Set (Fin 3))) Subtype.val_injective (fun _ => ⟨rfl, rfl⟩)
   (by rw [Set.image_preimage_eq_of_subset pumpkin_pair_subset_range]; exact pumpkin_pair_isCycle)
+
+example := reachableIn_delete_iff (G := pumpkin) (D := {2}) (I := ∅) (u := 0) (w := 0)
 
 example : ¬(pumpkin.delete {2}).IsForest (Subtype.val ⁻¹' ({0, 1} : Set (Fin 3))) :=
   fun h => isForest_delete_iff.1 h _ pumpkin_pair_isCycle
