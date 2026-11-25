@@ -7439,8 +7439,10 @@ One shared layer that multiplies adjacent pairs meets this bound: a prelude laye
 (LP2). For `N` hops of lookup a loop with a core of one layer needs `⌈log₂ N⌉` passes at any
 width, and doubling takes that many. A core whose products read the message on one side only, as a
 scan's do, needs `N − 1` at any width; whether a narrow core that multiplies the message by itself
-can do better is open (LP3). In the price of NV10 a loop pays for its core once, which saves little on `k` copies, and whether training finds
-the correct step is the open analog of Theorem A (LP4).
+can do better is open (LP3). In the price of NV10 a loop pays for its core once, which saves little on `k` copies. Where
+every hop has coordinates of its own, the cheapest step that fits the short chains is at chance on
+the first longer one; where the keys are addressed by content, whether training finds the correct
+step is the open analog of Theorem A (LP4).
 
 ### LP1. Passes count as depth
 
@@ -7620,13 +7622,31 @@ side, with a message reading of `4k` entries. That is `O(k)`, like the tree's pr
 not less: the levels of a binary tree shrink, and one shared layer is as wide as the widest. Against
 the leaves both are small (by hand).
 
-*The open analog of Theorem A.* Theorem A says that M does not return a flat kernel from a proper
-part. A loop is trained on short chains and run on long ones. Among the cores that fit the short
-chains, is the correct step, the one that follows a link or multiplies adjacent pairs, the
-cheapest in the price of NV10? If it is not, weight decay pulls the loop towards a step that fits
-the short chains and fails on longer ones. LP3's data shows what is at stake, not the answer: with
-ten reads, the checkpoint trained on one and two hops answers 52 of 100 at ten hops, the one trained
-on one to five hops all 100, and Phasor is not priced by NV10. Nothing here decides the question.
+*The analog of Theorem A.* Theorem A says that M does not return a flat kernel from a proper part.
+A loop is trained on short chains and run on long ones. Among the cores that fit the short chains,
+is the correct step, the one that follows a link or multiplies adjacent pairs, the cheapest in the
+price of NV10? If it is not, weight decay pulls the loop towards a step that fits the short chains
+and fails on longer ones.
+
+Where the hops have coordinates of their own, the answer is no, for a reason simpler than Theorem
+A's. Mask the table of one product layer to the rows and the columns that a training set reads.
+The masked table still interpolates, and it is cheaper, strictly unless the mask changes nothing:
+zero the same rows in a cheapest factorization, and its weight drops by their squared norms
+(`productCost_blockMask_lt`). So an interpolant that answers anything but `0` on an operand that no
+training pair contains is beaten in price by one that answers `0` there (`exists_productCost_lt`),
+and one of least price answers `0` on all of them (`eq_zero_of_isMinOn_productCost`). For a kernel
+with no zero entry, as the cubic kernel, that is wrong on every such entry
+(`ne_of_isMinOn_productCost`). Now give every hop coordinates of its own, a pool of keys per hop as
+in the synthetic task. No chain of at most `N₀` hops reads the link out of pool `N₀`, so the
+cheapest step that fits them answers `0` there and is at chance on `N₀ + 1` hops (by hand). A loop
+does no better than a stack: sharing ties the weights of the passes together, not the coordinates
+of the hops.
+
+Content addressing escapes this argument, and there the question is open. Phasor's read compares a
+query with every key by content, in coordinates that all hops share, so short chains already read
+every column a long one needs, and the masking says nothing. LP3's data shows what is at stake, not
+the answer: with ten reads, the checkpoint trained on one and two hops answers 52 of 100 at ten
+hops, the one trained on one to five hops all 100, and Phasor is not priced by NV10.
 
 *Not covered.* Normalizations, softmax attention whose scores depend on the tokens, the SiLU of a
 SwiGLU block, the `tanh` of Inkling's message gates and the router of a mixture of experts are not
@@ -7636,7 +7656,7 @@ whose state only approaches a fixed point, as a contraction does, is not covered
 ### Lean
 
 `ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
-`ProductLoopScanCore`, `ProductLoopDoubling` and `ProductLoopChain` of
+`ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain` and `ProductCostUnseen` of
 `src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
 `Transformer.InklingLoop`; for LP3, `ReadHorizon` and `TypedLookupPaths` of
 `src/Transformer/Phasor/TripleTransport/`, namespaces `Transformer.Phasor.TripleTransport.ReadHorizon`
@@ -7653,6 +7673,8 @@ and `Transformer.Phasor.TripleTransport.TypedLookupPaths`. All proved without `s
 | LP3, doubling | `DoublingSlot`, `doublingState`, `doublingEntry`, `doublingRead`, `doublingRead_doublingState`, `doublingCore`, `isProductLayer_doublingCore`, `doublingCore_pass`, `loopState_doublingCore`, `loopState_doublingCore_funMatrix`, `loopState_doublingCore_of_le` | The stream is `(V × V) ⊕ (V × V)`, the table and the written table `S`, with the message on `V × V`, and the loop starts from `S = 0`. Unit `(l, i, j)` reads the entries `(i, l)` and `(l, j)`, each the table slot plus the message. Pass `n + 1` writes `A^{2^{n+1}}` for any matrix `A`. The example is seven links on `Fin 8`, which take three passes. The bilinear algorithms with fewer units are by hand. |
 | LP3, the walk as one map | `chainMap`, `chainMap_lt`, `chainMap_last`, `chainMap_succ`, `chainMap_iterate`, `chainMap_iterate_of_le`, `chainLevel`, `chainLevel_iterate_le`, `chainTable_mem_orderSpan`, `chainEntry`, `doubling_walk_iff`, `scan_walk_iff` | The keys are `Fin (K + 1) × Bool × γ` for a finite type `γ`. Both loops read the entry from the start `(0, false, a)` to `(K, false, a)`, so the question is whether the walk returns to `a`; it holds for all tables at once. The doubling loop's equivalence takes `0 < K` and two keys at least, and its lower half is `le_passes_of_loop_walk` for the doubling core; the scan's lower half counts levels. The example is eight links on `Bool`: three passes of doubling answer, two do not. |
 | LP3, reads | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers; the product layers are the rows above. |
+| LP4, unseen coordinates | `interpolants`, `blockMask`, `rowMask`, `rowMask_mul`, `sq_norm_rowMask_le`, `frobeniusSq_rowMask_le`, `frobeniusSq_rowMask_lt`, `productCost_blockMask_lt`, `exists_productCost_lt`, `eq_zero_of_isMinOn_productCost`, `ne_of_isMinOn_productCost` | Stated for NV10's one product layer, its price `productCost`, any matrix `K` and any `Ω`, not for loops; the application to the hops of a loop is by hand. `IsMinOn` assumes an interpolant of least price and does not show that one exists; `exists_productCost_lt` needs none. The example is the cubic kernel at `p = 3` trained without the row `a = 2`. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
-of LP4 and its analog of Theorem A are by hand, and the analog is open.
+of a loop in LP4 is by hand, and so is the application of `ProductCostUnseen` to its hops; for keys
+addressed by content the analog of Theorem A is open.

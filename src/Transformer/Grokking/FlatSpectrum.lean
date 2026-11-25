@@ -160,6 +160,7 @@ public import Transformer.Grokking.FlatSpectrum.ProductCost
 public import Transformer.Grokking.FlatSpectrum.ProductCostSVD
 public import Transformer.Grokking.FlatSpectrum.ProductCostFlat
 public import Transformer.Grokking.FlatSpectrum.ProductCostCodes
+public import Transformer.Grokking.FlatSpectrum.ProductCostUnseen
 public import Transformer.Grokking.FlatSpectrum.SingleFeature
 public import Transformer.Grokking.FlatSpectrum.SeenShare
 public import Transformer.Grokking.FlatSpectrum.CertificateOrbit
@@ -448,7 +449,9 @@ columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so
 of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
 `(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so
 a flat kernel is no local minimum of that cost among the interpolants of any proper training set
-(`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). The task
+(`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). An interpolant
+of least price vanishes on every row and column that the training set never reads
+(`ProductCostUnseen`). The task
 `a³ + a b` is no function of one feature `u(a) ∘ v(b)` in a group or a type with zero of at most
 `p` elements (`SingleFeature`). A minimum of M needs a share of the table at least its effective
 rank over the largest rank (`SeenShare`). All certificates of `K` agree on its row space, so a
