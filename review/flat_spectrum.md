@@ -7439,10 +7439,13 @@ One shared layer that multiplies adjacent pairs meets this bound: a prelude laye
 (LP2). For `N` hops of lookup a loop with a core of one layer needs `⌈log₂ N⌉` passes at any
 width, and doubling takes that many. A core whose products read the message on one side only, as a
 scan's do, needs `N − 1` at any width; whether a narrow core that multiplies the message by itself
-can do better is open (LP3). In the price of NV10 a loop pays for its core once, which saves little on `k` copies. Where
-every hop has coordinates of its own, the cheapest step that fits the short chains is at chance on
-the first longer one; where the keys are addressed by content, whether training finds the correct
-step is the open analog of Theorem A (LP4).
+can do better is open (LP3). In the price of NV10 a loop pays for its core once, which saves little
+on `k` copies. Where every hop has coordinates of its own, the cheapest step that fits the short
+chains is at chance on the first longer one; where the keys are addressed by content, whether
+training finds the correct step is the open analog of Theorem A (LP4). Phasor's write gate
+`2σ(w) = 1 + tanh(w/2)` keeps all of this while its logit is constant; once the logit reads the
+state, one pass of one gated layer holds three copies of `x y` over `ZMod 2`, for which a product
+core of one layer needs two passes (LP5).
 
 ### LP1. Passes count as depth
 
@@ -7479,9 +7482,9 @@ readings, which keep the order, so it multiplies the larger of their two orders 
 
 The restart breaks NV7's residual form: a pass starts again from `z`, not from the last state, so
 the unrolled loop is not literally NV7's stack of `d₀ + T d₁` layers on one stream. The order does
-not need that form, only that a pass reads its inputs linearly. Nor does the bound use that the passes share
-their weights: the count is the same for `T` different cores. With a prelude and a core of one
-layer each and no coda, `k` copies need `T ≥ ⌈log₂ k⌉` passes.
+not need that form, only that a pass reads its inputs linearly. Nor does the bound use that the
+passes share their weights: the count is the same for `T` different cores. With a prelude and a
+core of one layer each and no coda, `k` copies need `T ≥ ⌈log₂ k⌉` passes.
 
 ### LP2. The looped tree and its fixed point
 
@@ -7547,9 +7550,9 @@ B'(i, j) = Σ_l B(i, l) B(l, j),
 at `V³` units. The message is `B − A`, as `S − P` is in LP2, and both factors of a term read it.
 After `t` passes `B` holds the jumps of length `2^t` (`loopState_doublingCore_funMatrix`;
 `ReadHorizon.double_reads` for reads), so `N` hops take `⌈log₂ N⌉` passes, and with absorbing
-terminals `B` is then a fixed point (`loopState_doublingCore_of_le`). On the synthetic task, with five keys per pool, ten hops
-have `V = 55` keys; for tables on all of them, a scan pass takes `3,025` units and a doubling pass
-`166,375`.
+terminals `B` is then a fixed point (`loopState_doublingCore_of_le`). On the synthetic task, with
+five keys per pool, ten hops have `V = 55` keys; for tables on all of them, a scan pass takes
+`3,025` units and a doubling pass `166,375`.
 
 The answer reads every link on its path, and LP1's count of the order sees it. Take `N = 2K`
 tables on one set of keys and walk from a fixed key, in the order `x₀, y₀, x₁, y₁, …`; a varying
@@ -7582,13 +7585,13 @@ N ≤ 2^{d₀ + d₂} (T + 1)
 ```
 
 passes of a scan layer, at any width: with no prelude and no coda `T ≥ N − 1`, one pass short of
-the scan's `N`, so eight links take seven passes where doubling takes three. To go below linear, a core has to multiply
-the message by itself, as doubling does. It need not pay `V³` units for that. A pass of doubling
-squares a matrix, and a bilinear algorithm for the matrix product is a product layer: Strassen's
-seven products of `2 × 2` blocks, used recursively, take `V^{log₂ 7} ≈ V^{2.81}` units, and the
-best known bilinear algorithms about `V^{2.37}` (by hand). Whether a core of about `V²` units, as
-wide as the scan, can go below linear is open: it need be exact only on the tables that occur, and
-the count of the order does not see the width.
+the scan's `N`, so eight links take seven passes where doubling takes three. To go below linear, a
+core has to multiply the message by itself, as doubling does. It need not pay `V³` units for that.
+A pass of doubling squares a matrix, and a bilinear algorithm for the matrix product is a product
+layer: Strassen's seven products of `2 × 2` blocks, used recursively, take `V^{log₂ 7} ≈ V^{2.81}`
+units, and the best known bilinear algorithms about `V^{2.37}` (by hand). Whether a core of about
+`V²` units, as wide as the scan, can go below linear is open: it need be exact only on the tables
+that occur, and the count of the order does not see the width.
 
 Phasor's shared read reveals the successor of one key per read. Under that contract a decoder that
 has the first `h` links of the walk cannot tell apart two memories that differ only at link `h + 1`
@@ -7648,19 +7651,70 @@ every column a long one needs, and the masking says nothing. LP3's data shows wh
 the answer: with ten reads, the checkpoint trained on one and two hops answers 52 of 100 at ten
 hops, the one trained on one to five hops all 100, and Phasor is not priced by NV10.
 
+### LP5. Phasor's gate
+
+Phasor scales what a sublayer writes into stream `i` by the write gate `2σ(wᵢ)`, and
+`2σ(w) = 1 + tanh(w/2)`: the `tanh` of Inkling's message gates, shifted by one. The logit `wᵢ` is a
+learned reading of the state plus a bias. A *gated layer* puts such a gate in front of every
+product unit, with a logit that reads the state linearly:
+
+```
+F z = z + ∑_u 2σ(ℓ_u z + b_u) (g_u z)(w_u z) o_u.
+```
+
+A gate whose logit does not read the state is a number. A gated layer with constant logits is a
+product layer, and every product layer is a gated layer with the gates of Phasor's plain router,
+`2σ(0) = 1`. On the loop's message, which Inkling's gates admit into the next pass, a constant gate
+scales the message: LP1's bound holds as it was, and behind the plain router's gate LP2's loop is
+the same loop.
+
+A gate whose logit reads the state escapes the count. Take three copies of `x y` over `ZMod 2`,
+where `ψ(t) = (−1)^t`. By LP1 a product prelude and a product core of one layer each and no coda,
+at any width, need two passes, since `1 + ⌈log₂ 3⌉ = 3`. A gated core needs one. The prelude writes
+`cᵢ = [xᵢ yᵢ = 1]` into three leaf slots, so `s = c₀ + c₁ + c₂` is a linear reading of its state.
+The core has two units, both writing into a root: `s · s` with weight `14` behind the gate
+`2σ(0) = 1`, and `1 · 1` with weight `−360` behind the gate `2σ(−s ln 2) = 2/(1 + 2^s)`, where the
+constant `1` is the sum of the one-hot features of `x₀`. The readout `root + 361 − 136 s` is
+
+```
+361 − 136 s + 14 s² − 720/(1 + 2^s) = (−1)^s        (s = 0, 1, 2, 3),
+```
+
+the differences `361 − 360`, `239 − 240`, `145 − 144` and `79 − 80`. The weight `−360` is forced:
+the quadratic has no third difference, `(−1)^s` has `−8` and the gate `1/45`. In NV7's terms, `s`
+has order `2`, a product unit on it order at most `4`, and `(−1)^s` reads all six operands; the
+gate's value `2/(1 + 2^s)` already reads all six.
+
+By hand, for any `k`: with `k + 1` units `1 · 1` behind the gates
+`2σ(b_u − s ln 2) = 2e^{b_u}/(e^{b_u} + 2^s)` of distinct biases, one pass holds any function of
+`s = 0, …, k`, and `ψ(∑ᵢ xᵢ yᵢ)` is one, since the matrix `1/(e^{b_u} + 2^s)` is a Cauchy matrix
+and invertible. One gated pass then does what LP1 allows a product core only in `⌈log₂ k⌉` passes.
+How large its weights get is not worked out here.
+
+The construction idealizes Phasor's gate. Phasor's logit reads the RMS-normalized state, one gate
+serves a whole stream where here every unit has its own, and the branch output it scales is
+RMS-normalized too. A gate on the message acts only from the second pass on, since the first pass
+gets no message.
+
 *Not covered.* Normalizations, softmax attention whose scores depend on the tokens, the SiLU of a
-SwiGLU block, the `tanh` of Inkling's message gates and the router of a mixture of experts are not
-polynomial in the state, and the order does not reach them. The fixed points here are exact: a loop
-whose state only approaches a fixed point, as a contraction does, is not covered.
+SwiGLU block, gates whose logits read the state and the router of a mixture of experts are not
+polynomial in the state. The order is defined for every function of the operands, but only a
+polynomial layer bounds its growth: a layer of products at most doubles it, while in LP5 one gate
+on a reading of order `2` reads all six operands. The fixed points here are exact: a loop whose
+state only approaches a fixed point, as a contraction does, is not covered.
 
 ### Lean
 
 `ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
-`ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain` and `ProductCostUnseen` of
-`src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
+`ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain`, `ProductCostUnseen`,
+`ProductLoopGate` and `ProductLoopGateParity` of `src/Transformer/Grokking/FlatSpectrum/`,
+namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
 `Transformer.InklingLoop`; for LP3, `ReadHorizon` and `TypedLookupPaths` of
-`src/Transformer/Phasor/TripleTransport/`, namespaces `Transformer.Phasor.TripleTransport.ReadHorizon`
-and `Transformer.Phasor.TripleTransport.TypedLookupPaths`. All proved without `sorry`.
+`src/Transformer/Phasor/TripleTransport/`, namespaces
+`Transformer.Phasor.TripleTransport.ReadHorizon` and
+`Transformer.Phasor.TripleTransport.TypedLookupPaths`; for LP5, `MHC.writeGate` of
+`src/Transformer/MHC/Section4_Parameterization.lean` and `Phasor.writeGate_zero` of
+`src/Transformer/Phasor/PlainRouter.lean`. All proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -7674,7 +7728,10 @@ and `Transformer.Phasor.TripleTransport.TypedLookupPaths`. All proved without `s
 | LP3, the walk as one map | `chainMap`, `chainMap_lt`, `chainMap_last`, `chainMap_succ`, `chainMap_iterate`, `chainMap_iterate_of_le`, `chainLevel`, `chainLevel_iterate_le`, `chainTable_mem_orderSpan`, `chainEntry`, `doubling_walk_iff`, `scan_walk_iff` | The keys are `Fin (K + 1) × Bool × γ` for a finite type `γ`. Both loops read the entry from the start `(0, false, a)` to `(K, false, a)`, so the question is whether the walk returns to `a`; it holds for all tables at once. The doubling loop's equivalence takes `0 < K` and two keys at least, and its lower half is `le_passes_of_loop_walk` for the doubling core; the scan's lower half counts levels. The example is eight links on `Bool`: three passes of doubling answer, two do not. |
 | LP3, reads | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers; the product layers are the rows above. |
 | LP4, unseen coordinates | `interpolants`, `blockMask`, `rowMask`, `rowMask_mul`, `sq_norm_rowMask_le`, `frobeniusSq_rowMask_le`, `frobeniusSq_rowMask_lt`, `productCost_blockMask_lt`, `exists_productCost_lt`, `eq_zero_of_isMinOn_productCost`, `ne_of_isMinOn_productCost` | Stated for NV10's one product layer, its price `productCost`, any matrix `K` and any `Ω`, not for loops; the application to the hops of a loop is by hand. `IsMinOn` assumes an interpolant of least price and does not show that one exists; `exists_productCost_lt` needs none. The example is the cubic kernel at `p = 3` trained without the row `a = 2`. |
+| LP5, the gate | `writeGate_eq_one_add_tanh`, `writeGate_neg_mul_log_two`, `neg_one_pow_eq_gate`, `gatedLayer`, `IsGatedLayer`, `isProductLayer_gatedLayer_zero`, `IsProductLayer.isGatedLayer`, `gatedLoopState`, `gatedLoopState_zero`, `gatedLoopState_plain`, `le_passes_of_gatedLoop_copies` | The gate is `MHC.writeGate`, `2σ`, the write gate of `Phasor.Router.step_apply`. A gated layer has a gate per unit, whose logit is a real-linear map `(ι → ℂ) →ₗ[ℝ] ℝ` of the state plus a bias, without Phasor's RMS normalization. `gatedLoopState` puts one gate on the whole message, which pass `n + 2` gets from the state after pass `n + 1`. The example of the bound is LP2's loop for three copies of `x³ + x y` at `p = 7` behind the gate `2σ(0)`. |
+| LP5, three copies over `ZMod 2` | `stdAddChar_zmod_two`, `ParityFeature`, `ParityState`, `parityRoot`, `parityPair`, `parityValue`, `parityPrelude`, `isProductNet_parityPrelude`, `parityPrelude_leaf`, `parityPrelude_root`, `parityPrelude_feature`, `paritySum`, `parityOne`, `parityLogit`, `parityCore`, `isGatedLayer_parityCore`, `parityReadout`, `parityReadout_parityCore`, `parityReadout_loopState`, `not_productLoop_parity` | Only `k = 3` and `q = x y` over `ZMod 2`. The prelude is a leaf layer of `8` units; the core is one gated layer of `2` units on a stream with a message of any type, which the single pass does not read. `not_productLoop_parity` is LP1 for a prelude and a core of one layer each, no coda and one pass, at any width; its example is LP2's tree core. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of a loop in LP4 is by hand, and so is the application of `ProductCostUnseen` to its hops; for keys
-addressed by content the analog of Theorem A is open.
+addressed by content the analog of Theorem A is open. LP5's one gated pass for every `k` is by
+hand.
