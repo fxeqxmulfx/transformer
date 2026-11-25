@@ -444,10 +444,12 @@ the squared-imaginary phase score, the complex-product feed-forward branches, th
 tied readout. At each position it is `Transformer.MHC.PeriRMS.run`, so for any parameters after `L`
 layers every stream and their mean have RMS at most `1 + 2√(2L)`, the final feature has RMS at
 most one, and every attention logit at the query position `i` is at most `(5/4) ln (i + 1)`.
-`Transformer.PhasorV2` rebuilds that model from the elements chosen for it one at a time. So far
-it has Scalable-Softmax, under which a key leading the others by `g > 1/s` keeps its weight near
-one at every length, while under softmax every fixed lead fades, and LeRoPE, which contains
-Partial RoPE and NoPE at integer positions and sees the parity of an offset, which NoPE cannot.
+`Transformer.PhasorV2` rebuilds that model from the elements chosen for it one at a time:
+Scalable-Softmax, under which a key leading the others by `g > 1/s` keeps its weight near one at
+every length, while under softmax every fixed lead fades; LeRoPE, which contains Partial RoPE and
+NoPE at integer positions and sees the parity of an offset, which NoPE cannot; and the Peri-norm
+residual, whose every update has length at most `|α| √D` whatever the weights, so that from a
+normalized embedding the stream has RMS at most `1 + n |α|` after `n` sublayers.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has

@@ -4,6 +4,7 @@ public import Transformer.PhasorV2.SSMax
 public import Transformer.PhasorV2.SSMaxLength
 public import Transformer.PhasorV2.LeRoPE
 public import Transformer.PhasorV2.LeRoPEBands
+public import Transformer.PhasorV2.PeriNorm
 
 /-!
 # Phasor v2
@@ -20,4 +21,9 @@ the elements chosen for it one at a time.
   the offset and keeps the bound of the unturned vectors. `Transformer.PhasorV2.LeRoPEBands`
   shows that every Partial RoPE head, NoPE's included, is a LeRoPE head at integer positions,
   while a band at `π` sees the parity of the offset, which NoPE cannot.
+* The Peri-norm residual (DiffGPT's main model, `research/main_model/README.txt`):
+  `Transformer.PhasorV2.PeriNorm` normalizes the input and the output of every branch and scales
+  the output by `α`. Every update has length at most `|α| √D` whatever the branch, so from a
+  normalized embedding the stream has RMS at most `1 + n |α|` after `n` sublayers, and causal
+  branches give a causal stack.
 -/
