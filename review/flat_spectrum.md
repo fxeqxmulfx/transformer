@@ -7424,3 +7424,191 @@ the solver or its running time. That the cells and formulas in Lean are those of
 the tests named above check. The link of PT3 to the lift matroid is a citation. The effective rank
 of the indicator of `0`, which PT8 compares with its floor, is a measurement of *Torch check*.
 
+## Loops (added)
+
+Inkling 2 Mini runs its middle blocks several times with the same weights. Every pass starts again
+from the state its prelude saved, and its only other input is a message read from the previous
+pass (`InklingLoop.passes`). NV7 counts layers: on the one-hot features, `k` copies need
+`1 + ⌈log₂ k⌉` product layers at any width, and a tree of that depth suffices. Does a loop pay for
+sharing its weights with extra passes, and what does the sharing save?
+
+In NV7's model, passes count as depth: a prelude of depth `d₀`, `T` passes of a core of depth `d₁`
+and a coda of depth `d₂` hold `ψ(f)` only if `1 + ⌈log₂ k⌉ ≤ d₀ + T d₁ + d₂`, at any width (LP1).
+One shared layer that multiplies adjacent pairs meets this bound: a prelude layer and
+`⌈log₂ k⌉` passes hold `ψ(f)`, fewer passes do not, and from then on the state does not change
+(LP2). For `N` hops of lookup a loop has two programs, `⌈log₂ N⌉` passes of a wide step or `N`
+passes of a narrow one; which width forces which number of passes is open (LP3). In the price of
+NV10 a loop pays for its core once, which saves little on `k` copies, and whether training finds
+the correct step is the open analog of Theorem A (LP4).
+
+### LP1. Passes count as depth
+
+*The loop.* Take NV7's stream: the one-hot features of the `k` pairs and a scratch part that
+starts at zero. A prelude, a product net of depth `d₀`, writes the prelude state `z`. The core `L`
+is a product net of depth `d₁` on the coordinates of `z` and `|ν|` more for the message. Pass `t`
+runs `L` on `z` and the message `m_t`, and its state `s_t` is what `L` writes on the coordinates of
+`z`. The message of the next pass is a linear reading of that state, and the first pass gets none:
+
+```
+s_t = L(z, m_t) on the coordinates of z,    m_1 = 0,    m_{t+1} = R s_t.
+```
+
+A coda `C` of depth `d₂` and a linear readout `ℓ` follow the last pass. At every position this is
+`InklingLoop.passes` with `L` as the core; the positions do not interact, since `L` has no
+attention. Inkling mixes the message into the inputs of its blocks through gates,
+`(1 − forget) x + admit m`, with `forget` and `admit` from learned projections through `tanh`
+(`InklingLoop.gate`). Here the gates are fixed, so the message enters the core through linear
+readings, as the state does. A pass reads only `z` and the last state, so once two consecutive
+passes agree, all later ones do (`InklingLoop.stable_prefix`).
+
+*The bound.* If `ℓ(C(s_T)) = ψ(Σᵢ q(xᵢ, yᵢ))` on all inputs, and `ψ ∘ q` has a nonzero mixed
+difference, then
+
+```
+1 + ⌈log₂ k⌉ ≤ d₀ + T d₁ + d₂,
+```
+
+at any width and any number of message coordinates. The proof is NV7's count of the order. The
+prelude state has order at most `2^{d₀}`. A pass reads `z` and `R s_{t−1}` only through linear
+readings, which keep the order, so it multiplies the larger of their two orders by at most
+`2^{d₁}`. After `T` passes the order is at most `2^{d₀ + T d₁}`, the coda multiplies it by
+`2^{d₂}`, and NV7's corner sum asks for `2k ≤ 2^{d₀ + T d₁ + d₂}`.
+
+The restart breaks NV7's residual form: a pass starts again from `z`, not from the last state, so
+the unrolled loop is not literally NV7's stack of `d₀ + T d₁` layers on one stream. The order does
+not need that form, only that a pass reads its inputs linearly. Nor does the bound use that the passes share
+their weights: the count is the same for `T` different cores. With a prelude and a core of one
+layer each and no coda, `k` copies need `T ≥ ⌈log₂ k⌉` passes.
+
+### LP2. The looped tree and its fixed point
+
+Every level of NV7's tree does the same thing: it multiplies adjacent pairs. So one shared layer
+can do every level, if each pass reads what the last one wrote. On the prelude's stream put `2h`
+leaf slots `P` and `2h` product slots `S`. Unit `i < h` of the core multiplies the readings of
+`P(2i)` and `P(2i + 1)` and writes the product into `S(i)`. The prelude writes the leaves into `P`,
+`0` into the first half of `S`, and `1` into the second half, which no unit writes. The message is
+`m = S − P` on `2h` coordinates, and it enters the readings of the leaf slots. The core never writes
+into `P`, and every pass restarts from `z`, so
+
+```
+z(P l) + m(l) = z(P l) + s(S l) − s(P l) = s(S l):
+```
+
+pass `t + 1` reads in its leaf slots what pass `t` wrote into its product slots. By induction, pass
+`t` writes into `S(i)` the product of the leaves `[i 2^t, (i + 1) 2^t)`, the leaves past the `2h`
+slots counting as `1`. The root `S(0)` holds the product of the first `2^t` leaves. Once `2^t`
+covers every leaf that is not `1`, the next pass writes what is already there, and the state is a
+fixed point.
+
+For `k` copies take `h = k`. One prelude layer writes `ψ(q(x_l, y_l))` into the leaf slot `l < k`,
+`1` into the other leaf slots and the start of `S`, at `4k|β|` units, constants included, and the
+core has `k` units. Then, for every `q` whose `ψ ∘ q` has a nonzero mixed difference,
+
+```
+the root holds ψ(Σᵢ q(xᵢ, yᵢ)) on all inputs after pass T   ⟺   T ≥ ⌈log₂ k⌉.
+```
+
+`⟸` is the construction. `⟹` is LP1 with `d₀ = d₁ = 1` and `d₂ = 0`, which holds for every core
+and message, not only this one. So a prelude layer and `⌈log₂ k⌉` passes reach NV7's depth
+`1 + ⌈log₂ k⌉`, the least possible: here sharing the weights costs no passes. Three copies take two
+passes, and by LP1 no loop with a prelude and a core of one layer each does it in one, at any width.
+After pass `⌈log₂ k⌉` the state stands still, so the extra passes of a loop run with a larger budget
+cannot spoil the answer. The core has `k` units where `⌈k/2⌉` would do (by hand); `h = k` keeps
+the construction free of rounding.
+
+### LP3. Doubling against scan
+
+`N` hops of lookup follow `N` links from a starting key. A loop can do it in two ways.
+
+*Scan.* The state holds the current key as a one-hot vector `c` over the `V` keys, and a pass
+follows one link,
+
+```
+c'(j) = Σᵢ c(i) A(i, j),
+```
+
+with `A` the one-hot table of the links. Each term multiplies two linear readings, so a pass takes
+`V²` units, and `N` hops take `N` passes. With absorbing terminals the walk stays at its end, and
+every later pass changes nothing (`TypedLookupPaths.saturates`, for a read that stops at a missing
+link).
+
+*Doubling.* The state holds a table `B`, and a pass composes it with itself,
+
+```
+B'(i, j) = Σ_l B(i, l) B(l, j),
+```
+
+at `V³` units. After `t` passes `B` holds the jumps of length `2^t` (`ReadHorizon.double_reads`),
+so `N` hops take `⌈log₂ N⌉` passes, and with absorbing terminals `B` is then a fixed point. The
+message is `B − A`, as `S − P` is in LP2. On the synthetic task, with five keys per pool, ten hops
+have `V = 55` keys; for tables on all of them, a scan pass takes `3,025` units and a doubling pass
+`166,375`.
+
+The indicator of the answer reads the start and the `N` links on its path. On one-hot features of
+the links it has order `N + 1`: fix every other link so that no other path reaches the answer, and
+it is a product of `N + 1` indicators, whose corner sum is `±1`. So a readout that writes it
+exactly needs, by LP1's count, at least about `log₂ (N + 1)` passes at any width (by hand). Doubling meets this up to a pass; the scan pays `N`. The count does not see the width.
+Whether `V²` units per pass force about `N` passes, a tradeoff between width and passes, is open.
+
+Phasor's shared read reveals the successor of one key per read. Under that contract a decoder that
+has the first `h` links of the walk cannot tell apart two memories that differ only at link `h + 1`
+(`ReadHorizon.insufficient`), so there `N` hops need `N` reads. The experiment shows this horizon
+(`experiments/phasor_value_transport`, *Read budget and every interior edge*). The seed-0
+normalized-vote checkpoint, trained on one and two hops with five shared reads, answers out of 100
+at each depth:
+
+| Shared reads at evaluation | 1 hop | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 5 | 100 | 100 | 98 | 93 | 85 | 17 | 15 | 23 | 22 | 17 |
+| 10 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 52 |
+| 20 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 51 |
+| 40 | 100 | 100 | 98 | 93 | 85 | 82 | 74 | 67 | 63 | 52 |
+
+Past five hops, five reads are at chance, which is 20. Past ten reads the counts move by at most
+one answer: the walk stops at the end of its chain. Trained on one to five hops with ten reads, the
+seed-0 checkpoint answers all 500 questions at six to ten hops, which training never saw, and forty
+reads keep every answer (*Training on more chain lengths*).
+
+### LP4. The price of a loop
+
+NV10 prices a network by half the sum of the squared Frobenius norms of its weights. A loop stores
+its core once, so `T` passes cost one core, while a stack of `T` layers that do the same step pays
+`T` times. For the scan this is the whole saving: `N` passes of `V²` units cost one pass.
+
+For `k` copies the loop saves little. In NV10's account the tree pays about `k (3/2) p^{4/3}` for
+its leaves and `3/2` for each of its `k − 1` product units. The looped tree keeps the leaves in its
+prelude, and its core has `k` units, each reading a leaf slot and a message coordinate on each
+side, with a message reading of `4k` entries. That is `O(k)`, like the tree's product units, and
+not less: the levels of a binary tree shrink, and one shared layer is as wide as the widest. Against
+the leaves both are small (by hand).
+
+*The open analog of Theorem A.* Theorem A says that M does not return a flat kernel from a proper
+part. A loop is trained on short chains and run on long ones. Among the cores that fit the short
+chains, is the correct step, the one that follows a link or multiplies adjacent pairs, the
+cheapest in the price of NV10? If it is not, weight decay pulls the loop towards a step that fits
+the short chains and fails on longer ones. LP3's data shows what is at stake, not the answer: with
+ten reads, the checkpoint trained on one and two hops answers 52 of 100 at ten hops, the one trained
+on one to five hops all 100, and Phasor is not priced by NV10. Nothing here decides the question.
+
+*Not covered.* Normalizations, softmax attention whose scores depend on the tokens, the SiLU of a
+SwiGLU block, the `tanh` of Inkling's message gates and the router of a mixture of experts are not
+polynomial in the state, and the order does not reach them. The fixed points here are exact: a loop
+whose state only approaches a fixed point, as a contraction does, is not covered.
+
+### Lean
+
+`ProductLoop`, `ProductLoopTree` and `ProductLoopCopies` of `src/Transformer/Grokking/FlatSpectrum/`,
+namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
+`Transformer.InklingLoop`; for LP3, `ReadHorizon` and `TypedLookupPaths` of
+`src/Transformer/Phasor/TripleTransport/`, namespaces `Transformer.Phasor.TripleTransport.ReadHorizon`
+and `Transformer.Phasor.TripleTransport.TypedLookupPaths`. All proved without `sorry`.
+
+| Item | Lean | Differences |
+| --- | --- | --- |
+| LP1 | the loop: `loopState`, `loopCore`, `passes_loopCore`, `loopState_add_of_succ_eq`, `loopState_id`; the bound: `loopState_mem_orderSpan`, `one_add_clog_le_of_mem_orderSpan`, `le_passes_of_loop_copies` | The core is one `IsProductNet` on the stream `ι ⊕ μ`, the prelude's coordinates and the message's, and the state of a pass is `L (Sum.elim z m) ∘ Sum.inl`. `loopState L R z n` is the state after pass `n + 1`. `passes_loopCore` is the equality with `InklingLoop.passes` at every position, with the closed message `none` read as `0`. The bound is stated for a prelude `P` on `Sum.elim (pairFeatures x y) 0`, a coda `C` and a readout `ℓ`. That it holds for different cores on different passes is by hand. |
+| LP2, the tree | `treeLevel`, `treeLevel_zero`, `treeLevel_succ`, `treeLevel_eq_one`, `treeLevel_root`, `leafSlot`, `prodSlot`, `slotReading`, `treeCore`, `isProductLayer_treeCore`, `treeRead`, `treeLeaves`, `TreeStart`, `treeState`, `treeCore_pass`, `loopState_treeCore`, `loopState_treeCore_root`, `loopState_treeCore_succ`, `loopState_treeCore_add` | The stream is `F ⊕ (Fin (2h) ⊕ Fin (2h))`, any `F` beside `P` and `S`, and the message is `Fin (2h)`. The root and the fixed point take any `K ≤ 2^{n+1}` from which on the leaves are `1`. |
+| LP2, `k` copies | `leafGate`, `leafUp`, `leafLayer`, `isProductLayer_leafLayer`, `leafLayer_features`, `copiesPair`, `copiesValue`, `copiesStart`, `treeStart_copiesStart`, `treeLeaves_copiesStart`, `treeLeaves_copiesStart_of_le`, `loopCopies_root`, `loopCopies_add`, `loopCopies_root_iff` | The leaf layer writes `G_t(x_{π t}, y_{π t})` into scratch slot `t` with `\|β\|` units per slot. The equivalence is stated for pass `n + 1`, as `⌈log₂ k⌉ ≤ n + 1`. The examples are three copies of `x³ + x y` at `p = 7`. |
+| LP3 | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers. The unit counts `V²` and `V³`, the order `N + 1` of the answer and the bound of about `log₂ (N + 1)` passes are by hand. |
+
+Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
+of LP4 and its analog of Theorem A are by hand, and the analog is open.
