@@ -159,6 +159,7 @@ public import Transformer.Grokking.FlatSpectrum.ProductLoopPeri
 public import Transformer.Grokking.FlatSpectrum.ProductLoopPeriParity
 public import Transformer.Grokking.FlatSpectrum.ProductLoopSwiGLU
 public import Transformer.Grokking.FlatSpectrum.ProductLoopSwiGLUParity
+public import Transformer.Grokking.FlatSpectrum.ProductLoopSoftmax
 public import Transformer.Grokking.FlatSpectrum.SharedEmbedding
 public import Transformer.Grokking.FlatSpectrum.SharedLayer
 public import Transformer.Grokking.FlatSpectrum.UnitaryAverage
@@ -458,8 +459,10 @@ inputs the layer at most doubles the order (`ProductLoopPeri`), but with the ide
 holds the same three copies (`ProductLoopPeriParity`). SiLU is a product with the write gate,
 `SiLU(t) = t · 2σ(t)/2`: a SwiGLU layer whose gate readings are constant on the inputs keeps the
 order (`ProductLoopSwiGLU`), and one SwiGLU pass holds the three copies too
-(`ProductLoopSwiGLUParity`). Through one shared embedding of width `D`,
-every complex-linear reading of one such layer, at any number of hidden units, has its
+(`ProductLoopSwiGLUParity`). Over two keys, the weight of softmax attention is half of the same
+gate: with constant scores a softmax layer keeps the order, and with scores of the state one head
+over two keys holds the three copies (`ProductLoopSoftmax`). Through one shared embedding of width
+`D`, every complex-linear reading of one such layer, at any number of hidden units, has its
 columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so writing the table
 of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
 `(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so

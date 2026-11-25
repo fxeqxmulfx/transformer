@@ -7450,7 +7450,9 @@ and what it writes, scales the branch of a product layer by one factor of two no
 count where both norms are constant on the inputs; with the ideal RMS, one pass of one such layer
 holds the same three copies (LP6). A SwiGLU unit is a product behind half of Phasor's gate, whose
 logit is its own first reading. With constant gate readings the block is affine; with readings of
-the state, one pass of one SwiGLU layer holds the three copies too (LP7).
+the state, one pass of one SwiGLU layer holds the three copies too (LP7). Over two keys, the weight
+of softmax attention is half of the same gate. With constant scores a softmax layer is affine;
+with scores of the state, one head over two keys holds the three copies (LP8).
 
 ### LP1. Passes count as depth
 
@@ -7783,23 +7785,51 @@ beside its gate; here the value `s` of the second unit takes its place.
 The construction idealizes DiffGPT's block: no normalization surrounds it here, and its readings
 are real-linear maps of the loop's complex state. The slope `ln 2` makes the values rational.
 
-*Not covered.* The count bounds polynomial layers. LP5, LP6 and LP7 show that a gate whose logit
-reads the state, Peri-RMS and the SiLU of a SwiGLU block escape it. Softmax attention whose scores
-depend on the tokens, the router of a mixture of experts and other normalizations, such as an RMS
-of the input alone, are not polynomial in the state either, and are not examined here. The order is
+### LP8. Softmax attention
+
+Softmax attention averages the values of the keys with the weights `exp` of their scores
+(`Recall.softmaxAttention`). A *softmax layer* has heads whose scores and values are real-linear
+readings of the state, and each head writes its average along an output vector. Over two keys with
+the scores `0` and `t` and the values `a` and `b`, the average is `a + (b − a) σ(t)`: the weight of
+the second key is half of Phasor's write gate.
+
+Where the scores are constant on the inputs, the weights are numbers, and the layer is affine in
+the state and keeps the order of every coordinate. Where they read the state, one head over two
+keys does LP5's three copies of `x y` over `ZMod 2` in one pass. On LP5's prelude the scores `0`
+and `−s ln 2` and the values `109 − 24s` and `−107 − 66s` write into the root
+
+```
+109 − 24s − (216 + 42s)/(1 + 2^s) = (−1)^s        (s = 0, 1, 2, 3),
+```
+
+the sums `109 − 108`, `85 − 86`, `61 − 60` and `37 − 38`. So the head is no product layer of any
+width. The weight `1/(1 + 2^s)` of the second key, whose third difference is `1/90`, reads all six
+operands. The root alone holds the parity, with no second head and no linear readout: the
+average `v₀ + (v₁ − v₀)/(1 + 2^s)` with two values linear in `s` has four coefficients for the four
+values of `s`.
+
+The construction idealizes attention. Here the keys are not tokens but indices of a head, and
+their scores and values are readings of one state. Phasor's SSMax multiplies the scores of `n`
+tokens by `λ log n`; over a fixed number of keys this factor is a constant, absorbed into the
+readings.
+
+*Not covered.* The count bounds polynomial layers. LP5 to LP8 show that a gate whose logit reads
+the state, Peri-RMS, the SiLU of a SwiGLU block and softmax attention whose scores read the state
+escape it. The router of a mixture of experts and other normalizations, such as an RMS of the
+input alone, are not polynomial in the state either, and are not examined here. The order is
 defined for every function of the operands, but only a polynomial layer bounds its growth. A layer
 of products at most doubles it. In LP5 one gate on a reading of order `2` reads all six operands,
-and so does one SiLU in LP7. In LP6 one division by the branch's norm, a factor of order `4`, does
-the same to a root of order `2`. The fixed points here are exact: a loop whose state only
-approaches a fixed point, as a contraction does, is not covered.
+and so do one SiLU in LP7 and one softmax weight in LP8. In LP6 one division by the branch's norm,
+a factor of order `4`, does the same to a root of order `2`. The fixed points here are exact: a
+loop whose state only approaches a fixed point, as a contraction does, is not covered.
 
 ### Lean
 
 `ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
 `ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain`, `ProductCostUnseen`,
 `ProductLoopGate`, `ProductLoopGateParity`, `ProductLoopPeri`, `ProductLoopPeriParity`,
-`ProductLoopSwiGLU` and `ProductLoopSwiGLUParity` of `src/Transformer/Grokking/FlatSpectrum/`,
-namespace `Transformer.Grokking.FlatSpectrum`, on
+`ProductLoopSwiGLU`, `ProductLoopSwiGLUParity` and `ProductLoopSoftmax` of
+`src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on
 `InklingLoop` of `src/Transformer/`, namespace `Transformer.InklingLoop`; for LP3, `ReadHorizon`
 and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 `Transformer.Phasor.TripleTransport.ReadHorizon` and
@@ -7807,7 +7837,8 @@ and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 `src/Transformer/MHC/Section4_Parameterization.lean` and `Phasor.writeGate_zero` of
 `src/Transformer/Phasor/PlainRouter.lean`; for LP7, `ComplexFFN.swigluFFN` of
 `src/Transformer/ComplexFFN/Defs.lean` and `Landscape.Neural.silu` of
-`src/Transformer/Landscape/Neural/Basic.lean`. All proved without `sorry`.
+`src/Transformer/Landscape/Neural/Basic.lean`; for LP8, `Recall.softmaxAttention` of
+`src/Transformer/Grokking/FlatSpectrum/Recall/Softmax.lean`. All proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -7827,9 +7858,11 @@ and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 | LP6, three copies over `ZMod 2` | `neg_one_pow_eq_peri`, `peri_pythagoras`, `stateEnergy_single_add`, `stateEnergy_elim_zero`, `PeriScratch`, `PeriState`, `periRoot`, `periExtra`, `periPair`, `periValue`, `periPrelude`, `isProductNet_periPrelude`, `periPrelude_leaf`, `periPrelude_root`, `periPrelude_feature`, `periSum`, `periOne`, `periGate`, `periUp`, `periOut`, `periCore`, `periBranch_apply`, `periReadout`, `periReadout_loopState`, `not_isProductNet_periCore` | Only `k = 3`, `q = x y` over `ZMod 2` and `ε = 0`. The prelude is a leaf layer of `10` units; the core is one Peri layer of `2` units at any nonzero depth scale `c`, on a stream with a message of any type, which the single pass does not read. The readout's weight on the root is `5/(c √(2n))`, with `n = 17 + \|ν\|` the width of the stream and `ν` the message's type. |
 | LP7, the SwiGLU layer | `silu_eq_mul_writeGate`, `silu_neg_mul_log_two`, `neg_one_pow_eq_silu`, `star_mem_orderSpan`, `realLinear_mem_orderSpan`, `swigluLayer`, `swigluLayer_order` | The block is `ComplexFFN.swigluFFN` on the complex state as a real vector space, so both readings of a unit are real-linear and its output is a complex vector; no RMS surrounds it. `swigluLayer_order` takes every gate reading constant on all inputs `(x, y)`. Its example is a layer on the features of three pairs over `ZMod 2` whose gates read the features of `x₀`. |
 | LP7, three copies over `ZMod 2` | `swigluValue`, `swigluOut`, `swigluCore`, `swigluReadout`, `swigluReadout_swigluCore`, `swigluReadout_loopState`, `not_isProductNet_swigluCore` | Only `k = 3` and `q = x y` over `ZMod 2`, on LP5's prelude and stream. The core is one SwiGLU layer of `2` units whose gate readings are both LP5's logit `−(ln 2) Re s`, on a stream with a message of any type, which the single pass does not read. |
+| LP8, the softmax layer | `softmaxAttention_two`, `neg_one_pow_eq_softmax`, `softmaxLayer`, `softmaxLayer_order` | The attention is `Recall.softmaxAttention` over a finite type of keys, with scores and values real-linear readings of the complex state and the average written along a complex vector. The keys are not tokens: there are no positions, no causal mask and no SSMax factor, and no RMS surrounds the layer. `softmaxLayer_order` takes every score constant on all inputs `(x, y)`. Its example is a layer on the features of three pairs over `ZMod 2` whose scores read the features of `x₀`. |
+| LP8, three copies over `ZMod 2` | `softmaxScore`, `softmaxValue`, `softmaxCore`, `softmaxRoot_loopState`, `not_isProductNet_softmaxCore` | Only `k = 3` and `q = x y` over `ZMod 2`, on LP5's prelude and stream. The core is one head over two keys, with the scores `0` and LP5's logit `−(ln 2) Re s`, writing into the root, on a stream with a message of any type, which the single pass does not read. The readout is the root. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of a loop in LP4 is by hand, and so is the application of `ProductCostUnseen` to its hops; for keys
 addressed by content the analog of Theorem A is open. LP5's one gated pass for every `k` is by
-hand. So are LP6's parity at a small `ε > 0`, the orders of `3(2s − 3)`, of `1/‖B z‖` and of
-`SiLU(−s ln 2)`, and the remark that the message's norm varies in LP2's loop.
+hand. So are LP6's parity at a small `ε > 0`, the orders of `3(2s − 3)`, of `1/‖B z‖`, of
+`SiLU(−s ln 2)` and of `1/(1 + 2^s)`, and the remark that the message's norm varies in LP2's loop.
