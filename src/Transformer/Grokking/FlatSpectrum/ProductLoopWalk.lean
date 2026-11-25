@@ -91,8 +91,7 @@ lemma swap_iterate (a b : γ) (n : ℕ) : (Equiv.swap a b)^[n] a = if Even n the
     rw [Function.iterate_succ_apply', ih]
     by_cases h : Even n <;> simp [h, Nat.even_add_one]
 
-/-- **The corner sum of a readout of the walk**: `2^{2K − 1} (g a − g b)`, twice it written
-without the half. -/
+/-- **The corner sum of a readout of the walk** is `2^{2K − 1} (g a − g b)`. -/
 theorem two_mul_cornerSum_pairWalk {K : ℕ} (hK : 0 < K) (a b : γ) (g : γ → ℂ) :
     2 * cornerSum (fun _ => id) (fun _ => ⇑(Equiv.swap a b)) (fun _ => id)
       (fun _ => ⇑(Equiv.swap a b)) (fun x y => g (pairWalk K x y a)) =
@@ -116,8 +115,15 @@ theorem two_mul_cornerSum_pairWalk {K : ℕ} (hK : 0 < K) (a b : γ) (g : γ →
   push_cast
   ring_nf
 
-/-- **A nonzero corner sum is full order**: if `φ` has order at most `2^D` and a nonzero corner
-sum on some box, then `1 + ⌈log₂ |κ|⌉ ≤ D`. -/
+/-- A readout of the walk that tells `a` from `b` has a nonzero corner sum. -/
+lemma cornerSum_pairWalk_ne_zero {K : ℕ} (hK : 0 < K) {a b : γ} (g : γ → ℂ) (hg : g a ≠ g b) :
+    cornerSum (fun _ => id) (fun _ => ⇑(Equiv.swap a b)) (fun _ => id)
+      (fun _ => ⇑(Equiv.swap a b)) (fun x y => g (pairWalk K x y a)) ≠ 0 := fun h0 => by
+  have hc := two_mul_cornerSum_pairWalk hK a b g
+  rw [h0, mul_zero] at hc
+  exact hg (sub_eq_zero.1 ((mul_eq_zero.1 hc.symm).resolve_left (by simp)))
+
+/-- **A nonzero corner sum is full order**: with order at most `2^D`, `1 + ⌈log₂ |κ|⌉ ≤ D`. -/
 lemma one_add_clog_le_of_cornerSum_ne_zero {κ α β : Type} [Fintype κ] [DecidableEq κ] {D : ℕ}
     (hK : 0 < Fintype.card κ) {φ : (κ → α) → (κ → β) → ℂ} (hφ : φ ∈ orderSpan (2 ^ D))
     {x₀ x₁ : κ → α} {y₀ y₁ : κ → β} (h : cornerSum x₀ x₁ y₀ y₁ φ ≠ 0) :
@@ -149,12 +155,8 @@ theorem le_passes_of_loop_walk {K : ℕ} (hK : 0 < K) {a b : γ} (g : γ → ℂ
   rw [show (fun x y => ℓ (C (loopState L R (P (Z x y)) n))) = fun x y => g (pairWalk K x y a) from
     funext fun x => funext (hval x), show 2 ^ d₂ * (2 ^ (d₁ * (n + 1)) * (2 ^ d₀ * 1)) =
       2 ^ (d₀ + (n + 1) * d₁ + d₂) by ring] at h3
-  have hc := two_mul_cornerSum_pairWalk hK a b g
-  have hne : cornerSum (fun _ => id) (fun _ => ⇑(Equiv.swap a b)) (fun _ => id)
-      (fun _ => ⇑(Equiv.swap a b)) (fun x y => g (pairWalk K x y a)) ≠ 0 := fun h0 => by
-    rw [h0, mul_zero] at hc
-    exact hg (sub_eq_zero.1 ((mul_eq_zero.1 hc.symm).resolve_left (by simp)))
-  simpa using one_add_clog_le_of_cornerSum_ne_zero (by simpa using hK) h3 hne
+  simpa using one_add_clog_le_of_cornerSum_ne_zero (by simpa using hK) h3
+    (cornerSum_pairWalk_ne_zero hK g hg)
 
 /-- The one-hot features of the links: the coordinate `(i, c, v)` of table `x i` is
 `[x i c = v]`, and likewise for `y i`. -/
@@ -181,8 +183,7 @@ example : 2 * cornerSum (fun _ => id) (fun _ => ⇑(Equiv.swap false true)) (fun
   rw [two_mul_cornerSum_pairWalk (by norm_num) false true fun c => if c = false then 1 else 0]
   norm_num
 
-/-- **Four links need two passes** of a core of one layer, with no prelude and no coda, at any
-width. -/
+/-- **Four links need two passes** of a one-layer core with no prelude and no coda, at any width. -/
 example {T ν : Type} [Fintype T] [Fintype ν] {m : ℕ}
     {L : ((((Fin 2 × Bool × Bool) ⊕ (Fin 2 × Bool × Bool)) ⊕ T) ⊕ ν → ℂ) →
       (((Fin 2 × Bool × Bool) ⊕ (Fin 2 × Bool × Bool)) ⊕ T) ⊕ ν → ℂ}
