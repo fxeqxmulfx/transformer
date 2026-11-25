@@ -111,6 +111,14 @@ public import Transformer.GainMatroid.Section2_NablaCovers
 public import Transformer.GainMatroid.Section2_NablaBiased
 public import Transformer.GainMatroid.Section2_NablaExamples
 public import Transformer.GainMatroid.Section2_NablaThetaExamples
+public import Transformer.GainMatroid.Section2_Components
+public import Transformer.GainMatroid.Section2_Nullity
+public import Transformer.GainMatroid.Section2_CycleNullity
+public import Transformer.GainMatroid.Section2_CycleBicycles
+public import Transformer.GainMatroid.Section2_BicycleNullity
+public import Transformer.GainMatroid.Section2_BalancedSpan
+public import Transformer.GainMatroid.Section2_LiftIndep
+public import Transformer.GainMatroid.Section2_LiftMatroid
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -230,6 +238,13 @@ thetas through the new vertex, and `Section2_DeltaBiased` deduces Proposition 2.
 `Section2_NablaTripods`, `Section2_NablaCorners` and `Section2_NablaCovers` match the thetas of
 `∇_Y G` with thetas of `G`, and `Section2_NablaBiased` deduces Proposition 2.7.
 `Section2_NablaExamples` and `Section2_NablaThetaExamples` meet their hypotheses.
+`Section2_Components` counts the components of a set of edges and `Section2_Nullity` its nullity
+`|S| + c(S) - |V|`, which vanishes exactly on forests; by `Section2_CycleNullity` it is at least two
+exactly when the set contains two distinct cycles. `Section2_CycleBicycles` finds a tight handcuff,
+two vertex-disjoint cycles or a theta in any two distinct cycles, `Section2_BicycleNullity` bounds
+the nullity of these and of loose handcuffs by two, and `Section2_BalancedSpan` proves that the
+cycles spanned by a forest are balanced when its fundamental cycles are. `Section2_LiftIndep` and
+`Section2_LiftMatroid` deduce that the lift circuits are the circuits of a matroid.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

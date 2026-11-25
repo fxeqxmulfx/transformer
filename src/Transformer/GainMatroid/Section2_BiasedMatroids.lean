@@ -19,9 +19,11 @@ no two vertex-disjoint unbalanced cycles, `F(G, B) = L(G, B)`."
 
 The source follows Oxley's text, whose matroids are finite, so the statements asserting a matroid
 take `V` and `E` finite. Zaslavsky's papers are not among the local sources: the facts cited from
-them are stated here and left unproved. `LinkMinorMap` covers deletion and the contraction of a
-link, `IsFrameContraction` and `IsLiftContraction` the two contractions of a joint, and
-`IsFrameMatroid.contract_eq_delete` a balanced loop, for which the source sets `/ e = \ e`.
+them are stated here and left unproved, except that the lift circuits are the circuits of a matroid,
+which `Section2_LiftMatroid` proves (`exists_isLiftMatroid`). `LinkMinorMap` covers deletion and
+the contraction of a link, `IsFrameContraction` and `IsLiftContraction` the two contractions of a
+joint, and `IsFrameMatroid.contract_eq_delete` a balanced loop, for which the source sets
+`/ e = \ e`.
 -/
 
 @[expose] public section
@@ -88,12 +90,6 @@ theorem IsLiftMatroid.contract_eq_delete (hM : Ω.IsLiftMatroid M) {e : E}
 matroid, `F(G, B)`. -/
 theorem exists_isFrameMatroid [Finite V] [Finite E] (Ω : BiasedGraph V E) :
     ∃ M, Ω.IsFrameMatroid M := by
-  sorry
-
-/-- **§2.2** (Zaslavsky). The lift circuits of a finite biased graph are the circuits of a matroid,
-`L(G, B)`. -/
-theorem exists_isLiftMatroid [Finite V] [Finite E] (Ω : BiasedGraph V E) :
-    ∃ M, Ω.IsLiftMatroid M := by
   sorry
 
 /-- **§1** (Zaslavsky). The canonical frame matrix of a realization represents `F(G, B)`. -/
@@ -167,7 +163,6 @@ example := isFrameCircuit_iff_isLiftCircuit twoLoops_not_disjoint {true}
 example (M : Matroid Bool) := isFrameMatroid_iff_isLiftMatroid (M := M) twoLoops_not_disjoint
 
 example := triangleBiased.exists_isFrameMatroid
-example := triangleBiased.exists_isLiftMatroid
 
 example := twoLoops_realizes.exists_isFrameMatroid_frameMatrix
 
@@ -182,19 +177,8 @@ example : ∃ M : Matroid Bool, M.contract {true} = M.delete {true} := by
   obtain ⟨M, hM⟩ := (twoLoops.gainBiased (1 : Bool → ℚˣ)).exists_isFrameMatroid
   exact ⟨M, hM.contract_eq_delete ((singleton_mem_balancedCycles_iff _ rfl).2 rfl)⟩
 
-example : ∃ M : Matroid Bool, M.contract {true} = M.delete {true} := by
-  obtain ⟨M, hM⟩ := (twoLoops.gainBiased (1 : Bool → ℚˣ)).exists_isLiftMatroid
-  exact ⟨M, hM.contract_eq_delete ((singleton_mem_balancedCycles_iff _ rfl).2 rfl)⟩
-
 example : ∃ M, twoLoopsContract.IsFrameMatroid M := by
   obtain ⟨M, hM⟩ := twoLoops.contrabalanced.exists_isFrameMatroid
   exact ⟨_, twoLoops_isFrameContraction.isFrameMatroid hM⟩
-
-example : ∃ M, ((twoLoops.delete {true}).gainBiased
-    (1 : ↥({true}ᶜ : Set Bool) → ℚˣ)).IsLiftMatroid M := by
-  obtain ⟨M, hM⟩ := twoLoops.contrabalanced.exists_isLiftMatroid
-  exact ⟨_, IsLiftContraction.isLiftMatroid (Ω := twoLoops.contrabalanced) (e := true)
-    ⟨⟨rfl, Set.notMem_empty _⟩, rfl,
-      fun _ hC => mem_balancedCycles_iff.2 ⟨hC, 1, fun f _ => by simp [switch]⟩⟩ hM⟩
 
 end Transformer.GainMatroid
