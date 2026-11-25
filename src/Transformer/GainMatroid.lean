@@ -32,7 +32,24 @@ public import Transformer.GainMatroid.Section2_FiniteMatroids
 public import Transformer.GainMatroid.Section2_MatroidExchange
 public import Transformer.GainMatroid.Section2_ExchangeGraphs
 public import Transformer.GainMatroid.Section2_ExchangeMatroids
+public import Transformer.GainMatroid.Section2_NatRank
+public import Transformer.GainMatroid.Section2_ConnectionIndices
+public import Transformer.GainMatroid.Section2_ConnectionRank
+public import Transformer.GainMatroid.Section2_DeltaConnection
+public import Transformer.GainMatroid.Section2_ConnectionK4
+public import Transformer.GainMatroid.Section2_DeltaConnectionFlats
+public import Transformer.GainMatroid.Section2_DeltaRank
+public import Transformer.GainMatroid.Section2_DeltaIndep
+public import Transformer.GainMatroid.Section2_DeltaDual
+public import Transformer.GainMatroid.Section2_ConnectionExamples
+public import Transformer.GainMatroid.Section2_ContractEmbedding
+public import Transformer.GainMatroid.Section2_ExchangeEmbeddings
+public import Transformer.GainMatroid.Section2_ExchangeContraction
+public import Transformer.GainMatroid.Section2_ExchangeIndep
+public import Transformer.GainMatroid.Section2_ExchangeDelta
+public import Transformer.GainMatroid.Section2_ExchangeAgree
 public import Transformer.GainMatroid.Section2_DeltaYMatroids
+public import Transformer.GainMatroid.Section2_ExchangeExamples
 public import Transformer.GainMatroid.Section2_Representable
 public import Transformer.GainMatroid.Section2_RepresentationExchange
 public import Transformer.GainMatroid.Section2_ExchangeMatrices
@@ -190,10 +207,24 @@ shows that the printed `∇_Y B` can contain a non-cycle.
 `Section2_CycleDegrees` proves that a vertex of a loopless graph meets a cycle in zero or two edges
 and lists the seven cycles of `K₄`. `Section2_FiniteMatroids` builds finite matroids from their
 independent sets and decides their flats. `Section2_MatroidExchange` defines `M(K₄)` and the Δ-Y and
-Y-Δ exchanges of matroids, `Section2_ExchangeGraphs` and `Section2_ExchangeMatroids` compute them on
-small graphs, and `Section2_DeltaYMatroids` states Proposition 2.8 and shows that part (ii) needs
-`Y` to be a triad. `Section2_Representable` defines the matrix representations of a matroid and
-their projective classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed
+Y-Δ exchanges of matroids, and `Section2_ExchangeGraphs` and `Section2_ExchangeMatroids` compute
+them on small graphs. `Section2_NatRank` gives the rank of a finite matroid as a natural number;
+`Section2_ConnectionIndices` and `Section2_ConnectionRank` give the rank function of the
+generalized parallel connection of a matroid and `M(K₄)` across a triangle and prove it
+submodular, `Section2_DeltaConnection` builds the matroid from it, `Section2_ConnectionK4`
+restricts it to `M(K₄)`, and `Section2_DeltaConnectionFlats` gives its flats.
+`Section2_DeltaRank` computes the rank of `Δ_X M`, `Section2_DeltaIndep` recognizes `Δ_X M` by its
+independent sets, `Section2_DeltaDual` proves that the parallel connection is unique and that
+`∇_X` undoes `Δ_X` at a triad, and `Section2_ConnectionExamples` meets their hypotheses.
+`Section2_ContractEmbedding` compares frame and lift independence through graphs carried into
+contractions, `Section2_ExchangeEmbeddings` and `Section2_ExchangeContraction` carry the two sides
+of an exchange pair into each other, `Section2_ExchangeIndep` and `Section2_ExchangeDelta` deduce
+that the frame and lift matroids of an exchange pair differ by `Δ_X`, `Section2_ExchangeAgree`
+checks that the `Δ_X` and `∇_Y` exchanges agree on balanced cycles, and
+`Section2_ExchangeExamples` meets their hypotheses. `Section2_DeltaYMatroids` states Proposition
+2.8 and shows that part (ii) needs `Y` to be a triad.
+`Section2_Representable` defines the matrix representations of a matroid and their projective
+classes, and `Section2_RepresentationExchange` refutes Proposition 2.9 as printed
 and states it for a coindependent triangle. `Section2_ExchangeMatrices` defines `I(K₄)` and the
 exchanges of matrices and proves Proposition 2.11 for identity gains on the exchanged edges.
 `Section2_GainExchange` refutes Proposition 2.10 (i) as printed and proves (i) and (ii) for gains
