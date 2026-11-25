@@ -182,6 +182,16 @@ public import Transformer.GainMatroid.Section4_TwoVertices
 public import Transformer.GainMatroid.Section4_U24
 public import Transformer.GainMatroid.Section4_TwoVertexCircuits
 public import Transformer.GainMatroid.Section4_U24Matroid
+public import Transformer.GainMatroid.Section2_TwoConnected
+public import Transformer.GainMatroid.Section3_Prisms
+public import Transformer.GainMatroid.Section3_Families
+public import Transformer.GainMatroid.Section1_Particular
+public import Transformer.GainMatroid.Section2_FatTheta
+public import Transformer.GainMatroid.Section3_Counts
+public import Transformer.GainMatroid.Section3_Examples
+public import Transformer.GainMatroid.Section3_FanTheta
+public import Transformer.GainMatroid.Section3_Unavoidable
+public import Transformer.GainMatroid.Section3_Localized
 
 /-!
 # Matrix representations of frame and lifted-graphic matroids
@@ -346,4 +356,13 @@ Theorem 1 (i) fails as printed on an almost-balanced biased graph. `Section4_Two
 the columns of loops and the cycles on two vertices, and `Section4_U24` proves Lemmas 4.11 and 4.12.
 `Section4_TwoVertexCircuits` counts the edges of circuits on two vertices, and `Section4_U24Matroid`
 proves that `𝖴₂` and `𝖴₃` represent `U_{2,4}`.
+`Section2_TwoConnected` deduces 2-connectivity from connectivity off each vertex.
+`Section3_Prisms` defines `Pr`, `Pr₁`, `Pr₂`, and `Section3_Families` the isomorphisms and
+subdivisions of biased graphs and the families `𝒢₀` and `𝒯₀`. `Section1_Particular` defines the
+canonical matrices particular to a biased graph. `Section2_FatTheta` states Proposition 2.12, and
+`Section3_Counts` Proposition 3.1 and the counts of biased tubes and `K₄`.
+`Section3_Examples` and `Section3_FanTheta` meet the hypotheses of §3. `Section3_Unavoidable`
+states Propositions 3.2 and 3.5, Lemma 3.4, Theorem 3.3 and Theorems 4 and 5, and proves that the
+members of `𝒢₀` are 2-connected and properly unbalanced. `Section3_Localized` states Theorem 6 and
+Corollary 3.6.
 -/
