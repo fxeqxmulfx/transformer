@@ -7528,9 +7528,12 @@ follows one link,
 c'(j) = Σᵢ c(i) A(i, j),
 ```
 
-with `A` the one-hot table of the links. Each term multiplies two linear readings, so a pass takes
-`V²` units, and `N` hops take `N` passes. With absorbing terminals the walk stays at its end, and
-every later pass changes nothing (`TypedLookupPaths.saturates`, for a read that stops at a missing
+with `A` the one-hot table of the links. The table sits in the prelude state, and the message
+brings the key the last pass wrote, as `S − P` brings the products in LP2. Each term multiplies an
+entry of the table by a reading of the key, so a pass takes `V²` units, and pass `T` writes
+`c A^T`, the key `T` links on (`loopState_scanCore_funMatrix`): `N` hops take `N` passes. With
+absorbing terminals the walk stays at its end, and every later pass changes nothing
+(`loopState_scanCore_of_le`; `TypedLookupPaths.saturates` for a read that stops at a missing
 link).
 
 *Doubling.* The state holds a table `B`, and a pass composes it with itself,
@@ -7539,9 +7542,10 @@ link).
 B'(i, j) = Σ_l B(i, l) B(l, j),
 ```
 
-at `V³` units. After `t` passes `B` holds the jumps of length `2^t` (`ReadHorizon.double_reads`),
-so `N` hops take `⌈log₂ N⌉` passes, and with absorbing terminals `B` is then a fixed point. The
-message is `B − A`, as `S − P` is in LP2. On the synthetic task, with five keys per pool, ten hops
+at `V³` units. The message is `B − A`, as `S − P` is in LP2, and both factors of a term read it.
+After `t` passes `B` holds the jumps of length `2^t` (`loopState_doublingCore_funMatrix`;
+`ReadHorizon.double_reads` for reads), so `N` hops take `⌈log₂ N⌉` passes, and with absorbing
+terminals `B` is then a fixed point (`loopState_doublingCore_of_le`). On the synthetic task, with five keys per pool, ten hops
 have `V = 55` keys; for tables on all of them, a scan pass takes `3,025` units and a doubling pass
 `166,375`.
 
@@ -7558,7 +7562,8 @@ table each, as the one-hot features of the links do, answers the `N` hops only i
 ```
 
 at any width. With no prelude, no coda and a core of one layer this is `T ≥ ⌈log₂ N⌉`; four links
-take two passes. Doubling meets the bound (by hand); the scan pays `N`.
+take two passes. Doubling meets the bound once the walk is written as one map (by hand); the scan
+pays `N`.
 
 The scan pays for its shape, not its width. Its step multiplies the message by a table and never
 by itself. Call a layer of the core a scan layer if its gates read only the prelude state, so that
@@ -7572,8 +7577,12 @@ N ≤ 2^{d₀ + d₂} (T + 1)
 
 passes of a scan layer, at any width: with no prelude and no coda `T ≥ N − 1`, so eight links take
 seven passes where a core of one layer might take three. To go below linear, a core has to multiply
-the message by itself, as doubling does. Whether it can with fewer than `V³` units, say `V²`, is
-open: the count of the order does not see the width.
+the message by itself, as doubling does. It need not pay `V³` units for that. A pass of doubling
+squares a matrix, and a bilinear algorithm for the matrix product is a product layer: Strassen's
+seven products of `2 × 2` blocks, used recursively, take `V^{log₂ 7} ≈ V^{2.81}` units, and the
+best known bilinear algorithms about `V^{2.37}` (by hand). Whether a core of about `V²` units, as
+wide as the scan, can go below linear is open: it need be exact only on the tables that occur, and
+the count of the order does not see the width.
 
 Phasor's shared read reveals the successor of one key per read. Under that contract a decoder that
 has the first `h` links of the walk cannot tell apart two memories that differ only at link `h + 1`
@@ -7622,7 +7631,8 @@ whose state only approaches a fixed point, as a contraction does, is not covered
 
 ### Lean
 
-`ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk` and `ProductLoopScan` of
+`ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
+`ProductLoopScanCore` and `ProductLoopDoubling` of
 `src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
 `Transformer.InklingLoop`; for LP3, `ReadHorizon` and `TypedLookupPaths` of
 `src/Transformer/Phasor/TripleTransport/`, namespaces `Transformer.Phasor.TripleTransport.ReadHorizon`
@@ -7635,7 +7645,9 @@ and `Transformer.Phasor.TripleTransport.TypedLookupPaths`. All proved without `s
 | LP2, `k` copies | `leafGate`, `leafUp`, `leafLayer`, `isProductLayer_leafLayer`, `leafLayer_features`, `copiesPair`, `copiesValue`, `copiesStart`, `treeStart_copiesStart`, `treeLeaves_copiesStart`, `treeLeaves_copiesStart_of_le`, `loopCopies_root`, `loopCopies_add`, `loopCopies_root_iff` | The leaf layer writes `G_t(x_{π t}, y_{π t})` into scratch slot `t` with `\|β\|` units per slot. The equivalence is stated for pass `n + 1`, as `⌈log₂ k⌉ ≤ n + 1`. The examples are three copies of `x³ + x y` at `p = 7`. |
 | LP3, the lower bound | `pairWalk`, `pairWalk_iterate`, `cornerX_id`, `cornerY_id`, `pairWalk_corner`, `cornerSign_eq_pow`, `sum_cornerSign`, `swap_iterate`, `two_mul_cornerSum_pairWalk`, `cornerSum_pairWalk_ne_zero`, `one_add_clog_le_of_cornerSum_ne_zero`, `le_passes_of_loop_walk`, `linkFeatures`, `linkFeatures_mem_orderSpan` | The `2K` tables are maps `γ → γ` on one type, NV7's operands `x i` and `y i`, followed from a fixed key `a`. The bound takes any input `Z` whose coordinates have order at most `1`, a prelude `P`, a coda `C` and a readout `ℓ` with `ℓ (C (loopState L R (P (Z x y)) n)) = g (pairWalk K x y a)` and `g a ≠ g b`, and concludes `1 + ⌈log₂ K⌉ ≤ d₀ + (n + 1) d₁ + d₂`. The example is four links on `Bool`, which need two passes. |
 | LP3, scan layers | `IsScanLayer`, `IsScanLayer.isProductLayer`, `IsScanLayer.order`, `loopState_mem_orderSpan_of_scan`, `two_mul_card_le_of_cornerSum_ne_zero`, `le_passes_of_scan_walk` | A scan layer is one product layer whose gates are linear functionals of the prelude's coordinates alone, `gate u (w ∘ Sum.inl)`; the core is one such layer. The bound has the inputs of the lower bound and concludes `2K ≤ 2^{d₀ + d₂} (n + 2)` after pass `n + 1`. The example is eight links on `Bool`, which take seven passes. |
-| LP3, reads | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers. The unit counts `V²` and `V³`, and that doubling meets the bound, are by hand. |
+| LP3, the scan | `funMatrix`, `funMatrix_mul`, `funMatrix_pow`, `single_vecMul_funMatrix`, `iterate_add_eq`, `ScanSlot`, `scanState`, `scanTable`, `scanKey`, `scanCore`, `isScanLayer_scanCore`, `scanRead`, `scanRead_scanState`, `scanCore_pass`, `loopState_scanCore`, `loopState_scanCore_funMatrix`, `loopState_scanCore_of_le` | Tables are complex matrices on a finite type `V` of keys, and `funMatrix f` is the table `[f i = j]` of a map. The stream is `(V × V) ⊕ (V ⊕ V)`, the table and the key slots `P` and `S`, with the message on `V`, and the scan starts from `S = 0`. Pass `n + 1` writes `c A^{n+1}` for any matrix `A` and any read key `c`. The fixed point takes any `N` by which every key has reached a fixed point of `f`. The example is three links on `Fin 4`. |
+| LP3, doubling | `DoublingSlot`, `doublingState`, `doublingEntry`, `doublingRead`, `doublingRead_doublingState`, `doublingCore`, `isProductLayer_doublingCore`, `doublingCore_pass`, `loopState_doublingCore`, `loopState_doublingCore_funMatrix`, `loopState_doublingCore_of_le` | The stream is `(V × V) ⊕ (V × V)`, the table and the written table `S`, with the message on `V × V`, and the loop starts from `S = 0`. Unit `(l, i, j)` reads the entries `(i, l)` and `(l, j)`, each the table slot plus the message. Pass `n + 1` writes `A^{2^{n+1}}` for any matrix `A`. The example is seven links on `Fin 8`, which take three passes. The bilinear algorithms with fewer units are by hand. |
+| LP3, reads | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers; the product layers are the rows above. That doubling meets the bound on the walk is by hand. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of LP4 and its analog of Theorem A are by hand, and the analog is open.
