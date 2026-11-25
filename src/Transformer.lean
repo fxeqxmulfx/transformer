@@ -70,6 +70,7 @@ public import Transformer.ComplexProjection
 public import Transformer.ReRoPEBlock
 public import Transformer.LeRoPEBlock
 public import Transformer.Phasor
+public import Transformer.PhasorV2
 public import Transformer.SequenceModel
 public import Transformer.GainMatroid
 
@@ -443,6 +444,9 @@ the squared-imaginary phase score, the complex-product feed-forward branches, th
 tied readout. At each position it is `Transformer.MHC.PeriRMS.run`, so for any parameters after `L`
 layers every stream and their mean have RMS at most `1 + 2√(2L)`, the final feature has RMS at
 most one, and every attention logit at the query position `i` is at most `(5/4) ln (i + 1)`.
+`Transformer.PhasorV2` rebuilds that model from the elements chosen for it one at a time. So far
+it has Scalable-Softmax: a key leading the others by `g > 1/s` keeps its weight near one at every
+length, while under softmax every fixed lead fades.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
