@@ -192,6 +192,19 @@ public import Transformer.GainMatroid.Section3_Examples
 public import Transformer.GainMatroid.Section3_FanTheta
 public import Transformer.GainMatroid.Section3_Unavoidable
 public import Transformer.GainMatroid.Section3_Localized
+public import Transformer.GainMatroid.Section2_EdgeImages
+public import Transformer.GainMatroid.Section4_AllCanonical
+public import Transformer.GainMatroid.Section5_FanFacts
+public import Transformer.GainMatroid.Section5_FanRollUp
+public import Transformer.GainMatroid.Section5_Derived
+public import Transformer.GainMatroid.Section5_D10
+public import Transformer.GainMatroid.Section5_DerivedCorollary
+public import Transformer.GainMatroid.Section5_AlmostBalanced
+public import Transformer.GainMatroid.Section5_Subdivisions
+public import Transformer.GainMatroid.Section5_TangledExtension
+public import Transformer.GainMatroid.Section5_MainCases
+public import Transformer.GainMatroid.Section1_MainTheorems
+public import Transformer.GainMatroid.Section1_Theorem2
 
 /-!
 # Matrix representations of frame and lifted-graphic matroids
@@ -365,4 +378,15 @@ canonical matrices particular to a biased graph. `Section2_FatTheta` states Prop
 states Propositions 3.2 and 3.5, Lemma 3.4, Theorem 3.3 and Theorems 4 and 5, and proves that the
 members of `𝒢₀` are 2-connected and properly unbalanced. `Section3_Localized` states Theorem 6 and
 Corollary 3.6.
+`Section4_AllCanonical` states Lemmas 4.13 to 4.18, the frame part of Lemma 4.18 over fields other
+than `GF(2)`. `Section5_FanFacts` and `Section5_FanRollUp` meet the hypotheses of §5 on the fan
+representing `U_{3,5}`. `Section5_Derived` defines derived gain functions and states Lemma 5.2, and
+`Section5_DerivedCorollary` states Corollary 5.3, whose part (iii) fails as printed on `D_{1,0}`
+and holds for normalized gain functions. `Section5_AlmostBalanced` states Theorem 5.4,
+`Section5_Subdivisions` Lemma 5.7, `Section5_TangledExtension` Lemma 5.8 with the edge maps of
+`Section2_EdgeImages`, and `Section5_D10` Lemma 5.10. `Section5_MainCases` states Theorems 5.5,
+5.6 and 5.9, their almost-balanced parts for the frame matroid. `Section1_MainTheorems` states
+Theorems 1, 2 and 3, Theorem 1 (i) off the almost-balanced case and Theorem 2 in rank greater than
+two over fields other than `GF(2)`, and `Section1_Theorem2` states that Theorem 2 fails otherwise,
+that Conjecture 3 fails as stated, and Conjecture 4.
 -/
