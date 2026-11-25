@@ -2,6 +2,8 @@ module
 
 public import Transformer.PhasorV2.SSMax
 public import Transformer.PhasorV2.SSMaxLength
+public import Transformer.PhasorV2.LeRoPE
+public import Transformer.PhasorV2.LeRoPEBands
 
 /-!
 # Phasor v2
@@ -13,4 +15,9 @@ the elements chosen for it one at a time.
   weights and proves the bounds of §2.2; `Transformer.PhasorV2.SSMaxLength` lets the number of
   keys grow. A lead of `g > 1/s` keeps a key's weight near one at every length, while under
   softmax every fixed lead fades.
+* LeRoPE (Karypis et al., arXiv:2607.10134v1, §3.1): `Transformer.PhasorV2.LeRoPE` defines the
+  learned frequencies and turns the complex bands of a head by them; the score depends only on
+  the offset and keeps the bound of the unturned vectors. `Transformer.PhasorV2.LeRoPEBands`
+  shows that every Partial RoPE head, NoPE's included, is a LeRoPE head at integer positions,
+  while a band at `π` sees the parity of the offset, which NoPE cannot.
 -/
