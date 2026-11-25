@@ -7452,7 +7452,9 @@ holds the same three copies (LP6). A SwiGLU unit is a product behind half of Pha
 logit is its own first reading. With constant gate readings the block is affine; with readings of
 the state, one pass of one SwiGLU layer holds the three copies too (LP7). Over two keys, the weight
 of softmax attention is half of the same gate. With constant scores a softmax layer is affine;
-with scores of the state, one head over two keys holds the three copies (LP8).
+with scores of the state, one head over two keys holds the three copies (LP8). A loop of SSMax
+reads follows a chain of pointers for any number of passes at every large length, where a fixed
+scale loses it (LP9).
 
 ### LP1. Passes count as depth
 
@@ -7813,6 +7815,29 @@ their scores and values are readings of one state. Phasor's SSMax multiplies the
 tokens by `λ log n`; over a fixed number of keys this factor is a constant, absorbed into the
 readings.
 
+### LP9. SSMax reads
+
+A loop that follows a chain of pointers reads one link per pass. Position `j` of a context of
+length `n` holds the key `e_j` and the value `e_{f j}` of a table `f`. The state of the loop is a
+query `c`, which scores the key of `j` by `c_j`. One read at the scale `β` averages the values with
+the weights `e^{β c_j}`, and SSMax reads at the scale `s log n` (SA5). Each pass reads with the
+query that the pass before wrote.
+
+A query within `η` of the one-hot `e_v`, coordinate by coordinate, leads the other keys by
+`1 − 2η`. By SA5, one SSMax read is then within `2(n − 1) n^{−s(1−2η)}` of `e_{f v}`, the next
+link. Where this error is at most `η`, the tolerance does not accumulate: after `N` passes the
+query is within `η` of `e_{f^N v}`, for every `N`. The error is at most `2 n^{1−s(1−2η)}`, so for
+`s(1 − 2η) > 1` it falls below `η` from some length on. From there the loop follows every table
+from every start for any number of passes.
+
+A fixed scale does not. On an injective table the exact query `e_v` puts the weight
+`e^β/(e^β + n − 1)` on its link, which tends to `0`: for every `η < 1`, from some length on, one
+pass is farther than `η` from `e_{f v}`. SSMax at `s = 1` puts the weight `n/(2n − 1)` on the link,
+which tends to `1/2`. A lead of `1` is the threshold itself, and no `η > 0` has
+`1 · (1 − 2η) > 1`. Phasor's attention at `a_h = 0` scores RMS-normalized vectors by
+`(ln N/d) Re Z`, SSMax at `s = 1` on scores `Re Z/d` of at most `1`, so a key that matches the
+query leads orthogonal keys by at most `1`: the threshold, not above it.
+
 *Not covered.* The count bounds polynomial layers. LP5 to LP8 show that a gate whose logit reads
 the state, Peri-RMS, the SiLU of a SwiGLU block and softmax attention whose scores read the state
 escape it. The router of a mixture of experts and other normalizations, such as an RMS of the
@@ -7821,14 +7846,16 @@ defined for every function of the operands, but only a polynomial layer bounds i
 of products at most doubles it. In LP5 one gate on a reading of order `2` reads all six operands,
 and so do one SiLU in LP7 and one softmax weight in LP8. In LP6 one division by the branch's norm,
 a factor of order `4`, does the same to a root of order `2`. The fixed points here are exact: a
-loop whose state only approaches a fixed point, as a contraction does, is not covered.
+loop whose state only approaches a fixed point, as a contraction does, is not covered. LP9's state
+stays within `η` of the chain without reaching it, one link per pass: whether reads at every
+position can double a chain, as LP3's doubling does with products, is not examined.
 
 ### Lean
 
 `ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
 `ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain`, `ProductCostUnseen`,
 `ProductLoopGate`, `ProductLoopGateParity`, `ProductLoopPeri`, `ProductLoopPeriParity`,
-`ProductLoopSwiGLU`, `ProductLoopSwiGLUParity` and `ProductLoopSoftmax` of
+`ProductLoopSwiGLU`, `ProductLoopSwiGLUParity`, `ProductLoopSoftmax` and `ProductLoopSSMax` of
 `src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on
 `InklingLoop` of `src/Transformer/`, namespace `Transformer.InklingLoop`; for LP3, `ReadHorizon`
 and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
@@ -7838,7 +7865,9 @@ and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 `src/Transformer/Phasor/PlainRouter.lean`; for LP7, `ComplexFFN.swigluFFN` of
 `src/Transformer/ComplexFFN/Defs.lean` and `Landscape.Neural.silu` of
 `src/Transformer/Landscape/Neural/Basic.lean`; for LP8, `Recall.softmaxAttention` of
-`src/Transformer/Grokking/FlatSpectrum/Recall/Softmax.lean`. All proved without `sorry`.
+`src/Transformer/Grokking/FlatSpectrum/Recall/Softmax.lean`; for LP9, `Recall.logScaleAttention`
+and `Recall.abs_logScaleAttention_sub_le` of
+`src/Transformer/Grokking/FlatSpectrum/Recall/LogScale.lean`. All proved without `sorry`.
 
 | Item | Lean | Differences |
 | --- | --- | --- |
@@ -7860,9 +7889,11 @@ and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 | LP7, three copies over `ZMod 2` | `swigluValue`, `swigluOut`, `swigluCore`, `swigluReadout`, `swigluReadout_swigluCore`, `swigluReadout_loopState`, `not_isProductNet_swigluCore` | Only `k = 3` and `q = x y` over `ZMod 2`, on LP5's prelude and stream. The core is one SwiGLU layer of `2` units whose gate readings are both LP5's logit `−(ln 2) Re s`, on a stream with a message of any type, which the single pass does not read. |
 | LP8, the softmax layer | `softmaxAttention_two`, `neg_one_pow_eq_softmax`, `softmaxLayer`, `softmaxLayer_order` | The attention is `Recall.softmaxAttention` over a finite type of keys, with scores and values real-linear readings of the complex state and the average written along a complex vector. The keys are not tokens: there are no positions, no causal mask and no SSMax factor, and no RMS surrounds the layer. `softmaxLayer_order` takes every score constant on all inputs `(x, y)`. Its example is a layer on the features of three pairs over `ZMod 2` whose scores read the features of `x₀`. |
 | LP8, three copies over `ZMod 2` | `softmaxScore`, `softmaxValue`, `softmaxCore`, `softmaxRoot_loopState`, `not_isProductNet_softmaxCore` | Only `k = 3` and `q = x y` over `ZMod 2`, on LP5's prelude and stream. The core is one head over two keys, with the scores `0` and LP5's logit `−(ln 2) Re s`, writing into the root, on a stream with a message of any type, which the single pass does not read. The readout is the root. |
+| LP9, SSMax reads | `NearOneHot`, `nearOneHot_single`, `softmaxHop`, `ssmaxHop`, `nearOneHot_ssmaxHop`, `nearOneHot_iterate_ssmaxHop`, `exists_forall_nearOneHot_iterate_ssmaxHop`, `softmaxHop_single_apply`, `exists_forall_not_nearOneHot_softmaxHop`, `ssmaxHop_one_single_apply` | The loop is the iterate of one read, `(ssmaxHop s f)^[N] c`: the query of each pass is the read of the pass before, without LP1's prelude, message and stream. The context holds the one-hot keys `e_j` and values `e_{f j}` of a finite type of positions, all visible to the query, with the real scores `c_j` and no RMS, rotation or causal mask. The theorem for every length takes the positions `Fin n`; the fixed scale's takes an injective table and the exact query `e_v`. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of a loop in LP4 is by hand, and so is the application of `ProductCostUnseen` to its hops; for keys
 addressed by content the analog of Theorem A is open. LP5's one gated pass for every `k` is by
 hand. So are LP6's parity at a small `ε > 0`, the orders of `3(2s − 3)`, of `1/‖B z‖`, of
-`SiLU(−s ln 2)` and of `1/(1 + 2^s)`, and the remark that the message's norm varies in LP2's loop.
+`SiLU(−s ln 2)` and of `1/(1 + 2^s)`, the remark that the message's norm varies in LP2's loop,
+and LP9's reading of Phasor's attention at `a_h = 0` as SSMax at `s = 1`.

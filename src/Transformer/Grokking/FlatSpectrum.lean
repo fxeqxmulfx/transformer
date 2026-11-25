@@ -160,6 +160,7 @@ public import Transformer.Grokking.FlatSpectrum.ProductLoopPeriParity
 public import Transformer.Grokking.FlatSpectrum.ProductLoopSwiGLU
 public import Transformer.Grokking.FlatSpectrum.ProductLoopSwiGLUParity
 public import Transformer.Grokking.FlatSpectrum.ProductLoopSoftmax
+public import Transformer.Grokking.FlatSpectrum.ProductLoopSSMax
 public import Transformer.Grokking.FlatSpectrum.SharedEmbedding
 public import Transformer.Grokking.FlatSpectrum.SharedLayer
 public import Transformer.Grokking.FlatSpectrum.UnitaryAverage
@@ -461,10 +462,12 @@ holds the same three copies (`ProductLoopPeriParity`). SiLU is a product with th
 order (`ProductLoopSwiGLU`), and one SwiGLU pass holds the three copies too
 (`ProductLoopSwiGLUParity`). Over two keys, the weight of softmax attention is half of the same
 gate: with constant scores a softmax layer keeps the order, and with scores of the state one head
-over two keys holds the three copies (`ProductLoopSoftmax`). Through one shared embedding of width
-`D`, every complex-linear reading of one such layer, at any number of hidden units, has its
-columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so writing the table
-of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
+over two keys holds the three copies (`ProductLoopSoftmax`). A loop of SSMax reads follows a chain
+of pointers for any number of passes at every large length, where a fixed scale loses it
+(`ProductLoopSSMax`). Through one shared embedding of width `D`, every complex-linear reading of one
+such layer, at any number of hidden units, has its columns and rows in a space of dimension at most
+`D + 3` (`SharedEmbedding`), so writing the table of `k` copies takes `k D + 3 ≥ p^k`
+(`SharedLayer`). One product layer pays at least
 `(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so
 a flat kernel is no local minimum of that cost among the interpolants of any proper training set
 (`ProductCostFlat`), and the codes of a task differ in price (`ProductCostCodes`). An interpolant
