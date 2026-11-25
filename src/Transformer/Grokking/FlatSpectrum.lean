@@ -148,6 +148,7 @@ public import Transformer.Grokking.FlatSpectrum.ProductDepth
 public import Transformer.Grokking.FlatSpectrum.ProductLoop
 public import Transformer.Grokking.FlatSpectrum.ProductLoopTree
 public import Transformer.Grokking.FlatSpectrum.ProductLoopCopies
+public import Transformer.Grokking.FlatSpectrum.ProductLoopWalk
 public import Transformer.Grokking.FlatSpectrum.SharedEmbedding
 public import Transformer.Grokking.FlatSpectrum.SharedLayer
 public import Transformer.Grokking.FlatSpectrum.UnitaryAverage
@@ -430,9 +431,11 @@ from the prelude state, as Inkling 2 Mini does, and reads a linear message from 
 pass of a core of depth `d` multiplies the order by at most `2^d`, so the passes count as depth
 (`ProductLoop`); one shared layer that multiplies adjacent pairs does every level of the tree
 (`ProductLoopTree`), and writes `k` copies after exactly `⌈log₂ k⌉` passes, then stands still
-(`ProductLoopCopies`). Through one shared embedding of
-width `D`, every complex-linear reading of one such layer, at any number of hidden units, has its
-columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so writing the table
+(`ProductLoopCopies`). A chain of `2K` lookups has full order, so a loop answers it only if the
+prelude, the passes and the coda have total depth at least `1 + ⌈log₂ K⌉` (`ProductLoopWalk`).
+Through one shared embedding of width `D`, every complex-linear reading of one such layer, at any
+number of hidden units, has its columns and rows in a space of dimension at most `D + 3`
+(`SharedEmbedding`), so writing the table
 of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
 `(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so
 a flat kernel is no local minimum of that cost among the interpolants of any proper training set

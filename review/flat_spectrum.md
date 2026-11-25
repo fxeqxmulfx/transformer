@@ -7436,8 +7436,9 @@ In NV7's model, passes count as depth: a prelude of depth `d₀`, `T` passes of 
 and a coda of depth `d₂` hold `ψ(f)` only if `1 + ⌈log₂ k⌉ ≤ d₀ + T d₁ + d₂`, at any width (LP1).
 One shared layer that multiplies adjacent pairs meets this bound: a prelude layer and
 `⌈log₂ k⌉` passes hold `ψ(f)`, fewer passes do not, and from then on the state does not change
-(LP2). For `N` hops of lookup a loop has two programs, `⌈log₂ N⌉` passes of a wide step or `N`
-passes of a narrow one; which width forces which number of passes is open (LP3). In the price of
+(LP2). For `N` hops of lookup a loop with a core of one layer needs `⌈log₂ N⌉` passes at any
+width. Doubling takes that many passes of a wide step, a scan `N` passes of a narrow one, and which
+width forces which number of passes is open (LP3). In the price of
 NV10 a loop pays for its core once, which saves little on `k` copies, and whether training finds
 the correct step is the open analog of Theorem A (LP4).
 
@@ -7544,11 +7545,22 @@ message is `B − A`, as `S − P` is in LP2. On the synthetic task, with five k
 have `V = 55` keys; for tables on all of them, a scan pass takes `3,025` units and a doubling pass
 `166,375`.
 
-The indicator of the answer reads the start and the `N` links on its path. On one-hot features of
-the links it has order `N + 1`: fix every other link so that no other path reaches the answer, and
-it is a product of `N + 1` indicators, whose corner sum is `±1`. So a readout that writes it
-exactly needs, by LP1's count, at least about `log₂ (N + 1)` passes at any width (by hand). Doubling meets this up to a pass; the scan pays `N`. The count does not see the width.
-Whether `V²` units per pass force about `N` passes, a tradeoff between width and passes, is open.
+The answer reads every link on its path, and LP1's count of the order sees it. Take `N = 2K`
+tables on one set of keys and walk from a fixed key, in the order `x₀, y₀, x₁, y₁, …`; a varying
+start is one more table. On the box between the identity and the swap of two keys `a` and `b`,
+every table is a power of the swap, so the walk ends at `a` after an even number of swaps and at
+`b` after an odd one. A readout `g` of the end with `g(a) ≠ g(b)` then has the corner sum
+`2^{2K−1} (g(a) − g(b)) ≠ 0`, and its order is the full `2K`. So a loop on features that read one
+table each, as the one-hot features of the links do, answers the `N` hops only if
+
+```
+⌈log₂ N⌉ = 1 + ⌈log₂ K⌉ ≤ d₀ + T d₁ + d₂,
+```
+
+at any width. With no prelude, no coda and a core of one layer this is `T ≥ ⌈log₂ N⌉`; four links
+take two passes. Doubling meets the bound (by hand); the scan pays `N`. The count does not see the
+width. Whether `V²` units per pass force about `N` passes, a tradeoff between width and passes, is
+open.
 
 Phasor's shared read reveals the successor of one key per read. Under that contract a decoder that
 has the first `h` links of the walk cannot tell apart two memories that differ only at link `h + 1`
@@ -7597,7 +7609,8 @@ whose state only approaches a fixed point, as a contraction does, is not covered
 
 ### Lean
 
-`ProductLoop`, `ProductLoopTree` and `ProductLoopCopies` of `src/Transformer/Grokking/FlatSpectrum/`,
+`ProductLoop`, `ProductLoopTree`, `ProductLoopCopies` and `ProductLoopWalk` of
+`src/Transformer/Grokking/FlatSpectrum/`,
 namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
 `Transformer.InklingLoop`; for LP3, `ReadHorizon` and `TypedLookupPaths` of
 `src/Transformer/Phasor/TripleTransport/`, namespaces `Transformer.Phasor.TripleTransport.ReadHorizon`
@@ -7608,7 +7621,8 @@ and `Transformer.Phasor.TripleTransport.TypedLookupPaths`. All proved without `s
 | LP1 | the loop: `loopState`, `loopCore`, `passes_loopCore`, `loopState_add_of_succ_eq`, `loopState_id`; the bound: `loopState_mem_orderSpan`, `one_add_clog_le_of_mem_orderSpan`, `le_passes_of_loop_copies` | The core is one `IsProductNet` on the stream `ι ⊕ μ`, the prelude's coordinates and the message's, and the state of a pass is `L (Sum.elim z m) ∘ Sum.inl`. `loopState L R z n` is the state after pass `n + 1`. `passes_loopCore` is the equality with `InklingLoop.passes` at every position, with the closed message `none` read as `0`. The bound is stated for a prelude `P` on `Sum.elim (pairFeatures x y) 0`, a coda `C` and a readout `ℓ`. That it holds for different cores on different passes is by hand. |
 | LP2, the tree | `treeLevel`, `treeLevel_zero`, `treeLevel_succ`, `treeLevel_eq_one`, `treeLevel_root`, `leafSlot`, `prodSlot`, `slotReading`, `treeCore`, `isProductLayer_treeCore`, `treeRead`, `treeLeaves`, `TreeStart`, `treeState`, `treeCore_pass`, `loopState_treeCore`, `loopState_treeCore_root`, `loopState_treeCore_succ`, `loopState_treeCore_add` | The stream is `F ⊕ (Fin (2h) ⊕ Fin (2h))`, any `F` beside `P` and `S`, and the message is `Fin (2h)`. The root and the fixed point take any `K ≤ 2^{n+1}` from which on the leaves are `1`. |
 | LP2, `k` copies | `leafGate`, `leafUp`, `leafLayer`, `isProductLayer_leafLayer`, `leafLayer_features`, `copiesPair`, `copiesValue`, `copiesStart`, `treeStart_copiesStart`, `treeLeaves_copiesStart`, `treeLeaves_copiesStart_of_le`, `loopCopies_root`, `loopCopies_add`, `loopCopies_root_iff` | The leaf layer writes `G_t(x_{π t}, y_{π t})` into scratch slot `t` with `\|β\|` units per slot. The equivalence is stated for pass `n + 1`, as `⌈log₂ k⌉ ≤ n + 1`. The examples are three copies of `x³ + x y` at `p = 7`. |
-| LP3 | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers. The unit counts `V²` and `V³`, the order `N + 1` of the answer and the bound of about `log₂ (N + 1)` passes are by hand. |
+| LP3, the lower bound | `pairWalk`, `pairWalk_iterate`, `cornerX_id`, `cornerY_id`, `pairWalk_corner`, `cornerSign_eq_pow`, `sum_cornerSign`, `swap_iterate`, `two_mul_cornerSum_pairWalk`, `one_add_clog_le_of_cornerSum_ne_zero`, `le_passes_of_loop_walk`, `linkFeatures`, `linkFeatures_mem_orderSpan` | The `2K` tables are maps `γ → γ` on one type, NV7's operands `x i` and `y i`, followed from a fixed key `a`. The bound takes any input `Z` whose coordinates have order at most `1`, a prelude `P`, a coda `C` and a readout `ℓ` with `ℓ (C (loopState L R (P (Z x y)) n)) = g (pairWalk K x y a)` and `g a ≠ g b`, and concludes `1 + ⌈log₂ K⌉ ≤ d₀ + (n + 1) d₁ + d₂`. The example is four links on `Bool`, which need two passes. |
+| LP3, reads | `ReadHorizon.fork`, `ReadHorizon.shared`, `ReadHorizon.revealed`, `ReadHorizon.insufficient`, `ReadHorizon.double`, `ReadHorizon.double_reads`, `ReadHorizon.forty_from_two_jumps`, `TypedLookupPaths.follow`, `TypedLookupPaths.saturates` | Stated for a successor map on any type and for reads that reveal one successor each, not for product layers. The unit counts `V²` and `V³`, and that doubling meets the bound, are by hand. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of LP4 and its analog of Theorem A are by hand, and the analog is open.
