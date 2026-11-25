@@ -83,11 +83,4 @@ example : ∃ M : Matroid Bool, M.contract {true} = M.delete {true} := by
   obtain ⟨M, hM⟩ := (twoLoops.gainBiased (1 : Bool → ℚˣ)).exists_isLiftMatroid
   exact ⟨M, hM.contract_eq_delete ((singleton_mem_balancedCycles_iff _ rfl).2 rfl)⟩
 
-example : ∃ M, ((twoLoops.delete {true}).gainBiased
-    (1 : ↥({true}ᶜ : Set Bool) → ℚˣ)).IsLiftMatroid M := by
-  obtain ⟨M, hM⟩ := twoLoops.contrabalanced.exists_isLiftMatroid
-  exact ⟨_, IsLiftContraction.isLiftMatroid (Ω := twoLoops.contrabalanced) (e := true)
-    ⟨⟨rfl, Set.notMem_empty _⟩, rfl,
-      fun _ hC => mem_balancedCycles_iff.2 ⟨hC, 1, fun f _ => by simp [switch]⟩⟩ hM⟩
-
 end Transformer.GainMatroid

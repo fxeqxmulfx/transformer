@@ -124,6 +124,8 @@ public import Transformer.GainMatroid.Section2_FrameCircuits
 public import Transformer.GainMatroid.Section2_SpanningForests
 public import Transformer.GainMatroid.Section2_FrameAugment
 public import Transformer.GainMatroid.Section2_FrameMatroid
+public import Transformer.GainMatroid.Section2_DeletionCycles
+public import Transformer.GainMatroid.Section2_LiftContraction
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -255,6 +257,9 @@ cycle and no two linked cycles, `Section2_FrameCircuits` shows that no frame cir
 another, `Section2_SpanningForests` counts the edges of pseudoforests, and `Section2_FrameAugment`
 proves the exchange axiom; `Section2_FrameMatroid` deduces that the frame circuits are the circuits
 of a matroid.
+`Section2_DeletionCycles` identifies the cycles and forests of a deletion with those of the graph
+avoiding the deleted edges, and `Section2_LiftContraction` deduces that the lift-type contraction of
+a joint `e` gives the cycle matroid of `G \ e`.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence

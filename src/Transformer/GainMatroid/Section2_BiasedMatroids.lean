@@ -19,12 +19,12 @@ no two vertex-disjoint unbalanced cycles, `F(G, B) = L(G, B)`."
 
 The source follows Oxley's text, whose matroids are finite, so the statements asserting a matroid
 take `V` and `E` finite. Zaslavsky's papers are not among the local sources: the facts cited from
-them are stated here and left unproved, except that the frame and lift circuits are the circuits
-of matroids, which `Section2_FrameMatroid` and `Section2_LiftMatroid` prove
-(`exists_isFrameMatroid`, `exists_isLiftMatroid`). `LinkMinorMap` covers deletion and the
-contraction of a link, `IsFrameContraction` and `IsLiftContraction` the two contractions of a
-joint, and `IsFrameMatroid.contract_eq_delete` a balanced loop, for which the source sets
-`/ e = \ e`.
+them are stated here and left unproved, except three, proved downstream: the frame and lift circuits
+are the circuits of matroids (`Section2_FrameMatroid`, `Section2_LiftMatroid`), and the lift-type
+contraction of a joint gives the cycle matroid of the deletion (`Section2_LiftContraction`).
+`LinkMinorMap` covers deletion and the contraction of a link, `IsFrameContraction` and
+`IsLiftContraction` the two contractions of a joint, and `IsFrameMatroid.contract_eq_delete` a
+balanced loop, for which the source sets `/ e = \ e`.
 -/
 
 @[expose] public section
@@ -121,14 +121,6 @@ theorem IsFrameContraction.isFrameMatroid [Finite V] [Finite E] {e : E} {v : V}
     {Ω₂ : BiasedGraph V ↥({e}ᶜ : Set E)} (h : Ω.IsFrameContraction e v Ω₂)
     (hM : Ω.IsFrameMatroid M) :
     Ω₂.IsFrameMatroid ((M.contract {e}).comap (Subtype.val : ↥({e}ᶜ : Set E) → E)) := by
-  sorry
-
-/-- **§2.2** (Zaslavsky). `L(G, B) / e = M(G \ e)` for a joint `e`: the lift-type contraction has
-graph `G \ e` and all its cycles balanced. -/
-theorem IsLiftContraction.isLiftMatroid [Finite V] [Finite E] {e : E}
-    {Ω₂ : BiasedGraph V ↥({e}ᶜ : Set E)} (h : Ω.IsLiftContraction e Ω₂)
-    (hM : Ω.IsLiftMatroid M) :
-    Ω₂.IsLiftMatroid ((M.contract {e}).comap (Subtype.val : ↥({e}ᶜ : Set E) → E)) := by
   sorry
 
 end BiasedGraph
