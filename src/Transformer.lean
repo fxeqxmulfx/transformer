@@ -447,9 +447,10 @@ most one, and every attention logit at the query position `i` is at most `(5/4) 
 `Transformer.PhasorV2` rebuilds that model from the elements chosen for it one at a time:
 Scalable-Softmax, under which a key leading the others by `g > 1/s` keeps its weight near one at
 every length, while under softmax every fixed lead fades; LeRoPE, which contains Partial RoPE and
-NoPE at integer positions and sees the parity of an offset, which NoPE cannot; and the Peri-norm
+NoPE at integer positions and sees the parity of an offset, which NoPE cannot; the Peri-norm
 residual, whose every update has length at most `|α| √D` whatever the weights, so that from a
-normalized embedding the stream has RMS at most `1 + n |α|` after `n` sublayers.
+normalized embedding the stream has RMS at most `1 + n |α|` after `n` sublayers; and Q/K RMS,
+under which every attention logit at the length `N` is at most `ln N` for all weights.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has

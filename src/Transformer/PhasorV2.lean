@@ -5,6 +5,7 @@ public import Transformer.PhasorV2.SSMaxLength
 public import Transformer.PhasorV2.LeRoPE
 public import Transformer.PhasorV2.LeRoPEBands
 public import Transformer.PhasorV2.PeriNorm
+public import Transformer.PhasorV2.QKNorm
 
 /-!
 # Phasor v2
@@ -26,4 +27,8 @@ the elements chosen for it one at a time.
   the output by `α`. Every update has length at most `|α| √D` whatever the branch, so from a
   normalized embedding the stream has RMS at most `1 + n |α|` after `n` sublayers, and causal
   branches give a causal stack.
+* Q/K RMS (DiffGPT's main model): `Transformer.PhasorV2.QKNorm` normalizes the bands of queries
+  and keys over the real head width `d`. A normalized query and key score at most `d` at all
+  positions, so under the gain `1/d` every SSMax logit at the length `N` is at most `ln N` and no
+  key outweighs another by more than the factor `N²`, for all weights.
 -/
