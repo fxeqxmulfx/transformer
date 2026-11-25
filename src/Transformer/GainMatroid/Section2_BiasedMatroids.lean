@@ -18,12 +18,12 @@ joint then `L(G, B) / e = M(G \ e)`." It adds: "Evidently whenever `(G, B)` is a
 no two vertex-disjoint unbalanced cycles, `F(G, B) = L(G, B)`."
 
 The source follows Oxley's text, whose matroids are finite, so the statements asserting a matroid
-take `V` and `E` finite. Zaslavsky's papers are not among the local sources: the facts cited from
-them are stated here and left unproved, except six, proved downstream: the frame and lift circuits
-are the circuits of matroids (`Section2_FrameMatroid`, `Section2_LiftMatroid`), deleting and
-contracting links agrees with deletion and contraction in both matroids
-(`Section2_LinkMinorMatroids`), and the two contractions of a joint agree with contraction in the
-matroids (`Section2_LiftContraction`, `Section2_FrameContraction`).
+take `V` and `E` finite. Zaslavsky's papers are not among the local sources; the facts cited from
+them are proved downstream: the frame and lift circuits are the circuits of matroids
+(`Section2_FrameMatroid`, `Section2_LiftMatroid`), the canonical matrices represent these matroids
+(`Section2_CanonicalMatrices`), deleting and contracting links agrees with deletion and contraction
+in both matroids (`Section2_LinkMinorMatroids`), and the two contractions of a joint agree with
+contraction in the matroids (`Section2_LiftContraction`, `Section2_FrameContraction`).
 `LinkMinorMap` covers deletion and the contraction of a link, `IsFrameContraction` and
 `IsLiftContraction` the two contractions of a joint, and `IsFrameMatroid.contract_eq_delete` a
 balanced loop, for which the source sets `/ e = \ e`.
@@ -89,18 +89,6 @@ theorem IsLiftMatroid.contract_eq_delete (hM : Ω.IsLiftMatroid M) {e : E}
   Matroid.contract_eq_delete_of_subset_loops (Set.singleton_subset_iff.2
     (Matroid.isLoop_iff.1 (Matroid.singleton_isCircuit.1 ((hM.2 _).2 (Or.inl he)))))
 
-/-- **§1** (Zaslavsky). The canonical frame matrix of a realization represents `F(G, B)`. -/
-theorem Realizes.exists_isFrameMatroid_frameMatrix [DecidableEq V] [Finite V] [Finite E]
-    {F : Type*} [Field F] {φ : E → Fˣ} (h : Ω.Realizes φ) :
-    ∃ M, Ω.IsFrameMatroid M ∧ IsMatrixRepresentation M (frameMatrix Ω.graph φ) := by
-  sorry
-
-/-- **§1** (Zaslavsky). The canonical lift matrix of a realization represents `L(G, B)`. -/
-theorem AddRealizes.exists_isLiftMatroid_liftMatrix [DecidableEq V] [Finite V] [Finite E]
-    {F : Type*} [Field F] {ψ : E → F} (h : Ω.AddRealizes ψ) :
-    ∃ M, Ω.IsLiftMatroid M ∧ IsMatrixRepresentation M (liftMatrix Ω.graph ψ) := by
-  sorry
-
 end BiasedGraph
 
 open BiasedGraph
@@ -126,10 +114,5 @@ example := triangleBiased_isLiftMatroid.unique triangleBiased_isLiftMatroid
 example := isFrameCircuit_iff_isLiftCircuit twoLoops_not_disjoint {true}
 
 example (M : Matroid Bool) := isFrameMatroid_iff_isLiftMatroid (M := M) twoLoops_not_disjoint
-
-example := twoLoops_realizes.exists_isFrameMatroid_frameMatrix
-
-example := AddRealizes.exists_isLiftMatroid_liftMatrix
-  (Ω := triangle.addGainBiased (![1, 0, 1] : Fin 3 → ℚ)) rfl
 
 end Transformer.GainMatroid
