@@ -19,10 +19,11 @@ no two vertex-disjoint unbalanced cycles, `F(G, B) = L(G, B)`."
 
 The source follows Oxley's text, whose matroids are finite, so the statements asserting a matroid
 take `V` and `E` finite. Zaslavsky's papers are not among the local sources: the facts cited from
-them are stated here and left unproved, except four, proved downstream: the frame and lift circuits
-are the circuits of matroids (`Section2_FrameMatroid`, `Section2_LiftMatroid`), and the two
-contractions of a joint agree with contraction in the matroids (`Section2_LiftContraction`,
-`Section2_FrameContraction`).
+them are stated here and left unproved, except six, proved downstream: the frame and lift circuits
+are the circuits of matroids (`Section2_FrameMatroid`, `Section2_LiftMatroid`), deleting and
+contracting links agrees with deletion and contraction in both matroids
+(`Section2_LinkMinorMatroids`), and the two contractions of a joint agree with contraction in the
+matroids (`Section2_LiftContraction`, `Section2_FrameContraction`).
 `LinkMinorMap` covers deletion and the contraction of a link, `IsFrameContraction` and
 `IsLiftContraction` the two contractions of a joint, and `IsFrameMatroid.contract_eq_delete` a
 balanced loop, for which the source sets `/ e = \ e`.
@@ -100,22 +101,6 @@ theorem AddRealizes.exists_isLiftMatroid_liftMatrix [DecidableEq V] [Finite V] [
     ∃ M, Ω.IsLiftMatroid M ∧ IsMatrixRepresentation M (liftMatrix Ω.graph ψ) := by
   sorry
 
-/-- **§2.2** (Zaslavsky). Deleting and contracting links in `(G, B)` is deleting and contracting
-them in `F(G, B)`. -/
-theorem LinkMinorMap.isFrameMatroid [Finite V] [Finite E] {Ω' : BiasedGraph V' E'}
-    (m : Ω.LinkMinorMap Ω') (hM : Ω.IsFrameMatroid M) :
-    Ω'.IsFrameMatroid
-      (((M.contract m.contractSet).delete m.deleteSet).comap fun e' => (m.edge e' : E)) := by
-  sorry
-
-/-- **§2.2** (Zaslavsky). Deleting and contracting links in `(G, B)` is deleting and contracting
-them in `L(G, B)`. -/
-theorem LinkMinorMap.isLiftMatroid [Finite V] [Finite E] {Ω' : BiasedGraph V' E'}
-    (m : Ω.LinkMinorMap Ω') (hM : Ω.IsLiftMatroid M) :
-    Ω'.IsLiftMatroid
-      (((M.contract m.contractSet).delete m.deleteSet).comap fun e' => (m.edge e' : E)) := by
-  sorry
-
 end BiasedGraph
 
 open BiasedGraph
@@ -146,9 +131,5 @@ example := twoLoops_realizes.exists_isFrameMatroid_frameMatrix
 
 example := AddRealizes.exists_isLiftMatroid_liftMatrix
   (Ω := triangle.addGainBiased (![1, 0, 1] : Fin 3 → ℚ)) rfl
-
-example := (LinkMinorMap.refl triangleBiased).isFrameMatroid triangleBiased_isFrameMatroid
-
-example := (LinkMinorMap.refl triangleBiased).isLiftMatroid triangleBiased_isLiftMatroid
 
 end Transformer.GainMatroid

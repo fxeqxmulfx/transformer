@@ -130,6 +130,11 @@ public import Transformer.GainMatroid.Section2_FrameContractGraph
 public import Transformer.GainMatroid.Section2_FrameContractIndep
 public import Transformer.GainMatroid.Section2_FrameContractCore
 public import Transformer.GainMatroid.Section2_FrameContraction
+public import Transformer.GainMatroid.Section2_ContractCycles
+public import Transformer.GainMatroid.Section2_MinorMaps
+public import Transformer.GainMatroid.Section2_ContractIndep
+public import Transformer.GainMatroid.Section2_LinkMinorIndep
+public import Transformer.GainMatroid.Section2_LinkMinorMatroids
 public import Transformer.GainMatroid.Section4_Switching
 public import Transformer.GainMatroid.Section4_Diagonal
 public import Transformer.GainMatroid.Section4_Rows
@@ -268,6 +273,11 @@ a joint `e` gives the cycle matroid of `G \ e`.
 of a joint, `Section2_FrameContractIndep` frame independence next to a joint and in a deletion, and
 `Section2_FrameContractCore` frame independence after the contraction; `Section2_FrameContraction`
 deduces that the frame-type contraction of a joint `e` agrees with `F(G, B) / e`.
+`Section2_ContractCycles` relates the reachability, nullity and cycles of the contraction of a
+forest `K` to those of `G`, `Section2_MinorMaps` carries walks and cycles along the maps of a link
+minor, `Section2_ContractIndep` gives frame and lift independence after contracting `K`, and
+`Section2_LinkMinorIndep` in a link minor; `Section2_LinkMinorMatroids` deduces that deleting and
+contracting links in `(G, B)` is deleting and contracting them in `F(G, B)` and `L(G, B)`.
 `Section4_Switching` proves Proposition 4.1 and `Section4_Diagonal` proves Lemma 4.2.
 `Section4_Rows` names what deleting a vertex leaves of a graph, `Section4_Graphs` defines `2C₃`,
 `K₄` and the tube, and `Section4_Relations` and `Section4_LiftRows` read a projective equivalence
