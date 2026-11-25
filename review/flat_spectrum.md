@@ -7445,7 +7445,10 @@ chains is at chance on the first longer one; where the keys are addressed by con
 training finds the correct step is the open analog of Theorem A (LP4). Phasor's write gate
 `2σ(w) = 1 + tanh(w/2)` keeps all of this while its logit is constant; once the logit reads the
 state, one pass of one gated layer holds three copies of `x y` over `ZMod 2`, for which a product
-core of one layer needs two passes (LP5).
+core of one layer needs two passes (LP5). Phasor's Peri-RMS, which normalizes what a sublayer reads
+and what it writes, scales the branch of a product layer by one factor of two norms. It keeps the
+count where both norms are constant on the inputs; with the ideal RMS, one pass of one such layer
+holds the same three copies (LP6).
 
 ### LP1. Passes count as depth
 
@@ -7696,21 +7699,76 @@ serves a whole stream where here every unit has its own, and the branch output i
 RMS-normalized too. A gate on the message acts only from the second pass on, since the first pass
 gets no message.
 
-*Not covered.* Normalizations, softmax attention whose scores depend on the tokens, the SiLU of a
-SwiGLU block, gates whose logits read the state and the router of a mixture of experts are not
-polynomial in the state. The order is defined for every function of the operands, but only a
-polynomial layer bounds its growth: a layer of products at most doubles it, while in LP5 one gate
-on a reading of order `2` reads all six operands. The fixed points here are exact: a loop whose
-state only approaches a fixed point, as a contraction does, is not covered.
+### LP6. Phasor's Peri-RMS
+
+Every sublayer of Phasor reads the RMS-normalized state and normalizes what its branch writes
+before the depth scale `c` (`MHC.PeriRMS.step`): Peri-RMS. Its feed-forward branch is a complex
+product without a gate nonlinearity (`Phasor.FFN`), the branch `B z = ∑_u (g_u z)(w_u z) o_u` of a
+product layer. On `n` complex coordinates the RMS is `R z = z √(2n)/√(‖z‖² + 2nε)`, as
+`GPTMini.rmsNormEps` on the `2n` real ones, and a *Peri layer* is
+
+```
+F z = z + c R(B(R z)).
+```
+
+Both RMS multiply their argument by a positive number, and `B` is homogeneous of degree two, so
+`F z = z + μ B z`, with one real factor `μ` of `‖z‖²` and `‖B z‖²`: a gate on the whole branch,
+whose logit reads two norms. Where both norms are constant on the inputs, `μ` is a number, the
+layer is a product layer, and it at most doubles the order. LP2's prelude behind Peri-RMS is such a
+layer when its leaves are characters: the one-hot features of `k` pairs have energy `2k` and the
+`k` leaves modulus one. The loop's message is part of the core's input, and LP2's message, the
+product slots minus the leaf slots, has a norm that depends on the input from the second pass on:
+with `ε > 0` this does not cover LP2's loop.
+
+With the ideal RMS, `ε = 0`, the input RMS drops out, `F z = z + c √(2n) B z/‖B z‖`, and a branch
+whose norm varies escapes the count. Take LP5's three copies of `x y` over `ZMod 2`. The prelude
+writes `cᵢ = [xᵢ yᵢ = 1]` into three leaf slots and `0` into a root and one extra slot. The core
+is one Peri layer of two units: `s (s − 3)` into the extra slot with weight `2`, and
+`1 · (2s − 3)` into the root with weight `3`, where `s = c₀ + c₁ + c₂` and `1` is the sum of the
+features of `x₀`. The branch is a Pythagorean pair,
+
+```
+(2s(s − 3))² + (3(2s − 3))² = (2s² − 6s + 9)²,
+```
+
+so the core adds `c √(2n) · 3(2s − 3)/(2s² − 6s + 9)` to the root, `n` the width of the stream.
+The readout `6 · 1 − 4s + 5 root/(c √(2n))` is
+
+```
+6 − 4s + 15 (2s − 3)/(2s² − 6s + 9) = (−1)^s        (s = 0, 1, 2, 3),
+```
+
+the sums `6 − 5`, `2 − 3`, `−2 + 3` and `−6 + 5`. By LP1 no product core of one layer does this in
+one pass, so the Peri core is no product layer of any width. The root `3(2s − 3)` of the branch
+has order `2`. The factor `1/‖B z‖ = 1/(2s² − 6s + 9)` is symmetric under `s ↦ 3 − s`, so it has
+no third difference and order at most `4`. Their product reads all six operands.
+
+The construction idealizes Phasor's Peri-RMS. Here one RMS covers the whole stream, the loop's
+message included, without a learned gain. The layer has no write gate and no stream mixing, and
+Phasor's `ε` is positive. By hand, the parity survives a small `ε > 0` if the readout also reads
+the extra slot. At `ε = 0` the root, the extra slot, `1` and `s` take at `s = 0, …, 3` values whose
+matrix has determinant `(32/25) · 2n c²`. The factor `μ` is continuous in `ε`, since `‖z‖² ≥ 6`
+and `‖B z‖ ≥ 5`, so for small `ε` a readout of these four gives `(−1)^s`, with weights that depend
+on `ε`.
+
+*Not covered.* The count bounds polynomial layers. LP5 and LP6 show that a gate whose logit reads
+the state and Peri-RMS escape it. Softmax attention whose scores depend on the tokens, the SiLU of
+a SwiGLU block, the router of a mixture of experts and other normalizations, such as an RMS of the
+input alone, are not polynomial in the state either, and are not examined here. The order is
+defined for every function of the operands, but only a polynomial layer bounds its growth. A layer
+of products at most doubles it. In LP5 one gate on a reading of order `2` reads all six operands,
+and in LP6 one division by the branch's norm, a factor of order `4`, does the same to a root of
+order `2`. The fixed points here are exact: a loop whose state only approaches a fixed point, as a
+contraction does, is not covered.
 
 ### Lean
 
 `ProductLoop`, `ProductLoopTree`, `ProductLoopCopies`, `ProductLoopWalk`, `ProductLoopScan`,
 `ProductLoopScanCore`, `ProductLoopDoubling`, `ProductLoopChain`, `ProductCostUnseen`,
-`ProductLoopGate` and `ProductLoopGateParity` of `src/Transformer/Grokking/FlatSpectrum/`,
-namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transformer/`, namespace
-`Transformer.InklingLoop`; for LP3, `ReadHorizon` and `TypedLookupPaths` of
-`src/Transformer/Phasor/TripleTransport/`, namespaces
+`ProductLoopGate`, `ProductLoopGateParity`, `ProductLoopPeri` and `ProductLoopPeriParity` of
+`src/Transformer/Grokking/FlatSpectrum/`, namespace `Transformer.Grokking.FlatSpectrum`, on
+`InklingLoop` of `src/Transformer/`, namespace `Transformer.InklingLoop`; for LP3, `ReadHorizon`
+and `TypedLookupPaths` of `src/Transformer/Phasor/TripleTransport/`, namespaces
 `Transformer.Phasor.TripleTransport.ReadHorizon` and
 `Transformer.Phasor.TripleTransport.TypedLookupPaths`; for LP5, `MHC.writeGate` of
 `src/Transformer/MHC/Section4_Parameterization.lean` and `Phasor.writeGate_zero` of
@@ -7730,8 +7788,11 @@ namespace `Transformer.Grokking.FlatSpectrum`, on `InklingLoop` of `src/Transfor
 | LP4, unseen coordinates | `interpolants`, `blockMask`, `rowMask`, `rowMask_mul`, `sq_norm_rowMask_le`, `frobeniusSq_rowMask_le`, `frobeniusSq_rowMask_lt`, `productCost_blockMask_lt`, `exists_productCost_lt`, `eq_zero_of_isMinOn_productCost`, `ne_of_isMinOn_productCost` | Stated for NV10's one product layer, its price `productCost`, any matrix `K` and any `Ω`, not for loops; the application to the hops of a loop is by hand. `IsMinOn` assumes an interpolant of least price and does not show that one exists; `exists_productCost_lt` needs none. The example is the cubic kernel at `p = 3` trained without the row `a = 2`. |
 | LP5, the gate | `writeGate_eq_one_add_tanh`, `writeGate_neg_mul_log_two`, `neg_one_pow_eq_gate`, `gatedLayer`, `IsGatedLayer`, `isProductLayer_gatedLayer_zero`, `IsProductLayer.isGatedLayer`, `gatedLoopState`, `gatedLoopState_zero`, `gatedLoopState_plain`, `le_passes_of_gatedLoop_copies` | The gate is `MHC.writeGate`, `2σ`, the write gate of `Phasor.Router.step_apply`. A gated layer has a gate per unit, whose logit is a real-linear map `(ι → ℂ) →ₗ[ℝ] ℝ` of the state plus a bias, without Phasor's RMS normalization. `gatedLoopState` puts one gate on the whole message, which pass `n + 2` gets from the state after pass `n + 1`. The example of the bound is LP2's loop for three copies of `x³ + x y` at `p = 7` behind the gate `2σ(0)`. |
 | LP5, three copies over `ZMod 2` | `stdAddChar_zmod_two`, `ParityFeature`, `ParityState`, `parityRoot`, `parityPair`, `parityValue`, `parityPrelude`, `isProductNet_parityPrelude`, `parityPrelude_leaf`, `parityPrelude_root`, `parityPrelude_feature`, `paritySum`, `parityOne`, `parityLogit`, `parityCore`, `isGatedLayer_parityCore`, `parityReadout`, `parityReadout_parityCore`, `parityReadout_loopState`, `not_productLoop_parity` | Only `k = 3` and `q = x y` over `ZMod 2`. The prelude is a leaf layer of `8` units; the core is one gated layer of `2` units on a stream with a message of any type, which the single pass does not read. `not_productLoop_parity` is LP1 for a prelude and a core of one layer each, no coda and one pass, at any width; its example is LP2's tree core. |
+| LP6, the Peri layer | `productBranch`, `productBranch_smul`, `rmsFactor`, `periFactor`, `stateEnergy`, `stateEnergy_smul`, `eq_zero_of_stateEnergy_eq_zero`, `periRMS`, `periLayer`, `periLayer_apply`, `periLayer_order`, `periLayer_eps_zero`, `leafOut`, `stateEnergy_features`, `productBranch_leaf_features` | The RMS is restated on complex states, as `GPTMini.rmsNormEps` on the `2n` real coordinates, and not imported from `MHC.PeriRMS`. There is no learned gain, no write gate and no stream mixing, and one RMS covers the whole stream, the loop's message included. `periLayer_order` takes both energies constant on all inputs `(x, y)`. Its example is LP2's prelude for `k` copies with characters as leaves, at any `p`, `ε` and `c`. |
+| LP6, three copies over `ZMod 2` | `neg_one_pow_eq_peri`, `peri_pythagoras`, `stateEnergy_single_add`, `stateEnergy_elim_zero`, `PeriScratch`, `PeriState`, `periRoot`, `periExtra`, `periPair`, `periValue`, `periPrelude`, `isProductNet_periPrelude`, `periPrelude_leaf`, `periPrelude_root`, `periPrelude_feature`, `periSum`, `periOne`, `periGate`, `periUp`, `periOut`, `periCore`, `periBranch_apply`, `periReadout`, `periReadout_loopState`, `not_isProductNet_periCore` | Only `k = 3`, `q = x y` over `ZMod 2` and `ε = 0`. The prelude is a leaf layer of `10` units; the core is one Peri layer of `2` units at any nonzero depth scale `c`, on a stream with a message of any type, which the single pass does not read. The readout's weight on the root is `5/(c √(2n))`, with `n = 17 + \|ν\|` the width of the stream and `ν` the message's type. |
 
 Not in Lean. The counts of LP3 are measurements of `experiments/phasor_value_transport`. The price
 of a loop in LP4 is by hand, and so is the application of `ProductCostUnseen` to its hops; for keys
 addressed by content the analog of Theorem A is open. LP5's one gated pass for every `k` is by
-hand.
+hand. So are LP6's parity at a small `ε > 0`, the orders of `3(2s − 3)` and of `1/‖B z‖`, and the
+remark that the message's norm varies in LP2's loop.

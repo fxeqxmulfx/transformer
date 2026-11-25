@@ -155,6 +155,8 @@ public import Transformer.Grokking.FlatSpectrum.ProductLoopDoubling
 public import Transformer.Grokking.FlatSpectrum.ProductLoopChain
 public import Transformer.Grokking.FlatSpectrum.ProductLoopGate
 public import Transformer.Grokking.FlatSpectrum.ProductLoopGateParity
+public import Transformer.Grokking.FlatSpectrum.ProductLoopPeri
+public import Transformer.Grokking.FlatSpectrum.ProductLoopPeriParity
 public import Transformer.Grokking.FlatSpectrum.SharedEmbedding
 public import Transformer.Grokking.FlatSpectrum.SharedLayer
 public import Transformer.Grokking.FlatSpectrum.UnitaryAverage
@@ -448,8 +450,11 @@ doubling answers after exactly `1 + ⌈log₂ K⌉` passes, the bound, and the s
 (`ProductLoopChain`). Phasor's write gate `2σ(w)` is `1 + tanh(w/2)`; a gate whose logit does not
 read the state is a number and keeps all of this, on a layer or on the loop's message
 (`ProductLoopGate`), but one gated pass holds three copies of `x y` over `ZMod 2` where no product
-core does (`ProductLoopGateParity`). Through one shared embedding of
-width `D`, every complex-linear reading of one such layer, at any number of hidden units, has its
+core does (`ProductLoopGateParity`). Phasor's Peri-RMS around a product layer is one real factor
+on the branch, read off the norms of the state and of the branch: where both are constant on the
+inputs the layer at most doubles the order (`ProductLoopPeri`), but with the ideal RMS one pass
+holds the same three copies (`ProductLoopPeriParity`). Through one shared embedding of width `D`,
+every complex-linear reading of one such layer, at any number of hidden units, has its
 columns and rows in a space of dimension at most `D + 3` (`SharedEmbedding`), so writing the table
 of `k` copies takes `k D + 3 ≥ p^k` (`SharedLayer`). One product layer pays at least
 `(3/2) ∑ σ^{2/3}`, with equality at the SVD (`UnitaryAverage`, `ProductCost`, `ProductCostSVD`), so
