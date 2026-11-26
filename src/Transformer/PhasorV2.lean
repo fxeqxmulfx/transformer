@@ -22,11 +22,11 @@ the elements chosen for it one at a time.
   the offset and keeps the bound of the unturned vectors. `Transformer.PhasorV2.LeRoPEBands`
   shows that every Partial RoPE head, NoPE's included, is a LeRoPE head at integer positions,
   while a band at `π` sees the parity of the offset, which NoPE cannot.
-* The Peri-norm residual (DiffGPT's main model, `research/main_model/README.txt`):
-  `Transformer.PhasorV2.PeriNorm` normalizes the input and the output of every branch and scales
-  the output by `α`. Every update has length at most `|α| √D` whatever the branch, so from a
-  normalized embedding the stream has RMS at most `1 + n |α|` after `n` sublayers, and causal
-  branches give a causal stack.
+* Peri-norm (DiffGPT's main model, `research/main_model/README.txt`):
+  `Transformer.PhasorV2.PeriNorm` writes the model's vectors as `c` complex channels, `D = 2c`
+  real coordinates, with the parameter-free `R_D`, and normalizes the input and the output of
+  every branch. The output has length at most `√D` whatever the branch, and a causal branch stays
+  causal.
 * Q/K RMS (DiffGPT's main model): `Transformer.PhasorV2.QKNorm` normalizes the bands of queries
   and keys over the real head width `d`. A normalized query and key score at most `d` at all
   positions, so under the gain `1/d` every SSMax logit at the length `N` is at most `ln N` and no
