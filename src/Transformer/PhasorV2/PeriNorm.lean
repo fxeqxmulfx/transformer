@@ -16,12 +16,16 @@ RMSNorm".
 The model is complex: its `D` real coordinates pair into `c = D/2` complex channels. The source
 pairs them inside each head block; another fixed pairing permutes the coordinates, and the
 projections absorb the permutation. A vector is `CSpace c = ℂ^c`, its squared length that of its
-`2c` real coordinates, and `R_D` is `rms` (`rms_eq_div`).
+`2c` real coordinates.
 
-* `R_D` has length at most `√D`, RMS at most one, for every input (`norm_rms_le`).
-* The Peri-norm branch `periBranch eps F z` is `R_D(F(R_D ∘ z))`: the raw branch `F` maps the
+Phasor v2 takes the mean over the complex channels instead of the real coordinates:
+`R(x) = x / √(mean_m |x_m|² + ε)` (`rms`, `rms_eq_div`). This is the source's `R_D` at `ε/2`
+divided by `√2`, and it leaves no factor `2` in the formulas.
+
+* `R` has length at most `√c`, RMS at most one, for every input (`norm_rms_le`).
+* The Peri-norm branch `periBranch eps F z` is `R(F(R ∘ z))`: the raw branch `F` maps the
   normalized sequence to a sequence, attention reading every position up to `i`, a feed-forward
-  branch only its own. Its output has length at most `√D` whatever `F` (`norm_periBranch_le`),
+  branch only its own. Its output has length at most `√c` whatever `F` (`norm_periBranch_le`),
   and a causal `F` gives a causal branch (`isCausal_periBranch`).
 
 `Transformer.PhasorV2.MHC` adds the output, scaled by the write gates and `α`, to the four
@@ -39,43 +43,43 @@ variable {c : ℕ}
 /-- A vector of the model: `c` complex channels, `D = 2c` real coordinates. -/
 abbrev CSpace (c : ℕ) := EuclideanSpace ℂ (Fin c)
 
-/-- **`R_D`** (DiffGPT's main model, *Architecture*), parameter-free:
-`R_D(x) = √D x / √(‖x‖² + D ε)` over the `D = 2c` real coordinates of `x`. -/
+/-- **The Peri-norm RMS** (DiffGPT's main model, *Architecture*, over complex channels),
+parameter-free: `R(x) = √c x / √(‖x‖² + c ε)` for the `c` complex channels of `x`. -/
 noncomputable def rms (eps : ℝ) (x : CSpace c) : CSpace c :=
-  ((Real.sqrt (2 * c) / Real.sqrt (‖x‖ ^ 2 + 2 * c * eps) : ℝ) : ℂ) • x
+  ((Real.sqrt c / Real.sqrt (‖x‖ ^ 2 + c * eps) : ℝ) : ℂ) • x
 
-/-- **The source's form** `x / √(mean(x²) + ε)`, the mean over the `D = 2c` real coordinates. -/
+/-- **The form** `x / √(mean_m |x_m|² + ε)`, the mean over the `c` complex channels. -/
 theorem rms_eq_div (hc : 0 < c) (eps : ℝ) (x : CSpace c) :
-    rms eps x = ((1 / Real.sqrt (‖x‖ ^ 2 / (2 * c) + eps) : ℝ) : ℂ) • x := by
-  have hD : (0 : ℝ) < 2 * c := mul_pos two_pos (Nat.cast_pos.2 hc)
-  rw [rms, div_add' _ _ _ hD.ne', Real.sqrt_div' _ hD.le, one_div_div, mul_comm eps]
+    rms eps x = ((1 / Real.sqrt (‖x‖ ^ 2 / c + eps) : ℝ) : ℂ) • x := by
+  have hc' : (0 : ℝ) < c := Nat.cast_pos.2 hc
+  rw [rms, div_add' _ _ _ hc'.ne', Real.sqrt_div' _ hc'.le, one_div_div, mul_comm eps]
 
-/-- The main model's width `D = 128`. -/
+/-- The main model's `c = 64` channels. -/
 example (x : CSpace 64) := rms_eq_div (by norm_num) (1 / 2 ^ 23) x
 
-/-- **`R_D` has length at most `√D`**: RMS at most one, for every input and every `ε ≥ 0`. -/
+/-- **`R` has length at most `√c`**: RMS at most one, for every input and every `ε ≥ 0`. -/
 theorem norm_rms_le {eps : ℝ} (heps : 0 ≤ eps) (x : CSpace c) :
-    ‖rms eps x‖ ≤ Real.sqrt (2 * c) := by
-  have hε : 0 ≤ 2 * (c : ℝ) * eps := mul_nonneg (by positivity) heps
-  have hx : ‖x‖ ≤ Real.sqrt (‖x‖ ^ 2 + 2 * c * eps) :=
+    ‖rms eps x‖ ≤ Real.sqrt c := by
+  have hε : 0 ≤ (c : ℝ) * eps := mul_nonneg (Nat.cast_nonneg c) heps
+  have hx : ‖x‖ ≤ Real.sqrt (‖x‖ ^ 2 + c * eps) :=
     Real.le_sqrt_of_sq_le (le_add_of_nonneg_right hε)
   rw [rms, norm_smul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (div_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)), div_mul_eq_mul_div,
     mul_div_assoc]
   exact mul_le_of_le_one_right (Real.sqrt_nonneg _) (div_le_one_of_le₀ hx (Real.sqrt_nonneg _))
 
-/-- The main model: `D = 128`, `ε = 2^{−23}`. -/
+/-- The main model: `c = 64`, `ε = 2^{−23}`. -/
 example (x : CSpace 64) := norm_rms_le (eps := 1 / 2 ^ 23) (by norm_num) x
 
-/-- **A Peri-norm branch** (DiffGPT's main model, *Architecture*): at the position `i`, `R_D` of
-the raw branch `F` applied to `R_D` of the input `z` at every position. -/
+/-- **A Peri-norm branch** (DiffGPT's main model, *Architecture*): at the position `i`, `R` of
+the raw branch `F` applied to `R` of the input `z` at every position. -/
 noncomputable def periBranch (eps : ℝ) (F : (ℕ → CSpace c) → ℕ → CSpace c) (z : ℕ → CSpace c)
     (i : ℕ) : CSpace c :=
   rms eps (F (fun j => rms eps (z j)) i)
 
-/-- **A Peri-norm branch has output of length at most `√D`**, whatever the raw branch. -/
+/-- **A Peri-norm branch has output of length at most `√c`**, whatever the raw branch. -/
 theorem norm_periBranch_le {eps : ℝ} (heps : 0 ≤ eps) (F : (ℕ → CSpace c) → ℕ → CSpace c)
-    (z : ℕ → CSpace c) (i : ℕ) : ‖periBranch eps F z i‖ ≤ Real.sqrt (2 * c) :=
+    (z : ℕ → CSpace c) (i : ℕ) : ‖periBranch eps F z i‖ ≤ Real.sqrt c :=
   norm_rms_le heps _
 
 /-- Any raw branch of the main model's width. -/

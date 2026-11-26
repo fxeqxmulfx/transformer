@@ -12,17 +12,17 @@ constrained as in §4.2) with a Peri-norm branch and phases. At every position `
     z_i = R_D(∑_s read_{i,s} h_{i,s}),
     h'_{i,s} = ∑_t P_{i,s,t} r_s conj(r_t) h_{i,t} + write_{i,s} α R_D(F(z)_i),
 
-where the sublayer's router reads the state `h_i` of the position (`Router.step`). The embedding
-enters as "four identical copies after embedding RMS", `h⁰_{i,s} = R_D(E[token_i])`. `stack` runs
-`n` sublayers, each with its router and raw branch; in the source attention and feed-forward
-alternate, `n = 2L`.
+where the sublayer's router reads the state `h_i` of the position (`Router.step`), and `R_D` is
+the RMS over the `c` complex channels (`rms`). The embedding enters as "four identical copies
+after embedding RMS", `h⁰_{i,s} = R_D(E[token_i])`. `stack` runs `n` sublayers, each with its
+router and raw branch; in the source attention and feed-forward alternate, `n = 2L`.
 
 * A sublayer moves a stream by the skip, which keeps a bound of the streams, plus the write,
-  which has length at most `2 |α| √D` (`Router.norm_step_le`). So after `n` sublayers every
-  stream has grown by at most `2 n |α| √D` (`norm_stack_le`).
+  which has length at most `2 |α| √c` (`Router.norm_step_le`). So after `n` sublayers every
+  stream has grown by at most `2 n |α| √c` (`norm_stack_le`).
 * From the normalized embedding, after `n` sublayers every stream has RMS at most `1 + 2 n |α|`
-  (`rms_stack_le`), for all weights, routers and branches. At the source's `α = 1/√(2L)` after
-  `2L` sublayers that is `1 + 2√(2L)` (`rms_stack_depth_le`).
+  over its complex channels (`rms_stack_le`), for all weights, routers and branches. At the
+  source's `α = 1/√(2L)` after `2L` sublayers that is `1 + 2√(2L)` (`rms_stack_depth_le`).
 * Causal branches give causal sublayers and stacks (`Router.isCausal_step`, `isCausal_stack`).
 -/
 
@@ -52,18 +52,18 @@ noncomputable def stack (eps α : ℝ) (R : ℕ → Router c)
   | 0, h => h
   | n + 1, h => (R n).step eps α (F n) (stack eps α R F n h)
 
-/-- **A sublayer moves a stream by at most `2 |α| √D` beyond a bound of the streams**: if every
-stream of `h_i` has length at most `B`, every new stream has length at most `B + 2 |α| √D`. -/
+/-- **A sublayer moves a stream by at most `2 |α| √c` beyond a bound of the streams**: if every
+stream of `h_i` has length at most `B`, every new stream has length at most `B + 2 |α| √c`. -/
 theorem Router.norm_step_le (R : Router c) {eps : ℝ} (heps : 0 ≤ eps) (α : ℝ)
     (F : (ℕ → CSpace c) → ℕ → CSpace c) (h : ℕ → State c) (i : ℕ) {B : ℝ}
     (hB : ∀ t, ‖h i t‖ ≤ B) (s : Fin 4) :
-    ‖R.step eps α F h i s‖ ≤ B + 2 * |α| * Real.sqrt (2 * c) := by
+    ‖R.step eps α F h i s‖ ≤ B + 2 * |α| * Real.sqrt c := by
   have hskip := norm_phaseSkip_le R.norm_rot (fun s t => (R.skip_pos eps (h i) s t).le)
     (R.skip_row_sum eps (h i)) hB s
   have hw := R.write_mem eps (h i) s
   have hbr := norm_periBranch_le heps F (fun j => R.readMix eps (h j)) i
   have hwrite : ‖((R.write eps (h i) s * α : ℝ) : ℂ) •
-      periBranch eps F (fun j => R.readMix eps (h j)) i‖ ≤ 2 * |α| * Real.sqrt (2 * c) := by
+      periBranch eps F (fun j => R.readMix eps (h j)) i‖ ≤ 2 * |α| * Real.sqrt c := by
     rw [norm_smul, Complex.norm_real, Real.norm_eq_abs, abs_mul, abs_of_pos hw.1]
     exact mul_le_mul (mul_le_mul_of_nonneg_right hw.2.le (abs_nonneg α)) hbr (norm_nonneg _)
       (by positivity)
@@ -74,12 +74,12 @@ example (R : Router 64) (F : (ℕ → CSpace 64) → ℕ → CSpace 64) (e : ℕ
   R.norm_step_le (eps := 1 / 2 ^ 23) (by norm_num) (1 / Real.sqrt 8) F
     (fun j _ => rms (1 / 2 ^ 23) (e j)) 7 (fun _ => norm_rms_le (by norm_num) (e 7)) 0
 
-/-- **After `n` sublayers every stream has grown by at most `2 n |α| √D`**, whatever the
+/-- **After `n` sublayers every stream has grown by at most `2 n |α| √c`**, whatever the
 routers and branches. -/
 theorem norm_stack_le {eps : ℝ} (heps : 0 ≤ eps) (α : ℝ) (R : ℕ → Router c)
     (F : ℕ → (ℕ → CSpace c) → ℕ → CSpace c) (n : ℕ) (h : ℕ → State c) (i : ℕ) {B : ℝ}
     (hB : ∀ t, ‖h i t‖ ≤ B) (s : Fin 4) :
-    ‖stack eps α R F n h i s‖ ≤ B + n * (2 * |α| * Real.sqrt (2 * c)) := by
+    ‖stack eps α R F n h i s‖ ≤ B + n * (2 * |α| * Real.sqrt c) := by
   induction n generalizing s with
   | zero => simpa [stack] using hB s
   | succ n ih =>
@@ -94,17 +94,17 @@ example (R : ℕ → Router 64) (F : ℕ → (ℕ → CSpace 64) → ℕ → CSp
     (fun j _ => rms (1 / 2 ^ 23) (e j)) 7 (fun _ => norm_rms_le (by norm_num) (e 7)) 0
 
 /-- **From the normalized embedding every stream has RMS at most `1 + 2 n |α|`** after `n`
-sublayers: the RMS `‖h‖/√D`, for all weights, routers and branches. -/
+sublayers: the RMS `‖h‖/√c` over the complex channels, for all weights, routers and branches. -/
 theorem rms_stack_le {eps : ℝ} (heps : 0 ≤ eps) (hc : 0 < c) (α : ℝ) (R : ℕ → Router c)
     (F : ℕ → (ℕ → CSpace c) → ℕ → CSpace c) (n : ℕ) (e : ℕ → CSpace c) (i : ℕ) (s : Fin 4) :
-    ‖stack eps α R F n (fun j _ => rms eps (e j)) i s‖ / Real.sqrt (2 * c) ≤ 1 + 2 * n * |α| := by
-  have hs : 0 < Real.sqrt (2 * c) := Real.sqrt_pos.2 (mul_pos two_pos (Nat.cast_pos.2 hc))
+    ‖stack eps α R F n (fun j _ => rms eps (e j)) i s‖ / Real.sqrt c ≤ 1 + 2 * n * |α| := by
+  have hs : 0 < Real.sqrt c := Real.sqrt_pos.2 (Nat.cast_pos.2 hc)
   rw [div_le_iff₀ hs]
   calc ‖stack eps α R F n (fun j _ => rms eps (e j)) i s‖
-      ≤ Real.sqrt (2 * c) + n * (2 * |α| * Real.sqrt (2 * c)) :=
+      ≤ Real.sqrt c + n * (2 * |α| * Real.sqrt c) :=
         norm_stack_le heps α R F n (fun j _ => rms eps (e j)) i
           (fun _ => norm_rms_le heps (e i)) s
-    _ = (1 + 2 * n * |α|) * Real.sqrt (2 * c) := by ring
+    _ = (1 + 2 * n * |α|) * Real.sqrt c := by ring
 
 /-- Eight sublayers of the main model. -/
 example (R : ℕ → Router 64) (F : ℕ → (ℕ → CSpace 64) → ℕ → CSpace 64) (e : ℕ → CSpace 64) :=
@@ -116,7 +116,7 @@ theorem rms_stack_depth_le {eps : ℝ} (heps : 0 ≤ eps) (hc : 0 < c) {L : ℕ}
     (R : ℕ → Router c) (F : ℕ → (ℕ → CSpace c) → ℕ → CSpace c) (e : ℕ → CSpace c) (i : ℕ)
     (s : Fin 4) :
     ‖stack eps (1 / Real.sqrt (2 * L)) R F (2 * L) (fun j _ => rms eps (e j)) i s‖ /
-      Real.sqrt (2 * c) ≤ 1 + 2 * Real.sqrt (2 * L) := by
+      Real.sqrt c ≤ 1 + 2 * Real.sqrt (2 * L) := by
   have hpos : (0 : ℝ) < 2 * L := mul_pos two_pos (Nat.cast_pos.2 hL)
   refine (rms_stack_le heps hc _ R F (2 * L) e i s).trans (le_of_eq ?_)
   rw [abs_of_pos (one_div_pos.2 (Real.sqrt_pos.2 hpos))]

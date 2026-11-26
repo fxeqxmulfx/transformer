@@ -28,6 +28,9 @@ throughout:
 * `W_Q`, `W_K`, `W_V` and `W_O` are complex-linear maps (`Attention`);
 * a head is `p` complex bands, `d = 2p`, and `Heads H p` holds all `H` heads, so concatenating
   them is the identity;
+* every RMS takes the mean over complex channels, `R_D` over the `c` of the stream (`rms`) and
+  `R_d` over the `p` bands of a head (`headRMS`), and the gain is `1/p` instead of `1/d`
+  (`Attention.weight`);
 * `z_i = R_D(…)` and `R_D(W_O a_i)` are the Peri-norm of `Router.step`, and the branch here is
   `z ↦ W_O a` (`Attention.branch`).
 
@@ -89,9 +92,10 @@ noncomputable def key (j : ℕ) (h : Fin H) : Fin p → ℂ :=
   turn (leropeFrequency 10000 α) j (headRMS eps (A.WK (z j) h))
 
 /-- **The weight** of the key `j ≤ i` for the query `i` of head `h`: SSMax over the `N_i = i + 1`
-visible keys with the gain `1/d`, `softmax_j((log N_i / d) Re Z_ij)`. -/
+visible keys with the gain `1/p`, `softmax_j((log N_i / p) Re Z_ij)`, where the source divides by
+`d = 2p`. -/
 noncomputable def weight (i : ℕ) (h : Fin H) (j : Fin (i + 1)) : ℝ :=
-  ssmaxWeight (1 / (2 * p))
+  ssmaxWeight (1 / p)
     (fun k : Fin (i + 1) => score (A.query eps α z i h) (A.key eps α z k h)) j
 
 /-- **The read of the heads** `a_i`: head `h` is `∑_{j ≤ i} p_ij v_j` with `v_j = W_V z_j`. -/
@@ -118,9 +122,9 @@ theorem sum_weight (i : ℕ) (h : Fin H) : ∑ j, A.weight eps α z i h j = 1 :=
   exact AttentionResiduals.depthWeight_sum _
 
 /-- **Every logit at the position `i` is at most `ln(i + 1)`**, for all weights:
-`|(ln N_i / d) Re Z_ij| ≤ ln N_i`. -/
+`|(ln N_i / p) Re Z_ij| ≤ ln N_i`. -/
 theorem abs_logit_le (hp : 0 < p) (heps : 0 < eps) (i j : ℕ) (h : Fin H) :
-    |1 / (2 * p) * Real.log (i + 1) * score (A.query eps α z i h) (A.key eps α z j h)| ≤
+    |1 / p * Real.log (i + 1) * score (A.query eps α z i h) (A.key eps α z j h)| ≤
       Real.log (i + 1) :=
   PhasorV2.abs_logit_le (abs_mul_score_le hp heps _ _ _ _ _)
     (le_add_of_nonneg_left (Nat.cast_nonneg i))
@@ -144,8 +148,8 @@ theorem isCausal_branch : IsCausal (A.branch eps α) := by
 
 end Attention
 
-/-- The main model: `D = 128`, four heads of `d = 32`, `ε = 2^{−23}`, the query at the position
-`7` against the key at `3`. -/
+/-- The main model: `c = 64`, four heads of `p = 16` bands, `ε = 2^{−23}`, the query at the
+position `7` against the key at `3`. -/
 example (A : Attention 64 4 16) (α : Fin 16 → ℝ) (z : ℕ → CSpace 64) (h : Fin 4) :=
   A.abs_logit_le (1 / 2 ^ 23) α z (by norm_num) (by norm_num) 7 3 h
 
@@ -164,7 +168,7 @@ sublayers with the write scale `α`, for all weights and branches. -/
 theorem rms_stack_embed_le {eps : ℝ} (heps : 0 ≤ eps) (hc : 0 < c) (α : ℝ) (R : ℕ → Router c)
     (F : ℕ → (ℕ → CSpace c) → ℕ → CSpace c) (n : ℕ) {V : Type*} (E : V → CSpace c)
     (tok : ℕ → V) (i : ℕ) (s : Fin 4) :
-    ‖stack eps α R F n (embed eps E tok) i s‖ / Real.sqrt (2 * c) ≤ 1 + 2 * n * |α| :=
+    ‖stack eps α R F n (embed eps E tok) i s‖ / Real.sqrt c ≤ 1 + 2 * n * |α| :=
   rms_stack_le heps hc α R F n (fun j => E (tok j)) i s
 
 /-- Eight attention sublayers on the main model's widths at `α = 1/√8`. -/

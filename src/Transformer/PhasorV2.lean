@@ -29,13 +29,13 @@ the elements chosen for it one at a time.
   while a band at `π` sees the parity of the offset, which NoPE cannot.
 * Peri-norm (DiffGPT's main model, `research/main_model/README.txt`):
   `Transformer.PhasorV2.PeriNorm` writes the model's vectors as `c` complex channels, `D = 2c`
-  real coordinates, with the parameter-free `R_D`, and normalizes the input and the output of
-  every branch. The output has length at most `√D` whatever the branch, and a causal branch stays
-  causal.
-* Q/K RMS (DiffGPT's main model): `Transformer.PhasorV2.QKNorm` normalizes the bands of queries
-  and keys over the real head width `d`. A normalized query and key score at most `d` at all
-  positions, so under the gain `1/d` every SSMax logit at the length `N` is at most `ln N` and no
-  key outweighs another by more than the factor `N²`, for all weights.
+  real coordinates, with a parameter-free RMS over the complex channels where the source's `R_D`
+  takes it over the real coordinates, and normalizes the input and the output of every branch.
+  The output has length at most `√c` whatever the branch, and a causal branch stays causal.
+* Q/K RMS (DiffGPT's main model): `Transformer.PhasorV2.QKNorm` normalizes queries and keys over
+  their `p` complex bands. A normalized query and key score at most `p` at all positions, so
+  under the gain `1/p` every SSMax logit at the length `N` is at most `ln N` and no key outweighs
+  another by more than the factor `N²`, for all weights.
 * mHC with phases (Xie et al., arXiv:2512.24880v2, §4.2, as DiffGPT's main model trains it):
   four streams, the router of the paper, and the skip map `D P D*` with the stream phases
   `e^{iφ}` of learned angles, which reach the whole unit circle where the source's

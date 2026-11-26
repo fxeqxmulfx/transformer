@@ -62397,26 +62397,26 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.PhasorV2](src/Transformer/PhasorV2.lean)** — 60 lines, aggregator
 
-**[Transformer.PhasorV2.Attention](src/Transformer/PhasorV2/Attention.lean)** — 176 lines
+**[Transformer.PhasorV2.Attention](src/Transformer/PhasorV2/Attention.lean)** — 180 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`embed`](src/Transformer/PhasorV2/Attention.lean#L55) | def |  |
-| [`Heads`](src/Transformer/PhasorV2/Attention.lean#L60) | abbrev |  |
-| [`Attention`](src/Transformer/PhasorV2/Attention.lean#L64) | structure |  |
-| [`turn_headRMS`](src/Transformer/PhasorV2/Attention.lean#L72) | theorem | proved |
-| [`query`](src/Transformer/PhasorV2/Attention.lean#L84) | def |  |
-| [`key`](src/Transformer/PhasorV2/Attention.lean#L88) | def |  |
-| [`weight`](src/Transformer/PhasorV2/Attention.lean#L93) | def |  |
-| [`read`](src/Transformer/PhasorV2/Attention.lean#L98) | def |  |
-| [`branch`](src/Transformer/PhasorV2/Attention.lean#L102) | def |  |
-| [`score_eq`](src/Transformer/PhasorV2/Attention.lean#L106) | theorem | proved |
-| [`weight_pos`](src/Transformer/PhasorV2/Attention.lean#L112) | theorem | proved |
-| [`sum_weight`](src/Transformer/PhasorV2/Attention.lean#L116) | theorem | proved |
-| [`abs_logit_le`](src/Transformer/PhasorV2/Attention.lean#L122) | theorem | proved |
-| [`weight_le_sq_mul`](src/Transformer/PhasorV2/Attention.lean#L129) | theorem | proved |
-| [`isCausal_branch`](src/Transformer/PhasorV2/Attention.lean#L137) | theorem | proved |
-| [`rms_stack_embed_le`](src/Transformer/PhasorV2/Attention.lean#L164) | theorem | proved |
+| [`embed`](src/Transformer/PhasorV2/Attention.lean#L58) | def |  |
+| [`Heads`](src/Transformer/PhasorV2/Attention.lean#L63) | abbrev |  |
+| [`Attention`](src/Transformer/PhasorV2/Attention.lean#L67) | structure |  |
+| [`turn_headRMS`](src/Transformer/PhasorV2/Attention.lean#L75) | theorem | proved |
+| [`query`](src/Transformer/PhasorV2/Attention.lean#L87) | def |  |
+| [`key`](src/Transformer/PhasorV2/Attention.lean#L91) | def |  |
+| [`weight`](src/Transformer/PhasorV2/Attention.lean#L97) | def |  |
+| [`read`](src/Transformer/PhasorV2/Attention.lean#L102) | def |  |
+| [`branch`](src/Transformer/PhasorV2/Attention.lean#L106) | def |  |
+| [`score_eq`](src/Transformer/PhasorV2/Attention.lean#L110) | theorem | proved |
+| [`weight_pos`](src/Transformer/PhasorV2/Attention.lean#L116) | theorem | proved |
+| [`sum_weight`](src/Transformer/PhasorV2/Attention.lean#L120) | theorem | proved |
+| [`abs_logit_le`](src/Transformer/PhasorV2/Attention.lean#L126) | theorem | proved |
+| [`weight_le_sq_mul`](src/Transformer/PhasorV2/Attention.lean#L133) | theorem | proved |
+| [`isCausal_branch`](src/Transformer/PhasorV2/Attention.lean#L141) | theorem | proved |
+| [`rms_stack_embed_le`](src/Transformer/PhasorV2/Attention.lean#L168) | theorem | proved |
 
 **[Transformer.PhasorV2.FFN](src/Transformer/PhasorV2/FFN.lean)** — 119 lines
 
@@ -62500,56 +62500,56 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`energy_phaseSkip_le`](src/Transformer/PhasorV2/MHCPhase.lean#L156) | theorem | proved |
 | [`phaseSkip_aligned`](src/Transformer/PhasorV2/MHCPhase.lean#L173) | theorem | proved |
 
-**[Transformer.PhasorV2.MHCRouter](src/Transformer/PhasorV2/MHCRouter.lean)** — 162 lines
+**[Transformer.PhasorV2.MHCRouter](src/Transformer/PhasorV2/MHCRouter.lean)** — 165 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`flatRMS`](src/Transformer/PhasorV2/MHCRouter.lean#L39) | def |  |
-| [`energy_flatRMS_le`](src/Transformer/PhasorV2/MHCRouter.lean#L43) | theorem | proved |
-| [`Router`](src/Transformer/PhasorV2/MHCRouter.lean#L63) | structure |  |
-| [`Router.read`](src/Transformer/PhasorV2/MHCRouter.lean#L74) | def |  |
-| [`Router.write`](src/Transformer/PhasorV2/MHCRouter.lean#L78) | def |  |
-| [`Router.skip`](src/Transformer/PhasorV2/MHCRouter.lean#L82) | def |  |
-| [`Router.rot`](src/Transformer/PhasorV2/MHCRouter.lean#L88) | def |  |
-| [`Router.read_mem`](src/Transformer/PhasorV2/MHCRouter.lean#L91) | theorem | proved |
-| [`Router.write_mem`](src/Transformer/PhasorV2/MHCRouter.lean#L95) | theorem | proved |
-| [`Router.skip_pos`](src/Transformer/PhasorV2/MHCRouter.lean#L99) | theorem | proved |
-| [`Router.skip_row_sum`](src/Transformer/PhasorV2/MHCRouter.lean#L104) | theorem | proved |
-| [`Router.rot_zero`](src/Transformer/PhasorV2/MHCRouter.lean#L108) | theorem | proved |
-| [`Router.rot_succ`](src/Transformer/PhasorV2/MHCRouter.lean#L111) | theorem | proved |
-| [`Router.norm_rot`](src/Transformer/PhasorV2/MHCRouter.lean#L114) | theorem | proved |
-| [`Router.rot_eq_one`](src/Transformer/PhasorV2/MHCRouter.lean#L125) | theorem | proved |
-| [`Router.phaseSkip_eq_mix`](src/Transformer/PhasorV2/MHCRouter.lean#L132) | theorem | proved |
-| [`Router.initial`](src/Transformer/PhasorV2/MHCRouter.lean#L139) | def |  |
-| [`Router.rot_initial`](src/Transformer/PhasorV2/MHCRouter.lean#L151) | theorem | proved |
+| [`flatRMS`](src/Transformer/PhasorV2/MHCRouter.lean#L41) | def |  |
+| [`energy_flatRMS_le`](src/Transformer/PhasorV2/MHCRouter.lean#L45) | theorem | proved |
+| [`Router`](src/Transformer/PhasorV2/MHCRouter.lean#L65) | structure |  |
+| [`Router.read`](src/Transformer/PhasorV2/MHCRouter.lean#L76) | def |  |
+| [`Router.write`](src/Transformer/PhasorV2/MHCRouter.lean#L80) | def |  |
+| [`Router.skip`](src/Transformer/PhasorV2/MHCRouter.lean#L85) | def |  |
+| [`Router.rot`](src/Transformer/PhasorV2/MHCRouter.lean#L91) | def |  |
+| [`Router.read_mem`](src/Transformer/PhasorV2/MHCRouter.lean#L94) | theorem | proved |
+| [`Router.write_mem`](src/Transformer/PhasorV2/MHCRouter.lean#L98) | theorem | proved |
+| [`Router.skip_pos`](src/Transformer/PhasorV2/MHCRouter.lean#L102) | theorem | proved |
+| [`Router.skip_row_sum`](src/Transformer/PhasorV2/MHCRouter.lean#L107) | theorem | proved |
+| [`Router.rot_zero`](src/Transformer/PhasorV2/MHCRouter.lean#L111) | theorem | proved |
+| [`Router.rot_succ`](src/Transformer/PhasorV2/MHCRouter.lean#L114) | theorem | proved |
+| [`Router.norm_rot`](src/Transformer/PhasorV2/MHCRouter.lean#L117) | theorem | proved |
+| [`Router.rot_eq_one`](src/Transformer/PhasorV2/MHCRouter.lean#L128) | theorem | proved |
+| [`Router.phaseSkip_eq_mix`](src/Transformer/PhasorV2/MHCRouter.lean#L135) | theorem | proved |
+| [`Router.initial`](src/Transformer/PhasorV2/MHCRouter.lean#L142) | def |  |
+| [`Router.rot_initial`](src/Transformer/PhasorV2/MHCRouter.lean#L154) | theorem | proved |
 
-**[Transformer.PhasorV2.PeriNorm](src/Transformer/PhasorV2/PeriNorm.lean)** — 96 lines
+**[Transformer.PhasorV2.PeriNorm](src/Transformer/PhasorV2/PeriNorm.lean)** — 100 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`CSpace`](src/Transformer/PhasorV2/PeriNorm.lean#L40) | abbrev |  |
-| [`rms`](src/Transformer/PhasorV2/PeriNorm.lean#L44) | def |  |
-| [`rms_eq_div`](src/Transformer/PhasorV2/PeriNorm.lean#L48) | theorem | proved |
-| [`norm_rms_le`](src/Transformer/PhasorV2/PeriNorm.lean#L57) | theorem | proved |
-| [`periBranch`](src/Transformer/PhasorV2/PeriNorm.lean#L72) | def |  |
-| [`norm_periBranch_le`](src/Transformer/PhasorV2/PeriNorm.lean#L77) | theorem | proved |
-| [`isCausal_periBranch`](src/Transformer/PhasorV2/PeriNorm.lean#L86) | theorem | proved |
+| [`CSpace`](src/Transformer/PhasorV2/PeriNorm.lean#L44) | abbrev |  |
+| [`rms`](src/Transformer/PhasorV2/PeriNorm.lean#L48) | def |  |
+| [`rms_eq_div`](src/Transformer/PhasorV2/PeriNorm.lean#L52) | theorem | proved |
+| [`norm_rms_le`](src/Transformer/PhasorV2/PeriNorm.lean#L61) | theorem | proved |
+| [`periBranch`](src/Transformer/PhasorV2/PeriNorm.lean#L76) | def |  |
+| [`norm_periBranch_le`](src/Transformer/PhasorV2/PeriNorm.lean#L81) | theorem | proved |
+| [`isCausal_periBranch`](src/Transformer/PhasorV2/PeriNorm.lean#L90) | theorem | proved |
 
-**[Transformer.PhasorV2.QKNorm](src/Transformer/PhasorV2/QKNorm.lean)** — 137 lines
+**[Transformer.PhasorV2.QKNorm](src/Transformer/PhasorV2/QKNorm.lean)** — 138 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`sqLen`](src/Transformer/PhasorV2/QKNorm.lean#L35) | def |  |
-| [`headRMS`](src/Transformer/PhasorV2/QKNorm.lean#L39) | def |  |
-| [`sqLen_nonneg`](src/Transformer/PhasorV2/QKNorm.lean#L42) | theorem | proved |
-| [`sqLen_ofReal_mul`](src/Transformer/PhasorV2/QKNorm.lean#L46) | theorem | proved |
-| [`sqLen_turn`](src/Transformer/PhasorV2/QKNorm.lean#L52) | theorem | proved |
-| [`sqLen_headRMS_le`](src/Transformer/PhasorV2/QKNorm.lean#L56) | theorem | proved |
-| [`abs_score_le_sqrt`](src/Transformer/PhasorV2/QKNorm.lean#L69) | theorem | proved |
-| [`abs_score_headRMS_le`](src/Transformer/PhasorV2/QKNorm.lean#L75) | theorem | proved |
-| [`abs_mul_score_le`](src/Transformer/PhasorV2/QKNorm.lean#L91) | theorem | proved |
-| [`abs_logit_le`](src/Transformer/PhasorV2/QKNorm.lean#L104) | theorem | proved |
-| [`ssmaxWeight_le_sq_mul`](src/Transformer/PhasorV2/QKNorm.lean#L117) | theorem | proved |
+| [`headRMS`](src/Transformer/PhasorV2/QKNorm.lean#L40) | def |  |
+| [`sqLen_nonneg`](src/Transformer/PhasorV2/QKNorm.lean#L43) | theorem | proved |
+| [`sqLen_ofReal_mul`](src/Transformer/PhasorV2/QKNorm.lean#L47) | theorem | proved |
+| [`sqLen_turn`](src/Transformer/PhasorV2/QKNorm.lean#L53) | theorem | proved |
+| [`sqLen_headRMS_le`](src/Transformer/PhasorV2/QKNorm.lean#L57) | theorem | proved |
+| [`abs_score_le_sqrt`](src/Transformer/PhasorV2/QKNorm.lean#L70) | theorem | proved |
+| [`abs_score_headRMS_le`](src/Transformer/PhasorV2/QKNorm.lean#L76) | theorem | proved |
+| [`abs_mul_score_le`](src/Transformer/PhasorV2/QKNorm.lean#L92) | theorem | proved |
+| [`abs_logit_le`](src/Transformer/PhasorV2/QKNorm.lean#L105) | theorem | proved |
+| [`ssmaxWeight_le_sq_mul`](src/Transformer/PhasorV2/QKNorm.lean#L118) | theorem | proved |
 
 **[Transformer.PhasorV2.SSMax](src/Transformer/PhasorV2/SSMax.lean)** — 167 lines
 

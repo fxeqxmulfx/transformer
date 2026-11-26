@@ -14,11 +14,12 @@ twice-sigmoid write gates, and "the original 20 cycle real Sinkhorn P", columns 
 is the parameterization of Xie et al. (arXiv:2512.24880v2, §4.2), whose gates and finite Sinkhorn
 map are `MHC.gate`, `MHC.writeGate` and `MHC.finiteSinkhorn`. Three learned angles `φ_s` give
 the phases `r_0 = 1` and `r_s = e^{iφ_s}`, shared across tokens (`Router.rot`), where the source
-learns `b_s` of `(1 + i b_s)/√(1 + b_s²)` (`Transformer.PhasorV2.MHCPhase`). The source's
-FP16/TF32 router arithmetic, its log-space first Sinkhorn cycle and the fixed rescaling of the
-router RMS are numerics; in exact reals they change nothing.
+learns `b_s` of `(1 + i b_s)/√(1 + b_s²)` (`Transformer.PhasorV2.MHCPhase`). As every RMS of
+Phasor v2 (`Transformer.PhasorV2.PeriNorm`), the router's takes the mean over complex channels,
+the `4c` of the state. The source's FP16/TF32 router arithmetic, its log-space first Sinkhorn
+cycle and the fixed rescaling of the router RMS are numerics; in exact reals they change nothing.
 
-* The router input has energy at most `4D` (`energy_flatRMS_le`).
+* The router input has energy at most `4c`, RMS at most one (`energy_flatRMS_le`).
 * Read gates lie in `(0, 1)`, write gates in `(0, 2)` (`Router.read_mem`, `Router.write_mem`).
   The skip matrix is positive with unit row sums (`Router.skip_pos`, `Router.skip_row_sum`); its
   columns need not sum to one (`MHC.one_cycle_not_doubly_stochastic`). Every phase has modulus
@@ -34,19 +35,20 @@ namespace Transformer.PhasorV2
 
 variable {c : ℕ}
 
-/-- **The router input** `R_{4D}(vec h)` (`mhc.json`, `router_input`): the parameter-free RMS of
-the flattened state, over its `4D = 8c` real coordinates. -/
+/-- **The router input** `R_{4D}(vec h)` (`mhc.json`, `router_input`, over complex channels): the
+parameter-free RMS of the flattened state, the mean of `|h_{s,m}|²` over its `4c` complex
+channels. -/
 noncomputable def flatRMS (eps : ℝ) (h : State c) : State c :=
-  ((Real.sqrt (8 * c) / Real.sqrt (energy h + 8 * c * eps) : ℝ) : ℂ) • h
+  ((Real.sqrt (4 * c) / Real.sqrt (energy h + 4 * c * eps) : ℝ) : ℂ) • h
 
-/-- **The router input has energy at most `4D`**: RMS at most one, for every `ε ≥ 0`. -/
+/-- **The router input has energy at most `4c`**: RMS at most one, for every `ε ≥ 0`. -/
 theorem energy_flatRMS_le {eps : ℝ} (heps : 0 ≤ eps) (h : State c) :
-    energy (flatRMS eps h) ≤ 8 * c := by
+    energy (flatRMS eps h) ≤ 4 * c := by
   have hE : 0 ≤ energy h := Finset.sum_nonneg fun s _ => sq_nonneg _
-  have hε : 0 ≤ 8 * (c : ℝ) * eps := mul_nonneg (by positivity) heps
-  have hden : 0 ≤ energy h + 8 * c * eps := add_nonneg hE hε
+  have hε : 0 ≤ 4 * (c : ℝ) * eps := mul_nonneg (by positivity) heps
+  have hden : 0 ≤ energy h + 4 * c * eps := add_nonneg hE hε
   have hk : energy (flatRMS eps h) =
-      (Real.sqrt (8 * c) / Real.sqrt (energy h + 8 * c * eps)) ^ 2 * energy h := by
+      (Real.sqrt (4 * c) / Real.sqrt (energy h + 4 * c * eps)) ^ 2 * energy h := by
     simp only [energy, flatRMS, Pi.smul_apply, norm_smul, Complex.norm_real, Real.norm_eq_abs,
       mul_pow, sq_abs, Finset.mul_sum]
   rw [hk, div_pow, Real.sq_sqrt (by positivity), Real.sq_sqrt hden, div_mul_eq_mul_div,
@@ -54,7 +56,7 @@ theorem energy_flatRMS_le {eps : ℝ} (heps : 0 ≤ eps) (h : State c) :
   exact mul_le_of_le_one_right (by positivity)
     (div_le_one_of_le₀ (le_add_of_nonneg_right hε) hden)
 
-/-- The main model: `D = 128`, `ε = 2^{−23}`. -/
+/-- The main model: `c = 64`, `ε = 2^{−23}`. -/
 example (h : State 64) := energy_flatRMS_le (eps := 1 / 2 ^ 23) (by norm_num) h
 
 /-- **The router of a sublayer** (`mhc.json`, `router_projection`): the real projections of the
@@ -78,7 +80,8 @@ noncomputable def Router.read (R : Router c) (eps : ℝ) (h : State c) (s : Fin 
 noncomputable def Router.write (R : Router c) (eps : ℝ) (h : State c) (s : Fin 4) : ℝ :=
   MHC.writeGate (R.scale 1 * R.writeProj (flatRMS eps h) s + R.writeBias s)
 
-/-- **The skip matrix**: twenty Sinkhorn cycles from `exp(scale₂ · skipProj(R_{4D} h) + skipBias)`. -/
+/-- **The skip matrix**: twenty Sinkhorn cycles from
+`exp(scale₂ · skipProj(R_{4D} h) + skipBias)`. -/
 noncomputable def Router.skip (R : Router c) (eps : ℝ) (h : State c) :
     Matrix (Fin 4) (Fin 4) ℝ :=
   MHC.finiteSinkhorn
