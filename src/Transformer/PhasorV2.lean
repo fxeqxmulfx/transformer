@@ -9,6 +9,7 @@ public import Transformer.PhasorV2.QKNorm
 public import Transformer.PhasorV2.MHCPhase
 public import Transformer.PhasorV2.MHCRouter
 public import Transformer.PhasorV2.MHC
+public import Transformer.PhasorV2.Attention
 
 /-!
 # Phasor v2
@@ -43,4 +44,10 @@ the elements chosen for it one at a time.
   is the sublayer. From the normalized embedding every stream has RMS at most `1 + 2 n |α|` after
   `n` sublayers, `1 + 2√(2L)` at the source's `α = 1/√(2L)`, for all weights, and causal branches
   give a causal stack.
+* Attention (DiffGPT's main model): `Transformer.PhasorV2.Attention` puts these elements together
+  from the embedding to the output of attention, complex throughout: the embedding table holds
+  complex vectors, the projections are complex-linear, and a head is `p` complex bands. For all
+  weights the score depends on the positions only through their offset, every logit at the
+  position `i` is at most `ln(i + 1)`, no key outweighs another by more than `(i + 1)²`, and the
+  branch is causal.
 -/
