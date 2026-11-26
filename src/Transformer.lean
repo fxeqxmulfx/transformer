@@ -449,8 +449,10 @@ Scalable-Softmax, under which a key leading the others by `g > 1/s` keeps its we
 every length, while under softmax every fixed lead fades; LeRoPE, which contains Partial RoPE and
 NoPE at integer positions and sees the parity of an offset, which NoPE cannot; Peri-norm, which
 normalizes the input and the output of every branch, so that the output has length at most `√D`
-whatever the weights; and Q/K RMS, under which every attention logit at the length `N` is at most
-`ln N` for all weights.
+whatever the weights; Q/K RMS, under which every attention logit at the length `N` is at most
+`ln N` for all weights; and mHC with phases, four streams under the paper's router mixed by
+`D P D*`, under which from a normalized embedding every stream has RMS at most `1 + 2√(2L)` after
+`L` layers for all weights.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has

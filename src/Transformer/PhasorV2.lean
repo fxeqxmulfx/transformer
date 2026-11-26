@@ -6,6 +6,9 @@ public import Transformer.PhasorV2.LeRoPE
 public import Transformer.PhasorV2.LeRoPEBands
 public import Transformer.PhasorV2.PeriNorm
 public import Transformer.PhasorV2.QKNorm
+public import Transformer.PhasorV2.MHCPhase
+public import Transformer.PhasorV2.MHCRouter
+public import Transformer.PhasorV2.MHC
 
 /-!
 # Phasor v2
@@ -31,4 +34,13 @@ the elements chosen for it one at a time.
   and keys over the real head width `d`. A normalized query and key score at most `d` at all
   positions, so under the gain `1/d` every SSMax logit at the length `N` is at most `ln N` and no
   key outweighs another by more than the factor `N²`, for all weights.
+* mHC with phases (Xie et al., arXiv:2512.24880v2, §4.2, as DiffGPT's main model trains it):
+  four streams, the router of the paper, and the skip map `D P D*` with the stream phases
+  `(1 + i b)/√(1 + b²)`. `Transformer.PhasorV2.MHCPhase` shows that this skip turns the streams
+  back, mixes them as the paper's skip does and turns them forward, so it keeps the paper's
+  bounds and the streams aligned with the phases. `Transformer.PhasorV2.MHCRouter` is the router:
+  sigmoid read gates, twice-sigmoid write gates, twenty Sinkhorn cycles. `Transformer.PhasorV2.MHC`
+  is the sublayer. From the normalized embedding every stream has RMS at most `1 + 2 n |α|` after
+  `n` sublayers, `1 + 2√(2L)` at the source's `α = 1/√(2L)`, for all weights, and causal branches
+  give a causal stack.
 -/
