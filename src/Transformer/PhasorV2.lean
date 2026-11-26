@@ -10,6 +10,7 @@ public import Transformer.PhasorV2.MHCPhase
 public import Transformer.PhasorV2.MHCRouter
 public import Transformer.PhasorV2.MHC
 public import Transformer.PhasorV2.Attention
+public import Transformer.PhasorV2.FFN
 
 /-!
 # Phasor v2
@@ -50,4 +51,8 @@ the elements chosen for it one at a time.
   weights the score depends on the positions only through their offset, every logit at the
   position `i` is at most `ln(i + 1)`, no key outweighs another by more than `(i + 1)²`, and the
   branch is causal.
+* The complex FFN (DiffGPT's main model): `Transformer.PhasorV2.FFN` is the plain complex product
+  of two complex-linear projections, mapped back by a third. It is a quadratic form, so it doubles
+  the phase of its input and is even. An attention sublayer and a feed-forward one make a layer,
+  and from the embedding the streams at a position depend on the tokens up to it only.
 -/

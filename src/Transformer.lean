@@ -454,7 +454,8 @@ whatever the weights; Q/K RMS, under which every attention logit at the length `
 `D P D*`, under which from a normalized embedding every stream has RMS at most `1 + 2√(2L)` after
 `L` layers for all weights. Its attention sublayer, complex from the embedding table to the output
 projection, is causal, and every logit at the query position `i` is at most `ln (i + 1)` for all
-weights.
+weights. Its feed-forward branch, the plain complex product of two complex-linear projections, is
+a quadratic form: it doubles the phase of its input and is even.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
