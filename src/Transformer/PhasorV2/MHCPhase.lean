@@ -1,7 +1,7 @@
 module
 
 public import Transformer.PhasorV2.PeriNorm
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 
 /-!
 # Phasor v2: the phase-conjugated skip of mHC
@@ -17,8 +17,10 @@ arXiv:2512.24880v2, §4.1–4.2), mixed with phases. Source: DiffGPT (`~/python_
 `Transformer.PhasorV2.MHCRouter` gives `P` and `r`, and `Transformer.PhasorV2.MHC` is the
 sublayer.
 
-* `phase b = (1 + i b)/√(1 + b²)` is `e^{i arctan b}` (`phase_eq_exp`). It lies on the unit
-  circle (`norm_phase`) and is one at `b = 0` (`phase_zero`).
+* Phasor v2 learns the angle of each phase instead: `r_s = phase φ_s = e^{iφ_s}`. Every unit
+  complex number is a phase (`exists_phase_eq`), while the source's `(1 + i b)/√(1 + b²)` keeps a
+  positive real part (`source_phase_re_pos`) and so never reaches `phase π = −1` (`phase_pi`).
+  The phase of the angle `0` is one (`phase_zero`).
 * The source's sum `phaseSkip r P h` is `D P D* h` (`phaseSkip_eq`): turn every stream back by its
   phase, mix the streams by the real matrix `P` as the paper's skip `mix` does, and turn them
   forward again. Unit phases keep the paper's bounds:
@@ -41,25 +43,35 @@ variable {c : ℕ}
 /-- The four streams of a position. -/
 abbrev State (c : ℕ) := Fin 4 → CSpace c
 
-/-- **A stream phase** (DiffGPT's main model, *Architecture*): `(1 + i b)/√(1 + b²)`. -/
-noncomputable def phase (b : ℝ) : ℂ :=
-  (1 + (b : ℂ) * Complex.I) / ((Real.sqrt (1 + b ^ 2) : ℝ) : ℂ)
-
-/-- **The phase is `e^{i arctan b}`.** -/
-theorem phase_eq_exp (b : ℝ) : phase b = Complex.exp (Real.arctan b * Complex.I) := by
-  rw [Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_arctan,
-    Real.sin_arctan, phase]
-  push_cast
-  ring
+/-- **A stream phase**: `e^{iφ}` of the learned angle `φ`. -/
+noncomputable def phase (φ : ℝ) : ℂ :=
+  Complex.exp (φ * Complex.I)
 
 /-- **Every phase has modulus one.** -/
-theorem norm_phase (b : ℝ) : ‖phase b‖ = 1 := by
-  rw [phase_eq_exp]
-  exact Complex.norm_exp_ofReal_mul_I _
+theorem norm_phase (φ : ℝ) : ‖phase φ‖ = 1 :=
+  Complex.norm_exp_ofReal_mul_I φ
 
-/-- **The phase of `b = 0`**, the initialization, is one. -/
+/-- **The phase of the angle `0`**, the initialization, is one. -/
 theorem phase_zero : phase 0 = 1 := by
   simp [phase]
+
+theorem phase_pi : phase Real.pi = -1 :=
+  Complex.exp_pi_mul_I
+
+/-- **Every unit complex number is a phase.** -/
+theorem exists_phase_eq {u : ℂ} (hu : ‖u‖ = 1) : ∃ φ, phase φ = u :=
+  (Complex.norm_eq_one_iff u).1 hu
+
+/-- The phase `i` of a quarter turn. -/
+example : ∃ φ, phase φ = Complex.I := exists_phase_eq Complex.norm_I
+
+/-- **The source's phases keep a positive real part** (DiffGPT's main model, *Architecture*):
+`(1 + i b)/√(1 + b²)` has the real part `1/√(1 + b²)`, so it never reaches `phase π`. -/
+theorem source_phase_re_pos (b : ℝ) :
+    0 < ((1 + (b : ℂ) * Complex.I) / ((Real.sqrt (1 + b ^ 2) : ℝ) : ℂ)).re := by
+  rw [Complex.div_ofReal_re, Complex.add_re, Complex.one_re, Complex.re_ofReal_mul, Complex.I_re,
+    mul_zero, add_zero]
+  positivity
 
 /-- **The paper's skip** (arXiv:2512.24880v2, Eq. (3)): stream `s` of `P h` is `∑_t P_{s,t} h_t`
 for a real matrix `P`. -/
@@ -95,9 +107,9 @@ theorem norm_turnStreams {r : Fin 4 → ℂ} (hr : ∀ s, ‖r s‖ = 1) (h : St
     ‖turnStreams r h s‖ = ‖h s‖ := by
   rw [turnStreams, norm_smul, hr s, one_mul]
 
-/-- The phases of three coordinates `b`, stream `0` at `b = 0`. -/
-example (b : Fin 4 → ℝ) (h : State 64) :=
-  norm_turnStreams (r := fun s => phase (b s)) (fun s => norm_phase (b s)) h 2
+/-- The phases of any four angles. -/
+example (φ : Fin 4 → ℝ) (h : State 64) :=
+  norm_turnStreams (r := fun s => phase (φ s)) (fun s => norm_phase (φ s)) h 2
 
 /-- **The paper's skip keeps a bound of the streams** when `P ≥ 0` has unit row sums. -/
 theorem norm_mix_le {P : Matrix (Fin 4) (Fin 4) ℝ} (hP : ∀ s t, 0 ≤ P s t)
@@ -124,9 +136,9 @@ theorem norm_phaseSkip_le {r : Fin 4 → ℂ} (hr : ∀ s, ‖r s‖ = 1)
   rw [phaseSkip_eq, norm_turnStreams hr]
   exact norm_mix_le hP hrow (fun t => (norm_turnStreams hr' h t).trans_le (hB t)) s
 
-/-- Phases of any coordinates, the uniform mixture, normalized streams. -/
-example (b : Fin 4 → ℝ) (e : Fin 4 → CSpace 64) :=
-  norm_phaseSkip_le (r := fun s => phase (b s)) (fun s => norm_phase (b s))
+/-- Phases of any angles, the uniform mixture, normalized streams. -/
+example (φ : Fin 4 → ℝ) (e : Fin 4 → CSpace 64) :=
+  norm_phaseSkip_le (r := fun s => phase (φ s)) (fun s => norm_phase (φ s))
     (P := Matrix.of fun _ _ => 1 / 4) (fun _ _ => by norm_num)
     (fun _ => by norm_num [Fin.sum_univ_four]) (h := fun t => rms (1 / 2 ^ 23) (e t))
     (fun t => norm_rms_le (by norm_num) (e t)) 3
@@ -152,8 +164,8 @@ theorem energy_phaseSkip_le {r : Fin 4 → ℂ} (hr : ∀ s, ‖r s‖ = 1)
   exact hP _
 
 /-- The identity skip, energy gain one. -/
-example (b : Fin 4 → ℝ) (h : State 64) :=
-  energy_phaseSkip_le (r := fun s => phase (b s)) (fun s => norm_phase (b s)) (P := 1) (K := 1)
+example (φ : Fin 4 → ℝ) (h : State 64) :=
+  energy_phaseSkip_le (r := fun s => phase (φ s)) (fun s => norm_phase (φ s)) (P := 1) (K := 1)
     (fun g => by rw [mix_one, one_mul]) h
 
 /-- **The streams aligned with the phases are kept**, `h_t = r_t v`, when the rows of `P` sum to
@@ -173,8 +185,8 @@ theorem phaseSkip_aligned {r : Fin 4 → ℂ} (hr : ∀ s, ‖r s‖ = 1) {P : M
   rfl
 
 /-- The uniform mixture keeps the aligned streams. -/
-example (b : Fin 4 → ℝ) (v : CSpace 64) :=
-  phaseSkip_aligned (r := fun s => phase (b s)) (fun s => norm_phase (b s))
+example (φ : Fin 4 → ℝ) (v : CSpace 64) :=
+  phaseSkip_aligned (r := fun s => phase (φ s)) (fun s => norm_phase (φ s))
     (P := Matrix.of fun _ _ => 1 / 4) (fun _ => by norm_num [Fin.sum_univ_four]) v
 
 end Transformer.PhasorV2

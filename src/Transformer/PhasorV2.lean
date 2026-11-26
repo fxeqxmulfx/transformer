@@ -38,7 +38,9 @@ the elements chosen for it one at a time.
   key outweighs another by more than the factor `N²`, for all weights.
 * mHC with phases (Xie et al., arXiv:2512.24880v2, §4.2, as DiffGPT's main model trains it):
   four streams, the router of the paper, and the skip map `D P D*` with the stream phases
-  `(1 + i b)/√(1 + b²)`. `Transformer.PhasorV2.MHCPhase` shows that this skip turns the streams
+  `e^{iφ}` of learned angles, which reach the whole unit circle where the source's
+  `(1 + i b)/√(1 + b²)` keeps to the right half-plane. `Transformer.PhasorV2.MHCPhase` shows that
+  this skip turns the streams
   back, mixes them as the paper's skip does and turns them forward, so it keeps the paper's
   bounds and the streams aligned with the phases. `Transformer.PhasorV2.MHCRouter` is the router:
   sigmoid read gates, twice-sigmoid write gates, twenty Sinkhorn cycles. `Transformer.PhasorV2.MHC`
