@@ -38,11 +38,10 @@ the elements chosen for it one at a time.
   another by more than the factor `N²`, for all weights.
 * mHC with phases (Xie et al., arXiv:2512.24880v2, §4.2, as DiffGPT's main model trains it):
   four streams, the router of the paper, and the skip map `D P D*` with the stream phases
-  `e^{iφ}` of learned angles, which reach the whole unit circle where the source's
-  `(1 + i b)/√(1 + b²)` keeps to the right half-plane. `Transformer.PhasorV2.MHCPhase` shows that
-  this skip turns the streams
-  back, mixes them as the paper's skip does and turns them forward, so it keeps the paper's
-  bounds and the streams aligned with the phases. `Transformer.PhasorV2.MHCRouter` is the router:
+  `(1 + i b)/√(1 + b²)` in the open right half-plane. `Transformer.PhasorV2.MHCPhase` shows that
+  this skip turns the streams back, mixes them as the paper's skip does and turns them forward,
+  so it keeps the paper's bounds and the streams aligned with the phases.
+  `Transformer.PhasorV2.MHCRouter` is the router:
   sigmoid read gates, twice-sigmoid write gates, twenty Sinkhorn cycles. `Transformer.PhasorV2.MHC`
   is the sublayer. From the normalized embedding every stream has RMS at most `1 + 2 n |α|` after
   `n` sublayers, `1 + 2√(2L)` at the source's `α = 1/√(2L)`, for all weights, and causal branches
