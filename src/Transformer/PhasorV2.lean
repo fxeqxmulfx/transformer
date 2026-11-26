@@ -11,6 +11,7 @@ public import Transformer.PhasorV2.MHCRouter
 public import Transformer.PhasorV2.MHC
 public import Transformer.PhasorV2.Attention
 public import Transformer.PhasorV2.FFN
+public import Transformer.PhasorV2.Readout
 
 /-!
 # Phasor v2
@@ -56,4 +57,9 @@ the elements chosen for it one at a time.
   of two complex-linear projections, mapped back by a third. It is a quadratic form, so it doubles
   the phase of its input and is even. An attention sublayer and a feed-forward one make a layer,
   and from the embedding the streams at a position depend on the tokens up to it only.
+* Tied readout (DiffGPT's main model) takes the unweighted mean of the four streams, applies
+  RMS over complex channels and scores each token with the real part of the inner product
+  against its learned embedding row. The mean retains at least a quarter of the length of a
+  phase-aligned mode. `Transformer.PhasorV2.Readout` gives the causal forward pass through all
+  layers with a shared table for the normalized input lookup and the output projection.
 -/

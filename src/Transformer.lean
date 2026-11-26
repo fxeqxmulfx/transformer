@@ -455,7 +455,10 @@ paper's router mixed by `D P D*`, under which from a normalized embedding every 
 most `1 + 2√(2L)` after `L` layers for all weights. Its attention sublayer, complex from the embedding table to the output
 projection, is causal, and every logit at the query position `i` is at most `ln (i + 1)` for all
 weights. Its feed-forward branch, the plain complex product of two complex-linear projections, is
-a quadratic form: it doubles the phase of its input and is even.
+a quadratic form: it doubles the phase of its input and is even. The causal forward pass
+averages the four streams, applies complex-channel RMS and scores against the learned rows of
+the shared embedding table. The stream mean retains at least a quarter of the length of the
+phase-aligned skip mode.
 `Transformer.Weil` proves Stepanov's form of the Riemann hypothesis for the
 curves `y² = f(x)`: over a finite field of odd order `q ≥ 64`, for `f` of odd
 degree `m` with `8m ≤ q`, `|∑_x χ₂(f(x))| ≤ 7 m √q`, and the affine curve has
