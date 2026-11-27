@@ -36,12 +36,12 @@ pub struct Variant {
 impl Variant {
     pub fn argand() -> Result<Self> {
         let routing = match std::env::var("ARGAND_RESIDUAL").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("entry-phase") => Routing::EntryPhase,
+            Err(std::env::VarError::NotPresent) | Ok("skip-write-gate") => Routing::SkipWriteGate,
+            Ok("entry-phase") => Routing::EntryPhase,
             Ok("single") => Routing::Single,
             Ok("norm-phase") => Routing::NormPhase,
             Ok("write-gate") => Routing::WriteGate,
             Ok("read-write-gate") => Routing::ReadWriteGate,
-            Ok("skip-write-gate") => Routing::SkipWriteGate,
             _ => {
                 return Err(
                     "ARGAND_RESIDUAL takes entry-phase, single, norm-phase, write-gate, read-write-gate or skip-write-gate".into(),

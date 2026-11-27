@@ -360,6 +360,57 @@ jq -s 'sort_by(.identity.model,.identity.seed)' "$out"/*/"$task"/seed*/result.js
 ./plot_argand_abs_diff.sh "$out"
 ```
 
+##### Default Argand with skip and write gates
+
+The Argand commands select `skip-write-gate` by default. Each attention
+and FFN sublayer computes both complex gates from the normalized incoming
+token vector. The skip gate multiplies the incoming residual and the write
+gate multiplies the normalized block output before scaling the write.
+The two vectors in each sublayer start at zero, giving both gates an
+initial value of `1 + 0i`.
+[Architecture](ARGAND.md)
+
+Use `ARGAND_RESIDUAL=entry-phase` to select the four-stream mHC model and
+its checkpoints. The command below checks the default residual on
+`arithmetic-abs-diff-blind` with AMSGradW at `beta2=0.98`, the original
+WSD horizon, and a cap of 1,000 updates. Update 988 is the final scheduled
+observation within that cap.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+task=arithmetic-abs-diff-blind
+out=runs/argand-skip-write-amsgradw-abs-diff
+unset ARGAND_RESIDUAL ARGAND_AMSGRADW_SQRT_SCALE
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw ARGAND_AMSGRADW_BETA2=0.98
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" argand-check
+for seed in 0 1 2; do
+    cell="$out/$task/seed$seed"
+    mkdir -p "$cell"
+    "$bin" argand-run "$task" "$seed" 1 "$out" 988 2> "$cell/observations.jsonl"
+    "$bin" argand-replay "$task" "$seed" 1 "$out" > "$cell/replay.json"
+done
+unset ARGAND_SCORE_INIT ARGAND_OPTIMIZER ARGAND_AMSGRADW_BETA2 PHASOR_EVAL_BATCH_CAP
+```
+
+The default gate run used width 128, four heads, one layer and one pass.
+All runs reached update 988. The two AdamW rows use the recorded results
+from the gate comparison above. The skip-and-write screens matched the
+case, seeds, splits and step-zero metrics. Times include training and
+scheduled scoring on the RTX 3050 Laptop GPU.
+
+| Residual | Optimizer | Held-out correct /4705, seeds 0 / 1 / 2 | Mean accuracy | Mean time (s) |
+|---|---|---|---:|---:|
+| Skip and write gates | AMSGradW, `beta2=0.98` | 2,987 / 3,029 / 3,144 | 64.9% | 8.28 |
+| Skip and write gates | AdamW | 3,115 / 3,005 / 3,270 | 66.5% | 9.39 |
+| Four-stream complex mHC | AdamW | 3,285 / 3,220 / 3,399 | 70.2% | 11.80 |
+
+The GPU check verified identity at initialization, the gate adjoints and
+AMSGradW updates. Independent reloads reproduced the held-out scores
+and losses of all three new checkpoints. Selecting `entry-phase` also
+reproduced the saved mHC checkpoint for seed 1.
+
 #### Complex mHC in Argand
 
 Each sublayer has a separate complex router projection from the
@@ -415,8 +466,8 @@ unset PHASOR_V2_MHC
 
 ##### Argand short GPT stress screen
 
-The `argand-check`, `argand-run` and `argand-replay` commands select the
-independent-phase model. The screen uses the 25 short cases with three
+Set `ARGAND_RESIDUAL=entry-phase` to select the independent-phase model
+for this screen. The screen uses the 25 short cases with three
 seeds each and one pass through the layers. It stops each run
 at its first held-out observation at or above 99% or at the last scheduled
 observation at or below 1,000 updates. The learning-rate schedule uses the
@@ -424,10 +475,12 @@ original case budget. The runner replays each passing checkpoint.
 
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-1000
 mkdir -p "$out"
 PHASOR_EVAL_BATCH_CAP=16 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_RESIDUAL
 ```
 
 The runs used Kernite 0.7.0 on an RTX 3050 Laptop GPU. The single-stream
@@ -453,12 +506,12 @@ identifier records this initialization, so use a separate run directory.
 
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
-export ARGAND_SCORE_INIT=1 PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 PHASOR_EVAL_BATCH_CAP=16
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-score-one
 mkdir -p "$out"
 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
-unset ARGAND_SCORE_INIT
+unset ARGAND_RESIDUAL ARGAND_SCORE_INIT
 ```
 
 The paired screens used Kernite 0.7.0 on an RTX 3050 Laptop GPU with the
@@ -490,13 +543,14 @@ checkpoint includes the extra moment buffer and its own model identifier.
 
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
-export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw
+export PHASOR_EVAL_BATCH_CAP=16
 export ARGAND_AMSGRADW_SQRT_SCALE=1 ARGAND_AMSGRADW_BETA2=0.95
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-score-one-amsgradw
 mkdir -p "$out"
 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
-unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
 ```
 
 The paired screen used `s=1`, Kernite 0.7.0 and an RTX 3050 Laptop GPU.
@@ -590,13 +644,14 @@ have the same values under this substitution.
 
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
-export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw
+export PHASOR_EVAL_BATCH_CAP=16
 export ARGAND_AMSGRADW_SQRT_SCALE=0.9 ARGAND_AMSGRADW_BETA2=0.95
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-score-one-amsgradw-scale-0.9
 mkdir -p "$out"
 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
-unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
 ```
 
 The 75 short runs matched the cases, seeds, splits, and step-zero scores
