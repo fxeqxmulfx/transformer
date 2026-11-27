@@ -198,7 +198,10 @@ With a new 100,000-step WSD schedule and identical initialization and
 batch order, it reached its first strict 4,656/4,656 at 18,432. The
 training-only certificate independently recovered all labels at that
 checkpoint, with minimum hidden margin 2.079. At 18,944 the same trajectory
-scored 4,595/4,656. Terminal success for the replication is determined
+scored 4,595/4,656. At update 59,904 it scored only 56/4,656 on hidden
+equations and 775/4,656 on training equations. Its first subsequent perfect
+hidden evaluation was at 63,232. Both measurements used a learning rate
+of 0.001. Terminal success for the replication is determined
 solely by all 4,656 strict hidden answers at update 100,000. All twelve
 preregistered seeds use this horizon, including early successes. The
 horizon was selected after seeing the first seed's 20,000-step result.
@@ -215,10 +218,25 @@ bash plot_division_accuracy.sh "runs/division-page/$case/seed0" \
 "$bin" adamw-confirm-plan "$case" runs/division-registered 20000
 bash run_division_horizon.sh runs/division-registered runs/division-confirm-100k 100000
 bash double_division_horizon.sh runs/division-confirm-100k runs/division-confirm-200k
+bash plot_division_cohort.sh runs/division-confirm-100k runs/division-comparison
 "$bin" division-certificate "runs/division-adamw-long/$case/seed0" first-strict
 "$bin" division-mask-lean > runs/OriginalDivisionMask.lean
 (cd ../.. && LAKE_ARTIFACT_CACHE=false lake env lean experiments/argand/runs/OriginalDivisionMask.lean)
 ```
+
+The cohort plot shows the measured hidden accuracy of each seed. Its
+right panel distinguishes the latest measurement of an active run from
+the strict score after reloading terminal weights. An empty row marks a
+seed awaiting training. Set `ARGAND_PLOT_SNAPSHOT=1` to keep a PNG and PDF
+named for the latest draw, update count and number of completed replays.
+
+The Lean construction in `DivisionNative.lean` represents all 9,312
+quotients with the same architecture as these runs. Two attention heads
+separate the operands, and the product FFN computes the quotient in a
+faithful character coordinate. All 239 tied scores compete at the output.
+For a sufficiently small total learning rate, this gives a positive
+Gaussian probability of strict recovery at a finite AdamW horizon. The
+numerical cohorts measure the separately specified WSD peak of 0.001.
 
 The optional `adamw-tail-run CASE SEED OUT WSD_BUDGET CUTOFF` continues
 after the entire WSD prefix with rates $10^{-8} 2^{-k}$. In exact real
