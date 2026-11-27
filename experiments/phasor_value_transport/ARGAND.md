@@ -175,8 +175,8 @@ vector of length `T`.
 **Step 6.** Divide each entry of `Si` by `sqrt(d)` to obtain `Si′`.
 
 **Step 7.** Multiply each entry in row `n` of `Si′` by `s log(n)` to obtain
-`Si″`. The multiplier `s` is a learned complex number initialized to
-`1 + i`. Count rows starting at one.
+`Si″`. The multiplier `s` is a learned complex number. Its default
+initialization is `1 + i`. Count rows starting at one.
 
 **Step 8.** Split `Si″` into its real and imaginary matrices. Set the
 entries strictly above the diagonal in both matrices to `−inf`, then apply

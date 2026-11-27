@@ -300,6 +300,22 @@ and seed 1 of `power-division-p193-k3` at update 949. All 75 terminal
 state digests matched the saved records. Independent reloads reproduced
 the held-out scores and losses of the 26 passing checkpoints.
 
+##### Argand score initialization at 1
+
+`ARGAND_SCORE_INIT=1` initializes each layer's score multiplier to
+`1 + 0i`. Both coordinates of the multiplier train. The checkpoint
+identifier records this initialization, so use a separate run directory.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_SCORE_INIT=1 PHASOR_EVAL_BATCH_CAP=16
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_SCORE_INIT
+```
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current

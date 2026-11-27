@@ -1,7 +1,7 @@
 //! Independent real coordinates and the existing clipped Kernite AdamW kernel.
-use super::complex_mhc::{AMPLITUDES, Routing, STREAMS};
+use super::complex_mhc::{AMPLITUDES, STREAMS};
 use super::tape::{Context, Tape};
-use super::{F, Pair, Result, grid};
+use super::{F, Pair, Result, Variant, grid};
 use crate::{Config, optimizer_kernels, random::Random};
 use kernite_cuda::{Buffer, Cuda, Grid};
 
@@ -72,7 +72,7 @@ pub(super) struct Parameters {
 }
 
 impl Parameters {
-    pub fn new(cuda: &Cuda, cfg: &Config, seed: u32, routing: Routing) -> Result<Self> {
+    pub fn new(cuda: &Cuda, cfg: &Config, seed: u32, variant: Variant) -> Result<Self> {
         let width = cfg.width;
         let mut rng = Random::new(seed);
         let mut router_rng = Random::new(seed.wrapping_add(20_000));
@@ -85,7 +85,7 @@ impl Parameters {
         let layers = (0..cfg.layers)
             .map(|_| {
                 let score = values.len();
-                values.extend([1.0, 1.0]);
+                values.extend(variant.score_init());
                 let mut projection =
                     |input, output| Projection::new(&mut values, &mut rng, input, output);
                 Layer {
@@ -97,7 +97,7 @@ impl Parameters {
                     gate: projection(width, 4 * width),
                     up: projection(width, 4 * width),
                     down: projection(4 * width, width),
-                    routers: routing.router_width().map(|output| {
+                    routers: variant.routing.router_width().map(|output| {
                         std::array::from_fn(|_| {
                             Projection::router(
                                 &mut values,

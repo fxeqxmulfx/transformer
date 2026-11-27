@@ -7,14 +7,58 @@ mod weights;
 
 pub(crate) use crate::Result;
 use crate::{base_ops, optimizer_kernels, random::Random, slot_copy, stable_loss};
-pub use complex_mhc::Routing;
-use complex_mhc::Sublayer;
+use complex_mhc::{Routing, Sublayer};
 use kernite_cuda::{Buffer, Cuda, Grid, Ptr};
 use tape::{Context, Pair, Tape};
 use weights::Parameters;
 
 type F = Buffer<f32>;
 type P = Ptr<f32>;
+
+#[derive(Clone, Copy)]
+pub struct Variant {
+    routing: Routing,
+    real_score_init: bool,
+}
+
+impl Variant {
+    pub fn argand() -> Result<Self> {
+        let real_score_init = match std::env::var("ARGAND_SCORE_INIT").as_deref() {
+            Err(std::env::VarError::NotPresent) | Ok("1+i") => false,
+            Ok("1") => true,
+            _ => return Err("ARGAND_SCORE_INIT takes 1+i or 1".into()),
+        };
+        Ok(Self {
+            routing: Routing::EntryPhase,
+            real_score_init,
+        })
+    }
+
+    pub fn v2() -> Result<Self> {
+        Ok(Self {
+            routing: Routing::selected()?,
+            real_score_init: false,
+        })
+    }
+
+    pub fn model(self) -> &'static str {
+        if self.real_score_init {
+            "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one"
+        } else {
+            self.routing.model()
+        }
+    }
+
+    pub fn legacy_model(self) -> Option<&'static str> {
+        // Old entry-phase checkpoints started the score at 1+i.
+        (matches!(self.routing, Routing::EntryPhase) && !self.real_score_init)
+            .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
+    }
+
+    fn score_init(self) -> [f32; 2] {
+        [1.0, if self.real_score_init { 0.0 } else { 1.0 }]
+    }
+}
 
 fn grid(count: usize) -> Grid {
     Grid::new(count.div_ceil(256) as u32, 256)
@@ -50,7 +94,7 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new(shape: crate::Config, repeat: usize, seed: u32, routing: Routing) -> Result<Self> {
+    pub fn new(shape: crate::Config, repeat: usize, seed: u32, variant: Variant) -> Result<Self> {
         if shape.width == 0
             || shape.heads == 0
             || !shape.width.is_multiple_of(shape.heads)
@@ -71,11 +115,12 @@ impl Engine {
         Ok(Self {
             config,
             repeat,
-            parameters: Parameters::new(&cuda, &shape, seed, routing)?,
+            parameters: Parameters::new(&cuda, &shape, seed, variant)?,
             tape: Tape::default(),
             kernel: kernels::device::Kernels::load(&cuda)?,
             scores: scores::device::Kernels::load(&cuda)?,
-            mhc: routing
+            mhc: variant
+                .routing
                 .router_width()
                 .map(|_| complex_mhc::Kernels::load(&cuda))
                 .transpose()?,
@@ -363,15 +408,23 @@ impl Engine {
     }
 }
 
-pub fn check(routing: Routing) -> Result<()> {
+pub fn check(variant: Variant) -> Result<()> {
     let mut cfg = crate::config(2)?;
     cfg.width = 16;
     cfg.heads = 2;
     cfg.layers = 2;
     cfg.vocab = 6;
     cfg.max_length = 3;
-    let mut engine = Engine::new(cfg, 2, 1, routing)?;
+    let mut engine = Engine::new(cfg, 2, 1, variant)?;
     let initial = engine.weights()?;
+    if engine
+        .parameters
+        .layers
+        .iter()
+        .any(|layer| initial[layer.score..layer.score + 2] != variant.score_init())
+    {
+        return Err("score multiplier has the wrong initialization".into());
+    }
     let mut tied = vec![0.0; initial.len()];
     tied[2 * 16] = 0.125;
     tied[2 * 2 * 16] = 0.25;
@@ -434,6 +487,15 @@ pub fn check(routing: Routing) -> Result<()> {
     {
         return Err("missing gradient for a vocabulary row absent from lookup".into());
     }
+    if variant.real_score_init
+        && !engine
+            .parameters
+            .layers
+            .iter()
+            .any(|layer| gradient[layer.score + 1].abs() > 1e-6)
+    {
+        return Err("missing gradient for the imaginary part of the score multiplier".into());
+    }
     let mut rng = Random::new(100);
     for trial in 0..3 {
         let direction: Vec<_> = initial.iter().map(|_| rng.gauss(0.0, 1.0) as f32).collect();
@@ -462,7 +524,7 @@ pub fn check(routing: Routing) -> Result<()> {
     }
     println!(
         "{} vocabulary prediction, prefix causality and tied adjoints verified",
-        routing.model()
+        variant.model()
     );
     Ok(())
 }

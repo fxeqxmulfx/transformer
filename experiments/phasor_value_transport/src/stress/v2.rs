@@ -2,7 +2,7 @@
 use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
 use crate::{
     Config, KERNITE_VERSION,
-    phasor_v2::{Engine, Routing},
+    phasor_v2::{Engine, Variant},
     phasor_v2_metrics as metrics,
     random::Random,
     schedule::Schedule,
@@ -11,23 +11,23 @@ use std::path::{Path, PathBuf};
 
 pub fn command(op: &str, args: &[String]) -> Result<()> {
     let (family, action) = op.split_once('-').ok_or("missing decoder operation")?;
-    let routing = if family == "argand" {
-        Routing::EntryPhase
+    let variant = if family == "argand" {
+        Variant::argand()?
     } else {
-        Routing::selected()?
+        Variant::v2()?
     };
     match (action, args) {
-        ("check", []) => crate::phasor_v2::check(routing),
+        ("check", []) => crate::phasor_v2::check(variant),
         ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
             name,
             seed.parse()?,
             repeat.parse()?,
             Path::new(out),
             cutoff.first().map(|step| step.parse()).transpose()?,
-            routing,
+            variant,
         ),
         ("replay", [name, seed, repeat, out]) => {
-            replay(name, seed.parse()?, repeat.parse()?, Path::new(out), routing)
+            replay(name, seed.parse()?, repeat.parse()?, Path::new(out), variant)
         }
         _ => Err(format!(
             "usage: {family}-check | {family}-run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | {family}-replay CASE SEED REPEAT RUN_DIR"
@@ -46,11 +46,11 @@ struct Cell {
     directory: PathBuf,
     repeat: usize,
     seed: u32,
-    routing: Routing,
+    variant: Variant,
 }
 
 impl Cell {
-    fn new(name: &str, seed: u32, repeat: usize, out: &Path, routing: Routing) -> Result<Self> {
+    fn new(name: &str, seed: u32, repeat: usize, out: &Path, variant: Variant) -> Result<Self> {
         if seed > 2 || repeat == 0 {
             return Err("expected seed 0 through 2 and a positive repeat count".into());
         }
@@ -81,18 +81,18 @@ impl Cell {
             directory,
             repeat,
             seed,
-            routing,
+            variant,
         })
     }
 
     fn engine(&self) -> Result<Engine> {
-        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed, self.routing)?;
+        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed, self.variant)?;
         engine.config.max_batch = task_config(&self.row, &self.task, false)?.max_batch;
         Ok(engine)
     }
 
     fn identity(&self) -> Value {
-        json!({"model":self.routing.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
+        json!({"model":self.variant.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
             "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION})
     }
 
@@ -107,11 +107,10 @@ impl Cell {
         }
         let mut record: Value = serde_json::from_slice(&fs::read(path)?)?;
         let step = record["step"].as_u64().ok_or("missing update number")? as usize;
-        // Entry-phase checkpoints recorded before the rename have the same layout.
-        if matches!(self.routing, Routing::EntryPhase)
-            && record["identity"]["model"] == "phasor-v2-entry-phase-mhc-tied-vocab-fp32"
+        if let Some(legacy) = self.variant.legacy_model()
+            && record["identity"]["model"] == legacy
         {
-            record["identity"]["model"] = self.routing.model().into();
+            record["identity"]["model"] = self.variant.model().into();
         }
         if record["identity"] != self.identity() || step > self.schedule.budget {
             return Err("checkpoint belongs to another decoder or suite cell".into());
@@ -153,9 +152,9 @@ fn run(
     repeat: usize,
     out: &Path,
     cutoff: Option<usize>,
-    routing: Routing,
+    variant: Variant,
 ) -> Result<()> {
-    let cell = Cell::new(name, seed, repeat, out, routing)?;
+    let cell = Cell::new(name, seed, repeat, out, variant)?;
     let budget = cell.schedule.budget;
     let until = cutoff.unwrap_or(budget);
     if until == 0 || until > budget || (until != budget && !until.is_multiple_of(cell.every)) {
@@ -241,8 +240,8 @@ fn update(
     engine.step(rate, step)
 }
 
-fn replay(name: &str, seed: u32, repeat: usize, out: &Path, routing: Routing) -> Result<()> {
-    let cell = Cell::new(name, seed, repeat, out, routing)?;
+fn replay(name: &str, seed: u32, repeat: usize, out: &Path, variant: Variant) -> Result<()> {
+    let cell = Cell::new(name, seed, repeat, out, variant)?;
     let (record, state) = cell.checkpoint()?.ok_or("missing decoder checkpoint")?;
     let mut engine = cell.engine()?;
     engine.restore_state(&state)?;
