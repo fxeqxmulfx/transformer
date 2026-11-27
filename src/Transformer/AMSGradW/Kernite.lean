@@ -48,7 +48,7 @@ noncomputable def run (rate : ℕ → ℝ) (batchGradient : ℕ → (ι → ℝ)
   | t + 1 => let s := run rate batchGradient initial t
     step (rate t) t (batchGradient t s.weights) s
 
-private theorem abs_clip_le (g : ι → ℝ) (i : ι) : |clip g i| ≤ 1 := by
+theorem abs_clip_le (g : ι → ℝ) (i : ι) : |clip g i| ≤ 1 := by
   have hden : 0 < max ‖(WithLp.toLp 2 g : Space ι)‖ 1 :=
     zero_lt_one.trans_le (le_max_right _ _)
   rw [clip, abs_div, abs_of_pos hden, div_le_one hden]
@@ -141,5 +141,7 @@ example (g : ℕ → (Fin 2 → ℝ) → Fin 2 → ℝ) (initial : Fin 2 → ℝ
   run_abs_weight_le (fun _ => 1 / 1000) g initial (fun _ => by norm_num) 0 1000
 
 example := abs_direction_le 0 (first := 1) (by norm_num) 0
+
+example (g : Fin 2 → ℝ) := abs_clip_le g 0
 
 end Transformer.AMSGradW.Kernite
