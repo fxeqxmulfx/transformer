@@ -79,7 +79,7 @@ impl Observations<'_> {
         packed
     }
 
-    fn forward(self, engine: &mut Engine) -> Result<()> {
+    pub(super) fn forward(self, engine: &mut Engine) -> Result<()> {
         engine.forward(self.tokens, self.labels, self.words(), self.length)
     }
 

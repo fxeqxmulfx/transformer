@@ -5,7 +5,7 @@ use crate::{
     division,
     engine::{
         Engine,
-        adamw::{AdamW, RatePlan},
+        adamw::{AdamW, RatePlan, wsd},
         page::{AdaptivePage, Observations, PageRule},
     },
     metrics,
@@ -33,13 +33,43 @@ impl Rule {
     }
 }
 
-enum Optimizer {
+pub(crate) enum Optimizer {
     Page(AdaptivePage),
     AdamW(AdamW),
 }
 
 impl Optimizer {
-    fn metrics(&self) -> Value {
+    pub fn new(
+        engine: &mut Engine,
+        rule: Rule,
+        batch: Observations<'_>,
+        sampler: u32,
+        schedule: Schedule,
+    ) -> Result<Self> {
+        Ok(match rule {
+            Rule::Page(correction) => {
+                Self::Page(AdaptivePage::new(engine, batch, sampler, correction)?)
+            }
+            Rule::AdamW(plan) => Self::AdamW(AdamW::new(engine, schedule, plan)?),
+        })
+    }
+
+    pub fn step(
+        &mut self,
+        engine: &mut Engine,
+        batch: Observations<'_>,
+        changed: bool,
+    ) -> Result<bool> {
+        match self {
+            Self::Page(page) => page.step(engine, batch, changed),
+            Self::AdamW(adamw) => {
+                adamw.step(engine, batch)?;
+                Ok(true)
+            }
+        }
+    }
+
+    pub fn metrics(&self) -> Value {
         match self {
             Self::Page(page) => page.metrics(),
             Self::AdamW(adamw) => adamw.metrics(),
@@ -200,11 +230,7 @@ impl Job {
                 .as_u64()
                 .ok_or("missing WSD budget")? as usize
         };
-        let schedule = Schedule {
-            budget,
-            warmup: budget / 50,
-            cooldown_start: (budget as u128 * 80 / 100) as usize,
-        };
+        let schedule = wsd(budget);
         match rule {
             Rule::Page(correction) => {
                 identity["optimizer"] = "batch-reference-adaptive-page-v1".into();
@@ -212,18 +238,15 @@ impl Job {
                 identity["page_seed"] = sampler.into();
             }
             Rule::AdamW(plan) => {
-                let scale = plan.scale(budget);
                 identity["optimizer"] = rule.label().into();
-                identity["adamw"] = json!({"weight_decay":0.1,"beta1":0.9,"beta2":0.95,"epsilon":1e-8,
-                    "clip_norm":1,"peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":budget,
-                    "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start});
+                identity["adamw"] = plan.settings(schedule);
                 if let RatePlan::Restart {
                     stock_runs,
                     trial,
                     first_budget,
                 } = plan
                 {
-                    identity["restart"] = json!({"stock_runs":stock_runs,"trial":trial,"first_budget":first_budget,"rate_scale":scale});
+                    identity["restart"] = json!({"stock_runs":stock_runs,"trial":trial,"first_budget":first_budget,"rate_scale":plan.scale(budget)});
                 }
             }
         }
@@ -325,23 +348,20 @@ impl Job {
             );
             let reference = Observations::from(&packed);
             if optimizer.is_none() {
-                optimizer = Some(match rule {
-                    Rule::Page(correction) => Optimizer::Page(AdaptivePage::new(
-                        &mut engine,
-                        reference,
-                        sampler,
-                        correction,
-                    )?),
-                    Rule::AdamW(plan) => Optimizer::AdamW(AdamW::new(&engine, schedule, plan)?),
-                });
+                optimizer = Some(Optimizer::new(
+                    &mut engine,
+                    rule,
+                    reference,
+                    sampler,
+                    schedule,
+                )?);
             }
-            match optimizer.as_mut().unwrap() {
-                Optimizer::Page(page) => {
-                    if !page.step(&mut engine, reference, step > 0)? {
-                        skipped += 1;
-                    }
-                }
-                Optimizer::AdamW(adamw) => adamw.step(&mut engine, &packed)?,
+            if !optimizer
+                .as_mut()
+                .unwrap()
+                .step(&mut engine, reference, step > 0)?
+            {
+                skipped += 1;
             }
         }
         unreachable!("the terminal checkpoint is always observed")

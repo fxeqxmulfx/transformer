@@ -13,7 +13,14 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | division-certificate CELL (terminal|first-strict) | division-mask-lean";
+const USAGE: &str = concat!(
+    "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | ",
+    "replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | ",
+    "(sum8-adamw | sum8-adamw-replay) RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
+    "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
+    "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
+    "division-certificate CELL (terminal|first-strict) | division-mask-lean"
+);
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
     if op.starts_with("adamw-") {
@@ -120,14 +127,18 @@ pub fn command(args: &[String]) -> Result<()> {
             op.ends_with("-plan"),
         ),
         (
-            "sum8-page" | "sum8-replay" | "sum8-page-sqrt" | "sum8-replay-sqrt" | "sum8-page-retry"
-            | "sum8-replay-retry",
+            "sum8-adamw" | "sum8-adamw-replay" | "sum8-page" | "sum8-replay" | "sum8-page-sqrt"
+            | "sum8-replay-sqrt" | "sum8-page-retry" | "sum8-replay-retry",
             [out, steps @ ..],
         ) if steps.len() <= 1 => crate::sum8::run(
             Path::new(out),
             steps.first().map(|s| s.parse()).transpose()?,
             op.contains("replay"),
-            correction(op),
+            if op.starts_with("sum8-adamw") {
+                crate::sum8::Method::AdamW
+            } else {
+                crate::sum8::Method::Page(correction(op))
+            },
         ),
         ("bench", [name, updates]) => bench::bench(name, updates.parse()?),
         ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(

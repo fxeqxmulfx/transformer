@@ -4,8 +4,10 @@ use crate::{
     KERNITE_VERSION, Result,
     engine::{
         Engine,
-        page::{AdaptivePage, Observations, PageRule},
+        adamw::{RatePlan, wsd},
+        page::{Observations, PageRule},
     },
+    page_runs::{Optimizer, Rule},
     suite::{Shape, load_weights, publish, save_weights},
 };
 use serde_json::{Value, json};
@@ -19,11 +21,25 @@ use std::{
 const LENGTH: usize = 8;
 const RUNS: usize = 8;
 const UPDATES: usize = 20_480;
-fn protocol_id(correction: PageRule) -> &'static str {
-    match correction {
-        PageRule::Single => "argand-sum8-adaptive-page-v1",
-        PageRule::SquareRoot => "argand-sum8-adaptive-page-sqrt-v1",
-        PageRule::Retry => "argand-sum8-adaptive-page-retry-v1",
+#[derive(Clone, Copy)]
+pub(crate) enum Method {
+    Page(PageRule),
+    AdamW,
+}
+impl Method {
+    fn protocol_id(self) -> &'static str {
+        match self {
+            Self::Page(PageRule::Single) => "argand-sum8-adaptive-page-v1",
+            Self::Page(PageRule::SquareRoot) => "argand-sum8-adaptive-page-sqrt-v1",
+            Self::Page(PageRule::Retry) => "argand-sum8-adaptive-page-retry-v1",
+            Self::AdamW => "argand-sum8-adamw-wsd-v1",
+        }
+    }
+    fn rule(self) -> Rule {
+        match self {
+            Self::Page(correction) => Rule::Page(correction),
+            Self::AdamW => Rule::AdamW(RatePlan::Wsd),
+        }
     }
 }
 
@@ -142,19 +158,24 @@ pub(crate) fn observed_phase_labels() -> ([f64; 16], [f64; 15]) {
     (diagonal, edge)
 }
 
-fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], correction: PageRule) -> Value {
-    json!({"protocol":protocol_id(correction), "kernite":KERNITE_VERSION, "updates":updates, "seeds":seeds,
+fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], method: Method) -> Value {
+    let mut plan = json!({"protocol":method.protocol_id(), "kernite":KERNITE_VERSION, "updates":updates, "seeds":seeds,
         "seed_order":["native_initialization","page_sampling"], "width":64,"heads":4,"ffn_width":256,
         "layers":6,"repeat":1,"vocab":2,"sigma":0.02,"open_words":31,"hidden_words":225,
         "mask":"big-endian nibbles; col == row or col == row + 1, without wrap",
-        "success":"positive terminal true-class logit gap on all 225 hidden words"})
+        "success":"positive terminal true-class logit gap on all 225 hidden words"});
+    if matches!(method, Method::AdamW) {
+        plan["seed_order"] = json!(["native_initialization", "unused"]);
+        plan["adamw"] = RatePlan::Wsd.settings(wsd(updates));
+    }
+    plan
 }
 
 fn manifest(
     dir: &Path,
     requested: Option<usize>,
     replay_only: bool,
-    correction: PageRule,
+    method: Method,
 ) -> Result<(usize, Value)> {
     if requested == Some(0) {
         return Err("expected a positive observation horizon".into());
@@ -166,7 +187,7 @@ fn manifest(
         let seeds = serde_json::from_value(prior["seeds"].clone())?;
         if updates == 0
             || requested.is_some_and(|n| n != updates)
-            || prior != protocol(updates, seeds, correction)
+            || prior != protocol(updates, seeds, method)
         {
             return Err("existing directory contains a different experiment".into());
         }
@@ -176,17 +197,26 @@ fn manifest(
         return Err("missing run to replay".into());
     }
     let updates = requested.unwrap_or(UPDATES);
-    let mut random = fs::File::open("/dev/urandom")?;
-    let mut seeds = [[0; 2]; RUNS];
-    for pair in &mut seeds {
-        let mut bytes = [0; 8];
-        random.read_exact(&mut bytes)?;
-        *pair = [
-            u32::from_le_bytes(bytes[..4].try_into()?),
-            u32::from_le_bytes(bytes[4..].try_into()?),
-        ];
-    }
-    let plan = protocol(updates, seeds, correction);
+    let seeds = match method {
+        Method::AdamW => {
+            let paired: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
+            serde_json::from_value(paired["seeds"].clone())?
+        }
+        Method::Page(_) => {
+            let mut random = fs::File::open("/dev/urandom")?;
+            let mut seeds = [[0; 2]; RUNS];
+            for pair in &mut seeds {
+                let mut bytes = [0; 8];
+                random.read_exact(&mut bytes)?;
+                *pair = [
+                    u32::from_le_bytes(bytes[..4].try_into()?),
+                    u32::from_le_bytes(bytes[4..].try_into()?),
+                ];
+            }
+            seeds
+        }
+    };
+    let plan = protocol(updates, seeds, method);
     publish(dir, "protocol.json", &serde_json::to_vec_pretty(&plan)?)?;
     Ok((updates, plan))
 }
@@ -201,30 +231,31 @@ fn train(
     updates: usize,
     observed: &Split,
     hidden: &Split,
-    correction: PageRule,
+    method: Method,
 ) -> Result<()> {
     let seed = read_seed(pair, 0)?;
     let mut model = new_engine(seed)?;
     let initial =
         json!({"observed":observed.score(&mut model)?, "hidden":hidden.score(&mut model)?});
-    let mut page = AdaptivePage::new(
+    let mut optimizer = Optimizer::new(
         &mut model,
+        method.rule(),
         observed.observations(),
         read_seed(pair, 1)?,
-        correction,
+        wsd(updates),
     )?;
     let mut history = fs::File::create(dir.join("training.jsonl"))?;
-    writeln!(history, "{}", page.metrics())?;
+    writeln!(history, "{}", optimizer.metrics())?;
     let start = Instant::now();
     let mut reason = "budget";
     let mut milestones = Vec::new();
     for t in 1..=updates {
-        if !page.step(&mut model, observed.observations(), false)? {
+        if !optimizer.step(&mut model, observed.observations(), false)? {
             reason = "no_resolvable_full_step";
             break;
         }
         if t.is_power_of_two() || t.is_multiple_of(256) || t == updates {
-            writeln!(history, "{}", page.metrics())?;
+            writeln!(history, "{}", optimizer.metrics())?;
             history.flush()?;
         }
         // Capture weights on the same uninterrupted trajectory. Intermediate
@@ -248,9 +279,9 @@ fn train(
         point["observed"] = observed.score(&mut model)?;
         point["hidden"] = hidden.score(&mut model)?;
     }
-    let record = json!({"protocol":protocol_id(correction),"seeds":pair,"updates":updates,"gpu":model.cuda.name(),
+    let record = json!({"protocol":method.protocol_id(),"seeds":pair,"updates":updates,"gpu":model.cuda.name(),
         "parameters":parameters,"seconds":seconds,"stop":reason,"initial":initial,"milestones":milestones,
-        "optimizer":page.metrics(),"observed":terminal_train,"hidden":terminal_hidden,"weights_sha256":digest});
+        "optimizer":optimizer.metrics(),"observed":terminal_train,"hidden":terminal_hidden,"weights_sha256":digest});
     publish(dir, "result.json", &serde_json::to_vec_pretty(&record)?)
 }
 
@@ -260,10 +291,10 @@ fn replay(
     updates: usize,
     observed: &Split,
     hidden: &Split,
-    correction: PageRule,
+    method: Method,
 ) -> Result<Value> {
     let record: Value = serde_json::from_slice(&fs::read(dir.join("result.json"))?)?;
-    if record["protocol"] != protocol_id(correction)
+    if record["protocol"] != method.protocol_id()
         || record["seeds"] != *pair
         || record["updates"] != updates
     {
@@ -287,12 +318,7 @@ fn replay(
     Ok(record)
 }
 
-pub fn run(
-    dir: &Path,
-    requested: Option<usize>,
-    replay_only: bool,
-    correction: PageRule,
-) -> Result<()> {
+pub fn run(dir: &Path, requested: Option<usize>, replay_only: bool, method: Method) -> Result<()> {
     fs::create_dir_all(dir)?;
     let lock = fs::File::options()
         .write(true)
@@ -300,7 +326,7 @@ pub fn run(
         .truncate(false)
         .open(dir.join("run.lock"))?;
     lock.lock()?;
-    let (updates, plan) = manifest(dir, requested, replay_only, correction)?;
+    let (updates, plan) = manifest(dir, requested, replay_only, method)?;
     let (observed, hidden) = (Split::new(true), Split::new(false));
     let mut records = Vec::new();
     for (i, pair) in plan["seeds"]
@@ -312,9 +338,9 @@ pub fn run(
         let cell = dir.join(format!("draw-{i}"));
         fs::create_dir_all(&cell)?;
         if !replay_only && !cell.join("result.json").try_exists()? {
-            train(&cell, pair, updates, &observed, &hidden, correction)?;
+            train(&cell, pair, updates, &observed, &hidden, method)?;
         }
-        let record = replay(&cell, pair, updates, &observed, &hidden, correction)?;
+        let record = replay(&cell, pair, updates, &observed, &hidden, method)?;
         println!(
             "draw {i}: {} updates, {}/31 observed, {}/225 hidden, {:.2} s",
             record["optimizer"]["step"],
@@ -342,6 +368,24 @@ pub fn run(
 mod tests {
     use super::*;
     use std::collections::BTreeSet;
+
+    #[test]
+    fn paired_adamw_uses_the_registered_page_initializations_and_its_own_wsd_budget() -> Result<()>
+    {
+        let page: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
+        let pairs = serde_json::from_value(page["seeds"].clone())?;
+        assert_eq!(
+            protocol(UPDATES, pairs, Method::Page(PageRule::Single)),
+            page
+        );
+        let adamw = protocol(UPDATES, pairs, Method::AdamW);
+        assert_eq!(adamw["seeds"], page["seeds"]);
+        assert_eq!(adamw["adamw"]["weight_decay"], 0.1);
+        assert_eq!(adamw["adamw"]["warmup"], 409);
+        assert_eq!(adamw["adamw"]["cooldown_start"], 16384);
+        assert_eq!(adamw["adamw"]["budget"], UPDATES);
+        Ok(())
+    }
 
     #[test]
     fn split_is_the_nonwrapping_staircase_and_its_complement() {

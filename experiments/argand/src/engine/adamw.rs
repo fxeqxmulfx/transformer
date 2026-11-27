@@ -1,10 +1,18 @@
 //! The clipped, bias-corrected AdamW update of Argand at 7399c3bb.
-use super::{Engine, F, Result, grid};
-use crate::{metrics::Packed, schedule::Schedule};
+use super::{Engine, F, Result, grid, page::Observations};
+use crate::schedule::Schedule;
 use kernite_cuda::Buffer;
 use serde_json::{Value, json};
 
 pub(crate) const DECAY: f32 = 0.1;
+
+pub(crate) fn wsd(budget: usize) -> Schedule {
+    Schedule {
+        budget,
+        warmup: budget / 50,
+        cooldown_start: (budget as u128 * 80 / 100) as usize,
+    }
+}
 
 #[derive(Clone, Copy)]
 pub(crate) enum RatePlan {
@@ -20,6 +28,13 @@ pub(crate) enum RatePlan {
 }
 
 impl RatePlan {
+    pub fn settings(self, schedule: Schedule) -> Value {
+        let scale = self.scale(schedule.budget);
+        json!({"weight_decay":0.1,"beta1":0.9,"beta2":0.95,"epsilon":1e-8,"clip_norm":1,
+            "peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":schedule.budget,
+            "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start})
+    }
+
     pub fn scale(self, budget: usize) -> f64 {
         match self {
             Self::Restart {
@@ -82,13 +97,8 @@ impl AdamW {
         })
     }
 
-    pub fn step(&mut self, engine: &mut Engine, batch: &Packed) -> Result<()> {
-        engine.forward(
-            &batch.tokens,
-            &batch.labels,
-            batch.tokens.len() / batch.length,
-            batch.length,
-        )?;
+    pub fn step(&mut self, engine: &mut Engine, batch: Observations<'_>) -> Result<()> {
+        batch.forward(engine)?;
         engine.backward()?;
         self.apply(engine)
     }
@@ -124,7 +134,7 @@ impl AdamW {
     }
 
     pub fn metrics(&self) -> Value {
-        json!({"step":self.completed,"rate":self.rate(self.completed - 1)})
+        json!({"step":self.completed,"rate":self.completed.checked_sub(1).map(|t| self.rate(t))})
     }
 }
 

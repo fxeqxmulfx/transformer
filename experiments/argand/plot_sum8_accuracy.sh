@@ -8,7 +8,8 @@ fi
 cd -- "$1"
 jq -er '
   if .replayed != true or .runs != 8 or (.records | length) != 8 or
-     .protocol.protocol != "argand-sum8-adaptive-page-v1"
+     (.protocol.protocol | IN("argand-sum8-adaptive-page-v1","argand-sum8-adaptive-page-sqrt-v1",
+       "argand-sum8-adaptive-page-retry-v1","argand-sum8-adamw-wsd-v1") | not)
   then error("expected the replayed eight-run sum8 cohort") else . end |
   .records | map(. as $r |
     ([.initial + {step:0}] + (.milestones // []) +
@@ -23,10 +24,13 @@ jq -er '
   ([$step] + stats("observed") + stats("hidden")) | @tsv
 ' summary.json > accuracy.tsv
 horizon=$(jq -er '.protocol.updates' summary.json)
-gnuplot -e "horizon=$horizon" - <<'PLOT'
+optimizer=$(jq -er '.protocol.protocol | {
+  "argand-sum8-adamw-wsd-v1":"AdamW + WSD", "argand-sum8-adaptive-page-v1":"PAGE",
+  "argand-sum8-adaptive-page-sqrt-v1":"PAGE (square root)", "argand-sum8-adaptive-page-retry-v1":"PAGE (retry)"}[.]' summary.json)
+gnuplot -e "horizon=$horizon; optimizer='$optimizer'" - <<'PLOT'
 set terminal pdfcairo color size 9.2in,4.0in font "DejaVu Sans,10"
 set output "accuracy.pdf"
-set multiplot layout 1,2 margins 0.075,0.975,0.17,0.80 spacing 0.08,0.05 title "Eight-bit modular sum   |   8 initializations, 31 observed and 225 hidden words"
+set multiplot layout 1,2 margins 0.075,0.975,0.17,0.80 spacing 0.08,0.05 title sprintf("Eight-bit modular sum   |   %s   |   8 initializations, 31 observed and 225 hidden words",optimizer)
 set border 3
 set tics nomirror
 set grid ytics lc rgb "#e4e7ec"
