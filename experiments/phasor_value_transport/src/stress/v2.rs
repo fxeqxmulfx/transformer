@@ -1,4 +1,4 @@
-//! Frozen GPT stress cases and schedule for Phasor v2.
+//! Frozen GPT stress cases and schedule for Argand and its residual controls.
 use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
 use crate::{
     Config, KERNITE_VERSION,
@@ -8,6 +8,33 @@ use crate::{
     schedule::Schedule,
 };
 use std::path::{Path, PathBuf};
+
+pub fn command(op: &str, args: &[String]) -> Result<()> {
+    let (family, action) = op.split_once('-').ok_or("missing decoder operation")?;
+    let routing = if family == "argand" {
+        Routing::EntryPhase
+    } else {
+        Routing::selected()?
+    };
+    match (action, args) {
+        ("check", []) => crate::phasor_v2::check(routing),
+        ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
+            name,
+            seed.parse()?,
+            repeat.parse()?,
+            Path::new(out),
+            cutoff.first().map(|step| step.parse()).transpose()?,
+            routing,
+        ),
+        ("replay", [name, seed, repeat, out]) => {
+            replay(name, seed.parse()?, repeat.parse()?, Path::new(out), routing)
+        }
+        _ => Err(format!(
+            "usage: {family}-check | {family}-run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | {family}-replay CASE SEED REPEAT RUN_DIR"
+        )
+        .into()),
+    }
+}
 
 struct Cell {
     row: Value,
@@ -23,7 +50,7 @@ struct Cell {
 }
 
 impl Cell {
-    fn new(name: &str, seed: u32, repeat: usize, out: &Path) -> Result<Self> {
+    fn new(name: &str, seed: u32, repeat: usize, out: &Path, routing: Routing) -> Result<Self> {
         if seed > 2 || repeat == 0 {
             return Err("expected seed 0 through 2 and a positive repeat count".into());
         }
@@ -54,7 +81,7 @@ impl Cell {
             directory,
             repeat,
             seed,
-            routing: Routing::selected()?,
+            routing,
         })
     }
 
@@ -78,14 +105,20 @@ impl Cell {
         if !path.try_exists()? {
             return Ok(None);
         }
-        let record: Value = serde_json::from_slice(&fs::read(path)?)?;
+        let mut record: Value = serde_json::from_slice(&fs::read(path)?)?;
         let step = record["step"].as_u64().ok_or("missing update number")? as usize;
+        // Entry-phase checkpoints recorded before the rename have the same layout.
+        if matches!(self.routing, Routing::EntryPhase)
+            && record["identity"]["model"] == "phasor-v2-entry-phase-mhc-tied-vocab-fp32"
+        {
+            record["identity"]["model"] = self.routing.model().into();
+        }
         if record["identity"] != self.identity() || step > self.schedule.budget {
-            return Err("checkpoint belongs to another Phasor v2 cell".into());
+            return Err("checkpoint belongs to another decoder or suite cell".into());
         }
         let bytes = fs::read(self.state_file(step))?;
         if record["state_sha256"] != hash(&bytes) || !bytes.len().is_multiple_of(4) {
-            return Err("invalid Phasor v2 checkpoint digest".into());
+            return Err("invalid decoder checkpoint digest".into());
         }
         let state = bytes
             .chunks_exact(4)
@@ -114,8 +147,15 @@ impl Cell {
     }
 }
 
-pub fn run(name: &str, seed: u32, repeat: usize, out: &Path, cutoff: Option<usize>) -> Result<()> {
-    let cell = Cell::new(name, seed, repeat, out)?;
+fn run(
+    name: &str,
+    seed: u32,
+    repeat: usize,
+    out: &Path,
+    cutoff: Option<usize>,
+    routing: Routing,
+) -> Result<()> {
+    let cell = Cell::new(name, seed, repeat, out, routing)?;
     let budget = cell.schedule.budget;
     let until = cutoff.unwrap_or(budget);
     if until == 0 || until > budget || (until != budget && !until.is_multiple_of(cell.every)) {
@@ -201,9 +241,9 @@ fn update(
     engine.step(rate, step)
 }
 
-pub fn replay(name: &str, seed: u32, repeat: usize, out: &Path) -> Result<()> {
-    let cell = Cell::new(name, seed, repeat, out)?;
-    let (record, state) = cell.checkpoint()?.ok_or("missing Phasor v2 checkpoint")?;
+fn replay(name: &str, seed: u32, repeat: usize, out: &Path, routing: Routing) -> Result<()> {
+    let cell = Cell::new(name, seed, repeat, out, routing)?;
+    let (record, state) = cell.checkpoint()?.ok_or("missing decoder checkpoint")?;
     let mut engine = cell.engine()?;
     engine.restore_state(&state)?;
     let mut splits = serde_json::Map::new();

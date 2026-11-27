@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
-# Run the 35 frozen GPT cases and replay each passing Phasor v2 checkpoint.
+# Run frozen GPT cases and replay each passing decoder checkpoint.
 set -euo pipefail
 
+usage='usage: run_v2_stress.sh [--argand TIER] REPEAT RUN_DIR [MAX_UPDATES]'
+runner=v2
+tier=all
+if [[ ${1:-} == --argand ]]; then
+    runner=argand
+    tier=${2:-}
+    if [[ $tier != short && $tier != long && $tier != all ]]; then
+        echo 'TIER must be short, long or all' >&2
+        exit 2
+    fi
+    shift 2
+fi
 if (( $# < 2 || $# > 3 )) || [[ $1 != [1-9]* || ${1//[0-9]/} ]]; then
-    echo 'usage: run_v2_stress.sh REPEAT RUN_DIR [MAX_UPDATES]' >&2
+    echo "$usage" >&2
     exit 2
 fi
 repeat=$1
@@ -17,7 +29,8 @@ fi
 dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 bin=${PHASOR_BIN:-"$dir/target/release/phasor-value-transport"}
 suite="$dir/../convex_stress/suite.json"
-rows=$(jq -er '.seeds as $seeds | .tasks[] as $task | $seeds[] |
+rows=$(jq -er --arg tier "$tier" '.seeds as $seeds |
+    (.tasks[] | select($tier == "all" or .tier == $tier)) as $task | $seeds[] |
     [$task.name, ., $task.case.max_updates, $task.case.observe] | @tsv' "$suite")
 while IFS=$'\t' read -r case_name seed budget every; do
     stop=$budget
@@ -30,10 +43,10 @@ while IFS=$'\t' read -r case_name seed budget every; do
     fi
     dest="$out/$case_name/seed$seed"
     mkdir -p "$dest"
-    result=$("$bin" v2-run "$case_name" "$seed" "$repeat" "$out" "$stop" 2>> "$dest/observations.jsonl")
+    result=$("$bin" "${runner}-run" "$case_name" "$seed" "$repeat" "$out" "$stop" 2>> "$dest/observations.jsonl")
     printf '%s\n' "$result"
     if jq -e '.passed' <<< "$result" >/dev/null; then
-        "$bin" v2-replay "$case_name" "$seed" "$repeat" "$out" > "$dest/replay.pending"
+        "$bin" "${runner}-replay" "$case_name" "$seed" "$repeat" "$out" > "$dest/replay.pending"
         mv -- "$dest/replay.pending" "$dest/replay.json"
     fi
 done <<< "$rows"

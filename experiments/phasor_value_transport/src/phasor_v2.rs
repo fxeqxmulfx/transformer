@@ -1,4 +1,4 @@
-//! Complex Phasor v2 and tied vocabulary readout on Kernite.
+//! Argand's complex decoder and tied vocabulary readout on Kernite.
 mod complex_mhc;
 mod kernels;
 mod scores;
@@ -363,14 +363,14 @@ impl Engine {
     }
 }
 
-pub fn check() -> Result<()> {
+pub fn check(routing: Routing) -> Result<()> {
     let mut cfg = crate::config(2)?;
     cfg.width = 16;
     cfg.heads = 2;
     cfg.layers = 2;
     cfg.vocab = 6;
     cfg.max_length = 3;
-    let mut engine = Engine::new(cfg, 2, 1, Routing::selected()?)?;
+    let mut engine = Engine::new(cfg, 2, 1, routing)?;
     let initial = engine.weights()?;
     let mut tied = vec![0.0; initial.len()];
     tied[2 * 16] = 0.125;
@@ -457,9 +457,12 @@ pub fn check() -> Result<()> {
             .sum();
         println!("direction {trial}: analytic={analytic:.6} finite_difference={finite:.6}");
         if !finite.is_finite() || (finite - analytic).abs() > 0.02 * (1.0 + finite.abs()) {
-            return Err("Phasor v2 GPU backward disagrees with finite differences".into());
+            return Err("complex decoder GPU backward disagrees with finite differences".into());
         }
     }
-    println!("v2 vocabulary prediction, prefix causality and tied adjoints verified");
+    println!(
+        "{} vocabulary prediction, prefix causality and tied adjoints verified",
+        routing.model()
+    );
     Ok(())
 }

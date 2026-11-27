@@ -268,6 +268,23 @@ done
 unset PHASOR_V2_MHC
 ```
 
+##### Argand GPT stress screen
+
+The `argand-check`, `argand-run` and `argand-replay` commands select the
+independent-phase model. The screen uses the 25 short and 10 long cases
+with three seeds each and one pass through the layers. It stops each run
+at its first held-out observation at or above 99% or at the last scheduled
+observation at or below 1,000 updates. The learning-rate schedule uses the
+original case budget. The runner replays each passing checkpoint.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+target/release/phasor-value-transport argand-check
+out=runs/argand-stress-1000
+mkdir -p "$out"
+PHASOR_EVAL_BATCH_CAP=16 ./run_v2_stress.sh --argand all 1 "$out" 1000 | tee "$out/stress-1000.jsonl"
+```
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current

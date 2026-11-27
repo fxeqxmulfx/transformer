@@ -33,7 +33,7 @@ impl Routing {
             Self::Single => "phasor-v2-single-stream-tied-vocab-fp32",
             Self::Real => "phasor-v2-real-mhc-tied-vocab-fp32",
             Self::Conjugated => "phasor-v2-conjugated-mhc-tied-vocab-fp32",
-            Self::EntryPhase => "phasor-v2-entry-phase-mhc-tied-vocab-fp32",
+            Self::EntryPhase => "argand-entry-phase-mhc-tied-vocab-fp32",
         }
     }
 
