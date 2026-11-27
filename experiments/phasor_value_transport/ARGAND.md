@@ -12,12 +12,37 @@
 | `ffn_expansion` | `4` | Ratio of the FFN intermediate width to `c`. |
 | `eps` | `1e-6` | Offset added to the vector norm in `complex_rmsnorm`. |
 | `rope_base` | `10000` | Base of the LeRoPE frequency schedule. |
-| Initial $\alpha_m$ | `0` | Initial value of each learned LeRoPE log-frequency adjustment. |
-| `s_init` | `1` | Initial value of each layer's learned complex score multiplier `s`. |
 | `write_gain` | `2` | Scale applied to the sigmoid write amplitudes. |
 | `mix_diagonal_bias` | `2` | Offset added to the diagonal of the mixing logits. |
 | `sinkhorn_cycles` | `20` | Number of column and row normalization cycles. |
-| Initial phase columns of `W_mhc` | `0` | Set the starting angles of the gates and mixing weights. |
+
+### Initialization
+
+For Gaussian-initialized weights, sample the real and imaginary parts
+separately. In $\mathcal N(0,\sigma^2)$, $\sigma$ is the standard deviation
+of each part.
+
+| Parameter or state | Initial value |
+|---|---|
+| Embedding and tied output table `E` | $\mathcal N(0,0.02^2)$ per part. |
+| Attention matrices `W_Q`, `W_K`, `W_V`, `W_O` | $\mathcal N(0,0.02^2)$ per part. |
+| FFN matrices `W_g`, `W_u`, `W_F` | $\mathcal N(0,0.02^2)$ per part. |
+| First 12 columns of each `W_mhc` for amplitude logits | $\mathcal N(0,(0.01/\sqrt{Sc})^2)$ per part. |
+| Last 12 columns of each `W_mhc` for angles | $0+0i$ in every entry. |
+| LeRoPE log-frequency adjustments $\alpha_m$ | $0$ for every $m$, shared across heads and layers. |
+| `s_init` of the learned score multiplier `s` | $1+0i$ in every layer. |
+| AMSGradW buffers $m_0$, $v_0$, $v_{\max,0}$ | $0$ for every real coordinate. |
+| WSD learning rate at the first update | $0$. |
+
+For $S=4$ and $c=64$, the amplitude weights of `W_mhc` have standard
+deviation $0.000625$. The initial read gates, write gates, and mixing
+coefficients equal their real amplitudes computed from `X` because all
+their angles start at zero.
+
+Each stress run uses one of the seeds `0`, `1` or `2`. A generator seeded
+with `seed` initializes `E` and the attention and FFN matrices. A separate
+generator seeded with `seed + 20_000` initializes the mHC amplitude weights.
+[Kernite parameter initialization](src/phasor_v2/weights.rs)
 
 ### Optimizer and WSD
 
@@ -32,7 +57,6 @@
 | WSD peak learning rate $\eta_{\mathrm{peak}}$ | `1e-3` | Rate during the stable phase. |
 | WSD final learning rate $\eta_{\mathrm{final}}$ | `1e-8` | Rate on the final scheduled update. |
 
-For each real coordinate, the moments and the running maximum start at zero.
 Both moments use the gradient after clipping. The maximum is taken over the
 raw second moments and retained throughout training. On update $t$, counted
 from one, bias correction uses $m_t/(1-\beta_1^t)$ and
