@@ -13,6 +13,8 @@ public import Transformer.Grokking.FiniteRecovery.SeriesLearning
 public import Transformer.Grokking.FiniteRecovery.TransitionNoDecay
 public import Transformer.Grokking.FiniteRecovery.CommonBatchGradient
 public import Transformer.Grokking.FiniteRecovery.ArgandMomentumCopy
+public import Transformer.Grokking.FiniteRecovery.ArgandFullGradient
+public import Transformer.Grokking.FiniteRecovery.ArgandStrictRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
@@ -25,4 +27,9 @@ parameter layout supports both the bias-corrected AMSGradW control and
 default clipped momentum SGD from the initialized draws. For SGD on the
 positive WSD floor, the criterion is convergence of accumulated clipped
 gradients. Recurring singleton observations of the binary copying task
-preclude a finite limit with a strict correct readout. -/
+preclude a finite limit with a strict correct readout. Full gradient
+accumulation uses one fixed cross-entropy objective with a quadratic
+penalty. With a sufficiently small constant tail, its native clipped
+momentum run has stationary cluster points. The energy inequality
+upgrades this to full trajectory convergence. Approximate nuclear
+completion certifies strict logits at finite weights. -/

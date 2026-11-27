@@ -11,13 +11,13 @@ stationarity, even at zero activations. -/
 
 namespace Transformer.Grokking.FiniteRecovery.Argand
 
-open Transformer.PhasorV2 Transformer.AMSGradW
+open Transformer.PhasorV2 Transformer.Optimization Transformer.AMSGradW
 open scoped InnerProductSpace
 
 variable {A : Type*} [Fintype A] {H d layers T : ℕ}
 
-private theorem contDiff_hidden_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) :
-    ContDiff ℝ 1 (fun w : Weights A H d layers => (Model.fromWeights w).hidden repeats word i) := by
+private theorem c1Lipschitz_hidden_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) :
+    C1Lipschitz (fun w : Weights A H d layers => (Model.fromWeights w).hidden repeats word i) := by
   let W := Weights A H d layers
   let ε : ℝ := 1 / 1000000
   let scale := 1 / Real.sqrt (2 * (layers : ℝ) * repeats)
@@ -25,51 +25,64 @@ private theorem contDiff_hidden_fromWeights (repeats : ℕ) (word : Word A T) (i
   let slide (w : W) (z : Word (CSpace (H * d)) T) (l : Fin layers) :=
     ((Model.fromWeights w).layer l).forwardWith ε scale (causalGeometry (Model.fromWeights w).alpha) z
   let pass (w : W) (z : Word (CSpace (H * d)) T) := (List.finRange layers).foldl (slide w) z
-  have hrms := contDiff_argandRMS (c := H * d) (by norm_num : 0 < ε)
-  have hx (j : Fin T) : ContDiff ℝ 1 (fun w => x w j) :=
-    hrms.comp (contDiff_embedding_fromWeights (word j))
+  have hrms := c1Lipschitz_argandRMS (c := H * d) (by norm_num : 0 < ε)
+  have hx (j : Fin T) : C1Lipschitz (fun w => x w j) :=
+    hrms.comp (c1Lipschitz_embedding_fromWeights (word j))
   have hpass (ls : List (Fin layers)) (z : W → Word (CSpace (H * d)) T)
-      (hz : ∀ j, ContDiff ℝ 1 (fun w => z w j)) (j : Fin T) :
-      ContDiff ℝ 1 (fun w => ls.foldl (slide w) (z w) j) := by
+      (hz : ∀ j, C1Lipschitz (fun w => z w j)) (j : Fin T) :
+      C1Lipschitz (fun w => ls.foldl (slide w) (z w) j) := by
     induction ls generalizing z with
     | nil => exact hz j
     | cons l ls ih =>
       simp only [List.foldl_cons]
-      exact ih (fun w => slide w (z w) l) (contDiff_forward_fromWeights l scale z hz)
-  have hrepeat (n : ℕ) (j : Fin T) : ContDiff ℝ 1 (fun w => ((pass w)^[n]) (x w) j) := by
+      exact ih (fun w => slide w (z w) l) (c1Lipschitz_forward_fromWeights l scale z hz)
+  have hrepeat (n : ℕ) (j : Fin T) : C1Lipschitz (fun w => ((pass w)^[n]) (x w) j) := by
     induction n generalizing j with
     | zero => exact hx j
     | succ n ih =>
       simp only [Function.iterate_succ_apply']
       exact hpass _ _ ih j
   simp only [Model.hidden, Model.hiddenWith, List.ofFn_eq_map, List.foldl_map]
-  change ContDiff ℝ 1 (fun w : W => argandRMS ε ((pass w)^[repeats] (x w) i))
+  change C1Lipschitz (fun w : W => argandRMS ε ((pass w)^[repeats] (x w) i))
   exact hrms.comp (hrepeat repeats i)
+
+theorem c1Lipschitz_logits_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
+    C1Lipschitz (fun w : Weights A H d layers => (Model.fromWeights w).logits repeats word i a) :=
+  ((C1Lipschitz.of_contDiff Complex.reCLM.contDiff).comp ((c1Lipschitz_embedding_fromWeights a).inner ℂ
+    (c1Lipschitz_hidden_fromWeights repeats word i))).div_const 2
+
+theorem c1Lipschitz_labelLoss_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
+    C1Lipschitz (fun w : Weights A H d layers =>
+      -Real.log ((Model.fromWeights w).probability repeats word i a)) := by
+  have hp (t : A) := (c1Lipschitz_logits_fromWeights (H := H) (d := d) (layers := layers) repeats word i t).exp
+  have hsum (w : Weights A H d layers) : 0 < ∑ t, Real.exp ((Model.fromWeights w).logits repeats word i t) :=
+    Finset.sum_pos' (fun _ _ => (Real.exp_pos _).le) ⟨a, Finset.mem_univ _, Real.exp_pos _⟩
+  have hprob : C1Lipschitz (fun w : Weights A H d layers => (Model.fromWeights w).probability repeats word i a) :=
+    (hp a).div (C1Lipschitz.sum fun t _ => hp t) (fun w => (hsum w).ne')
+  exact (hprob.log fun w => ((Model.fromWeights w).probability_pos repeats word i a).ne').neg
 
 theorem contDiff_logits_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
     ContDiff ℝ 1 (fun w : Weights A H d layers => (Model.fromWeights w).logits repeats word i a) :=
-  (Complex.reCLM.contDiff.comp ((contDiff_embedding_fromWeights a).inner (𝕜 := ℂ)
-    (contDiff_hidden_fromWeights repeats word i))).div_const 2
+  (c1Lipschitz_logits_fromWeights repeats word i a).contDiff
 
 theorem contDiff_labelLoss_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
     ContDiff ℝ 1 (fun w : Weights A H d layers =>
-      -Real.log ((Model.fromWeights w).probability repeats word i a)) := by
-  have hp (t : A) := (contDiff_logits_fromWeights (H := H) (d := d) (layers := layers) repeats word i t).exp
-  have hsum (w : Weights A H d layers) : 0 < ∑ t, Real.exp ((Model.fromWeights w).logits repeats word i t) :=
-    Finset.sum_pos' (fun _ _ => (Real.exp_pos _).le) ⟨a, Finset.mem_univ _, Real.exp_pos _⟩
-  have hprob : ContDiff ℝ 1 (fun w : Weights A H d layers => (Model.fromWeights w).probability repeats word i a) :=
-    (hp a).div (ContDiff.sum fun t _ => hp t) (fun w => (hsum w).ne')
-  exact (hprob.log fun w => ((Model.fromWeights w).probability_pos repeats word i a).ne').neg
+      -Real.log ((Model.fromWeights w).probability repeats word i a)) :=
+  (c1Lipschitz_labelLoss_fromWeights repeats word i a).contDiff
 
-theorem contDiff_batchLoss (repeats : ℕ) (batch : List (LabeledPosition A)) :
-    ContDiff ℝ 1 (batchLoss (H := H) (d := d) (layers := layers) repeats batch) := by
+theorem c1Lipschitz_batchLoss (repeats : ℕ) (batch : List (LabeledPosition A)) :
+    C1Lipschitz (batchLoss (H := H) (d := d) (layers := layers) repeats batch) := by
   unfold batchLoss
-  apply ContDiff.div_const
+  apply C1Lipschitz.div_const
   induction batch with
-  | nil => exact contDiff_const
+  | nil => exact (C1Lipschitz.const _)
   | cons p batch ih =>
     simp only [List.map_cons, List.sum_cons]
-    exact (contDiff_labelLoss_fromWeights repeats p.2.1 p.2.2.1 p.2.2.2).add ih
+    exact (c1Lipschitz_labelLoss_fromWeights repeats p.2.1 p.2.2.1 p.2.2.2).add ih
+
+theorem contDiff_batchLoss (repeats : ℕ) (batch : List (LabeledPosition A)) :
+    ContDiff ℝ 1 (batchLoss (H := H) (d := d) (layers := layers) repeats batch) :=
+  (c1Lipschitz_batchLoss repeats batch).contDiff
 
 /-- The gradient used by the exact-real optimizer is continuous in all
 parameters, including values at initialization. -/
