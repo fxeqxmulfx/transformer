@@ -18,8 +18,40 @@
 | `mix_diagonal_bias` | `2` | Offset added to the diagonal of the mixing logits. |
 | `sinkhorn_cycles` | `20` | Number of column and row normalization cycles. |
 | Initial phase columns of `W_mhc` | `0` | Set the starting angles of the gates and mixing weights. |
-| `optimizer` | AMSGradW | Optimizer for training Argand. |
-| `beta2` | `0.98` | Weight of the previous second moment in AMSGradW. |
+
+### Optimizer and WSD
+
+| Setting | Value | Meaning |
+|---|---|---|
+| `optimizer` | AMSGradW | Uses the running maximum of the second moment. |
+| `beta1` | `0.9` | Weight of the previous first moment. |
+| `beta2` | `0.98` | Weight of the previous second moment. |
+| Optimizer epsilon | `1e-8` | Added to the denominator after the square root. |
+| `weight_decay` | `0.1` | Decoupled decay with multiplier $1-0.1\eta$ on the pre-update weight. |
+| Gradient norm limit | `1.0` | Upper limit on the global Euclidean gradient norm. |
+| WSD peak learning rate $\eta_{\mathrm{peak}}$ | `1e-3` | Rate during the stable phase. |
+| WSD final learning rate $\eta_{\mathrm{final}}$ | `1e-8` | Rate on the final scheduled update. |
+
+For each real coordinate, the moments and the running maximum start at zero.
+Both moments use the gradient after clipping. The maximum is taken over the
+raw second moments and retained throughout training. On update $t$, counted
+from one, bias correction uses $m_t/(1-\beta_1^t)$ and
+$v_{\max,t}/(1-\beta_2^t)$.
+
+WSD (Warmup–Stable–Decay) uses the task's full `max_updates` budget $B$.
+Let $k$ be the number of completed updates, $W=\lfloor 0.02B\rfloor$ and
+$D=\lfloor 0.8B\rfloor$.
+
+- **Warmup.** For $0\le k<W$, the rate rises linearly from zero as $\eta_{\mathrm{peak}}k/W$.
+- **Stable.** For $W\le k<D$, the rate is $\eta_{\mathrm{peak}}$.
+- **Decay.** For $D\le k<B$, let $u=(k-D)/(B-1-D)$. The rate is $\eta_{\mathrm{peak}}+(\eta_{\mathrm{final}}-\eta_{\mathrm{peak}})(1-\cos(\pi u))/2$.
+
+For $B=100\,000$, the short screen's 1,000-update limit covers at most half
+of the 2,000-update warmup.
+
+Select AMSGradW in Kernite with `ARGAND_OPTIMIZER=amsgradw` and set
+`ARGAND_AMSGRADW_BETA2=0.98`.
+[Suite budgets](../convex_stress/suite.json) · [AMSGradW run settings and results](README.md#argand-amsgradw-with-a-larger-second-moment-coefficient)
 
 ## Embedding
 
@@ -275,7 +307,3 @@ The LeRoPE tables use `c=64` and `d=16`. The short screen used each test
 case's model dimensions and supervised positions. The Kernite runner
 selects this initialization with `ARGAND_SCORE_INIT=1`.
 [Run settings](README.md#argand-score-initialization-at-1) · [mHC implementation](src/phasor_v2/complex_mhc.rs)
-
-Select AMSGradW in Kernite with `ARGAND_OPTIMIZER=amsgradw` and set
-`ARGAND_AMSGRADW_BETA2=0.98`.
-[AMSGradW run settings and results](README.md#argand-amsgradw-with-a-larger-second-moment-coefficient)
