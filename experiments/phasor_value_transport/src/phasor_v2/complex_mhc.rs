@@ -2,7 +2,7 @@
 use super::{
     Result, grid,
     tape::{Context, Pair, Tape},
-    weights::{Parameters, Projection},
+    weights::{Layer, Parameters, SecondGate},
 };
 use kernite_cuda::{Cuda, Grid};
 
@@ -14,6 +14,8 @@ pub enum Routing {
     Single,
     NormPhase,
     WriteGate,
+    ReadWriteGate,
+    SkipWriteGate,
     Real,
     Conjugated,
     EntryPhase,
@@ -35,6 +37,8 @@ impl Routing {
             Self::Single => "phasor-v2-single-stream-tied-vocab-fp32",
             Self::NormPhase => "argand-norm-phase-single-stream-tied-vocab-fp32",
             Self::WriteGate => "argand-write-gate-single-stream-tied-vocab-fp32",
+            Self::ReadWriteGate => "argand-read-write-gate-single-stream-tied-vocab-fp32",
+            Self::SkipWriteGate => "argand-skip-write-gate-single-stream-tied-vocab-fp32",
             Self::Real => "phasor-v2-real-mhc-tied-vocab-fp32",
             Self::Conjugated => "phasor-v2-conjugated-mhc-tied-vocab-fp32",
             Self::EntryPhase => "argand-entry-phase-mhc-tied-vocab-fp32",
@@ -43,7 +47,11 @@ impl Routing {
 
     pub(super) fn router_width(self) -> Option<usize> {
         match self {
-            Self::Single | Self::NormPhase | Self::WriteGate => None,
+            Self::Single
+            | Self::NormPhase
+            | Self::WriteGate
+            | Self::ReadWriteGate
+            | Self::SkipWriteGate => None,
             Self::Real => Some(12),
             Self::Conjugated => Some(18),
             Self::EntryPhase => Some(24),
@@ -150,6 +158,10 @@ impl Route {
 pub(super) struct Sublayer {
     state: Pair,
     route: Option<Route>,
+    normalized: Pair,
+    write_weights: Option<Pair>,
+    turn: Option<Pair>,
+    /// Block input after RMS normalization and any token-dependent read gate.
     pub input: Pair,
 }
 
@@ -158,29 +170,44 @@ impl Sublayer {
         tape: &mut Tape,
         ctx: &Context<'_>,
         params: &Parameters,
-        router: Option<&Projection>,
+        layer: &Layer,
+        sublayer: usize,
         state: Pair,
         rows: usize,
         width: usize,
     ) -> Result<Self> {
-        let Some(router) = router else {
-            return Ok(Self {
-                state,
-                route: None,
-                input: state,
-            });
+        let (route, read) = if let Some(routers) = &layer.routers {
+            let stack = tape.rms(ctx, state, STREAMS * width)?;
+            let logits = routers[sublayer].project(tape, ctx, params, stack, rows)?;
+            let route = tape.route(ctx, logits, rows)?;
+            let read = tape.mm(
+                ctx,
+                route.pre.matrix(rows, 1, STREAMS),
+                state.matrix(rows, STREAMS, width),
+            )?;
+            (Some(route), read)
+        } else {
+            (None, state)
         };
-        let normalized = tape.rms(ctx, state, STREAMS * width)?;
-        let logits = router.project(tape, ctx, params, normalized, rows)?;
-        let route = tape.route(ctx, logits, rows)?;
-        let input = tape.mm(
-            ctx,
-            route.pre.matrix(rows, 1, STREAMS),
-            state.matrix(rows, STREAMS, width),
-        )?;
+        let normalized = tape.rms(ctx, read, width)?;
+        let weight = |offsets: [usize; 2]| params.pair(offsets[sublayer], 2 * width);
+        let (state, input) = match layer.second_gate {
+            Some(SecondGate::Read(g)) => (
+                state,
+                tape.gate_rows(ctx, normalized, normalized, weight(g))?,
+            ),
+            Some(SecondGate::Skip(g)) => (
+                tape.gate_rows(ctx, state, normalized, weight(g))?,
+                normalized,
+            ),
+            None => (state, normalized),
+        };
         Ok(Self {
             state,
-            route: Some(route),
+            route,
+            normalized,
+            write_weights: layer.write_gates.map(weight),
+            turn: layer.turn.map(|at| params.pair(at + sublayer, 1)),
             input,
         })
     }
@@ -192,7 +219,6 @@ impl Sublayer {
         branch: Pair,
         width: usize,
         scale: f32,
-        turn: Option<Pair>,
     ) -> Result<Pair> {
         if let Some(route) = self.route {
             let rows = branch.len / (2 * width);
@@ -208,11 +234,15 @@ impl Sublayer {
             )?;
             tape.sum(ctx, skip, write, scale)
         } else {
-            let skip = match turn {
+            let skip = match self.turn {
                 Some(theta) => tape.turn_by_norm(ctx, self.state, theta, width)?,
                 None => self.state,
             };
-            tape.sum(ctx, skip, branch, scale)
+            let write = match self.write_weights {
+                Some(weights) => tape.gate_rows(ctx, branch, self.normalized, weights)?,
+                None => branch,
+            };
+            tape.sum(ctx, skip, write, scale)
         }
     }
 }

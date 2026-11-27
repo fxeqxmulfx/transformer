@@ -282,7 +282,7 @@ terminal state digests matched their records, and independent checkpoint
 reloads reproduced the held-out scores and losses of all 49 passes. All
 105 phase runs learned at least one nonzero rotation coefficient.
 
-##### Token-dependent writes on `arithmetic-abs-diff-blind`
+##### Token-dependent residual gates on `arithmetic-abs-diff-blind`
 
 The embedding RMS gives the first attention sublayer inputs of almost
 constant norm. A gate that reads the token coordinates can distinguish
@@ -293,23 +293,42 @@ complex vector $w$. A single complex scalar controls the magnitude and
 phase of the write at each token. Zero initialization reproduces ordinary
 addition, including all initial logits.
 
+Two variants add one independent complex vector per sublayer. Write
+$g_r=1+n^\mathsf{T}w_r$, $g_s=1+n^\mathsf{T}w_s$, and $g_w=1+n^\mathsf{T}w_w$.
+The read-and-write variant passes $g_r n$ into attention or the FFN and
+multiplies the normalized write by $g_w$. The skip-and-write variant keeps
+the usual block input $n$ and computes $x'=g_s x+g_w u$. Both gates see
+the same incoming token. Each variant uses one stream, four width-128
+complex vectors per layer, and ordinary addition at initialization.
+
 The blind absolute-difference task has 4,704 training pairs and 4,705
 held-out pairs. All runs use width 128, one layer, one pass, the tied
 vocabulary, AdamW, and a score multiplier initialized to `1 + 0i`.
 The schedule checks every 19 updates. Update 988 is the last observation
-within the 1,000-update cap. Times include training and scheduled scoring
-on the RTX 3050 Laptop GPU and exclude setup, checkpoint writes and replay.
+within the 1,000-update cap. The timing run used one executable for all
+six models, with the order varied by seed. Times include training and
+scheduled scoring on the RTX 3050 Laptop GPU and exclude setup, checkpoint
+writes and replay.
 
 | Residual | Extra real parameters per layer | Held-out correct, seeds 0 / 1 / 2 | Mean accuracy | Mean seconds to update 988 |
 |---|---:|---|---:|---:|
-| Ordinary addition | 0 | 1,430 / 1,520 / 1,357 | 30.5% | 6.11 |
-| Norm-dependent phase | 2 | 1,437 / 1,524 / 1,346 | 30.5% | 6.21 |
-| Token-dependent write gate | 512 | 2,394 / 2,347 / 2,359 | 50.3% | 7.10 |
-| Four-stream complex mHC, independent edge phases | 49,152 | 3,285 / 3,220 / 3,399 | 70.2% | 10.12 |
+| Ordinary addition | 0 | 1,430 / 1,520 / 1,357 | 30.5% | 7.64 |
+| Norm-dependent phase | 2 | 1,437 / 1,524 / 1,346 | 30.5% | 7.67 |
+| Write gate | 512 | 2,394 / 2,347 / 2,359 | 50.3% | 8.12 |
+| Read and write gates | 1,024 | 2,336 / 2,346 / 2,387 | 50.1% | 9.60 |
+| Skip and write gates | 1,024 | 3,115 / 3,005 / 3,270 | 66.5% | 9.39 |
+| Four-stream complex mHC, independent edge phases | 49,152 | 3,285 / 3,220 / 3,399 | 70.2% | 11.80 |
 
-The write gate gained 19.8 percentage points over the norm-dependent phase
-averaged over these seeds. All 12 saved checkpoints reproduced their
-held-out scores after reload.
+The write gate gained 19.8 percentage points over the norm-dependent phase.
+Adding a skip gate gained a further 16.2 points. Adding a read gate changed
+the mean by −0.2 points. Complex mHC led the skip-and-write model on every
+seed at update 988, by 3.6 points on average.
+
+At 50% accuracy, the skip-and-write model took 646 / 627 / 646 updates,
+exactly 38 more than mHC on each seed. In elapsed time it reached that
+threshold sooner on all three, averaging 6.14 seconds versus 7.24 seconds
+for mHC. All runs stayed below 99% through the cap. Independent checkpoint
+reloads reproduced the held-out scores and losses of all 18 runs.
 
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
@@ -317,18 +336,28 @@ bin=target/release/phasor-value-transport
 task=arithmetic-abs-diff-blind
 out=runs/argand-abs-diff-s1
 export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=adamw PHASOR_EVAL_BATCH_CAP=16
-for variant in single norm-phase write-gate entry-phase; do
-    export ARGAND_RESIDUAL=$variant
-    "$bin" argand-check
-    for seed in 0 1 2; do
+for variant in single norm-phase write-gate read-write-gate skip-write-gate entry-phase; do
+    ARGAND_RESIDUAL=$variant "$bin" argand-check
+done
+for seed in 0 1 2; do
+    case "$seed" in
+        0) variants='single write-gate skip-write-gate entry-phase read-write-gate norm-phase' ;;
+        1) variants='norm-phase read-write-gate entry-phase skip-write-gate write-gate single' ;;
+        2) variants='entry-phase skip-write-gate single norm-phase write-gate read-write-gate' ;;
+    esac
+    for variant in $variants; do
+        export ARGAND_RESIDUAL=$variant
         cell="$out/$variant/$task/seed$seed"
         mkdir -p "$cell"
-        "$bin" argand-run "$task" "$seed" 1 "$out/$variant" 988 2> "$cell/observations.jsonl"
+        if [ ! -s "$cell/result.json" ]; then
+            "$bin" argand-run "$task" "$seed" 1 "$out/$variant" 988 2> "$cell/observations.jsonl"
+        fi
         "$bin" argand-replay "$task" "$seed" 1 "$out/$variant" > "$cell/replay.json"
     done
 done
 unset ARGAND_RESIDUAL ARGAND_SCORE_INIT ARGAND_OPTIMIZER PHASOR_EVAL_BATCH_CAP
 jq -s 'sort_by(.identity.model,.identity.seed)' "$out"/*/"$task"/seed*/result.json > "$out/comparison.json"
+./plot_argand_abs_diff.sh "$out"
 ```
 
 #### Complex mHC in Argand

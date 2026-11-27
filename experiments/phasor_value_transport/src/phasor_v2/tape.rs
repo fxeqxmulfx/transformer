@@ -167,18 +167,15 @@ impl Tape {
         self.apply(ctx, Operation::Product(out, a, b), out)
     }
 
-    /// Multiply each normalized branch write by 1 + sum_j input[j] * weights[j].
+    /// Multiply each row by 1 + sum_j input[j] * weights[j].
     /// The complex projection produces one scalar per token, shared by its channels.
-    pub fn gate_write(
+    pub fn gate_rows(
         &mut self,
         ctx: &Context<'_>,
-        branch: Pair,
+        values: Pair,
         input: Pair,
-        weights: Option<Pair>,
+        weights: Pair,
     ) -> Result<Pair> {
-        let Some(weights) = weights else {
-            return Ok(branch);
-        };
         let width = weights.len / 2;
         let rows = input.len / weights.len;
         let gate = self.mm(
@@ -186,8 +183,8 @@ impl Tape {
             input.matrix(1, rows, width),
             weights.matrix(1, width, 1),
         )?;
-        let correction = self.mm(ctx, gate.matrix(rows, 1, 1), branch.matrix(rows, 1, width))?;
-        self.sum(ctx, branch, correction, 1.0)
+        let correction = self.mm(ctx, gate.matrix(rows, 1, 1), values.matrix(rows, 1, width))?;
+        self.sum(ctx, values, correction, 1.0)
     }
 
     pub fn sum(&mut self, ctx: &Context<'_>, a: Pair, b: Pair, scale: f32) -> Result<Pair> {

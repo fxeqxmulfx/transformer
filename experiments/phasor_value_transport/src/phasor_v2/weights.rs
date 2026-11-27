@@ -47,6 +47,20 @@ impl Projection {
     }
 }
 
+#[derive(Clone, Copy)]
+pub(super) enum SecondGate {
+    Read([usize; 2]),
+    Skip([usize; 2]),
+}
+
+impl SecondGate {
+    pub fn offsets(self) -> [usize; 2] {
+        match self {
+            Self::Read(v) | Self::Skip(v) => v,
+        }
+    }
+}
+
 pub(super) struct Layer {
     pub q: Projection,
     pub k: Projection,
@@ -61,6 +75,8 @@ pub(super) struct Layer {
     pub turn: Option<usize>,
     /// Two consecutive complex vectors project the normalized input to scalar write gates.
     pub write_gates: Option<[usize; 2]>,
+    /// Independent token projections can modulate either block reads or residual skips.
+    pub second_gate: Option<SecondGate>,
 }
 
 enum OptimizerBuffers {
@@ -102,6 +118,7 @@ impl Parameters {
                     score,
                     turn: None,
                     write_gates: None,
+                    second_gate: None,
                     q: projection(width, width),
                     k: projection(width, width),
                     v: projection(width, width),
@@ -131,10 +148,18 @@ impl Parameters {
                     layer.turn = Some(values.len());
                     values.extend([0.0, 0.0]);
                 }
-                Routing::WriteGate => {
-                    let start = values.len();
-                    layer.write_gates = Some([start, start + 2 * width]);
-                    values.resize(start + 4 * width, 0.0);
+                Routing::WriteGate | Routing::ReadWriteGate | Routing::SkipWriteGate => {
+                    let mut gate_vectors = || {
+                        let start = values.len();
+                        values.resize(start + 4 * width, 0.0);
+                        [start, start + 2 * width]
+                    };
+                    layer.write_gates = Some(gate_vectors());
+                    layer.second_gate = match variant.routing {
+                        Routing::ReadWriteGate => Some(SecondGate::Read(gate_vectors())),
+                        Routing::SkipWriteGate => Some(SecondGate::Skip(gate_vectors())),
+                        _ => None,
+                    };
                 }
                 _ => {}
             }

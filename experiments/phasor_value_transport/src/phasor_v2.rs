@@ -11,7 +11,7 @@ use crate::{base_ops, optimizer_kernels, random::Random, slot_copy, stable_loss}
 use complex_mhc::{Routing, Sublayer};
 use kernite_cuda::{Buffer, Cuda, Grid, Ptr};
 use tape::{Context, Pair, Tape};
-use weights::Parameters;
+use weights::{Parameters, SecondGate};
 
 type F = Buffer<f32>;
 type P = Ptr<f32>;
@@ -40,9 +40,11 @@ impl Variant {
             Ok("single") => Routing::Single,
             Ok("norm-phase") => Routing::NormPhase,
             Ok("write-gate") => Routing::WriteGate,
+            Ok("read-write-gate") => Routing::ReadWriteGate,
+            Ok("skip-write-gate") => Routing::SkipWriteGate,
             _ => {
                 return Err(
-                    "ARGAND_RESIDUAL takes entry-phase, single, norm-phase or write-gate".into(),
+                    "ARGAND_RESIDUAL takes entry-phase, single, norm-phase, write-gate, read-write-gate or skip-write-gate".into(),
                 );
             }
         };
@@ -303,10 +305,8 @@ impl Engine {
             .recip();
         for _ in 0..self.repeat {
             for layer in &p.layers {
-                let router = layer.routers.as_ref();
-                let attention =
-                    Sublayer::read(tape, &ctx, p, router.map(|r| &r[0]), x, rows, width)?;
-                let n = tape.rms(&ctx, attention.input, width)?;
+                let attention = Sublayer::read(tape, &ctx, p, layer, 0, x, rows, width)?;
+                let n = attention.input;
                 let q = layer.q.project(tape, &ctx, p, n, rows)?;
                 let k = layer.k.project(tape, &ctx, p, n, rows)?;
                 let v = layer.v.project(tape, &ctx, p, n, rows)?;
@@ -329,42 +329,16 @@ impl Engine {
                 let a = tape.heads(&ctx, a, true)?;
                 let a = layer.o.project(tape, &ctx, p, a, rows)?;
                 let a = tape.rms(&ctx, a, width)?;
-                let a = tape.gate_write(
-                    &ctx,
-                    a,
-                    n,
-                    layer.write_gates.map(|g| p.pair(g[0], 2 * width)),
-                )?;
-                x = attention.write(
-                    tape,
-                    &ctx,
-                    a,
-                    width,
-                    scale,
-                    layer.turn.map(|at| p.pair(at, 1)),
-                )?;
+                x = attention.write(tape, &ctx, a, width, scale)?;
 
-                let ffn = Sublayer::read(tape, &ctx, p, router.map(|r| &r[1]), x, rows, width)?;
-                let n = tape.rms(&ctx, ffn.input, width)?;
+                let ffn = Sublayer::read(tape, &ctx, p, layer, 1, x, rows, width)?;
+                let n = ffn.input;
                 let g = layer.gate.project(tape, &ctx, p, n, rows)?;
                 let u = layer.up.project(tape, &ctx, p, n, rows)?;
                 let f = tape.product(&ctx, g, u)?;
                 let f = layer.down.project(tape, &ctx, p, f, rows)?;
                 let f = tape.rms(&ctx, f, width)?;
-                let f = tape.gate_write(
-                    &ctx,
-                    f,
-                    n,
-                    layer.write_gates.map(|g| p.pair(g[1], 2 * width)),
-                )?;
-                x = ffn.write(
-                    tape,
-                    &ctx,
-                    f,
-                    width,
-                    scale,
-                    layer.turn.map(|at| p.pair(at + 1, 1)),
-                )?;
+                x = ffn.write(tape, &ctx, f, width, scale)?;
             }
         }
         if self.mhc.is_some() {
@@ -533,6 +507,9 @@ pub fn check(variant: Variant) -> Result<()> {
             2 * engine.shape.layers
         }
         Routing::WriteGate => 4 * engine.shape.width * engine.shape.layers,
+        Routing::ReadWriteGate | Routing::SkipWriteGate => {
+            8 * engine.shape.width * engine.shape.layers
+        }
         _ => 0,
     };
     if extra_weights != 0 {
@@ -563,7 +540,13 @@ pub fn check(variant: Variant) -> Result<()> {
                 initial[at] = 0.13;
                 initial[at + 1] = -0.17;
             }
-            if let Some(gates) = layer.write_gates {
+            for gates in [
+                layer.write_gates,
+                layer.second_gate.map(SecondGate::offsets),
+            ]
+            .into_iter()
+            .flatten()
+            {
                 for at in gates {
                     for (j, value) in initial[at..at + 2 * engine.shape.width]
                         .iter_mut()
@@ -624,16 +607,18 @@ pub fn check(variant: Variant) -> Result<()> {
             return Err("missing attention or FFN residual phase gradient".into());
         }
     }
-    for gates in engine
-        .parameters
-        .layers
-        .iter()
-        .filter_map(|layer| layer.write_gates)
-    {
+    for gates in engine.parameters.layers.iter().flat_map(|layer| {
+        [
+            layer.write_gates,
+            layer.second_gate.map(SecondGate::offsets),
+        ]
+        .into_iter()
+        .flatten()
+    }) {
         for at in gates {
             let g = &gradient[at..at + 2 * engine.shape.width];
             if (0..2).any(|coord| g[coord..].iter().step_by(2).all(|x| x.abs() < 1e-6)) {
-                return Err("missing real or imaginary write-gate gradient".into());
+                return Err("missing real or imaginary token-gate gradient".into());
             }
         }
     }
@@ -654,11 +639,24 @@ pub fn check(variant: Variant) -> Result<()> {
         return Err("missing gradient for the imaginary part of the score multiplier".into());
     }
     let mut rng = Random::new(100);
-    let gated = matches!(variant.routing, Routing::WriteGate);
-    for trial in 0..3 + usize::from(gated) {
+    let layer = &engine.parameters.layers[0];
+    let trials =
+        3 + usize::from(layer.write_gates.is_some()) + usize::from(layer.second_gate.is_some());
+    for trial in 0..trials {
         let mut direction: Vec<_> = initial.iter().map(|_| rng.gauss(0.0, 1.0) as f32).collect();
-        if trial == 3 {
+        if trial >= 3 {
             direction[..initial.len() - extra_weights].fill(0.0);
+            // Trial 3 probes write parameters alone. Trial 4 probes the second gate alone.
+            for layer in &engine.parameters.layers {
+                let excluded = if trial == 3 {
+                    layer.second_gate.map(SecondGate::offsets)
+                } else {
+                    layer.write_gates
+                };
+                for at in excluded.into_iter().flatten() {
+                    direction[at..at + 2 * engine.shape.width].fill(0.0);
+                }
+            }
         }
         let delta = 0.0002;
         let mut losses = [0.0; 2];
