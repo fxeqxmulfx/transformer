@@ -174,9 +174,9 @@ vector of length `T`.
 
 **Step 6.** Divide each entry of `Si` by `sqrt(d)` to obtain `Si′`.
 
-**Step 7.** Multiply each entry in row `n` of `Si′` by `s log(n)` to obtain
-`Si″`. The multiplier `s` is a learned complex number. Its default
-initialization is `1 + i`. Count rows starting at one.
+**Step 7.** Each layer has a learned complex multiplier with initial
+value `s=1`. Multiply each entry in row `n` of `Si′` by `s log(n)` to
+obtain `Si″`. Count rows starting at one.
 
 **Step 8.** Split `Si″` into its real and imaginary matrices. Set the
 entries strictly above the diagonal in both matrices to `−inf`, then apply
@@ -248,6 +248,7 @@ result = softmax(logits, axis=-1)
 loss = cross_entropy(logits, tokens)
 ~~~
 
-The LeRoPE tables use `c=64` and `d=16`. The `entry-phase` run used `c=128`
-and `d=32` and computed the loss at the positions specified by the test
-case. [Run settings](README.md#complex-mhc-in-argand) · [mHC implementation](src/phasor_v2/complex_mhc.rs)
+The LeRoPE tables use `c=64` and `d=16`. The short screen used each test
+case's model dimensions and supervised positions. The Kernite runner
+selects this initialization with `ARGAND_SCORE_INIT=1`.
+[Run settings](README.md#argand-score-initialization-at-1) · [mHC implementation](src/phasor_v2/complex_mhc.rs)
