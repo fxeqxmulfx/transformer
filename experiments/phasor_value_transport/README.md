@@ -316,6 +316,23 @@ mkdir -p "$out"
 unset ARGAND_SCORE_INIT
 ```
 
+The paired screens used Kernite 0.7.0 on an RTX 3050 Laptop GPU with the
+same cases, seeds, splits, learning-rate schedule and observation limit.
+
+| Initial score multiplier | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 |
+|---|---:|---:|---:|
+| `1 + i` | 26 | 10 | 8 |
+| `1` | 32 | 13 | 8 |
+
+All 26 cells that passed with `1 + i` also passed with `1`. The six
+additional passes came from `arithmetic-cube-plus` (seeds 0 and 2),
+`arithmetic-mul` (seeds 0 and 1), `arithmetic-add` (seed 0) and
+`basis-depth-hard` (seed 1). Among the 26 shared passes, `1` reached
+99% earlier in 10, `1 + i` reached it earlier in 7, and 9 tied.
+All 75 terminal state digests matched the saved records. Independent
+reloads reproduced the held-out scores and losses of the 32 passing
+checkpoints.
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current
