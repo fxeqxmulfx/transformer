@@ -37,6 +37,12 @@ checkpoint in a new process and scores every held-out and transfer
 split. `run_argand.sh TIER REPEAT RUN_DIR [MAX_UPDATES]` runs the three
 seeds of every case in a tier and replays each pass.
 
+`peak` measures the FP32 multiply-add and DRAM copy rates of the GPU.
+`bench CASE UPDATES` times full-batch updates of seed 0 of a case. It
+counts the real operations of their complex matrix products and
+reports the time those take at the measured peak, the compute bound, as
+a fraction of the measured time.
+
 Each update visits the training split in order, in microbatches of the
 case's batch size. Scoring uses the same batch size and scores each
 example independently. One checkpoint replayed with batches of 16, 32
@@ -93,6 +99,25 @@ With 40 updates on the same cell, this crate reached the loss
 states differed by at most `2e-8`. Repeated runs of either runner differ
 by up to `9e-8`, because the LeRoPE $\alpha$ and score adjoints are
 summed by atomic additions.
+
+### Speed on this GPU
+
+The RTX 3050 Laptop GPU reached 7.5 to 7.9 TFLOPS of FP32 multiply-adds
+once its clock had risen under load, and copied 182 GB/s. The compute
+bound counts only the matrix products. Before tuning, updates took 10
+to 16 times that bound:
+
+| Case | Width, layers | Microbatches × batch | Positions | Product GFLOP | Update ms | Compute bound ms | Fraction |
+|---|---|---|---|---|---|---|---|
+| `suite-boolean-and-shift` | 64, 2 | 4 × 32 | 2,432 | 8.37 | 17.3 | 1.07 | 6.2% |
+| `arithmetic-abs-diff-blind` | 128, 1 | 19 × 256 | 9,408 | 62.3 | 83.3 | 8.0 | 9.6% |
+| `recurrence-fibonacci-k1-c2-lgt` | 128, 1 | 10 × 512 | 9,408 | 66.9 | 90.0 | 8.9 | 9.9% |
+| `basis-depth-hard` | 128, 6 | 1,250 × 16 | 1,217,200 | 49,001 | 61,840 | 6,497 | 10.5% |
+
+```sh
+target/release/argand peak
+target/release/argand bench arithmetic-abs-diff-blind 30
+```
 
 ## Earlier runs
 

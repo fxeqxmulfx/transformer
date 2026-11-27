@@ -1,6 +1,6 @@
 //! Training, scoring and replay of one Argand cell of the frozen GPT tiers.
 use crate::{
-    KERNITE_VERSION, Result,
+    KERNITE_VERSION, Result, bench,
     data::{Example, Task},
     engine::{self, Engine, MODEL, PENALTY},
     hash, metrics,
@@ -13,7 +13,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const USAGE: &str = "usage: argand check | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR";
+const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR";
 
 pub fn command(args: &[String]) -> Result<()> {
     let Some((op, args)) = args.split_first() else {
@@ -21,6 +21,8 @@ pub fn command(args: &[String]) -> Result<()> {
     };
     match (op.as_str(), args) {
         ("check", []) => engine::check(),
+        ("peak", []) => bench::peak(),
+        ("bench", [name, updates]) => bench::bench(name, updates.parse()?),
         ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
             name,
             seed.parse()?,
@@ -35,20 +37,20 @@ pub fn command(args: &[String]) -> Result<()> {
     }
 }
 
-struct Cell {
+pub(crate) struct Cell {
     row: Value,
-    task: Task,
-    shape: Shape,
-    batch: usize,
+    pub task: Task,
+    pub shape: Shape,
+    pub batch: usize,
     every: usize,
-    schedule: Schedule,
+    pub schedule: Schedule,
     directory: PathBuf,
     repeat: usize,
     seed: u32,
 }
 
 impl Cell {
-    fn new(name: &str, seed: u32, repeat: usize, out: &Path) -> Result<Self> {
+    pub fn new(name: &str, seed: u32, repeat: usize, out: &Path) -> Result<Self> {
         if seed > 2 || repeat == 0 {
             return Err("expected seed 0 through 2 and a positive repeat count".into());
         }
@@ -79,7 +81,7 @@ impl Cell {
         })
     }
 
-    fn engine(&self) -> Result<Engine> {
+    pub fn engine(&self) -> Result<Engine> {
         Engine::new(self.shape.clone(), self.repeat, self.seed)
     }
 
@@ -187,14 +189,14 @@ fn run(name: &str, seed: u32, repeat: usize, out: &Path, cutoff: Option<usize>) 
 }
 
 /// The training split in order, as microbatches of the suite's batch size.
-struct FullBatch {
+pub(crate) struct FullBatch {
     order: Vec<u32>,
     batch: usize,
     labeled: usize,
 }
 
 impl FullBatch {
-    fn new(
+    pub fn new(
         engine: &Engine,
         train: &[Example],
         p: &mut metrics::Packed,
@@ -221,7 +223,7 @@ impl FullBatch {
     /// One update of the Lean `fullGradientMomentumRun`: the microbatches
     /// accumulate the gradient of the mean loss over all labeled training
     /// positions, then the penalty and the clipped momentum step follow.
-    fn update(
+    pub fn update(
         &self,
         engine: &mut Engine,
         train: &[Example],
@@ -234,6 +236,27 @@ impl FullBatch {
             engine.accumulate(&p.tokens, &p.labels, part.len(), p.length, self.labeled)?;
         }
         engine.full_step(rate)
+    }
+
+    /// Accumulates one full-batch gradient, as `update` does without its
+    /// step, and counts its matrix-product operations, padded positions and
+    /// microbatches.
+    pub fn count(
+        &self,
+        engine: &mut Engine,
+        train: &[Example],
+        p: &mut metrics::Packed,
+    ) -> Result<(f64, usize, usize)> {
+        engine.zero_gradient()?;
+        let (mut flops, mut positions, mut parts) = (0.0, 0, 0);
+        for part in self.order.chunks(self.batch) {
+            p.fill(train, part);
+            engine.accumulate(&p.tokens, &p.labels, part.len(), p.length, self.labeled)?;
+            flops += engine.product_flops();
+            positions += p.tokens.len();
+            parts += 1;
+        }
+        Ok((flops, positions, parts))
     }
 }
 

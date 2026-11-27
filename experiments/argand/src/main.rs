@@ -3,6 +3,7 @@
 use arithmetic::{hash, reference as arithmetic_data};
 
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
+mod bench;
 mod engine;
 mod runner;
 mod suite;

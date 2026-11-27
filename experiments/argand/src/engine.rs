@@ -398,6 +398,12 @@ impl Engine {
         Ok(())
     }
 
+    /// The matrix-product operations of the last forward pass and its
+    /// backward pass.
+    pub fn product_flops(&self) -> f64 {
+        self.tape.product_flops()
+    }
+
     pub fn state(&self) -> Result<Vec<f32>> {
         self.parameters.state()
     }

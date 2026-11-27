@@ -190,6 +190,18 @@ impl Tape {
         self.apply(ctx, Operation::Scores(out, x, s), out)
     }
 
+    /// The real operations of the complex matrix products on the tape: eight
+    /// for each complex multiply-add, in the product and in its two adjoints.
+    pub fn product_flops(&self) -> f64 {
+        self.operations
+            .iter()
+            .map(|op| match op {
+                Operation::Matrix(_, a, b) => 24.0 * (a.batches * a.rows * a.cols * b.cols) as f64,
+                _ => 0.0,
+            })
+            .sum()
+    }
+
     pub fn backward(&self, ctx: &Context<'_>) -> Result<()> {
         for &op in self.operations.iter().rev() {
             ctx.apply::<true>(op)?;
