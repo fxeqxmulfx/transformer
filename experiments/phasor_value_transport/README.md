@@ -5835,9 +5835,9 @@ jq -s --rawfile extensions runs/fourteen-extensions.tsv -f compare.jq \
     runs/v060-half/report.json runs/v060-selected/report.json
 ```
 
-## Kernite v0.6.0
+## Kernite v0.7.0
 
-The Phasor runner uses the published v0.6.0 CUDA and macro crates with
+The Phasor runner uses the published v0.7.0 CUDA and macro crates with
 Rust 1.100.0. The original DiffGPT trainer and AdamW are pinned to
 `5a37c515`. Fresh results record the Kernite version from Cargo.lock.
 Checkpoint replay reports both the training and scoring versions.
@@ -5845,6 +5845,21 @@ The replay reloads the weights, verifies their SHA-256 digest and scores
 the original held-out split. The verifier matches the architecture, digest,
 training version and exact sequence count for all three seeds of every
 reported task.
+
+The default mixed-precision build reached the first scheduled held-out
+evaluation on the RTX 3050 Laptop GPU for both cases below. Run the commands
+from this directory to repeat the upgrade check.
+
+```sh
+cargo +stable build --locked --release
+out=runs/kernite-070-smoke
+export PHASOR_EVAL_BATCH_CAP=16
+target/release/phasor-value-transport screen suite-boolean-and-shift 0 "$out" 4
+target/release/phasor-value-transport screen arithmetic-abs-diff 0 "$out" 19
+bash tests/replay_audit.sh
+```
+
+### Measurements on Kernite v0.6.0
 
 With a full successor displacement and initial gain 0.75, the v0.6.0
 GPU forward pass agreed with the independent FP64 oracle to within
@@ -6983,7 +6998,11 @@ upstream mixed-precision configuration received a separate compilation check.
 
 Use DiffGPT at `5a37c515639f23037d191b0659a5a0853984328d` under
 `.lake/reproduction/gpt`. The build checks the historical trainer revision
-and its source tree. Cargo locks the published Kernite v0.6.0 crates. The
+and its source tree. For a sparse checkout prepared with the linked
+instructions, add the catalog, codec workspace and text corpus from the
+repository root with
+`git -C .lake/reproduction/gpt sparse-checkout add research/current_grokking src/native_transformer data`.
+Cargo locks the published Kernite v0.7.0 crates. The
 commands below use stable Rust 1.100.0. Run `cargo fetch --locked` once for
 offline builds. [DiffGPT checkout instructions](../rerope/README.md#build-and-commands)
 
