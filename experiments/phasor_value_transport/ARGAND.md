@@ -276,6 +276,6 @@ case's model dimensions and supervised positions. The Kernite runner
 selects this initialization with `ARGAND_SCORE_INIT=1`.
 [Run settings](README.md#argand-score-initialization-at-1) · [mHC implementation](src/phasor_v2/complex_mhc.rs)
 
-Select the optimizer configuration in Kernite with `ARGAND_OPTIMIZER=amsgradw`,
-`ARGAND_AMSGRADW_BETA2=0.98` and `ARGAND_AMSGRADW_SQRT_SCALE=1`.
+Select AMSGradW in Kernite with `ARGAND_OPTIMIZER=amsgradw` and set
+`ARGAND_AMSGRADW_BETA2=0.98`.
 [AMSGradW run settings and results](README.md#argand-amsgradw-with-a-larger-second-moment-coefficient)
