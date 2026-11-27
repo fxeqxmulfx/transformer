@@ -1,8 +1,8 @@
-//! Independent real coordinates and clipped Kernite AdamW and AMSGradW.
+//! Independent real coordinates and clipped momentum SGD, AdamW and AMSGradW.
 use super::complex_mhc::{AMPLITUDES, Routing, STREAMS};
 use super::kernels::device;
 use super::tape::{Context, Tape};
-use super::{AmsGradWConfig, F, Pair, Result, Variant, grid};
+use super::{AmsGradWConfig, F, Optimizer, Pair, Result, Variant, grid};
 use crate::{Config, optimizer_kernels, random::Random};
 use kernite_cuda::{Buffer, Cuda, Grid};
 
@@ -80,15 +80,22 @@ pub(super) struct Layer {
 }
 
 enum OptimizerBuffers {
-    AdamW(Buffer<u32>),
-    AmsGradW { maximum: F, config: AmsGradWConfig },
+    SgdMomentum,
+    AdamW {
+        owners: Buffer<u32>,
+        second: F,
+    },
+    AmsGradW {
+        second: F,
+        maximum: F,
+        config: AmsGradWConfig,
+    },
 }
 
 pub(super) struct Parameters {
     pub value: F,
     pub grad: F,
     first: F,
-    second: F,
     optimizer: OptimizerBuffers,
     parts: F,
     norm: F,
@@ -166,23 +173,28 @@ impl Parameters {
         }
         let count = values.len();
         let zeros = vec![0.0; count];
-        let optimizer = if let Some(config) = variant.amsgradw() {
-            OptimizerBuffers::AmsGradW {
+        let optimizer = match variant.optimizer {
+            Optimizer::SgdMomentum => OptimizerBuffers::SgdMomentum,
+            Optimizer::AdamW => {
+                let owners: Vec<[u32; 5]> = (0..count as u32)
+                    .step_by(2)
+                    .map(|i| [i, i + 1, 0, 0, 1])
+                    .collect();
+                OptimizerBuffers::AdamW {
+                    owners: cuda.upload(owners.as_flattened())?,
+                    second: cuda.upload(&zeros)?,
+                }
+            }
+            Optimizer::AmsGradW(config) => OptimizerBuffers::AmsGradW {
+                second: cuda.upload(&zeros)?,
                 maximum: cuda.upload(&zeros)?,
                 config,
-            }
-        } else {
-            let owners: Vec<[u32; 5]> = (0..count as u32)
-                .step_by(2)
-                .map(|i| [i, i + 1, 0, 0, 1])
-                .collect();
-            OptimizerBuffers::AdamW(cuda.upload(owners.as_flattened())?)
+            },
         };
         Ok(Self {
             value: cuda.upload(&values)?,
             grad: cuda.alloc(count)?,
             first: cuda.upload(&zeros)?,
-            second: cuda.upload(&zeros)?,
             optimizer,
             parts: cuda.alloc(count.div_ceil(256))?,
             norm: cuda.alloc(1)?,
@@ -195,9 +207,15 @@ impl Parameters {
     pub fn state(&self) -> Result<Vec<f32>> {
         let mut values = self.value.read()?;
         values.extend(self.first.read()?);
-        values.extend(self.second.read()?);
-        if let OptimizerBuffers::AmsGradW { maximum, .. } = &self.optimizer {
-            values.extend(maximum.read()?);
+        match &self.optimizer {
+            OptimizerBuffers::SgdMomentum => {}
+            OptimizerBuffers::AdamW { second, .. } => values.extend(second.read()?),
+            OptimizerBuffers::AmsGradW {
+                second, maximum, ..
+            } => {
+                values.extend(second.read()?);
+                values.extend(maximum.read()?);
+            }
         }
         Ok(values)
     }
@@ -205,7 +223,8 @@ impl Parameters {
     pub fn restore_state(&mut self, state: &[f32]) -> Result<()> {
         let count = self.len();
         let buffers = match &self.optimizer {
-            OptimizerBuffers::AdamW(_) => 3,
+            OptimizerBuffers::SgdMomentum => 2,
+            OptimizerBuffers::AdamW { .. } => 3,
             OptimizerBuffers::AmsGradW { .. } => 4,
         };
         if state.len() != buffers * count
@@ -214,16 +233,27 @@ impl Parameters {
         {
             return Err("invalid decoder optimizer state".into());
         }
-        let second = &state[2 * count..3 * count];
-        let peaks = &state[3 * count..];
-        if peaks.iter().zip(second).any(|(peak, value)| peak < value) {
+        let moments = &state[2 * count..];
+        if matches!(&self.optimizer, OptimizerBuffers::AmsGradW { .. })
+            && moments[count..]
+                .iter()
+                .zip(moments)
+                .any(|(peak, value)| peak < value)
+        {
             return Err("AMSGradW maximum is below the second moment".into());
         }
         self.value.write(&state[..count])?;
         self.first.write(&state[count..2 * count])?;
-        self.second.write(second)?;
-        if let OptimizerBuffers::AmsGradW { maximum, .. } = &mut self.optimizer {
-            maximum.write(peaks)?;
+        match &mut self.optimizer {
+            OptimizerBuffers::SgdMomentum => {}
+            OptimizerBuffers::AdamW { second, .. } => second.write(moments)?,
+            OptimizerBuffers::AmsGradW {
+                second, maximum, ..
+            } => {
+                let (variance, peaks) = moments.split_at(count);
+                second.write(variance)?;
+                maximum.write(peaks)?;
+            }
         }
         Ok(())
     }
@@ -256,11 +286,15 @@ impl Parameters {
         completed: usize,
     ) -> Result<()> {
         let grad = self.grad.ptr();
-        let t = (completed + 1) as f64;
-        let bc1 = (1.0 - 0.9_f64.powf(t)) as f32;
-        let second_bias_correction = |beta2: f64| (1.0 - beta2.powf(t)).sqrt() as f32;
+        let bias_corrections = |beta2: f64| {
+            let t = (completed + 1) as f64;
+            (
+                (1.0 - 0.9_f64.powf(t)) as f32,
+                (1.0 - beta2.powf(t)).sqrt() as f32,
+            )
+        };
         // SAFETY: AdamW's identity map owns two coordinates per thread.
-        // AMSGradW owns one coordinate per thread in all four buffers.
+        // The other optimizers own one coordinate per thread in each buffer.
         unsafe {
             kernel.norm_partial(
                 Grid::new(self.parts.len() as u32, 32),
@@ -275,39 +309,115 @@ impl Parameters {
                 self.parts.len() as u32,
             )?;
             match &self.optimizer {
-                OptimizerBuffers::AdamW(map) => kernel.adam_coordinates(
-                    grid(self.len() / 2),
-                    self.value.ptr(),
-                    self.first.ptr(),
-                    self.second.ptr(),
-                    grad,
-                    map.ptr(),
-                    self.norm.ptr(),
-                    (self.len() / 2) as u32,
-                    rate,
-                    0.1,
-                    bc1,
-                    second_bias_correction(0.95),
-                )?,
-                OptimizerBuffers::AmsGradW { maximum, config } => device.amsgradw(
+                OptimizerBuffers::SgdMomentum => device.sgd_momentum(
                     grid(self.len()),
                     self.value.ptr(),
                     self.first.ptr(),
-                    self.second.ptr(),
-                    maximum.ptr(),
                     grad,
                     self.norm.ptr(),
                     self.len() as u32,
                     rate,
-                    0.1,
-                    config.beta2 as f32,
-                    (1.0 - config.beta2) as f32,
-                    bc1,
-                    second_bias_correction(config.beta2),
-                    config.sqrt_scale,
                 )?,
+                OptimizerBuffers::AdamW { owners, second } => {
+                    let (bc1, bc2) = bias_corrections(0.95);
+                    kernel.adam_coordinates(
+                        grid(self.len() / 2),
+                        self.value.ptr(),
+                        self.first.ptr(),
+                        second.ptr(),
+                        grad,
+                        owners.ptr(),
+                        self.norm.ptr(),
+                        (self.len() / 2) as u32,
+                        rate,
+                        0.1,
+                        bc1,
+                        bc2,
+                    )?;
+                }
+                OptimizerBuffers::AmsGradW {
+                    second,
+                    maximum,
+                    config,
+                } => {
+                    let (bc1, bc2) = bias_corrections(config.beta2);
+                    device.amsgradw(
+                        grid(self.len()),
+                        self.value.ptr(),
+                        self.first.ptr(),
+                        second.ptr(),
+                        maximum.ptr(),
+                        grad,
+                        self.norm.ptr(),
+                        self.len() as u32,
+                        rate,
+                        0.1,
+                        config.beta2 as f32,
+                        (1.0 - config.beta2) as f32,
+                        bc1,
+                        bc2,
+                        config.sqrt_scale,
+                    )?;
+                }
             }
         }
+        Ok(())
+    }
+
+    pub fn check_sgd_momentum(
+        &mut self,
+        kernel: &optimizer_kernels::kernels::Kernels,
+        device: &device::Kernels,
+    ) -> Result<()> {
+        let count = self.len();
+        let initial = self.state()?;
+        let mut expected = initial.clone();
+        let mut grad = vec![0.0; count];
+        // A clipped warmup step fills the velocity at zero rate. The next
+        // steps retain it, including on coordinates with zero fresh gradient.
+        for (completed, (rate, a, b)) in [
+            (0.0_f32, 3.0_f32, 4.0_f32),
+            (0.01, 0.1, 0.0),
+            (0.02, -0.5, 0.1),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            grad[0] = a;
+            grad[1] = b;
+            self.grad.write(&grad)?;
+            self.update(kernel, device, rate, completed)?;
+            let scale = a.hypot(b).max(1.0);
+            for (i, &raw) in grad.iter().enumerate() {
+                expected[count + i] = 0.9_f32.mul_add(expected[count + i], raw / scale);
+                expected[i] -= rate * expected[count + i];
+            }
+            let actual = self.state()?;
+            if actual.len() != expected.len()
+                || actual
+                    .iter()
+                    .zip(&expected)
+                    .any(|(&x, &y)| !x.is_finite() || (x - y).abs() > 2e-6)
+            {
+                return Err(format!(
+                    "SGD momentum update {} disagrees with the reference",
+                    completed + 1
+                )
+                .into());
+            }
+        }
+        let trained = self.state()?;
+        self.restore_state(&initial)?;
+        if self.state()? != initial {
+            return Err("SGD momentum initial state restore failed".into());
+        }
+        self.restore_state(&trained)?;
+        if self.state()? != trained {
+            return Err("SGD momentum checkpoint restore failed".into());
+        }
+        println!(
+            "SGD momentum clipping, zero-rate warmup, updates and checkpoint restore verified"
+        );
         Ok(())
     }
 

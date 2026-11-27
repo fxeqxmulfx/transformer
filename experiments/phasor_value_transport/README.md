@@ -370,8 +370,13 @@ The two vectors in each sublayer start at zero, giving both gates an
 initial value of `1 + 0i`.
 [Architecture](ARGAND.md)
 
-Use `ARGAND_RESIDUAL=entry-phase` to select the four-stream mHC model and
-its checkpoints. The command below checks the default residual on
+Argand defaults to SGD with momentum `0.9`, zero weight decay and the WSD
+schedule on Kernite 0.8.0. Use `ARGAND_OPTIMIZER=adamw` or
+`ARGAND_OPTIMIZER=amsgradw` to select the earlier optimizer controls.
+
+Use `ARGAND_RESIDUAL=entry-phase` to select the four-stream mHC model.
+The historical checkpoints record their optimizer and Kernite version.
+The command below checks the default residual on
 `arithmetic-abs-diff-blind` with AMSGradW at `beta2=0.98`, the original
 WSD horizon, and a cap of 1,000 updates. Update 988 is the final scheduled
 observation within that cap.

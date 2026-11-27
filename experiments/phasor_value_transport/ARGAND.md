@@ -25,8 +25,8 @@ of each part.
 | FFN matrices `W_g`, `W_u`, `W_F` | $\mathcal N(0,0.02^2)$ per part. |
 | Skip and write vectors `w_skip`, `w_write` in each sublayer | $0+0i$ in every entry. |
 | LeRoPE log-frequency adjustments $\alpha_m$ | $0$ for every $m$, shared across heads and layers. |
-| `s_init` of the learned score multiplier `s` | $1+0i$ in every layer. |
-| AMSGradW buffers $m_0$, $v_0$, $v_{\max,0}$ | $0$ for every real coordinate. |
+| `s_init` of the learned score multiplier `s` | $1+0i$ in every layer with `ARGAND_SCORE_INIT=1`. |
+| SGD velocity $v_0$ | $0$ for every real coordinate. |
 | WSD learning rate at the first update | $0$. |
 
 Both gates start at $1+0i$, giving ordinary residual addition at
@@ -38,19 +38,24 @@ initialize `E` and the attention and FFN matrices.
 
 | Setting | Value | Meaning |
 |---|---|---|
-| `optimizer` | AMSGradW | Uses the running maximum of the second moment. |
-| `beta1` | `0.9` | Weight of the previous first moment. |
-| `beta2` | `0.98` | Weight of the previous second moment. |
-| Optimizer epsilon | `1e-8` | Added to the denominator after the square root. |
-| `weight_decay` | `0.1` | Decoupled decay with multiplier $1-0.1\eta$ on the pre-update weight. |
+| `optimizer` | `sgd-momentum` | SGD with Polyak momentum. |
+| Momentum $\beta$ | `0.9` | Weight of the previous velocity. |
+| `weight_decay` | `0` | No weight penalty or decoupled decay. |
 | Gradient norm limit | `1.0` | Upper limit on the global Euclidean gradient norm. |
 | WSD peak learning rate $\eta_{\mathrm{peak}}$ | `1e-3` | Rate during the stable phase. |
 | WSD final learning rate $\eta_{\mathrm{final}}$ | `1e-8` | Rate on the final scheduled update. |
 
-Both moments use the gradient after clipping. The maximum is taken over the
-raw second moments and retained throughout training. On update $t$, counted
-from one, bias correction uses $m_t/(1-\beta_1^t)$ and
-$v_{\max,t}/(1-\beta_2^t)$.
+For minibatch gradient $g_k$ and learning rate $\eta_k$, the update is
+
+$$
+\tilde g_k = \frac{g_k}{\max(1,\lVert g_k\rVert_2)}, \qquad
+v_{k+1} = 0.9 v_k + \tilde g_k, \qquad
+\theta_{k+1} = \theta_k - \eta_k v_{k+1}.
+$$
+
+At the first warmup update, the zero rate keeps the weights fixed while
+the velocity receives the clipped gradient. SGD checkpoints store the
+weights and velocity.
 
 WSD (Warmup–Stable–Decay) uses the task's full `max_updates` budget $B$.
 Let $k$ be the number of completed updates, $W=\lfloor 0.02B\rfloor$ and
@@ -63,9 +68,10 @@ $D=\lfloor 0.8B\rfloor$.
 For $B=100\,000$, the short screen's 1,000-update limit covers at most half
 of the 2,000-update warmup.
 
-Select AMSGradW in Kernite with `ARGAND_OPTIMIZER=amsgradw` and set
-`ARGAND_AMSGRADW_BETA2=0.98`.
-[Suite budgets](../convex_stress/suite.json) · [AMSGradW run settings and results](README.md#argand-amsgradw-with-a-larger-second-moment-coefficient)
+The runner uses Kernite 0.8.0. Leave `ARGAND_OPTIMIZER` unset or set it to
+`sgd-momentum` to select the default. Select the earlier controls with
+`ARGAND_OPTIMIZER=adamw` or `ARGAND_OPTIMIZER=amsgradw`.
+[Suite budgets](../convex_stress/suite.json) · [Optimizer kernel](src/phasor_v2/kernels.rs)
 
 ## Embedding
 

@@ -27,10 +27,17 @@ impl AmsGradWConfig {
 }
 
 #[derive(Clone, Copy)]
+enum Optimizer {
+    SgdMomentum,
+    AdamW,
+    AmsGradW(AmsGradWConfig),
+}
+
+#[derive(Clone, Copy)]
 pub struct Variant {
     routing: Routing,
     real_score_init: bool,
-    amsgradw: Option<AmsGradWConfig>,
+    optimizer: Optimizer,
 }
 
 impl Variant {
@@ -53,8 +60,9 @@ impl Variant {
             Ok("1") => true,
             _ => return Err("ARGAND_SCORE_INIT takes 1+i or 1".into()),
         };
-        let amsgradw = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("adamw") => None,
+        let optimizer = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
+            Err(std::env::VarError::NotPresent) | Ok("sgd-momentum") => Optimizer::SgdMomentum,
+            Ok("adamw") => Optimizer::AdamW,
             Ok("amsgradw") => {
                 let sqrt_scale = match std::env::var("ARGAND_AMSGRADW_SQRT_SCALE") {
                     Ok(value) => value.parse::<f32>()?,
@@ -72,14 +80,14 @@ impl Variant {
                 if !(0.0..1.0).contains(&beta2) {
                     return Err("ARGAND_AMSGRADW_BETA2 must be in [0, 1)".into());
                 }
-                Some(AmsGradWConfig { beta2, sqrt_scale })
+                Optimizer::AmsGradW(AmsGradWConfig { beta2, sqrt_scale })
             }
-            _ => return Err("ARGAND_OPTIMIZER takes adamw or amsgradw".into()),
+            _ => return Err("ARGAND_OPTIMIZER takes sgd-momentum, adamw or amsgradw".into()),
         };
         Ok(Self {
             routing,
             real_score_init,
-            amsgradw,
+            optimizer,
         })
     }
 
@@ -87,7 +95,7 @@ impl Variant {
         Ok(Self {
             routing: Routing::selected()?,
             real_score_init: false,
-            amsgradw: None,
+            optimizer: Optimizer::AdamW,
         })
     }
 
@@ -96,8 +104,10 @@ impl Variant {
         if self.real_score_init {
             name.push_str("-s-init-one");
         }
-        if self.amsgradw.is_some() {
-            name.push_str("-amsgradw");
+        match self.optimizer {
+            Optimizer::SgdMomentum => name.push_str("-sgd-momentum"),
+            Optimizer::AdamW => {}
+            Optimizer::AmsGradW(_) => name.push_str("-amsgradw"),
         }
         name
     }
@@ -106,12 +116,15 @@ impl Variant {
         // Old entry-phase checkpoints used AdamW and started the score at 1+i.
         (matches!(self.routing, Routing::EntryPhase)
             && !self.real_score_init
-            && self.amsgradw.is_none())
+            && matches!(self.optimizer, Optimizer::AdamW))
         .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
     }
 
     pub(crate) fn amsgradw(self) -> Option<AmsGradWConfig> {
-        self.amsgradw
+        match self.optimizer {
+            Optimizer::AmsGradW(config) => Some(config),
+            _ => None,
+        }
     }
 
     fn score_init(self) -> [f32; 2] {
@@ -681,10 +694,16 @@ pub fn check(variant: Variant) -> Result<()> {
             return Err("complex decoder GPU backward disagrees with finite differences".into());
         }
     }
-    if let Some(config) = variant.amsgradw {
-        engine
+    match variant.optimizer {
+        Optimizer::SgdMomentum => engine
             .parameters
-            .check_amsgradw(&engine.adam, &engine.kernel, config)?;
+            .check_sgd_momentum(&engine.adam, &engine.kernel)?,
+        Optimizer::AdamW => {}
+        Optimizer::AmsGradW(config) => {
+            engine
+                .parameters
+                .check_amsgradw(&engine.adam, &engine.kernel, config)?
+        }
     }
     println!(
         "{} vocabulary prediction, prefix causality and tied adjoints verified",

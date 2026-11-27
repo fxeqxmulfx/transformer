@@ -447,6 +447,36 @@ pub(super) mod device {
         }
     }
 
+    /// SGD with Polyak momentum on the globally clipped gradient.
+    pub unsafe extern "ptx-kernel" fn sgd_momentum(
+        p: *mut f32,
+        momentum: *mut f32,
+        g: *const f32,
+        norm: *const f32,
+        count: u32,
+        lr: f32,
+    ) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past {
+            ret();
+        }
+        let (value, velocity, gradient, scale, displacement): (f32, f32, f32, f32, f32);
+        ld.global.f32(scale, [norm]);
+        max.f32(scale, scale, 1.0);
+        load(gradient, g, i);
+        div.rn.f32(gradient, gradient, scale);
+        load(velocity, momentum, i);
+        fma.rn.f32(velocity, 0.9, velocity, gradient);
+        load(value, p, i);
+        mul.rn.f32(displacement, lr, velocity);
+        sub.rn.f32(value, value, displacement);
+        put(p, i, value);
+        put(momentum, i, velocity);
+    }
+
     /// AMSGrad uses the maximum of raw second moments. Keep the pinned AdamW
     /// bias corrections and decoupled decay.
     pub unsafe extern "ptx-kernel" fn amsgradw(

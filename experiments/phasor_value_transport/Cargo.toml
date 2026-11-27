@@ -106,8 +106,8 @@ composed-retrieval = { path = "../composed_retrieval", features = ["chain-data"]
 frequency = { package = "convex-stress-frequency-data", path = "../convex_stress_frequency_data" }
 parity = { package = "convex-stress-parity-data", path = "../convex_stress_parity_data" }
 probes = { package = "convex-stress-probe-data", path = "../convex_stress_probe_data" }
-kernite-cuda = "=0.7.0"
-kernite-macros = "=0.7.0"
+kernite-cuda = "=0.8.0"
+kernite-macros = "=0.8.0"
 serde_json = { version = "=1.0.154", features = ["float_roundtrip"] }
 sha2 = "=0.11.1"
 source-codec = { package = "diffgpt-mash-native", path = "../../.lake/reproduction/gpt/src/native_transformer/codec" }
