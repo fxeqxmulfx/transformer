@@ -7,6 +7,8 @@ public import Transformer.Optimization.StrongConvexity
 public import Transformer.Optimization.StrongConvergence
 public import Transformer.Optimization.Quadratic
 public import Transformer.Optimization.Matrix
+public import Transformer.Optimization.PAGE.Complexity
+public import Transformer.Optimization.PAGE.Quadratic
 
 /-!
 # Training convergence safeguards shared by Muon and DASH
