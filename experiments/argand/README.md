@@ -144,6 +144,14 @@ constant-row token. `division-mask-lean` exports the exact mask, a spanning
 witness and a perfect matching. Lean checks the literals with `decide`.
 [Ideal character recovery](../../src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean) · [Identifiability including zero](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean)
 
+The exact minimum for identifying this class with a freely chosen mask
+is 192 equations. A connected graph on 96 row vertices and 96 column
+vertices requires 191 unit cells, and one further cell determines the
+constant. The unit diagonal and one full unit row attain 191 and include
+a perfect matching, so the same unit mask also gives unique nuclear-norm
+completion of the character table. The optimizer runs use the original
+4,656-observation split. [Proof of the exact minimum](../../src/Transformer/Grokking/FiniteRecovery/FactorObservations.lean)
+
 ### Eight-bit sum on the 31-word staircase
 
 | Accepted updates | Runs fitting 31/31 | Mean hidden accuracy | Hidden correct per run (of 225) | Exact hidden recoveries |
