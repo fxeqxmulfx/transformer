@@ -246,6 +246,15 @@ For a sufficiently small total learning rate, this gives a positive
 Gaussian probability of strict recovery at a finite AdamW horizon. The
 numerical cohorts measure the separately specified WSD peak of 0.001.
 
+The same capacity suffices for every table in the unknown-factor class.
+The row and column factors vary independently, and the constant row may
+return any of the 239 tokens, including the equals sign. A single set
+of attention and FFN weights suffices in the construction as the embedding
+varies across targets. For any required confidence below one, a common
+bound on the total learning rate and a common finite number of independent
+certified trials work uniformly for the class on the optimal 192-cell
+mask. [Uniform native realization and AdamW certificate](../../src/Transformer/Grokking/FiniteRecovery/FactorNative.lean)
+
 The optional `adamw-tail-run CASE SEED OUT WSD_BUDGET CUTOFF` continues
 after the entire WSD prefix with rates $10^{-8} 2^{-k}$. In exact real
 arithmetic every weight then converges for arbitrary minibatches. On an

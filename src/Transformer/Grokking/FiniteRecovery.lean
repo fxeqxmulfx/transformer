@@ -33,6 +33,7 @@ public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
 public import Transformer.Grokking.FiniteRecovery.DivisionNative
 public import Transformer.Grokking.FiniteRecovery.FactorObservations
+public import Transformer.Grokking.FiniteRecovery.FactorNative
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -87,8 +88,9 @@ row and all 239 competing readout tokens. The 96-by-96 group-factor
 class with an unknown constant row has an exact minimum of 192 observations.
 The diagonal and one unit row with one additional constant-row label
 attain it and certify nuclear-norm completion of the unit block.
-An explicit native draw at
-width 64, FFN width 256, depth six and one pass represents all 9,312
-quotients strictly. This gives a positive Gaussian basin for sufficiently
+At width 64, FFN width 256, depth six and one pass, every table in this
+class is strictly realized on all 9,312 inputs by varying only the native
+embedding draw. All 239 choices of the constant-row token are allowed.
+This gives uniform confidence for certified AdamW restarts at sufficiently
 small total rate. The finite-seed success law for the experimental WSD
 counts only strictly correct endpoints at the declared horizon. -/
