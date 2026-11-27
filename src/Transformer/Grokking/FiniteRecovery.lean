@@ -28,6 +28,7 @@ public import Transformer.Grokking.FiniteRecovery.TransversalExamples
 public import Transformer.Grokking.FiniteRecovery.ArgandModularSum
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGESchedule
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
+public import Transformer.Grokking.FiniteRecovery.CheckpointFactors
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
