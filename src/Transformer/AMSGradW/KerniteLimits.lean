@@ -54,13 +54,13 @@ theorem run_weights_tendsto_of_summable (rate : ℕ → ℝ) (batchGradient : �
   choose w hw using hlim
   exact ⟨w, tendsto_pi_nhds.mpr hw⟩
 
-private theorem firstBias_tendsto : Tendsto firstBias atTop (𝓝 1) := by
+theorem firstBias_tendsto : Tendsto firstBias atTop (𝓝 1) := by
   have hp := tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 9 / 10) (by norm_num)
   have h := (Filter.tendsto_add_atTop_iff_nat 1).2 hp
   change Tendsto (fun t => 1 - (9 / 10 : ℝ) ^ (t + 1)) atTop (𝓝 1)
   simpa only [sub_zero] using h.const_sub 1
 
-private theorem denominator_tendsto {v : ℕ → ℝ} {V : ℝ} (h : Tendsto v atTop (𝓝 V)) :
+theorem denominator_tendsto {v : ℕ → ℝ} {V : ℝ} (h : Tendsto v atTop (𝓝 V)) :
     Tendsto (fun t => denominator t (v t)) atTop (𝓝 (Real.sqrt V + 1 / 100000000)) := by
   have hp := tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num : (0 : ℝ) ≤ 98 / 100) (by norm_num)
   have hcor := ((Filter.tendsto_add_atTop_iff_nat 1).2 hp).const_sub 1
@@ -134,6 +134,8 @@ example (g : ℕ → (Fin 2 → ℝ) → Fin 2 → ℝ) (initial : Fin 2 → ℝ
   run_weights_tendsto_of_summable (fun t => (1 / 2 : ℝ) ^ t) g initial
     (fun t => ⟨by positivity, (pow_le_one₀ (by norm_num) (by norm_num)).trans (by norm_num)⟩)
     (summable_geometric_of_lt_one (by norm_num) (by norm_num))
+
+example := denominator_tendsto (v := fun _ => 1) tendsto_const_nhds
 
 example :=
   run_clippedGrad_tendsto_of_weights_tendsto (ι := Fin 1) (fun _ => 1 / 1000) (fun _ _ => 0) 0 0

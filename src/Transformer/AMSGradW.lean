@@ -9,6 +9,7 @@ public import Transformer.AMSGradW.Perturbation
 public import Transformer.AMSGradW.Convergence
 public import Transformer.AMSGradW.Minimum
 public import Transformer.AMSGradW.ShiftedQuadratic
+public import Transformer.AMSGradW.AlternatingMomentum
 
 /-!
 # AMSGradW: original decoupled-decay training convergence
@@ -61,6 +62,12 @@ transfer to positive constant decoupled decay.
 These are exact-real, fixed full-gradient results. Stochastic minibatches,
 bias-corrected updates and floating-point implementations are not covered.
 Every statement is proved without `sorry` or extra axioms.
+
+The Kernite modules separately treat clipped, bias-corrected minibatch
+updates. For a positive limiting rate, the parameter sequence converges
+exactly when its clipped minibatch gradients converge. Two interpolating
+quadratic batches exhibit failure of that condition and permit comparison
+with ordinary SGD and Polyak momentum.
 -/
 
 @[expose] public section
