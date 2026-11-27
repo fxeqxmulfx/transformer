@@ -80,12 +80,15 @@ example : ∃ U V : Matrix (Fin 1) (Fin 1 ⊕ Fin 1) ℂ,
     zero_le_one stepWitness_kernel (by norm_num) (by norm_num) (by norm_num) stepWitness_ball
     fun v => ⟨v, by rw [stack_fromCols_one, one_mulVec]⟩
 
-/-- **Trained fits exist** (`review/flat_spectrum.md`, items WD7 and WD8): for every weight
-decay `λ > 0` the squared loss on `Ω` has a factorization of width `m + n` with the least
-weight-decayed loss among the factorizations of every width, the limit of the run from
-`U₀ = [1 0]`, `V₀ = [0 1]` with a small enough step. -/
-theorem exists_isDecayedMin_fitLoss (Ω : Set (m × n)) (K : Matrix m n ℂ) (hlam : 0 < lam) :
-    ∃ (U : Matrix m (m ⊕ n) ℂ) (V : Matrix n (m ⊕ n) ℂ),
+/-- **The full-row-rank start** (`review/flat_spectrum.md`, WD7 and WD8):
+for every positive decay, a positive step from the stacked identity yields
+a convergent run whose limit has the least decayed loss. -/
+theorem exists_tendsto_decayRun_fitLoss_fullStart (Ω : Set (m × n)) (K : Matrix m n ℂ)
+    (hlam : 0 < lam) :
+    ∃ η > 0, ∃ (U : Matrix m (m ⊕ n) ℂ) (V : Matrix n (m ⊕ n) ℂ),
+      Tendsto (decayRun (fun X => mask Ω (X - K)) η lam
+        (fromCols (1 : Matrix m m ℂ) (0 : Matrix m n ℂ))
+        (fromCols (0 : Matrix n m ℂ) (1 : Matrix n n ℂ))) atTop (𝓝 (U, V)) ∧
       IsDecayedMin (fitLoss Ω K) lam U V := by
   have hK := frobeniusSq_nonneg K
   have hκ0 : 0 ≤ frobeniusSq K + 1 := by linarith
@@ -112,9 +115,19 @@ theorem exists_isDecayedMin_fitLoss (Ω : Set (m × n)) (K : Matrix m n ℂ) (hl
     (1 / (lam + (ρ / 2 + (frobeniusSq K + 1)) + 2 * ρ))
   rw [le_div_iff₀ hA] at hstep
   rw [le_div_iff₀ hB] at hdesc
-  obtain ⟨U, V, -, h⟩ := exists_tendsto_decayRun_fitLoss_isDecayedMin (Ω := Ω)
-    (lt_min (div_pos hlam hA) (one_div_pos.mpr hB)) hlam hκ0 hκ hρκ (by linarith) hdesc hρc
+  have hη := lt_min (div_pos hlam hA) (one_div_pos.mpr hB)
+  obtain ⟨U, V, hlim, h⟩ := exists_tendsto_decayRun_fitLoss_isDecayedMin (Ω := Ω)
+    hη hlam hκ0 hκ hρκ (by linarith) hdesc hρc
     fun v => ⟨v, by rw [stack_fromCols_one, one_mulVec]⟩
+  exact ⟨_, hη, U, V, hlim, h⟩
+
+example := exists_tendsto_decayRun_fitLoss_fullStart (Set.univ : Set (Fin 1 × Fin 1)) 1 one_pos
+
+/-- **Trained fits exist** (`review/flat_spectrum.md`, WD7 and WD8). -/
+theorem exists_isDecayedMin_fitLoss (Ω : Set (m × n)) (K : Matrix m n ℂ) (hlam : 0 < lam) :
+    ∃ (U : Matrix m (m ⊕ n) ℂ) (V : Matrix n (m ⊕ n) ℂ),
+      IsDecayedMin (fitLoss Ω K) lam U V := by
+  obtain ⟨_, _, U, V, _, h⟩ := exists_tendsto_decayRun_fitLoss_fullStart Ω K hlam
   exact ⟨U, V, h⟩
 
 example := exists_isDecayedMin_fitLoss (Set.univ : Set (Fin 1 × Fin 1)) 1 one_pos

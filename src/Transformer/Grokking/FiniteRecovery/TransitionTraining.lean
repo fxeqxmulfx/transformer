@@ -20,7 +20,7 @@ open Transformer.AMSGradW
 
 noncomputable section
 
-private def marginDerivative (competitors : ℕ) (t : ℝ) : ℝ :=
+def marginDerivative (competitors : ℕ) (t : ℝ) : ℝ :=
   -(competitors : ℝ) / (Real.exp t + competitors)
 
 private theorem marginLoss_hasDerivAt (competitors : ℕ) (t : ℝ) :
@@ -75,7 +75,7 @@ private theorem marginObjective_hasGradientAt (competitors : ℕ) (x : TrainingS
   rw [he]
   exact hf
 
-private theorem marginObjective_gradient (competitors : ℕ) (x : TrainingSpace 1) :
+theorem marginObjective_gradient (competitors : ℕ) (x : TrainingSpace 1) :
     gradient (marginObjective competitors) x 0 = marginDerivative competitors (x 0 + 1) := by
   rw [(marginObjective_hasGradientAt competitors x).gradient]
   simp
