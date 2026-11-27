@@ -5,7 +5,7 @@ public import Transformer.Grokking.FiniteRecovery.Argand
 public import Transformer.AMSGradW.Kernite
 
 /-! Independent real coordinates for the single-stream Argand parameter
-layout in experiments/phasor_value_transport/src/phasor_v2/weights.rs.
+layout in experiments/phasor_value_transport/src/argand/weights.rs.
 The inert alignment coordinate in the GPU array is omitted. The initial
 values take the sampled tensor entries as inputs, so every seed is covered. -/
 

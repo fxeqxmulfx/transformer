@@ -3,7 +3,7 @@ module
 public import Transformer.AMSGradW.Basic
 
 /-! Exact-real equations of the clipped, bias-corrected Kernite update in
-experiments/phasor_value_transport/src/phasor_v2/{weights,kernels}.rs.
+experiments/phasor_value_transport/src/argand/{weights,kernels}.rs.
 The input can be the gradient of any minibatch at the current weights.
 The constants are the documented Argand AMSGradW settings, with square-root
 scale one and the second moment coefficient 0.98. -/

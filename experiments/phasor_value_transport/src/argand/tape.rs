@@ -1,4 +1,4 @@
-//! A reverse pass over the kernels used by the Phasor v2 decoder.
+//! A reverse pass over the kernels used by the Argand decoder.
 use super::complex_mhc::{self, AMPLITUDES, Route, STREAMS};
 use super::{F, P, Result, grid, kernels, scores};
 use kernite_cuda::{Cuda, Grid};

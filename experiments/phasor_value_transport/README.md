@@ -120,7 +120,7 @@ bin=target/release/phasor-value-transport
 ```
 
 The train column uses the same replay with `train` included in the split
-predicate in `src/stress/v2.rs`. The checkpoint digest, weights and scorer
+predicate in `src/stress/argand.rs`. The checkpoint digest, weights and scorer
 are identical for both columns.
 
 The matched control is the original fixed-mean Phasor. It uses the
@@ -159,9 +159,9 @@ improved early held-out accuracy and took 13.2% more updates to reach
 initializations.
 
 To reproduce the real initialization in a separate experiment worktree,
-set the score entry in `Parameters::new` in `src/phasor_v2/weights.rs`
+set the score entry in `Parameters::new` in `src/argand/weights.rs`
 to `values.extend([1.0, 0.0]);` and append `-s-init-real` to the model
-identifier for `Routing::Single` in `src/phasor_v2/complex_mhc.rs`.
+identifier for `Routing::Single` in `src/argand/complex_mhc.rs`.
 Build the same release binary and use a fresh run directory with the
 following commands.
 

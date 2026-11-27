@@ -224,7 +224,7 @@ impl Engine {
             || repeat == 0
             || shape.layers.checked_mul(repeat).is_none()
         {
-            return Err("invalid Phasor v2 model dimensions".into());
+            return Err("invalid Argand model dimensions".into());
         }
         let cuda = Cuda::new()?;
         let rows = shape.max_batch * shape.max_length;
@@ -300,7 +300,7 @@ impl Engine {
             || labels.len() != rows
             || tokens.iter().any(|&id| id as usize >= self.config.vocab)
         {
-            return Err("invalid Phasor v2 input batch".into());
+            return Err("invalid Argand input batch".into());
         }
         let own = self.labeled(labels).max(1);
         let normalizer = match normalizer {
@@ -584,7 +584,7 @@ impl Engine {
 
     pub fn restore(&mut self, weights: &[f32]) -> Result<()> {
         if weights.len() != self.parameters.len() || weights.iter().any(|x| !x.is_finite()) {
-            return Err("invalid Phasor v2 checkpoint".into());
+            return Err("invalid Argand checkpoint".into());
         }
         self.last = None;
         Ok(self.parameters.value.write(weights)?)

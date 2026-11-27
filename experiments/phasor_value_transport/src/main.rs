@@ -10,6 +10,7 @@ mod addresses;
 mod affine_phase;
 mod affine_phase_checks;
 mod architecture;
+mod argand;
 mod associative;
 mod associative_checks;
 mod bilinear_phase;
@@ -39,7 +40,6 @@ mod pair_ops;
 mod periodic_activation;
 mod periodic_activation_checks;
 mod phase_checks;
-mod phasor_v2;
 mod phase_controls;
 mod phase_prefix;
 mod recurrent;
@@ -367,7 +367,7 @@ fn main() -> Result<()> {
         [op, args @ ..] if matches!(
             op.as_str(),
             "v2-check" | "v2-run" | "v2-replay" | "argand-check" | "argand-run" | "argand-replay"
-        ) => stress::v2::command(op, args),
+        ) => stress::argand::command(op, args),
         [op] if op == "extensions" => stress::extensions(stress::EXTENSIONS),
         [op] if op == "catalog-inventory" => stress::catalog::inventory(stress::EXTENSIONS),
         [op, registry] if op == "catalog-inventory" => stress::catalog::inventory(&fs::read_to_string(registry)?),

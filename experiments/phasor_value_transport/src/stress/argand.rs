@@ -2,8 +2,8 @@
 use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
 use crate::{
     Config, KERNITE_VERSION,
-    phasor_v2::{AmsGradWConfig, Engine, Variant},
-    phasor_v2_metrics as metrics,
+    argand::{AmsGradWConfig, Engine, Variant},
+    argand_metrics as metrics,
     random::Random,
     schedule::Schedule,
 };
@@ -17,7 +17,7 @@ pub fn command(op: &str, args: &[String]) -> Result<()> {
         Variant::v2()?
     };
     match (action, args) {
-        ("check", []) => crate::phasor_v2::check(variant),
+        ("check", []) => crate::argand::check(variant),
         ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
             name,
             seed.parse()?,

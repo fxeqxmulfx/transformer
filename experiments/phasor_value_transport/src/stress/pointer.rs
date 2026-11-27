@@ -1,4 +1,4 @@
-//! Check the attainable labels of the causal position-based Phasor v2 readout.
+//! Check the attainable labels of the causal position-based Argand readout.
 use super::{Example, Result, Value, cases, data, json};
 
 fn generation_reachable(example: &Example) -> bool {
