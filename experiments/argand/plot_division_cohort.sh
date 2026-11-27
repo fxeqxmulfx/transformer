@@ -60,28 +60,46 @@ if (( started == 0 )); then echo 'no recorded evaluations yet' >&2; exit 1; fi
 [[ -s complete.tsv ]] || echo '1 NaN' > complete.tsv
 series=$(for f in {1..12}; do if [[ -s "$f.tsv" ]]; then echo "$f"; fi; done | paste -sd' ')
 gnuplot -e "series='$series'; labels=\"$labels\"; budget=$budget; done_count=$done_count; successes=$successes; started=$started" - <<'GP'
-set terminal pdfcairo color size 12in,5.4in font "DejaVu Sans,10"
+set terminal pdfcairo color size 12in,6.4in font "DejaVu Sans,10"
 set output 'snapshot.pdf'
 set multiplot
 set label 1 'Division modulo 97 across 12 initializations' at screen 0.073,0.946 font ",18" tc rgb '#172c38'
 set label 2 sprintf('Argand   |   AdamW, weight decay 0.1   |   %d updates per seed   |   4,656 held-out equations',budget) at screen 0.073,0.886 tc rgb '#405563'
 set lmargin at screen 0.073
 set rmargin at screen 0.536
-set bmargin at screen 0.15
+set bmargin at screen 0.535
 set tmargin at screen 0.77
 set border 3 lc rgb '#87959e'
 set tics nomirror out scale 0.5
 set grid ytics lc rgb '#e1e6e9'
-set xlabel 'Minibatch updates (thousands)'
+set format x ''
 set ylabel 'Held-out accuracy (%)'
 set title 'Recorded accuracy during training'
 set yrange [-2:103]
 set ytics 25
 set xrange [0:budget/1000.]
+cooldown=0.8*budget/1000.
+set arrow 1 from first cooldown,graph 0 to first cooldown,graph 1 nohead dt 2 lw 1 lc rgb '#81929b' back
 unset key
 colors='#176a73 #b55724 #604aa5 #a22c59 #397b3c #335ea8 #9a6b17 #026b9c #7d476c #737c22 #3c595d #a03432'
 plot for [k in series] sprintf('%s.tsv',k) u ($1/1000.):2 w l lw 1.8 lc rgb word(colors,int(k))
 unset label
+set bmargin at screen 0.135
+set tmargin at screen 0.45
+set xlabel 'Minibatch updates (thousands)'
+set format x '%g'
+set ylabel 'Held-out errors'
+unset title
+set logscale y
+set yrange [0.78:7000]
+set ytics ('0' 1,'1' 2,'10' 11,'100' 101,'1,000' 1001,'4,656' 4657)
+set label 5 'WSD cooldown' at first cooldown,graph 1.025 center font ",8" tc rgb '#455864'
+plot for [k in series] sprintf('%s.tsv',k) u ($1/1000.):(1+$3) w l lw 1.4 lc rgb word(colors,int(k))
+unset arrow 1
+unset label 5
+unset logscale y
+set bmargin at screen 0.135
+set tmargin at screen 0.77
 set lmargin at screen 0.715
 set rmargin at screen 0.965
 unset ylabel

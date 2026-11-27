@@ -274,8 +274,9 @@ bash plot_division_cohort.sh runs/division-confirm-100k runs/division-comparison
 (cd ../.. && LAKE_ARTIFACT_CACHE=false lake env lean experiments/argand/runs/OriginalDivisionMask.lean)
 ```
 
-The cohort plot shows the measured hidden accuracy of each seed. Its
-right panel distinguishes the latest measurement of an active run from
+The cohort plot shows the measured hidden accuracy of each seed and
+the remaining error count throughout training. The dashed marker is
+the start of the WSD cooldown. The right panel distinguishes the latest measurement of an active run from
 the strict score after reloading terminal weights. An empty row marks a
 seed awaiting training. Set `ARGAND_PLOT_SNAPSHOT=1` to keep a PNG and PDF
 named for the latest draw, update count and number of completed replays.
