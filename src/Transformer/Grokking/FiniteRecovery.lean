@@ -31,6 +31,7 @@ public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
 public import Transformer.Grokking.FiniteRecovery.CheckpointFactors
 public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
+public import Transformer.Grokking.FiniteRecovery.TerminalValidation
 public import Transformer.Grokking.FiniteRecovery.DivisionNative
 public import Transformer.Grokking.FiniteRecovery.FactorObservations
 public import Transformer.Grokking.FiniteRecovery.FactorNative

@@ -220,6 +220,17 @@ If any terminal replay fails, all twelve repeat from the same seeds with
 a 200,000-step WSD schedule. The empirical fractions use separate
 denominators of twelve for the two budgets.
 
+The 20,000-update pilot had records for the first two seeds before the
+100,000 cohort was registered. The other ten seeds had no training
+results at registration. For a fixed budget with single-run success at
+most $3/4$, the probability of ten independent successes is at most
+$(3/4)^{10}=0.05631$. If either of two prespecified budgets can be
+reported, the corresponding bound is $2(3/4)^{10}=0.11263$ even when
+the same seeds are used for both. The twelve-seed fractions describe
+the registered cohort. The generic confirmation command's binomial
+fields assume one fixed budget and twelve fresh trials.
+[Terminal validation theorem](../../src/Transformer/Grokking/FiniteRecovery/TerminalValidation.lean)
+
 Two independent ordinary AdamW runs of seed 113 on the same 256-update
 schedule started with identical loss and scored 57 and 58 hidden prompts
 at the endpoint. Both checkpoints replayed exactly. The backward pass
