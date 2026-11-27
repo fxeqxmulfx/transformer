@@ -23,6 +23,8 @@ public import Transformer.Grokking.FiniteRecovery.ArgandGaussianRecovery
 public import Transformer.Grokking.FiniteRecovery.ArgandFlatLimit
 public import Transformer.Grokking.FiniteRecovery.ArgandParityFeatures
 public import Transformer.Grokking.FiniteRecovery.ArgandLearnedNorm
+public import Transformer.Grokking.FiniteRecovery.TransversalTraining
+public import Transformer.Grokking.FiniteRecovery.TransversalExamples
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
@@ -50,4 +52,12 @@ for the unknown bilinear coupling at any model width. Prefix energy
 bounds the nuclear norm of the trained centered phase table. For binary
 modular sums the signed readout gaps, or the normalized hidden states,
 give a bound at the rank-one target scale. For the binary copy and
-constant examples the observed loss controls nuclear distance directly. -/
+constant examples the observed loss controls nuclear distance directly.
+
+For any finite class, supports of competitors of equal or lower nuclear
+cost form a hypergraph. Its transversal number is the minimum number
+of observations for unique completion. The factor continuation eventually
+decodes every word of every member. A full Argand search pairs native
+momentum proposals with rational displacements and selects feasible weights
+by the nuclear norm of their decoded phase tables. For a representable
+class it stabilizes from each native draw at a positive logit margin. -/
