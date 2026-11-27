@@ -23,6 +23,9 @@ fn export_example_decoders(source: &Path, out: &Path) {
 // metrics. The existing entry point uses the same rollout with an empty sink.
 fn export_completions(source: &Path, out: &Path) {
     let original = fs::read_to_string(source).unwrap();
+    let v2 = original.replace("engine::{Engine, Result}", "phasor_v2::{Engine, Result}");
+    assert_ne!(v2, original, "pinned scorer engine import changed");
+    fs::write(out.join("phasor_v2_metrics.rs"), v2).unwrap();
     let entry = "pub fn evaluate(engine: &mut Engine, examples: &[Example], generate: bool) -> Result<Value> {";
     let emitted = "for (i, tokens) in written.iter().enumerate() {";
     assert_eq!(original.matches(entry).count(), 1);
@@ -354,7 +357,7 @@ fn main() {
             "blake complex gemm pcg random sequence_ops",
         ),
         (geometry.join("diagnostic/src"), "plain_product"),
-        (out.clone(), "data engine layout metrics phase_score_tiles schedule"),
+        (out.clone(), "data engine layout metrics phase_score_tiles schedule phasor_v2_metrics"),
     ] {
         for name in names.split_whitespace() {
             let path = dir.join(format!("{name}.rs"));

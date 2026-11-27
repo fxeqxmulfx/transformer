@@ -52,6 +52,46 @@ split. An independent process then reloads the weights and scores the same
 split. The opening commands train the default Phasor on these 105 cells
 and run the three exact NV11 checks. [Default training and replay](#embedding-input-phasor-on-the-gpt-stress-suite-and-nv11)
 
+### Single-stream Phasor v2 with a tied vocabulary
+
+Phasor v2 uses a single complex residual stream and a tied vocabulary
+classifier. For each position it computes
+`(Re(x) Re(E)^T + Im(x) Im(E)^T) / 2` against all rows of the learned
+embedding table. The outer cross-entropy uses the frozen GPT supervision
+mask and the original scorer, including free generation and EOS.
+
+The Kernite 0.7.0 implementation uses FP32 real coordinates throughout
+the complex forward and reverse passes. RMS divides by the Euclidean
+norm plus `1e-6` and multiplies by the square root of the complex width.
+Each layer uses Q/K RMS, a shared learned LeRoPE table and two causal
+softmaxes for the complex attention weights. Score row `n` is multiplied
+by `s log(n)/sqrt(d)`, where the complex scalar `s` starts at `1 + i`
+and is shared by the heads of its layer. The FFN uses a width-`4c`
+complex product. Both residual branches use PeriNorm and
+`1/sqrt(2 * layers * repeat)`. The same layer parameters are applied
+on every repeat. The experiments use the suite's widths, head counts
+and depths, with `repeat=1`.
+
+Use the pinned checkout described under
+[reproduction](#reproducing-the-pair-address-baseline). From this directory,
+the following commands verify the tied classifier and directional
+derivatives, then screen all three seeds of every canonical case.
+
+```sh
+cargo +stable build --locked --release
+target/release/phasor-value-transport v2-check
+out=runs/phasor-v2-kernite
+mkdir -p "$out"
+export PHASOR_EVAL_BATCH_CAP=16
+./run_v2_stress.sh 1 "$out" 1000 | tee "$out/stress-1000.jsonl"
+```
+
+The optional cap stops at the last scheduled observation within the
+specified number of updates. With the cap omitted, the runner uses
+the complete frozen budgets. Reusing the same directory resumes the
+stored weights, optimizer state and minibatch order. Passing checkpoints
+are reloaded and scored on the held-out and available transfer splits.
+
 ### Phasor v2 with an input-position readout
 
 The single-stream Phasor v2 proposal scores the embeddings of the current
