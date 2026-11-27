@@ -437,6 +437,29 @@ mkdir -p "$out"
 unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_OPTIMIZER
 ```
 
+The 75 short runs matched the cases, seeds, splits, and step-zero scores
+and losses of the unit-scale AMSGradW and AdamW screens. AMSGradW kept
+its running maximum throughout every run. Time sums the training and
+evaluation segments.
+
+| Optimizer | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 | Updates | Time (s) |
+|---|---:|---:|---:|---:|---:|
+| AMSGradW, $a=0.9$ | 24 | 8 | 8 | 59,364 | 961 |
+| AMSGradW, $a=1$ | 25 | 9 | 8 | 59,341 | 902 |
+| AdamW | 32 | 13 | 8 | 57,762 | 870 |
+
+Among the 24 shared passes, $a=0.9$ reached 99% earlier in 10 runs,
+$a=1$ reached it earlier in one, and 13 tied. For `basis-depth-hard`
+seed 1, $a=1$ reached 511/512 at update 750 and $a=0.9$ finished at
+308/512 at update 1,000. The five modulo-97 arithmetic misses improved
+from 86.8–91.8% with $a=1$ to 92.5–95.6% with $a=0.9$ at update 988.
+`power-division-p193-k3` seed 1 improved from 25.0% to 42.1% at update
+949.
+
+All 75 terminal state digests matched the saved records. Independent
+checkpoint reloads reproduced the held-out scores and losses of all
+24 passes.
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current
