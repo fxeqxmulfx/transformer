@@ -197,10 +197,11 @@ fn run(
     let train = &cell.task.splits["train"];
     let heldout = &cell.task.splits[&cell.task.selection];
     let mut packed = metrics::Packed::default();
-    let full = match cell.variant.full_batch_penalty() {
-        Some(penalty) => Some(FullBatch::new(&engine, train, &mut packed, cell.batch, penalty)?),
-        None => None,
-    };
+    let full = cell
+        .variant
+        .full_batch_penalty()
+        .map(|penalty| FullBatch::new(&engine, train, &mut packed, cell.batch, penalty))
+        .transpose()?;
     let per_epoch = train.len().div_ceil(cell.batch);
     let mut random = Random::new(seed + 10_000);
     let mut epoch = Vec::new();
@@ -229,7 +230,8 @@ fn run(
             }
         }
         if let Some(full) = &full {
-            full.update(&mut engine, train, &mut packed, cell.schedule.rate(step), step)?;
+            let rate = cell.schedule.rate(step);
+            full.update(&mut engine, train, &mut packed, rate, step)?;
             continue;
         }
         if step.is_multiple_of(per_epoch) {

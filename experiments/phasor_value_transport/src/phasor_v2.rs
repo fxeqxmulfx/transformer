@@ -38,7 +38,9 @@ enum Gradient {
     Minibatch,
     /// Every update follows the Lean `fullGradientMomentumRun`: the gradient of
     /// the mean loss over all labeled training positions plus `penalty * x`.
-    Full { penalty: f32 },
+    Full {
+        penalty: f32,
+    },
 }
 
 #[derive(Clone, Copy)]
@@ -853,7 +855,7 @@ pub fn check(variant: Variant) -> Result<()> {
                     (f64::from(v) - (0.9 * f64::from(old) + g / scale)).abs() > 2e-6
                 })
         {
-            return Err("the penalized full-batch momentum step disagrees with the reference".into());
+            return Err("penalized full-batch step disagrees with the reference".into());
         }
         println!("Full-batch penalty enters once before clipping at gradient norm {norm:.4}");
     }
