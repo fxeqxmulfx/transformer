@@ -1,4 +1,5 @@
 //! Independent real coordinates and the existing clipped Kernite AdamW kernel.
+use super::complex_mhc::{AMPLITUDES, Routing, STREAMS};
 use super::tape::{Context, Tape};
 use super::{F, Pair, Result, grid};
 use crate::{Config, optimizer_kernels, random::Random};
@@ -14,6 +15,16 @@ impl Projection {
     fn new(weights: &mut Vec<f32>, rng: &mut Random, input: usize, output: usize) -> Self {
         let at = weights.len();
         weights.extend((0..2 * input * output).map(|_| rng.gauss(0.0, 0.02) as f32));
+        Self { at, input, output }
+    }
+
+    fn router(weights: &mut Vec<f32>, rng: &mut Random, input: usize, output: usize) -> Self {
+        let at = weights.len();
+        let deviation = 0.01 / (input as f64).sqrt();
+        for _ in 0..input {
+            weights.extend((0..AMPLITUDES).map(|_| rng.gauss(0.0, deviation) as f32));
+            weights.resize(weights.len() + 2 * output - AMPLITUDES, 0.0);
+        }
         Self { at, input, output }
     }
 
@@ -44,6 +55,7 @@ pub(super) struct Layer {
     pub up: Projection,
     pub down: Projection,
     pub score: usize,
+    pub routers: Option<[Projection; 2]>,
 }
 
 pub(super) struct Parameters {
@@ -60,8 +72,10 @@ pub(super) struct Parameters {
 }
 
 impl Parameters {
-    pub fn new(cuda: &Cuda, cfg: &Config, rng: &mut Random) -> Result<Self> {
+    pub fn new(cuda: &Cuda, cfg: &Config, seed: u32, routing: Routing) -> Result<Self> {
         let width = cfg.width;
+        let mut rng = Random::new(seed);
+        let mut router_rng = Random::new(seed.wrapping_add(20_000));
         let embed_size = 2 * cfg.vocab * width;
         let frequencies = width / cfg.heads;
         let mut values: Vec<_> = (0..embed_size)
@@ -73,7 +87,7 @@ impl Parameters {
                 let score = values.len();
                 values.extend([1.0, 1.0]);
                 let mut projection =
-                    |input, output| Projection::new(&mut values, rng, input, output);
+                    |input, output| Projection::new(&mut values, &mut rng, input, output);
                 Layer {
                     score,
                     q: projection(width, width),
@@ -83,6 +97,16 @@ impl Parameters {
                     gate: projection(width, 4 * width),
                     up: projection(width, 4 * width),
                     down: projection(4 * width, width),
+                    routers: routing.router_width().map(|output| {
+                        std::array::from_fn(|_| {
+                            Projection::router(
+                                &mut values,
+                                &mut router_rng,
+                                STREAMS * width,
+                                output,
+                            )
+                        })
+                    }),
                 }
             })
             .collect();

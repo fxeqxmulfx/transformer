@@ -1,4 +1,5 @@
-//! A reverse pass over the kernels used by the single-stream decoder.
+//! A reverse pass over the kernels used by the Phasor v2 decoder.
+use super::complex_mhc::{self, AMPLITUDES, Route, STREAMS};
 use super::{F, P, Result, grid, kernels, scores};
 use kernite_cuda::{Cuda, Grid};
 
@@ -57,6 +58,9 @@ enum Operation {
     Heads(Pair, Pair, bool),
     Rotate(Pair, Pair),
     Scores(Pair, Pair, Pair),
+    Expand(Pair, Pair, usize),
+    Collapse(Pair, Pair, usize),
+    Route(Route),
 }
 
 struct Slot {
@@ -76,6 +80,7 @@ pub(super) struct Context<'a> {
     pub cuda: &'a Cuda,
     pub kernel: &'a kernels::device::Kernels,
     pub scores: &'a scores::device::Kernels,
+    pub mhc: Option<&'a complex_mhc::Kernels>,
     pub rotations: P,
     pub alpha: Pair,
     pub length: usize,
@@ -168,6 +173,34 @@ impl Tape {
     pub fn scores(&mut self, ctx: &Context<'_>, x: Pair, s: Pair) -> Result<Pair> {
         let out = self.allocate(ctx.cuda, x.len)?;
         self.apply(ctx, Operation::Scores(out, x, s), out)
+    }
+
+    pub fn expand(&mut self, ctx: &Context<'_>, x: Pair, width: usize) -> Result<Pair> {
+        let out = self.allocate(ctx.cuda, STREAMS * x.len)?;
+        self.apply(ctx, Operation::Expand(out, x, width), out)
+    }
+
+    pub fn collapse(&mut self, ctx: &Context<'_>, x: Pair, width: usize) -> Result<Pair> {
+        let out = self.allocate(ctx.cuda, x.len / STREAMS)?;
+        self.apply(ctx, Operation::Collapse(out, x, width), out)
+    }
+
+    pub fn route(&mut self, ctx: &Context<'_>, logits: Pair, rows: usize) -> Result<Route> {
+        let route = Route {
+            logits,
+            packed: self.allocate(ctx.cuda, rows * AMPLITUDES)?,
+            amplitudes: self.allocate(ctx.cuda, rows * AMPLITUDES)?,
+            pre: self.allocate(ctx.cuda, 2 * rows * STREAMS)?,
+            post: self.allocate(ctx.cuda, 2 * rows * STREAMS)?,
+            residual: self.allocate(ctx.cuda, 2 * rows * STREAMS * STREAMS)?,
+            edge_gradient: (logits.len / rows == AMPLITUDES + 3 * STREAMS)
+                .then(|| self.allocate(ctx.cuda, rows * STREAMS * STREAMS))
+                .transpose()?,
+        };
+        let op = Operation::Route(route);
+        ctx.apply::<false>(op)?;
+        self.operations.push(op);
+        Ok(route)
     }
 
     pub fn backward(&self, ctx: &Context<'_>) -> Result<()> {
@@ -343,6 +376,31 @@ impl Context<'_> {
                         self.scores
                             .weights::<false>(launch, y.x, s.x, x.x, y.dx, x.dx, s.dx, t, gain)?;
                     }
+                }
+                Operation::Expand(y, x, width) => {
+                    let mhc = &self.mhc.expect("stream expansion requires mHC").real;
+                    let launch = grid(x.len);
+                    let (width, count) = ((2 * width) as u32, x.len as u32);
+                    // The embedding RMS has no other consumers in an mHC run.
+                    if BACK {
+                        mhc.expand::<true>(launch, x.dx, y.dx, width, count)?;
+                    } else {
+                        mhc.expand::<false>(launch, y.x, x.x, width, count)?;
+                    }
+                }
+                Operation::Collapse(y, x, width) => {
+                    let mhc = &self.mhc.expect("stream collapse requires mHC").real;
+                    let launch = grid(y.len);
+                    let (width, count) = ((2 * width) as u32, y.len as u32);
+                    // The final four streams have no other consumers.
+                    if BACK {
+                        mhc.collapse::<true>(launch, x.dx, y.dx, width, count)?;
+                    } else {
+                        mhc.collapse::<false>(launch, y.x, x.x, width, count)?;
+                    }
+                }
+                Operation::Route(route) => {
+                    route.apply::<BACK>(self.mhc.expect("missing mHC kernels"))?
                 }
             }
         }

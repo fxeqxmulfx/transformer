@@ -1,12 +1,13 @@
-//! Frozen GPT stress cases and schedule for the single-stream Phasor v2.
+//! Frozen GPT stress cases and schedule for Phasor v2.
 use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
 use crate::{
-    Config, KERNITE_VERSION, phasor_v2::Engine, phasor_v2_metrics as metrics, random::Random,
+    Config, KERNITE_VERSION,
+    phasor_v2::{Engine, Routing},
+    phasor_v2_metrics as metrics,
+    random::Random,
     schedule::Schedule,
 };
 use std::path::{Path, PathBuf};
-
-const MODEL: &str = "phasor-v2-single-stream-tied-vocab-fp32";
 
 struct Cell {
     row: Value,
@@ -18,6 +19,7 @@ struct Cell {
     directory: PathBuf,
     repeat: usize,
     seed: u32,
+    routing: Routing,
 }
 
 impl Cell {
@@ -52,17 +54,18 @@ impl Cell {
             directory,
             repeat,
             seed,
+            routing: Routing::selected()?,
         })
     }
 
     fn engine(&self) -> Result<Engine> {
-        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed)?;
+        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed, self.routing)?;
         engine.config.max_batch = task_config(&self.row, &self.task, false)?.max_batch;
         Ok(engine)
     }
 
     fn identity(&self) -> Value {
-        json!({"model":MODEL,"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
+        json!({"model":self.routing.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
             "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION})
     }
 

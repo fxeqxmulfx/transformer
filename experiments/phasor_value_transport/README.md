@@ -159,9 +159,10 @@ initializations.
 
 To reproduce the real initialization in a separate experiment worktree,
 set the score entry in `Parameters::new` in `src/phasor_v2/weights.rs`
-to `values.extend([1.0, 0.0]);` and append `-s-init-real` to `MODEL`
-in `src/stress/v2.rs`. Build the same release binary and use a fresh run
-directory with the following commands.
+to `values.extend([1.0, 0.0]);` and append `-s-init-real` to the model
+identifier for `Routing::Single` in `src/phasor_v2/complex_mhc.rs`.
+Build the same release binary and use a fresh run directory with the
+following commands.
 
 ```sh
 cargo +stable build --locked --release
@@ -211,6 +212,58 @@ for width in 64 128; do
     "$bin" replay arithmetic-abs-diff-blind 1 "$trial"
 done
 unset PHASOR_V1_COMPLEX_WIDTH
+```
+
+#### Complex mHC in Phasor v2
+
+Each sublayer has a separate complex router projection from the
+RMS-normalized stack of four streams. The pinned mHC kernels apply
+sigmoid to read amplitudes and twice sigmoid to write amplitudes.
+Twenty column/row Sinkhorn cycles produce the residual amplitudes $P$
+from logits with a diagonal offset of 2. The three routers start
+with identical amplitude projections and zero phase projections.
+
+The real arm uses these amplitudes directly. The conjugated and
+entry-phase arms learn a phase for each read and write gate. The
+conjugated residual uses $DPD^*$ with one angle per stream at each
+position. The entry-phase residual uses $P_{ij}e^{i\theta_{ij}}$
+with one angle per edge. All three pass the complex read through the
+same v2 PeriNorm attention and FFN. The vocabulary projection reads
+the RMS-normalized mean of the four final streams.
+
+The comparison uses seed 1, 128 complex numbers, four heads, one
+layer and one pass on `arithmetic-abs-diff-blind`. Each run uses the
+frozen WSD schedule and stops at the first 99% observation or update
+19,988. The single-stream row uses the saved checkpoint from the
+same experimental setup. All runs use Kernite 0.7.0 on the RTX 3050.
+
+| Residual | Held-out correct at 988 /4705 | First 99% update | Held-out correct at first pass /4705 |
+|---|---:|---:|---:|
+| Ordinary addition | 1,432 | 12,996 | 4,658 |
+| Real mHC | 2,047 | 9,158 | 4,660 |
+| Complex gates and conjugated residual | 2,995 | 4,446 | 4,659 |
+| Complex gates and independent edge phases | 2,879 | 3,990 | 4,661 |
+
+Independent checkpoint reloads reproduced the scores and losses.
+Among the tested configurations, independent edge phases reached 99%
+in the fewest updates, 10.3% fewer than conjugated mixing. Both complex
+arms change read and write phases as well as residual mixing relative
+to real mHC. These results cover one case and one seed.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+export PHASOR_EVAL_BATCH_CAP=16
+for mode in real conjugated entry-phase; do
+    export PHASOR_V2_MHC=$mode
+    trial="runs/v2-mhc-comparison/$mode"
+    "$bin" v2-check
+    for stop in 988 4997 19988; do
+        "$bin" v2-run arithmetic-abs-diff-blind 1 1 "$trial" "$stop"
+    done
+    "$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$trial"
+done
+unset PHASOR_V2_MHC
 ```
 
 ### Phasor v2 with an input-position readout

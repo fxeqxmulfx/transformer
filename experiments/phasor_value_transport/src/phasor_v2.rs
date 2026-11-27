@@ -1,4 +1,5 @@
-//! Single-stream complex Phasor v2 and tied vocabulary readout on Kernite.
+//! Complex Phasor v2 and tied vocabulary readout on Kernite.
+mod complex_mhc;
 mod kernels;
 mod scores;
 mod tape;
@@ -6,6 +7,8 @@ mod weights;
 
 pub(crate) use crate::Result;
 use crate::{base_ops, optimizer_kernels, random::Random, slot_copy, stable_loss};
+pub use complex_mhc::Routing;
+use complex_mhc::Sublayer;
 use kernite_cuda::{Buffer, Cuda, Grid, Ptr};
 use tape::{Context, Pair, Tape};
 use weights::Parameters;
@@ -33,6 +36,7 @@ pub struct Engine {
     tape: Tape,
     kernel: kernels::device::Kernels,
     scores: scores::device::Kernels,
+    mhc: Option<complex_mhc::Kernels>,
     embed: base_ops::kernels::Kernels,
     loss: stable_loss::kernels::Kernels,
     clear: slot_copy::kernels::Kernels,
@@ -46,7 +50,7 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new(shape: crate::Config, repeat: usize, seed: u32) -> Result<Self> {
+    pub fn new(shape: crate::Config, repeat: usize, seed: u32, routing: Routing) -> Result<Self> {
         if shape.width == 0
             || shape.heads == 0
             || !shape.width.is_multiple_of(shape.heads)
@@ -67,10 +71,14 @@ impl Engine {
         Ok(Self {
             config,
             repeat,
-            parameters: Parameters::new(&cuda, &shape, &mut Random::new(seed))?,
+            parameters: Parameters::new(&cuda, &shape, seed, routing)?,
             tape: Tape::default(),
             kernel: kernels::device::Kernels::load(&cuda)?,
             scores: scores::device::Kernels::load(&cuda)?,
+            mhc: routing
+                .router_width()
+                .map(|_| complex_mhc::Kernels::load(&cuda))
+                .transpose()?,
             embed: base_ops::kernels::Kernels::load(&cuda)?,
             loss: stable_loss::kernels::Kernels::load(&cuda)?,
             clear: slot_copy::kernels::Kernels::load(&cuda)?,
@@ -165,6 +173,7 @@ impl Engine {
             cuda: &self.cuda,
             kernel: &self.kernel,
             scores: &self.scores,
+            mhc: self.mhc.as_ref(),
             rotations: self.rotations.ptr(),
             alpha,
             length,
@@ -184,12 +193,18 @@ impl Engine {
             )?;
         }
         let mut x = tape.rms(&ctx, input, width)?;
+        if self.mhc.is_some() {
+            x = tape.expand(&ctx, x, width)?;
+        }
         let scale = (2.0 * (self.shape.layers * self.repeat) as f32)
             .sqrt()
             .recip();
         for _ in 0..self.repeat {
             for layer in &p.layers {
-                let n = tape.rms(&ctx, x, width)?;
+                let router = layer.routers.as_ref();
+                let attention =
+                    Sublayer::read(tape, &ctx, p, router.map(|r| &r[0]), x, rows, width)?;
+                let n = tape.rms(&ctx, attention.input, width)?;
                 let q = layer.q.project(tape, &ctx, p, n, rows)?;
                 let k = layer.k.project(tape, &ctx, p, n, rows)?;
                 let v = layer.v.project(tape, &ctx, p, n, rows)?;
@@ -212,16 +227,20 @@ impl Engine {
                 let a = tape.heads(&ctx, a, true)?;
                 let a = layer.o.project(tape, &ctx, p, a, rows)?;
                 let a = tape.rms(&ctx, a, width)?;
-                x = tape.sum(&ctx, x, a, scale)?;
+                x = attention.write(tape, &ctx, a, width, scale)?;
 
-                let n = tape.rms(&ctx, x, width)?;
+                let ffn = Sublayer::read(tape, &ctx, p, router.map(|r| &r[1]), x, rows, width)?;
+                let n = tape.rms(&ctx, ffn.input, width)?;
                 let g = layer.gate.project(tape, &ctx, p, n, rows)?;
                 let u = layer.up.project(tape, &ctx, p, n, rows)?;
                 let f = tape.product(&ctx, g, u)?;
                 let f = layer.down.project(tape, &ctx, p, f, rows)?;
                 let f = tape.rms(&ctx, f, width)?;
-                x = tape.sum(&ctx, x, f, scale)?;
+                x = ffn.write(tape, &ctx, f, width, scale)?;
             }
+        }
+        if self.mhc.is_some() {
+            x = tape.collapse(&ctx, x, width)?;
         }
         tape.rms(&ctx, x, width)
     }
@@ -234,6 +253,7 @@ impl Engine {
             cuda: &self.cuda,
             kernel: &self.kernel,
             scores: &self.scores,
+            mhc: self.mhc.as_ref(),
             rotations: self.rotations.ptr(),
             alpha: self.parameters.alpha(),
             length,
@@ -278,6 +298,7 @@ impl Engine {
             cuda: &self.cuda,
             kernel: &self.kernel,
             scores: &self.scores,
+            mhc: self.mhc.as_ref(),
             rotations: self.rotations.ptr(),
             alpha: self.parameters.alpha(),
             length,
@@ -349,7 +370,7 @@ pub fn check() -> Result<()> {
     cfg.layers = 2;
     cfg.vocab = 6;
     cfg.max_length = 3;
-    let mut engine = Engine::new(cfg, 2, 1)?;
+    let mut engine = Engine::new(cfg, 2, 1, Routing::selected()?)?;
     let initial = engine.weights()?;
     let mut tied = vec![0.0; initial.len()];
     tied[2 * 16] = 0.125;
