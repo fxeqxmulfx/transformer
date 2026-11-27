@@ -1,34 +1,44 @@
-//! Frozen GPT stress cases and schedule for the Argand full-batch runs.
-use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
+//! Training, scoring and replay of one Argand cell of the frozen GPT tiers.
 use crate::{
-    Config, KERNITE_VERSION,
-    argand::{Engine, MODEL, PENALTY},
-    argand_metrics as metrics,
+    KERNITE_VERSION, Result,
+    data::{Example, Task},
+    engine::{self, Engine, MODEL, PENALTY},
+    hash, metrics,
     schedule::Schedule,
+    suite::{self, Shape, publish, suite_hash},
 };
-use std::path::{Path, PathBuf};
+use serde_json::{Value, json};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
-pub fn command(op: &str, args: &[String]) -> Result<()> {
-    match (op, args) {
-        ("argand-check", []) => crate::argand::check(),
-        ("argand-run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
+const USAGE: &str = "usage: argand check | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR";
+
+pub fn command(args: &[String]) -> Result<()> {
+    let Some((op, args)) = args.split_first() else {
+        return Err(USAGE.into());
+    };
+    match (op.as_str(), args) {
+        ("check", []) => engine::check(),
+        ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
             name,
             seed.parse()?,
             repeat.parse()?,
             Path::new(out),
             cutoff.first().map(|step| step.parse()).transpose()?,
         ),
-        ("argand-replay", [name, seed, repeat, out]) => {
+        ("replay", [name, seed, repeat, out]) => {
             replay(name, seed.parse()?, repeat.parse()?, Path::new(out))
         }
-        _ => Err("usage: argand-check | argand-run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | argand-replay CASE SEED REPEAT RUN_DIR".into()),
+        _ => Err(USAGE.into()),
     }
 }
 
 struct Cell {
     row: Value,
     task: Task,
-    shape: Config,
+    shape: Shape,
     batch: usize,
     every: usize,
     schedule: Schedule,
@@ -42,17 +52,14 @@ impl Cell {
         if seed > 2 || repeat == 0 {
             return Err("expected seed 0 through 2 and a positive repeat count".into());
         }
-        let (row, task) = load(name)?;
-        if !matches!(row["tier"].as_str(), Some("short" | "long")) {
-            return Err("expected a case from the canonical GPT tiers".into());
-        }
+        let (row, task) = suite::load(name)?;
         let number = |k: &str| {
             row["case"][k]
                 .as_u64()
                 .ok_or("missing case setting")
                 .map(|n| n as usize)
         };
-        let shape = task_config(&row, &task, true)?;
+        let shape = suite::shape(&row, &task)?;
         let (batch, every, schedule) = (
             number("batch")?,
             number("observe")?,
@@ -73,14 +80,12 @@ impl Cell {
     }
 
     fn engine(&self) -> Result<Engine> {
-        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed)?;
-        engine.config.max_batch = task_config(&self.row, &self.task, false)?.max_batch;
-        Ok(engine)
+        Engine::new(self.shape.clone(), self.repeat, self.seed)
     }
 
     fn identity(&self) -> Value {
         json!({"model":MODEL,"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
-            "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION,
+            "tier":self.row["tier"],"suite_sha256":suite_hash(),"kernite":KERNITE_VERSION,
             "penalty":PENALTY.to_string()})
     }
 

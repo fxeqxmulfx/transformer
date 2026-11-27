@@ -26,7 +26,9 @@ if [[ $cap != 0 && ( $cap != [1-9]* || ${cap//[0-9]/} ) ]]; then
 fi
 
 dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-bin=${PHASOR_BIN:-"$dir/target/release/phasor-value-transport"}
+# ARGAND_BIN names a frozen copy of the binary, so a cohort keeps one
+# build while the crate is rebuilt.
+bin=${ARGAND_BIN:-"$dir/target/release/argand"}
 suite="$dir/../convex_stress/suite.json"
 rows=$(jq -er --arg tier "$tier" '.seeds as $seeds |
     (.tasks[] | select($tier == "all" or .tier == $tier)) as $task | $seeds[] |
@@ -42,10 +44,10 @@ while IFS=$'\t' read -r case_name seed budget every; do
     fi
     dest="$out/$case_name/seed$seed"
     mkdir -p "$dest"
-    result=$("$bin" argand-run "$case_name" "$seed" "$repeat" "$out" "$stop" 2>> "$dest/observations.jsonl")
+    result=$("$bin" run "$case_name" "$seed" "$repeat" "$out" "$stop" 2>> "$dest/observations.jsonl")
     printf '%s\n' "$result"
     if jq -e '.passed' <<< "$result" >/dev/null; then
-        "$bin" argand-replay "$case_name" "$seed" "$repeat" "$out" > "$dest/replay.pending"
+        "$bin" replay "$case_name" "$seed" "$repeat" "$out" > "$dest/replay.pending"
         mv -- "$dest/replay.pending" "$dest/replay.json"
     fi
 done <<< "$rows"

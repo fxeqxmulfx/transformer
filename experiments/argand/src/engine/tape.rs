@@ -114,11 +114,11 @@ impl Tape {
         })
     }
 
-    pub fn clear_gradients(&self, clear: &crate::slot_copy::kernels::Kernels) -> Result<()> {
+    pub fn clear_gradients(&self, kernel: &kernels::device::Kernels) -> Result<()> {
         for slot in &self.slots[..self.used] {
             // SAFETY: the grid is bounded by the used portion of this slot.
             unsafe {
-                clear.clear(grid(slot.len), slot.dx.ptr(), slot.len as u32)?;
+                kernel.clear(grid(slot.len), slot.dx.ptr(), slot.len as u32)?;
             }
         }
         Ok(())

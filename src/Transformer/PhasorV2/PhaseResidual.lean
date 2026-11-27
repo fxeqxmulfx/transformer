@@ -12,7 +12,7 @@ real coefficient controls the rotation at every token and channel of the sublaye
 The incoming norm is already computed by the input RMS. At zero initialization the
 update is ordinary addition. The skip preserves the norm and has an explicit inverse.
 
-The example branch follows `experiments/phasor_value_transport/ARGAND.md`, §§ Embedding,
+The example branch follows `experiments/argand/ARGAND.md`, §§ Embedding,
 complex_ffn, and Forward pass and loss. Both projected factors of the FFN change sign
 when the input is negated. Their product, hence the normalized and scaled write, is even.
 The two occurrences of RMS use the runner's denominator `‖x‖ + ε`.

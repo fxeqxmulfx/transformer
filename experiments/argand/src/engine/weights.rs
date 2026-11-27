@@ -2,7 +2,7 @@
 use super::kernels::device;
 use super::tape::{Context, Tape};
 use super::{F, Pair, Result, SCORE_INIT, grid};
-use crate::{Config, optimizer_kernels, random::Random};
+use crate::{optimizer_kernels, random::Random, suite::Shape};
 use kernite_cuda::{Cuda, Grid};
 
 pub(super) struct Projection {
@@ -64,7 +64,7 @@ pub(super) struct Parameters {
 }
 
 impl Parameters {
-    pub fn new(cuda: &Cuda, cfg: &Config, seed: u32) -> Result<Self> {
+    pub fn new(cuda: &Cuda, cfg: &Shape, seed: u32) -> Result<Self> {
         let width = cfg.width;
         let mut rng = Random::new(seed);
         let embed_size = 2 * cfg.vocab * width;

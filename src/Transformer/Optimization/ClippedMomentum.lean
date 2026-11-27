@@ -4,8 +4,8 @@ public import Transformer.AMSGradW.Kernite
 public import Transformer.AMSGradW.Perturbation
 public import Mathlib.Topology.Algebra.InfiniteSum.Real
 
-/-! The exact-real version of the default Argand update in
-experiments/phasor_value_transport/src/argand/kernels.rs. Global clipping
+/-! The exact-real version of the Argand update in
+experiments/argand/src/engine/kernels.rs. Global clipping
 has threshold one, Polyak momentum is 0.9, and weight decay is zero. -/
 
 @[expose] public section

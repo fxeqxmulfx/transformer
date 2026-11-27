@@ -1,4 +1,5 @@
-# Compare two complete runs of run_v2_stress.sh at the same observation cap.
+# Compare two complete runs of run_argand.sh, or of run_v2_stress.sh at commit
+# 7399c3bb, at the same observation cap.
 # Load suite, control and candidate with --slurpfile and cap with --argjson.
 def cell: [.identity.case, .identity.seed];
 def sha256: type == "string" and test("^[0-9a-f]{64}$");

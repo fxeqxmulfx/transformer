@@ -4,7 +4,7 @@
 //! multipliers starting at `1 + 0i`, and the clipped momentum steps of the
 //! Lean `fullGradientMomentumRun` on the full training gradient plus
 //! `PENALTY * x`. Earlier residual, score and optimizer variants are in
-//! commit 7399c3bb.
+//! experiments/phasor_value_transport at commit 7399c3bb.
 mod kernels;
 mod residual;
 mod scores;
@@ -12,7 +12,7 @@ mod tape;
 mod weights;
 
 pub(crate) use crate::Result;
-use crate::{base_ops, optimizer_kernels, random::Random, slot_copy, stable_loss};
+use crate::{base_ops, optimizer_kernels, random::Random, stable_loss, suite::Shape};
 use kernite_cuda::{Buffer, Cuda, Grid, Ptr};
 use residual::Sublayer;
 use tape::{Context, Pair, Tape};
@@ -45,7 +45,7 @@ pub struct Engine {
     pub predictions: Buffer<u32>,
     pub logits: F,
     pub cuda: Cuda,
-    shape: crate::Config,
+    shape: Shape,
     repeat: usize,
     parameters: Parameters,
     tape: Tape,
@@ -53,7 +53,6 @@ pub struct Engine {
     scores: scores::device::Kernels,
     embed: base_ops::kernels::Kernels,
     loss: stable_loss::kernels::Kernels,
-    clear: slot_copy::kernels::Kernels,
     optimizer: optimizer_kernels::kernels::Kernels,
     inputs: Buffer<u32>,
     labels: Buffer<u32>,
@@ -64,7 +63,7 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new(shape: crate::Config, repeat: usize, seed: u32) -> Result<Self> {
+    pub fn new(shape: Shape, repeat: usize, seed: u32) -> Result<Self> {
         if shape.width == 0
             || shape.heads == 0
             || !shape.width.is_multiple_of(shape.heads)
@@ -91,7 +90,6 @@ impl Engine {
             scores: scores::device::Kernels::load(&cuda)?,
             embed: base_ops::kernels::Kernels::load(&cuda)?,
             loss: stable_loss::kernels::Kernels::load(&cuda)?,
-            clear: slot_copy::kernels::Kernels::load(&cuda)?,
             optimizer: optimizer_kernels::kernels::Kernels::load(&cuda)?,
             inputs: cuda.alloc(rows)?,
             labels: cuda.alloc(rows)?,
@@ -322,7 +320,7 @@ impl Engine {
         let p = &self.parameters;
         // SAFETY: the launch covers the parameter gradient buffer.
         unsafe {
-            self.clear
+            self.kernel
                 .clear(grid(p.len()), p.grad.ptr(), p.len() as u32)?;
         }
         Ok(())
@@ -372,7 +370,7 @@ impl Engine {
             heads,
             head_width: width / heads,
         };
-        self.tape.clear_gradients(&self.clear)?;
+        self.tape.clear_gradients(&self.kernel)?;
         // SAFETY: this launch uses the logit buffer extent.
         unsafe {
             let count = output.len / 2;
@@ -423,12 +421,14 @@ impl Engine {
 }
 
 pub fn check() -> Result<()> {
-    let mut cfg = crate::config(2)?;
-    cfg.width = 16;
-    cfg.heads = 2;
-    cfg.layers = 2;
-    cfg.vocab = 6;
-    cfg.max_length = 3;
+    let cfg = Shape {
+        width: 16,
+        heads: 2,
+        layers: 2,
+        vocab: 6,
+        max_length: 3,
+        max_batch: 2,
+    };
     let mut engine = Engine::new(cfg, 2, 1)?;
     let mut initial = engine.weights()?;
     let width = engine.shape.width;

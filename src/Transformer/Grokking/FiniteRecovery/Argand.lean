@@ -3,7 +3,7 @@ module
 public import Transformer.Grokking.FiniteRecovery.ArgandAttention
 
 /-! The single-stream Argand forward pass from
-experiments/phasor_value_transport/ARGAND.md, including skip and write gates,
+experiments/argand/ARGAND.md, including skip and write gates,
 split complex attention, shared layer repeats, and the tied token readout. -/
 
 @[expose] public section

@@ -397,6 +397,21 @@ pub(super) mod device {
         put(g, i, gradient);
     }
 
+    /// Zeroes `count` coordinates, as `clear` in
+    /// experiments/phasor_value_transport/src/slot_copy.rs.
+    pub unsafe extern "ptx-kernel" fn clear(out: *mut f32, count: u32) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past {
+            ret();
+        }
+        let zero: f32;
+        mov.f32(zero, 0.0);
+        put(out, i, zero);
+    }
+
     #[instances(false,true)]
     pub unsafe extern "ptx-kernel" fn real_readout<const BACK: bool>(
         y: *mut f32, x: *const f32, size: u32,

@@ -1,0 +1,750 @@
+# Argand on the GPT stress tiers
+
+Can a complex decoder with one residual stream and a tied vocabulary
+readout learn the frozen GPT stress tiers from random embeddings? The
+runs vary its residual, the starting value $s_0$ of its score
+multiplier, its optimizer and its batch.
+[Architecture](ARGAND.md) · [Lean forward pass](../../src/Transformer/Grokking/FiniteRecovery/Argand.lean)
+
+## Training and replay
+
+This crate trains one model: skip and write gates around every
+sublayer, $s_0 = 1 + 0i$, and the clipped momentum steps of the Lean
+`fullGradientMomentumRun`. Each update takes the gradient of the full
+training loss plus $\frac{\lambda}{2}\lVert\theta\rVert^2$, with
+$\lambda = 10^{-4}$. The model has no configuration flags and runs on
+Kernite 0.8.0. The data generators, scorer, WSD schedule and shared
+kernels are modules of the pinned GPT checkout, compiled unchanged.
+The build checks the checkout's commit. [Pinned checkout](../phasor_value_transport/README.md#reproducing-the-pair-address-baseline)
+
+```sh
+cargo +stable build --locked --release
+target/release/argand check
+out=runs/argand-short
+mkdir -p "$out"
+./run_argand.sh short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+```
+
+`check` tests on the GPU the tied classifier, prefix causality,
+finite-difference directional derivatives, the microbatch accumulation
+and the clipped momentum step. `run CASE SEED REPEAT RUN_DIR
+[LAST_OBSERVATION]` trains one cell of the 25 short and 10 long cases.
+It stops at the first scheduled observation with at least 99% exact
+sequences on the primary held-out split, or at the requested
+observation. Rerunning it on the same directory resumes the saved
+weights and velocity. `replay CASE SEED REPEAT RUN_DIR` reloads the
+checkpoint in a new process and scores every held-out and transfer
+split. `run_argand.sh TIER REPEAT RUN_DIR [MAX_UPDATES]` runs the three
+seeds of every case in a tier and replays each pass.
+
+Each update visits the training split in order, in microbatches of the
+case's batch size. Scoring uses the same batch size and scores each
+example independently. One checkpoint replayed with batches of 16, 32
+and 128 gave identical scores and losses on all 13 splits. Checkpoints
+from commit e38c01a3 resume here. So do those from commit 7399c3bb with
+`ARGAND_SCORE_INIT=1 ARGAND_BATCH=full ARGAND_PENALTY=1e-4`.
+
+## Runs
+
+The first ten rows ran in `experiments/phasor_value_transport` at commit
+7399c3bb or earlier, as described under [Earlier runs](#earlier-runs).
+All ran on the RTX 3050 Laptop GPU with one pass through the layers.
+"Minibatch" means the suite's minibatches in the frozen order. Times
+and update counts are in the linked sections.
+
+| Runs | Residual | $s_0$ | Optimizer and batch | Cells | Result |
+|---|---|---|---|---|---|
+| [GPT screens](#gpt-screens-and-delayed-generalization) | Ordinary addition | $1+i$ | AdamW, minibatch | 35 cases × 3 seeds, 1,000 updates | 19/75 short and 1/30 long runs reach 99% |
+| [Score start](#score-initialization-on-absolute-difference) | Ordinary addition | $1+i$, $1$ | AdamW, minibatch | Blind absolute difference, seed 1 | 99% at updates 12,996 and 14,706 |
+| [Norm phase](#one-stream-residual-with-a-norm-dependent-phase) | Ordinary, norm-dependent phase | $1$ | AdamW, minibatch | 35 cases × 3 seeds, 1,000 updates | Short 21/75 and 22/75, long 2/30 and 4/30 |
+| [Residual gates](#token-dependent-residual-gates-on-arithmetic-abs-diff-blind) | Five single-stream residuals and complex mHC | $1$ | AdamW, minibatch | Blind absolute difference, 3 seeds, 988 updates | Skip and write gates 66.5%, mHC 70.2% held-out |
+| [Gates with AMSGradW](#skip-and-write-gates-with-amsgradw) | Skip and write gates | $1$ | AMSGradW $\beta_2=0.98$, minibatch | Blind absolute difference, 3 seeds, 988 updates | 64.9% held-out |
+| [mHC on one task](#complex-mhc-in-argand) | Real, conjugated and edge-phase mHC | $1+i$ | AdamW, minibatch | Blind absolute difference, seed 1 | 99% at updates 9,158, 4,446 and 3,990 |
+| [mHC short screen](#argand-short-gpt-stress-screen) | Edge-phase mHC | $1+i$ | AdamW, minibatch | 25 short × 3 seeds, 1,000 updates | 26/75 |
+| [mHC score start](#argand-score-initialization-at-1) | Edge-phase mHC | $1$ | AdamW, minibatch | 25 short × 3 seeds, 1,000 updates | 32/75 |
+| [AMSGradW screens](#argand-with-amsgradw) | Edge-phase mHC | $1$ | AMSGradW: $\beta_2=0.95$; $\beta_2=0.98$; $a=0.9$, minibatch | 25 short × 3 seeds, 1,000 updates | 25/75, 26/75, 24/75 |
+| [Full-batch momentum](#argand-full-batch-momentum) | Skip and write gates | $1+i$ | Clipped momentum, full batch, $\lambda=10^{-4}$ | `suite-boolean-and-shift`, seed 0, 200 updates | 3.43 s, against 0.97 s with minibatches |
+| [This model](#this-model) | Skip and write gates | $1$ | Clipped momentum, full batch, $\lambda=10^{-4}$ | `suite-boolean-and-shift`, seed 0 | 99% at update 224 |
+
+## Findings
+
+With AdamW minibatches and 1,000 updates, the four-stream complex mHC
+with independent edge phases and $s_0=1$ passed the most short runs,
+32/75. Among one-stream residuals, skip and write gates came closest to
+it on blind absolute difference: 66.5% against 70.2% held-out at update
+988. They reached 50% in less elapsed time than mHC on all three seeds. The
+three AMSGradW screens passed fewer short runs than AdamW.
+
+### This model
+
+On `suite-boolean-and-shift` seed 0, this model reached 7/7 on the
+primary held-out split at update 224. Training and scheduled scoring
+took 3.9 s. An independent replay reproduced the score and loss, and
+scored 27/64 on the `test` split. The model has not yet been screened
+on the tiers.
+
+```sh
+target/release/argand run suite-boolean-and-shift 0 1 runs/argand-boolean-shift
+target/release/argand replay suite-boolean-and-shift 0 1 runs/argand-boolean-shift
+```
+
+With 40 updates on the same cell, this crate reached the loss
+4.572885853903634 of the runner it replaces, commit e38c01a3. The final
+states differed by at most `2e-8`. Repeated runs of either runner differ
+by up to `9e-8`, because the LeRoPE $\alpha$ and score adjoints are
+summed by atomic additions.
+
+## Earlier runs
+
+These runs trained in `experiments/phasor_value_transport` at commit
+7399c3bb or earlier, and their run directories remain in that
+directory's `runs/`. Run their commands there at commit 7399c3bb. At
+that commit, the `v2-*` operations and the variables `PHASOR_V2_MHC`,
+`ARGAND_RESIDUAL`, `ARGAND_SCORE_INIT`, `ARGAND_OPTIMIZER`,
+`ARGAND_AMSGRADW_SQRT_SCALE`, `ARGAND_AMSGRADW_BETA2`, `ARGAND_BATCH` and
+`ARGAND_PENALTY` select the variants, and `run_v2_stress.sh` is the run
+script. Source paths in these sections refer to that commit.
+
+The single-stream configuration of Argand, originally named Phasor v2,
+uses a complex residual stream and a tied vocabulary classifier. For
+each position it computes
+`(Re(x) Re(E)^T + Im(x) Im(E)^T) / 2` against all rows of the learned
+embedding table. The outer cross-entropy uses the frozen GPT supervision
+mask and the original scorer, including free generation and EOS.
+
+The implementation uses FP32 real coordinates throughout the complex
+forward and reverse passes. RMS divides by the Euclidean norm plus
+`1e-6` and multiplies by the square root of the complex width. Each
+layer uses Q/K RMS, a shared learned LeRoPE table and two causal
+softmaxes for the complex attention weights. Score row `n` is multiplied
+by `s log(n)/sqrt(d)`, where the complex scalar `s` is shared by the
+heads of its layer. It starts at `1 + i` unless a section says
+otherwise. The FFN uses a width-`4c` complex product. Both residual
+branches use PeriNorm and `1/sqrt(2 * layers * repeat)`. The same layer
+parameters are applied on every repeat. The experiments use the suite's
+widths, head counts and depths, with `repeat=1`.
+
+Use the pinned checkout described under
+[reproduction](../phasor_value_transport/README.md#reproducing-the-pair-address-baseline).
+From `experiments/phasor_value_transport`, the following commands verify
+the tied classifier and directional derivatives, then screen all three
+seeds of every canonical case.
+
+```sh
+cargo +stable build --locked --release
+target/release/phasor-value-transport v2-check
+out=runs/phasor-v2-kernite
+mkdir -p "$out"
+export PHASOR_EVAL_BATCH_CAP=16
+./run_v2_stress.sh 1 "$out" 1000 | tee "$out/stress-1000.jsonl"
+```
+
+The optional cap stops at the last scheduled observation within the
+specified number of updates. With the cap omitted, the runner uses
+the complete frozen budgets. Reusing the same directory resumes the
+stored weights, optimizer state and minibatch order. Passing checkpoints
+are reloaded and scored on the held-out and available transfer splits.
+
+### GPT screens and delayed generalization
+
+On the RTX 3050 Laptop GPU, the first 1,000 updates gave 19/75 passing
+short runs and 1/30 passing long runs. Each passing checkpoint reproduced
+its primary score in an independent reload. The long pass was easy
+recall, seed 2, with 511/512 at update 750.
+
+On `arithmetic-abs-diff-blind`, two input tokens encode operands and the
+target is `floor(abs(a-b)/2)`. Seed 1 had the highest held-out score at the
+screen and was continued with the same optimizer and schedule. The gap
+between train and validation narrowed substantially after the model had
+fit nearly all the training pairs.
+
+| Update | Training pairs correct /4704 | Held-out pairs correct /4705 |
+|---|---:|---:|
+| 988 | 4,594 | 1,432 |
+| 4,997 | 4,697 | 4,015 |
+| 12,996 | 4,704 | 4,658 |
+
+```sh
+bin=target/release/phasor-value-transport
+"$bin" v2-run arithmetic-abs-diff-blind 1 1 "$out" 4997
+"$bin" v2-run arithmetic-abs-diff-blind 1 1 "$out" 19988
+"$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$out"
+```
+
+The train column uses the same replay with `train` included in the split
+predicate in `src/stress/argand.rs`. The checkpoint digest, weights and scorer
+are identical for both columns.
+
+The matched control is the original fixed-mean Phasor. It uses the
+learned complex backbone, four residual streams with a fixed mean
+and the tied classifier. Its held-out score on the same seed was
+4,662/4,705 at update 4,978. The single-stream model needed 2.61 times
+as many updates to reach 99%. Both runs used the case's configured
+width of 128, which counts real coordinates in the original model and
+complex numbers in Argand.
+
+```sh
+CARGO_TARGET_DIR=target/plain-phasor cargo +stable build --locked --release \
+    --features fp32-affine-reference,original-stream-mean
+plain=target/plain-phasor/release/phasor-value-transport
+"$plain" screen arithmetic-abs-diff-blind 1 "$out/plain-long" 12996
+"$plain" replay arithmetic-abs-diff-blind 1 "$out/plain-long"
+```
+
+### Score initialization on absolute difference
+
+Both coordinates of the score multiplier train from either starting
+value, `1 + i` or `1 + 0i`. The two values differ in scale and in
+how they mix the real and imaginary logits before their respective
+softmaxes. With two input tokens, every supervised row has the same
+prefix length. The comparison uses seed 1 and the same schedule and
+stopping threshold as the earlier single-stream Argand run.
+
+| Initial multiplier | Held-out correct at 988 /4705 | Held-out correct at 4,997 /4705 | First 99% update |
+|---|---:|---:|---:|
+| `1 + i` | 1,432 | 4,015 | 12,996 |
+| `1 + 0i` | 1,520 | 4,261 | 14,706 |
+
+Both passing checkpoints replayed at 4,658/4,705. Real initialization
+improved early held-out accuracy and took 13.2% more updates to reach
+99%. The delayed improvement on novel pairs persists under both
+initializations.
+
+To reproduce the real initialization in a separate experiment worktree,
+set the score entry in `Parameters::new` in `src/argand/weights.rs`
+to `values.extend([1.0, 0.0]);` and append `-s-init-real` to the model
+identifier for `Routing::Single` in `src/argand/complex_mhc.rs`.
+Build the same release binary and use a fresh run directory with the
+following commands.
+
+```sh
+cargo +stable build --locked --release
+bin=target/release/phasor-value-transport
+real=runs/phasor-v2-s-init-real
+for stop in 988 4997 19988; do
+    "$bin" v2-run arithmetic-abs-diff-blind 1 1 "$real" "$stop"
+done
+"$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$real"
+```
+
+### One-stream residual with a norm-dependent phase
+
+Does rotating the skip help a single-stream Argand reach 99% held-out exact sequences
+within 1,000 updates? Each attention and FFN sublayer gets one real coefficient
+$\theta$, initialized to zero and shared across tokens. It updates the incoming
+complex vector by $x' = e^{i\theta\lVert x\rVert_2} x + u(x)$, where $u$ is the
+usual scaled, PeriNorm-normalized write. The rotation uses the incoming norm before
+RMS. A repeated pass reuses the same coefficients. [Lean definition and proof](../../src/Transformer/PhasorV2/PhaseResidual.lean)
+
+| `ARGAND_RESIDUAL` | Skip | Additional real parameters per layer |
+|---|---|---:|
+| `single` | $x$ | 0 |
+| `norm-phase` | $e^{i\theta\lVert x\rVert_2} x$ | 2 |
+
+Both arms use the tied vocabulary, the score multiplier initialized to `1 + 0i`,
+AdamW, one pass, and the same frozen schedule and minibatch order for each seed.
+Both coordinates of the multiplier train. The shared weights start at identical
+values. The runner checks the threshold at the scheduled observations through
+update 1,000 and reloads every passing checkpoint.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=adamw PHASOR_EVAL_BATCH_CAP=16
+for residual in norm-phase single; do
+    export ARGAND_RESIDUAL=$residual
+    out="runs/argand-norm-phase-s1/$residual"
+    mkdir -p "$out"
+    target/release/phasor-value-transport argand-check
+    ./run_v2_stress.sh --argand all 1 "$out" 1000 > "$out/stress-1000.jsonl"
+done
+unset ARGAND_RESIDUAL ARGAND_SCORE_INIT ARGAND_OPTIMIZER PHASOR_EVAL_BATCH_CAP
+jq -n --argjson cap 1000 --slurpfile suite ../convex_stress/suite.json \
+    --slurpfile control runs/argand-norm-phase-s1/single/stress-1000.jsonl \
+    --slurpfile candidate runs/argand-norm-phase-s1/norm-phase/stress-1000.jsonl \
+    -f compare_v2_screens.jq
+```
+
+| Tier | Tasks × seeds | Ordinary addition reaching 99% | Norm-dependent phase reaching 99% |
+|---|---:|---:|---:|
+| Short | 25 × 3 | 21/75 | 22/75 |
+| Long | 10 × 3 | 2/30 | 4/30 |
+
+On the short tier, the pass status changed only on `basis-depth-hard`.
+The phase residual passed seeds 0 and 2. Ordinary addition passed seed 1.
+For seed 0 at update 1,000, the phase residual scored 512/512 and ordinary
+addition scored 315/512. Of the 20 short runs where both crossed 99%, the
+phase residual crossed earlier in three, at the same observation in 15, and
+later in two. The earlier four-stream complex mHC screen with the same
+`s=1`, AdamW, cases, seeds and cutoff passed 32/75.
+
+The phase residual added two long passes. On `basis-recall-easy` seed 0
+it scored 509/512 at update 1,000, where ordinary addition scored 0/512.
+On `associative-divisor-n2-l1-w0` seed 2 it crossed at update 912, while
+ordinary addition finished at 4,597/4,656 at update 988. Both models passed
+`basis-recall-easy` seed 2 at update 450. On the other shared long pass,
+`associative-divisor-n2-l1-w0` seed 1, ordinary addition crossed at 817
+and the phase residual at 912.
+
+On `arithmetic-abs-diff-blind`, the task from the original mHC comparison,
+seed 1 scored 1,524/4,705 with the phase residual and 1,520/4,705 with
+ordinary addition at update 988, the last observation within the cap.
+
+The step-zero held-out scores and losses matched in all 105 pairs. All 210
+terminal state digests matched their records, and independent checkpoint
+reloads reproduced the held-out scores and losses of all 49 passes. All
+105 phase runs learned at least one nonzero rotation coefficient.
+
+#### Token-dependent residual gates on `arithmetic-abs-diff-blind`
+
+The embedding RMS gives the first attention sublayer inputs of almost
+constant norm. A gate that reads the token coordinates can distinguish
+directions of equal norm. Let $n=\mathrm{RMS}(x)$ and let $u$ be the usual
+scaled, normalized branch write. The single-stream `write-gate` updates
+$x'=x+(1+n^\mathsf{T}w)u$. Each sublayer learns one zero-initialized
+complex vector $w$. A single complex scalar controls the magnitude and
+phase of the write at each token. Zero initialization reproduces ordinary
+addition, including all initial logits.
+
+Two variants add one independent complex vector per sublayer. Write
+$g_r=1+n^\mathsf{T}w_r$, $g_s=1+n^\mathsf{T}w_s$, and $g_w=1+n^\mathsf{T}w_w$.
+The read-and-write variant passes $g_r n$ into attention or the FFN and
+multiplies the normalized write by $g_w$. The skip-and-write variant keeps
+the usual block input $n$ and computes $x'=g_s x+g_w u$. Both gates see
+the same incoming token. Each variant uses one stream, four width-128
+complex vectors per layer, and ordinary addition at initialization.
+
+The blind absolute-difference task has 4,704 training pairs and 4,705
+held-out pairs. All runs use width 128, one layer, one pass, the tied
+vocabulary, AdamW, and a score multiplier initialized to `1 + 0i`.
+The schedule checks every 19 updates. Update 988 is the last observation
+within the 1,000-update cap. The timing run used one executable for all
+six models, with the order varied by seed. Times include training and
+scheduled scoring on the RTX 3050 Laptop GPU and exclude setup, checkpoint
+writes and replay.
+
+| Residual | Extra real parameters per layer | Held-out correct, seeds 0 / 1 / 2 | Mean accuracy | Mean seconds to update 988 |
+|---|---:|---|---:|---:|
+| Ordinary addition | 0 | 1,430 / 1,520 / 1,357 | 30.5% | 7.64 |
+| Norm-dependent phase | 2 | 1,437 / 1,524 / 1,346 | 30.5% | 7.67 |
+| Write gate | 512 | 2,394 / 2,347 / 2,359 | 50.3% | 8.12 |
+| Read and write gates | 1,024 | 2,336 / 2,346 / 2,387 | 50.1% | 9.60 |
+| Skip and write gates | 1,024 | 3,115 / 3,005 / 3,270 | 66.5% | 9.39 |
+| Four-stream complex mHC, independent edge phases | 49,152 | 3,285 / 3,220 / 3,399 | 70.2% | 11.80 |
+
+The write gate gained 19.8 percentage points over the norm-dependent phase.
+Adding a skip gate gained a further 16.2 points. Adding a read gate changed
+the mean by −0.2 points. Complex mHC led the skip-and-write model on every
+seed at update 988, by 3.6 points on average.
+
+At 50% accuracy, the skip-and-write model took 646 / 627 / 646 updates,
+exactly 38 more than mHC on each seed. In elapsed time it reached that
+threshold sooner on all three, averaging 6.14 seconds versus 7.24 seconds
+for mHC. All runs stayed below 99% through the cap. Independent checkpoint
+reloads reproduced the held-out scores and losses of all 18 runs.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+task=arithmetic-abs-diff-blind
+out=runs/argand-abs-diff-s1
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=adamw PHASOR_EVAL_BATCH_CAP=16
+for variant in single norm-phase write-gate read-write-gate skip-write-gate entry-phase; do
+    ARGAND_RESIDUAL=$variant "$bin" argand-check
+done
+for seed in 0 1 2; do
+    case "$seed" in
+        0) variants='single write-gate skip-write-gate entry-phase read-write-gate norm-phase' ;;
+        1) variants='norm-phase read-write-gate entry-phase skip-write-gate write-gate single' ;;
+        2) variants='entry-phase skip-write-gate single norm-phase write-gate read-write-gate' ;;
+    esac
+    for variant in $variants; do
+        export ARGAND_RESIDUAL=$variant
+        cell="$out/$variant/$task/seed$seed"
+        mkdir -p "$cell"
+        if [ ! -s "$cell/result.json" ]; then
+            "$bin" argand-run "$task" "$seed" 1 "$out/$variant" 988 2> "$cell/observations.jsonl"
+        fi
+        "$bin" argand-replay "$task" "$seed" 1 "$out/$variant" > "$cell/replay.json"
+    done
+done
+unset ARGAND_RESIDUAL ARGAND_SCORE_INIT ARGAND_OPTIMIZER PHASOR_EVAL_BATCH_CAP
+jq -s 'sort_by(.identity.model,.identity.seed)' "$out"/*/"$task"/seed*/result.json > "$out/comparison.json"
+./plot_argand_abs_diff.sh "$out"
+```
+
+#### Skip and write gates with AMSGradW
+
+At commit 7399c3bb the Argand commands selected `skip-write-gate` by
+default. These gates are the residual of this crate. Each attention
+and FFN sublayer computes both complex gates from the normalized incoming
+token vector. The skip gate multiplies the incoming residual and the write
+gate multiplies the normalized block output before scaling the write.
+The two vectors in each sublayer start at zero, giving both gates an
+initial value of `1 + 0i`.
+[Architecture](ARGAND.md)
+
+At that commit Argand defaulted to minibatch SGD with momentum `0.9`, zero
+weight decay and the WSD schedule on Kernite 0.8.0.
+`ARGAND_OPTIMIZER=adamw` or `ARGAND_OPTIMIZER=amsgradw` selected the
+earlier optimizer controls, and `ARGAND_RESIDUAL=entry-phase` the
+four-stream mHC model.
+The historical checkpoints record their optimizer and Kernite version.
+The command below checks the skip-and-write residual on
+`arithmetic-abs-diff-blind` with AMSGradW at `beta2=0.98`, the original
+WSD horizon, and a cap of 1,000 updates. Update 988 is the final scheduled
+observation within that cap.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+task=arithmetic-abs-diff-blind
+out=runs/argand-skip-write-amsgradw-abs-diff
+unset ARGAND_RESIDUAL ARGAND_AMSGRADW_SQRT_SCALE
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw ARGAND_AMSGRADW_BETA2=0.98
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" argand-check
+for seed in 0 1 2; do
+    cell="$out/$task/seed$seed"
+    mkdir -p "$cell"
+    "$bin" argand-run "$task" "$seed" 1 "$out" 988 2> "$cell/observations.jsonl"
+    "$bin" argand-replay "$task" "$seed" 1 "$out" > "$cell/replay.json"
+done
+unset ARGAND_SCORE_INIT ARGAND_OPTIMIZER ARGAND_AMSGRADW_BETA2 PHASOR_EVAL_BATCH_CAP
+```
+
+The default gate run used width 128, four heads, one layer and one pass.
+All runs reached update 988. The two AdamW rows use the recorded results
+from the gate comparison above. The skip-and-write screens matched the
+case, seeds, splits and step-zero metrics. Times include training and
+scheduled scoring on the RTX 3050 Laptop GPU.
+
+| Residual | Optimizer | Held-out correct /4705, seeds 0 / 1 / 2 | Mean accuracy | Mean time (s) |
+|---|---|---|---:|---:|
+| Skip and write gates | AMSGradW, `beta2=0.98` | 2,987 / 3,029 / 3,144 | 64.9% | 8.28 |
+| Skip and write gates | AdamW | 3,115 / 3,005 / 3,270 | 66.5% | 9.39 |
+| Four-stream complex mHC | AdamW | 3,285 / 3,220 / 3,399 | 70.2% | 11.80 |
+
+The GPU check verified identity at initialization, the gate adjoints and
+AMSGradW updates. Independent reloads reproduced the held-out scores
+and losses of all three new checkpoints. Selecting `entry-phase` also
+reproduced the saved mHC checkpoint for seed 1.
+
+### Complex mHC in Argand
+
+Each sublayer has a separate complex router projection from the
+RMS-normalized stack of four streams. The pinned mHC kernels apply
+sigmoid to read amplitudes and twice sigmoid to write amplitudes.
+Twenty column/row Sinkhorn cycles produce the residual amplitudes $P$
+from logits with a diagonal offset of 2. The three routers start
+with identical amplitude projections and zero phase projections.
+
+The real arm uses these amplitudes directly. The conjugated and
+entry-phase arms learn a phase for each read and write gate. The
+conjugated residual uses $DPD^*$ with one angle per stream at each
+position. The entry-phase residual uses $P_{ij}e^{i\theta_{ij}}$
+with one angle per edge. All three pass the complex read through the
+same Argand PeriNorm attention and FFN. The vocabulary projection reads
+the RMS-normalized mean of the four final streams. Until commit
+3ead6c25, [ARGAND.md](ARGAND.md) also described the independent-phase
+variant.
+
+The comparison uses seed 1, 128 complex numbers, four heads, one
+layer and one pass on `arithmetic-abs-diff-blind`. Each run uses the
+frozen WSD schedule and stops at the first 99% observation or update
+19,988. The single-stream row uses the saved checkpoint from the
+same experimental setup. All runs use Kernite 0.7.0 on the RTX 3050.
+
+| Residual | Held-out correct at 988 /4705 | First 99% update | Held-out correct at first pass /4705 |
+|---|---:|---:|---:|
+| Ordinary addition | 1,432 | 12,996 | 4,658 |
+| Real mHC | 2,047 | 9,158 | 4,660 |
+| Complex gates and conjugated residual | 2,995 | 4,446 | 4,659 |
+| Complex gates and independent edge phases | 2,879 | 3,990 | 4,661 |
+
+Independent checkpoint reloads reproduced the scores and losses.
+Among the tested configurations, independent edge phases reached 99%
+in the fewest updates, 10.3% fewer than conjugated mixing. Both complex
+arms change read and write phases as well as residual mixing relative
+to real mHC. These results cover one case and one seed.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+export PHASOR_EVAL_BATCH_CAP=16
+for mode in real conjugated entry-phase; do
+    export PHASOR_V2_MHC=$mode
+    trial="runs/v2-mhc-comparison/$mode"
+    "$bin" v2-check
+    for stop in 988 4997 19988; do
+        "$bin" v2-run arithmetic-abs-diff-blind 1 1 "$trial" "$stop"
+    done
+    "$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$trial"
+done
+unset PHASOR_V2_MHC
+```
+
+#### Argand short GPT stress screen
+
+Set `ARGAND_RESIDUAL=entry-phase` to select the independent-phase model
+for this screen. The screen uses the 25 short cases with three
+seeds each and one pass through the layers. It stops each run
+at its first held-out observation at or above 99% or at the last scheduled
+observation at or below 1,000 updates. The learning-rate schedule uses the
+original case budget. The runner replays each passing checkpoint.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-1000
+mkdir -p "$out"
+PHASOR_EVAL_BATCH_CAP=16 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_RESIDUAL
+```
+
+The runs used Kernite 0.7.0 on an RTX 3050 Laptop GPU. The single-stream
+screen above used the same cases, seeds and observation limit.
+
+| Model | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 |
+|---|---:|---:|---:|
+| Single-stream control | 19 | 7 | 6 |
+| Argand with independent phases | 26 | 10 | 8 |
+
+Argand passed all 19 cells that passed in the single-stream screen.
+It also passed all three seeds of `arithmetic-square-sum` at updates
+893–950, all three seeds of `power-division-p97-k3` at updates 741–798,
+and seed 1 of `power-division-p193-k3` at update 949. All 75 terminal
+state digests matched the saved records. Independent reloads reproduced
+the held-out scores and losses of the 26 passing checkpoints.
+
+#### Argand score initialization at 1
+
+`ARGAND_SCORE_INIT=1` initializes each layer's score multiplier to
+`1 + 0i`. Both coordinates of the multiplier train. The checkpoint
+identifier records this initialization, so use a separate run directory.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 PHASOR_EVAL_BATCH_CAP=16
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_RESIDUAL ARGAND_SCORE_INIT
+```
+
+The paired screens used Kernite 0.7.0 on an RTX 3050 Laptop GPU with the
+same cases, seeds, splits, learning-rate schedule and observation limit.
+
+| Initial score multiplier | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 |
+|---|---:|---:|---:|
+| `1 + i` | 26 | 10 | 8 |
+| `1` | 32 | 13 | 8 |
+
+All 26 cells that passed with `1 + i` also passed with `1`. The six
+additional passes came from `arithmetic-cube-plus` (seeds 0 and 2),
+`arithmetic-mul` (seeds 0 and 1), `arithmetic-add` (seed 0) and
+`basis-depth-hard` (seed 1). Among the 26 shared passes, `1` reached
+99% earlier in 10, `1 + i` reached it earlier in 7, and 9 tied.
+All 75 terminal state digests matched the saved records. Independent
+reloads reproduced the held-out scores and losses of the 32 passing
+checkpoints.
+
+#### Argand with AMSGradW
+
+`ARGAND_OPTIMIZER=amsgradw` tracks the running maximum of each coordinate's
+second moment before bias correction, following AMSGrad in Reddi et al.,
+Algorithm 2. The parameter update uses that maximum in the denominator
+and applies decoupled weight decay. Both optimizers use the case's WSD
+schedule, `beta1=0.9`, `beta2=0.95`, `epsilon=1e-8`, weight decay `0.1`,
+bias correction and gradient norm clipping at `1`. The AMSGradW
+checkpoint includes the extra moment buffer and its own model identifier.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw
+export PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_AMSGRADW_SQRT_SCALE=1 ARGAND_AMSGRADW_BETA2=0.95
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one-amsgradw
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
+```
+
+The paired screen used `s=1`, Kernite 0.7.0 and an RTX 3050 Laptop GPU.
+The two runs matched the case, seed, split and step-zero score and loss
+for each of the 75 pairs. Time sums the training and evaluation segments.
+
+| Optimizer | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 | Updates | Time (s) |
+|---|---:|---:|---:|---:|---:|
+| AdamW | 32 | 13 | 8 | 57,762 | 870 |
+| AMSGradW | 25 | 9 | 8 | 59,341 | 902 |
+
+AdamW passed each of the 25 cells that passed with AMSGradW. Among these
+shared passes, AdamW crossed earlier in 11, AMSGradW crossed earlier in
+one, and 13 tied. The seven additional AdamW passes were two seeds each
+of `arithmetic-cube-plus` and `arithmetic-mul`, and one seed each of
+`arithmetic-add`, `power-division-p193-k3` and `basis-depth-hard`.
+The five modulo-97 arithmetic misses with AMSGradW reached 86.8–91.8%
+at update 988 and improved over their last four observations.
+`power-division-p193-k3` seed 1 reached 25.0% at update 949.
+
+A GPU update check verified clipping, both moments, the running maximum
+and decoupled decay. At update 8, the resumed and uninterrupted probe
+had the same exact score and a maximum absolute state difference of
+`2.8e-8`. All 75 terminal state digests matched the saved records, and
+all 25 passing checkpoints reproduced their held-out scores and losses
+on independent reload.
+
+#### Argand AMSGradW with a larger second-moment coefficient
+
+`ARGAND_AMSGRADW_BETA2` sets the second-moment coefficient in $[0,1)$
+and defaults to `0.95`. AMSGradW uses it in both the moment recurrence
+and bias correction. A non-default coefficient is recorded in the
+checkpoint identity. The `0.98` screen tests stronger smoothing before
+the running maximum, with a unit denominator scale and the full
+second-moment history.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw
+export ARGAND_AMSGRADW_SQRT_SCALE=1 ARGAND_AMSGRADW_BETA2=0.98 PHASOR_EVAL_BATCH_CAP=16
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one-amsgradw-beta2-0.98
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
+```
+
+The 75 runs used the same cases, seeds, held-out splits and WSD schedules
+as the unit-scale AMSGradW baseline. The scores and losses at update
+zero matched exactly. Time sums the training and evaluation segments
+recorded for each screen on the same RTX 3050 Laptop GPU.
+
+| Optimizer | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 | Updates | Time (s) |
+|---|---:|---:|---:|---:|---:|
+| AMSGradW, $\beta_2=0.98$ | 26 | 9 | 8 | 58,815 | 1,721 |
+| AMSGradW, $\beta_2=0.95$ | 25 | 9 | 8 | 59,341 | 902 |
+| AdamW, $\beta_2=0.95$ | 32 | 13 | 8 | 57,762 | 870 |
+
+All 25 baseline passes also passed at $\beta_2=0.98$. The additional pass
+was `basis-depth-hard` seed 0, which rose from 310/512 to 510/512 at
+update 1,000. Among the 25 shared passes, `0.98` reached 99% earlier
+in nine, `0.95` reached it earlier in one, and 15 tied.
+
+Among the 49 pairs finishing below 99% at the same cutoff, `0.98`
+scored higher in 47, tied in one, and scored lower in one. The median
+change was +2.2 percentage points. On `power-division-p193-k3` seed 1,
+accuracy rose from 25.0% to 50.2% at update 949. On `basis-depth-hard`
+seed 2, it fell from 92.2% to 63.3% at update 1,000.
+
+The GPU update matched the scalar reference at both coefficients. At
+`0.95` the eight-update probe had a maximum absolute state difference
+of `1.6e-8` from the prior build, and the saved baseline checkpoint
+reproduced its full replay. All 75 terminal state digests matched their
+records. Independent reloads reproduced the scores and losses of all
+26 passing checkpoints.
+
+#### Argand AMSGradW with a scaled denominator
+
+The adaptive denominator is $a\sqrt{v_{\max}/(1-\beta_2^t)}+\epsilon$.
+`ARGAND_AMSGRADW_SQRT_SCALE` sets $a$ in $(0,1]$. The checkpoint
+identity records each non-unit scale. The $a=0.9$ screen uses the
+same Argand initialization, WSD schedule and decoupled decay as the
+unit-scale AMSGradW screen.
+
+In the constant-step full-gradient update, dividing by
+$a\sqrt{v_{\max}}+\epsilon$ is equivalent to using standard AMSGradW
+with $\eta/a$, $\epsilon/a$ and $a\lambda$. The products
+$\eta\lambda$ and $\lambda\epsilon$ in the convergence conditions
+have the same values under this substitution.
+[AMSGradW convergence theorem](../../src/Transformer/AMSGradW/Convergence.lean)
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw
+export PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_AMSGRADW_SQRT_SCALE=0.9 ARGAND_AMSGRADW_BETA2=0.95
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one-amsgradw-scale-0.9
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
+```
+
+The 75 short runs matched the cases, seeds, splits, and step-zero scores
+and losses of the unit-scale AMSGradW and AdamW screens. AMSGradW kept
+its running maximum throughout every run. Time sums the training and
+evaluation segments.
+
+| Optimizer | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 | Updates | Time (s) |
+|---|---:|---:|---:|---:|---:|
+| AMSGradW, $a=0.9$ | 24 | 8 | 8 | 59,364 | 961 |
+| AMSGradW, $a=1$ | 25 | 9 | 8 | 59,341 | 902 |
+| AdamW | 32 | 13 | 8 | 57,762 | 870 |
+
+Among the 24 shared passes, $a=0.9$ reached 99% earlier in 10 runs,
+$a=1$ reached it earlier in one, and 13 tied. For `basis-depth-hard`
+seed 1, $a=1$ reached 511/512 at update 750 and $a=0.9$ finished at
+308/512 at update 1,000. The five modulo-97 arithmetic misses improved
+from 86.8–91.8% with $a=1$ to 92.5–95.6% with $a=0.9$ at update 988.
+`power-division-p193-k3` seed 1 improved from 25.0% to 42.1% at update
+949.
+
+All 75 terminal state digests matched the saved records. Independent
+checkpoint reloads reproduced the held-out scores and losses of all
+24 passes.
+
+#### Argand full-batch momentum
+
+`ARGAND_BATCH=full` trains the Lean `fullGradientMomentumRun`. Each
+update takes the gradient of the mean loss over every labeled training
+position, adds $\lambda\theta$ and then takes the clipped momentum step.
+
+$$
+g_k = \nabla L(\theta_k) + \lambda\theta_k, \qquad
+v_{k+1} = 0.9 v_k + \frac{g_k}{\max(1,\lVert g_k\rVert_2)}, \qquad
+\theta_{k+1} = \theta_k - \eta_k v_{k+1}.
+$$
+
+Microbatches of the suite's batch size visit the training split in
+order. Each divides its loss gradient by the split's label count, so the
+microbatch gradients sum to $\nabla L$, as in
+`accumulated_batchGradient`. The penalty enters once, before clipping,
+as in `fullGradientObjective_gradient`. `ARGAND_PENALTY` sets
+$\lambda$. The convergence theorem needs $\lambda>0$, and the runner
+refuses other values. The mode also refuses residuals other than
+`skip-write-gate` and optimizers other than `sgd-momentum`. The model
+name gains `-full-batch` and the checkpoint identity records the
+penalty.
+
+The rate keeps the case's WSD schedule, so a run of $B$ updates is the
+first $B$ states of the Lean run with WSD as its rate prefix.
+`fullGradientMomentumRun_limits` concerns a constant tail rate below a
+threshold that it only shows to exist.
+[Full-gradient run](../../src/Transformer/Grokking/FiniteRecovery/ArgandFullGradient.lean) · [Accumulation](../../src/Transformer/Grokking/FiniteRecovery/ArgandAccumulation.lean)
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+export ARGAND_BATCH=full ARGAND_PENALTY=1e-4
+"$bin" argand-check
+out=runs/argand-full-batch-smoke
+"$bin" argand-run suite-boolean-and-shift 0 1 "$out" 200
+unset ARGAND_BATCH ARGAND_PENALTY
+```
+
+The check splits a batch of two examples, with three and two labels, into
+two microbatches. Under every residual and optimizer, the accumulated
+gradient matched the batch gradient within `3.0e-8`, with a largest entry
+of `0.287`. A zero-rate step with $\lambda=0.5$ matched the clipped
+penalized gradient, whose norm was `2.4533`.
+
+On `suite-boolean-and-shift` seed 0, 200 full-batch updates and their
+scheduled scoring took 3.43 s, against 0.97 s for 200 minibatch updates.
+A run stopped at update 20 and resumed to 40 reached the same loss as an
+uninterrupted run. Two repeated runs of either mode differed in 33 of the
+551,976 state coordinates, by at most `5e-6` relative. Most were LeRoPE
+$\alpha$ coordinates and their velocities, whose gradients are summed by
+atomic floating-point additions.

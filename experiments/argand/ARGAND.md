@@ -32,7 +32,7 @@ of each part.
 Both gates start at $1+0i$, giving ordinary residual addition at
 initialization. Each stress run uses one of the seeds `0`, `1` or `2` to
 initialize `E` and the attention and FFN matrices.
-[Kernite parameter initialization](src/argand/weights.rs)
+[Kernite parameter initialization](src/engine/weights.rs)
 
 ### Objective, optimizer and WSD
 
@@ -84,8 +84,9 @@ of the 2,000-update warmup.
 
 The runner uses Kernite 0.8.0 and has no configuration flags. The
 residual, score-initialization, minibatch, AdamW and AMSGradW variants
-in the README ran at commit 7399c3bb or earlier.
-[Suite budgets](../convex_stress/suite.json) · [Optimizer kernel](src/argand/kernels.rs)
+in the README ran in `experiments/phasor_value_transport` at commit
+7399c3bb or earlier.
+[Suite budgets](../convex_stress/suite.json) · [Optimizer kernel](src/engine/kernels.rs)
 
 ## Embedding
 
@@ -265,4 +266,4 @@ loss = cross_entropy(logits, tokens)
 
 The LeRoPE tables use `c=64` and `d=16`. The short screen used each test
 case's model dimensions and supervised positions.
-[Run settings](README.md#default-argand-with-skip-and-write-gates) · [Residual gates](src/argand/residual.rs)
+[Run settings](README.md#training-and-replay) · [Residual gates](src/engine/residual.rs)
