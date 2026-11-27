@@ -114,6 +114,9 @@ bash plot_sum8_accuracy.sh "$sum"
 bash plot_sum8_accuracy.sh runs/sum8-adamw-20480
 "$bin" page-run grok-division-p97 0 runs/division-page 8192
 bash run_page_screen.sh all runs/gpt-page
+bash run_page_screen.sh all runs/gpt-adamw adamw
+jq -n --slurpfile control runs/gpt-page/all-summary.json \
+  --slurpfile candidate runs/gpt-adamw/all-summary.json -f compare_optimizer_screens.jq
 repair=runs/sum8-page-sqrt-2048
 mkdir -p "$repair"
 jq '.updates=2048 | .protocol="argand-sum8-adaptive-page-sqrt-v1"' sum8-page-protocol.json > "$repair/protocol.json"
@@ -124,6 +127,13 @@ The paired AdamW sum experiment reads the same eight initialization seeds
 from `sum8-page-protocol.json`. Each update uses all 31 observed words.
 The AdamW parameters and WSD schedule match the division trainer at the
 chosen budget. The 225 hidden words are scored from saved weights.
+
+On the 25 short GPT tasks, the single-position PAGE correction reached
+the 99% screen threshold in 14 of 75 runs. Seven tasks passed with at
+least one seed and three passed with all three. Six runs were strictly
+correct on their entire primary split, the Boolean AND shift and random
+cases on all seeds. These primary splits contain seven and eight examples,
+respectively. The separate exhaustive Boolean audit covers unseen inputs.
 
 The confirmation protocol selects the first trained task in the agreed
 order with an exact primary score and strictly positive margins, then
