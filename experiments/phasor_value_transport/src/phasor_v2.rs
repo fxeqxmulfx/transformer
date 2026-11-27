@@ -39,7 +39,12 @@ impl Variant {
             Err(std::env::VarError::NotPresent) | Ok("entry-phase") => Routing::EntryPhase,
             Ok("single") => Routing::Single,
             Ok("norm-phase") => Routing::NormPhase,
-            _ => return Err("ARGAND_RESIDUAL takes entry-phase, single or norm-phase".into()),
+            Ok("write-gate") => Routing::WriteGate,
+            _ => {
+                return Err(
+                    "ARGAND_RESIDUAL takes entry-phase, single, norm-phase or write-gate".into(),
+                );
+            }
         };
         let real_score_init = match std::env::var("ARGAND_SCORE_INIT").as_deref() {
             Err(std::env::VarError::NotPresent) | Ok("1+i") => false,
@@ -324,6 +329,12 @@ impl Engine {
                 let a = tape.heads(&ctx, a, true)?;
                 let a = layer.o.project(tape, &ctx, p, a, rows)?;
                 let a = tape.rms(&ctx, a, width)?;
+                let a = tape.gate_write(
+                    &ctx,
+                    a,
+                    n,
+                    layer.write_gates.map(|g| p.pair(g[0], 2 * width)),
+                )?;
                 x = attention.write(
                     tape,
                     &ctx,
@@ -340,6 +351,12 @@ impl Engine {
                 let f = tape.product(&ctx, g, u)?;
                 let f = layer.down.project(tape, &ctx, p, f, rows)?;
                 let f = tape.rms(&ctx, f, width)?;
+                let f = tape.gate_write(
+                    &ctx,
+                    f,
+                    n,
+                    layer.write_gates.map(|g| p.pair(g[1], 2 * width)),
+                )?;
                 x = ffn.write(
                     tape,
                     &ctx,
@@ -510,8 +527,15 @@ pub fn check(variant: Variant) -> Result<()> {
     engine.restore(&initial)?;
     let tokens = [1, 2, 3, 3, 1, 0];
     let labels = [2, 3, 4, u32::MAX, 5, 2];
-    if matches!(variant.routing, Routing::NormPhase) {
-        norm_phase_checks::check(&engine)?;
+    let extra_weights = match variant.routing {
+        Routing::NormPhase => {
+            norm_phase_checks::check(&engine)?;
+            2 * engine.shape.layers
+        }
+        Routing::WriteGate => 4 * engine.shape.width * engine.shape.layers,
+        _ => 0,
+    };
+    if extra_weights != 0 {
         let mut ordinary = Engine::new(
             engine.shape.clone(),
             2,
@@ -522,22 +546,36 @@ pub fn check(variant: Variant) -> Result<()> {
             },
         )?;
         let shared = ordinary.weights()?;
-        if initial[..shared.len()] != shared || initial[shared.len()..] != [0.0; 4] {
-            return Err("norm phase initialization differs from the matched ordinary model".into());
+        if initial.len() != shared.len() + extra_weights
+            || initial[..shared.len()] != shared
+            || initial[shared.len()..].iter().any(|&v| v != 0.0)
+        {
+            return Err("residual initialization differs from the matched ordinary model".into());
         }
         engine.forward(&tokens, &labels, 2, 3)?;
         ordinary.forward(&tokens, &labels, 2, 3)?;
         if engine.logits.read()? != ordinary.logits.read()? {
-            return Err("zero phase changed ordinary residual logits".into());
+            return Err("zero residual parameters changed ordinary logits".into());
         }
-        // Exercise the radial input adjoint at nonzero angles in the full decoder check.
+        // Exercise the input and parameter adjoints away from the identity.
         for layer in &engine.parameters.layers {
-            let at = layer.turn.ok_or("missing residual phase coefficients")?;
-            initial[at] = 0.13;
-            initial[at + 1] = -0.17;
+            if let Some(at) = layer.turn {
+                initial[at] = 0.13;
+                initial[at + 1] = -0.17;
+            }
+            if let Some(gates) = layer.write_gates {
+                for at in gates {
+                    for (j, value) in initial[at..at + 2 * engine.shape.width]
+                        .iter_mut()
+                        .enumerate()
+                    {
+                        *value = 0.01 * ((j % 7) as f32 - 3.0);
+                    }
+                }
+            }
         }
         engine.restore(&initial)?;
-        println!("Zero phase reproduces ordinary initialization and logits");
+        println!("Zero residual parameters reproduce ordinary initialization and logits");
     }
     engine.forward(&tokens, &labels, 2, 3)?;
     let before = engine.logits.read()?;
@@ -586,6 +624,19 @@ pub fn check(variant: Variant) -> Result<()> {
             return Err("missing attention or FFN residual phase gradient".into());
         }
     }
+    for gates in engine
+        .parameters
+        .layers
+        .iter()
+        .filter_map(|layer| layer.write_gates)
+    {
+        for at in gates {
+            let g = &gradient[at..at + 2 * engine.shape.width];
+            if (0..2).any(|coord| g[coord..].iter().step_by(2).all(|x| x.abs() < 1e-6)) {
+                return Err("missing real or imaginary write-gate gradient".into());
+            }
+        }
+    }
     if !gradient.iter().all(|g| g.is_finite())
         || !gradient[2 * 4 * 16..2 * 5 * 16]
             .iter()
@@ -603,8 +654,12 @@ pub fn check(variant: Variant) -> Result<()> {
         return Err("missing gradient for the imaginary part of the score multiplier".into());
     }
     let mut rng = Random::new(100);
-    for trial in 0..3 {
-        let direction: Vec<_> = initial.iter().map(|_| rng.gauss(0.0, 1.0) as f32).collect();
+    let gated = matches!(variant.routing, Routing::WriteGate);
+    for trial in 0..3 + usize::from(gated) {
+        let mut direction: Vec<_> = initial.iter().map(|_| rng.gauss(0.0, 1.0) as f32).collect();
+        if trial == 3 {
+            direction[..initial.len() - extra_weights].fill(0.0);
+        }
         let delta = 0.0002;
         let mut losses = [0.0; 2];
         for (loss, sign) in losses.iter_mut().zip([-1.0, 1.0]) {

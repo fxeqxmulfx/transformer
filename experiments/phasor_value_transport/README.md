@@ -282,6 +282,55 @@ terminal state digests matched their records, and independent checkpoint
 reloads reproduced the held-out scores and losses of all 49 passes. All
 105 phase runs learned at least one nonzero rotation coefficient.
 
+##### Token-dependent writes on `arithmetic-abs-diff-blind`
+
+The embedding RMS gives the first attention sublayer inputs of almost
+constant norm. A gate that reads the token coordinates can distinguish
+directions of equal norm. Let $n=\mathrm{RMS}(x)$ and let $u$ be the usual
+scaled, normalized branch write. The single-stream `write-gate` updates
+$x'=x+(1+n^\mathsf{T}w)u$. Each sublayer learns one zero-initialized
+complex vector $w$. A single complex scalar controls the magnitude and
+phase of the write at each token. Zero initialization reproduces ordinary
+addition, including all initial logits.
+
+The blind absolute-difference task has 4,704 training pairs and 4,705
+held-out pairs. All runs use width 128, one layer, one pass, the tied
+vocabulary, AdamW, and a score multiplier initialized to `1 + 0i`.
+The schedule checks every 19 updates. Update 988 is the last observation
+within the 1,000-update cap. Times include training and scheduled scoring
+on the RTX 3050 Laptop GPU and exclude setup, checkpoint writes and replay.
+
+| Residual | Extra real parameters per layer | Held-out correct, seeds 0 / 1 / 2 | Mean accuracy | Mean seconds to update 988 |
+|---|---:|---|---:|---:|
+| Ordinary addition | 0 | 1,430 / 1,520 / 1,357 | 30.5% | 6.11 |
+| Norm-dependent phase | 2 | 1,437 / 1,524 / 1,346 | 30.5% | 6.21 |
+| Token-dependent write gate | 512 | 2,394 / 2,347 / 2,359 | 50.3% | 7.10 |
+| Four-stream complex mHC, independent edge phases | 49,152 | 3,285 / 3,220 / 3,399 | 70.2% | 10.12 |
+
+The write gate gained 19.8 percentage points over the norm-dependent phase
+averaged over these seeds. All 12 saved checkpoints reproduced their
+held-out scores after reload.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+task=arithmetic-abs-diff-blind
+out=runs/argand-abs-diff-s1
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=adamw PHASOR_EVAL_BATCH_CAP=16
+for variant in single norm-phase write-gate entry-phase; do
+    export ARGAND_RESIDUAL=$variant
+    "$bin" argand-check
+    for seed in 0 1 2; do
+        cell="$out/$variant/$task/seed$seed"
+        mkdir -p "$cell"
+        "$bin" argand-run "$task" "$seed" 1 "$out/$variant" 988 2> "$cell/observations.jsonl"
+        "$bin" argand-replay "$task" "$seed" 1 "$out/$variant" > "$cell/replay.json"
+    done
+done
+unset ARGAND_RESIDUAL ARGAND_SCORE_INIT ARGAND_OPTIMIZER PHASOR_EVAL_BATCH_CAP
+jq -s 'sort_by(.identity.model,.identity.seed)' "$out"/*/"$task"/seed*/result.json > "$out/comparison.json"
+```
+
 #### Complex mHC in Argand
 
 Each sublayer has a separate complex router projection from the

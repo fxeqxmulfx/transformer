@@ -59,6 +59,8 @@ pub(super) struct Layer {
     pub routers: Option<[Projection; 2]>,
     /// Offsets `turn` and `turn + 1` hold the attention and FFN skip coefficients.
     pub turn: Option<usize>,
+    /// Two consecutive complex vectors project the normalized input to scalar write gates.
+    pub write_gates: Option<[usize; 2]>,
 }
 
 enum OptimizerBuffers {
@@ -99,6 +101,7 @@ impl Parameters {
                 Layer {
                     score,
                     turn: None,
+                    write_gates: None,
                     q: projection(width, width),
                     k: projection(width, width),
                     v: projection(width, width),
@@ -122,10 +125,18 @@ impl Parameters {
         // The legacy optimizer takes pairs. Pad one inert real coordinate if necessary.
         values.resize(values.len().next_multiple_of(2), 0.0);
         // Append after the entire ordinary model so every shared weight and its RNG draw match.
-        if matches!(variant.routing, Routing::NormPhase) {
-            for layer in &mut layers {
-                layer.turn = Some(values.len());
-                values.extend([0.0, 0.0]);
+        for layer in &mut layers {
+            match variant.routing {
+                Routing::NormPhase => {
+                    layer.turn = Some(values.len());
+                    values.extend([0.0, 0.0]);
+                }
+                Routing::WriteGate => {
+                    let start = values.len();
+                    layer.write_gates = Some([start, start + 2 * width]);
+                    values.resize(start + 4 * width, 0.0);
+                }
+                _ => {}
             }
         }
         let count = values.len();

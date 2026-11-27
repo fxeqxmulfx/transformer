@@ -13,6 +13,7 @@ pub const AMPLITUDES: usize = 24;
 pub enum Routing {
     Single,
     NormPhase,
+    WriteGate,
     Real,
     Conjugated,
     EntryPhase,
@@ -33,6 +34,7 @@ impl Routing {
         match self {
             Self::Single => "phasor-v2-single-stream-tied-vocab-fp32",
             Self::NormPhase => "argand-norm-phase-single-stream-tied-vocab-fp32",
+            Self::WriteGate => "argand-write-gate-single-stream-tied-vocab-fp32",
             Self::Real => "phasor-v2-real-mhc-tied-vocab-fp32",
             Self::Conjugated => "phasor-v2-conjugated-mhc-tied-vocab-fp32",
             Self::EntryPhase => "argand-entry-phase-mhc-tied-vocab-fp32",
@@ -41,7 +43,7 @@ impl Routing {
 
     pub(super) fn router_width(self) -> Option<usize> {
         match self {
-            Self::Single | Self::NormPhase => None,
+            Self::Single | Self::NormPhase | Self::WriteGate => None,
             Self::Real => Some(12),
             Self::Conjugated => Some(18),
             Self::EntryPhase => Some(24),
