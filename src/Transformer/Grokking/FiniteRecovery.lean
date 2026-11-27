@@ -29,6 +29,7 @@ public import Transformer.Grokking.FiniteRecovery.ArgandModularSum
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGESchedule
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
 public import Transformer.Grokking.FiniteRecovery.CheckpointFactors
+public import Transformer.Grokking.FiniteRecovery.AdamWFloor
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -69,4 +70,8 @@ class it stabilizes from each native draw at a positive logit margin.
 An observation fiber of size m has optimal worst-case hidden success 1/m.
 For an identifiable class, PAGE with coupled decay about an observation-only
 strict reference generalizes above any prescribed confidence below one from
-native draws, for every representable member and every sampling path. -/
+native draws, for every representable member and every sampling path.
+Ordinary AdamW with decoupled decay has a dimension-independent bound on
+each update. A positive summable continuation of the WSD prefix converges
+in every weight for any minibatch stream. A sufficiently small continuation
+preserves the strict decoded function of an identified checkpoint. -/
