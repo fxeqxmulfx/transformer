@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
-# Run frozen GPT cases and replay each passing decoder checkpoint.
+# Train frozen GPT cases with Argand and replay each passing checkpoint.
 set -euo pipefail
 
-usage='usage: run_v2_stress.sh [--argand TIER] REPEAT RUN_DIR [MAX_UPDATES]'
-runner=v2
-tier=all
-if [[ ${1:-} == --argand ]]; then
-    runner=argand
-    tier=${2:-}
-    if [[ $tier != short && $tier != long && $tier != all ]]; then
-        echo 'TIER must be short, long or all' >&2
-        exit 2
-    fi
-    shift 2
+usage='usage: run_argand.sh TIER REPEAT RUN_DIR [MAX_UPDATES]'
+if (( $# < 3 || $# > 4 )); then
+    echo "$usage" >&2
+    exit 2
 fi
-if (( $# < 2 || $# > 3 )) || [[ $1 != [1-9]* || ${1//[0-9]/} ]]; then
+tier=$1
+shift
+if [[ $tier != short && $tier != long && $tier != all ]]; then
+    echo 'TIER must be short, long or all' >&2
+    exit 2
+fi
+if [[ $1 != [1-9]* || ${1//[0-9]/} ]]; then
     echo "$usage" >&2
     exit 2
 fi
@@ -43,10 +42,10 @@ while IFS=$'\t' read -r case_name seed budget every; do
     fi
     dest="$out/$case_name/seed$seed"
     mkdir -p "$dest"
-    result=$("$bin" "${runner}-run" "$case_name" "$seed" "$repeat" "$out" "$stop" 2>> "$dest/observations.jsonl")
+    result=$("$bin" argand-run "$case_name" "$seed" "$repeat" "$out" "$stop" 2>> "$dest/observations.jsonl")
     printf '%s\n' "$result"
     if jq -e '.passed' <<< "$result" >/dev/null; then
-        "$bin" "${runner}-replay" "$case_name" "$seed" "$repeat" "$out" > "$dest/replay.pending"
+        "$bin" argand-replay "$case_name" "$seed" "$repeat" "$out" > "$dest/replay.pending"
         mv -- "$dest/replay.pending" "$dest/replay.json"
     fi
 done <<< "$rows"

@@ -1,38 +1,27 @@
-//! Frozen GPT stress cases and schedule for Argand and its residual controls.
+//! Frozen GPT stress cases and schedule for the Argand full-batch runs.
 use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
 use crate::{
     Config, KERNITE_VERSION,
-    argand::{AmsGradWConfig, Engine, Variant},
+    argand::{Engine, MODEL, PENALTY},
     argand_metrics as metrics,
-    random::Random,
     schedule::Schedule,
 };
 use std::path::{Path, PathBuf};
 
 pub fn command(op: &str, args: &[String]) -> Result<()> {
-    let (family, action) = op.split_once('-').ok_or("missing decoder operation")?;
-    let variant = if family == "argand" {
-        Variant::argand()?
-    } else {
-        Variant::v2()?
-    };
-    match (action, args) {
-        ("check", []) => crate::argand::check(variant),
-        ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
+    match (op, args) {
+        ("argand-check", []) => crate::argand::check(),
+        ("argand-run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
             name,
             seed.parse()?,
             repeat.parse()?,
             Path::new(out),
             cutoff.first().map(|step| step.parse()).transpose()?,
-            variant,
         ),
-        ("replay", [name, seed, repeat, out]) => {
-            replay(name, seed.parse()?, repeat.parse()?, Path::new(out), variant)
+        ("argand-replay", [name, seed, repeat, out]) => {
+            replay(name, seed.parse()?, repeat.parse()?, Path::new(out))
         }
-        _ => Err(format!(
-            "usage: {family}-check | {family}-run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | {family}-replay CASE SEED REPEAT RUN_DIR"
-        )
-        .into()),
+        _ => Err("usage: argand-check | argand-run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | argand-replay CASE SEED REPEAT RUN_DIR".into()),
     }
 }
 
@@ -46,11 +35,10 @@ struct Cell {
     directory: PathBuf,
     repeat: usize,
     seed: u32,
-    variant: Variant,
 }
 
 impl Cell {
-    fn new(name: &str, seed: u32, repeat: usize, out: &Path, variant: Variant) -> Result<Self> {
+    fn new(name: &str, seed: u32, repeat: usize, out: &Path) -> Result<Self> {
         if seed > 2 || repeat == 0 {
             return Err("expected seed 0 through 2 and a positive repeat count".into());
         }
@@ -81,31 +69,19 @@ impl Cell {
             directory,
             repeat,
             seed,
-            variant,
         })
     }
 
     fn engine(&self) -> Result<Engine> {
-        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed, self.variant)?;
+        let mut engine = Engine::new(self.shape.clone(), self.repeat, self.seed)?;
         engine.config.max_batch = task_config(&self.row, &self.task, false)?.max_batch;
         Ok(engine)
     }
 
     fn identity(&self) -> Value {
-        let mut identity = json!({"model":self.variant.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
-            "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION});
-        if let Some(config) = self.variant.amsgradw() {
-            if config.sqrt_scale != 1.0 {
-                identity["amsgradw_sqrt_scale"] = config.sqrt_scale.to_string().into();
-            }
-            if config.beta2 != AmsGradWConfig::DEFAULT_BETA2 {
-                identity["amsgradw_beta2"] = config.beta2.to_string().into();
-            }
-        }
-        if let Some(penalty) = self.variant.full_batch_penalty() {
-            identity["penalty"] = penalty.to_string().into();
-        }
-        identity
+        json!({"model":MODEL,"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
+            "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION,
+            "penalty":PENALTY.to_string()})
     }
 
     fn state_file(&self, step: usize) -> PathBuf {
@@ -117,13 +93,8 @@ impl Cell {
         if !path.try_exists()? {
             return Ok(None);
         }
-        let mut record: Value = serde_json::from_slice(&fs::read(path)?)?;
+        let record: Value = serde_json::from_slice(&fs::read(path)?)?;
         let step = record["step"].as_u64().ok_or("missing update number")? as usize;
-        if let Some(legacy) = self.variant.legacy_model()
-            && record["identity"]["model"] == legacy
-        {
-            record["identity"]["model"] = self.variant.model().into();
-        }
         if record["identity"] != self.identity() || step > self.schedule.budget {
             return Err("checkpoint belongs to another decoder or suite cell".into());
         }
@@ -158,15 +129,8 @@ impl Cell {
     }
 }
 
-fn run(
-    name: &str,
-    seed: u32,
-    repeat: usize,
-    out: &Path,
-    cutoff: Option<usize>,
-    variant: Variant,
-) -> Result<()> {
-    let cell = Cell::new(name, seed, repeat, out, variant)?;
+fn run(name: &str, seed: u32, repeat: usize, out: &Path, cutoff: Option<usize>) -> Result<()> {
+    let cell = Cell::new(name, seed, repeat, out)?;
     let budget = cell.schedule.budget;
     let until = cutoff.unwrap_or(budget);
     if until == 0 || until > budget || (until != budget && !until.is_multiple_of(cell.every)) {
@@ -197,24 +161,7 @@ fn run(
     let train = &cell.task.splits["train"];
     let heldout = &cell.task.splits[&cell.task.selection];
     let mut packed = metrics::Packed::default();
-    let full = cell
-        .variant
-        .full_batch_penalty()
-        .map(|penalty| FullBatch::new(&engine, train, &mut packed, cell.batch, penalty))
-        .transpose()?;
-    let per_epoch = train.len().div_ceil(cell.batch);
-    let mut random = Random::new(seed + 10_000);
-    let mut epoch = Vec::new();
-    let mut start_epoch = |epoch: &mut Vec<u32>| {
-        epoch.clear();
-        epoch.extend(0..train.len() as u32);
-        random.shuffle(epoch);
-    };
-    if full.is_none() {
-        for _ in 0..start.div_ceil(per_epoch) {
-            start_epoch(&mut epoch);
-        }
-    }
+    let full = FullBatch::new(&engine, train, &mut packed, cell.batch)?;
     let started = std::time::Instant::now();
     for step in start..=until {
         if (step != start || start == 0) && (step.is_multiple_of(cell.every) || step == budget) {
@@ -229,39 +176,9 @@ fn run(
                 return cell.save(&engine, step, result);
             }
         }
-        if let Some(full) = &full {
-            let rate = cell.schedule.rate(step);
-            full.update(&mut engine, train, &mut packed, rate, step)?;
-            continue;
-        }
-        if step.is_multiple_of(per_epoch) {
-            start_epoch(&mut epoch);
-        }
-        let lo = step % per_epoch * cell.batch;
-        let indices = &epoch[lo..(lo + cell.batch).min(epoch.len())];
-        update(
-            &mut engine,
-            train,
-            &mut packed,
-            indices,
-            cell.schedule.rate(step),
-            step,
-        )?;
+        full.update(&mut engine, train, &mut packed, cell.schedule.rate(step))?;
     }
     unreachable!("the requested final step is always scored")
-}
-
-fn update(
-    engine: &mut Engine,
-    train: &[Example],
-    p: &mut metrics::Packed,
-    indices: &[u32],
-    rate: f32,
-    step: usize,
-) -> Result<()> {
-    p.fill(train, indices);
-    engine.forward(&p.tokens, &p.labels, indices.len(), p.length)?;
-    engine.step(rate, step)
 }
 
 /// The training split in order, as microbatches of the suite's batch size.
@@ -269,7 +186,6 @@ struct FullBatch {
     order: Vec<u32>,
     batch: usize,
     labeled: usize,
-    penalty: f32,
 }
 
 impl FullBatch {
@@ -278,7 +194,6 @@ impl FullBatch {
         train: &[Example],
         p: &mut metrics::Packed,
         batch: usize,
-        penalty: f32,
     ) -> Result<Self> {
         let order: Vec<u32> = (0..train.len() as u32).collect();
         let labeled = order
@@ -295,7 +210,6 @@ impl FullBatch {
             order,
             batch,
             labeled,
-            penalty,
         })
     }
 
@@ -308,19 +222,18 @@ impl FullBatch {
         train: &[Example],
         p: &mut metrics::Packed,
         rate: f32,
-        step: usize,
     ) -> Result<()> {
         engine.zero_gradient()?;
         for part in self.order.chunks(self.batch) {
             p.fill(train, part);
             engine.accumulate(&p.tokens, &p.labels, part.len(), p.length, self.labeled)?;
         }
-        engine.full_step(self.penalty, rate, step)
+        engine.full_step(rate)
     }
 }
 
-fn replay(name: &str, seed: u32, repeat: usize, out: &Path, variant: Variant) -> Result<()> {
-    let cell = Cell::new(name, seed, repeat, out, variant)?;
+fn replay(name: &str, seed: u32, repeat: usize, out: &Path) -> Result<()> {
+    let cell = Cell::new(name, seed, repeat, out)?;
     let (record, state) = cell.checkpoint()?.ok_or("missing decoder checkpoint")?;
     let mut engine = cell.engine()?;
     engine.restore_state(&state)?;

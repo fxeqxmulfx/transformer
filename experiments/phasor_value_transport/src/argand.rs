@@ -1,186 +1,35 @@
 //! Argand's complex decoder and tied vocabulary readout on Kernite.
-mod complex_mhc;
+//!
+//! One model trains here: skip and write gates around every sublayer, score
+//! multipliers starting at `1 + 0i`, and the clipped momentum steps of the
+//! Lean `fullGradientMomentumRun` on the full training gradient plus
+//! `PENALTY * x`. Earlier residual, score and optimizer variants are in
+//! commit 7399c3bb.
 mod kernels;
-mod norm_phase_checks;
+mod residual;
 mod scores;
 mod tape;
 mod weights;
 
 pub(crate) use crate::Result;
 use crate::{base_ops, optimizer_kernels, random::Random, slot_copy, stable_loss};
-use complex_mhc::{Routing, Sublayer};
 use kernite_cuda::{Buffer, Cuda, Grid, Ptr};
+use residual::Sublayer;
 use tape::{Context, Pair, Tape};
-use weights::{Parameters, SecondGate};
+use weights::Parameters;
 
 type F = Buffer<f32>;
 type P = Ptr<f32>;
 
-#[derive(Clone, Copy)]
-pub(crate) struct AmsGradWConfig {
-    pub beta2: f64,
-    pub sqrt_scale: f32,
-}
+/// The checkpoint identity of the model.
+pub const MODEL: &str =
+    "argand-skip-write-gate-single-stream-tied-vocab-fp32-s-init-one-sgd-momentum-full-batch";
 
-impl AmsGradWConfig {
-    pub const DEFAULT_BETA2: f64 = 0.95;
-}
+/// The coefficient λ of the penalty `(λ/2)‖x‖²` in the full-gradient objective.
+pub const PENALTY: f32 = 1e-4;
 
-#[derive(Clone, Copy)]
-enum Optimizer {
-    SgdMomentum,
-    AdamW,
-    AmsGradW(AmsGradWConfig),
-}
-
-#[derive(Clone, Copy)]
-enum Gradient {
-    Minibatch,
-    /// Every update follows the Lean `fullGradientMomentumRun`: the gradient of
-    /// the mean loss over all labeled training positions plus `penalty * x`.
-    Full {
-        penalty: f32,
-    },
-}
-
-#[derive(Clone, Copy)]
-pub struct Variant {
-    routing: Routing,
-    real_score_init: bool,
-    optimizer: Optimizer,
-    gradient: Gradient,
-}
-
-impl Variant {
-    pub fn argand() -> Result<Self> {
-        let routing = match std::env::var("ARGAND_RESIDUAL").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("skip-write-gate") => Routing::SkipWriteGate,
-            Ok("entry-phase") => Routing::EntryPhase,
-            Ok("single") => Routing::Single,
-            Ok("norm-phase") => Routing::NormPhase,
-            Ok("write-gate") => Routing::WriteGate,
-            Ok("read-write-gate") => Routing::ReadWriteGate,
-            _ => {
-                return Err(
-                    "ARGAND_RESIDUAL takes entry-phase, single, norm-phase, write-gate, read-write-gate or skip-write-gate".into(),
-                );
-            }
-        };
-        let real_score_init = match std::env::var("ARGAND_SCORE_INIT").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("1+i") => false,
-            Ok("1") => true,
-            _ => return Err("ARGAND_SCORE_INIT takes 1+i or 1".into()),
-        };
-        let optimizer = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("sgd-momentum") => Optimizer::SgdMomentum,
-            Ok("adamw") => Optimizer::AdamW,
-            Ok("amsgradw") => {
-                let sqrt_scale = match std::env::var("ARGAND_AMSGRADW_SQRT_SCALE") {
-                    Ok(value) => value.parse::<f32>()?,
-                    Err(std::env::VarError::NotPresent) => 1.0,
-                    Err(error) => return Err(error.into()),
-                };
-                if !(0.0 < sqrt_scale && sqrt_scale <= 1.0) {
-                    return Err("ARGAND_AMSGRADW_SQRT_SCALE must be in (0, 1]".into());
-                }
-                let beta2 = match std::env::var("ARGAND_AMSGRADW_BETA2") {
-                    Ok(value) => value.parse::<f64>()?,
-                    Err(std::env::VarError::NotPresent) => AmsGradWConfig::DEFAULT_BETA2,
-                    Err(error) => return Err(error.into()),
-                };
-                if !(0.0..1.0).contains(&beta2) {
-                    return Err("ARGAND_AMSGRADW_BETA2 must be in [0, 1)".into());
-                }
-                Optimizer::AmsGradW(AmsGradWConfig { beta2, sqrt_scale })
-            }
-            _ => return Err("ARGAND_OPTIMIZER takes sgd-momentum, adamw or amsgradw".into()),
-        };
-        let penalty = std::env::var("ARGAND_PENALTY");
-        let gradient = match std::env::var("ARGAND_BATCH").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("minibatch") => {
-                if !matches!(penalty, Err(std::env::VarError::NotPresent)) {
-                    return Err("ARGAND_PENALTY requires ARGAND_BATCH=full".into());
-                }
-                Gradient::Minibatch
-            }
-            Ok("full") => {
-                let penalty = penalty
-                    .map_err(|_| "ARGAND_BATCH=full requires ARGAND_PENALTY, the coefficient of (λ/2)‖x‖²")?
-                    .parse::<f32>()
-                    .map_err(|_| "ARGAND_PENALTY must be a number")?;
-                if !(penalty.is_finite() && penalty > 0.0) {
-                    return Err("ARGAND_PENALTY must be positive and finite".into());
-                }
-                if !matches!(optimizer, Optimizer::SgdMomentum) {
-                    return Err("ARGAND_BATCH=full trains with clipped momentum SGD; leave ARGAND_OPTIMIZER unset or set it to sgd-momentum".into());
-                }
-                if !matches!(routing, Routing::SkipWriteGate) {
-                    return Err("ARGAND_BATCH=full trains the Lean Argand model with skip and write gates; leave ARGAND_RESIDUAL unset or set it to skip-write-gate".into());
-                }
-                Gradient::Full { penalty }
-            }
-            _ => return Err("ARGAND_BATCH takes minibatch or full".into()),
-        };
-        Ok(Self {
-            routing,
-            real_score_init,
-            optimizer,
-            gradient,
-        })
-    }
-
-    pub fn v2() -> Result<Self> {
-        Ok(Self {
-            routing: Routing::selected()?,
-            real_score_init: false,
-            optimizer: Optimizer::AdamW,
-            gradient: Gradient::Minibatch,
-        })
-    }
-
-    pub fn model(self) -> String {
-        let mut name = self.routing.model().to_owned();
-        if self.real_score_init {
-            name.push_str("-s-init-one");
-        }
-        match self.optimizer {
-            Optimizer::SgdMomentum => name.push_str("-sgd-momentum"),
-            Optimizer::AdamW => {}
-            Optimizer::AmsGradW(_) => name.push_str("-amsgradw"),
-        }
-        if let Gradient::Full { .. } = self.gradient {
-            name.push_str("-full-batch");
-        }
-        name
-    }
-
-    /// The coefficient λ of the full-gradient penalty `(λ/2)‖x‖²`.
-    pub(crate) fn full_batch_penalty(self) -> Option<f32> {
-        match self.gradient {
-            Gradient::Minibatch => None,
-            Gradient::Full { penalty } => Some(penalty),
-        }
-    }
-
-    pub fn legacy_model(self) -> Option<&'static str> {
-        // Old entry-phase checkpoints used AdamW and started the score at 1+i.
-        (matches!(self.routing, Routing::EntryPhase)
-            && !self.real_score_init
-            && matches!(self.optimizer, Optimizer::AdamW))
-        .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
-    }
-
-    pub(crate) fn amsgradw(self) -> Option<AmsGradWConfig> {
-        match self.optimizer {
-            Optimizer::AmsGradW(config) => Some(config),
-            _ => None,
-        }
-    }
-
-    fn score_init(self) -> [f32; 2] {
-        [1.0, if self.real_score_init { 0.0 } else { 1.0 }]
-    }
-}
+/// The initial score multiplier `s = 1 + 0i` of every layer.
+const SCORE_INIT: [f32; 2] = [1.0, 0.0];
 
 fn grid(count: usize) -> Grid {
     Grid::new(count.div_ceil(256) as u32, 256)
@@ -202,11 +51,10 @@ pub struct Engine {
     tape: Tape,
     kernel: kernels::device::Kernels,
     scores: scores::device::Kernels,
-    mhc: Option<complex_mhc::Kernels>,
     embed: base_ops::kernels::Kernels,
     loss: stable_loss::kernels::Kernels,
     clear: slot_copy::kernels::Kernels,
-    adam: optimizer_kernels::kernels::Kernels,
+    optimizer: optimizer_kernels::kernels::Kernels,
     inputs: Buffer<u32>,
     labels: Buffer<u32>,
     loss_values: F,
@@ -216,7 +64,7 @@ pub struct Engine {
 }
 
 impl Engine {
-    pub fn new(shape: crate::Config, repeat: usize, seed: u32, variant: Variant) -> Result<Self> {
+    pub fn new(shape: crate::Config, repeat: usize, seed: u32) -> Result<Self> {
         if shape.width == 0
             || shape.heads == 0
             || !shape.width.is_multiple_of(shape.heads)
@@ -237,19 +85,14 @@ impl Engine {
         Ok(Self {
             config,
             repeat,
-            parameters: Parameters::new(&cuda, &shape, seed, variant)?,
+            parameters: Parameters::new(&cuda, &shape, seed)?,
             tape: Tape::default(),
             kernel: kernels::device::Kernels::load(&cuda)?,
             scores: scores::device::Kernels::load(&cuda)?,
-            mhc: variant
-                .routing
-                .router_width()
-                .map(|_| complex_mhc::Kernels::load(&cuda))
-                .transpose()?,
             embed: base_ops::kernels::Kernels::load(&cuda)?,
             loss: stable_loss::kernels::Kernels::load(&cuda)?,
             clear: slot_copy::kernels::Kernels::load(&cuda)?,
-            adam: optimizer_kernels::kernels::Kernels::load(&cuda)?,
+            optimizer: optimizer_kernels::kernels::Kernels::load(&cuda)?,
             inputs: cuda.alloc(rows)?,
             labels: cuda.alloc(rows)?,
             predictions: cuda.alloc(rows)?,
@@ -363,7 +206,6 @@ impl Engine {
             cuda: &self.cuda,
             kernel: &self.kernel,
             scores: &self.scores,
-            mhc: self.mhc.as_ref(),
             rotations: self.rotations.ptr(),
             alpha,
             length,
@@ -383,15 +225,12 @@ impl Engine {
             )?;
         }
         let mut x = tape.rms(&ctx, input, width)?;
-        if self.mhc.is_some() {
-            x = tape.expand(&ctx, x, width)?;
-        }
         let scale = (2.0 * (self.shape.layers * self.repeat) as f32)
             .sqrt()
             .recip();
         for _ in 0..self.repeat {
             for layer in &p.layers {
-                let attention = Sublayer::read(tape, &ctx, p, layer, 0, x, rows, width)?;
+                let attention = Sublayer::read(tape, &ctx, p, layer, 0, x, width)?;
                 let n = attention.input;
                 let q = layer.q.project(tape, &ctx, p, n, rows)?;
                 let k = layer.k.project(tape, &ctx, p, n, rows)?;
@@ -415,20 +254,17 @@ impl Engine {
                 let a = tape.heads(&ctx, a, true)?;
                 let a = layer.o.project(tape, &ctx, p, a, rows)?;
                 let a = tape.rms(&ctx, a, width)?;
-                x = attention.write(tape, &ctx, a, width, scale)?;
+                x = attention.write(tape, &ctx, a, scale)?;
 
-                let ffn = Sublayer::read(tape, &ctx, p, layer, 1, x, rows, width)?;
+                let ffn = Sublayer::read(tape, &ctx, p, layer, 1, x, width)?;
                 let n = ffn.input;
                 let g = layer.gate.project(tape, &ctx, p, n, rows)?;
                 let u = layer.up.project(tape, &ctx, p, n, rows)?;
                 let f = tape.product(&ctx, g, u)?;
                 let f = layer.down.project(tape, &ctx, p, f, rows)?;
                 let f = tape.rms(&ctx, f, width)?;
-                x = ffn.write(tape, &ctx, f, width, scale)?;
+                x = ffn.write(tape, &ctx, f, scale)?;
             }
-        }
-        if self.mhc.is_some() {
-            x = tape.collapse(&ctx, x, width)?;
         }
         tape.rms(&ctx, x, width)
     }
@@ -441,7 +277,6 @@ impl Engine {
             cuda: &self.cuda,
             kernel: &self.kernel,
             scores: &self.scores,
-            mhc: self.mhc.as_ref(),
             rotations: self.rotations.ptr(),
             alpha: self.parameters.alpha(),
             length,
@@ -509,16 +344,19 @@ impl Engine {
     }
 
     /// One update of `fullGradientMomentumRun` from the accumulated data
-    /// gradient: adds `penalty * x`, then the clipped momentum step.
-    pub fn full_step(&mut self, penalty: f32, rate: f32, completed: usize) -> Result<()> {
+    /// gradient: adds `PENALTY * x`, then the clipped momentum step.
+    pub fn full_step(&mut self, rate: f32) -> Result<()> {
+        self.penalized_step(PENALTY, rate)
+    }
+
+    fn penalized_step(&mut self, penalty: f32, rate: f32) -> Result<()> {
         self.parameters.add_penalty(&self.kernel, penalty)?;
-        self.parameters
-            .update(&self.adam, &self.kernel, rate, completed)
+        self.parameters.update(&self.optimizer, &self.kernel, rate)
     }
 
     /// Backpropagates the last forward pass and adds its parameter gradient.
     /// Every parameter adjoint accumulates: matrix products and gates add,
-    /// and the LeRoPE, score and turn adjoints use atomic additions.
+    /// and the LeRoPE and score adjoints use atomic additions.
     fn add_backward(&mut self) -> Result<()> {
         let (input, output, batch, length) =
             self.last.take().ok_or("forward required before update")?;
@@ -528,7 +366,6 @@ impl Engine {
             cuda: &self.cuda,
             kernel: &self.kernel,
             scores: &self.scores,
-            mhc: self.mhc.as_ref(),
             rotations: self.rotations.ptr(),
             alpha: self.parameters.alpha(),
             length,
@@ -563,12 +400,6 @@ impl Engine {
         Ok(())
     }
 
-    pub fn step(&mut self, rate: f32, completed: usize) -> Result<()> {
-        self.backward()?;
-        self.parameters
-            .update(&self.adam, &self.kernel, rate, completed)
-    }
-
     pub fn state(&self) -> Result<Vec<f32>> {
         self.parameters.state()
     }
@@ -591,20 +422,21 @@ impl Engine {
     }
 }
 
-pub fn check(variant: Variant) -> Result<()> {
+pub fn check() -> Result<()> {
     let mut cfg = crate::config(2)?;
     cfg.width = 16;
     cfg.heads = 2;
     cfg.layers = 2;
     cfg.vocab = 6;
     cfg.max_length = 3;
-    let mut engine = Engine::new(cfg, 2, 1, variant)?;
+    let mut engine = Engine::new(cfg, 2, 1)?;
     let mut initial = engine.weights()?;
+    let width = engine.shape.width;
     if engine
         .parameters
         .layers
         .iter()
-        .any(|layer| initial[layer.score..layer.score + 2] != variant.score_init())
+        .any(|layer| initial[layer.score..layer.score + 2] != SCORE_INIT)
     {
         return Err("score multiplier has the wrong initialization".into());
     }
@@ -623,68 +455,33 @@ pub fn check(variant: Variant) -> Result<()> {
         return Err("the tied classifier failed to predict the unseen token".into());
     }
 
+    // Each layer appends its attention and FFN write gates, then its two skip
+    // gates, after all other coordinates. All start at zero.
+    let gates = 8 * width * engine.shape.layers;
+    let first_gate = initial.len() - gates;
+    let offsets: Vec<_> = engine
+        .parameters
+        .layers
+        .iter()
+        .flat_map(|layer| layer.write_gates.into_iter().chain(layer.skip_gates))
+        .collect();
+    if initial[first_gate..].iter().any(|&v| v != 0.0)
+        || offsets
+            .iter()
+            .enumerate()
+            .any(|(j, &at)| at != first_gate + 2 * width * j)
+    {
+        return Err("the gate vectors are not the trailing zero coordinates".into());
+    }
+    // Exercise the input and parameter adjoints away from the identity.
+    for &at in &offsets {
+        for (j, value) in initial[at..at + 2 * width].iter_mut().enumerate() {
+            *value = 0.01 * ((j % 7) as f32 - 3.0);
+        }
+    }
     engine.restore(&initial)?;
     let tokens = [1, 2, 3, 3, 1, 0];
     let labels = [2, 3, 4, u32::MAX, 5, 2];
-    let extra_weights = match variant.routing {
-        Routing::NormPhase => {
-            norm_phase_checks::check(&engine)?;
-            2 * engine.shape.layers
-        }
-        Routing::WriteGate => 4 * engine.shape.width * engine.shape.layers,
-        Routing::ReadWriteGate | Routing::SkipWriteGate => {
-            8 * engine.shape.width * engine.shape.layers
-        }
-        _ => 0,
-    };
-    if extra_weights != 0 {
-        let mut ordinary = Engine::new(
-            engine.shape.clone(),
-            2,
-            1,
-            Variant {
-                routing: Routing::Single,
-                ..variant
-            },
-        )?;
-        let shared = ordinary.weights()?;
-        if initial.len() != shared.len() + extra_weights
-            || initial[..shared.len()] != shared
-            || initial[shared.len()..].iter().any(|&v| v != 0.0)
-        {
-            return Err("residual initialization differs from the matched ordinary model".into());
-        }
-        engine.forward(&tokens, &labels, 2, 3)?;
-        ordinary.forward(&tokens, &labels, 2, 3)?;
-        if engine.logits.read()? != ordinary.logits.read()? {
-            return Err("zero residual parameters changed ordinary logits".into());
-        }
-        // Exercise the input and parameter adjoints away from the identity.
-        for layer in &engine.parameters.layers {
-            if let Some(at) = layer.turn {
-                initial[at] = 0.13;
-                initial[at + 1] = -0.17;
-            }
-            for gates in [
-                layer.write_gates,
-                layer.second_gate.map(SecondGate::offsets),
-            ]
-            .into_iter()
-            .flatten()
-            {
-                for at in gates {
-                    for (j, value) in initial[at..at + 2 * engine.shape.width]
-                        .iter_mut()
-                        .enumerate()
-                    {
-                        *value = 0.01 * ((j % 7) as f32 - 3.0);
-                    }
-                }
-            }
-        }
-        engine.restore(&initial)?;
-        println!("Zero residual parameters reproduce ordinary initialization and logits");
-    }
     engine.forward(&tokens, &labels, 2, 3)?;
     let before = engine.logits.read()?;
     let dense: Vec<_> = tokens
@@ -722,29 +519,10 @@ pub fn check(variant: Variant) -> Result<()> {
     engine.forward(&tokens, &labels, 2, 3)?;
     engine.backward()?;
     let gradient = engine.parameters.grad.read()?;
-    for at in engine
-        .parameters
-        .layers
-        .iter()
-        .filter_map(|layer| layer.turn)
-    {
-        if gradient[at..at + 2].iter().any(|g| g.abs() < 1e-6) {
-            return Err("missing attention or FFN residual phase gradient".into());
-        }
-    }
-    for gates in engine.parameters.layers.iter().flat_map(|layer| {
-        [
-            layer.write_gates,
-            layer.second_gate.map(SecondGate::offsets),
-        ]
-        .into_iter()
-        .flatten()
-    }) {
-        for at in gates {
-            let g = &gradient[at..at + 2 * engine.shape.width];
-            if (0..2).any(|coord| g[coord..].iter().step_by(2).all(|x| x.abs() < 1e-6)) {
-                return Err("missing real or imaginary token-gate gradient".into());
-            }
+    for &at in &offsets {
+        let g = &gradient[at..at + 2 * width];
+        if (0..2).any(|coord| g[coord..].iter().step_by(2).all(|x| x.abs() < 1e-6)) {
+            return Err("missing real or imaginary token-gate gradient".into());
         }
     }
     if !gradient.iter().all(|g| g.is_finite())
@@ -754,32 +532,28 @@ pub fn check(variant: Variant) -> Result<()> {
     {
         return Err("missing gradient for a vocabulary row absent from lookup".into());
     }
-    if variant.real_score_init
-        && !engine
-            .parameters
-            .layers
-            .iter()
-            .any(|layer| gradient[layer.score + 1].abs() > 1e-6)
+    if !engine
+        .parameters
+        .layers
+        .iter()
+        .any(|layer| gradient[layer.score + 1].abs() > 1e-6)
     {
         return Err("missing gradient for the imaginary part of the score multiplier".into());
     }
     let mut rng = Random::new(100);
-    let layer = &engine.parameters.layers[0];
-    let trials =
-        3 + usize::from(layer.write_gates.is_some()) + usize::from(layer.second_gate.is_some());
-    for trial in 0..trials {
+    for trial in 0..5 {
         let mut direction: Vec<_> = initial.iter().map(|_| rng.gauss(0.0, 1.0) as f32).collect();
         if trial >= 3 {
-            direction[..initial.len() - extra_weights].fill(0.0);
-            // Trial 3 probes write parameters alone. Trial 4 probes the second gate alone.
+            // Trial 3 probes the write gates alone. Trial 4 probes the skip gates alone.
+            direction[..first_gate].fill(0.0);
             for layer in &engine.parameters.layers {
                 let excluded = if trial == 3 {
-                    layer.second_gate.map(SecondGate::offsets)
+                    layer.skip_gates
                 } else {
                     layer.write_gates
                 };
-                for at in excluded.into_iter().flatten() {
-                    direction[at..at + 2 * engine.shape.width].fill(0.0);
+                for at in excluded {
+                    direction[at..at + 2 * width].fill(0.0);
                 }
             }
         }
@@ -831,48 +605,36 @@ pub fn check(variant: Variant) -> Result<()> {
     println!(
         "Label-weighted microbatch gradients sum to the batch gradient within {gap:.1e} of {largest:.3}"
     );
-    if matches!(variant.optimizer, Optimizer::SgdMomentum) {
-        // The penalty enters the gradient once, before clipping. A zero rate
-        // keeps the weights and sets the velocity to the clipped sum.
-        let penalty = 0.5_f32;
-        let before = engine.state()?;
-        engine.full_step(penalty, 0.0, 0)?;
-        let after = engine.state()?;
-        let count = parts.len();
-        let sum: Vec<f64> = parts
+    // The penalty enters the gradient once, before clipping. A zero rate
+    // keeps the weights and sets the velocity to the clipped sum. A penalty
+    // far above PENALTY makes a missing or doubled term visible.
+    let penalty = 0.5_f32;
+    let before = engine.state()?;
+    engine.penalized_step(penalty, 0.0)?;
+    let after = engine.state()?;
+    let count = parts.len();
+    let sum: Vec<f64> = parts
+        .iter()
+        .zip(&initial)
+        .map(|(&g, &x)| f64::from(g) + f64::from(penalty) * f64::from(x))
+        .collect();
+    let norm = sum.iter().map(|g| g * g).sum::<f64>().sqrt();
+    let scale = norm.max(1.0);
+    if after[..count] != before[..count]
+        || after[count..]
             .iter()
-            .zip(&initial)
-            .map(|(&g, &x)| f64::from(g) + f64::from(penalty) * f64::from(x))
-            .collect();
-        let norm = sum.iter().map(|g| g * g).sum::<f64>().sqrt();
-        let scale = norm.max(1.0);
-        if after[..count] != before[..count]
-            || after[count..]
-                .iter()
-                .zip(&before[count..])
-                .zip(&sum)
-                .any(|((&v, &old), &g)| {
-                    (f64::from(v) - (0.9 * f64::from(old) + g / scale)).abs() > 2e-6
-                })
-        {
-            return Err("penalized full-batch step disagrees with the reference".into());
-        }
-        println!("Full-batch penalty enters once before clipping at gradient norm {norm:.4}");
+            .zip(&before[count..])
+            .zip(&sum)
+            .any(|((&v, &old), &g)| {
+                (f64::from(v) - (0.9 * f64::from(old) + g / scale)).abs() > 2e-6
+            })
+    {
+        return Err("penalized full-batch step disagrees with the reference".into());
     }
-    match variant.optimizer {
-        Optimizer::SgdMomentum => engine
-            .parameters
-            .check_sgd_momentum(&engine.adam, &engine.kernel)?,
-        Optimizer::AdamW => {}
-        Optimizer::AmsGradW(config) => {
-            engine
-                .parameters
-                .check_amsgradw(&engine.adam, &engine.kernel, config)?
-        }
-    }
-    println!(
-        "{} vocabulary prediction, prefix causality and tied adjoints verified",
-        variant.model()
-    );
+    println!("Full-batch penalty enters once before clipping at gradient norm {norm:.4}");
+    engine
+        .parameters
+        .check_sgd_momentum(&engine.optimizer, &engine.kernel)?;
+    println!("{MODEL} vocabulary prediction, prefix causality and tied adjoints verified");
     Ok(())
 }

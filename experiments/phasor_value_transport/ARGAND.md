@@ -25,7 +25,7 @@ of each part.
 | FFN matrices `W_g`, `W_u`, `W_F` | $\mathcal N(0,0.02^2)$ per part. |
 | Skip and write vectors `w_skip`, `w_write` in each sublayer | $0+0i$ in every entry. |
 | LeRoPE log-frequency adjustments $\alpha_m$ | $0$ for every $m$, shared across heads and layers. |
-| `s_init` of the learned score multiplier `s` | $1+0i$ in every layer with `ARGAND_SCORE_INIT=1`. |
+| `s_init` of the learned score multiplier `s` | $1+0i$ in every layer. |
 | SGD velocity $v_0$ | $0$ for every real coordinate. |
 | WSD learning rate at the first update | $0$. |
 
@@ -34,33 +34,19 @@ initialization. Each stress run uses one of the seeds `0`, `1` or `2` to
 initialize `E` and the attention and FFN matrices.
 [Kernite parameter initialization](src/argand/weights.rs)
 
-### Optimizer and WSD
+### Objective, optimizer and WSD
 
 | Setting | Value | Meaning |
 |---|---|---|
 | `optimizer` | `sgd-momentum` | SGD with Polyak momentum. |
 | Momentum $\beta$ | `0.9` | Weight of the previous velocity. |
-| `weight_decay` | `0` | No decoupled decay. Only the full batch below adds a weight penalty. |
+| Penalty $\lambda$ | `1e-4` | Coefficient of $(\lambda/2)\lVert\theta\rVert_2^2$ in the objective. |
+| `weight_decay` | `0` | No decoupled decay. |
 | Gradient norm limit | `1.0` | Upper limit on the global Euclidean gradient norm. |
 | WSD peak learning rate $\eta_{\mathrm{peak}}$ | `1e-3` | Rate during the stable phase. |
 | WSD final learning rate $\eta_{\mathrm{final}}$ | `1e-8` | Rate on the final scheduled update. |
 
-For minibatch gradient $g_k$ and learning rate $\eta_k$, the update is
-
-$$
-\tilde g_k = \frac{g_k}{\max(1,\lVert g_k\rVert_2)}, \qquad
-v_{k+1} = 0.9 v_k + \tilde g_k, \qquad
-\theta_{k+1} = \theta_k - \eta_k v_{k+1}.
-$$
-
-At the first warmup update, the zero rate keeps the weights fixed while
-the velocity receives the clipped gradient. SGD checkpoints store the
-weights and velocity.
-
-#### Full batch
-
-`ARGAND_BATCH=full` replaces the minibatch gradient by the gradient of the
-regularized training objective
+Every update uses the full gradient of the regularized training objective
 
 $$
 F(\theta) = \frac{1}{N}\sum_{j=1}^{N}\ell_j(\theta)
@@ -68,13 +54,21 @@ F(\theta) = \frac{1}{N}\sum_{j=1}^{N}\ell_j(\theta)
 $$
 
 Here $\ell_1,\dots,\ell_N$ are the cross-entropy losses at the $N$
-labeled positions of the training split, and `ARGAND_PENALTY` sets
-$\lambda>0$. The update above uses $g_k=\nabla F(\theta_k)$.
+labeled positions of the training split. For $g_k=\nabla F(\theta_k)$
+and learning rate $\eta_k$, the update is
+
+$$
+\tilde g_k = \frac{g_k}{\max(1,\lVert g_k\rVert_2)}, \qquad
+v_{k+1} = 0.9 v_k + \tilde g_k, \qquad
+\theta_{k+1} = \theta_k - \eta_k v_{k+1}.
+$$
+
 Microbatches of the suite's batch size visit the training split in
 order. Each divides its loss gradient by $N$, so their gradients sum to
 the data term. The penalty gradient $\lambda\theta_k$ is added once,
-before clipping. The mode requires `skip-write-gate` and
-`sgd-momentum`.
+before clipping. At the first warmup update, the zero rate keeps the
+weights fixed while the velocity receives the clipped gradient.
+Checkpoints store the weights and velocity.
 [Lean full-gradient run](../../src/Transformer/Grokking/FiniteRecovery/ArgandFullGradient.lean)
 
 WSD (Warmup–Stable–Decay) uses the task's full `max_updates` budget $B$.
@@ -88,9 +82,9 @@ $D=\lfloor 0.8B\rfloor$.
 For $B=100\,000$, the short screen's 1,000-update limit covers at most half
 of the 2,000-update warmup.
 
-The runner uses Kernite 0.8.0. Leave `ARGAND_OPTIMIZER` unset or set it to
-`sgd-momentum` to select the default. Select the earlier controls with
-`ARGAND_OPTIMIZER=adamw` or `ARGAND_OPTIMIZER=amsgradw`.
+The runner uses Kernite 0.8.0 and has no configuration flags. The
+residual, score-initialization, minibatch, AdamW and AMSGradW variants
+in the README ran at commit 7399c3bb or earlier.
 [Suite budgets](../convex_stress/suite.json) · [Optimizer kernel](src/argand/kernels.rs)
 
 ## Embedding
@@ -270,6 +264,5 @@ loss = cross_entropy(logits, tokens)
 ~~~
 
 The LeRoPE tables use `c=64` and `d=16`. The short screen used each test
-case's model dimensions and supervised positions. The Kernite runner
-selects this initialization with `ARGAND_SCORE_INIT=1`.
-[Run settings](README.md#default-argand-with-skip-and-write-gates) · [Residual gates](src/argand/complex_mhc.rs)
+case's model dimensions and supervised positions.
+[Run settings](README.md#default-argand-with-skip-and-write-gates) · [Residual gates](src/argand/residual.rs)

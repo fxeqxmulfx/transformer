@@ -17,9 +17,9 @@ open scoped Topology
 
 variable {A : Type*} {H d layers T : ℕ}
 
-/-- Argand starts the score multiplier at 1+i. The documented
-ARGAND_SCORE_INIT=1 override starts it at one. Other coordinates follow
-the same supplied Gaussian draws and zero settings in both runs. -/
+/-- `realScoreInit` starts the score multiplier at one, as the runner does.
+Otherwise it starts at 1+i, the runner default at commit 7399c3bb. Other
+coordinates follow the same supplied Gaussian draws and zero settings in both runs. -/
 def sgdInitialWeights (realScoreInit : Bool) (draw : ComplexParameter A H d layers → ℂ) :
     Weights A H d layers
   | .inl (.score _, true) => if realScoreInit then 0 else 1

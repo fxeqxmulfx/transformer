@@ -40,7 +40,7 @@ abbrev Weights (A : Type*) (H d layers : ℕ) := Parameter A H d layers → ℝ
 def complexEntry (w : Weights A H d layers) (p : ComplexParameter A H d layers) : ℂ :=
   ⟨w (.inl (p, false)), w (.inl (p, true))⟩
 
-/-- The frozen initial state with ARGAND_SCORE_INIT=1. Gaussian draws
+/-- The runner's frozen initial state, with score multipliers at one. Gaussian draws
 provide the complex embedding and projection entries. -/
 def initialWeights (draw : ComplexParameter A H d layers → ℂ) : Weights A H d layers
   | .inr _ => 0

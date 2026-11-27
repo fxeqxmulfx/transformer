@@ -54,6 +54,27 @@ and run the three exact NV11 checks. [Default training and replay](#embedding-in
 
 ### Single-stream Argand with a tied vocabulary
 
+The runner trains one model, specified in [ARGAND.md](ARGAND.md). It
+uses skip and write gates, score multipliers starting at `1 + 0i`, and
+full-batch clipped momentum SGD on the objective with penalty
+$\lambda = 10^{-4}$. It has no configuration flags. The following
+commands check the model and screen every short case for 1,000 updates.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+target/release/phasor-value-transport argand-check
+out=runs/argand-short
+mkdir -p "$out"
+./run_argand.sh short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+```
+
+The subsections below record earlier runs of Phasor v2 and the Argand
+variants. Their commands need the runner of commit 7399c3bb. At that
+commit, the `v2-*` operations and the variables `PHASOR_V2_MHC`,
+`ARGAND_RESIDUAL`, `ARGAND_SCORE_INIT`, `ARGAND_OPTIMIZER`,
+`ARGAND_AMSGRADW_SQRT_SCALE`, `ARGAND_AMSGRADW_BETA2`, `ARGAND_BATCH` and
+`ARGAND_PENALTY` select the variants, and `run_v2_stress.sh` is the run script.
+
 The single-stream configuration of Argand, originally named Phasor v2,
 uses a complex residual stream and a tied vocabulary classifier. For
 each position it computes
