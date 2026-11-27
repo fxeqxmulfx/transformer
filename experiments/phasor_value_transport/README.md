@@ -268,11 +268,11 @@ done
 unset PHASOR_V2_MHC
 ```
 
-##### Argand GPT stress screen
+##### Argand short GPT stress screen
 
 The `argand-check`, `argand-run` and `argand-replay` commands select the
-independent-phase model. The screen uses the 25 short and 10 long cases
-with three seeds each and one pass through the layers. It stops each run
+independent-phase model. The screen uses the 25 short cases with three
+seeds each and one pass through the layers. It stops each run
 at its first held-out observation at or above 99% or at the last scheduled
 observation at or below 1,000 updates. The learning-rate schedule uses the
 original case budget. The runner replays each passing checkpoint.
@@ -280,10 +280,25 @@ original case budget. The runner replays each passing checkpoint.
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
 target/release/phasor-value-transport argand-check
-out=runs/argand-stress-1000
+out=runs/argand-short-1000
 mkdir -p "$out"
-PHASOR_EVAL_BATCH_CAP=16 ./run_v2_stress.sh --argand all 1 "$out" 1000 | tee "$out/stress-1000.jsonl"
+PHASOR_EVAL_BATCH_CAP=16 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
 ```
+
+The runs used Kernite 0.7.0 on an RTX 3050 Laptop GPU. The single-stream
+screen above used the same cases, seeds and observation limit.
+
+| Model | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 |
+|---|---:|---:|---:|
+| Single-stream control | 19 | 7 | 6 |
+| Argand with independent phases | 26 | 10 | 8 |
+
+Argand passed all 19 cells that passed in the single-stream screen.
+It also passed all three seeds of `arithmetic-square-sum` at updates
+893–950, all three seeds of `power-division-p97-k3` at updates 741–798,
+and seed 1 of `power-division-p193-k3` at update 949. All 75 terminal
+state digests matched the saved records. Independent reloads reproduced
+the held-out scores and losses of the 26 passing checkpoints.
 
 ### Argand with an input-position readout
 
