@@ -12,6 +12,7 @@ pub const AMPLITUDES: usize = 24;
 #[derive(Clone, Copy)]
 pub enum Routing {
     Single,
+    NormPhase,
     Real,
     Conjugated,
     EntryPhase,
@@ -31,6 +32,7 @@ impl Routing {
     pub fn model(self) -> &'static str {
         match self {
             Self::Single => "phasor-v2-single-stream-tied-vocab-fp32",
+            Self::NormPhase => "argand-norm-phase-single-stream-tied-vocab-fp32",
             Self::Real => "phasor-v2-real-mhc-tied-vocab-fp32",
             Self::Conjugated => "phasor-v2-conjugated-mhc-tied-vocab-fp32",
             Self::EntryPhase => "argand-entry-phase-mhc-tied-vocab-fp32",
@@ -39,7 +41,7 @@ impl Routing {
 
     pub(super) fn router_width(self) -> Option<usize> {
         match self {
-            Self::Single => None,
+            Self::Single | Self::NormPhase => None,
             Self::Real => Some(12),
             Self::Conjugated => Some(18),
             Self::EntryPhase => Some(24),
@@ -188,6 +190,7 @@ impl Sublayer {
         branch: Pair,
         width: usize,
         scale: f32,
+        turn: Option<Pair>,
     ) -> Result<Pair> {
         if let Some(route) = self.route {
             let rows = branch.len / (2 * width);
@@ -203,7 +206,11 @@ impl Sublayer {
             )?;
             tape.sum(ctx, skip, write, scale)
         } else {
-            tape.sum(ctx, self.state, branch, scale)
+            let skip = match turn {
+                Some(theta) => tape.turn_by_norm(ctx, self.state, theta, width)?,
+                None => self.state,
+            };
+            tape.sum(ctx, skip, branch, scale)
         }
     }
 }

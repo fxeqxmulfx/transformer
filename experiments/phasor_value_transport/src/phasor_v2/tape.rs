@@ -53,6 +53,7 @@ impl Matrix {
 enum Operation {
     Matrix(Matrix, Matrix, Matrix),
     Rms(Pair, Pair, usize),
+    TurnByNorm(Pair, Pair, Pair, usize),
     Product(Pair, Pair, Pair),
     Sum(Pair, Pair, Pair, f32),
     Heads(Pair, Pair, bool),
@@ -148,6 +149,17 @@ impl Tape {
     pub fn rms(&mut self, ctx: &Context<'_>, x: Pair, width: usize) -> Result<Pair> {
         let out = self.allocate(ctx.cuda, x.len)?;
         self.apply(ctx, Operation::Rms(out, x, width), out)
+    }
+
+    pub fn turn_by_norm(
+        &mut self,
+        ctx: &Context<'_>,
+        x: Pair,
+        theta: Pair,
+        width: usize,
+    ) -> Result<Pair> {
+        let out = self.allocate(ctx.cuda, x.len)?;
+        self.apply(ctx, Operation::TurnByNorm(out, x, theta, width), out)
     }
 
     pub fn product(&mut self, ctx: &Context<'_>, a: Pair, b: Pair) -> Result<Pair> {
@@ -279,6 +291,19 @@ impl Context<'_> {
                             (width as f32).sqrt(),
                         )?;
                     }
+                }
+                Operation::TurnByNorm(y, x, theta, width) => {
+                    let launch = Grid::new((x.len / (2 * width)) as u32, 32);
+                    k.turn_by_norm::<BACK>(
+                        launch,
+                        y.x,
+                        x.x,
+                        y.dx,
+                        x.dx,
+                        theta.x,
+                        theta.dx,
+                        width as u32,
+                    )?;
                 }
                 Operation::Product(y, a, b) => {
                     let launch = grid(y.len / 2);

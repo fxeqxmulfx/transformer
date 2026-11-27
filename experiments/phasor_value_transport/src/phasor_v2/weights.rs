@@ -1,5 +1,5 @@
 //! Independent real coordinates and clipped Kernite AdamW and AMSGradW.
-use super::complex_mhc::{AMPLITUDES, STREAMS};
+use super::complex_mhc::{AMPLITUDES, Routing, STREAMS};
 use super::kernels::device;
 use super::tape::{Context, Tape};
 use super::{F, Pair, Result, Variant, grid};
@@ -57,6 +57,8 @@ pub(super) struct Layer {
     pub down: Projection,
     pub score: usize,
     pub routers: Option<[Projection; 2]>,
+    /// Offsets `turn` and `turn + 1` hold the attention and FFN skip coefficients.
+    pub turn: Option<usize>,
 }
 
 enum OptimizerBuffers {
@@ -88,7 +90,7 @@ impl Parameters {
             .map(|_| rng.gauss(0.0, 0.02) as f32)
             .collect();
         values.resize(embed_size + frequencies, 0.0);
-        let layers = (0..cfg.layers)
+        let mut layers: Vec<_> = (0..cfg.layers)
             .map(|_| {
                 let score = values.len();
                 values.extend(variant.score_init());
@@ -96,6 +98,7 @@ impl Parameters {
                     |input, output| Projection::new(&mut values, &mut rng, input, output);
                 Layer {
                     score,
+                    turn: None,
                     q: projection(width, width),
                     k: projection(width, width),
                     v: projection(width, width),
@@ -118,6 +121,13 @@ impl Parameters {
             .collect();
         // The legacy optimizer takes pairs. Pad one inert real coordinate if necessary.
         values.resize(values.len().next_multiple_of(2), 0.0);
+        // Append after the entire ordinary model so every shared weight and its RNG draw match.
+        if matches!(variant.routing, Routing::NormPhase) {
+            for layer in &mut layers {
+                layer.turn = Some(values.len());
+                values.extend([0.0, 0.0]);
+            }
+        }
         let count = values.len();
         let zeros = vec![0.0; count];
         let optimizer = if let Some(sqrt_scale) = variant.amsgradw_sqrt_scale {

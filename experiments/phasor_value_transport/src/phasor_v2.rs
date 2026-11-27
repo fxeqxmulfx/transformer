@@ -1,6 +1,7 @@
 //! Argand's complex decoder and tied vocabulary readout on Kernite.
 mod complex_mhc;
 mod kernels;
+mod norm_phase_checks;
 mod scores;
 mod tape;
 mod weights;
@@ -24,6 +25,12 @@ pub struct Variant {
 
 impl Variant {
     pub fn argand() -> Result<Self> {
+        let routing = match std::env::var("ARGAND_RESIDUAL").as_deref() {
+            Err(std::env::VarError::NotPresent) | Ok("entry-phase") => Routing::EntryPhase,
+            Ok("single") => Routing::Single,
+            Ok("norm-phase") => Routing::NormPhase,
+            _ => return Err("ARGAND_RESIDUAL takes entry-phase, single or norm-phase".into()),
+        };
         let real_score_init = match std::env::var("ARGAND_SCORE_INIT").as_deref() {
             Err(std::env::VarError::NotPresent) | Ok("1+i") => false,
             Ok("1") => true,
@@ -45,7 +52,7 @@ impl Variant {
             _ => return Err("ARGAND_OPTIMIZER takes adamw or amsgradw".into()),
         };
         Ok(Self {
-            routing: Routing::EntryPhase,
+            routing,
             real_score_init,
             amsgradw_sqrt_scale,
         })
@@ -59,13 +66,15 @@ impl Variant {
         })
     }
 
-    pub fn model(self) -> &'static str {
-        match (self.real_score_init, self.amsgradw_sqrt_scale.is_some()) {
-            (false, false) => self.routing.model(),
-            (true, false) => "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one",
-            (false, true) => "argand-entry-phase-mhc-tied-vocab-fp32-amsgradw",
-            (true, true) => "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one-amsgradw",
+    pub fn model(self) -> String {
+        let mut name = self.routing.model().to_owned();
+        if self.real_score_init {
+            name.push_str("-s-init-one");
         }
+        if self.amsgradw_sqrt_scale.is_some() {
+            name.push_str("-amsgradw");
+        }
+        name
     }
 
     pub fn legacy_model(self) -> Option<&'static str> {
@@ -297,7 +306,14 @@ impl Engine {
                 let a = tape.heads(&ctx, a, true)?;
                 let a = layer.o.project(tape, &ctx, p, a, rows)?;
                 let a = tape.rms(&ctx, a, width)?;
-                x = attention.write(tape, &ctx, a, width, scale)?;
+                x = attention.write(
+                    tape,
+                    &ctx,
+                    a,
+                    width,
+                    scale,
+                    layer.turn.map(|at| p.pair(at, 1)),
+                )?;
 
                 let ffn = Sublayer::read(tape, &ctx, p, router.map(|r| &r[1]), x, rows, width)?;
                 let n = tape.rms(&ctx, ffn.input, width)?;
@@ -306,7 +322,14 @@ impl Engine {
                 let f = tape.product(&ctx, g, u)?;
                 let f = layer.down.project(tape, &ctx, p, f, rows)?;
                 let f = tape.rms(&ctx, f, width)?;
-                x = ffn.write(tape, &ctx, f, width, scale)?;
+                x = ffn.write(
+                    tape,
+                    &ctx,
+                    f,
+                    width,
+                    scale,
+                    layer.turn.map(|at| p.pair(at + 1, 1)),
+                )?;
             }
         }
         if self.mhc.is_some() {
@@ -442,7 +465,7 @@ pub fn check(variant: Variant) -> Result<()> {
     cfg.vocab = 6;
     cfg.max_length = 3;
     let mut engine = Engine::new(cfg, 2, 1, variant)?;
-    let initial = engine.weights()?;
+    let mut initial = engine.weights()?;
     if engine
         .parameters
         .layers
@@ -469,6 +492,35 @@ pub fn check(variant: Variant) -> Result<()> {
     engine.restore(&initial)?;
     let tokens = [1, 2, 3, 3, 1, 0];
     let labels = [2, 3, 4, u32::MAX, 5, 2];
+    if matches!(variant.routing, Routing::NormPhase) {
+        norm_phase_checks::check(&engine)?;
+        let mut ordinary = Engine::new(
+            engine.shape.clone(),
+            2,
+            1,
+            Variant {
+                routing: Routing::Single,
+                ..variant
+            },
+        )?;
+        let shared = ordinary.weights()?;
+        if initial[..shared.len()] != shared || initial[shared.len()..] != [0.0; 4] {
+            return Err("norm phase initialization differs from the matched ordinary model".into());
+        }
+        engine.forward(&tokens, &labels, 2, 3)?;
+        ordinary.forward(&tokens, &labels, 2, 3)?;
+        if engine.logits.read()? != ordinary.logits.read()? {
+            return Err("zero phase changed ordinary residual logits".into());
+        }
+        // Exercise the radial input adjoint at nonzero angles in the full decoder check.
+        for layer in &engine.parameters.layers {
+            let at = layer.turn.ok_or("missing residual phase coefficients")?;
+            initial[at] = 0.13;
+            initial[at + 1] = -0.17;
+        }
+        engine.restore(&initial)?;
+        println!("Zero phase reproduces ordinary initialization and logits");
+    }
     engine.forward(&tokens, &labels, 2, 3)?;
     let before = engine.logits.read()?;
     let dense: Vec<_> = tokens
@@ -506,6 +558,16 @@ pub fn check(variant: Variant) -> Result<()> {
     engine.forward(&tokens, &labels, 2, 3)?;
     engine.backward()?;
     let gradient = engine.parameters.grad.read()?;
+    for at in engine
+        .parameters
+        .layers
+        .iter()
+        .filter_map(|layer| layer.turn)
+    {
+        if gradient[at..at + 2].iter().any(|g| g.abs() < 1e-6) {
+            return Err("missing attention or FFN residual phase gradient".into());
+        }
+    }
     if !gradient.iter().all(|g| g.is_finite())
         || !gradient[2 * 4 * 16..2 * 5 * 16]
             .iter()

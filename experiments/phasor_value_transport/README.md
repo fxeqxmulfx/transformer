@@ -215,6 +215,38 @@ done
 unset PHASOR_V1_COMPLEX_WIDTH
 ```
 
+#### One-stream residual with a norm-dependent phase
+
+Does rotating the skip help a single-stream Argand reach 99% held-out exact sequences
+within 1,000 updates? Each attention and FFN sublayer gets one real coefficient
+$\theta$, initialized to zero and shared across tokens. It updates the incoming
+complex vector by $x' = e^{i\theta\lVert x\rVert_2} x + u(x)$, where $u$ is the
+usual scaled, PeriNorm-normalized write. The rotation uses the incoming norm before
+RMS. A repeated pass reuses the same coefficients. [Lean definition and proof](../../src/Transformer/PhasorV2/PhaseResidual.lean)
+
+| `ARGAND_RESIDUAL` | Skip | Additional real parameters per layer |
+|---|---|---:|
+| `single` | $x$ | 0 |
+| `norm-phase` | $e^{i\theta\lVert x\rVert_2} x$ | 2 |
+
+Both arms use the tied vocabulary, the score multiplier initialized to `1 + 0i`,
+AdamW, one pass, and the same frozen schedule and minibatch order for each seed.
+The shared weights have identical initial values. The threshold is checked at the
+scheduled observations up to update 1,000. The runner reloads every passing checkpoint.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=adamw PHASOR_EVAL_BATCH_CAP=16
+for residual in norm-phase single; do
+    export ARGAND_RESIDUAL=$residual
+    out="runs/argand-norm-phase-s1/$residual"
+    mkdir -p "$out"
+    target/release/phasor-value-transport argand-check
+    ./run_v2_stress.sh --argand all 1 "$out" 1000 > "$out/stress-1000.jsonl"
+done
+unset ARGAND_RESIDUAL ARGAND_SCORE_INIT ARGAND_OPTIMIZER PHASOR_EVAL_BATCH_CAP
+```
+
 #### Complex mHC in Argand
 
 Each sublayer has a separate complex router projection from the
