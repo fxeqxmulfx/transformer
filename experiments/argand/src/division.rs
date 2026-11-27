@@ -3,16 +3,53 @@ use crate::{
     Result,
     data::{Example, Task},
     division_equations as source,
+    suite::Shape,
 };
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 pub(crate) const NAME: &str = "grok-division-p97";
+pub(crate) const TRAIN_HASH: &str =
+    "53e9d2fb9336a74529e88bf582a2fb37483c1f7e79ab8f1fd670de565baf0eef";
+
+pub(crate) fn shape() -> Shape {
+    Shape {
+        width: 64,
+        heads: 4,
+        layers: 6,
+        vocab: 239,
+        max_batch: 512,
+        max_length: source::ANSWER_POS + 1,
+    }
+}
+
+pub(crate) fn example(a: usize, b: usize, label: usize) -> Example {
+    let tokens = [
+        source::EOS,
+        source::NUM0 + a,
+        source::DIV,
+        source::NUM0 + b,
+        source::EQ,
+    ];
+    let mut targets = vec![-100; tokens.len()];
+    targets[source::ANSWER_POS] = (source::NUM0 + label) as i64;
+    Example {
+        task: NAME.to_owned(),
+        tokens: tokens.map(|t| t as i64).to_vec(),
+        targets,
+        changes: vec![false; tokens.len()],
+        prompt: vec![],
+        answer: vec![],
+        limit: 0,
+        field: None,
+        row_index: None,
+    }
+}
 
 pub(crate) fn load() -> Result<(Value, Task)> {
     let (open, hidden) = source::split(0, 4656);
     let hashes = [source::fingerprint(&open), source::fingerprint(&hidden)];
-    if hashes[0] != "53e9d2fb9336a74529e88bf582a2fb37483c1f7e79ab8f1fd670de565baf0eef"
+    if hashes[0] != TRAIN_HASH
         || hashes[1] != "1f679f635bd75862e28f1f6dec8cc121a2963f2fa258a0d8d291df0c8b9acc7d"
     {
         return Err("original division equation fingerprints changed".into());
@@ -23,33 +60,18 @@ pub(crate) fn load() -> Result<(Value, Task)> {
             split.to_owned(),
             equations
                 .iter()
-                .map(|e| {
-                    let pos = source::ANSWER_POS;
-                    let tokens = e.tokens()[..=pos].iter().map(|&t| t as i64).collect();
-                    let mut targets = vec![-100; pos + 1];
-                    targets[pos] = e.target(pos) as i64;
-                    Example {
-                        task: NAME.to_owned(),
-                        tokens,
-                        targets,
-                        changes: vec![false; pos + 1],
-                        prompt: vec![],
-                        answer: vec![],
-                        limit: 0,
-                        field: None,
-                        row_index: None,
-                    }
-                })
+                .map(|e| example(e.num as usize, e.den as usize, e.quo as usize))
                 .collect(),
         );
     }
+    let spec = shape();
     let row = json!({"name":NAME,"tier":"division","split_sha256":hashes,"case":{
-        "width":64,"heads":4,"layers":6,"batch":512,"observe":256,"max_updates":8192}});
+        "width":spec.width,"heads":spec.heads,"layers":spec.layers,"batch":spec.max_batch,"observe":256,"max_updates":8192}});
     Ok((
         row,
         Task {
             splits,
-            vocab: 239,
+            vocab: spec.vocab,
             selection: "hidden".to_owned(),
         },
     ))
@@ -58,46 +80,6 @@ pub(crate) fn load() -> Result<(Value, Task)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use convex_relabel_graph_audit::graph::{Pair, analyze};
-
-    /// The ideal character learner uses an explicit prior on the output
-    /// codes. The neural trainer has no access to this test or its factors.
-    #[test]
-    fn original_mask_identifies_unit_characters_and_the_zero_row() -> Result<()> {
-        let (open, hidden) = source::split(0, 4656);
-        let units: Vec<_> = open
-            .iter()
-            .filter(|e| e.num > 0)
-            .map(|e| Pair {
-                row: e.num as usize - 1,
-                column: e.den as usize - 1,
-                label: e.quo as usize - 1,
-            })
-            .collect();
-        let mut coding = vec![usize::MAX; 96];
-        let mut residue = 1;
-        for power in 0..96 {
-            coding[residue - 1] = power;
-            residue = 5 * residue % 97;
-        }
-        let graph = analyze(96, &units, &coding).map_err(|error| error.to_string())?;
-        assert_eq!(graph.observed_cells, 4611);
-        assert!(graph.connected && graph.observed_phase_consistent);
-        assert!(graph.perfect_matching.is_some());
-        let predictions = graph.completion_labels.ok_or("no unit completion")?;
-        let mut zero_examples = open.iter().filter(|e| e.num == 0);
-        let zero = zero_examples.next().ok_or("zero row was unobserved")?.quo;
-        assert!(zero_examples.all(|e| e.quo == zero));
-        for e in hidden {
-            let pred = if e.num == 0 {
-                zero
-            } else {
-                (1 + predictions[e.num as usize - 1 + 96 * (e.den as usize - 1)]) as u8
-            };
-            assert_eq!(pred, e.quo);
-        }
-        Ok(())
-    }
     #[test]
     fn only_the_quotient_is_supervised_and_it_is_absent_from_the_prompt() -> Result<()> {
         let (_, task) = load()?;

@@ -13,7 +13,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP";
+const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | division-certificate CELL (terminal|first-strict) | division-mask-lean";
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
     if op.starts_with("adamw-") {
@@ -30,6 +30,17 @@ pub fn command(args: &[String]) -> Result<()> {
         return Err(USAGE.into());
     };
     match (op.as_str(), args) {
+        ("division-mask-lean", []) => {
+            print!("{}", crate::division_certificate::mask::lean_source()?);
+            Ok(())
+        }
+        ("division-certificate", [cell, kind]) if kind == "terminal" || kind == "first-strict" => {
+            println!(
+                "{}",
+                crate::division_certificate::check(Path::new(cell), kind == "first-strict")?
+            );
+            Ok(())
+        }
         ("adamw-tail-run", [name, seed, out, budget, cap]) => {
             let seed: u32 = seed.parse()?;
             let job = crate::page_runs::Job::new(name, cap.parse()?)?;

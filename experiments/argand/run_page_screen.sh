@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 # Run each canonical case in manifest order. The binary replays each endpoint.
 set -euo pipefail
-if (( $# < 2 || $# > 3 )) || [[ ! $1 =~ ^(short|long|all)$ ]] || [[ ! ${3:-single} =~ ^(single|sqrt)$ ]]; then
-    echo 'usage: bash run_page_screen.sh TIER RUN_DIRECTORY [single|sqrt]' >&2
+if (( $# < 2 || $# > 3 )) || [[ ! $1 =~ ^(short|long|all)$ ]] || [[ ! ${3:-single} =~ ^(single|sqrt|retry|adamw)$ ]]; then
+    echo 'usage: bash run_page_screen.sh TIER RUN_DIRECTORY [single|sqrt|retry|adamw]' >&2
     exit 2
 fi
 dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 bin=${ARGAND_BIN:-"$dir/target/release/argand"}
-op=page-run
-if [[ ${3:-single} == sqrt ]]; then op=page-run-sqrt; fi
+case ${3:-single} in
+    single) op=page-run ;;
+    sqrt|retry) op=page-run-$3 ;;
+    adamw) op=adamw-run ;;
+esac
 rows=$(jq -er --arg tier "$1" '.seeds as $s | .tasks[] | select($tier == "all" or .tier == $tier) | .name as $name | $s[] | [$name,.] | @tsv' "$dir/../convex_stress/suite.json")
 files=()
 while IFS=$'\t' read -r name seed; do

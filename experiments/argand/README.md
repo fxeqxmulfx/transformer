@@ -134,8 +134,15 @@ the 4,656 observed equations, 4,611 have a nonzero numerator. Their
 the output coordinates of a faithful multiplicative character the observed
 phases are consistent, and propagation recovers every nonzero hidden
 answer. The other 45 observations identify the constant zero-numerator
-row. Together these checks recover 4,656/4,656 hidden answers. The graph
-audit is a test-only dependency. [Ideal character recovery in Lean](../../src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean)
+row. Together these checks recover 4,656/4,656 hidden answers. The
+`division-certificate CELL terminal` command reconstructs these factors
+from the training rows, reloads the checkpoint by SHA-256 and scores every
+legal prompt against the recovered answers. It masks all labels during the
+forward pass and compares the winning token with every vocabulary competitor.
+The same verifier accepts unknown row and column factors and an arbitrary
+constant-row token. `division-mask-lean` exports the exact mask, a spanning
+witness and a perfect matching. Lean checks the literals with `decide`.
+[Ideal character recovery](../../src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean) · [Identifiability including zero](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean)
 
 ### Eight-bit sum on the 31-word staircase
 
@@ -185,14 +192,32 @@ replayed with minimum gap 10.273. All 30 evaluations from 12,800 through
 The observation spacing was 256 updates, with a separate evaluation at
 the declared endpoint. The discovery run took 719 seconds on the RTX 3050.
 
+The first fresh seed, 889832341, fit every training equation by the
+20,000-step endpoint and scored 4,287/4,656 on hidden prompts (92.07%).
+With a new 100,000-step WSD schedule and identical initialization and
+batch order, it reached its first strict 4,656/4,656 at 18,432. The
+training-only certificate independently recovered all labels at that
+checkpoint, with minimum hidden margin 2.079. At 18,944 the same trajectory
+scored 4,595/4,656. Terminal success for the replication is determined
+solely by all 4,656 strict hidden answers at update 100,000. All twelve
+preregistered seeds use this horizon, including early successes. The
+horizon was selected after seeing the first seed's 20,000-step result.
+If any terminal replay fails, all twelve repeat from the same seeds with
+a 200,000-step WSD schedule. The empirical fractions use separate
+denominators of twelve for the two budgets.
+
 ```sh
 case=grok-division-p97
 "$bin" adamw-run "$case" 0 runs/division-adamw-short 8192
 "$bin" adamw-run "$case" 0 runs/division-adamw-long 20000
 bash plot_division_accuracy.sh "runs/division-page/$case/seed0" \
   "runs/division-adamw-short/$case/seed0" "runs/division-adamw-long/$case/seed0" runs/division-comparison
-"$bin" adamw-confirm-plan "$case" runs/division-adamw-confirm 20000
-"$bin" adamw-confirm "$case" runs/division-adamw-confirm 20000
+"$bin" adamw-confirm-plan "$case" runs/division-registered 20000
+bash run_division_horizon.sh runs/division-registered runs/division-confirm-100k 100000
+bash double_division_horizon.sh runs/division-confirm-100k runs/division-confirm-200k
+"$bin" division-certificate "runs/division-adamw-long/$case/seed0" first-strict
+"$bin" division-mask-lean > runs/OriginalDivisionMask.lean
+(cd ../.. && LAKE_ARTIFACT_CACHE=false lake env lean experiments/argand/runs/OriginalDivisionMask.lean)
 ```
 
 The optional `adamw-tail-run CASE SEED OUT WSD_BUDGET CUTOFF` continues

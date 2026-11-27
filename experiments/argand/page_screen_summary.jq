@@ -3,11 +3,12 @@
 . as $records |
 [$suite[0].tasks[] | select($tier == "all" or .tier == $tier) as $task |
   $suite[0].seeds[] | {task:$task, seed:.}] as $cells |
-if length != 2*($cells|length) then error("incomplete PAGE screen") else . end |
+if length != 2*($cells|length) then error("incomplete optimizer screen") else . end |
 [range(0;$cells|length) as $i |
   $cells[$i] as $c | $records[2*$i] as $r | $records[2*$i+1] as $v |
   $v.splits[$c.task.selection] as $p |
   if $r.identity.case != $c.task.name or $r.identity.seed != $c.seed or
+     $r.identity.optimizer != $records[0].identity.optimizer or $r.identity.correction != $records[0].identity.correction or
      $r.identity.tier != $c.task.tier or $r.identity != $v.identity or
      $r.weights_sha256 != $v.weights_sha256 or $r.step != $v.step or
      $r.strict != $v.strict or $p.correct != $r.correct or $p.loss != $r.loss or
@@ -22,6 +23,7 @@ def counts: {runs:length, passed_99:map(select(.passed))|length,
   cases_all_seeds:group_by(.identity.case)|map(select(all(.[];.passed)))|length,
   updates:map(.step)|add, skipped:map(.skipped_batches)|add,
   train_and_score_seconds:map(.segment_seconds)|add};
-{overall:counts,tiers:(group_by(.identity.tier) | map({key:.[0].identity.tier,value:counts}) | from_entries),
+{optimizer:.[0].identity.optimizer,correction:.[0].identity.correction,
+ overall:counts,tiers:(group_by(.identity.tier) | map({key:.[0].identity.tier,value:counts}) | from_entries),
  cases:group_by(.identity.case) | map({name:.[0].identity.case, tier:.[0].identity.tier, total:.[0].total,
    cells:sort_by(.identity.seed) | map({seed:.identity.seed,step,correct,passed,strict:.strict.all_strict})})}

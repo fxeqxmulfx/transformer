@@ -6,6 +6,7 @@ include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 mod and_audit;
 mod bench;
 mod division;
+mod division_certificate;
 #[allow(dead_code)]
 #[path = "../../grok_division/src/data.rs"]
 mod division_equations;
