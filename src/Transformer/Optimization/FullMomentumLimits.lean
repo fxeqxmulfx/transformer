@@ -15,14 +15,13 @@ namespace Transformer.Optimization
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
 
-/-- The small constant step can be selected from the objective and the
-initial state, using just a Lipschitz bound on a compact ball. A finite
-warmup may supply the initial state for this constant-rate tail. -/
-theorem exists_pos_fullMomentum_descent {f : E → ℝ} (hf : Differentiable ℝ f)
+/-- A single constant step bound serves every start below an energy cap.
+The cap bounds the entire orbit of the clipped update. -/
+theorem exists_pos_fullMomentum_descent_below {f : E → ℝ} (hf : Differentiable ℝ f)
     (hLip : LocallyLipschitz (gradient f)) {γ : ℝ} (hγ : 0 < γ)
-    (hcoerc : ∀ w, γ * ‖w‖ ^ 2 ≤ f w) (x₀ v₀ : E) (hv₀ : ‖v₀‖ ≤ 10) :
+    (hcoerc : ∀ w, γ * ‖w‖ ^ 2 ≤ f w) (cap : ℝ) :
     ∃ R ≥ 0, ∃ η₀ > 0, ∀ η, 0 < η → η ≤ η₀ → ∀ (x v : ℕ → E),
-      x 0 = x₀ → v 0 = v₀ →
+      fullMomentumEnergy f η (x 0) (v 0) ≤ cap → ‖v 0‖ ≤ 10 →
       (∀ t, v (t + 1) = (9 / 10 : ℝ) • v t +
         (clipScale (gradient f (x t)))⁻¹ • gradient f (x t)) →
       (∀ t, x (t + 1) = x t - η • v (t + 1)) →
@@ -30,14 +29,13 @@ theorem exists_pos_fullMomentum_descent {f : E → ℝ} (hf : Differentiable ℝ
         fullMomentumEnergy f η (x (t + 1)) (v (t + 1)) +
           η / 40 * (‖v t‖ ^ 2 + ‖v (t + 1)‖ ^ 2) ≤
         fullMomentumEnergy f η (x t) (v t) := by
-  let cap := fullMomentumEnergy f 1 x₀ v₀
   let R := Real.sqrt (cap / γ)
   let B := closedBall (0 : E) (R + 1)
   obtain ⟨L, hL⟩ := hLip.locallyLipschitzOn.exists_lipschitzOnWith_of_compact
     (isCompact_closedBall (0 : E) (R + 1))
   refine ⟨R, Real.sqrt_nonneg _, min (1 / 10) (1 / (240 * ((L : ℝ) + 1))), ?_, ?_⟩
   · positivity
-  intro η hη hη₀ x v hx₀ hvinit hvel hpos
+  intro η hη hη₀ x v h₀ hv₀ hvel hpos
   have hη₁ : η ≤ 1 / 10 := hη₀.trans (min_le_left _ _)
   have hηL : (L : ℝ) * η ≤ 1 / 240 := by
     have h := (le_div_iff₀ (by positivity : 0 < 240 * ((L : ℝ) + 1))).mp
@@ -45,7 +43,7 @@ theorem exists_pos_fullMomentum_descent {f : E → ℝ} (hf : Differentiable ℝ
     nlinarith only [h, hη.le]
   have hv (t : ℕ) : ‖v t‖ ≤ 10 := by
     induction t with
-    | zero => rwa [hvinit]
+    | zero => exact hv₀
     | succ t ih => exact hvel t ▸ norm_fullMomentum_velocity_le _ _ ih
   have hnorm (t : ℕ) (ht : fullMomentumEnergy f η (x t) (v t) ≤ cap) : ‖x t‖ ≤ R :=
     Real.le_sqrt_of_sq_le ((le_div_iff₀ hγ).mpr (by
@@ -69,17 +67,39 @@ theorem exists_pos_fullMomentum_descent {f : E → ℝ} (hf : Differentiable ℝ
       (hv (t + 1)) (hvel t) (hpos t)
   have hcap (t : ℕ) : fullMomentumEnergy f η (x t) (v t) ≤ cap := by
     induction t with
-    | zero =>
-      rw [hx₀, hvinit]
-      unfold cap fullMomentumEnergy
-      apply add_le_add (le_refl _)
-      have h : η / 2 ≤ 1 / 2 := by linarith
-      have hq := one_le_clipScale (gradient f x₀)
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right h (by linarith [hq])) (sq_nonneg _)
+    | zero => exact h₀
     | succ t ih =>
       exact (le_add_of_nonneg_right (by positivity)).trans ((hstep t ih).trans ih)
   exact ⟨fun t => hnorm t (hcap t), fun t => hstep t (hcap t)⟩
+
+/-- Increasing the learning rate increases the kinetic part of the energy. -/
+theorem fullMomentumEnergy_mono_rate (f : E → ℝ) (x v : E) :
+    Monotone (fun η => fullMomentumEnergy f η x v) := by
+  intro a b hab
+  dsimp [fullMomentumEnergy]
+  have hclip : 0 ≤ clipScale (gradient f x) := zero_le_one.trans (one_le_clipScale _)
+  gcongr
+
+/-- Select a step bound using the initial weights and velocity. -/
+theorem exists_pos_fullMomentum_descent {f : E → ℝ} (hf : Differentiable ℝ f)
+    (hLip : LocallyLipschitz (gradient f)) {γ : ℝ} (hγ : 0 < γ)
+    (hcoerc : ∀ w, γ * ‖w‖ ^ 2 ≤ f w) (x₀ v₀ : E) (hv₀ : ‖v₀‖ ≤ 10) :
+    ∃ R ≥ 0, ∃ η₀ > 0, ∀ η, 0 < η → η ≤ η₀ → ∀ (x v : ℕ → E),
+      x 0 = x₀ → v 0 = v₀ →
+      (∀ t, v (t + 1) = (9 / 10 : ℝ) • v t +
+        (clipScale (gradient f (x t)))⁻¹ • gradient f (x t)) →
+      (∀ t, x (t + 1) = x t - η • v (t + 1)) →
+      (∀ t, ‖x t‖ ≤ R) ∧ ∀ t,
+        fullMomentumEnergy f η (x (t + 1)) (v (t + 1)) +
+          η / 40 * (‖v t‖ ^ 2 + ‖v (t + 1)‖ ^ 2) ≤
+        fullMomentumEnergy f η (x t) (v t) := by
+  obtain ⟨R, hR, η₀, hη₀, hb⟩ := exists_pos_fullMomentum_descent_below hf hLip hγ hcoerc
+    (fullMomentumEnergy f 1 x₀ v₀)
+  refine ⟨R, hR, min η₀ 1, lt_min hη₀ zero_lt_one, ?_⟩
+  intro η hη hη' x v hx hv
+  exact hb η hη (hη'.trans (min_le_left _ _)) x v
+    (by rw [hx, hv]; exact fullMomentumEnergy_mono_rate f x₀ v₀ (hη'.trans (min_le_right _ _)))
+    (hv ▸ hv₀)
 
 /-- The kinetic budget forces the full gradient to vanish and eventually
 turns off clipping. The actual objective values then converge to the

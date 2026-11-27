@@ -21,6 +21,28 @@ open Transformer.Optimization Transformer.Grokking.FlatSpectrum
 
 variable {A : Type*} [Fintype A] {H d layers : ℕ}
 
+/-- Every draw below a common energy cap at the end of the prefix has a
+weight limit below that cap, with one constant tail rate bound for all draws. -/
+theorem fullGradientMomentumRun_converges_below (realScoreInit : Bool) (repeats : ℕ)
+    (batch : List (LabeledPosition A)) {lam : ℝ} (hlam : 0 < lam)
+    (prefixRate : ℕ → ℝ) (N : ℕ) (cap : ℝ) :
+    ∃ η₀ > 0, ∀ η, 0 < η → η ≤ η₀ → ∀ draw : ComplexParameter A H d layers → ℂ,
+      let f := fullGradientObjective repeats batch lam
+      let run := fullGradientMomentumRun realScoreInit repeats batch lam
+        (fun t => if t < N then prefixRate t else η) draw
+      let x := fun t => WithLp.toLp 2 (run t).weights
+      let v := fun t => WithLp.toLp 2 (run t).velocity
+      fullMomentumEnergy f η (x N) (v N) ≤ cap →
+        ∃ star : WeightSpace A H d layers,
+          Tendsto x atTop (𝓝 star) ∧ gradient f star = 0 ∧ f star ≤ cap := by
+  obtain ⟨η₀, hη₀, hrun⟩ := fullGradientMomentumRun_limits_below
+    (H := H) (d := d) (layers := layers) realScoreInit repeats batch hlam prefixRate N cap
+  have hLift := analyticLift_fullGradientObjective
+    (H := H) (d := d) (layers := layers) repeats batch lam
+  refine ⟨η₀, hη₀, fun η hη hη' draw hcap => ?_⟩
+  obtain ⟨star, _, _, _, hstat, _, _, _, hvalue, hlim⟩ := hrun η hη hη' draw hcap
+  exact ⟨star, hlim (hLift.momentumEnergyInequality hη.le star), hstat, hvalue⟩
+
 /-- The full real-coordinate momentum orbit converges from every
 native parameter draw on every fixed finite list of observations.
 A finite WSD prefix may be used before choosing a constant tail rate. -/

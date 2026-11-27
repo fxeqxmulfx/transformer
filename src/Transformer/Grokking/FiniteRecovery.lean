@@ -16,6 +16,11 @@ public import Transformer.Grokking.FiniteRecovery.ArgandMomentumCopy
 public import Transformer.Grokking.FiniteRecovery.ArgandFullGradientConvergence
 public import Transformer.Grokking.FiniteRecovery.ArgandRecoveryObstruction
 public import Transformer.Grokking.FiniteRecovery.ArgandStrictRecovery
+public import Transformer.Grokking.FiniteRecovery.ArgandCapacityExact
+public import Transformer.Grokking.FiniteRecovery.ArgandDecayObstruction
+public import Transformer.Grokking.FiniteRecovery.ArgandObservationProbability
+public import Transformer.Grokking.FiniteRecovery.ArgandGaussianRecovery
+public import Transformer.Grokking.FiniteRecovery.ArgandFlatLimit
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
@@ -34,4 +39,9 @@ penalty. With a sufficiently small constant tail, every weight converges.
 A bounded analytic lift of the exact RMS supplies the local energy
 inequality. Approximate nuclear completion certifies strict logits at
 finite weights. Zero sampled embeddings yield tied logits even at a
-limit with uniquely identifying observations. -/
+limit with uniquely identifying observations. With independent Gaussian
+draws, small positive coupled decay gives strict limit predictions on
+two entirely omitted binary words for the copy and constant tasks.
+Large decay can send the full weights to zero with probability arbitrarily
+close to one. Observation counts bound the worst-case success probability
+for the unknown bilinear coupling at any model width. -/
