@@ -277,6 +277,14 @@ bound on the total learning rate and a common finite number of independent
 certified trials work uniformly for the class on the optimal 192-cell
 mask. [Uniform native realization and AdamW certificate](../../src/Transformer/Grokking/FiniteRecovery/FactorNative.lean)
 
+The `division-mask-lean` export also checks the actual 4,656-cell mask.
+Its observed permutation and connected unit graph imply unique
+nuclear-norm completion for every unit-modulus rank-one table on the
+96 by 96 block. The constant-row observation extends identification to
+all 9,312 inputs. The generated `original_factor_class_stabilizes`
+specializes certified AdamW restarts to this mask for every table in the
+class. [Mask witnesses](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean)
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by

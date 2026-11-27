@@ -42,17 +42,15 @@ def divisionUnitIndex : DivisionUnit ≃ Fin 96 where
 def bitDivisionMask (rows : Fin 97 → ℕ) : Set DivisionInput :=
   {x | (rows (x.1.elim 0 (fun u => (divisionUnitIndex u).succ))).testBit (divisionUnitIndex x.2).val}
 
-/-- The three integer witnesses are enough to check graph connectivity
-without traversing the graph in the theorem prover. The conclusion
-quantifies over all unknown factors and all 239-token score tables. -/
-theorem bitMask_certifies_division (rows : Fin 97 → ℕ) (bridge cover : Fin 96 → Fin 96) (z : Fin 96)
+/-- The bridge and cover witnesses connect the entire unit graph. One
+additional bit witnesses an observation of the constant row. -/
+theorem bitMask_identifying_graph (rows : Fin 97 → ℕ) (bridge cover : Fin 96 → Fin 96) (z : Fin 96)
     (hrows : ∀ i, (rows i.succ).testBit (bridge i).val = true ∧ (rows 1).testBit (bridge i).val = true)
     (hcols : ∀ j, (rows (cover j).succ).testBit j.val = true)
-    (hz : (rows 0).testBit z.val = true) (score : DivisionInput → Fin 239 → ℝ) :
-    classCertificate (bitDivisionMask rows) (factorClass unitToken) (fun x => divisionAnswer x) score ↔
-      StrictOn score divisionAnswer := by
+    (hz : (rows 0).testBit z.val = true) :
+    (patternGraph (unitMask (bitDivisionMask rows))).Preconnected ∧ ∃ j, (none,j) ∈ bitDivisionMask rows := by
   let e := divisionUnitIndex
-  apply division_certificate_iff
+  constructor
   · apply preconnected_of_row_bridges _ (e.symm 0)
     · intro i
       obtain ⟨h,h'⟩ := hrows (e i)
@@ -68,6 +66,29 @@ theorem bitMask_certifies_division (rows : Fin 97 → ℕ) (bridge cover : Fin 9
   · refine ⟨e.symm z,?_⟩
     change (rows 0).testBit (e (e.symm z)).val = true
     simpa using hz
+
+/-- A permutation of the exported column indices lifts to an observed
+perfect matching of the unit block. -/
+theorem bitMask_unit_matching (rows : Fin 97 → ℕ) (σ : Equiv.Perm (Fin 96))
+    (h : ∀ i, (rows i.succ).testBit (σ i).val = true) :
+    ∃ τ : Equiv.Perm DivisionUnit, ∀ i, (i,τ i) ∈ unitMask (bitDivisionMask rows) := by
+  let e := divisionUnitIndex
+  refine ⟨e.trans (σ.trans e.symm),fun i => ?_⟩
+  change (rows (e i).succ).testBit (e (e.symm (σ (e i)))).val = true
+  simpa using h (e i)
+
+example := bitMask_unit_matching (fun _ => 2^96-1) (Equiv.refl _) (by decide)
+
+/-- On this mask the observed-label verifier recognizes strictly correct
+division score tables on the full vocabulary. -/
+theorem bitMask_certifies_division (rows : Fin 97 → ℕ) (bridge cover : Fin 96 → Fin 96) (z : Fin 96)
+    (hrows : ∀ i, (rows i.succ).testBit (bridge i).val = true ∧ (rows 1).testBit (bridge i).val = true)
+    (hcols : ∀ j, (rows (cover j).succ).testBit j.val = true)
+    (hz : (rows 0).testBit z.val = true) (score : DivisionInput → Fin 239 → ℝ) :
+    classCertificate (bitDivisionMask rows) (factorClass unitToken) (fun x => divisionAnswer x) score ↔
+      StrictOn score divisionAnswer := by
+  obtain ⟨hc,hz⟩ := bitMask_identifying_graph rows bridge cover z hrows hcols hz
+  exact division_certificate_iff _ hc hz score
 
 private def crossRows (i : Fin 97) : ℕ :=
   if i = 1 then 2^96 - 1 else 1
