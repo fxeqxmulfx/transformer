@@ -18,6 +18,8 @@
 | `mix_diagonal_bias` | `2` | Offset added to the diagonal of the mixing logits. |
 | `sinkhorn_cycles` | `20` | Number of column and row normalization cycles. |
 | Initial phase columns of `W_mhc` | `0` | Set the starting angles of the gates and mixing weights. |
+| `optimizer` | AMSGradW | Optimizer for training Argand. |
+| `beta2` | `0.98` | Weight of the previous second moment in AMSGradW. |
 
 ## Embedding
 
@@ -273,3 +275,7 @@ The LeRoPE tables use `c=64` and `d=16`. The short screen used each test
 case's model dimensions and supervised positions. The Kernite runner
 selects this initialization with `ARGAND_SCORE_INIT=1`.
 [Run settings](README.md#argand-score-initialization-at-1) · [mHC implementation](src/phasor_v2/complex_mhc.rs)
+
+Select the optimizer configuration in Kernite with `ARGAND_OPTIMIZER=amsgradw`,
+`ARGAND_AMSGRADW_BETA2=0.98` and `ARGAND_AMSGRADW_SQRT_SCALE=1`.
+[AMSGradW run settings and results](README.md#argand-amsgradw-with-a-larger-second-moment-coefficient)
