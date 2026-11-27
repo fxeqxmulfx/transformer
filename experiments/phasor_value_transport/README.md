@@ -52,10 +52,11 @@ split. An independent process then reloads the weights and scores the same
 split. The opening commands train the default Phasor on these 105 cells
 and run the three exact NV11 checks. [Default training and replay](#embedding-input-phasor-on-the-gpt-stress-suite-and-nv11)
 
-### Single-stream Phasor v2 with a tied vocabulary
+### Single-stream Argand with a tied vocabulary
 
-Phasor v2 uses a single complex residual stream and a tied vocabulary
-classifier. For each position it computes
+The single-stream configuration of Argand, originally named Phasor v2,
+uses a complex residual stream and a tied vocabulary classifier. For
+each position it computes
 `(Re(x) Re(E)^T + Im(x) Im(E)^T) / 2` against all rows of the learned
 embedding table. The outer cross-entropy uses the frozen GPT supervision
 mask and the original scorer, including free generation and EOS.
@@ -128,7 +129,7 @@ and the tied classifier. Its held-out score on the same seed was
 4,662/4,705 at update 4,978. The single-stream model needed 2.61 times
 as many updates to reach 99%. Both runs used the case's configured
 width of 128, which counts real coordinates in the original model and
-complex numbers in v2.
+complex numbers in Argand.
 
 ```sh
 CARGO_TARGET_DIR=target/plain-phasor cargo +stable build --locked --release \
@@ -145,7 +146,7 @@ value, `1 + i` or `1 + 0i`. The two values differ in scale and in
 how they mix the real and imaginary logits before their respective
 softmaxes. With two input tokens, every supervised row has the same
 prefix length. The comparison uses seed 1 and the same schedule and
-stopping threshold as the preceding Phasor v2 run.
+stopping threshold as the earlier single-stream Argand run.
 
 | Initial multiplier | Held-out correct at 988 /4705 | Held-out correct at 4,997 /4705 | First 99% update |
 |---|---:|---:|---:|
@@ -194,7 +195,7 @@ reproduced their exact held-out score on checkpoint reload.
 
 At width 64, the v1 mHC reached the target in about a third of the
 updates. At width 128 and one stream, v1 reached the target at update
-5,738 and v2 at update 12,996. That comparison holds width and residual
+5,738 and Argand at update 12,996. That comparison holds width and residual
 topology fixed across two different attention and FFN implementations.
 
 ```sh
@@ -214,7 +215,7 @@ done
 unset PHASOR_V1_COMPLEX_WIDTH
 ```
 
-#### Complex mHC in Phasor v2
+#### Complex mHC in Argand
 
 Each sublayer has a separate complex router projection from the
 RMS-normalized stack of four streams. The pinned mHC kernels apply
@@ -228,8 +229,9 @@ entry-phase arms learn a phase for each read and write gate. The
 conjugated residual uses $DPD^*$ with one angle per stream at each
 position. The entry-phase residual uses $P_{ij}e^{i\theta_{ij}}$
 with one angle per edge. All three pass the complex read through the
-same v2 PeriNorm attention and FFN. The vocabulary projection reads
-the RMS-normalized mean of the four final streams.
+same Argand PeriNorm attention and FFN. The vocabulary projection reads
+the RMS-normalized mean of the four final streams. The architecture
+description covers the independent-phase variant. [Argand forward pass](ARGAND.md)
 
 The comparison uses seed 1, 128 complex numbers, four heads, one
 layer and one pass on `arithmetic-abs-diff-blind`. Each run uses the
@@ -266,9 +268,9 @@ done
 unset PHASOR_V2_MHC
 ```
 
-### Phasor v2 with an input-position readout
+### Argand with an input-position readout
 
-The single-stream Phasor v2 proposal scores the embeddings of the current
+The single-stream Argand proposal scores the embeddings of the current
 sequence and normalizes over the visible positions. The probability of a
 token is the sum of the probabilities of its matching positions. An absent
 target therefore has probability zero for every choice of weights. With
