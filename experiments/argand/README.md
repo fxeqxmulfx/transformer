@@ -104,15 +104,33 @@ summed by atomic additions.
 
 The RTX 3050 Laptop GPU reached 7.5 to 7.9 TFLOPS of FP32 multiply-adds
 once its clock had risen under load, and copied 182 GB/s. The compute
-bound counts only the matrix products. Before tuning, updates took 10
-to 16 times that bound:
+bound counts only the matrix products of an update:
 
-| Case | Width, layers | Microbatches × batch | Positions | Product GFLOP | Update ms | Compute bound ms | Fraction |
-|---|---|---|---|---|---|---|---|
-| `suite-boolean-and-shift` | 64, 2 | 4 × 32 | 2,432 | 8.37 | 17.3 | 1.07 | 6.2% |
-| `arithmetic-abs-diff-blind` | 128, 1 | 19 × 256 | 9,408 | 62.3 | 83.3 | 8.0 | 9.6% |
-| `recurrence-fibonacci-k1-c2-lgt` | 128, 1 | 10 × 512 | 9,408 | 66.9 | 90.0 | 8.9 | 9.9% |
-| `basis-depth-hard` | 128, 6 | 1,250 × 16 | 1,217,200 | 49,001 | 61,840 | 6,497 | 10.5% |
+| Case | Width, layers | Microbatches × batch | Positions | Product GFLOP | Compute bound ms |
+|---|---|---|---|---|---|
+| `suite-boolean-and-shift` | 64, 2 | 4 × 32 | 2,432 | 8.37 | 1.07 |
+| `arithmetic-abs-diff-blind` | 128, 1 | 19 × 256 | 9,408 | 62.3 | 8.0 |
+| `recurrence-fibonacci-k1-c2-lgt` | 128, 1 | 10 × 512 | 9,408 | 66.9 | 8.6 |
+| `basis-depth-hard` | 128, 6 | 1,250 × 16 | 1,217,200 | 49,001 | 6,497 |
+
+Milliseconds per update after each change, and the compute bound as a
+fraction of them, each against the peak measured in the same run:
+
+| Change | Boolean and shift | Absolute difference | Fibonacci | Basis depth |
+|---|---|---|---|---|
+| Baseline | 17.3 (6.2%) | 83.3 (9.6%) | 90.0 (9.9%) | 61,840 (10.5%) |
+| Register-tiled products | 16.4 (6.5%) | 59.6 (13.4%) | 57.3 (15.0%) | not measured |
+
+The tiled product keeps a 4 × 4 block of complex outputs per thread in
+registers, after the FP32 SGEMM of Kernite's `examples/matmul`. Each
+output is the chain of fused multiply-adds of the 16 × 16 kernel, in
+the same order, so with `k` whole the two agree bit for bit; `check`
+compares them on all 128 views of transposition, conjugation and
+addition. When the output has too few tiles to occupy the GPU, `k` is
+split, and the partial products are added in order. With 40 updates
+on `suite-boolean-and-shift`, the loss was 4.572885819843838 and the
+weights differed from the 16 × 16 kernel's by at most `6e-8`; the cell
+again passed at update 224, in 3.7 s.
 
 ```sh
 target/release/argand peak

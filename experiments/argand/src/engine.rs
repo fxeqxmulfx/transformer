@@ -5,6 +5,7 @@
 //! Lean `fullGradientMomentumRun` on the full training gradient plus
 //! `PENALTY * x`. Earlier residual, score and optimizer variants are in
 //! experiments/phasor_value_transport at commit 7399c3bb.
+mod gemm;
 mod kernels;
 mod residual;
 mod scores;
@@ -50,6 +51,10 @@ pub struct Engine {
     parameters: Parameters,
     tape: Tape,
     kernel: kernels::device::Kernels,
+    gemm: gemm::device::Kernels,
+    /// The partial products of a split `k`: at most four tiles of the
+    /// tiled product for each multiprocessor.
+    workspace: F,
     scores: scores::device::Kernels,
     embed: base_ops::kernels::Kernels,
     loss: stable_loss::kernels::Kernels,
@@ -87,6 +92,10 @@ impl Engine {
             parameters: Parameters::new(&cuda, &shape, seed)?,
             tape: Tape::default(),
             kernel: kernels::device::Kernels::load(&cuda)?,
+            gemm: gemm::device::Kernels::load(&cuda)?,
+            workspace: cuda.alloc(
+                8 * cuda.multiprocessors() as usize * gemm::device::TILE * gemm::device::TILE,
+            )?,
             scores: scores::device::Kernels::load(&cuda)?,
             embed: base_ops::kernels::Kernels::load(&cuda)?,
             loss: stable_loss::kernels::Kernels::load(&cuda)?,
@@ -203,6 +212,10 @@ impl Engine {
         let ctx = Context {
             cuda: &self.cuda,
             kernel: &self.kernel,
+            gemm: &self.gemm,
+            workspace: self.workspace.ptr(),
+            workspace_len: self.workspace.len(),
+            multiprocessors: self.cuda.multiprocessors() as usize,
             scores: &self.scores,
             rotations: self.rotations.ptr(),
             alpha,
@@ -274,6 +287,10 @@ impl Engine {
         let ctx = Context {
             cuda: &self.cuda,
             kernel: &self.kernel,
+            gemm: &self.gemm,
+            workspace: self.workspace.ptr(),
+            workspace_len: self.workspace.len(),
+            multiprocessors: self.cuda.multiprocessors() as usize,
             scores: &self.scores,
             rotations: self.rotations.ptr(),
             alpha: self.parameters.alpha(),
@@ -363,6 +380,10 @@ impl Engine {
         let ctx = Context {
             cuda: &self.cuda,
             kernel: &self.kernel,
+            gemm: &self.gemm,
+            workspace: self.workspace.ptr(),
+            workspace_len: self.workspace.len(),
+            multiprocessors: self.cuda.multiprocessors() as usize,
             scores: &self.scores,
             rotations: self.rotations.ptr(),
             alpha: self.parameters.alpha(),
@@ -436,6 +457,24 @@ pub fn check() -> Result<()> {
         max_batch: 2,
     };
     let mut engine = Engine::new(cfg, 2, 1)?;
+    let products = Context {
+        cuda: &engine.cuda,
+        kernel: &engine.kernel,
+        gemm: &engine.gemm,
+        workspace: engine.workspace.ptr(),
+        workspace_len: engine.workspace.len(),
+        multiprocessors: engine.cuda.multiprocessors() as usize,
+        scores: &engine.scores,
+        rotations: engine.rotations.ptr(),
+        alpha: engine.parameters.alpha(),
+        length: 1,
+        heads: 1,
+        head_width: 1,
+    }
+    .check_products()?;
+    println!(
+        "Tiled complex products equal the 16 x 16 kernel's with k whole, and agree within {products:.1e} of the largest value with k split"
+    );
     let mut initial = engine.weights()?;
     let width = engine.shape.width;
     if engine
