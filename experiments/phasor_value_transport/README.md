@@ -92,6 +92,87 @@ the complete frozen budgets. Reusing the same directory resumes the
 stored weights, optimizer state and minibatch order. Passing checkpoints
 are reloaded and scored on the held-out and available transfer splits.
 
+#### GPT screens and delayed generalization
+
+On the RTX 3050 Laptop GPU, the first 1,000 updates gave 19/75 passing
+short runs and 1/30 passing long runs. Each passing checkpoint reproduced
+its primary score in an independent reload. The long pass was easy
+recall, seed 2, with 511/512 at update 750.
+
+On `arithmetic-abs-diff-blind`, two input tokens encode operands and the
+target is `floor(abs(a-b)/2)`. Seed 1 had the highest held-out score at the
+screen and was continued with the same optimizer and schedule. The gap
+between train and validation narrowed substantially after the model had
+fit nearly all the training pairs.
+
+| Update | Training pairs correct /4704 | Held-out pairs correct /4705 |
+|---|---:|---:|
+| 988 | 4,594 | 1,432 |
+| 4,997 | 4,697 | 4,015 |
+| 12,996 | 4,704 | 4,658 |
+
+```sh
+bin=target/release/phasor-value-transport
+"$bin" v2-run arithmetic-abs-diff-blind 1 1 "$out" 4997
+"$bin" v2-run arithmetic-abs-diff-blind 1 1 "$out" 19988
+"$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$out"
+```
+
+The train column uses the same replay with `train` included in the split
+predicate in `src/stress/v2.rs`. The checkpoint digest, weights and scorer
+are identical for both columns.
+
+The matched control is the original fixed-mean Phasor. It uses the
+learned complex backbone, four residual streams with a fixed mean
+and the tied classifier. Its held-out score on the same seed was
+4,662/4,705 at update 4,978. The single-stream model needed 2.61 times
+as many updates to reach 99%. Both runs used the case's configured
+width of 128, which counts real coordinates in the original model and
+complex numbers in v2.
+
+```sh
+CARGO_TARGET_DIR=target/plain-phasor cargo +stable build --locked --release \
+    --features fp32-affine-reference,original-stream-mean
+plain=target/plain-phasor/release/phasor-value-transport
+"$plain" screen arithmetic-abs-diff-blind 1 "$out/plain-long" 12996
+"$plain" replay arithmetic-abs-diff-blind 1 "$out/plain-long"
+```
+
+#### Score initialization on absolute difference
+
+Both coordinates of the score multiplier train from either starting
+value, `1 + i` or `1 + 0i`. The two values differ in scale and in
+how they mix the real and imaginary logits before their respective
+softmaxes. With two input tokens, every supervised row has the same
+prefix length. The comparison uses seed 1 and the same schedule and
+stopping threshold as the preceding Phasor v2 run.
+
+| Initial multiplier | Held-out correct at 988 /4705 | Held-out correct at 4,997 /4705 | First 99% update |
+|---|---:|---:|---:|
+| `1 + i` | 1,432 | 4,015 | 12,996 |
+| `1 + 0i` | 1,520 | 4,261 | 14,706 |
+
+Both passing checkpoints replayed at 4,658/4,705. Real initialization
+improved early held-out accuracy and took 13.2% more updates to reach
+99%. The delayed improvement on novel pairs persists under both
+initializations.
+
+To reproduce the real initialization in a separate experiment worktree,
+set the score entry in `Parameters::new` in `src/phasor_v2/weights.rs`
+to `values.extend([1.0, 0.0]);` and append `-s-init-real` to `MODEL`
+in `src/stress/v2.rs`. Build the same release binary and use a fresh run
+directory with the following commands.
+
+```sh
+cargo +stable build --locked --release
+bin=target/release/phasor-value-transport
+real=runs/phasor-v2-s-init-real
+for stop in 988 4997 19988; do
+    "$bin" v2-run arithmetic-abs-diff-blind 1 1 "$real" "$stop"
+done
+"$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$real"
+```
+
 ### Phasor v2 with an input-position readout
 
 The single-stream Phasor v2 proposal scores the embeddings of the current
