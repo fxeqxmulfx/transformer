@@ -6,17 +6,64 @@ use serde_json::{Value, json};
 
 pub(crate) const DECAY: f32 = 0.1;
 
+#[derive(Clone, Copy)]
+pub(crate) enum RatePlan {
+    Wsd,
+    Geometric {
+        budget: usize,
+    },
+    Restart {
+        stock_runs: usize,
+        trial: usize,
+        first_budget: usize,
+    },
+}
+
+impl RatePlan {
+    pub fn scale(self, budget: usize) -> f64 {
+        match self {
+            Self::Restart {
+                stock_runs,
+                trial,
+                first_budget,
+            } if trial >= stock_runs => {
+                let horizon_ratio = (first_budget as f64 + 1.0) / (budget as f64 + 1.0);
+                let trial_ratio = (stock_runs as f64 + 1.0) / (trial as f64 + 1.0);
+                horizon_ratio.min(1.0) * trial_ratio
+            }
+            _ => 1.0,
+        }
+    }
+
+    fn rate(self, schedule: Schedule, completed: usize) -> f32 {
+        if let Self::Geometric { budget } = self
+            && completed >= budget
+        {
+            return (1e-8 * 0.5_f64.powf((completed - budget) as f64)) as f32;
+        }
+        let t = completed.min(schedule.budget - 1);
+        let base =
+            if t >= schedule.warmup && t == schedule.cooldown_start && t + 1 == schedule.budget {
+                // A one-point cooldown starts at its peak. It has no time interval to divide by.
+                crate::schedule::PEAK as f32
+            } else {
+                schedule.rate(completed)
+            };
+        (f64::from(base) * self.scale(schedule.budget)) as f32
+    }
+}
+
 pub(crate) struct AdamW {
     owners: Buffer<u32>,
     first: F,
     second: F,
     schedule: Schedule,
-    geometric_tail: bool,
+    plan: RatePlan,
     completed: usize,
 }
 
 impl AdamW {
-    pub fn new(engine: &Engine, schedule: Schedule, geometric_tail: bool) -> Result<Self> {
+    pub fn new(engine: &Engine, schedule: Schedule, plan: RatePlan) -> Result<Self> {
         let n = u32::try_from(engine.parameters.len())?;
         if !n.is_multiple_of(2) {
             return Err(
@@ -30,7 +77,7 @@ impl AdamW {
             first: engine.cuda.upload(&zeros)?,
             second: engine.cuda.upload(&zeros)?,
             schedule,
-            geometric_tail,
+            plan,
             completed: 0,
         })
     }
@@ -47,11 +94,7 @@ impl AdamW {
     }
 
     fn rate(&self, completed: usize) -> f32 {
-        if self.geometric_tail && completed >= self.schedule.budget {
-            (1e-8 * 0.5_f64.powf((completed - self.schedule.budget) as f64)) as f32
-        } else {
-            self.schedule.rate(completed)
-        }
+        self.plan.rate(self.schedule, completed)
     }
 
     fn apply(&mut self, engine: &Engine) -> Result<()> {
@@ -91,6 +134,35 @@ mod tests {
     use crate::suite::Shape;
 
     #[test]
+    fn restart_scale_preserves_stock_trials_and_bounds_growing_horizons() {
+        let plan = |trial| RatePlan::Restart {
+            stock_runs: 12,
+            trial,
+            first_budget: 100_000,
+        };
+        assert_eq!(plan(11).scale(200_000), 1.0);
+        assert_eq!(plan(12).scale(100_000), 1.0);
+        assert_eq!(plan(13).scale(50_000), 13.0 / 14.0);
+        assert_eq!(plan(25).scale(200_000), (100_001.0 / 200_001.0) * 0.5);
+        let ordinary = Schedule {
+            budget: 100_000,
+            warmup: 2_000,
+            cooldown_start: 80_000,
+        };
+        for t in 0..ordinary.budget {
+            assert_eq!(plan(0).rate(ordinary, t), RatePlan::Wsd.rate(ordinary, t));
+        }
+        let short = Schedule {
+            budget: 4,
+            warmup: 0,
+            cooldown_start: 3,
+        };
+        for t in 0..4 {
+            assert_eq!(plan(25).rate(short, t), crate::schedule::PEAK as f32 / 2.0);
+        }
+    }
+
+    #[test]
     #[ignore = "requires CUDA"]
     fn clipped_moments_decay_and_wsd_match_scalar_coordinates() -> Result<()> {
         let shape = Shape {
@@ -107,7 +179,7 @@ mod tests {
             warmup: 2,
             cooldown_start: 8,
         };
-        let mut opt = AdamW::new(&e, wsd, true)?;
+        let mut opt = AdamW::new(&e, wsd, RatePlan::Geometric { budget: wsd.budget })?;
         let mut w = e.weights()?;
         let mut m = vec![0.0; w.len()];
         let mut v = m.clone();

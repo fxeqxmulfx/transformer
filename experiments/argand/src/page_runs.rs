@@ -5,7 +5,7 @@ use crate::{
     division,
     engine::{
         Engine,
-        adamw::AdamW,
+        adamw::{AdamW, RatePlan},
         page::{AdaptivePage, Observations, PageRule},
     },
     metrics,
@@ -19,19 +19,16 @@ use std::{fs, io::Write, path::Path, time::Instant};
 #[derive(Clone, Copy)]
 pub(crate) enum Rule {
     Page(PageRule),
-    AdamW { geometric_after: Option<usize> },
+    AdamW(RatePlan),
 }
 
 impl Rule {
     pub fn label(self) -> &'static str {
         match self {
             Self::Page(correction) => correction.label(),
-            Self::AdamW {
-                geometric_after: None,
-            } => "adamw-wsd",
-            Self::AdamW {
-                geometric_after: Some(_),
-            } => "adamw-wsd-geometric-tail",
+            Self::AdamW(RatePlan::Wsd) => "adamw-wsd",
+            Self::AdamW(RatePlan::Geometric { .. }) => "adamw-wsd-geometric-tail",
+            Self::AdamW(RatePlan::Restart { .. }) => "adamw-wsd-restart",
         }
     }
 }
@@ -174,8 +171,8 @@ impl Job {
             "fixed_horizon":fixed,"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
             "batch":self.batch,"observe":self.every,"vocab":self.shape.vocab});
         let geometric_after = match rule {
-            Rule::AdamW { geometric_after } => geometric_after,
-            Rule::Page(_) => None,
+            Rule::AdamW(RatePlan::Geometric { budget }) => Some(budget),
+            _ => None,
         };
         if geometric_after.is_some_and(|b| b < 10 || b > self.until) {
             return Err(
@@ -184,7 +181,9 @@ impl Job {
         }
         let budget = if let Some(budget) = geometric_after {
             budget
-        } else if self.row["name"] == division::NAME {
+        } else if self.row["name"] == division::NAME
+            || matches!(rule, Rule::AdamW(RatePlan::Restart { .. }))
+        {
             self.until
         } else {
             self.row["case"]["max_updates"]
@@ -193,8 +192,8 @@ impl Job {
         };
         let schedule = Schedule {
             budget,
-            warmup: budget * 2 / 100,
-            cooldown_start: budget * 80 / 100,
+            warmup: budget / 50,
+            cooldown_start: (budget as u128 * 80 / 100) as usize,
         };
         match rule {
             Rule::Page(correction) => {
@@ -202,11 +201,20 @@ impl Job {
                 identity["correction"] = correction.label().into();
                 identity["page_seed"] = sampler.into();
             }
-            Rule::AdamW { .. } => {
+            Rule::AdamW(plan) => {
+                let scale = plan.scale(budget);
                 identity["optimizer"] = rule.label().into();
                 identity["adamw"] = json!({"weight_decay":0.1,"beta1":0.9,"beta2":0.95,"epsilon":1e-8,
-                    "clip_norm":1,"peak":crate::schedule::PEAK,"min_rate":1e-8,"budget":budget,
+                    "clip_norm":1,"peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":budget,
                     "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start});
+                if let RatePlan::Restart {
+                    stock_runs,
+                    trial,
+                    first_budget,
+                } = plan
+                {
+                    identity["restart"] = json!({"stock_runs":stock_runs,"trial":trial,"first_budget":first_budget,"rate_scale":scale});
+                }
             }
         }
         let mut engine = Engine::new(self.shape.clone(), 1, seed)?;
@@ -311,9 +319,7 @@ impl Job {
                         sampler,
                         correction,
                     )?),
-                    Rule::AdamW { .. } => {
-                        Optimizer::AdamW(AdamW::new(&engine, schedule, geometric_after.is_some())?)
-                    }
+                    Rule::AdamW(plan) => Optimizer::AdamW(AdamW::new(&engine, schedule, plan)?),
                 });
             }
             match optimizer.as_mut().unwrap() {

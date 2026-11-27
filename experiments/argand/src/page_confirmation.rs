@@ -53,7 +53,7 @@ pub fn run(name: &str, dir: &Path, cap: usize, rule: Rule, plan_only: bool) -> R
         "success":"strict correctness of every supervised prefix and exact primary suite score at the fixed horizon",
         "exhaustive_boolean_and_lengths":if audit_and {Some([8,16])} else {None},
         "null":0.75,"one_sided_alpha":0.05});
-        if matches!(rule, Rule::AdamW { .. }) {
+        if matches!(rule, Rule::AdamW(_)) {
             plan["seed_usage"] = "First word: native initialization and shuffled epochs (order seed = model seed + 10000 modulo 2^32). AdamW uses no estimator sampler. The second word is unused.".into();
             plan["data_split"] = "Identical for all draws and for the discovery run.".into();
         }

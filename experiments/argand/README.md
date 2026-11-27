@@ -209,13 +209,25 @@ checkpoint, with minimum hidden margin 2.079. At 18,944 the same trajectory
 scored 4,595/4,656. At update 59,904 it scored only 56/4,656 on hidden
 equations and 775/4,656 on training equations. Its first subsequent perfect
 hidden evaluation was at 63,232. Both measurements used a learning rate
-of 0.001. Terminal success for the replication is determined
+of 0.001. At update 100,000 this seed again scored 4,656/4,656 on each
+split. Independent replay gave a minimum hidden gap of 19.092. The
+observed-label certificate accepted all 9,312 predictions and gave a
+minimum training gap of 19.225. Terminal success for the replication is determined
 solely by all 4,656 strict hidden answers at update 100,000. All twelve
 preregistered seeds use this horizon, including early successes. The
 horizon was selected after seeing the first seed's 20,000-step result.
 If any terminal replay fails, all twelve repeat from the same seeds with
 a 200,000-step WSD schedule. The empirical fractions use separate
 denominators of twelve for the two budgets.
+
+Two independent ordinary AdamW runs of seed 113 on the same 256-update
+schedule started with identical loss and scored 57 and 58 hidden prompts
+at the endpoint. Both checkpoints replayed exactly. The backward pass
+uses FP32 atomic additions for the shared LeRoPE offsets and complex
+score multipliers. The order of additions across GPU blocks can vary.
+For this backend the cohort measures success across seed draws and GPU
+executions. Its finite collection of stored checkpoints can be rescored
+without retraining.
 
 ```sh
 case=grok-division-p97
@@ -254,6 +266,25 @@ varies across targets. For any required confidence below one, a common
 bound on the total learning rate and a common finite number of independent
 certified trials work uniformly for the class on the optimal 192-cell
 mask. [Uniform native realization and AdamW certificate](../../src/Transformer/Grokking/FiniteRecovery/FactorNative.lean)
+
+An optional restart schedule applies to any task. For zero-indexed trial
+$j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
+trials multiply every rate by
+$\frac{M+1}{j+1}\min(1,\frac{K_0+1}{K_j+1})$. The total rate tends to
+zero for arbitrary finite budgets. In real arithmetic, the first terminal
+checkpoint accepted by the observed-label verifier is eventually retained
+and is strictly correct on all inputs almost surely. The theorem assumes
+independent Gaussian native starts, positive variances and native strict
+representability of an identifiable finite class. It gives no numerical
+single-run success rate at the stock peak. [General restart theorem](../../src/Transformer/Grokking/FiniteRecovery/AdamWRestartRates.lean)
+
+`adamw-restart-run CASE SEED OUT CAP STOCK_RUNS TRIAL FIRST_BUDGET`
+performs one fixed-horizon trial, records its rate scale, and replays the
+endpoint. Each trial has its own `OUT/CASE/draw-TRIAL` directory.
+`FIRST_BUDGET` is the first trial's effective update count. For example,
+with 12 stock trials of 100,000 and a constant budget, trial 13 uses
+13/14 of each scheduled rate. The 100,000- and conditional 200,000-step
+confirmation cohorts use ordinary unscaled WSD for every seed.
 
 The optional `adamw-tail-run CASE SEED OUT WSD_BUDGET CUTOFF` continues
 after the entire WSD prefix with rates $10^{-8} 2^{-k}$. In exact real

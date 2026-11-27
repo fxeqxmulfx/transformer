@@ -2,7 +2,7 @@
 use crate::{
     KERNITE_VERSION, Result, bench,
     data::{Example, Task},
-    engine::{self, Engine, MODEL, PENALTY},
+    engine::{self, Engine, MODEL, PENALTY, adamw::RatePlan},
     hash, metrics,
     schedule::Schedule,
     suite::{self, Shape, publish, suite_hash},
@@ -13,13 +13,11 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | division-certificate CELL (terminal|first-strict) | division-mask-lean";
+const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP | adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET | adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | division-certificate CELL (terminal|first-strict) | division-mask-lean";
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
     if op.starts_with("adamw-") {
-        crate::page_runs::Rule::AdamW {
-            geometric_after: None,
-        }
+        crate::page_runs::Rule::AdamW(RatePlan::Wsd)
     } else {
         crate::page_runs::Rule::Page(correction(op))
     }
@@ -44,11 +42,29 @@ pub fn command(args: &[String]) -> Result<()> {
         ("adamw-tail-run", [name, seed, out, budget, cap]) => {
             let seed: u32 = seed.parse()?;
             let job = crate::page_runs::Job::new(name, cap.parse()?)?;
-            let rule = crate::page_runs::Rule::AdamW {
-                geometric_after: Some(budget.parse()?),
-            };
+            let rule = crate::page_runs::Rule::AdamW(RatePlan::Geometric {
+                budget: budget.parse()?,
+            });
             let dir = Path::new(out).join(name).join(format!("seed{seed}"));
             println!("{}", job.run(&dir, seed, 0, rule, true)?);
+            Ok(())
+        }
+        ("adamw-restart-run", [name, seed, out, cap, stock, index, first]) => {
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?;
+            let trial: usize = index.parse()?;
+            let first_budget: usize = first.parse()?;
+            if trial == 0 && first_budget != job.until {
+                return Err(
+                    "first restart budget must equal the first trial's effective horizon".into(),
+                );
+            }
+            let rule = crate::page_runs::Rule::AdamW(RatePlan::Restart {
+                stock_runs: stock.parse()?,
+                trial,
+                first_budget,
+            });
+            let dir = Path::new(out).join(name).join(format!("draw-{trial}"));
+            println!("{}", job.run(&dir, seed.parse()?, 0, rule, true)?);
             Ok(())
         }
         ("check", []) => engine::check(),
