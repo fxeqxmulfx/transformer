@@ -477,6 +477,27 @@ pub(super) mod device {
         put(momentum, i, velocity);
     }
 
+    /// Adds `lam * p`, the gradient of the penalty `(lam / 2) * |p|^2`.
+    pub unsafe extern "ptx-kernel" fn add_penalty(
+        g: *mut f32,
+        p: *const f32,
+        count: u32,
+        lam: f32,
+    ) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past {
+            ret();
+        }
+        let (value, gradient): (f32, f32);
+        load(value, p, i);
+        load(gradient, g, i);
+        fma.rn.f32(gradient, lam, value, gradient);
+        put(g, i, gradient);
+    }
+
     /// AMSGrad uses the maximum of raw second moments. Keep the pinned AdamW
     /// bias corrections and decoupled decay.
     pub unsafe extern "ptx-kernel" fn amsgradw(

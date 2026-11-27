@@ -34,10 +34,19 @@ enum Optimizer {
 }
 
 #[derive(Clone, Copy)]
+enum Gradient {
+    Minibatch,
+    /// Every update follows the Lean `fullGradientMomentumRun`: the gradient of
+    /// the mean loss over all labeled training positions plus `penalty * x`.
+    Full { penalty: f32 },
+}
+
+#[derive(Clone, Copy)]
 pub struct Variant {
     routing: Routing,
     real_score_init: bool,
     optimizer: Optimizer,
+    gradient: Gradient,
 }
 
 impl Variant {
@@ -84,10 +93,37 @@ impl Variant {
             }
             _ => return Err("ARGAND_OPTIMIZER takes sgd-momentum, adamw or amsgradw".into()),
         };
+        let penalty = std::env::var("ARGAND_PENALTY");
+        let gradient = match std::env::var("ARGAND_BATCH").as_deref() {
+            Err(std::env::VarError::NotPresent) | Ok("minibatch") => {
+                if !matches!(penalty, Err(std::env::VarError::NotPresent)) {
+                    return Err("ARGAND_PENALTY requires ARGAND_BATCH=full".into());
+                }
+                Gradient::Minibatch
+            }
+            Ok("full") => {
+                let penalty = penalty
+                    .map_err(|_| "ARGAND_BATCH=full requires ARGAND_PENALTY, the coefficient of (λ/2)‖x‖²")?
+                    .parse::<f32>()
+                    .map_err(|_| "ARGAND_PENALTY must be a number")?;
+                if !(penalty.is_finite() && penalty > 0.0) {
+                    return Err("ARGAND_PENALTY must be positive and finite".into());
+                }
+                if !matches!(optimizer, Optimizer::SgdMomentum) {
+                    return Err("ARGAND_BATCH=full trains with clipped momentum SGD; leave ARGAND_OPTIMIZER unset or set it to sgd-momentum".into());
+                }
+                if !matches!(routing, Routing::SkipWriteGate) {
+                    return Err("ARGAND_BATCH=full trains the Lean Argand model with skip and write gates; leave ARGAND_RESIDUAL unset or set it to skip-write-gate".into());
+                }
+                Gradient::Full { penalty }
+            }
+            _ => return Err("ARGAND_BATCH takes minibatch or full".into()),
+        };
         Ok(Self {
             routing,
             real_score_init,
             optimizer,
+            gradient,
         })
     }
 
@@ -96,6 +132,7 @@ impl Variant {
             routing: Routing::selected()?,
             real_score_init: false,
             optimizer: Optimizer::AdamW,
+            gradient: Gradient::Minibatch,
         })
     }
 
@@ -109,7 +146,18 @@ impl Variant {
             Optimizer::AdamW => {}
             Optimizer::AmsGradW(_) => name.push_str("-amsgradw"),
         }
+        if let Gradient::Full { .. } = self.gradient {
+            name.push_str("-full-batch");
+        }
         name
+    }
+
+    /// The coefficient λ of the full-gradient penalty `(λ/2)‖x‖²`.
+    pub(crate) fn full_batch_penalty(self) -> Option<f32> {
+        match self.gradient {
+            Gradient::Minibatch => None,
+            Gradient::Full { penalty } => Some(penalty),
+        }
     }
 
     pub fn legacy_model(self) -> Option<&'static str> {
@@ -213,12 +261,33 @@ impl Engine {
         })
     }
 
+    /// The number of supervised positions: labels below the vocabulary size.
+    pub fn labeled(&self, labels: &[u32]) -> usize {
+        labels
+            .iter()
+            .filter(|&&y| (y as usize) < self.config.vocab)
+            .count()
+    }
+
     pub fn forward(
         &mut self,
         tokens: &[u32],
         labels: &[u32],
         batch: usize,
         length: usize,
+    ) -> Result<()> {
+        self.forward_normalized(tokens, labels, batch, length, None)
+    }
+
+    /// The loss gradient divides by `normalizer`, by default this batch's
+    /// own label count.
+    fn forward_normalized(
+        &mut self,
+        tokens: &[u32],
+        labels: &[u32],
+        batch: usize,
+        length: usize,
+        normalizer: Option<usize>,
     ) -> Result<()> {
         let rows = batch * length;
         if batch == 0
@@ -231,10 +300,12 @@ impl Engine {
         {
             return Err("invalid Phasor v2 input batch".into());
         }
-        let labels_count = labels
-            .iter()
-            .filter(|&&y| (y as usize) < self.config.vocab)
-            .count();
+        let own = self.labeled(labels).max(1);
+        let normalizer = match normalizer {
+            None => own,
+            Some(total) if total >= own => total,
+            Some(_) => return Err("the full-batch label count is below a microbatch's".into()),
+        };
         self.last = None;
         self.inputs
             .part_mut(..rows)
@@ -271,7 +342,7 @@ impl Engine {
                 self.labels.ptr(),
                 self.config.vocab as u32,
                 rows as u32,
-                labels_count.max(1) as f32,
+                normalizer as f32,
             )?;
         }
         self.last = Some((input, scores, batch, length));
@@ -405,6 +476,48 @@ impl Engine {
     }
 
     fn backward(&mut self) -> Result<()> {
+        self.zero_gradient()?;
+        self.add_backward()
+    }
+
+    /// Clears the parameter gradient before a full-batch accumulation.
+    pub fn zero_gradient(&mut self) -> Result<()> {
+        let p = &self.parameters;
+        // SAFETY: the launch covers the parameter gradient buffer.
+        unsafe {
+            self.clear
+                .clear(grid(p.len()), p.grad.ptr(), p.len() as u32)?;
+        }
+        Ok(())
+    }
+
+    /// Adds one microbatch's part of the mean gradient over `total` labeled
+    /// positions. Over a partition of the training split the parts sum to
+    /// the gradient of the mean loss (`accumulated_batchGradient`).
+    pub fn accumulate(
+        &mut self,
+        tokens: &[u32],
+        labels: &[u32],
+        batch: usize,
+        length: usize,
+        total: usize,
+    ) -> Result<()> {
+        self.forward_normalized(tokens, labels, batch, length, Some(total))?;
+        self.add_backward()
+    }
+
+    /// One update of `fullGradientMomentumRun` from the accumulated data
+    /// gradient: adds `penalty * x`, then the clipped momentum step.
+    pub fn full_step(&mut self, penalty: f32, rate: f32, completed: usize) -> Result<()> {
+        self.parameters.add_penalty(&self.kernel, penalty)?;
+        self.parameters
+            .update(&self.adam, &self.kernel, rate, completed)
+    }
+
+    /// Backpropagates the last forward pass and adds its parameter gradient.
+    /// Every parameter adjoint accumulates: matrix products and gates add,
+    /// and the LeRoPE, score and turn adjoints use atomic additions.
+    fn add_backward(&mut self) -> Result<()> {
         let (input, output, batch, length) =
             self.last.take().ok_or("forward required before update")?;
         let width = self.shape.width;
@@ -420,12 +533,9 @@ impl Engine {
             heads,
             head_width: width / heads,
         };
-        let p = &self.parameters;
         self.tape.clear_gradients(&self.clear)?;
-        // SAFETY: these launches use the parameter and logit buffer extents.
+        // SAFETY: this launch uses the logit buffer extent.
         unsafe {
-            self.clear
-                .clear(grid(p.len()), p.grad.ptr(), p.len() as u32)?;
             let count = output.len / 2;
             self.kernel.real_readout::<true>(
                 grid(count),
@@ -437,7 +547,7 @@ impl Engine {
         self.tape.backward(&ctx)?;
         // SAFETY: input IDs were checked and this gradient adds to the tied readout's.
         unsafe {
-            let e = p.embedding();
+            let e = self.parameters.embedding();
             self.embed.embed_bwd(
                 grid(e.len),
                 e.dx,
@@ -693,6 +803,59 @@ pub fn check(variant: Variant) -> Result<()> {
         if !finite.is_finite() || (finite - analytic).abs() > 0.02 * (1.0 + finite.abs()) {
             return Err("complex decoder GPU backward disagrees with finite differences".into());
         }
+    }
+    // The two examples hold three and two of the five labels. Each part
+    // divides by all five, so the parts sum to the batch gradient.
+    engine.restore(&initial)?;
+    engine.forward(&tokens, &labels, 2, 3)?;
+    engine.backward()?;
+    let whole = engine.parameters.grad.read()?;
+    engine.zero_gradient()?;
+    for rows in [0..3, 3..6] {
+        engine.accumulate(&tokens[rows.clone()], &labels[rows], 1, 3, 5)?;
+    }
+    let parts = engine.parameters.grad.read()?;
+    let largest = whole.iter().fold(0.0_f32, |m, g| m.max(g.abs()));
+    let gap = parts
+        .iter()
+        .zip(&whole)
+        .fold(0.0_f32, |m, (&a, &b)| m.max((a - b).abs()));
+    if parts.len() != whole.len()
+        || !parts.iter().all(|g| g.is_finite())
+        || gap > 1e-5 * (1.0 + largest)
+    {
+        return Err("accumulated microbatch gradients disagree with the batch gradient".into());
+    }
+    println!(
+        "Label-weighted microbatch gradients sum to the batch gradient within {gap:.1e} of {largest:.3}"
+    );
+    if matches!(variant.optimizer, Optimizer::SgdMomentum) {
+        // The penalty enters the gradient once, before clipping. A zero rate
+        // keeps the weights and sets the velocity to the clipped sum.
+        let penalty = 0.5_f32;
+        let before = engine.state()?;
+        engine.full_step(penalty, 0.0, 0)?;
+        let after = engine.state()?;
+        let count = parts.len();
+        let sum: Vec<f64> = parts
+            .iter()
+            .zip(&initial)
+            .map(|(&g, &x)| f64::from(g) + f64::from(penalty) * f64::from(x))
+            .collect();
+        let norm = sum.iter().map(|g| g * g).sum::<f64>().sqrt();
+        let scale = norm.max(1.0);
+        if after[..count] != before[..count]
+            || after[count..]
+                .iter()
+                .zip(&before[count..])
+                .zip(&sum)
+                .any(|((&v, &old), &g)| {
+                    (f64::from(v) - (0.9 * f64::from(old) + g / scale)).abs() > 2e-6
+                })
+        {
+            return Err("the penalized full-batch momentum step disagrees with the reference".into());
+        }
+        println!("Full-batch penalty enters once before clipping at gradient norm {norm:.4}");
     }
     match variant.optimizer {
         Optimizer::SgdMomentum => engine

@@ -40,7 +40,7 @@ initialize `E` and the attention and FFN matrices.
 |---|---|---|
 | `optimizer` | `sgd-momentum` | SGD with Polyak momentum. |
 | Momentum $\beta$ | `0.9` | Weight of the previous velocity. |
-| `weight_decay` | `0` | No weight penalty or decoupled decay. |
+| `weight_decay` | `0` | No decoupled decay. Only the full batch below adds a weight penalty. |
 | Gradient norm limit | `1.0` | Upper limit on the global Euclidean gradient norm. |
 | WSD peak learning rate $\eta_{\mathrm{peak}}$ | `1e-3` | Rate during the stable phase. |
 | WSD final learning rate $\eta_{\mathrm{final}}$ | `1e-8` | Rate on the final scheduled update. |
@@ -56,6 +56,26 @@ $$
 At the first warmup update, the zero rate keeps the weights fixed while
 the velocity receives the clipped gradient. SGD checkpoints store the
 weights and velocity.
+
+#### Full batch
+
+`ARGAND_BATCH=full` replaces the minibatch gradient by the gradient of the
+regularized training objective
+
+$$
+F(\theta) = \frac{1}{N}\sum_{j=1}^{N}\ell_j(\theta)
+  + \frac{\lambda}{2}\lVert\theta\rVert_2^2 .
+$$
+
+Here $\ell_1,\dots,\ell_N$ are the cross-entropy losses at the $N$
+labeled positions of the training split, and `ARGAND_PENALTY` sets
+$\lambda>0$. The update above uses $g_k=\nabla F(\theta_k)$.
+Microbatches of the suite's batch size visit the training split in
+order. Each divides its loss gradient by $N$, so their gradients sum to
+the data term. The penalty gradient $\lambda\theta_k$ is added once,
+before clipping. The mode requires `skip-write-gate` and
+`sgd-momentum`.
+[Lean full-gradient run](../../src/Transformer/Grokking/FiniteRecovery/ArgandFullGradient.lean)
 
 WSD (Warmup–Stable–Decay) uses the task's full `max_updates` budget $B$.
 Let $k$ be the number of completed updates, $W=\lfloor 0.02B\rfloor$ and

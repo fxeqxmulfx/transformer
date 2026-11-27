@@ -682,6 +682,59 @@ All 75 terminal state digests matched the saved records. Independent
 checkpoint reloads reproduced the held-out scores and losses of all
 24 passes.
 
+##### Argand full-batch momentum
+
+`ARGAND_BATCH=full` trains the Lean `fullGradientMomentumRun`. Each
+update takes the gradient of the mean loss over every labeled training
+position, adds $\lambda\theta$ and then takes the clipped momentum step.
+
+$$
+g_k = \nabla L(\theta_k) + \lambda\theta_k, \qquad
+v_{k+1} = 0.9 v_k + \frac{g_k}{\max(1,\lVert g_k\rVert_2)}, \qquad
+\theta_{k+1} = \theta_k - \eta_k v_{k+1}.
+$$
+
+Microbatches of the suite's batch size visit the training split in
+order. Each divides its loss gradient by the split's label count, so the
+microbatch gradients sum to $\nabla L$, as in
+`accumulated_batchGradient`. The penalty enters once, before clipping,
+as in `fullGradientObjective_gradient`. `ARGAND_PENALTY` sets
+$\lambda$. The convergence theorem needs $\lambda>0$, and the runner
+refuses other values. The mode also refuses residuals other than
+`skip-write-gate` and optimizers other than `sgd-momentum`. The model
+name gains `-full-batch` and the checkpoint identity records the
+penalty.
+
+The rate keeps the case's WSD schedule, so a run of $B$ updates is the
+first $B$ states of the Lean run with WSD as its rate prefix.
+`fullGradientMomentumRun_limits` concerns a constant tail rate below a
+threshold that it only shows to exist.
+[Full-gradient run](../../src/Transformer/Grokking/FiniteRecovery/ArgandFullGradient.lean) · [Accumulation](../../src/Transformer/Grokking/FiniteRecovery/ArgandAccumulation.lean)
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+bin=target/release/phasor-value-transport
+export ARGAND_BATCH=full ARGAND_PENALTY=1e-4
+"$bin" argand-check
+out=runs/argand-full-batch-smoke
+"$bin" argand-run suite-boolean-and-shift 0 1 "$out" 200
+unset ARGAND_BATCH ARGAND_PENALTY
+```
+
+The check splits a batch of two examples, with three and two labels, into
+two microbatches. Under every residual and optimizer, the accumulated
+gradient matched the batch gradient within `3.0e-8`, with a largest entry
+of `0.287`. A zero-rate step with $\lambda=0.5$ matched the clipped
+penalized gradient, whose norm was `2.4533`.
+
+On `suite-boolean-and-shift` seed 0, 200 full-batch updates and their
+scheduled scoring took 3.43 s, against 0.97 s for 200 minibatch updates.
+A run stopped at update 20 and resumed to 40 reached the same loss as an
+uninterrupted run. Two repeated runs of either mode differed in 33 of the
+551,976 state coordinates, by at most `5e-6` relative. Most were LeRoPE
+$\alpha$ coordinates and their velocities, whose gradients are summed by
+atomic floating-point additions.
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current

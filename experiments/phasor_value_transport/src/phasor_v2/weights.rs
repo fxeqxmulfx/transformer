@@ -278,6 +278,26 @@ impl Parameters {
         self.pair(self.embed_size, self.frequencies)
     }
 
+    /// Adds `penalty * x` to the gradient, once and before `update` reads its
+    /// norm, as `fullGradientObjective_gradient` adds the penalty before
+    /// clipping. Only the clipped momentum rule takes this penalty.
+    pub fn add_penalty(&self, device: &device::Kernels, penalty: f32) -> Result<()> {
+        if !matches!(self.optimizer, OptimizerBuffers::SgdMomentum) {
+            return Err("the full-gradient penalty requires clipped momentum SGD".into());
+        }
+        // SAFETY: the launch covers the equal value and gradient buffers.
+        unsafe {
+            device.add_penalty(
+                grid(self.len()),
+                self.grad.ptr(),
+                self.value.ptr(),
+                self.len() as u32,
+                penalty,
+            )?;
+        }
+        Ok(())
+    }
+
     pub fn update(
         &self,
         kernel: &optimizer_kernels::kernels::Kernels,

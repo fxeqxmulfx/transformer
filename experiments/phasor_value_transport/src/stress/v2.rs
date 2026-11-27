@@ -102,6 +102,9 @@ impl Cell {
                 identity["amsgradw_beta2"] = config.beta2.to_string().into();
             }
         }
+        if let Some(penalty) = self.variant.full_batch_penalty() {
+            identity["penalty"] = penalty.to_string().into();
+        }
         identity
     }
 
@@ -193,6 +196,11 @@ fn run(
 
     let train = &cell.task.splits["train"];
     let heldout = &cell.task.splits[&cell.task.selection];
+    let mut packed = metrics::Packed::default();
+    let full = match cell.variant.full_batch_penalty() {
+        Some(penalty) => Some(FullBatch::new(&engine, train, &mut packed, cell.batch, penalty)?),
+        None => None,
+    };
     let per_epoch = train.len().div_ceil(cell.batch);
     let mut random = Random::new(seed + 10_000);
     let mut epoch = Vec::new();
@@ -201,10 +209,11 @@ fn run(
         epoch.extend(0..train.len() as u32);
         random.shuffle(epoch);
     };
-    for _ in 0..start.div_ceil(per_epoch) {
-        start_epoch(&mut epoch);
+    if full.is_none() {
+        for _ in 0..start.div_ceil(per_epoch) {
+            start_epoch(&mut epoch);
+        }
     }
-    let mut packed = metrics::Packed::default();
     let started = std::time::Instant::now();
     for step in start..=until {
         if (step != start || start == 0) && (step.is_multiple_of(cell.every) || step == budget) {
@@ -218,6 +227,10 @@ fn run(
             if passed || step == until {
                 return cell.save(&engine, step, result);
             }
+        }
+        if let Some(full) = &full {
+            full.update(&mut engine, train, &mut packed, cell.schedule.rate(step), step)?;
+            continue;
         }
         if step.is_multiple_of(per_epoch) {
             start_epoch(&mut epoch);
@@ -247,6 +260,61 @@ fn update(
     p.fill(train, indices);
     engine.forward(&p.tokens, &p.labels, indices.len(), p.length)?;
     engine.step(rate, step)
+}
+
+/// The training split in order, as microbatches of the suite's batch size.
+struct FullBatch {
+    order: Vec<u32>,
+    batch: usize,
+    labeled: usize,
+    penalty: f32,
+}
+
+impl FullBatch {
+    fn new(
+        engine: &Engine,
+        train: &[Example],
+        p: &mut metrics::Packed,
+        batch: usize,
+        penalty: f32,
+    ) -> Result<Self> {
+        let order: Vec<u32> = (0..train.len() as u32).collect();
+        let labeled = order
+            .chunks(batch)
+            .map(|part| {
+                p.fill(train, part);
+                engine.labeled(&p.labels)
+            })
+            .sum();
+        if labeled == 0 {
+            return Err("full-batch training needs a labeled training position".into());
+        }
+        Ok(Self {
+            order,
+            batch,
+            labeled,
+            penalty,
+        })
+    }
+
+    /// One update of the Lean `fullGradientMomentumRun`: the microbatches
+    /// accumulate the gradient of the mean loss over all labeled training
+    /// positions, then the penalty and the clipped momentum step follow.
+    fn update(
+        &self,
+        engine: &mut Engine,
+        train: &[Example],
+        p: &mut metrics::Packed,
+        rate: f32,
+        step: usize,
+    ) -> Result<()> {
+        engine.zero_gradient()?;
+        for part in self.order.chunks(self.batch) {
+            p.fill(train, part);
+            engine.accumulate(&p.tokens, &p.labels, part.len(), p.length, self.labeled)?;
+        }
+        engine.full_step(self.penalty, rate, step)
+    }
 }
 
 fn replay(name: &str, seed: u32, repeat: usize, out: &Path, variant: Variant) -> Result<()> {
