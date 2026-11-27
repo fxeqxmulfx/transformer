@@ -35,7 +35,7 @@ theorem Model.rank_logits_le [Fintype A] (model : Model A H d layers)
     j.elim (fun k => (model.embedding token k).re) (fun k => (model.embedding token k).im)
   have hfactor : Matrix.of (fun word token => model.logits repeats word i token) = X * E := by
     ext word token
-    simp only [Matrix.of_apply, Model.logits, PiLp.inner_apply, RCLike.inner_apply,
+    simp only [Matrix.of_apply, Model.logits, Model.readout, PiLp.inner_apply, RCLike.inner_apply,
       Complex.re_sum, Matrix.mul_apply, X, E, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr,
       Complex.mul_re, Complex.conj_re, Complex.conj_im, mul_neg, sub_neg_eq_add,
       Finset.sum_add_distrib, add_div]

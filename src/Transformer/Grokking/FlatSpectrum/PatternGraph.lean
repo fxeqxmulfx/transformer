@@ -87,15 +87,17 @@ example := rigid_of_preconnected (G := ℂ) (Ω := (Set.univ : Set (Fin 1 × Fin
     · rw [Subsingleton.elim j j'])
   1 (-1) (fun _ _ => by norm_num) 0 0
 
-/-- A rigid pattern with a row and a column is connected. -/
-lemma connected_of_rigid [Nonempty m] [Nonempty n] {Ω : Set (m × n)}
-    (hΩ : ∀ (r : m → ℂ) (s : n → ℂ), (∀ ij ∈ Ω, r ij.1 + s ij.2 = 0) → ∀ i j, r i + s j = 0) :
+/-- A pattern rigid over a nontrivial additive group, with a row and a column, is connected. -/
+lemma connected_of_rigid [Nonempty m] [Nonempty n] {G : Type*} [AddGroup G] [Nontrivial G]
+    {Ω : Set (m × n)}
+    (hΩ : ∀ (r : m → G) (s : n → G), (∀ ij ∈ Ω, r ij.1 + s ij.2 = 0) → ∀ i j, r i + s j = 0) :
     (patternGraph Ω).Connected := by
   classical
   obtain ⟨i₀⟩ := ‹Nonempty m›
   obtain ⟨j₀⟩ := ‹Nonempty n›
-  have h := hΩ (fun i => if (patternGraph Ω).Reachable (.inl i₀) (.inl i) then 1 else 0)
-    (fun j => if (patternGraph Ω).Reachable (.inl i₀) (.inr j) then -1 else 0) fun ij hij => by
+  obtain ⟨a, ha⟩ := exists_ne (0 : G)
+  have h := hΩ (fun i => if (patternGraph Ω).Reachable (.inl i₀) (.inl i) then a else 0)
+    (fun j => if (patternGraph Ω).Reachable (.inl i₀) (.inr j) then -a else 0) fun ij hij => by
       have hadj := patternGraph_adj_inl_inr.mpr hij
       by_cases hi : (patternGraph Ω).Reachable (.inl i₀) (.inl ij.1)
       · rw [ite_eq_left hi, ite_eq_left (hi.trans hadj.reachable), add_neg_cancel]
@@ -104,12 +106,12 @@ lemma connected_of_rigid [Nonempty m] [Nonempty n] {Ω : Set (m × n)}
     by_contra hj
     have := h i₀ j
     rw [ite_eq_left (Reachable.refl _), ite_eq_right hj, add_zero] at this
-    exact one_ne_zero this
+    exact ha this
   have hrow (i : m) : (patternGraph Ω).Reachable (.inl i₀) (.inl i) := by
     by_contra hi
     have := h i j₀
     rw [ite_eq_right hi, ite_eq_left (hcol j₀), zero_add, neg_eq_zero] at this
-    exact one_ne_zero this
+    exact ha this
   have hall : ∀ x, (patternGraph Ω).Reachable (.inl i₀) x
     | .inl i => hrow i
     | .inr j => hcol j
@@ -124,13 +126,11 @@ theorem rigid_iff_connected [Nonempty m] [Nonempty n] (Ω : Set (m × n)) :
 
 example := (rigid_iff_connected {ij : Fin 2 × Fin 2 | ij ≠ (1, 0)}).mp rigid_ne_one_zero
 
-/-- **A rigid pattern has at least `#m + #n − 1` cells** (`review/flat_spectrum.md`, Scope: "A
-rigid pattern is connected, so it has at least `2p − 1` cells"). -/
-theorem card_add_card_le_ncard_add_one_of_rigid [Finite m] [Finite n] [Nonempty m]
-    [Nonempty n] {Ω : Set (m × n)}
-    (hΩ : ∀ (r : m → ℂ) (s : n → ℂ), (∀ ij ∈ Ω, r ij.1 + s ij.2 = 0) → ∀ i j, r i + s j = 0) :
+/-- A connected pattern has at least `#m + #n − 1` cells. -/
+theorem card_add_card_le_ncard_add_one_of_connected [Finite m] [Finite n] {Ω : Set (m × n)}
+    (hΩ : (patternGraph Ω).Connected) :
     Nat.card m + Nat.card n ≤ Ω.ncard + 1 := by
-  have h := (connected_of_rigid hΩ).card_vert_le_card_edgeSet_add_one
+  have h := hΩ.card_vert_le_card_edgeSet_add_one
   rw [Nat.card_sum, Nat.card_coe_set_eq] at h
   refine h.trans (Nat.add_le_add_right ?_ 1)
   refine (Set.ncard_le_ncard (t := (fun ij : m × n => s(Sum.inl ij.1, Sum.inr ij.2)) '' Ω)
@@ -143,6 +143,13 @@ theorem card_add_card_le_ncard_add_one_of_rigid [Finite m] [Finite n] [Nonempty 
     · exact ⟨(i, j'), patternGraph_adj_inl_inr.mp he, rfl⟩
     · exact ⟨(i', j), patternGraph_adj_inr_inl.mp he, Sym2.eq_swap⟩
     · exact absurd he not_patternGraph_adj_inr_inr
+
+/-- **A rigid pattern has at least `#m + #n − 1` cells** (`review/flat_spectrum.md`, Scope). -/
+theorem card_add_card_le_ncard_add_one_of_rigid [Finite m] [Finite n] [Nonempty m]
+    [Nonempty n] {Ω : Set (m × n)}
+    (hΩ : ∀ (r : m → ℂ) (s : n → ℂ), (∀ ij ∈ Ω, r ij.1 + s ij.2 = 0) → ∀ i j, r i + s j = 0) :
+    Nat.card m + Nat.card n ≤ Ω.ncard + 1 :=
+  card_add_card_le_ncard_add_one_of_connected (connected_of_rigid hΩ)
 
 example : Nat.card (Fin 2) + Nat.card (Fin 2) ≤ {ij : Fin 2 × Fin 2 | ij ≠ (1, 0)}.ncard + 1 :=
   card_add_card_le_ncard_add_one_of_rigid rigid_ne_one_zero

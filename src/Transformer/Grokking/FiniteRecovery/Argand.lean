@@ -1,7 +1,6 @@
 module
 
-public import Transformer.Grokking.FiniteRecovery.Basic
-public import Transformer.PhasorV2.PhaseResidual
+public import Transformer.Grokking.FiniteRecovery.ArgandAttention
 
 /-! The single-stream Argand forward pass from
 experiments/phasor_value_transport/ARGAND.md, including skip and write gates,
@@ -14,7 +13,7 @@ namespace Transformer.Grokking.FiniteRecovery.Argand
 open Transformer.PhasorV2
 open scoped BigOperators ComplexConjugate InnerProductSpace
 
-variable {A : Type*} {T c H d layers : ℕ}
+variable {A P : Type*} {T c H d layers : ℕ}
 
 /-- The learned linear forms in the skip and write gates of one sublayer. -/
 structure Gates (c : ℕ) where
@@ -24,8 +23,8 @@ structure Gates (c : ℕ) where
 /-- Both gates read the normalized input. The skip scales the original residual,
 and the write scales the normalized branch output. -/
 noncomputable def sublayer (gates : Gates c) (eps scale : ℝ)
-    (branch : Word (CSpace c) T → Word (CSpace c) T)
-    (x : Word (CSpace c) T) : Word (CSpace c) T :=
+    (branch : (P → CSpace c) → P → CSpace c)
+    (x : P → CSpace c) : P → CSpace c :=
   let z := fun i => argandRMS eps (x i)
   fun i => (1 + gates.skip (z i)) • x i +
     ((scale : ℂ) * (1 + gates.write (z i))) • argandRMS eps (branch z i)
@@ -37,30 +36,6 @@ theorem sublayer_zero_gates (eps scale : ℝ)
       x i + (scale : ℂ) • argandRMS eps (branch (fun j => argandRMS eps (x j)) i) := by
   simp [sublayer]
 
-/-- Argand uses the same norm-plus-offset denominator for each query and key head. -/
-noncomputable def normalizeHead (eps : ℝ) (x : Fin d → ℂ) : Fin d → ℂ :=
-  fun j => ((Real.sqrt d / (Real.sqrt (sqLen x) + eps) : ℝ) : ℂ) * x j
-
-/-- A row of real softmax with the keys after the query masked out. -/
-noncomputable def causalSoftmax (i : Fin T) (logits : Fin T → ℝ) (j : Fin T) : ℝ :=
-  if j ≤ i then
-    Real.exp (logits j) / ∑ k ∈ Finset.univ.filter (· ≤ i), Real.exp (logits k)
-  else 0
-
-/-- Complex attention uses the two causal softmaxes of the real and imaginary
-parts of the scaled query-key scores. -/
-noncomputable def attention (projections : Attention c H d) (eps : ℝ) (multiplier : ℂ)
-    (alpha : Fin d → ℝ) (x : Word (CSpace c) T) (i : Fin T) : CSpace c :=
-  let frequencies := leropeFrequency 10000 alpha
-  let query := fun j h => turn frequencies (j.val : ℝ) (normalizeHead eps (projections.WQ (x j) h))
-  let key := fun j h => turn frequencies (j.val : ℝ) (normalizeHead eps (projections.WK (x j) h))
-  let scaled := fun h j =>
-    multiplier * ((Real.log ((i.val : ℝ) + 1) / Real.sqrt d : ℝ) : ℂ) *
-      ∑ m, conj (query i h m) * key j h m
-  projections.WO fun h m => ∑ j : Fin T,
-    (⟨causalSoftmax i (fun k => (scaled h k).re) j,
-      causalSoftmax i (fun k => (scaled h k).im) j⟩ : ℂ) * projections.WV (x j) h m
-
 /-- A single Argand layer shares a complex score multiplier across its heads. -/
 structure Layer (H d : ℕ) where
   attentionProjections : Attention (H * d) H d
@@ -70,13 +45,17 @@ structure Layer (H d : ℕ) where
   feedForwardGates : Gates (H * d)
 
 /-- The attention sublayer is followed by the product feed-forward sublayer. -/
-noncomputable def Layer.forward (layer : Layer H d) (eps scale : ℝ) (alpha : Fin d → ℝ)
-    (x : Word (CSpace (H * d)) T) : Word (CSpace (H * d)) T :=
+noncomputable def Layer.forwardWith [Fintype P] (layer : Layer H d) (eps scale : ℝ)
+    (geometry : AttentionGeometry P d) (x : P → CSpace (H * d)) : P → CSpace (H * d) :=
   let afterAttention := sublayer layer.attentionGates eps scale
-    (attention layer.attentionProjections eps layer.scoreMultiplier alpha) x
+    (attentionWith geometry layer.attentionProjections eps layer.scoreMultiplier) x
   let f := layer.feedForward
   sublayer layer.feedForwardGates eps scale
     (fun z i => f.WF (f.Wg (z i) * f.Wu (z i))) afterAttention
+
+noncomputable def Layer.forward (layer : Layer H d) (eps scale : ℝ) (alpha : Fin d → ℝ)
+    (x : Word (CSpace (H * d)) T) : Word (CSpace (H * d)) T :=
+  layer.forwardWith eps scale (causalGeometry alpha) x
 
 /-- The same embedding table also supplies the output classifier. -/
 structure Model (A : Type*) (H d layers : ℕ) where
@@ -87,19 +66,29 @@ structure Model (A : Type*) (H d layers : ℕ) where
 
 /-- Normalize the input embeddings, repeat the ordered layer stack with shared
 weights, and normalize the final single residual stream. -/
-noncomputable def Model.hidden (model : Model A H d layers) (repeats : ℕ)
-    (tokens : Word A T) : Word (CSpace (H * d)) T :=
+noncomputable def Model.hiddenWith [Fintype P] (model : Model A H d layers) (repeats : ℕ)
+    (geometry : AttentionGeometry P d) (tokens : P → A) : P → CSpace (H * d) :=
   let scale := 1 / Real.sqrt (2 * (layers : ℝ) * repeats)
-  let pass := fun z : Word (CSpace (H * d)) T =>
-    (List.ofFn model.layer).foldl (fun x layer => layer.forward model.eps scale model.alpha x) z
+  let pass := fun z : P → CSpace (H * d) =>
+    (List.ofFn model.layer).foldl (fun x layer => layer.forwardWith model.eps scale geometry x) z
   let initial := fun i => argandRMS model.eps (model.embedding (tokens i))
   fun i => argandRMS model.eps ((pass^[repeats]) initial i)
 
+noncomputable def Model.hidden (model : Model A H d layers) (repeats : ℕ)
+    (tokens : Word A T) : Word (CSpace (H * d)) T :=
+  model.hiddenWith repeats (causalGeometry model.alpha) tokens
+
 /-- The tied output head takes half the real complex inner product. -/
+noncomputable def Model.readout (model : Model A H d layers) (state : CSpace (H * d)) : A → ℝ :=
+  fun token => (⟪model.embedding token, state⟫_ℂ).re / 2
+
 noncomputable def Model.logits (model : Model A H d layers) (repeats : ℕ)
     (tokens : Word A T) (i : Fin T) : A → ℝ :=
-  let state := model.hidden repeats tokens i
-  fun token => (⟪model.embedding token, state⟫_ℂ).re / 2
+  model.readout (model.hidden repeats tokens i)
+
+noncomputable def Model.logitsWith [Fintype P] (model : Model A H d layers) (repeats : ℕ)
+    (geometry : AttentionGeometry P d) (tokens : P → A) (i : P) : A → ℝ :=
+  model.readout (model.hiddenWith repeats geometry tokens i)
 
 /-- The distribution over the next token from the complete forward pass. -/
 noncomputable def Model.probability [Fintype A] (model : Model A H d layers) (repeats : ℕ)

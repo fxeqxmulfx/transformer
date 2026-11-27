@@ -48,10 +48,11 @@ def lastTokenFamily (T : ℕ) : Set (Word Bool (T + 1) → Bool) :=
 private def inactiveLayer : Layer 1 1 :=
   ⟨⟨0, 0, 0, 0⟩, ⟨0, 0, 0⟩, 1, ⟨0, 0⟩, ⟨0, 0⟩⟩
 
-private theorem inactiveLayer_forward {T : ℕ} (eps scale : ℝ) (alpha : Fin 1 → ℝ)
-    (x : Word (CSpace 1) T) : inactiveLayer.forward eps scale alpha x = x := by
+private theorem inactiveLayer_forward {P : Type*} [Fintype P] (eps scale : ℝ)
+    (geometry : AttentionGeometry P 1) (x : P → CSpace 1) :
+    inactiveLayer.forwardWith eps scale geometry x = x := by
   funext i
-  simp [inactiveLayer, Layer.forward, sublayer, attention, argandRMS]
+  simp [inactiveLayer, Layer.forwardWith, sublayer, attentionWith, argandRMS]
 
 private def scalarVector (v : ℝ) : CSpace 1 :=
   WithLp.toLp 2 fun _ => (v : ℂ)
@@ -79,11 +80,14 @@ private theorem scalarModel_logits {T : ℕ} (E : Bool → ℝ) (layers repeats 
     (scalarModel E layers).logits repeats word i token = y / (|y| + 1) * E token / 2 := by
   have hpass : (fun z : Word (CSpace 1) T =>
       (List.ofFn fun _ : Fin layers => inactiveLayer).foldl
-        (fun x layer => layer.forward 1 (1 / Real.sqrt (2 * (layers : ℝ) * repeats)) 0 x) z) = id := by
+        (fun x layer =>
+          layer.forwardWith 1 (1 / Real.sqrt (2 * (layers : ℝ) * repeats)) (causalGeometry 0) x)
+        z) = id := by
     funext z
     have h (xs : List (Layer 1 1)) (hx : ∀ a ∈ xs, a = inactiveLayer) :
-        xs.foldl (fun x layer => layer.forward 1 (1 / Real.sqrt (2 * (layers : ℝ) * repeats)) 0 x) z =
-          z := by
+        xs.foldl (fun x layer =>
+          layer.forwardWith 1 (1 / Real.sqrt (2 * (layers : ℝ) * repeats)) (causalGeometry 0) x)
+          z = z := by
       induction xs with
       | nil => rfl
       | cons a as ih =>
@@ -93,10 +97,10 @@ private theorem scalarModel_logits {T : ℕ} (E : Bool → ℝ) (layers repeats 
   have hhidden : (scalarModel E layers).hidden repeats word i =
       scalarVector ((E (word i) / (|E (word i)| + 1)) /
         (|E (word i) / (|E (word i)| + 1)| + 1)) := by
-    simp only [Model.hidden, scalarModel, hpass, Function.iterate_id, id_eq, Function.comp_apply,
-      argandRMS_scalar]
+    simp only [Model.hidden, Model.hiddenWith, scalarModel, hpass, Function.iterate_id, id_eq,
+      Function.comp_apply, argandRMS_scalar]
   rw [Model.logits, hhidden]
-  simp only [scalarModel, Function.comp_apply, PiLp.inner_apply, Fin.sum_univ_one, scalarVector,
+  simp only [Model.readout, scalarModel, Function.comp_apply, PiLp.inner_apply, Fin.sum_univ_one, scalarVector,
     RCLike.inner_apply, Complex.mul_re, Complex.conj_re, Complex.conj_im,
     Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
 
