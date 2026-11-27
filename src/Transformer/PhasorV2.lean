@@ -11,6 +11,7 @@ public import Transformer.PhasorV2.MHCRouter
 public import Transformer.PhasorV2.MHC
 public import Transformer.PhasorV2.Attention
 public import Transformer.PhasorV2.FFN
+public import Transformer.PhasorV2.PhaseResidual
 public import Transformer.PhasorV2.Readout
 
 /-!
@@ -62,4 +63,7 @@ the elements chosen for it one at a time.
   against its learned embedding row. The mean retains at least a quarter of the length of a
   phase-aligned mode. `Transformer.PhasorV2.Readout` gives the causal forward pass through all
   layers with a shared table for the normalized input lookup and the output projection.
+* `Transformer.PhasorV2.PhaseResidual` studies a single-stream alternative for Argand. One learned
+  scalar turns the skip by an angle proportional to the incoming norm. The skip has an explicit
+  inverse, and one such FFN sublayer separates from every fixed complex skip with an even write.
 -/
