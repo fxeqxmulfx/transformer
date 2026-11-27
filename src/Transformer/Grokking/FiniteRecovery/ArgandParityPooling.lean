@@ -21,7 +21,8 @@ theorem radial_pos {r : ℝ} (h : 0 < r) : 0 < radial r := by
   dsimp [radial, offset]
   positivity
 
-private theorem rms_row {r : ℝ} (hr : 0 < r) (a : ZMod 2) :
+/-- RMS maps a positive multiple of a token row to its scalar radial response. -/
+theorem rms_row {r : ℝ} (hr : 0 < r) (a : ZMod 2) :
     argandRMS offset ((r : ℂ) • embedding a) = ((radial r : ℝ) : ℂ) • embedding a := by
   have he : ‖embedding a‖ = 1 := by simp [embedding, EuclideanSpace.single]
   rw [argandRMS, norm_smul, he, Complex.norm_real, Real.norm_of_nonneg hr.le, mul_one, smul_smul]
@@ -63,7 +64,8 @@ noncomputable def poolLayer (n : ℕ) : Layer 4 16 where
   attentionGates := ⟨(-((inputGain : ℂ)⁻¹)) • (coord 0 + coord 1), 0⟩
   feedForwardGates := ⟨0,0⟩
 
-private theorem row_coords (a : ZMod 2) :
+/-- The two input coordinates encode the constant one and the token indicator. -/
+theorem row_coords (a : ZMod 2) :
     embedding a 0 + embedding a 1 = 1 ∧ embedding a 0 = (a.val : ℂ) := by
   have h : ∀ b : ZMod 2, b = 0 ∨ b = 1 := by decide
   rcases h a with rfl | rfl <;>

@@ -45,6 +45,34 @@ theorem independentGaussianDraws_openPos (variance : ι → ℝ≥0) (hv : ∀ i
   let (i : ι) : (complexGaussianDraw (variance i)).IsOpenPosMeasure := complexGaussianDraw_openPos (hv i)
   exact inferInstanceAs (Measure.IsOpenPosMeasure (Measure.pi _))
 
+/-- The common zero-embedding stationary example has probability zero under
+the native product law at positive variance: almost surely every sampled
+complex coordinate is nonzero, prior to applying the deterministic overrides. -/
+theorem gaussian_entries_ae_ne_zero (variance : ι → ℝ≥0) (hv : ∀ i, 0 < variance i) :
+    ∀ᵐ z ∂independentGaussianDraws variance, ∀ i, z i ≠ 0 := by
+  apply Filter.eventually_all.mpr
+  intro i
+  let ν := gaussianReal 0 (variance i)
+  let _ : NullSingletonClass ν := nullSingletonClass_gaussianReal (hv i).ne'
+  have hzero : complexGaussianDraw (variance i) {0} = 0 := by
+    rw [complexGaussianDraw, Measure.map_apply Complex.equivRealProdCLM.symm.continuous.measurable
+      (measurableSet_singleton 0)]
+    have he : Complex.equivRealProdCLM.symm ⁻¹' ({0} : Set ℂ) = {(0,0)} := by
+      ext z
+      change Complex.equivRealProdCLM.symm z = 0 ↔ z = 0
+      constructor
+      · intro h
+        exact Complex.equivRealProdCLM.symm.injective (h.trans (map_zero _).symm)
+      · rintro rfl
+        exact map_zero _
+    rw [he]
+    exact measure_singleton (μ := ν.prod ν) _
+  apply Filter.Eventually.mono (compl_mem_ae_iff.mpr
+    (Measure.pi_eval_preimage_null (fun j => complexGaussianDraw (variance j)) hzero))
+  exact fun _ h => h
+
+example := gaussian_entries_ae_ne_zero (ι := Fin 2) (fun _ => (1/50 : ℝ≥0)^2) (fun _ => by norm_num)
+
 /-- The distributional hypothesis in the hidden-word theorem holds
 for any positive tensor variances, including fan-in dependent scales. -/
 theorem gaussian_mixedWords_momentum_recovers {layers : ℕ}

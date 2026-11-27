@@ -107,7 +107,8 @@ noncomputable def historyMean (p : ℝ) : ℕ → ((ℕ → Option I) → ℝ) �
     p * h (Function.update path t none) +
       (1-p) * mean (fun i => h (Function.update path t (some i)))
 
-private theorem run_prefix (loss : I → E → ℝ) (η : ℝ) (x : E) (t : ℕ)
+/-- The first t draws determine the entire state at update t. -/
+theorem run_prefix (loss : I → E → ℝ) (η : ℝ) (x : E) (t : ℕ)
     {a b : ℕ → Option I} (h : ∀ j < t, a j = b j) :
     run loss η x a t = run loss η x b t := by
   induction t with
