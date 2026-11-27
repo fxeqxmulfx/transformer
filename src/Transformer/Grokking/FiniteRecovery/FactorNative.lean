@@ -3,6 +3,7 @@ module
 public import Transformer.Grokking.FiniteRecovery.FactorLayer
 public import Transformer.Grokking.FiniteRecovery.DivisionNative
 public import Transformer.Grokking.FiniteRecovery.FactorObservations
+public import Transformer.Grokking.FiniteRecovery.AdamWRestartRates
 
 /-! Every member of the unknown-factor class is strictly represented in
 the same native architecture, including arbitrary constant-row outputs.
@@ -64,5 +65,24 @@ in the class. -/
 example := class_adamW_confidence 100000 (factorMask (1 : DivisionUnit))
   (by rw [unitMask_factorMask]; exact (diagRow_connected _).preconnected)
   ⟨1,mem_insert _ _⟩ (fun _ => 1) (by intro; norm_num) (failure := 1/4) (by norm_num)
+
+/-- Keep any number of ordinary WSD trials first. The universal schedule
+then gives almost-sure correct stabilization for every table in the class
+without a supplied bound on the learning rate sum. -/
+theorem class_restartWsd_stabilizes (stockRuns : ℕ) (K : ℕ → ℕ) (S : Set DivisionInput)
+    (hc : (patternGraph (unitMask S)).Preconnected) (hz : ∃ j, (none,j) ∈ S)
+    (variance : ComplexParameter (Fin 239) 4 16 6 → ℝ≥0) (hv : ∀ i, 0 < variance i) :
+    let P := Measure.infinitePi (fun _ : ℕ => independentGaussianDraws variance)
+    ∀ᵐ w ∂P, ∀ f : (factorClass unitToken : Set (DivisionInput → Fin 239)),
+      ∀ batch : ℕ → ℕ → List (LabeledPosition (Fin 239)),
+        let scores := restartScores 1 K (restartWsdRate stockRuns K) divisionPrompt w batch
+        let ok := fun j => classCertificate S (factorClass unitToken) (fun x => f.val x) (scores j)
+        ∃ j, StrictOn (scores j) f.val ∧ ∀ k, retained ok id (j+1+k) = some j :=
+  adamW_restartWsd_stabilizes 1 stockRuns K divisionPrompt S (factorClass unitToken)
+    (factorClass_identified _ _ hc hz) variance hv class_native_realization
+
+example := class_restartWsd_stabilizes 12 (fun _ => 100000) (factorMask (1 : DivisionUnit))
+  (by rw [unitMask_factorMask]; exact (diagRow_connected _).preconnected)
+  ⟨1,mem_insert _ _⟩ (fun _ => 1) (by intro; norm_num)
 
 end Transformer.Grokking.FiniteRecovery.Argand.Division.Factors

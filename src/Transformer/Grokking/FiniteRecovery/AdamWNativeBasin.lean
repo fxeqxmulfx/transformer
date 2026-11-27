@@ -18,17 +18,16 @@ open scoped NNReal ENNReal Topology
 
 variable {A X : Type*} [Fintype A] [Finite X] {T H d L : ℕ}
 
-/-- A native realizing draw, before training, suffices to produce a
-positive-measure event of strictly correct *trained* endpoints for every
-minibatch sequence. The bound concerns the sum of the K learning rates. -/
-theorem adamW_native_basin (r K : ℕ) (prompt : X → Word A (T+1)) (f : X → A)
+/-- One positive-mass native basin and one cumulative-rate bound work
+at all horizons and for all minibatch streams. -/
+theorem adamW_native_rate_basin (r : ℕ) (prompt : X → Word A (T+1)) (f : X → A)
     (variance : ComplexParameter A H d L → ℝ≥0) (hv : ∀ i, 0 < variance i)
     (witness : ComplexParameter A H d L → ℂ)
     (hw : StrictOn (fun x => (Model.fromWeights (sgdInitialWeights true witness)).logits r
       (prompt x) (Fin.last T)) f) :
     ∃ δ > (0:ℝ), ∃ U, IsOpen U ∧ 0 < independentGaussianDraws variance U ∧
       ∀ z ∈ U, ∀ rate : ℕ → ℝ, (∀ t, 0 ≤ rate t ∧ rate t ≤ 10) →
-        (∑ t ∈ Finset.range K, rate t) ≤ δ → ∀ batch : ℕ → List (LabeledPosition A), ∀ n ≤ K,
+        ∀ batch : ℕ → List (LabeledPosition A), ∀ n, (∑ t ∈ Finset.range n, rate t) ≤ δ →
           StrictOn (fun x => (Model.fromWeights (adamWRun r batch rate z n).weights).logits r
             (prompt x) (Fin.last T)) f := by
   let init := sgdInitialWeights (A := A) (H := H) (d := d) (layers := L) true
@@ -42,7 +41,7 @@ theorem adamW_native_basin (r K : ℕ) (prompt : X → Word A (T+1)) (f : X → 
   let C := max (‖c‖+1) (120:ℝ)/10 + 12
   have hC : 0 < C := by dsimp [C]; positivity
   refine ⟨ε/(3*C),by positivity,U,hU,hU.measure_pos _ ⟨witness,mem_ball_self hρ⟩,?_⟩
-  intro z hz rate hr hs batch n hn
+  intro z hz rate hr batch n hs
   have hi : dist (init z) c < ρ := hz
   have hnorm : ‖init z‖ ≤ ‖c‖+1 := by
     have he := norm_sub_norm_le (init z) c
@@ -54,18 +53,33 @@ theorem adamW_native_basin (r K : ℕ) (prompt : X → Word A (T+1)) (f : X → 
   let fit := adamWRun r batch rate z
   have hstep (t) : dist (fit t).weights (fit (t+1)).weights ≤ C * rate t :=
     (AdamW.step_dist rate _ (init z) hr t).trans (mul_le_mul_of_nonneg_right hscale (hr t).1)
-  have hsum := (Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hn) (fun i _ _ => (hr i).1)).trans hs
   have hd := dist_le_range_sum_of_dist_le (f := fun t => (fit t).weights) n
     (d := fun t => C * rate t) (fun {t} _ => hstep t)
   rw [← Finset.mul_sum] at hd
   have hd' : dist (init z) (fit n).weights ≤ ε/3 := by
-    refine hd.trans ((mul_le_mul_of_nonneg_left hsum hC.le).trans_eq ?_)
+    refine hd.trans ((mul_le_mul_of_nonneg_left hs hC.le).trans_eq ?_)
     field_simp
   apply hball
   apply Metric.mem_ball.mpr
   calc
     dist (fit n).weights c ≤ dist (fit n).weights (init z) + dist (init z) c := dist_triangle _ _ _
     _ < ε := by rw [dist_comm (fit n).weights]; linarith [hi.trans_le (min_le_right _ _)]
+
+/-- A native realizing draw yields a positive-measure event of strictly
+correct trained endpoints and earlier iterates at a fixed horizon K. -/
+theorem adamW_native_basin (r K : ℕ) (prompt : X → Word A (T+1)) (f : X → A)
+    (variance : ComplexParameter A H d L → ℝ≥0) (hv : ∀ i, 0 < variance i)
+    (witness : ComplexParameter A H d L → ℂ)
+    (hw : StrictOn (fun x => (Model.fromWeights (sgdInitialWeights true witness)).logits r
+      (prompt x) (Fin.last T)) f) :
+    ∃ δ > (0:ℝ), ∃ U, IsOpen U ∧ 0 < independentGaussianDraws variance U ∧
+      ∀ z ∈ U, ∀ rate : ℕ → ℝ, (∀ t, 0 ≤ rate t ∧ rate t ≤ 10) →
+        (∑ t ∈ Finset.range K, rate t) ≤ δ → ∀ batch : ℕ → List (LabeledPosition A), ∀ n ≤ K,
+          StrictOn (fun x => (Model.fromWeights (adamWRun r batch rate z n).weights).logits r
+            (prompt x) (Fin.last T)) f := by
+  obtain ⟨δ,hδ,U,ho,hp,hU⟩ := adamW_native_rate_basin r prompt f variance hv witness hw
+  refine ⟨δ,hδ,U,ho,hp,fun z hz rate hr hs batch n hn => hU z hz rate hr batch n ?_⟩
+  exact (Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hn) (fun i _ _ => (hr i).1)).trans hs
 
 /-- The same rate budget and number of restarts work uniformly for all
 members of the class. Every trial may use different/adaptive minibatches.

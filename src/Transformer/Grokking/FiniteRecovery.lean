@@ -92,5 +92,8 @@ At width 64, FFN width 256, depth six and one pass, every table in this
 class is strictly realized on all 9,312 inputs by varying only the native
 embedding draw. All 239 choices of the constant-row token are allowed.
 This gives uniform confidence for certified AdamW restarts at sufficiently
-small total rate. The finite-seed success law for the experimental WSD
+small total rate. An explicit WSD restart schedule begins with any number
+of ordinary trials, then gradually rescales the rates. It almost surely
+retains a correct endpoint without a supplied margin or rate threshold.
+The finite-seed success law for the experimental WSD
 counts only strictly correct endpoints at the declared horizon. -/
