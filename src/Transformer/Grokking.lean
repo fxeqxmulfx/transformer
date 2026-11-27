@@ -13,6 +13,7 @@ public import Transformer.Grokking.DivisionOrbits
 public import Transformer.Grokking.Composition
 public import Transformer.Grokking.CircuitEfficiency
 public import Transformer.Grokking.FlatSpectrum
+public import Transformer.Grokking.FiniteRecovery
 public import Transformer.Grokking.DiffGPT
 public import Transformer.Grokking.Convex
 
