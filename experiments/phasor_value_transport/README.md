@@ -431,6 +431,35 @@ mkdir -p "$out"
 unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
 ```
 
+The 75 runs used the same cases, seeds, held-out splits and WSD schedules
+as the unit-scale AMSGradW baseline. The scores and losses at update
+zero matched exactly. Time sums the training and evaluation segments
+recorded for each screen on the same RTX 3050 Laptop GPU.
+
+| Optimizer | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 | Updates | Time (s) |
+|---|---:|---:|---:|---:|---:|
+| AMSGradW, $\beta_2=0.98$ | 26 | 9 | 8 | 58,815 | 1,721 |
+| AMSGradW, $\beta_2=0.95$ | 25 | 9 | 8 | 59,341 | 902 |
+| AdamW, $\beta_2=0.95$ | 32 | 13 | 8 | 57,762 | 870 |
+
+All 25 baseline passes also passed at $\beta_2=0.98$. The additional pass
+was `basis-depth-hard` seed 0, which rose from 310/512 to 510/512 at
+update 1,000. Among the 25 shared passes, `0.98` reached 99% earlier
+in nine, `0.95` reached it earlier in one, and 15 tied.
+
+Among the 49 pairs finishing below 99% at the same cutoff, `0.98`
+scored higher in 47, tied in one, and scored lower in one. The median
+change was +2.2 percentage points. On `power-division-p193-k3` seed 1,
+accuracy rose from 25.0% to 50.2% at update 949. On `basis-depth-hard`
+seed 2, it fell from 92.2% to 63.3% at update 1,000.
+
+The GPU update matched the scalar reference at both coefficients. At
+`0.95` the eight-update probe had a maximum absolute state difference
+of `1.6e-8` from the prior build, and the saved baseline checkpoint
+reproduced its full replay. All 75 terminal state digests matched their
+records. Independent reloads reproduced the scores and losses of all
+26 passing checkpoints.
+
 ##### Argand AMSGradW with a scaled denominator
 
 The adaptive denominator is $a\sqrt{v_{\max}/(1-\beta_2^t)}+\epsilon$.
