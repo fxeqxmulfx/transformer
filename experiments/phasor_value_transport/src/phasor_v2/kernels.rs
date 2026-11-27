@@ -360,6 +360,7 @@ pub(super) mod device {
         decay: f32,
         bc1: f32,
         bc2: f32,
+        sqrt_scale: f32,
     ) {
         let i: u32;
         index(i);
@@ -387,6 +388,7 @@ pub(super) mod device {
         max.f32(maximum, maximum, second);
         sqrt.rn.f32(denominator, maximum);
         div.rn.f32(denominator, denominator, bc2);
+        mul.rn.f32(denominator, denominator, sqrt_scale);
         add.rn.f32(denominator, denominator, 1e-8);
         div.rn.f32(t, lr, bc1);
         mul.rn.f32(t, t, first);

@@ -92,8 +92,14 @@ impl Cell {
     }
 
     fn identity(&self) -> Value {
-        json!({"model":self.variant.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
-            "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION})
+        let mut identity = json!({"model":self.variant.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
+            "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION});
+        if let Some(scale) = self.variant.amsgradw_sqrt_scale()
+            && scale != 1.0
+        {
+            identity["amsgradw_sqrt_scale"] = scale.to_string().into();
+        }
+        identity
     }
 
     fn state_file(&self, step: usize) -> PathBuf {

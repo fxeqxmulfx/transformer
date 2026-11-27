@@ -19,7 +19,7 @@ type P = Ptr<f32>;
 pub struct Variant {
     routing: Routing,
     real_score_init: bool,
-    amsgradw: bool,
+    amsgradw_sqrt_scale: Option<f32>,
 }
 
 impl Variant {
@@ -29,15 +29,25 @@ impl Variant {
             Ok("1") => true,
             _ => return Err("ARGAND_SCORE_INIT takes 1+i or 1".into()),
         };
-        let amsgradw = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
-            Err(std::env::VarError::NotPresent) | Ok("adamw") => false,
-            Ok("amsgradw") => true,
+        let amsgradw_sqrt_scale = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
+            Err(std::env::VarError::NotPresent) | Ok("adamw") => None,
+            Ok("amsgradw") => {
+                let scale = match std::env::var("ARGAND_AMSGRADW_SQRT_SCALE") {
+                    Ok(value) => value.parse::<f32>()?,
+                    Err(std::env::VarError::NotPresent) => 1.0,
+                    Err(error) => return Err(error.into()),
+                };
+                if !(0.0 < scale && scale <= 1.0) {
+                    return Err("ARGAND_AMSGRADW_SQRT_SCALE must be in (0, 1]".into());
+                }
+                Some(scale)
+            }
             _ => return Err("ARGAND_OPTIMIZER takes adamw or amsgradw".into()),
         };
         Ok(Self {
             routing: Routing::EntryPhase,
             real_score_init,
-            amsgradw,
+            amsgradw_sqrt_scale,
         })
     }
 
@@ -45,12 +55,12 @@ impl Variant {
         Ok(Self {
             routing: Routing::selected()?,
             real_score_init: false,
-            amsgradw: false,
+            amsgradw_sqrt_scale: None,
         })
     }
 
     pub fn model(self) -> &'static str {
-        match (self.real_score_init, self.amsgradw) {
+        match (self.real_score_init, self.amsgradw_sqrt_scale.is_some()) {
             (false, false) => self.routing.model(),
             (true, false) => "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one",
             (false, true) => "argand-entry-phase-mhc-tied-vocab-fp32-amsgradw",
@@ -60,8 +70,14 @@ impl Variant {
 
     pub fn legacy_model(self) -> Option<&'static str> {
         // Old entry-phase checkpoints used AdamW and started the score at 1+i.
-        (matches!(self.routing, Routing::EntryPhase) && !self.real_score_init && !self.amsgradw)
-            .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
+        (matches!(self.routing, Routing::EntryPhase)
+            && !self.real_score_init
+            && self.amsgradw_sqrt_scale.is_none())
+        .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
+    }
+
+    pub fn amsgradw_sqrt_scale(self) -> Option<f32> {
+        self.amsgradw_sqrt_scale
     }
 
     fn score_init(self) -> [f32; 2] {
@@ -532,10 +548,10 @@ pub fn check(variant: Variant) -> Result<()> {
             return Err("complex decoder GPU backward disagrees with finite differences".into());
         }
     }
-    if variant.amsgradw {
+    if let Some(sqrt_scale) = variant.amsgradw_sqrt_scale {
         engine
             .parameters
-            .check_amsgradw(&engine.adam, &engine.kernel)?;
+            .check_amsgradw(&engine.adam, &engine.kernel, sqrt_scale)?;
     }
     println!(
         "{} vocabulary prediction, prefix causality and tied adjoints verified",

@@ -61,7 +61,7 @@ pub(super) struct Layer {
 
 enum OptimizerBuffers {
     AdamW(Buffer<u32>),
-    AmsGradW(F),
+    AmsGradW { maximum: F, sqrt_scale: f32 },
 }
 
 pub(super) struct Parameters {
@@ -120,8 +120,11 @@ impl Parameters {
         values.resize(values.len().next_multiple_of(2), 0.0);
         let count = values.len();
         let zeros = vec![0.0; count];
-        let optimizer = if variant.amsgradw {
-            OptimizerBuffers::AmsGradW(cuda.upload(&zeros)?)
+        let optimizer = if let Some(sqrt_scale) = variant.amsgradw_sqrt_scale {
+            OptimizerBuffers::AmsGradW {
+                maximum: cuda.upload(&zeros)?,
+                sqrt_scale,
+            }
         } else {
             let owners: Vec<[u32; 5]> = (0..count as u32)
                 .step_by(2)
@@ -147,7 +150,7 @@ impl Parameters {
         let mut values = self.value.read()?;
         values.extend(self.first.read()?);
         values.extend(self.second.read()?);
-        if let OptimizerBuffers::AmsGradW(maximum) = &self.optimizer {
+        if let OptimizerBuffers::AmsGradW { maximum, .. } = &self.optimizer {
             values.extend(maximum.read()?);
         }
         Ok(values)
@@ -157,7 +160,7 @@ impl Parameters {
         let count = self.len();
         let buffers = match &self.optimizer {
             OptimizerBuffers::AdamW(_) => 3,
-            OptimizerBuffers::AmsGradW(_) => 4,
+            OptimizerBuffers::AmsGradW { .. } => 4,
         };
         if state.len() != buffers * count
             || state.iter().any(|x| !x.is_finite())
@@ -166,15 +169,15 @@ impl Parameters {
             return Err("invalid decoder optimizer state".into());
         }
         let second = &state[2 * count..3 * count];
-        let maximum = &state[3 * count..];
-        if maximum.iter().zip(second).any(|(peak, value)| peak < value) {
+        let peaks = &state[3 * count..];
+        if peaks.iter().zip(second).any(|(peak, value)| peak < value) {
             return Err("AMSGradW maximum is below the second moment".into());
         }
         self.value.write(&state[..count])?;
         self.first.write(&state[count..2 * count])?;
         self.second.write(second)?;
-        if let OptimizerBuffers::AmsGradW(buffer) = &mut self.optimizer {
-            buffer.write(maximum)?;
+        if let OptimizerBuffers::AmsGradW { maximum, .. } = &mut self.optimizer {
+            maximum.write(peaks)?;
         }
         Ok(())
     }
@@ -240,7 +243,10 @@ impl Parameters {
                     bc1,
                     bc2,
                 )?,
-                OptimizerBuffers::AmsGradW(maximum) => device.amsgradw(
+                OptimizerBuffers::AmsGradW {
+                    maximum,
+                    sqrt_scale,
+                } => device.amsgradw(
                     grid(self.len()),
                     self.value.ptr(),
                     self.first.ptr(),
@@ -253,6 +259,7 @@ impl Parameters {
                     0.1,
                     bc1,
                     bc2,
+                    *sqrt_scale,
                 )?,
             }
         }
@@ -263,6 +270,7 @@ impl Parameters {
         &mut self,
         kernel: &optimizer_kernels::kernels::Kernels,
         device: &device::Kernels,
+        sqrt_scale: f32,
     ) -> Result<()> {
         let count = self.len();
         let mut grad = vec![0.0; count];
@@ -282,7 +290,7 @@ impl Parameters {
             let step = (completed + 1) as i32;
             let corrected_first = first / (1.0 - 0.9_f64.powi(step));
             let corrected_maximum = maximum / (1.0 - 0.95_f64.powi(step));
-            let denominator = corrected_maximum.sqrt() + 1e-8;
+            let denominator = f64::from(sqrt_scale) * corrected_maximum.sqrt() + 1e-8;
             value = (1.0 - lr * 0.1) * value - lr * corrected_first / denominator;
             let state = self.state()?;
             for (buffer, expected) in [value, first, second, maximum].into_iter().enumerate() {

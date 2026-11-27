@@ -346,11 +346,12 @@ checkpoint includes the extra moment buffer and its own model identifier.
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
 export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_AMSGRADW_SQRT_SCALE=1
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-score-one-amsgradw
 mkdir -p "$out"
 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
-unset ARGAND_OPTIMIZER
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_OPTIMIZER
 ```
 
 The paired screen used `s=1`, Kernite 0.7.0 and an RTX 3050 Laptop GPU.
@@ -377,6 +378,32 @@ had the same exact score and a maximum absolute state difference of
 `2.8e-8`. All 75 terminal state digests matched the saved records, and
 all 25 passing checkpoints reproduced their held-out scores and losses
 on independent reload.
+
+##### Argand AMSGradW with a scaled denominator
+
+The adaptive denominator is $a\sqrt{v_{\max}/(1-\beta_2^t)}+\epsilon$.
+`ARGAND_AMSGRADW_SQRT_SCALE` sets $a$ in $(0,1]$. The checkpoint
+identity records each non-unit scale. The $a=0.9$ screen uses the
+same Argand initialization, WSD schedule and decoupled decay as the
+unit-scale AMSGradW screen.
+
+In the constant-step full-gradient update, dividing by
+$a\sqrt{v_{\max}}+\epsilon$ is equivalent to using standard AMSGradW
+with $\eta/a$, $\epsilon/a$ and $a\lambda$. The products
+$\eta\lambda$ and $\lambda\epsilon$ in the convergence conditions
+have the same values under this substitution.
+[AMSGradW convergence theorem](../../src/Transformer/AMSGradW/Convergence.lean)
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
+export ARGAND_AMSGRADW_SQRT_SCALE=0.9
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one-amsgradw-scale-0.9
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_OPTIMIZER
+```
 
 ### Argand with an input-position readout
 
