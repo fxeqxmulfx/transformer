@@ -5,11 +5,12 @@ if (( $# != 2 )); then
     echo 'usage: bash plot_division_cohort.sh COHORT OUTPUT_DIRECTORY' >&2
     exit 2
 fi
+dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 cohort=$(cd -- "$1" && pwd)
 mkdir -p -- "$2"
 out=$(cd -- "$2" && pwd)
 tmp=$(mktemp -d "$out/.division-cohort.XXXXXX")
-trap 'rm -f -- "$tmp"/*.tsv "$tmp"/snapshot.{pdf,png}; rmdir -- "$tmp"' EXIT
+trap 'rm -f -- "$tmp"/*.tsv "$tmp"/snapshot.{pdf,png} "$tmp/verified.json"; rmdir -- "$tmp"' EXIT
 cd -- "$tmp"
 plan="$cohort/protocol.json"
 budget=$(jq -er 'select(.case=="grok-division-p97" and .correction=="adamw-wsd"
@@ -118,6 +119,10 @@ unset multiplot
 GP
 pdftoppm -singlefile -r 135 -png snapshot.pdf snapshot
 base="division-${budget}-cohort"
+if [[ $budget == 100000 || $budget == 200000 ]]; then
+    bash "$dir/report_division_horizon.sh" "$cohort" > verified.json
+    mv -- verified.json "$out/$base-verified.json"
+fi
 if [[ ${ARGAND_PLOT_SNAPSHOT:-0} == 1 ]]; then
     tag="$base-draw-$last_draw-step-$last_step-done-$done_count"
     cp -- snapshot.pdf "$out/$tag.pdf"

@@ -279,6 +279,7 @@ bash plot_division_accuracy.sh "runs/division-page/$case/seed0" \
 bash run_division_horizon.sh runs/division-registered runs/division-confirm-100k 100000
 bash double_division_horizon.sh runs/division-confirm-100k runs/division-confirm-200k
 bash plot_division_cohort.sh runs/division-confirm-100k runs/division-comparison
+bash report_division_horizon.sh runs/division-confirm-100k
 "$bin" division-certificate "runs/division-adamw-long/$case/seed0" first-strict
 "$bin" division-mask-lean > runs/OriginalDivisionMask.lean
 (cd ../.. && LAKE_ARTIFACT_CACHE=false lake env lean experiments/argand/runs/OriginalDivisionMask.lean)
@@ -290,6 +291,10 @@ the start of the WSD cooldown. The right panel distinguishes the latest measurem
 the strict score after reloading terminal weights. An empty row marks a
 seed awaiting training. Set `ARGAND_PLOT_SNAPSHOT=1` to keep a PNG and PDF
 named for the latest draw, update count and number of completed replays.
+The adjacent `*-cohort-verified.json` counts a seed when independent
+replay and the training-label certificate agree on its strict hidden
+score. It gives the twelve-seed fraction once all twelve have been
+verified, together with the ten-seed subset first trained after the pilot.
 
 The Lean construction in `DivisionNative.lean` represents all 9,312
 quotients with the same architecture as these runs. Two attention heads
