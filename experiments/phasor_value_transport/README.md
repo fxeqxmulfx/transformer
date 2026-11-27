@@ -231,8 +231,9 @@ RMS. A repeated pass reuses the same coefficients. [Lean definition and proof](.
 
 Both arms use the tied vocabulary, the score multiplier initialized to `1 + 0i`,
 AdamW, one pass, and the same frozen schedule and minibatch order for each seed.
-The shared weights have identical initial values. The threshold is checked at the
-scheduled observations up to update 1,000. The runner reloads every passing checkpoint.
+Both coordinates of the multiplier train. The shared weights start at identical
+values. The runner checks the threshold at the scheduled observations through
+update 1,000 and reloads every passing checkpoint.
 
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
@@ -245,7 +246,41 @@ for residual in norm-phase single; do
     ./run_v2_stress.sh --argand all 1 "$out" 1000 > "$out/stress-1000.jsonl"
 done
 unset ARGAND_RESIDUAL ARGAND_SCORE_INIT ARGAND_OPTIMIZER PHASOR_EVAL_BATCH_CAP
+jq -n --argjson cap 1000 --slurpfile suite ../convex_stress/suite.json \
+    --slurpfile control runs/argand-norm-phase-s1/single/stress-1000.jsonl \
+    --slurpfile candidate runs/argand-norm-phase-s1/norm-phase/stress-1000.jsonl \
+    -f compare_v2_screens.jq
 ```
+
+| Tier | Tasks × seeds | Ordinary addition reaching 99% | Norm-dependent phase reaching 99% |
+|---|---:|---:|---:|
+| Short | 25 × 3 | 21/75 | 22/75 |
+| Long | 10 × 3 | 2/30 | 4/30 |
+
+On the short tier, the pass status changed only on `basis-depth-hard`.
+The phase residual passed seeds 0 and 2. Ordinary addition passed seed 1.
+For seed 0 at update 1,000, the phase residual scored 512/512 and ordinary
+addition scored 315/512. Of the 20 short runs where both crossed 99%, the
+phase residual crossed earlier in three, at the same observation in 15, and
+later in two. The earlier four-stream complex mHC screen with the same
+`s=1`, AdamW, cases, seeds and cutoff passed 32/75.
+
+The phase residual added two long passes. On `basis-recall-easy` seed 0
+it scored 509/512 at update 1,000, where ordinary addition scored 0/512.
+On `associative-divisor-n2-l1-w0` seed 2 it crossed at update 912, while
+ordinary addition finished at 4,597/4,656 at update 988. Both models passed
+`basis-recall-easy` seed 2 at update 450. On the other shared long pass,
+`associative-divisor-n2-l1-w0` seed 1, ordinary addition crossed at 817
+and the phase residual at 912.
+
+On `arithmetic-abs-diff-blind`, the task from the original mHC comparison,
+seed 1 scored 1,524/4,705 with the phase residual and 1,520/4,705 with
+ordinary addition at update 988, the last observation within the cap.
+
+The step-zero held-out scores and losses matched in all 105 pairs. All 210
+terminal state digests matched their records, and independent checkpoint
+reloads reproduced the held-out scores and losses of all 49 passes. All
+105 phase runs learned at least one nonzero rotation coefficient.
 
 #### Complex mHC in Argand
 
