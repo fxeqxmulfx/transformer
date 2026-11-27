@@ -16,7 +16,7 @@ open scoped InnerProductSpace
 
 variable {A : Type*} [Fintype A] {H d layers T : ℕ}
 
-private theorem c1Lipschitz_hidden_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) :
+theorem c1Lipschitz_hidden_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) :
     C1Lipschitz (fun w : Weights A H d layers => (Model.fromWeights w).hidden repeats word i) := by
   let W := Weights A H d layers
   let ε : ℝ := 1 / 1000000
