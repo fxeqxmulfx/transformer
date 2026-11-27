@@ -353,6 +353,31 @@ mkdir -p "$out"
 unset ARGAND_OPTIMIZER
 ```
 
+The paired screen used `s=1`, Kernite 0.7.0 and an RTX 3050 Laptop GPU.
+The two runs matched the case, seed, split and step-zero score and loss
+for each of the 75 pairs. Time sums the training and evaluation segments.
+
+| Optimizer | Runs reaching 99% /75 | Cases with a pass /25 | Cases passing all three seeds /25 | Updates | Time (s) |
+|---|---:|---:|---:|---:|---:|
+| AdamW | 32 | 13 | 8 | 57,762 | 870 |
+| AMSGradW | 25 | 9 | 8 | 59,341 | 902 |
+
+AdamW passed each of the 25 cells that passed with AMSGradW. Among these
+shared passes, AdamW crossed earlier in 11, AMSGradW crossed earlier in
+one, and 13 tied. The seven additional AdamW passes were two seeds each
+of `arithmetic-cube-plus` and `arithmetic-mul`, and one seed each of
+`arithmetic-add`, `power-division-p193-k3` and `basis-depth-hard`.
+The five modulo-97 arithmetic misses with AMSGradW reached 86.8–91.8%
+at update 988 and improved over their last four observations.
+`power-division-p193-k3` seed 1 reached 25.0% at update 949.
+
+A GPU update check verified clipping, both moments, the running maximum
+and decoupled decay. At update 8, the resumed and uninterrupted probe
+had the same exact score and a maximum absolute state difference of
+`2.8e-8`. All 75 terminal state digests matched the saved records, and
+all 25 passing checkpoints reproduced their held-out scores and losses
+on independent reload.
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current
