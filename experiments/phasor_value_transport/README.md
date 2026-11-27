@@ -52,6 +52,41 @@ split. An independent process then reloads the weights and scores the same
 split. The opening commands train the default Phasor on these 105 cells
 and run the three exact NV11 checks. [Default training and replay](#embedding-input-phasor-on-the-gpt-stress-suite-and-nv11)
 
+### Phasor v2 with an input-position readout
+
+The single-stream Phasor v2 proposal scores the embeddings of the current
+sequence and normalizes over the visible positions. The probability of a
+token is the sum of the probabilities of its matching positions. An absent
+target therefore has probability zero for every choice of weights. With
+next-token loss at every position, the first occurrence of a token
+different from the opening token already gives infinite loss.
+
+The native audit rebuilt the frozen splits for all 35 tasks. Every task
+has nonconstant training inputs, so the proposed all-position objective
+blocks all 75 short and 30 long runs. With the suite's original supervision
+mask, only three tasks have all training targets in their visible prefixes.
+
+| Tier | Cases | Blocked with all-position loss | Blocked with original supervision | Cases with an exact-accuracy upper bound under 99% |
+|---|---:|---:|---:|---:|
+| Short | 25 | 25 | 24 | 24 |
+| Long | 10 | 10 | 8 | 8 |
+
+The three cases with full target support under the original mask are
+`gpt-probe-key-value-binding`, `basis-recall-easy`, and
+`associative-divisor-n2-l1-w0`. Exact-accuracy bounds are based on target
+reachability alone. For free generation the set of available tokens is
+fixed by the prompt, including when exact scoring requires EOS. For the
+recurrence case the bound accounts for the scorer's pooling of token aliases.
+
+Run the support audit from this directory with the pinned DiffGPT checkout
+described under [reproduction](#reproducing-the-pair-address-baseline).
+
+```sh
+cargo +stable build --locked --release
+mkdir -p runs
+target/release/phasor-value-transport pointer-audit > runs/phasor-v2-pointer-audit.json
+```
+
 ### Input-phase comparison
 
 The following commands run the input-phase Phasor on all 105 cells.

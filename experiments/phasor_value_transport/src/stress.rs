@@ -21,6 +21,7 @@ mod language_probes;
 mod length_transfer;
 mod noisy_anchors;
 mod parity_length;
+pub mod pointer;
 pub mod probe_rows;
 pub mod lookup_question;
 pub mod ordinal_dialogue;
