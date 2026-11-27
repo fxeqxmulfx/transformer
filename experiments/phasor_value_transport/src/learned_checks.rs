@@ -96,7 +96,7 @@ fn scalar_oracle(rows: usize, width: usize) -> Result<()> {
 fn end_to_end(length: usize, width: usize) -> Result<()> {
     let mut cfg = config(3)?;
     cfg.width = width;
-    cfg.heads = width / 32;
+    cfg.heads = if architecture::V1_RESIDUAL { 4 } else { width / 32 };
     cfg.gain = cfg.heads as f32 / width as f32;
     cfg.max_length = length;
     cfg.vocab = 37;
@@ -170,7 +170,11 @@ fn end_to_end(length: usize, width: usize) -> Result<()> {
     } else {
         0.003
     };
-    for (range, epsilon) in [(0..p * width, 0.0002), (start..end, read_epsilon)] {
+    let mut ranges = vec![(0..p * width, 0.0002), (start..end, read_epsilon)];
+    if architecture::V1_RESIDUAL {
+        ranges.push((layout::score_offset(&cfg)..layout::total_count(&cfg), 0.0003));
+    }
+    for (range, epsilon) in ranges {
         if range.is_empty() {
             continue;
         }
@@ -305,6 +309,9 @@ pub fn run(width: Option<usize>) -> Result<()> {
     }
     for (length, width) in [(1, 256), (2, 128), (9, 64)] {
         end_to_end(length, width)?;
+    }
+    if architecture::V1_RESIDUAL {
+        return Ok(());
     }
     if architecture::COMPACT {
         compact_checks::run()?;

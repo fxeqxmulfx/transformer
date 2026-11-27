@@ -99,7 +99,12 @@ fn config(batch: usize) -> Result<Config> {
         lr: schedule::PEAK,
         decay: 0.1,
         warmup: schedule::Schedule::new(BUDGET)?.warmup,
-        architecture: "complex-phase-score-lerope".into(),
+        architecture: if architecture::V1_RESIDUAL {
+            architecture::V1_RESIDUAL_ARCH
+        } else {
+            "complex-phase-score-lerope"
+        }
+        .into(),
         phase_optimizer: false,
         head: head::Head::Original,
     })

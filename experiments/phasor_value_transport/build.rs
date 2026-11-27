@@ -2,6 +2,7 @@
 mod build_adjoint_storage;
 mod build_compact;
 mod build_embedding;
+mod build_residual;
 mod build_score_tiles;
 mod build_scoring;
 use std::{collections::BTreeSet, env, fs, path::Path, process::Command};
@@ -190,6 +191,7 @@ fn main() {
     catalog_schedule(&gpt, &out);
     let src = gpt.join("research/main_model/phase_score_native/src");
     let mut engine = check_device_offsets(fs::read_to_string(src.join("engine.rs")).unwrap());
+    build_residual::engine(&mut engine);
     build_compact::hidden_dimensions(&mut engine, true);
     let embedding_helpers = build_embedding::extract(&mut engine);
     // Only the FP32 reference dispatches entirely to the upstream SGEMM.
@@ -280,7 +282,8 @@ fn main() {
         engine = engine.replace(from, to);
     }
     let layout = fs::read_to_string(src.join("layout.rs")).unwrap();
-    let layout = build_compact::layout(layout);
+    let mut layout = build_compact::layout(layout);
+    build_residual::layout(&mut layout);
     let initialize = "p.resize(total_count(cfg), 0.);";
     assert_eq!(layout.matches(initialize).count(), 1);
     let layout = layout.replace(
@@ -349,7 +352,7 @@ fn main() {
     mods.push_str(&format!("{marker}{body}\n}}\n"));
     for (dir, names) in [
         (
-            src,
+            src.clone(),
             "attention base_ops centered_attention embedding_backward mhc optimizer optimizer_kernels ordinary_attention ordinary_forward phase_mhc phase_score phase_score_forward pipeline pipeline_host placement precision rotary stable_attention stable_chain stable_loss tensor tiled_transpose",
         ),
         (
@@ -360,7 +363,7 @@ fn main() {
         (out.clone(), "data engine layout metrics phase_score_tiles schedule phasor_v2_metrics"),
     ] {
         for name in names.split_whitespace() {
-            let path = dir.join(format!("{name}.rs"));
+            let path = build_residual::module(&dir, &src, &out, name);
             mods.push_str(&format!(
                 "#[allow(dead_code, clippy::all)]\n#[path={path:?}] mod {name};\n"
             ));

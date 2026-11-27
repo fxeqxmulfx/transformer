@@ -173,6 +173,46 @@ done
 "$bin" v2-replay arithmetic-abs-diff-blind 1 1 "$real"
 ```
 
+#### Ordinary residual in Phasor v1
+
+This control uses the original Phasor phase score, learnable LeRoPE,
+plain complex FFN, PeriNorm and tied classifier. Each sublayer now
+adds its normalized output to one residual stream with the original
+scale. The runner specializes the pinned attention kernels for 64
+real coordinates per head to support the wider control.
+
+Seed 1 used four heads, one layer, one pass and the frozen
+`arithmetic-abs-diff-blind` split and schedule. All three v1 results
+reproduced their exact held-out score on checkpoint reload.
+
+| Residual | Complex width | Held-out correct /4705 | First 99% update |
+|---|---:|---:|---:|
+| Original mHC | 64 | 4,662 | 4,978 |
+| Ordinary addition | 64 | 4,659 | 15,238 |
+| Ordinary addition | 128 | 4,659 | 5,738 |
+
+At width 64, the v1 mHC reached the target in about a third of the
+updates. At width 128 and one stream, v1 reached the target at update
+5,738 and v2 at update 12,996. That comparison holds width and residual
+topology fixed across two different attention and FFN implementations.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference,v1-residual
+bin=target/release/phasor-value-transport
+export PHASOR_EVAL_BATCH_CAP=16
+"$bin" shared-check 128
+"$bin" shared-check 256
+for width in 64 128; do
+    export PHASOR_V1_COMPLEX_WIDTH=$width
+    trial="runs/v1-ordinary-residual/c$width"
+    for stop in 988 4997 19988; do
+        "$bin" advance arithmetic-abs-diff-blind 1 "$trial" "$stop"
+    done
+    "$bin" replay arithmetic-abs-diff-blind 1 "$trial"
+done
+unset PHASOR_V1_COMPLEX_WIDTH
+```
+
 ### Phasor v2 with an input-position readout
 
 The single-stream Phasor v2 proposal scores the embeddings of the current

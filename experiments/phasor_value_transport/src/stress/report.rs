@@ -26,6 +26,8 @@ pub(super) fn validate(
         )
     };
     if result["model"] != MODEL
+        || (architecture::V1_RESIDUAL
+            && result["complex_width"] != architecture::real_width(number("width")? as usize)? / 2)
         || !architecture::valid_record(result, number("width")?, vocab)
         || result["fp32_affines"] != precision::FP32_AFFINE_REFERENCE
         || result["suite_sha256"] != suite_hash(row)

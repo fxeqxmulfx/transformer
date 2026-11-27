@@ -49,7 +49,7 @@ fn task_config(row: &Value, task: &Task, reserve_training_batch: bool) -> Result
     let c = &row["case"];
     let number = |key: &str| c[key].as_u64().map(|x| x as usize).ok_or("missing shape");
     let mut cfg = config(number("batch")?)?;
-    cfg.width = number("width")?;
+    cfg.width = architecture::real_width(number("width")?)?;
     cfg.heads = number("heads")?;
     cfg.layers = number("layers")?;
     let evaluation = if cfg.width >= 128 && cfg.layers >= 6 {

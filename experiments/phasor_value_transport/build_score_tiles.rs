@@ -14,6 +14,7 @@ fn replace_once(text: &mut String, source: &str, replacement: &str) {
 pub fn kernel(source: &Path, out: &Path) {
     let source = source.join("phase_score_forward.rs");
     let mut kernel = fs::read_to_string(&source).unwrap();
+    crate::build_residual::wide_head(&mut kernel);
     for (old, new) in [
         ("        imaginary: *mut f32,\n", ""),
         (

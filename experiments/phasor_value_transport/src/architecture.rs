@@ -2,6 +2,23 @@
 use crate::{engine::Config, head::Head, layout, pair_memory};
 use serde_json::{Value, json};
 
+pub const V1_RESIDUAL: bool = cfg!(feature = "v1-residual");
+pub const V1_RESIDUAL_ARCH: &str = "complex-phase-score-residual-lerope";
+
+pub fn real_width(frozen: usize) -> crate::Result<usize> {
+    if V1_RESIDUAL
+        && let Some(width) = std::env::var_os("PHASOR_V1_COMPLEX_WIDTH")
+    {
+        return width
+            .to_str()
+            .and_then(|width| width.parse::<usize>().ok())
+            .and_then(|width| width.checked_mul(2))
+            .filter(|width| [64, 128, 256].contains(width))
+            .ok_or_else(|| "PHASOR_V1_COMPLEX_WIDTH must be 32, 64 or 128".into());
+    }
+    Ok(frozen)
+}
+
 // Historical binary selectors are explicit. Precision and the task never select a model.
 pub const RAW: bool = !cfg!(any(
     feature = "pair-v2",
@@ -199,7 +216,9 @@ pub const HEAD: Head = if FOURIER {
 } else {
     Head::Relations
 };
-pub const MODEL: &str = if matches!(HEAD, Head::Original) {
+pub const MODEL: &str = if V1_RESIDUAL {
+    "phasor-v1-ordinary-residual-v1"
+} else if matches!(HEAD, Head::Original) {
     "phasor-original-stream-mean-v1"
 } else {
     HEAD.id()
@@ -225,6 +244,9 @@ pub fn parameters(cfg: &Config) -> usize {
 }
 
 pub fn record(result: &mut Value, cfg: &Config, values: &[f32]) {
+    if V1_RESIDUAL {
+        result["complex_width"] = json!(cfg.width / 2);
+    }
     if cfg.head.uses_lookup_capacity() {
         result["prototype_slots"] =
             json!(crate::slot_memory::capacity(cfg.head, cfg.width, cfg.vocab));
