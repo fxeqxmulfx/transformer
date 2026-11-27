@@ -1,10 +1,29 @@
 # Argand
 
+## Hyperparameters
+
+| Hyperparameter | Value | Meaning |
+|---|---|---|
+| `c` | `64` in the example | Number of complex elements in a token vector. |
+| `H` | `4` in the example | Number of attention heads. |
+| `layers` | Model configuration | Number of distinct layers. |
+| `repeat` | `1` in the short screen | Number of passes through the same layers. |
+| `S` | `4` | Number of mHC residual streams. |
+| `ffn_expansion` | `4` | Ratio of the FFN intermediate width to `c`. |
+| `eps` | `1e-6` | Offset added to the vector norm in `complex_rmsnorm`. |
+| `rope_base` | `10000` | Base of the LeRoPE frequency schedule. |
+| Initial $\alpha_m$ | `0` | Initial value of each learned LeRoPE log-frequency adjustment. |
+| `s_init` | `1` | Initial value of each layer's learned complex score multiplier `s`. |
+| `write_gain` | `2` | Scale applied to the sigmoid write amplitudes. |
+| `mix_diagonal_bias` | `2` | Offset added to the diagonal of the mixing logits. |
+| `sinkhorn_cycles` | `20` | Number of column and row normalization cycles. |
+| Initial phase columns of `W_mhc` | `0` | Set the starting angles of the gates and mixing weights. |
+
 ## Embedding
 
 The embedding table `E` contains one learned complex vector for each
-vocabulary token. The table has shape `vocab_size × c`. At width `c=64`, each
-row contains 64 complex numbers, or 128 real parameters.
+vocabulary token. The table has shape `vocab_size × c`. Each row contains
+`c` complex numbers, or `2c` real parameters.
 
 For a sequence of `T` tokens, select the corresponding rows from `E` to obtain
 `emb = E[tokens]` of shape `T × c`.
@@ -17,25 +36,26 @@ Apply `complex_rmsnorm` to each row of `emb`. The resulting `norm_emb` has
 shape `T × c`. Row `n` is the normalized embedding of the token at position
 `n`.
 
-Stack four identical copies of `norm_emb` to form the initial state `X` of
-shape `T × 4 × c`. Each position has four complex vectors of length `c`, one
+Stack `S` identical copies of `norm_emb` to form the initial state `X` of
+shape `T × S × c`. Each position has `S` complex vectors of length `c`, one
 for each stream.
 
 ## mHC with complex gates and independent phases
 
-An mHC sublayer reads one vector per token from the four streams in `X`,
+An mHC sublayer reads one vector per token from the `S` streams in `X`,
 passes it through attention or the FFN, and writes the result back into the
-four streams.
+`S` streams.
 
 ### Step 1. Compute the gate parameters
 
-For each position `n`, concatenate the four vectors in `X[n]` into one
-complex vector of length `4c`. Apply `complex_rmsnorm` to this vector and
-multiply it by the learned complex matrix `W_mhc` of shape `4c × 24`.
+For each position `n`, concatenate the `S` vectors in `X[n]` into one
+complex vector of length `Sc`. Apply `complex_rmsnorm` to this vector and
+multiply it by the learned complex matrix `W_mhc` of shape
+`(S * c) × (2S + S²)`.
 
-The projection produces 24 complex numbers per token. List their real
-coordinates in the order `Re(r₁), Im(r₁), Re(r₂), Im(r₂), …` to obtain 48
-real coordinates for the amplitude logits and angles.
+The projection produces `2S + S²` complex numbers per token. List their
+coordinates in the order `Re(r₁), Im(r₁), Re(r₂), Im(r₂), …`. For `S=4`,
+the 24 complex numbers yield 48 real coordinates for the logits and angles.
 
 | Coordinates | Purpose |
 |---|---|
@@ -46,9 +66,8 @@ real coordinates for the amplitude logits and angles.
 | 29–32 | Four write angles |
 | 33–48 | Sixteen mixing angles arranged as a `4 × 4` matrix |
 
-Each attention and FFN sublayer has its own `W_mhc` matrix. Initialize the
-columns that produce the angles to zero. Recompute the gates from the
-current `X` each time the sublayer runs.
+Each attention and FFN sublayer has its own `W_mhc` matrix. Recompute the
+gates from the current `X` each time the sublayer runs.
 
 ### Step 2. Form the complex coefficients
 
@@ -57,17 +76,18 @@ Compute two complex numbers for each stream at each position.
 $$
 g_{\mathrm{read}} = \operatorname{sigmoid}(\ell_{\mathrm{read}})\,e^{i\phi_{\mathrm{read}}}
 \qquad
-g_{\mathrm{write}} = 2\operatorname{sigmoid}(\ell_{\mathrm{write}})\,e^{i\phi_{\mathrm{write}}}.
+g_{\mathrm{write}} =
+\mathrm{write\_gain}\cdot\operatorname{sigmoid}(\ell_{\mathrm{write}})\,e^{i\phi_{\mathrm{write}}}.
 $$
 
 On an Argand diagram, multiplying by a gate scales each complex element
 by the gate's amplitude and rotates it by the gate's angle.
 
-To mix the streams, arrange the 16 mixing logits as a `4 × 4` matrix and
-add 2 to each diagonal entry. Exponentiate each entry, then apply 20 cycles
-of Sinkhorn normalization. In each cycle, divide each column by its sum and
-then each row by its sum. The resulting real amplitude matrix `P[n]` has
-shape `4 × 4`.
+To mix the streams, arrange the `S²` mixing logits as an `S × S` matrix and
+add `mix_diagonal_bias` to each diagonal entry. Exponentiate each entry,
+then apply `sinkhorn_cycles` cycles of Sinkhorn normalization. In each
+cycle, divide each column by its sum and then each row by its sum. The
+resulting real amplitude matrix `P[n]` has shape `S × S`.
 
 Compute a complex weight for each pair of streams.
 
@@ -75,17 +95,17 @@ $$
 R[n,a,b] = P[n,a,b]\,e^{i\theta[n,a,b]}.
 $$
 
-Here `b` is the source stream and `a` is the output stream. Each of the 16
+Here `b` is the source stream and `a` is the output stream. Each of the `S²`
 connections has its own angle $\theta[n,a,b]$, computed from the token state
 at position `n`.
 
 ### Step 3. Read from the streams
 
-At each position `n`, multiply each of the four vectors `X[n,b]` by its
+At each position `n`, multiply each of the `S` vectors `X[n,b]` by its
 complex read gate and add the results.
 
 $$
-z[n] = \sum_{b=1}^{4} g_{\mathrm{read}}[n,b]\,X[n,b].
+z[n] = \sum_{b=1}^{S} g_{\mathrm{read}}[n,b]\,X[n,b].
 $$
 
 The resulting `z` has shape `T × c`. Normalize each row, pass the result
@@ -107,14 +127,14 @@ the complex write gate for stream `a`.
 $$
 X_{\mathrm{new}}[n,a]
 =
-\sum_{b=1}^{4} R[n,a,b]\,X[n,b]
+\sum_{b=1}^{S} R[n,a,b]\,X[n,b]
 +
 \mathrm{scale}\cdot g_{\mathrm{write}}[n,a]\,y[n].
 $$
 
-Compute all four output streams from the same input `X`. Steps 1–4 define
+Compute all `S` output streams from the same input `X`. Steps 1–4 define
 `mhc_sublayer(X, W_mhc, F, scale, ...)`, which returns `X_new` of shape
-`T × 4 × c`.
+`T × S × c`.
 
 ## complex_attention
 
@@ -152,9 +172,9 @@ angle per step. The first table uses rounded increments.
 | Row 2, one step | 1·1=1 | 1·0.562=0.562 | 1·0.316=0.316 | 1·0.178=0.178 | 1·0.1=0.1 |
 | Row 3, two steps | 2·1=2 | 2·0.562=1.124 | 2·0.316=0.632 | 2·0.178=0.356 | 2·0.1=0.2 |
 
-LeRoPE multiplies the base increment $10000^{-m/d}$ by $e^{\alpha_m}$.
-The parameter $\alpha_m$ is a learned real number for column `m`. All
-$\alpha_m$ start at zero.
+LeRoPE multiplies the base increment $\mathrm{rope\_base}^{-m/d}$ by
+$e^{\alpha_m}$. The parameter $\alpha_m$ is a learned real number for
+column `m`.
 
 | Column `m` with `d=16` | 0 | 1 | 2 | 3 | 4 |
 |---|---:|---:|---:|---:|---:|
@@ -174,8 +194,8 @@ vector of length `T`.
 
 **Step 6.** Divide each entry of `Si` by `sqrt(d)` to obtain `Si′`.
 
-**Step 7.** Each layer has a learned complex multiplier with initial
-value `s=1`. Multiply each entry in row `n` of `Si′` by `s log(n)` to
+**Step 7.** Each layer has a learned complex multiplier `s` initialized to
+`s_init`. Multiply each entry in row `n` of `Si′` by `s log(n)` to
 obtain `Si″`. Count rows starting at one.
 
 **Step 8.** Split `Si″` into its real and imaginary matrices. Set the
@@ -198,7 +218,8 @@ Si‴ = softmax(mask(real(Si″)), axis=-1) + i * softmax(mask(imag(Si″)), axi
 ## complex_ffn
 
 The input `x_in` is the `T × c` complex matrix from step 3 of the FFN's mHC
-sublayer. The intermediate vectors have length `m = 4c`.
+sublayer. The intermediate vectors have length `m = ffn_expansion * c`.
+With the example width, this gives `m=256`.
 
 **Step 1.** Multiply `x_in` by the learned complex matrices `W_g` and `W_u`
 of shape `c × m` to obtain `G` and `U`, both of shape `T × m`.
@@ -211,7 +232,7 @@ of shape `c × m` to obtain `G` and `U`, both of shape `T × m`.
 
 ## Forward pass and loss
 
-After the final layer, average the four streams at each position and
+After the final layer, average the `S` streams at each position and
 normalize the resulting vectors. The output projection uses the learned
 rows of the same table `E`. Each column of `logits` corresponds to one
 vocabulary token.
@@ -227,7 +248,7 @@ cross_entropy(logits, tokens):
 
 emb = E[tokens]                         # T × c
 norm_emb = complex_rmsnorm(emb)         # T × c
-X = stack([norm_emb] * 4, axis=1)        # T × 4 × c
+X = stack([norm_emb] * S, axis=1)        # T × S × c
 
 sin_cos = lerope()
 L = layers * repeat
