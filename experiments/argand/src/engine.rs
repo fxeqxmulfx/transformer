@@ -9,6 +9,7 @@ pub(crate) mod adamw;
 mod gemm;
 mod kernels;
 pub(crate) mod page;
+mod reduction;
 mod residual;
 mod scores;
 mod tape;
@@ -57,6 +58,7 @@ pub struct Engine {
     /// The partial products of a split `k`: at most four tiles of the
     /// tiled product for each multiprocessor.
     workspace: F,
+    ordered_gradients: Option<reduction::OrderedGradients>,
     scores: scores::device::Kernels,
     embed: base_ops::kernels::Kernels,
     loss: stable_loss::kernels::Kernels,
@@ -98,6 +100,7 @@ impl Engine {
             workspace: cuda.alloc(
                 8 * cuda.multiprocessors() as usize * gemm::device::TILE * gemm::device::TILE,
             )?,
+            ordered_gradients: None,
             scores: scores::device::Kernels::load(&cuda)?,
             embed: base_ops::kernels::Kernels::load(&cuda)?,
             loss: stable_loss::kernels::Kernels::load(&cuda)?,
@@ -113,6 +116,15 @@ impl Engine {
             shape,
             cuda,
         })
+    }
+
+    pub fn order_shared_gradients(&mut self) -> Result<()> {
+        let s = &self.shape;
+        let rows = s.max_batch * s.max_length * s.heads;
+        self.ordered_gradients = Some(reduction::OrderedGradients::new(
+            &self.cuda, rows, (s.width / s.heads).max(2),
+        )?);
+        Ok(())
     }
 
     /// The number of supervised positions: labels below the vocabulary size.
@@ -372,8 +384,8 @@ impl Engine {
     }
 
     /// Backpropagates the last forward pass and adds its parameter gradient.
-    /// Every parameter adjoint accumulates: matrix products and gates add,
-    /// and the LeRoPE and score adjoints use atomic additions.
+    /// LeRoPE offsets and attention score multipliers receive contributions
+    /// from all tokens and heads, using atomics or the selected fixed order.
     fn add_backward(&mut self) -> Result<()> {
         let (input, output, batch, length) =
             self.last.take().ok_or("forward required before update")?;
@@ -404,7 +416,7 @@ impl Engine {
                 count as u32,
             )?;
         }
-        self.tape.backward(&ctx)?;
+        self.tape.backward(&ctx, self.ordered_gradients.as_ref())?;
         // SAFETY: input IDs were checked and this gradient adds to the tied readout's.
         unsafe {
             let e = self.parameters.embedding();

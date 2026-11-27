@@ -36,8 +36,8 @@ pub(super) mod device {
         mul.rn.f32(x,x,1.4426950408889634);
         ex2.approx.f32(x,x);
     }
-    #[instances(false,true)]
-    pub unsafe extern "ptx-kernel" fn weights<const BACK: bool>(
+    #[instances((false,false),(true,false),(true,true))]
+    pub unsafe extern "ptx-kernel" fn weights<const BACK: bool, const TERMS: bool>(
         p: *mut f32, s: *const f32, raw: *const f32, dprob: *const f32,
         draw: *mut f32, ds: *mut f32, length: u32, gain: f32,
     ) {
@@ -121,9 +121,11 @@ pub(super) mod device {
             setp.eq.u32(done,lane,0);
             if done {
                 mul.rn.f32(dr,dr,g); mul.rn.f32(di,di,g);
-                let old: f32;
-                atom.global.add.f32(old,[ds],dr);
-                atom.global.add.f32(old,[ds+4],di);
+                if TERMS { put(ds,row,dr,di); } else {
+                    let old: f32;
+                    atom.global.add.f32(old,[ds],dr);
+                    atom.global.add.f32(old,[ds+4],di);
+                }
             }
         }
     }

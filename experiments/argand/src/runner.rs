@@ -13,7 +13,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP | adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET | adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | division-certificate CELL (terminal|first-strict) | division-mask-lean";
+const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | division-certificate CELL (terminal|first-strict) | division-mask-lean";
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
     if op.starts_with("adamw-") {
@@ -26,6 +26,23 @@ fn training_rule(op: &str) -> crate::page_runs::Rule {
 pub fn command(args: &[String]) -> Result<()> {
     let Some((op, args)) = args.split_first() else {
         return Err(USAGE.into());
+    };
+    let (args, ordered_gradients) = match args {
+        [rest @ .., flag]
+            if flag == "--ordered-gradients"
+                && matches!(
+                    op.as_str(),
+                    "adamw-run"
+                        | "adamw-restart-run"
+                        | "adamw-tail-run"
+                        | "page-run"
+                        | "page-run-sqrt"
+                        | "page-run-retry"
+                ) =>
+        {
+            (rest, true)
+        }
+        _ => (args, false),
     };
     match (op.as_str(), args) {
         ("division-mask-lean", []) => {
@@ -41,7 +58,8 @@ pub fn command(args: &[String]) -> Result<()> {
         }
         ("adamw-tail-run", [name, seed, out, budget, cap]) => {
             let seed: u32 = seed.parse()?;
-            let job = crate::page_runs::Job::new(name, cap.parse()?)?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+                .with_ordered_gradients(ordered_gradients);
             let rule = crate::page_runs::Rule::AdamW(RatePlan::Geometric {
                 budget: budget.parse()?,
             });
@@ -50,7 +68,8 @@ pub fn command(args: &[String]) -> Result<()> {
             Ok(())
         }
         ("adamw-restart-run", [name, seed, out, cap, stock, index, first]) => {
-            let job = crate::page_runs::Job::new(name, cap.parse()?)?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+                .with_ordered_gradients(ordered_gradients);
             let trial: usize = index.parse()?;
             let first_budget: usize = first.parse()?;
             if trial == 0 && first_budget != job.until {
@@ -76,7 +95,8 @@ pub fn command(args: &[String]) -> Result<()> {
         }
         ("adamw-run" | "page-run" | "page-run-sqrt" | "page-run-retry", [name, seed, out, cap]) => {
             let seed: u32 = seed.parse()?;
-            let job = crate::page_runs::Job::new(name, cap.parse()?)?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+                .with_ordered_gradients(ordered_gradients);
             let dir = Path::new(out).join(name).join(format!("seed{seed}"));
             let record = job.run(
                 &dir,

@@ -229,6 +229,16 @@ For this backend the cohort measures success across seed draws and GPU
 executions. Its finite collection of stored checkpoints can be rescored
 without retraining.
 
+For reproducibility controls, append `--ordered-gradients` to an AdamW
+or PAGE single-run command. Each shared gradient is summed by a fixed
+warp tree and written once per coordinate. On the RTX 3050, two separate
+256-update runs with seed 113 and a third run using restart trial zero
+produced byte-identical weights, loss 4.604454520360096 and 60/4,656
+correct hidden answers. All three saved checkpoints replayed these scores.
+The ordered backend records `gradient_reduction: ordered-f32-v1` in its
+checkpoint identity. The registered 100,000- and 200,000-update cohorts
+use the original atomic backend.
+
 ```sh
 case=grok-division-p97
 "$bin" adamw-run "$case" 0 runs/division-adamw-short 8192

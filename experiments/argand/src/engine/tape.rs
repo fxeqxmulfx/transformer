@@ -1,5 +1,5 @@
 //! A reverse pass over the kernels used by the Argand decoder.
-use super::{F, P, Result, gemm, grid, kernels, scores};
+use super::{F, P, Result, gemm, grid, kernels, reduction::OrderedGradients, scores};
 use crate::random::Random;
 use gemm::device as g;
 use kernite_cuda::{Cuda, Grid};
@@ -132,7 +132,7 @@ impl Tape {
     }
 
     fn apply(&mut self, ctx: &Context<'_>, op: Operation, output: Pair) -> Result<Pair> {
-        ctx.apply::<false>(op)?;
+        ctx.apply::<false>(op, None)?;
         self.operations.push(op);
         Ok(output)
     }
@@ -209,9 +209,9 @@ impl Tape {
             .sum()
     }
 
-    pub fn backward(&self, ctx: &Context<'_>) -> Result<()> {
+    pub fn backward(&self, ctx: &Context<'_>, ordered: Option<&OrderedGradients>) -> Result<()> {
         for &op in self.operations.iter().rev() {
-            ctx.apply::<true>(op)?;
+            ctx.apply::<true>(op, ordered)?;
         }
         Ok(())
     }
@@ -321,7 +321,7 @@ impl Context<'_> {
         Ok(())
     }
 
-    fn apply<const BACK: bool>(&self, op: Operation) -> Result<()> {
+    fn apply<const BACK: bool>(&self, op: Operation, ordered: Option<&OrderedGradients>) -> Result<()> {
         let k = self.kernel;
         let (d, t, h) = (
             self.head_width as u32,
@@ -419,43 +419,38 @@ impl Context<'_> {
                 Operation::Rotate(y, x) => {
                     let size = (y.len / 2) as u32;
                     let launch = grid(size as usize);
-                    if BACK {
-                        k.rotate::<true>(
-                            launch,
-                            x.dx,
-                            y.x,
-                            y.dx,
-                            self.rotations,
-                            self.alpha.dx,
-                            d,
-                            t,
-                            h,
-                            size,
-                        )?;
-                    } else {
-                        k.rotate::<false>(
-                            launch,
-                            y.x,
-                            x.x,
-                            y.dx,
-                            self.rotations,
-                            self.alpha.dx,
-                            d,
-                            t,
-                            h,
-                            size,
-                        )?;
+                    match (BACK, ordered) {
+                        (false, _) => k.rotate::<false, false>(
+                            launch, y.x, x.x, y.dx, self.rotations, self.alpha.dx, d, t, h, size,
+                        )?,
+                        (true, None) => k.rotate::<true, false>(
+                            launch, x.dx, y.x, y.dx, self.rotations, self.alpha.dx, d, t, h, size,
+                        )?,
+                        (true, Some(sums)) => {
+                            k.rotate::<true, true>(
+                                launch, x.dx, y.x, y.dx, self.rotations, sums.terms.ptr(), d, t, h, size,
+                            )?;
+                            sums.accumulate(k, self.alpha.dx, size / d, d)?;
+                        }
                     }
                 }
                 Operation::Scores(y, x, s) => {
-                    let launch = Grid::new((y.len / (2 * t as usize)) as u32, 32);
+                    let rows = (y.len / (2 * t as usize)) as u32;
+                    let launch = Grid::new(rows, 32);
                     let gain = std::f32::consts::LN_2 / (d as f32).sqrt();
-                    if BACK {
-                        self.scores
-                            .weights::<true>(launch, y.x, s.x, x.x, y.dx, x.dx, s.dx, t, gain)?;
-                    } else {
-                        self.scores
-                            .weights::<false>(launch, y.x, s.x, x.x, y.dx, x.dx, s.dx, t, gain)?;
+                    match (BACK, ordered) {
+                        (false, _) => self.scores.weights::<false, false>(
+                            launch, y.x, s.x, x.x, y.dx, x.dx, s.dx, t, gain,
+                        )?,
+                        (true, None) => self.scores.weights::<true, false>(
+                            launch, y.x, s.x, x.x, y.dx, x.dx, s.dx, t, gain,
+                        )?,
+                        (true, Some(sums)) => {
+                            self.scores.weights::<true, true>(
+                                launch, y.x, s.x, x.x, y.dx, x.dx, sums.terms.ptr(), t, gain,
+                            )?;
+                            sums.accumulate(k, s.dx, rows, 2)?;
+                        }
                     }
                 }
             }

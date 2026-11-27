@@ -76,6 +76,7 @@ pub struct Job {
     batch: usize,
     every: usize,
     pub until: usize,
+    ordered_gradients: bool,
 }
 
 impl Job {
@@ -110,7 +111,13 @@ impl Job {
             batch,
             every,
             until,
+            ordered_gradients: false,
         })
+    }
+
+    pub fn with_ordered_gradients(mut self, ordered: bool) -> Self {
+        self.ordered_gradients = ordered;
+        self
     }
 
     fn verify(
@@ -170,6 +177,9 @@ impl Job {
             "suite_sha256":suite::suite_hash(),"kernite":KERNITE_VERSION,"repeat":1,"budget":self.until,
             "fixed_horizon":fixed,"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
             "batch":self.batch,"observe":self.every,"vocab":self.shape.vocab});
+        if self.ordered_gradients {
+            identity["gradient_reduction"] = "ordered-f32-v1".into();
+        }
         let geometric_after = match rule {
             Rule::AdamW(RatePlan::Geometric { budget }) => Some(budget),
             _ => None,
@@ -225,6 +235,9 @@ impl Job {
             }
             self.verify(dir, &record, &mut engine, "weights.f32", "replay.json")?;
             return Ok(record);
+        }
+        if self.ordered_gradients {
+            engine.order_shared_gradients()?;
         }
         let train = &self.task.splits["train"];
         let hidden = &self.task.splits[&self.task.selection];

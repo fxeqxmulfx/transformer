@@ -313,8 +313,8 @@ pub(super) mod device {
         put(table,k,c); add.u32(k,k,1); put(table,k,s); add.u32(k,k,1); put(table,k,a);
     }
 
-    #[instances(false,true)]
-    pub unsafe extern "ptx-kernel" fn rotate<const BACK: bool>(
+    #[instances((false,false),(true,false),(true,true))]
+    pub unsafe extern "ptx-kernel" fn rotate<const BACK: bool, const TERMS: bool>(
         y: *mut f32, x: *const f32, dy: *const f32, table: *const f32,
         dalpha: *mut f32, width: u32, length: u32, heads: u32, size: u32,
     ) {
@@ -337,12 +337,42 @@ pub(super) mod device {
             complex_load(u,v,x,i);
             mul.rn.f32(t,re,v); neg.f32(t,t); fma.rn.f32(t,im,u,t);
             mul.rn.f32(t,t,angle);
-            atomic_add(dalpha,col,t);
+            if TERMS { put(dalpha,i,t); } else { atomic_add(dalpha,col,t); }
         } else {
             complex_load(re,im,x,i);
             mul.rn.f32(u,im,sin); neg.f32(u,u); fma.rn.f32(u,re,cos,u);
             mul.rn.f32(v,im,cos); fma.rn.f32(v,re,sin,v);
             complex_put(y,i,u,v,past);
+        }
+    }
+
+    /// One warp sums a fixed, disjoint set of rows of one column.
+    /// ADD is used only on the final launch, with one warp per column.
+    #[instances(false,true)]
+    pub unsafe extern "ptx-kernel" fn sum_columns<const ADD: bool>(
+        dst: *mut f32, src: *const f32, rows: u32, width: u32,
+    ) {
+        let (col,part,parts,lane,row,stride,at): (u32,u32,u32,u32,u32,u32,u32);
+        mov.u32(col,ctaid.x); mov.u32(part,ctaid.y); mov.u32(parts,nctaid.y);
+        mov.u32(lane,tid.x);
+        mad.lo.u32(row,part,32,lane); mul.lo.u32(stride,parts,32);
+        let (sum,v): (f32,f32);
+        mov.f32(sum,0.0);
+        let done: pred;
+        label(next_row);
+        setp.ge.u32(done,row,rows);
+        if done { bra(reduced); }
+        mad.lo.u32(at,row,width,col);
+        load(v,src,at); add.rn.f32(sum,sum,v);
+        add.u32(row,row,stride); bra(next_row);
+        label(reduced);
+        reduce_sum(sum);
+        setp.eq.u32(done,lane,0);
+        if done {
+            if ADD { accumulate(dst,col,sum); } else {
+                mad.lo.u32(at,part,width,col);
+                put(dst,at,sum);
+            }
         }
     }
 
