@@ -19,6 +19,7 @@ type P = Ptr<f32>;
 pub struct Variant {
     routing: Routing,
     real_score_init: bool,
+    amsgradw: bool,
 }
 
 impl Variant {
@@ -28,9 +29,15 @@ impl Variant {
             Ok("1") => true,
             _ => return Err("ARGAND_SCORE_INIT takes 1+i or 1".into()),
         };
+        let amsgradw = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
+            Err(std::env::VarError::NotPresent) | Ok("adamw") => false,
+            Ok("amsgradw") => true,
+            _ => return Err("ARGAND_OPTIMIZER takes adamw or amsgradw".into()),
+        };
         Ok(Self {
             routing: Routing::EntryPhase,
             real_score_init,
+            amsgradw,
         })
     }
 
@@ -38,20 +45,22 @@ impl Variant {
         Ok(Self {
             routing: Routing::selected()?,
             real_score_init: false,
+            amsgradw: false,
         })
     }
 
     pub fn model(self) -> &'static str {
-        if self.real_score_init {
-            "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one"
-        } else {
-            self.routing.model()
+        match (self.real_score_init, self.amsgradw) {
+            (false, false) => self.routing.model(),
+            (true, false) => "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one",
+            (false, true) => "argand-entry-phase-mhc-tied-vocab-fp32-amsgradw",
+            (true, true) => "argand-entry-phase-mhc-tied-vocab-fp32-s-init-one-amsgradw",
         }
     }
 
     pub fn legacy_model(self) -> Option<&'static str> {
-        // Old entry-phase checkpoints started the score at 1+i.
-        (matches!(self.routing, Routing::EntryPhase) && !self.real_score_init)
+        // Old entry-phase checkpoints used AdamW and started the score at 1+i.
+        (matches!(self.routing, Routing::EntryPhase) && !self.real_score_init && !self.amsgradw)
             .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
     }
 
@@ -383,7 +392,8 @@ impl Engine {
 
     pub fn step(&mut self, rate: f32, completed: usize) -> Result<()> {
         self.backward()?;
-        self.parameters.update(&self.adam, rate, completed)
+        self.parameters
+            .update(&self.adam, &self.kernel, rate, completed)
     }
 
     pub fn state(&self) -> Result<Vec<f32>> {
@@ -521,6 +531,11 @@ pub fn check(variant: Variant) -> Result<()> {
         if !finite.is_finite() || (finite - analytic).abs() > 0.02 * (1.0 + finite.abs()) {
             return Err("complex decoder GPU backward disagrees with finite differences".into());
         }
+    }
+    if variant.amsgradw {
+        engine
+            .parameters
+            .check_amsgradw(&engine.adam, &engine.kernel)?;
     }
     println!(
         "{} vocabulary prediction, prefix causality and tied adjoints verified",

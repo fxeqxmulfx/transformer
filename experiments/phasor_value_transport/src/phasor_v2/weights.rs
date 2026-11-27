@@ -1,5 +1,6 @@
-//! Independent real coordinates and the existing clipped Kernite AdamW kernel.
+//! Independent real coordinates and clipped Kernite AdamW and AMSGradW.
 use super::complex_mhc::{AMPLITUDES, STREAMS};
+use super::kernels::device;
 use super::tape::{Context, Tape};
 use super::{F, Pair, Result, Variant, grid};
 use crate::{Config, optimizer_kernels, random::Random};
@@ -58,12 +59,17 @@ pub(super) struct Layer {
     pub routers: Option<[Projection; 2]>,
 }
 
+enum OptimizerBuffers {
+    AdamW(Buffer<u32>),
+    AmsGradW(F),
+}
+
 pub(super) struct Parameters {
     pub value: F,
     pub grad: F,
     first: F,
     second: F,
-    map: Buffer<u32>,
+    optimizer: OptimizerBuffers,
     parts: F,
     norm: F,
     embed_size: usize,
@@ -113,17 +119,22 @@ impl Parameters {
         // The legacy optimizer takes pairs. Pad one inert real coordinate if necessary.
         values.resize(values.len().next_multiple_of(2), 0.0);
         let count = values.len();
-        let owners: Vec<[u32; 5]> = (0..count as u32)
-            .step_by(2)
-            .map(|i| [i, i + 1, 0, 0, 1])
-            .collect();
         let zeros = vec![0.0; count];
+        let optimizer = if variant.amsgradw {
+            OptimizerBuffers::AmsGradW(cuda.upload(&zeros)?)
+        } else {
+            let owners: Vec<[u32; 5]> = (0..count as u32)
+                .step_by(2)
+                .map(|i| [i, i + 1, 0, 0, 1])
+                .collect();
+            OptimizerBuffers::AdamW(cuda.upload(owners.as_flattened())?)
+        };
         Ok(Self {
             value: cuda.upload(&values)?,
             grad: cuda.alloc(count)?,
             first: cuda.upload(&zeros)?,
             second: cuda.upload(&zeros)?,
-            map: cuda.upload(owners.as_flattened())?,
+            optimizer,
             parts: cuda.alloc(count.div_ceil(256))?,
             norm: cuda.alloc(1)?,
             embed_size,
@@ -136,20 +147,35 @@ impl Parameters {
         let mut values = self.value.read()?;
         values.extend(self.first.read()?);
         values.extend(self.second.read()?);
+        if let OptimizerBuffers::AmsGradW(maximum) = &self.optimizer {
+            values.extend(maximum.read()?);
+        }
         Ok(values)
     }
 
     pub fn restore_state(&mut self, state: &[f32]) -> Result<()> {
         let count = self.len();
-        if state.len() != 3 * count
+        let buffers = match &self.optimizer {
+            OptimizerBuffers::AdamW(_) => 3,
+            OptimizerBuffers::AmsGradW(_) => 4,
+        };
+        if state.len() != buffers * count
             || state.iter().any(|x| !x.is_finite())
             || state[2 * count..].iter().any(|&x| x < 0.0)
         {
-            return Err("invalid Phasor v2 optimizer state".into());
+            return Err("invalid decoder optimizer state".into());
+        }
+        let second = &state[2 * count..3 * count];
+        let maximum = &state[3 * count..];
+        if maximum.iter().zip(second).any(|(peak, value)| peak < value) {
+            return Err("AMSGradW maximum is below the second moment".into());
         }
         self.value.write(&state[..count])?;
         self.first.write(&state[count..2 * count])?;
-        self.second.write(&state[2 * count..])?;
+        self.second.write(second)?;
+        if let OptimizerBuffers::AmsGradW(buffer) = &mut self.optimizer {
+            buffer.write(maximum)?;
+        }
         Ok(())
     }
 
@@ -176,12 +202,16 @@ impl Parameters {
     pub fn update(
         &self,
         kernel: &optimizer_kernels::kernels::Kernels,
+        device: &device::Kernels,
         rate: f32,
         completed: usize,
     ) -> Result<()> {
         let grad = self.grad.ptr();
         let t = (completed + 1) as f64;
-        // SAFETY: each pair in the identity map owns two distinct coordinates.
+        let bc1 = (1.0 - 0.9_f64.powf(t)) as f32;
+        let bc2 = (1.0 - 0.95_f64.powf(t)).sqrt() as f32;
+        // SAFETY: AdamW's identity map owns two coordinates per thread.
+        // AMSGradW owns one coordinate per thread in all four buffers.
         unsafe {
             kernel.norm_partial(
                 Grid::new(self.parts.len() as u32, 32),
@@ -195,21 +225,77 @@ impl Parameters {
                 self.parts.ptr(),
                 self.parts.len() as u32,
             )?;
-            kernel.adam_coordinates(
-                grid(self.len() / 2),
-                self.value.ptr(),
-                self.first.ptr(),
-                self.second.ptr(),
-                grad,
-                self.map.ptr(),
-                self.norm.ptr(),
-                (self.len() / 2) as u32,
-                rate,
-                0.1,
-                (1.0 - 0.9_f64.powf(t)) as f32,
-                (1.0 - 0.95_f64.powf(t)).sqrt() as f32,
-            )?;
+            match &self.optimizer {
+                OptimizerBuffers::AdamW(map) => kernel.adam_coordinates(
+                    grid(self.len() / 2),
+                    self.value.ptr(),
+                    self.first.ptr(),
+                    self.second.ptr(),
+                    grad,
+                    map.ptr(),
+                    self.norm.ptr(),
+                    (self.len() / 2) as u32,
+                    rate,
+                    0.1,
+                    bc1,
+                    bc2,
+                )?,
+                OptimizerBuffers::AmsGradW(maximum) => device.amsgradw(
+                    grid(self.len()),
+                    self.value.ptr(),
+                    self.first.ptr(),
+                    self.second.ptr(),
+                    maximum.ptr(),
+                    grad,
+                    self.norm.ptr(),
+                    self.len() as u32,
+                    rate,
+                    0.1,
+                    bc1,
+                    bc2,
+                )?,
+            }
         }
+        Ok(())
+    }
+
+    pub fn check_amsgradw(
+        &mut self,
+        kernel: &optimizer_kernels::kernels::Kernels,
+        device: &device::Kernels,
+    ) -> Result<()> {
+        let count = self.len();
+        let mut grad = vec![0.0; count];
+        let mut value = f64::from(self.value.read()?[0]);
+        let (mut first, mut second, mut maximum) = (0.0_f64, 0.0_f64, 0.0_f64);
+        let rate = 0.01_f32;
+        let lr = f64::from(rate);
+        // The first gradient clips, the second lowers v, and the third raises its maximum.
+        for (completed, raw) in [2.0_f32, 0.1, -0.5].into_iter().enumerate() {
+            grad[0] = raw;
+            self.grad.write(&grad)?;
+            self.update(kernel, device, rate, completed)?;
+            let g = f64::from(raw / raw.abs().max(1.0));
+            first = 0.9 * first + 0.1 * g;
+            second = 0.95 * second + 0.05 * g * g;
+            maximum = maximum.max(second);
+            let step = (completed + 1) as i32;
+            let corrected_first = first / (1.0 - 0.9_f64.powi(step));
+            let corrected_maximum = maximum / (1.0 - 0.95_f64.powi(step));
+            let denominator = corrected_maximum.sqrt() + 1e-8;
+            value = (1.0 - lr * 0.1) * value - lr * corrected_first / denominator;
+            let state = self.state()?;
+            for (buffer, expected) in [value, first, second, maximum].into_iter().enumerate() {
+                let actual = f64::from(state[buffer * count]);
+                if !actual.is_finite() || (actual - expected).abs() > 2e-6 {
+                    return Err(format!(
+                        "AMSGradW step {step}, buffer {buffer}: expected {expected}, got {actual}"
+                    )
+                    .into());
+                }
+            }
+        }
+        println!("AMSGradW clipping, moments, maximum and parameter updates verified");
         Ok(())
     }
 }

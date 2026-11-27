@@ -1,4 +1,4 @@
-//! FP32 kernels for interleaved complex values. Gradients use real coordinates.
+//! FP32 kernels for the complex decoder and its independent real coordinates.
 #[kernite_macros::kernels]
 pub(super) mod device {
     fn index(i: u32) {
@@ -344,6 +344,61 @@ pub(super) mod device {
             mul.rn.f32(v,im,cos); fma.rn.f32(v,re,sin,v);
             complex_put(y,i,u,v,past);
         }
+    }
+
+    /// AMSGrad uses the maximum of raw second moments. Keep the pinned AdamW
+    /// bias corrections and decoupled decay.
+    pub unsafe extern "ptx-kernel" fn amsgradw(
+        p: *mut f32,
+        m: *mut f32,
+        v: *mut f32,
+        v_max: *mut f32,
+        g: *const f32,
+        norm: *const f32,
+        count: u32,
+        lr: f32,
+        decay: f32,
+        bc1: f32,
+        bc2: f32,
+    ) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past {
+            ret();
+        }
+        let (value, first, second, maximum, gradient, scale, t, denominator): (
+            f32, f32, f32, f32, f32, f32, f32, f32,
+        );
+        ld.global.f32(scale, [norm]);
+        max.f32(scale, scale, 1.0);
+        load(gradient, g, i);
+        div.rn.f32(gradient, gradient, scale);
+        load(value, p, i);
+        load(first, m, i);
+        load(second, v, i);
+        load(maximum, v_max, i);
+        sub.rn.f32(t, gradient, first);
+        fma.rn.f32(first, 0.1, t, first);
+        mul.rn.f32(t, gradient, gradient);
+        mul.rn.f32(second, second, 0.95);
+        fma.rn.f32(second, 0.05, t, second);
+        max.f32(maximum, maximum, second);
+        sqrt.rn.f32(denominator, maximum);
+        div.rn.f32(denominator, denominator, bc2);
+        add.rn.f32(denominator, denominator, 1e-8);
+        div.rn.f32(t, lr, bc1);
+        mul.rn.f32(t, t, first);
+        div.rn.f32(t, t, denominator);
+        mul.rn.f32(denominator, lr, decay);
+        sub.rn.f32(denominator, 1.0, denominator);
+        mul.rn.f32(value, value, denominator);
+        sub.rn.f32(value, value, t);
+        put(p, i, value);
+        put(m, i, first);
+        put(v, i, second);
+        put(v_max, i, maximum);
     }
 
     #[instances(false,true)]

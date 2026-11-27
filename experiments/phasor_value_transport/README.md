@@ -333,6 +333,26 @@ All 75 terminal state digests matched the saved records. Independent
 reloads reproduced the held-out scores and losses of the 32 passing
 checkpoints.
 
+##### Argand with AMSGradW
+
+`ARGAND_OPTIMIZER=amsgradw` tracks the running maximum of each coordinate's
+second moment before bias correction, following AMSGrad in Reddi et al.,
+Algorithm 2. The parameter update uses that maximum in the denominator
+and applies decoupled weight decay. Both optimizers use the case's WSD
+schedule, `beta1=0.9`, `beta2=0.95`, `epsilon=1e-8`, weight decay `0.1`,
+bias correction and gradient norm clipping at `1`. The AMSGradW
+checkpoint includes the extra moment buffer and its own model identifier.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one-amsgradw
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_OPTIMIZER
+```
+
 ### Argand with an input-position readout
 
 The single-stream Argand proposal scores the embeddings of the current
