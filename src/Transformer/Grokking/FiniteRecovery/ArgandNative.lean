@@ -55,7 +55,7 @@ private theorem norm_argandRMS_bound {c : ℕ} {ε : ℝ} (hε : 0 < ε) (x : CS
   apply (div_le_iff₀ hD).2
   exact mul_le_mul_of_nonneg_left (le_add_of_nonneg_right hε.le) (Real.sqrt_nonneg _)
 
-private theorem abs_logits_le (model : Model A H d layers) (heps : 0 < model.eps)
+theorem Model.abs_logits_le (model : Model A H d layers) (heps : 0 < model.eps)
     (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
     |model.logits repeats word i a| ≤ ‖model.embedding a‖ * Real.sqrt (H * d : ℕ) / 2 := by
   have hs : ‖model.hidden repeats word i‖ ≤ Real.sqrt (H * d : ℕ) :=
@@ -77,7 +77,7 @@ theorem Model.lossGe_of_embeddingBound [Fintype A] [Nontrivial A] (model : Model
   let z := model.logits repeats word i
   let p := fun t => Real.exp (z t)
   have hz (b : A) : |z b| ≤ B * W / 2 :=
-    (abs_logits_le model heps repeats word i b).trans
+    (model.abs_logits_le heps repeats word i b).trans
       (div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_right (hB b) (Real.sqrt_nonneg _)) (by norm_num))
   obtain ⟨b, hb⟩ := exists_ne a
   have hgap : z a + -B * W ≤ z b := by

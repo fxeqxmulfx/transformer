@@ -65,7 +65,7 @@ theorem card_mixedInputs (n : ℕ) : (mixedInputs n).card = 2 ^ (n + 3) - 2 := b
 def markedWord (n : ℕ) (b : Bool) : Word Bool (n + 3) :=
   fun j => if j = 1 then !b else b
 
-private theorem marked_first (n : ℕ) (b : Bool) : markedWord n b 0 = b := by
+theorem marked_first (n : ℕ) (b : Bool) : markedWord n b 0 = b := by
   simp [markedWord]
 
 private theorem marked_last (n : ℕ) (b : Bool) : markedWord n b (Fin.last (n + 2)) = b := by
@@ -92,6 +92,18 @@ noncomputable def mixedPositionBatch (n : ℕ) (mode : Option Bool) : List (Labe
     [⟨n + 2, markedWord n false, 0, mode.getD false⟩,
      ⟨n + 2, markedWord n true, 0, mode.getD true⟩]
 
+theorem mixedPositionBatch_nativeMargins (n layers repeats : ℕ) (mode : Option Bool) :
+    NativeBinaryMargins 1 1 layers repeats (mixedPositionBatch n mode) := by
+  let batch := mixedPositionBatch n mode
+  have hlabels (p : LabeledPosition Bool) (hp : p ∈ batch) :
+      p.2.2.2 = mode.getD (p.2.1 p.2.2.1) := by
+    rcases List.mem_append.mp hp with hp | hp
+    · obtain ⟨w, _, rfl⟩ := List.mem_map.mp hp
+      rfl
+    · simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
+      rcases hp with rfl | rfl <;> simp [marked_first]
+  exact nativeBinaryMargins_of_token_labels layers repeats batch mode hlabels
+
 /-- The ordinary last-position logits recover all words of length n+3,
 including both entirely unseen input words, on a positive-measure set of
 native draws. The two repeated labels supervise position zero on the
@@ -108,13 +120,6 @@ theorem mixedWords_momentum_recovers {layers : ℕ}
               (fun _ => η) draw t).weights) atTop (𝓝 star) ∧
             (Model.fromWeights star).realizes repeats (lastTokenTask (T := n + 2) mode) := by
   let batch := mixedPositionBatch n mode
-  have hlabels (p : LabeledPosition Bool) (hp : p ∈ batch) :
-      p.2.2.2 = mode.getD (p.2.1 p.2.2.1) := by
-    rcases List.mem_append.mp hp with hp | hp
-    · obtain ⟨w, _, rfl⟩ := List.mem_map.mp hp
-      rfl
-    · simp only [List.mem_cons, List.not_mem_nil, or_false] at hp
-      rcases hp with rfl | rfl <;> simp [marked_first]
   have hcover (word : Word Bool (n + 3)) :
       ∃ p ∈ batch, p.2.2.2 = lastTokenTask mode word ∧ ∀ (w : Weights Bool 1 1 layers) a,
         (Model.fromWeights w).logits repeats word (Fin.last (n + 2)) a =
@@ -139,7 +144,7 @@ theorem mixedWords_momentum_recovers {layers : ℕ}
         ((Model.fromWeights w).logits_first_eq_of_token_eq repeats
           (u := fun _ => b) (v := markedWord n b) (marked_first n b).symm a)
   obtain ⟨lam₀, hlam₀, hfit⟩ := binaryBatch_momentum_posMeasure mu repeats batch
-    (nativeBinaryMargins_of_token_labels layers repeats batch mode hlabels)
+    (mixedPositionBatch_nativeMargins n layers repeats mode)
     (Fin.last (n + 2)) (lastTokenTask mode) hcover
   refine ⟨lam₀, hlam₀, fun lam hlam hle => ?_⟩
   obtain ⟨U, hU, hp, η₀, hη₀, hr⟩ := hfit lam hlam hle

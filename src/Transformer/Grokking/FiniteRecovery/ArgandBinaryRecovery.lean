@@ -133,6 +133,32 @@ private theorem exists_draw_small_binary_loss (repeats : ℕ) (batch : List (Lab
     exact hsite q hq)
   simpa [losses, nsmul_eq_mul, mul_comm δ] using hs
 
+/-- Arbitrarily large native margins on the observed sites give a
+positive-measure set of runs with arbitrarily small limiting batch loss
+when the positive coupled decay is chosen sufficiently small. -/
+theorem binaryBatch_momentum_lowLoss
+    (mu : Measure (ComplexParameter Bool H d layers → ℂ)) [mu.IsOpenPosMeasure]
+    (repeats : ℕ) (batch : List (LabeledPosition Bool)) (hfit : NativeBinaryMargins H d layers repeats batch)
+    {δ : ℝ} (hδ : 0 < δ) :
+    ∃ lam₀ > 0, ∀ lam, 0 < lam → lam ≤ lam₀ →
+      ∃ U : Set (ComplexParameter Bool H d layers → ℂ), IsOpen U ∧ 0 < mu U ∧
+        ∃ η₀ > 0, ∀ η, 0 < η → η ≤ η₀ → ∀ draw ∈ U,
+          ∃ star : Weights Bool H d layers,
+            Tendsto (fun t => (fullGradientMomentumRun true repeats batch lam (fun _ => η) draw t).weights)
+              atTop (𝓝 star) ∧ batchLoss repeats batch star ≤ δ := by
+  obtain ⟨draw, hce⟩ := exists_draw_small_binary_loss repeats batch hfit (half_pos hδ)
+  let x : WeightSpace Bool H d layers := WithLp.toLp 2 (sgdInitialWeights true draw)
+  refine ⟨(δ / 2) / (‖x‖ ^ 2 + 1), div_pos (half_pos hδ) (by positivity), fun lam hlam hlam₀ => ?_⟩
+  have hreg := (le_div_iff₀ (by positivity : 0 < ‖x‖ ^ 2 + 1)).mp hlam₀
+  have hx : fullGradientObjective repeats batch lam x < δ := by
+    change batchLoss repeats batch (sgdInitialWeights true draw) + (lam / 2) * ‖x‖ ^ 2 < _
+    nlinarith only [hce, hreg, hlam, hδ]
+  obtain ⟨U, hU, _, hpos, η₀, hη₀, hr⟩ := fullGradientMomentumRun_posMeasure_of_sublevel
+    mu true repeats batch hlam (fun _ => 0) 0 δ draw hx (fun w => batchLoss repeats batch w ≤ δ)
+    (fun w hw => (le_add_of_nonneg_right (by positivity : 0 ≤ (lam / 2) * ‖w‖ ^ 2)).trans hw)
+  exact ⟨U, hU, hpos, η₀, hη₀, fun η hη hle draw hd => by
+    simpa only [Nat.not_lt_zero, ite_false] using hr η hη hle draw hd⟩
+
 /-- This guarantee uses only observed positions. A prediction on a
 hidden word can be transferred from an observed site when the model
 has identical logits there for every weight vector. -/
@@ -160,25 +186,15 @@ theorem binaryBatch_momentum_posMeasure
   have htotal : n * (2 * δ) < Real.log 2 := by
     have he := (div_mul_cancel₀ (Real.log 2) hden.ne' : δ * (4 * (n + 1)) = Real.log 2)
     nlinarith only [he, hδ, mul_nonneg hn hδ.le]
-  obtain ⟨draw, hce⟩ := exists_draw_small_binary_loss repeats batch hfit hδ
-  let x : WeightSpace Bool H d layers := WithLp.toLp 2 (sgdInitialWeights true draw)
-  refine ⟨δ / (‖x‖ ^ 2 + 1), div_pos hδ (by positivity), fun lam hlam hlam₀ => ?_⟩
-  have hreg := (le_div_iff₀ (by positivity : 0 < ‖x‖ ^ 2 + 1)).mp hlam₀
-  have hx : fullGradientObjective repeats batch lam x < 2 * δ := by
-    change batchLoss repeats batch (sgdInitialWeights true draw) + (lam / 2) * ‖x‖ ^ 2 < _
-    nlinarith only [hce, hreg, hlam, hδ]
-  obtain ⟨U, hU, _, hpos, η₀, hη₀, hfit⟩ := fullGradientMomentumRun_posMeasure_of_sublevel
-    mu true repeats batch hlam (fun _ => 0) 0 (2 * δ) draw hx
-    (fun w => ∀ word, (Model.fromWeights w).logits repeats word i (!(target word)) <
-       (Model.fromWeights w).logits repeats word i (target word)) (by
-      intro w hw word
-      have hb : batchLoss repeats batch (WithLp.ofLp w) ≤ fullGradientObjective repeats batch lam w :=
-        le_add_of_nonneg_right (by positivity : 0 ≤ (lam / 2) * ‖w‖ ^ 2)
-      obtain ⟨p, hp, hlabel, heq⟩ := hcover word
-      have h := strict_binary_site_of_totalLoss repeats batch (WithLp.ofLp w)
-        ((mul_le_mul_of_nonneg_left (hb.trans hw) hn).trans_lt htotal) hp
-      simpa only [heq _ _, ← hlabel] using h)
-  exact ⟨U, hU, hpos, η₀, hη₀, fun η hη hle draw hdraw => by
-    simpa only [Nat.not_lt_zero, ite_false] using hfit η hη hle draw hdraw⟩
+  obtain ⟨lam₀, hlam₀, hr⟩ := binaryBatch_momentum_lowLoss mu repeats batch hfit (show 0 < 2 * δ by positivity)
+  refine ⟨lam₀, hlam₀, fun lam hlam hle => ?_⟩
+  obtain ⟨U, hU, hp, η₀, hη₀, ht⟩ := hr lam hlam hle
+  refine ⟨U, hU, hp, η₀, hη₀, fun η hη hηle draw hd => ?_⟩
+  obtain ⟨w, hw, hb⟩ := ht η hη hηle draw hd
+  refine ⟨w, hw, fun word => ?_⟩
+  obtain ⟨p, hp, hlabel, heq⟩ := hcover word
+  have h := strict_binary_site_of_totalLoss repeats batch w
+    ((mul_le_mul_of_nonneg_left hb hn).trans_lt htotal) hp
+  simpa only [heq _ _, ← hlabel] using h
 
 end Transformer.Grokking.FiniteRecovery.Argand

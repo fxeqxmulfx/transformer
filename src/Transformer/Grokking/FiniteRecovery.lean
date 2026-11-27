@@ -21,6 +21,8 @@ public import Transformer.Grokking.FiniteRecovery.ArgandDecayObstruction
 public import Transformer.Grokking.FiniteRecovery.ArgandObservationProbability
 public import Transformer.Grokking.FiniteRecovery.ArgandGaussianRecovery
 public import Transformer.Grokking.FiniteRecovery.ArgandFlatLimit
+public import Transformer.Grokking.FiniteRecovery.ArgandParityFeatures
+public import Transformer.Grokking.FiniteRecovery.ArgandLearnedNorm
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
@@ -44,4 +46,8 @@ draws, small positive coupled decay gives strict limit predictions on
 two entirely omitted binary words for the copy and constant tasks.
 Large decay can send the full weights to zero with probability arbitrarily
 close to one. Observation counts bound the worst-case success probability
-for the unknown bilinear coupling at any model width. -/
+for the unknown bilinear coupling at any model width. Prefix energy
+bounds the nuclear norm of the trained centered phase table. For binary
+modular sums the signed readout gaps, or the normalized hidden states,
+give a bound at the rank-one target scale. For the binary copy and
+constant examples the observed loss controls nuclear distance directly. -/
