@@ -28,6 +28,7 @@ public import Transformer.Grokking.FiniteRecovery.TransversalExamples
 public import Transformer.Grokking.FiniteRecovery.ArgandModularSum
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGESchedule
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
+public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
@@ -63,4 +64,8 @@ of observations for unique completion. The factor continuation eventually
 decodes every word of every member. A full Argand search pairs native
 momentum proposals with rational displacements and selects feasible weights
 by the nuclear norm of their decoded phase tables. For a representable
-class it stabilizes from each native draw at a positive logit margin. -/
+class it stabilizes from each native draw at a positive logit margin.
+An observation fiber of size m has optimal worst-case hidden success 1/m.
+For an identifiable class, PAGE with coupled decay about an observation-only
+strict reference generalizes above any prescribed confidence below one from
+native draws, for every representable member and every sampling path. -/

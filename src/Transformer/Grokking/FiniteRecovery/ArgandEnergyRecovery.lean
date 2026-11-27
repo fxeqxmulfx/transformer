@@ -30,6 +30,29 @@ theorem continuous_sgdInitialWeights (realScoreInit : Bool) :
 
 variable [Fintype A]
 
+/-- For any law on the native draws, one deterministic bound on the norm
+of the initialized weights holds on a measurable event of mass above q. -/
+theorem exists_initial_norm_bound (mu : Measure (ComplexParameter A H d layers → ℂ))
+    [IsProbabilityMeasure mu] (realScoreInit : Bool) {q : ENNReal} (hq : q < 1) :
+    ∃ n : ℕ, ∃ U : Set (ComplexParameter A H d layers → ℂ), MeasurableSet U ∧ q < mu U ∧
+      ∀ draw ∈ U, ‖(WithLp.toLp 2 (sgdInitialWeights realScoreInit draw) : WeightSpace A H d layers)‖ ≤ n := by
+  let coords := PiLp.continuousLinearEquiv 2 ℝ (fun _ : Parameter A H d layers => ℝ)
+  let radius (draw : ComplexParameter A H d layers → ℂ) := ‖coords.symm (sgdInitialWeights realScoreInit draw)‖
+  let S (n : ℕ) := {draw | radius draw ≤ n}
+  have hmono : Monotone S := by
+    intro i j hij draw hd
+    exact le_trans (show radius draw ≤ (i : ℝ) from hd) (Nat.cast_le.mpr hij)
+  have hall : ⋃ n, S n = univ := by
+    apply eq_univ_of_forall
+    intro draw
+    obtain ⟨n, hn⟩ := exists_nat_ge (radius draw)
+    exact mem_iUnion.mpr ⟨n, hn⟩
+  have ht := tendsto_measure_iUnion_atTop (μ := mu) hmono
+  rw [hall, measure_univ] at ht
+  obtain ⟨n, hn⟩ := ((tendsto_order.mp ht).1 q hq).exists
+  have hc : Continuous radius := (coords.symm.continuous.comp (continuous_sgdInitialWeights realScoreInit)).norm
+  exact ⟨n,S n,(isClosed_le hc continuous_const).measurableSet,hn,fun _ h => h⟩
+
 /-- Each finite full-gradient update is continuous in the tensor draws. -/
 theorem continuous_prefix_weights_velocity (realScoreInit : Bool) (repeats : ℕ)
     (batch : List (LabeledPosition A)) (lam : ℝ) (rate : ℕ → ℝ) (n : ℕ) :

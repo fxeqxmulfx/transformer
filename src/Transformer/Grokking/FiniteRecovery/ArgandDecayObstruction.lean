@@ -88,23 +88,12 @@ theorem prob_zero_limit_of_large_decay (mu : Measure (ComplexParameter A H d lay
       ∃ lam₀ > 0, ∀ lam, lam₀ ≤ lam → ∃ η₀ > 0, ∀ η, 0 < η → η ≤ η₀ → ∀ draw ∈ S,
         Tendsto (fun t => (fullGradientMomentumRun realScoreInit repeats batch lam
           (fun _ => η) draw t).weights) atTop (𝓝 0) := by
-  let coords := PiLp.continuousLinearEquiv 2 ℝ (fun _ : Parameter A H d layers => ℝ)
-  let radius (draw : ComplexParameter A H d layers → ℂ) := ‖coords.symm (sgdInitialWeights realScoreInit draw)‖
-  let S (n : ℕ) := {draw | radius draw ≤ n}
-  have hmono : Monotone S := by
-    intro i j hij draw hd
-    exact le_trans (show radius draw ≤ (i : ℝ) from hd) (Nat.cast_le.mpr hij)
-  have hall : ⋃ n, S n = univ := by
-    apply eq_univ_of_forall
-    intro draw
-    obtain ⟨n, hn⟩ := exists_nat_ge (radius draw)
-    exact mem_iUnion.mpr ⟨n, hn⟩
-  have ht := tendsto_measure_iUnion_atTop (μ := mu) hmono
-  rw [hall, measure_univ] at ht
-  obtain ⟨n, hn⟩ := ((tendsto_order.mp ht).1 q hq).exists
-  have hc : Continuous radius := (coords.symm.continuous.comp (continuous_sgdInitialWeights realScoreInit)).norm
-  exact ⟨S n, (isClosed_le hc continuous_const).measurableSet, hn,
-    zero_limit_of_large_decay realScoreInit repeats batch (R := (n : ℝ)) (Nat.cast_nonneg _)⟩
+  obtain ⟨n,S,hS,hp,hbound⟩ := exists_initial_norm_bound mu realScoreInit hq
+  obtain ⟨l,hl,h⟩ := zero_limit_of_large_decay (H := H) (d := d) (layers := layers)
+    realScoreInit repeats batch (R := (n : ℝ)) (Nat.cast_nonneg _)
+  refine ⟨S,hS,hp,l,hl,fun lam hlam => ?_⟩
+  obtain ⟨a,ha,hrun⟩ := h lam hlam
+  exact ⟨a,ha,fun η hη hb draw hd => hrun η hη hb draw (hbound draw hd)⟩
 
 example (mu : Measure (ComplexParameter (ZMod 2) 4 16 1 → ℂ)) [IsProbabilityMeasure mu] :=
   let e := wordEnumeration 2 4
