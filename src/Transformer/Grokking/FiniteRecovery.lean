@@ -25,6 +25,7 @@ public import Transformer.Grokking.FiniteRecovery.ArgandParityFeatures
 public import Transformer.Grokking.FiniteRecovery.ArgandLearnedNorm
 public import Transformer.Grokking.FiniteRecovery.TransversalTraining
 public import Transformer.Grokking.FiniteRecovery.TransversalExamples
+public import Transformer.Grokking.FiniteRecovery.ArgandModularSum
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
