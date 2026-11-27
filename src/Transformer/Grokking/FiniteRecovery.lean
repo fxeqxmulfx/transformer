@@ -31,6 +31,7 @@ public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
 public import Transformer.Grokking.FiniteRecovery.CheckpointFactors
 public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
+public import Transformer.Grokking.FiniteRecovery.DivisionNative
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -81,5 +82,8 @@ positive Gaussian basin at the same rate. For a natively representable
 finite class, a sufficiently small total rate suffices uniformly over
 all minibatch streams. Independent certified proposals achieve every
 confidence below one. The division mask includes the constant numerator
-row and all 239 competing readout tokens. Its finite-seed success law
-counts only strictly correct endpoints at the declared WSD horizon. -/
+row and all 239 competing readout tokens. An explicit native draw at
+width 64, FFN width 256, depth six and one pass represents all 9,312
+quotients strictly. This gives a positive Gaussian basin for sufficiently
+small total rate. The finite-seed success law for the experimental WSD
+counts only strictly correct endpoints at the declared horizon. -/
