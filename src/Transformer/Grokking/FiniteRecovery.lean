@@ -29,7 +29,8 @@ public import Transformer.Grokking.FiniteRecovery.ArgandModularSum
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGESchedule
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
 public import Transformer.Grokking.FiniteRecovery.CheckpointFactors
-public import Transformer.Grokking.FiniteRecovery.AdamWFloor
+public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
+public import Transformer.Grokking.FiniteRecovery.DivisionMask
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -74,4 +75,11 @@ native draws, for every representable member and every sampling path.
 Ordinary AdamW with decoupled decay has a dimension-independent bound on
 each update. A positive summable continuation of the WSD prefix converges
 in every weight for any minibatch stream. A sufficiently small continuation
-preserves the strict decoded function of an identified checkpoint. -/
+preserves the strict decoded function of an identified checkpoint.
+For fixed-horizon AdamW, one strict trained real trajectory gives a
+positive Gaussian basin at the same rate. For a natively representable
+finite class, a sufficiently small total rate suffices uniformly over
+all minibatch streams. Independent certified proposals achieve every
+confidence below one. The division mask includes the constant numerator
+row and all 239 competing readout tokens. Its finite-seed success law
+counts only strictly correct endpoints at the declared WSD horizon. -/

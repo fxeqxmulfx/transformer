@@ -2,7 +2,7 @@ module
 
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGEGaussian
 public import Transformer.Grokking.FiniteRecovery.StaircaseDecoder
-public import Mathlib.Probability.ProductMeasure
+public import Transformer.Grokking.FiniteRecovery.VerifiedRestarts
 
 /-! Certifying a finite PAGE checkpoint on the binary modular-sum staircase.
 Independent native starts give a geometric failure bound and an almost surely
@@ -14,27 +14,6 @@ namespace Transformer.Grokking.FiniteRecovery.Argand
 
 open MeasureTheory Set Filter Finset
 open scoped ENNReal NNReal Topology
-
-private theorem iid_miss {D : Type*} [MeasurableSpace D] (μ : Measure D) [IsProbabilityMeasure μ]
-    {U : Set D} (hu : MeasurableSet U) (J m : ℕ) :
-    Measure.infinitePi (fun _ : ℕ => μ)
-      {z | ∀ i ∈ Finset.Ico J (J+m), z i ∉ U} = (1-μ U)^m := by
-  change Measure.infinitePi _ (Set.pi (Finset.Ico J (J+m) : Set ℕ) (fun _ => Uᶜ)) = _
-  rw [Measure.infinitePi_pi _ (fun _ _ => hu.compl)]
-  simp [prob_compl_eq_one_sub hu]
-
-private theorem iid_eventually_hits {D : Type*} [MeasurableSpace D] (μ : Measure D)
-    [IsProbabilityMeasure μ] {U : Set D} (hu : MeasurableSet U) (hp : 0 < μ U) (J : ℕ) :
-    ∀ᵐ z ∂Measure.infinitePi (fun _ : ℕ => μ), ∃ j ≥ J, z j ∈ U := by
-  rw [ae_iff]
-  apply le_antisymm _ bot_le
-  have hlt : 1-μ U < 1 := ENNReal.sub_lt_self ENNReal.one_ne_top one_ne_zero hp.ne'
-  apply le_of_tendsto_of_tendsto' tendsto_const_nhds (ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one hlt)
-  intro m
-  rw [← iid_miss μ hu J m]
-  apply measure_mono
-  intro z hz i hi hiU
-  exact hz ⟨i,(Finset.mem_Ico.mp hi).1,hiU⟩
 
 variable {k s : ℕ}
 
@@ -93,11 +72,11 @@ theorem modularSum_page_restarts (e : Fin (s+1) ≃ Word (ZMod 2) (k+1)) (hk : (
     simpa only [add_zero] using hw
   refine ⟨J,μ U,hp,prob_le_one,?_,?_⟩
   · intro m paths
-    rw [← iid_miss μ hU.measurableSet J m]
+    rw [← iid_miss_window μ hU.measurableSet J m]
     apply measure_mono
     intro z hz i hi hiU
     exact hz i hi (hit i (Finset.mem_Ico.mp hi).1 (z i) hiU (paths i))
-  · filter_upwards [iid_eventually_hits μ hU.measurableSet hp J] with z hz
+  · filter_upwards [iid_hits_after μ hU.measurableSet hp J] with z hz
     intro paths
     obtain ⟨j,hj,hz⟩ := hz
     have existsOk : ∃ i, ok (trial i (z i) (paths i)) := ⟨j,hit j hj _ hz _⟩
