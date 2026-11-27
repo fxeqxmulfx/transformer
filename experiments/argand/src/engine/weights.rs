@@ -171,19 +171,18 @@ impl Parameters {
         Ok(())
     }
 
-    /// `v ← 0.9 v + g / max(‖g‖, 1)`, then `x ← x − rate · v`.
-    pub fn update(
+    pub(super) fn reduce_norm(
         &self,
         kernel: &optimizer_kernels::kernels::Kernels,
-        device: &device::Kernels,
-        rate: f32,
-    ) -> Result<()> {
-        // SAFETY: each launch owns one coordinate per thread in each buffer.
+        values: &F,
+    ) -> Result<&F> {
+        assert_eq!(values.len(), self.len());
+        // SAFETY: each warp reduces one block of 256 coordinates.
         unsafe {
             kernel.norm_partial(
                 Grid::new(self.parts.len() as u32, 32),
                 self.parts.ptr(),
-                self.grad.ptr(),
+                values.ptr(),
                 self.len() as u32,
             )?;
             kernel.norm_finish(
@@ -192,6 +191,20 @@ impl Parameters {
                 self.parts.ptr(),
                 self.parts.len() as u32,
             )?;
+        }
+        Ok(&self.norm)
+    }
+
+    /// `v ← 0.9 v + g / max(‖g‖, 1)`, then `x ← x − rate · v`.
+    pub fn update(
+        &self,
+        kernel: &optimizer_kernels::kernels::Kernels,
+        device: &device::Kernels,
+        rate: f32,
+    ) -> Result<()> {
+        self.reduce_norm(kernel, &self.grad)?;
+        // SAFETY: each thread owns one coordinate in equal-sized buffers.
+        unsafe {
             device.sgd_momentum(
                 grid(self.len()),
                 self.value.ptr(),

@@ -346,6 +346,31 @@ pub(super) mod device {
         }
     }
 
+    /// Out-of-place trial weights for a PAGE line search.
+    pub unsafe extern "ptx-kernel" fn page_trial(
+        out: *mut f32, start: *const f32, estimate: *const f32, count: u32, rate: f32,
+    ) {
+        let i: u32; index(i);
+        let past: pred; setp.ge.u32(past,i,count);
+        if past { ret(); }
+        let (w,g): (f32,f32);
+        load(w,start,i); load(g,estimate,i);
+        neg.f32(g,g); fma.rn.f32(w,rate,g,w);
+        put(out,i,w);
+    }
+
+    /// Both gradients are of the same component, at consecutive accepted weights.
+    pub unsafe extern "ptx-kernel" fn page_correct(
+        estimate: *mut f32, after: *const f32, before: *const f32, count: u32,
+    ) {
+        let i: u32; index(i);
+        let past: pred; setp.ge.u32(past,i,count);
+        if past { ret(); }
+        let (g,a,b): (f32,f32,f32);
+        load(g,estimate,i); load(a,after,i); load(b,before,i);
+        sub.rn.f32(a,a,b); add.rn.f32(g,g,a); put(estimate,i,g);
+    }
+
     /// SGD with Polyak momentum on the globally clipped gradient.
     pub unsafe extern "ptx-kernel" fn sgd_momentum(
         p: *mut f32,

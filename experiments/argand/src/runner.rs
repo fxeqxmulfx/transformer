@@ -13,15 +13,75 @@ use std::{
     path::{Path, PathBuf},
 };
 
-const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR";
+const USAGE: &str = "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP";
+
+fn training_rule(op: &str) -> crate::page_runs::Rule {
+    if op.starts_with("adamw-") {
+        crate::page_runs::Rule::AdamW {
+            geometric_after: None,
+        }
+    } else {
+        crate::page_runs::Rule::Page(correction(op))
+    }
+}
 
 pub fn command(args: &[String]) -> Result<()> {
     let Some((op, args)) = args.split_first() else {
         return Err(USAGE.into());
     };
     match (op.as_str(), args) {
+        ("adamw-tail-run", [name, seed, out, budget, cap]) => {
+            let seed: u32 = seed.parse()?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?;
+            let rule = crate::page_runs::Rule::AdamW {
+                geometric_after: Some(budget.parse()?),
+            };
+            let dir = Path::new(out).join(name).join(format!("seed{seed}"));
+            println!("{}", job.run(&dir, seed, 0, rule, true)?);
+            Ok(())
+        }
         ("check", []) => engine::check(),
         ("peak", []) => bench::peak(),
+        ("sum8-spectrum", [out]) => crate::sum8_spectrum::run(Path::new(out)),
+        ("page-and-audit", [cell]) => {
+            println!("{}", crate::and_audit::run(Path::new(cell))?);
+            Ok(())
+        }
+        ("adamw-run" | "page-run" | "page-run-sqrt" | "page-run-retry", [name, seed, out, cap]) => {
+            let seed: u32 = seed.parse()?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?;
+            let dir = Path::new(out).join(name).join(format!("seed{seed}"));
+            let record = job.run(
+                &dir,
+                seed,
+                seed.wrapping_add(30000),
+                training_rule(op),
+                name == crate::division::NAME,
+            )?;
+            println!("{record}");
+            Ok(())
+        }
+        (
+            "adamw-confirm" | "adamw-confirm-plan" | "page-confirm" | "page-confirm-plan"
+            | "page-confirm-sqrt" | "page-confirm-retry",
+            [name, out, cap],
+        ) => crate::page_confirmation::run(
+            name,
+            Path::new(out),
+            cap.parse()?,
+            training_rule(op),
+            op.ends_with("-plan"),
+        ),
+        (
+            "sum8-page" | "sum8-replay" | "sum8-page-sqrt" | "sum8-replay-sqrt" | "sum8-page-retry"
+            | "sum8-replay-retry",
+            [out, steps @ ..],
+        ) if steps.len() <= 1 => crate::sum8::run(
+            Path::new(out),
+            steps.first().map(|s| s.parse()).transpose()?,
+            op.contains("replay"),
+            correction(op),
+        ),
         ("bench", [name, updates]) => bench::bench(name, updates.parse()?),
         ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
             name,
@@ -34,6 +94,14 @@ pub fn command(args: &[String]) -> Result<()> {
             replay(name, seed.parse()?, repeat.parse()?, Path::new(out))
         }
         _ => Err(USAGE.into()),
+    }
+}
+
+fn correction(op: &str) -> engine::page::PageRule {
+    match op.rsplit('-').next() {
+        Some("sqrt") => engine::page::PageRule::SquareRoot,
+        Some("retry") => engine::page::PageRule::Retry,
+        _ => engine::page::PageRule::Single,
     }
 }
 
@@ -105,14 +173,7 @@ impl Cell {
         if record["identity"] != self.identity() || step > self.schedule.budget {
             return Err("checkpoint belongs to another decoder or suite cell".into());
         }
-        let bytes = fs::read(self.state_file(step))?;
-        if record["state_sha256"] != hash(&bytes) || !bytes.len().is_multiple_of(4) {
-            return Err("invalid decoder checkpoint digest".into());
-        }
-        let state = bytes
-            .chunks_exact(4)
-            .map(|w| f32::from_le_bytes(w.try_into().unwrap()))
-            .collect();
+        let state = suite::read_floats(&self.state_file(step), &record["state_sha256"])?;
         Ok(Some((record, state)))
     }
 

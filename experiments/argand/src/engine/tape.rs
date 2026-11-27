@@ -237,11 +237,11 @@ impl Context<'_> {
         };
         let span = k.div_ceil(parts).next_multiple_of(g::DEPTH).max(g::DEPTH);
         let parts = k.div_ceil(span).max(1);
-        let output = u32::from(y.conjugated) * g::CONJUGATE_Y
-            | u32::from(y.transposed) * g::TRANSPOSE_Y
-            | u32::from(add) * g::ADD;
+        let output = (u32::from(y.conjugated) * g::CONJUGATE_Y)
+            | (u32::from(y.transposed) * g::TRANSPOSE_Y)
+            | (u32::from(add) * g::ADD);
         let mut flags =
-            u32::from(a.conjugated) * g::CONJUGATE_A | u32::from(b.conjugated) * g::CONJUGATE_B;
+            (u32::from(a.conjugated) * g::CONJUGATE_A) | (u32::from(b.conjugated) * g::CONJUGATE_B);
         let destination = if parts > 1 {
             flags |= g::PARTIAL;
             assert!(2 * parts * batches * m * n <= self.workspace_len);

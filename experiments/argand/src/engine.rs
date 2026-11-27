@@ -5,8 +5,10 @@
 //! Lean `fullGradientMomentumRun` on the full training gradient plus
 //! `PENALTY * x`. Earlier residual, score and optimizer variants are in
 //! experiments/phasor_value_transport at commit 7399c3bb.
+pub(crate) mod adamw;
 mod gemm;
 mod kernels;
+pub(crate) mod page;
 mod residual;
 mod scores;
 mod tape;

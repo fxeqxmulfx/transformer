@@ -8,9 +8,10 @@ multiplier, its optimizer and its batch.
 
 ## Training and replay
 
-This crate trains one model: skip and write gates around every
-sublayer, $s_0 = 1 + 0i$, and the clipped momentum steps of the Lean
-`fullGradientMomentumRun`. Each update takes the gradient of the full
+Argand has trainable skip and write gates around every sublayer and
+starts its score multiplier at $s_0 = 1 + 0i$. The default `run` command
+uses the clipped momentum steps of Lean's `fullGradientMomentumRun`.
+Each momentum update takes the gradient of the full
 training loss plus $\frac{\lambda}{2}\lVert\theta\rVert^2$, with
 $\lambda = 10^{-4}$. The model has no configuration flags and runs on
 Kernite 0.8.0. The data generators, scorer, WSD schedule and shared
@@ -49,6 +50,161 @@ example independently. One checkpoint replayed with batches of 16, 32
 and 128 gave identical scores and losses on all 13 splits. Checkpoints
 from commit e38c01a3 resume here. So do those from commit 7399c3bb with
 `ARGAND_SCORE_INIT=1 ARGAND_BATCH=full ARGAND_PENALTY=1e-4`.
+
+## Adaptive PAGE from native initialization
+
+The adaptive runner trains every coordinate of the same decoder in FP32.
+Its only random inputs are the ordinary initializer, the shuffled training
+order where applicable, and the PAGE sampler. Training uses observed
+cross-entropy. Hidden labels are used only for evaluation.
+
+For a reference batch with $N$ supervised token positions and mean loss
+$l_0$ at initialization, the runner fixes
+$\lambda=2l_0/(N\max(1,\lVert w_0\rVert^2))$ for the entire run.
+It adds $\lambda w$ to each mean gradient, including the gate gradients.
+The first trial uses $\eta=F(w_0)/\lVert g_0\rVert^2$ for
+$F=l+\lambda\lVert w\rVert^2/2$. Subsequent trials start at twice the
+last accepted rate. A trial must reduce the current reference objective
+by at least $\eta\lVert g\rVert^2/2$. A rejected estimated direction
+triggers a gradient refresh at the saved weights. Exact-direction retries
+halve the rate. Each correction evaluates the same randomly selected
+positions at both accepted endpoints. With $b$ distinct positions the
+scheduled refresh probability is $b/(N+b)$, with a full refresh for $b=N$.
+The baseline uses $b=1$. The variance-reduction experiment uses
+$b=\min(\lceil\sqrt N\rceil,\text{batch capacity})$. Lean's constant-rate
+PAGE results have their own step and reference-objective hypotheses.
+
+The eight-bit sum uses a width of 64 complex channels, four heads,
+an FFN width of 256, six layers and one pass. The observed 31-word
+staircase is the entire reference batch throughout training. Its
+complement contains 225 words. Each long run starts again from its
+saved pair of seeds and stores checkpoints from one uninterrupted
+20,480-update trajectory. FP32 atomic gradient sums can vary between
+repetitions. The accuracy curves use checkpoints of the long run.
+The binary phase table is $X_{ij}=P(0\mid i,j)-P(1\mid i,j)$.
+Its 16 singular values, nuclear norm and sign certificate are computed
+on the frozen weights. [Lean certificate](../../src/Transformer/Grokking/FiniteRecovery/CheckpointCertificate.lean)
+
+The division experiment predicts only $q$ from the five tokens through
+the equals sign. It uses the original 239-token vocabulary and the fixed
+seed-zero 50/50 split of all 9,312 equations. It uses the width and depth
+of the sum experiment, a reference batch of 512, and 8,192 updates.
+The stress cohort uses each case's own shape, label mask, batch size,
+shuffled epochs, exact-sequence scorer and first 99% observation rule.
+It stops by the last scheduled observation through 1,000 updates. For
+these larger splits the line search compares both weight vectors on the
+same current minibatch. The reference objective is re-evaluated when
+moving to the next minibatch. Every terminal checkpoint is independently
+reloaded and scored. [Division data](../grok_division/PROTOCOL.md)
+
+```sh
+cargo +stable build --release --locked --offline
+cargo +stable test --release --locked --offline -- --ignored --test-threads=1
+bin=target/release/argand
+sum=runs/sum8-page-20480
+mkdir -p "$sum"
+cp sum8-page-protocol.json "$sum/protocol.json"
+"$bin" sum8-page "$sum" 20480
+"$bin" sum8-replay "$sum"
+bash plot_sum8_accuracy.sh "$sum"
+"$bin" sum8-spectrum "$sum"
+"$bin" page-run grok-division-p97 0 runs/division-page 8192
+bash run_page_screen.sh all runs/gpt-page
+repair=runs/sum8-page-sqrt-2048
+mkdir -p "$repair"
+jq '.updates=2048 | .protocol="argand-sum8-adaptive-page-sqrt-v1"' sum8-page-protocol.json > "$repair/protocol.json"
+"$bin" sum8-page-sqrt "$repair" 2048
+```
+
+The confirmation protocol selects the first trained task in the agreed
+order with an exact primary score and strictly positive margins, then
+draws 12 fresh pairs of initialization and sampler seeds. All 12 train
+to the original fixed cap. The discovery seeds are excluded from the
+estimate. The null is a single-run success probability of at most
+three quarters. Under independent sampling, 12 successes have
+probability at most $(3/4)^{12}$ under that null. For Boolean AND the
+secondary audit enumerates all 130,816 binary strings of lengths 8 to 16,
+deduplicates the training prompts and scores both the answer and EOS.
+It records generator support and unseen multi-zero strings separately.
+`page-confirm CASE RUN_DIR CAP` records the seed pairs before training.
+
+The training-only graph audit is an independent control for division. Among
+the 4,656 observed equations, 4,611 have a nonzero numerator. Their
+96-by-96 bipartite mask is connected and contains a perfect matching. In
+the output coordinates of a faithful multiplicative character the observed
+phases are consistent, and propagation recovers every nonzero hidden
+answer. The other 45 observations identify the constant zero-numerator
+row. Together these checks recover 4,656/4,656 hidden answers. The graph
+audit is a test-only dependency. [Ideal character recovery in Lean](../../src/Transformer/Grokking/FlatSpectrum/FeatureCodes/PoweredDivision.lean)
+
+### Eight-bit sum on the 31-word staircase
+
+| Accepted updates | Runs fitting 31/31 | Mean hidden accuracy | Hidden correct per run (of 225) | Exact hidden recoveries |
+|---:|---:|---:|---|---:|
+| 2,048, original run | 5/8 | 43.61% | 100, 103, 99, 98, 94, 97, 99, 95 | 0/8 |
+| 2,048, checkpoint in the long run | 5/8 | 43.44% | 100, 102, 98, 98, 93, 97, 99, 95 | 0/8 |
+| 20,480 | 8/8 | 43.28% | 97, 100, 96, 100, 94, 96, 97, 99 | 0/8 |
+
+The 789,788-parameter decoder began with 107/225 strict hidden predictions
+on all eight seeds. The long runs averaged 263 seconds each. Mean observed
+cross-entropy at the endpoint was 0.00638 and mean hidden cross-entropy was
+3.844. The measured nuclear norm of the learned phase table ranged from
+28.78 to 35.38, compared with 16 for the rank-one target. The initial
+calibration gave $\lambda$ between 0.0001243 and 0.0001303. On average,
+55.37% of accepted steps required a forced full-gradient refresh. The two
+horizons reuse the same seed pairs. Zero exact successes in eight
+independent initializations at a fixed horizon gives a one-sided 95%
+upper confidence limit of $1-0.05^{1/8}=0.3123$.
+
+### Modular division with AdamW and WSD
+
+The AdamW control uses the coordinate kernel and settings of Argand at
+`7399c3bb`. It clips the labeled minibatch gradient to Euclidean norm one,
+uses bias-corrected moments with betas 0.9 and 0.95 and epsilon $10^{-8}$,
+and applies decoupled decay 0.1 to every trainable real coordinate. The peak
+rate is 0.001. WSD warms up over the first 2% of the declared budget and
+cools from 80% to a final rate of $10^{-8}$. Both runs start from the same
+native seed-zero weights and use the same input, order seed 10000, loss and
+820,124-parameter model as the PAGE control. Each learns only from the
+4,656 observed equations. Hidden accuracy uses the other 4,656 and all
+239 tokens compete at readout.
+
+| Optimizer | Updates | Training correct | Hidden correct | Hidden minimum logit gap |
+| --- | ---: | ---: | ---: | ---: |
+| Adaptive PAGE | 8,192 | 106 | 85 | −0.563 |
+| AdamW, WSD budget 8,192 | 8,192 | 4,656 | 2,604 | −14.361 |
+| AdamW, WSD budget 20,000 | 20,000 | 4,656 | 4,656 | 17.453 |
+
+In the 8,192-step run hidden accuracy climbed from 1,388/4,656 at step
+7,168 to 2,514 at 7,936 and 2,604 at the endpoint. Changing the WSD
+budget also changed its warmup and cooldown. At step 8,192 the longer
+run scored 422/4,656. On the stable rate it reached 4,616 at 12,288,
+4,653 at 12,544, and 4,656 at 12,800. The first perfect checkpoint
+replayed with minimum gap 10.273. All 30 evaluations from 12,800 through
+20,000 were perfect, including the final independently reloaded weights.
+The observation spacing was 256 updates, with a separate evaluation at
+the declared endpoint. The discovery run took 719 seconds on the RTX 3050.
+
+```sh
+case=grok-division-p97
+"$bin" adamw-run "$case" 0 runs/division-adamw-short 8192
+"$bin" adamw-run "$case" 0 runs/division-adamw-long 20000
+bash plot_division_accuracy.sh "runs/division-page/$case/seed0" \
+  "runs/division-adamw-short/$case/seed0" "runs/division-adamw-long/$case/seed0" runs/division-comparison
+"$bin" adamw-confirm-plan "$case" runs/division-adamw-confirm 20000
+"$bin" adamw-confirm "$case" runs/division-adamw-confirm 20000
+```
+
+The optional `adamw-tail-run CASE SEED OUT WSD_BUDGET CUTOFF` continues
+after the entire WSD prefix with rates $10^{-8} 2^{-k}$. In exact real
+arithmetic every weight then converges for arbitrary minibatches. On an
+identifying mask, a sufficiently small geometric continuation preserves a
+strict prediction in the admissible class that fits the observed labels.
+For the ordinary positive WSD floor, a common clipped-gradient limit gives
+an explicit weight limit. The finite experiments above use ordinary WSD.
+[AdamW trajectory](../../src/Transformer/Grokking/FiniteRecovery/AdamWTrajectory.lean)
+· [Identifiable checkpoints](../../src/Transformer/Grokking/FiniteRecovery/ArgandAdamW.lean)
+· [Positive WSD floor](../../src/Transformer/Grokking/FiniteRecovery/AdamWFloor.lean)
 
 ## Runs
 

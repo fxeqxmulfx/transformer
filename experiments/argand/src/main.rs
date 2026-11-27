@@ -3,10 +3,23 @@
 use arithmetic::{hash, reference as arithmetic_data};
 
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
+mod and_audit;
 mod bench;
+mod division;
+#[allow(dead_code)]
+#[path = "../../grok_division/src/data.rs"]
+mod division_equations;
 mod engine;
+mod margins;
+#[allow(dead_code)]
+#[path = "../../grok_division/src/mt.rs"]
+mod mt;
+mod page_confirmation;
+mod page_runs;
 mod runner;
 mod suite;
+mod sum8;
+mod sum8_spectrum;
 
 /// The error type shared with the pinned modules.
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;

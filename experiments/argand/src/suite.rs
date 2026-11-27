@@ -81,3 +81,37 @@ pub fn publish(dir: &Path, name: &str, bytes: &[u8]) -> Result<()> {
     fs::File::open(dir)?.sync_all()?;
     Ok(())
 }
+
+pub(crate) fn save_weights(
+    dir: &Path,
+    file: &str,
+    model: &crate::engine::Engine,
+) -> Result<(usize, String)> {
+    let weights = model.weights()?;
+    let bytes: Vec<_> = weights.iter().flat_map(|x| x.to_le_bytes()).collect();
+    publish(dir, file, &bytes)?;
+    Ok((weights.len(), hash(&bytes)))
+}
+
+pub(crate) fn load_weights(
+    dir: &Path,
+    file: &str,
+    digest: &Value,
+    model: &mut crate::engine::Engine,
+) -> Result<()> {
+    model.restore(&read_floats(&dir.join(file), digest)?)
+}
+
+pub(crate) fn read_floats(path: &Path, digest: &Value) -> Result<Vec<f32>> {
+    let bytes = fs::read(path)?;
+    if !bytes.len().is_multiple_of(4) || digest != &hash(&bytes) {
+        return Err("invalid weights digest".into());
+    }
+    Ok(bytes
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .copied()
+        .map(f32::from_le_bytes)
+        .collect())
+}

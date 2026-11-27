@@ -1,0 +1,54 @@
+{
+  "ffn_width": 256,
+  "heads": 4,
+  "hidden_words": 225,
+  "kernite": "0.8.0",
+  "layers": 6,
+  "mask": "big-endian nibbles; col == row or col == row + 1, without wrap",
+  "open_words": 31,
+  "protocol": "argand-sum8-adaptive-page-v1",
+  "repeat": 1,
+  "seed_order": [
+    "native_initialization",
+    "page_sampling"
+  ],
+  "seeds": [
+    [
+      2341476673,
+      1868899785
+    ],
+    [
+      3377379763,
+      2540165404
+    ],
+    [
+      3019567387,
+      1709968971
+    ],
+    [
+      3843603917,
+      3412326775
+    ],
+    [
+      4195447240,
+      938838792
+    ],
+    [
+      542731586,
+      1135559648
+    ],
+    [
+      2230583513,
+      3294397487
+    ],
+    [
+      3283694185,
+      2446018928
+    ]
+  ],
+  "sigma": 0.02,
+  "success": "positive terminal true-class logit gap on all 225 hidden words",
+  "updates": 20480,
+  "vocab": 2,
+  "width": 64
+}
