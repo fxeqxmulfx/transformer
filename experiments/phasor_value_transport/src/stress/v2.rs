@@ -2,7 +2,7 @@
 use super::{Example, Result, Task, Value, fs, hash, json, load, publish, suite_hash, task_config};
 use crate::{
     Config, KERNITE_VERSION,
-    phasor_v2::{Engine, Variant},
+    phasor_v2::{AmsGradWConfig, Engine, Variant},
     phasor_v2_metrics as metrics,
     random::Random,
     schedule::Schedule,
@@ -94,10 +94,13 @@ impl Cell {
     fn identity(&self) -> Value {
         let mut identity = json!({"model":self.variant.model(),"repeat":self.repeat,"seed":self.seed,"case":self.row["name"],
             "tier":self.row["tier"],"suite_sha256":suite_hash(&self.row),"kernite":KERNITE_VERSION});
-        if let Some(scale) = self.variant.amsgradw_sqrt_scale()
-            && scale != 1.0
-        {
-            identity["amsgradw_sqrt_scale"] = scale.to_string().into();
+        if let Some(config) = self.variant.amsgradw() {
+            if config.sqrt_scale != 1.0 {
+                identity["amsgradw_sqrt_scale"] = config.sqrt_scale.to_string().into();
+            }
+            if config.beta2 != AmsGradWConfig::DEFAULT_BETA2 {
+                identity["amsgradw_beta2"] = config.beta2.to_string().into();
+            }
         }
         identity
     }

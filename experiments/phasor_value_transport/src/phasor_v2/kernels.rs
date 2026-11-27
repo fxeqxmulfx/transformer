@@ -459,6 +459,8 @@ pub(super) mod device {
         count: u32,
         lr: f32,
         decay: f32,
+        beta2: f32,
+        one_minus_beta2: f32,
         bc1: f32,
         bc2: f32,
         sqrt_scale: f32,
@@ -484,8 +486,8 @@ pub(super) mod device {
         sub.rn.f32(t, gradient, first);
         fma.rn.f32(first, 0.1, t, first);
         mul.rn.f32(t, gradient, gradient);
-        mul.rn.f32(second, second, 0.95);
-        fma.rn.f32(second, 0.05, t, second);
+        mul.rn.f32(second, second, beta2);
+        fma.rn.f32(second, one_minus_beta2, t, second);
         max.f32(maximum, maximum, second);
         sqrt.rn.f32(denominator, maximum);
         div.rn.f32(denominator, denominator, bc2);

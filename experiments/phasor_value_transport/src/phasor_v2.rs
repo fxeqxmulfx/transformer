@@ -17,10 +17,20 @@ type F = Buffer<f32>;
 type P = Ptr<f32>;
 
 #[derive(Clone, Copy)]
+pub(crate) struct AmsGradWConfig {
+    pub beta2: f64,
+    pub sqrt_scale: f32,
+}
+
+impl AmsGradWConfig {
+    pub const DEFAULT_BETA2: f64 = 0.95;
+}
+
+#[derive(Clone, Copy)]
 pub struct Variant {
     routing: Routing,
     real_score_init: bool,
-    amsgradw_sqrt_scale: Option<f32>,
+    amsgradw: Option<AmsGradWConfig>,
 }
 
 impl Variant {
@@ -36,25 +46,33 @@ impl Variant {
             Ok("1") => true,
             _ => return Err("ARGAND_SCORE_INIT takes 1+i or 1".into()),
         };
-        let amsgradw_sqrt_scale = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
+        let amsgradw = match std::env::var("ARGAND_OPTIMIZER").as_deref() {
             Err(std::env::VarError::NotPresent) | Ok("adamw") => None,
             Ok("amsgradw") => {
-                let scale = match std::env::var("ARGAND_AMSGRADW_SQRT_SCALE") {
+                let sqrt_scale = match std::env::var("ARGAND_AMSGRADW_SQRT_SCALE") {
                     Ok(value) => value.parse::<f32>()?,
                     Err(std::env::VarError::NotPresent) => 1.0,
                     Err(error) => return Err(error.into()),
                 };
-                if !(0.0 < scale && scale <= 1.0) {
+                if !(0.0 < sqrt_scale && sqrt_scale <= 1.0) {
                     return Err("ARGAND_AMSGRADW_SQRT_SCALE must be in (0, 1]".into());
                 }
-                Some(scale)
+                let beta2 = match std::env::var("ARGAND_AMSGRADW_BETA2") {
+                    Ok(value) => value.parse::<f64>()?,
+                    Err(std::env::VarError::NotPresent) => AmsGradWConfig::DEFAULT_BETA2,
+                    Err(error) => return Err(error.into()),
+                };
+                if !(0.0..1.0).contains(&beta2) {
+                    return Err("ARGAND_AMSGRADW_BETA2 must be in [0, 1)".into());
+                }
+                Some(AmsGradWConfig { beta2, sqrt_scale })
             }
             _ => return Err("ARGAND_OPTIMIZER takes adamw or amsgradw".into()),
         };
         Ok(Self {
             routing,
             real_score_init,
-            amsgradw_sqrt_scale,
+            amsgradw,
         })
     }
 
@@ -62,7 +80,7 @@ impl Variant {
         Ok(Self {
             routing: Routing::selected()?,
             real_score_init: false,
-            amsgradw_sqrt_scale: None,
+            amsgradw: None,
         })
     }
 
@@ -71,7 +89,7 @@ impl Variant {
         if self.real_score_init {
             name.push_str("-s-init-one");
         }
-        if self.amsgradw_sqrt_scale.is_some() {
+        if self.amsgradw.is_some() {
             name.push_str("-amsgradw");
         }
         name
@@ -81,12 +99,12 @@ impl Variant {
         // Old entry-phase checkpoints used AdamW and started the score at 1+i.
         (matches!(self.routing, Routing::EntryPhase)
             && !self.real_score_init
-            && self.amsgradw_sqrt_scale.is_none())
+            && self.amsgradw.is_none())
         .then_some("phasor-v2-entry-phase-mhc-tied-vocab-fp32")
     }
 
-    pub fn amsgradw_sqrt_scale(self) -> Option<f32> {
-        self.amsgradw_sqrt_scale
+    pub(crate) fn amsgradw(self) -> Option<AmsGradWConfig> {
+        self.amsgradw
     }
 
     fn score_init(self) -> [f32; 2] {
@@ -610,10 +628,10 @@ pub fn check(variant: Variant) -> Result<()> {
             return Err("complex decoder GPU backward disagrees with finite differences".into());
         }
     }
-    if let Some(sqrt_scale) = variant.amsgradw_sqrt_scale {
+    if let Some(config) = variant.amsgradw {
         engine
             .parameters
-            .check_amsgradw(&engine.adam, &engine.kernel, sqrt_scale)?;
+            .check_amsgradw(&engine.adam, &engine.kernel, config)?;
     }
     println!(
         "{} vocabulary prediction, prefix causality and tied adjoints verified",

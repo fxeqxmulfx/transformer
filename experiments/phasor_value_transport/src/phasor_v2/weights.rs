@@ -2,7 +2,7 @@
 use super::complex_mhc::{AMPLITUDES, Routing, STREAMS};
 use super::kernels::device;
 use super::tape::{Context, Tape};
-use super::{F, Pair, Result, Variant, grid};
+use super::{AmsGradWConfig, F, Pair, Result, Variant, grid};
 use crate::{Config, optimizer_kernels, random::Random};
 use kernite_cuda::{Buffer, Cuda, Grid};
 
@@ -63,7 +63,7 @@ pub(super) struct Layer {
 
 enum OptimizerBuffers {
     AdamW(Buffer<u32>),
-    AmsGradW { maximum: F, sqrt_scale: f32 },
+    AmsGradW { maximum: F, config: AmsGradWConfig },
 }
 
 pub(super) struct Parameters {
@@ -130,10 +130,10 @@ impl Parameters {
         }
         let count = values.len();
         let zeros = vec![0.0; count];
-        let optimizer = if let Some(sqrt_scale) = variant.amsgradw_sqrt_scale {
+        let optimizer = if let Some(config) = variant.amsgradw() {
             OptimizerBuffers::AmsGradW {
                 maximum: cuda.upload(&zeros)?,
-                sqrt_scale,
+                config,
             }
         } else {
             let owners: Vec<[u32; 5]> = (0..count as u32)
@@ -222,7 +222,7 @@ impl Parameters {
         let grad = self.grad.ptr();
         let t = (completed + 1) as f64;
         let bc1 = (1.0 - 0.9_f64.powf(t)) as f32;
-        let bc2 = (1.0 - 0.95_f64.powf(t)).sqrt() as f32;
+        let second_bias_correction = |beta2: f64| (1.0 - beta2.powf(t)).sqrt() as f32;
         // SAFETY: AdamW's identity map owns two coordinates per thread.
         // AMSGradW owns one coordinate per thread in all four buffers.
         unsafe {
@@ -251,12 +251,9 @@ impl Parameters {
                     rate,
                     0.1,
                     bc1,
-                    bc2,
+                    second_bias_correction(0.95),
                 )?,
-                OptimizerBuffers::AmsGradW {
-                    maximum,
-                    sqrt_scale,
-                } => device.amsgradw(
+                OptimizerBuffers::AmsGradW { maximum, config } => device.amsgradw(
                     grid(self.len()),
                     self.value.ptr(),
                     self.first.ptr(),
@@ -267,9 +264,11 @@ impl Parameters {
                     self.len() as u32,
                     rate,
                     0.1,
+                    config.beta2 as f32,
+                    (1.0 - config.beta2) as f32,
                     bc1,
-                    bc2,
-                    *sqrt_scale,
+                    second_bias_correction(config.beta2),
+                    config.sqrt_scale,
                 )?,
             }
         }
@@ -280,7 +279,7 @@ impl Parameters {
         &mut self,
         kernel: &optimizer_kernels::kernels::Kernels,
         device: &device::Kernels,
-        sqrt_scale: f32,
+        config: AmsGradWConfig,
     ) -> Result<()> {
         let count = self.len();
         let mut grad = vec![0.0; count];
@@ -288,19 +287,19 @@ impl Parameters {
         let (mut first, mut second, mut maximum) = (0.0_f64, 0.0_f64, 0.0_f64);
         let rate = 0.01_f32;
         let lr = f64::from(rate);
-        // The first gradient clips, the second lowers v, and the third raises its maximum.
+        // The first gradient clips and the next two exercise the running maximum.
         for (completed, raw) in [2.0_f32, 0.1, -0.5].into_iter().enumerate() {
             grad[0] = raw;
             self.grad.write(&grad)?;
             self.update(kernel, device, rate, completed)?;
             let g = f64::from(raw / raw.abs().max(1.0));
             first = 0.9 * first + 0.1 * g;
-            second = 0.95 * second + 0.05 * g * g;
+            second = config.beta2 * second + (1.0 - config.beta2) * g * g;
             maximum = maximum.max(second);
             let step = (completed + 1) as i32;
             let corrected_first = first / (1.0 - 0.9_f64.powi(step));
-            let corrected_maximum = maximum / (1.0 - 0.95_f64.powi(step));
-            let denominator = f64::from(sqrt_scale) * corrected_maximum.sqrt() + 1e-8;
+            let corrected_maximum = maximum / (1.0 - config.beta2.powi(step));
+            let denominator = f64::from(config.sqrt_scale) * corrected_maximum.sqrt() + 1e-8;
             value = (1.0 - lr * 0.1) * value - lr * corrected_first / denominator;
             let state = self.state()?;
             for (buffer, expected) in [value, first, second, maximum].into_iter().enumerate() {

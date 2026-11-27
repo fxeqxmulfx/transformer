@@ -378,12 +378,12 @@ checkpoint includes the extra moment buffer and its own model identifier.
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
 export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
-export ARGAND_AMSGRADW_SQRT_SCALE=1
+export ARGAND_AMSGRADW_SQRT_SCALE=1 ARGAND_AMSGRADW_BETA2=0.95
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-score-one-amsgradw
 mkdir -p "$out"
 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
-unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_OPTIMIZER
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER
 ```
 
 The paired screen used `s=1`, Kernite 0.7.0 and an RTX 3050 Laptop GPU.
@@ -411,6 +411,26 @@ had the same exact score and a maximum absolute state difference of
 all 25 passing checkpoints reproduced their held-out scores and losses
 on independent reload.
 
+##### Argand AMSGradW with a larger second-moment coefficient
+
+`ARGAND_AMSGRADW_BETA2` sets the second-moment coefficient in $[0,1)$
+and defaults to `0.95`. AMSGradW uses it in both the moment recurrence
+and bias correction. A non-default coefficient is recorded in the
+checkpoint identity. The `0.98` screen tests stronger smoothing before
+the running maximum, with a unit denominator scale and the full
+second-moment history.
+
+```sh
+cargo +stable build --locked --release --features fp32-affine-reference
+export ARGAND_RESIDUAL=entry-phase ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw
+export ARGAND_AMSGRADW_SQRT_SCALE=1 ARGAND_AMSGRADW_BETA2=0.98 PHASOR_EVAL_BATCH_CAP=16
+target/release/phasor-value-transport argand-check
+out=runs/argand-short-score-one-amsgradw-beta2-0.98
+mkdir -p "$out"
+./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER ARGAND_RESIDUAL
+```
+
 ##### Argand AMSGradW with a scaled denominator
 
 The adaptive denominator is $a\sqrt{v_{\max}/(1-\beta_2^t)}+\epsilon$.
@@ -429,12 +449,12 @@ have the same values under this substitution.
 ```sh
 cargo +stable build --locked --release --features fp32-affine-reference
 export ARGAND_SCORE_INIT=1 ARGAND_OPTIMIZER=amsgradw PHASOR_EVAL_BATCH_CAP=16
-export ARGAND_AMSGRADW_SQRT_SCALE=0.9
+export ARGAND_AMSGRADW_SQRT_SCALE=0.9 ARGAND_AMSGRADW_BETA2=0.95
 target/release/phasor-value-transport argand-check
 out=runs/argand-short-score-one-amsgradw-scale-0.9
 mkdir -p "$out"
 ./run_v2_stress.sh --argand short 1 "$out" 1000 | tee "$out/short-1000.jsonl"
-unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_OPTIMIZER
+unset ARGAND_AMSGRADW_SQRT_SCALE ARGAND_AMSGRADW_BETA2 ARGAND_OPTIMIZER
 ```
 
 The 75 short runs matched the cases, seeds, splits, and step-zero scores
