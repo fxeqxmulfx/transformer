@@ -531,6 +531,21 @@ either choice of the second-moment decay. The bound allows dependence
 between checks and uses the same early stopping rule as the division pilots.
 [Hidden-corner example](../../src/Transformer/Grokking/FiniteRecovery/HiddenCorner.lean) · [First-hit distribution](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentRelabeling.lean) · [Finite-grid bound](../../src/Transformer/Grokking/FiniteRecovery/FirstHitSymmetry.lean)
 
+The same limitation reaches the 200,000-update budget for ordinary AdamW
+and the normalized recurrence. On the three-by-three table
+$F(i,j)=(1+i-j)\bmod 64$, the diagonal and first superdiagonal give five
+observations with labels 0 and 1. They identify the rank-one character
+table by nuclear-norm minimization. Nine distinct input tokens from 8 to
+16 let a six-layer, width-64 Argand model strictly realize every label.
+Two hidden cells require the ordered answers $(2,3)$. For each fixed
+minibatch stream and any evaluation, all $53\cdot52=2756$ ordered pairs
+of distinct unused tokens have equal probability under stock Gaussian
+initialization. At most one pair strictly wins. Including initialization,
+every 256th step and the final step, there are 783 evaluations. The
+chance of any checkpoint answering the entire hidden set correctly is
+therefore at most $783/2756$ (28.41%).
+[Two hidden answers](../../src/Transformer/Grokking/FiniteRecovery/TwoHiddenAnswers.lean)
+
 Short qualification runs keep the 20,000-step WSD but stop at 4,096 updates
 or the first perfect checkpoint. The equal-moment rate multipliers are 2
 then 3 after a miss. For softsign at peak 0.0003 the stronger decay values
