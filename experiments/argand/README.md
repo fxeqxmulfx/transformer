@@ -470,6 +470,16 @@ satisfies the witness condition when the grid includes initialization.
 The FP32 implementation rounds at different intermediate operations.
 [Trajectory equivalence](../../src/Transformer/Grokking/FiniteRecovery/NormalizedAdam.lean) · [Hidden recovery](../../src/Transformer/Grokking/FiniteRecovery/NormalizedRecovery.lean)
 
+Bias-corrected AdamW also satisfies the uniform coordinatewise moment
+inequality $\hat m_t^2\leq K\hat v_t$ for any gradient history when
+$0\leq a<1$ and $a^2<b<1$. It uses the same
+$K=b(1-a)^2/[(1-b)(b-a^2)]$ as the uncorrected update, including on the
+first step. At the experimental decays the adaptive direction is at most
+$\sqrt{19/14}$. With weight decay 0.1 and rates in $[0,10]$, every
+coordinate stays within $\max(\|w_0\|_\infty,10\sqrt{19/14})$ in both
+real recurrences.
+[Normalized moment and weight bounds](../../src/Transformer/Grokking/FiniteRecovery/NormalizedMomentBound.lean)
+
 For any hidden set of more than 288 division inputs, stock Gaussian
 initialization strictly solves the whole set with probability at most
 $1/234$. There are at most 288 equations on which the answer occurs

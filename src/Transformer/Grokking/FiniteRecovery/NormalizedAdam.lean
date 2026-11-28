@@ -20,7 +20,7 @@ noncomputable def gain (β : ℝ) : ℕ → ℝ
   | 0 => 1
   | t+1 => gain β t / (β+gain β t)
 
-private theorem bias_pos {β : ℝ} (h0 : 0 ≤ β) (h1 : β < 1) (t : ℕ) : 0 < 1-β^(t+1) :=
+theorem bias_pos {β : ℝ} (h0 : 0 ≤ β) (h1 : β < 1) (t : ℕ) : 0 < 1-β^(t+1) :=
   sub_pos.mpr (pow_lt_one₀ h0 h1 (Nat.succ_ne_zero t))
 
 theorem gain_eq {β : ℝ} (h0 : 0 ≤ β) (h1 : β < 1) (t : ℕ) :
