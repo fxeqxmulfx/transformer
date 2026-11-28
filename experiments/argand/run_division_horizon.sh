@@ -57,7 +57,7 @@ for ((i=0; i<12; i++)); do
             [[ -f "$file" ]] || continue
             mv -- "$file" "$staging/"
         done
-        last=$(sed '${/}$/!d;}' "$staging/observations.jsonl" | jq -sr 'last.step // 0')
+        last=$(sed -z 's/[^\n]*$//' "$staging/observations.jsonl" | jq -sr 'last.step // 0')
         archive=$(mktemp -d "$cell/interrupted/step-$last.XXXXXXXX")
         mv -T -- "$staging" "$archive"
         echo "Archived the interrupted draw $i through update $last in $archive"

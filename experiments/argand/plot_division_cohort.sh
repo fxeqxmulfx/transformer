@@ -24,7 +24,9 @@ last_step=0
 archives=0
 touch recent.tsv complete.tsv
 trajectory_tsv() {
-    sed '${/}$/!d;}' "$1" |
+    # The native writer terminates each evaluation with a newline.
+    # A partial final record can already end in a nested closing brace.
+    sed -z 's/[^\n]*$//' "$1" |
         jq -r --argjson seed "$2" --argjson budget "$budget" '
           if .identity.case=="grok-division-p97" and .identity.optimizer=="adamw-wsd"
             and .identity.seed==$seed and .identity.order_seed==(($seed+10000)%4294967296)
