@@ -10,6 +10,7 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Handoff
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Recovery
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Tail
 
 /-! A mean-field approximation of AdamW training in width. The particles
 are width units carrying their weights and both moment buffers; they
@@ -26,4 +27,6 @@ identifies, by the chain rule, the recovery residual of a certificate
 F ∘ mean ψ with the `residual` of the transfer theorem. `Handoff` turns the
 majorant into the excess of the recovery theorem, and `Recovery` gives
 permanent recovery once max(r̄, 0) + widthError + E[tail] is below the
-recovery margin. -/
+recovery margin. `Tail` gives that allowance after the horizon from a
+contraction of the coupled distance and run-wise bounds on the later
+fluctuations and segment errors. -/

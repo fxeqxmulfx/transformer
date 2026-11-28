@@ -61,3 +61,9 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.measurable_majorant
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.drift_excess
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_width_transfer
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.le_of_contraction
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.coupling_nonneg
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.residual_le_tail
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identity_system_zero
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identity_flow_zero
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identity_coupling_zero
