@@ -128,6 +128,15 @@ example := identityRegular.Mχ_nonneg
 example := integrable_features identityTraining (Measure.dirac 0) identityRegular 2 (1/2) 0
 example := segmentError_le_grid identityTraining (Measure.dirac 0) identityRegular (N := 2) two_pos
   (fun _ => 0) 3 (n := 4) (by norm_num) (u := 1/2) (by norm_num) (by norm_num)
+example := integral_abs_le_sqrt (Measure.dirac (0:ℝ)) (Y := fun _ => (0:ℝ)) (memLp_const 0)
+example := integral_abs_empirical_sub_le (Measure.dirac (0:ℝ)) (N := 2) two_pos (f := fun _ => (0:ℝ))
+  measurable_const (C := 0) (fun _ => by simp)
+example := integrable_abs_empirical_sub (Measure.dirac (0:ℝ)) 2 (f := fun _ => (0:ℝ)) measurable_const
+  (C := 0) (fun _ => by simp)
+example := continuous_direction (eps := 1) one_pos 0
+example := continuous_flow identityTraining (Measure.dirac 0) one_pos identityRegular.continuous_grad 3
+example := integral_fluctuation_le identityTraining (Measure.dirac 0) (N := 2) two_pos one_pos
+  identityRegular.continuous_grad continuous_const (C := 0) (fun _ _ => by simp [identityTraining]) 3
 
 end Examples
 

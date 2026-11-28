@@ -103,6 +103,12 @@ example := abs_weights_le identityTraining zero_le_one (fun _ => ⟨zero_le_one,
   (N := 2) (fun _ => 0) 3 0 0
 example := abs_displacement_le identityTraining zero_le_one (fun _ => ⟨zero_le_one, by norm_num [identityTraining]⟩)
   (N := 2) (fun _ => 0) 3 0 0
+example := cone_step (P := Fin 1) 1 1 0 0 (s := ⟨0, 0, 0⟩) (fun _ => by simp)
+example := second_nonneg_of_cone (P := Fin 1) (s := ⟨0, 0, 0⟩) (fun _ => by simp) 0
+example := coordinate_step (eps := 1) (η := 1) one_pos zero_le_one (by norm_num) 0 (w := 0) (m := 0)
+  (v := 0) (w' := 0) (m' := 0) (v' := 0) (g := 0) (g' := 0) (by norm_num) le_rfl
+example := gap_step (P := Fin 1) (eps := 1) (η := 1) one_pos zero_le_one (by norm_num) 0
+  (s := ⟨0, 0, 0⟩) (s' := ⟨0, 0, 0⟩) (fun _ => by simp) (fun _ => by simp) 0 0
 
 end Examples
 

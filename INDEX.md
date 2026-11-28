@@ -33907,7 +33907,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`coordinate_step`](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/Basic.lean#L134) | theorem | proved |
 | [`gap_step`](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/Basic.lean#L179) | theorem | proved |
 
-**[Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/Bounds.lean)** — 109 lines
+**[Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/Bounds.lean)** — 115 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -33987,7 +33987,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`majorant_nonneg`](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/ErrorBound.lean#L85) | theorem | proved |
 | [`integral_majorant_le`](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/ErrorBound.lean#L93) | theorem | proved |
 
-**[Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Grid](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/Grid.lean)** — 134 lines
+**[Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Grid](src/Transformer/Grokking/FiniteRecovery/MeanFieldWidth/Grid.lean)** — 143 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
