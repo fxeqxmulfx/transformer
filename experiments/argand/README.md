@@ -460,6 +460,19 @@ answer check are reconstructed from the training split. At update 100,000
 the first three completed checkpoints matched bit for bit on all 33,383,520
 logit comparisons combined. Each retained 4,656 strict hidden answers.
 
+For a fixed sequence of minibatches and any finite stock WSD horizon $K$,
+write $d_K=\prod_{t<K}(1-\eta_t/10)$. The real AdamW endpoint in each
+coordinate satisfies $|w_{K,i}-d_K w_{0,i}|\le120(1-d_K)$. This bound is
+independent of the initialization. Since $d_K>0$ and the gradients are
+continuous, Brouwer's fixed-point theorem implies that, as the native
+draw varies, the final embeddings and all attention and FFN projections
+jointly attain every prescribed vector. The scores, gates and frequency
+coordinates train as usual and obey the same bound around their
+deterministic initial values times $d_K$. If a choice of the free
+coordinates gives strict answers throughout that box, an open set of
+native Gaussian draws strictly generalizes at the original WSD rates.
+[Endpoint reachability](../../src/Transformer/Grokking/FiniteRecovery/ArgandReachability.lean)
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by

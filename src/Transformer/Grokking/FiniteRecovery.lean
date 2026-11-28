@@ -37,6 +37,7 @@ public import Transformer.Grokking.FiniteRecovery.DivisionNative
 public import Transformer.Grokking.FiniteRecovery.FactorObservations
 public import Transformer.Grokking.FiniteRecovery.FactorNative
 public import Transformer.Grokking.FiniteRecovery.DivisionRelabeling
+public import Transformer.Grokking.FiniteRecovery.ArgandReachability
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -102,4 +103,7 @@ The finite-seed success law for the experimental WSD counts only strictly
 correct endpoints at the declared horizon. A bijection of token alphabets
 permutes embedding rows, gradients, both AdamW moments and every readout.
 The ordinary WSD probability of strict generalization on a hidden mask
-is identical across encodings under the transported Gaussian law. -/
+is identical across encodings under the transported Gaussian law.
+At any finite stock WSD horizon, the projected endpoint map is onto all
+embedding and attention/FFN projection coordinates simultaneously. The
+remaining trainable coordinates lie in an explicit decay-dependent box. -/

@@ -1,0 +1,11 @@
+Brouwer's fixed-point theorem on nonempty compact convex sets.
+
+Source under the MIT license reproduced in LICENSE:
+  https://github.com/harfe/fixed-point-theorems-lean4
+  revision 93a3eed3364281a9dbf9652bb52356a8db65057c
+
+The five modules form the import closure of FixedPointTheorems.brouwer.
+The upstream proof uses cubical Sperner labeling. The Argand finite-horizon
+reachability theorem applies it to a closed ball of free initial coordinates.
+The three uses of toContinuousMap in brouwer.lean use its Mathlib 4.36
+name, ContinuousMap.ofClass.

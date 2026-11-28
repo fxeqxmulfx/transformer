@@ -39,3 +39,10 @@ roots = ["RBTree.Depth", "RBTree.Lemmas"]
 globs = ["RBTree.+"]
 # The copied sources rely on auto-bound implicits (third_party/RBTree/NOTICE).
 leanOptions = { Elab.async = false }
+
+[[lean_lib]]
+name = "FixedPointTheorems"
+srcDir = "third_party/FixedPointTheorems"
+roots = ["FixedPointTheorems.brouwer"]
+globs = ["FixedPointTheorems.+"]
+leanOptions = { autoImplicit = false, Elab.async = false }
