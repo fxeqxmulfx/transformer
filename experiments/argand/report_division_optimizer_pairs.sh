@@ -42,7 +42,7 @@ jq -s --slurpfile p "$primary/protocol.json" '
   ($pairs|map(.candidate)|counts) as $candidate |
   {registered:($seeds|length),primary_rate:$p[0].control.identity.adamw.peak,
    candidate_optimizer:$p[0].candidate.identity.optimizer,
-   candidate_peak:($p[0].candidate.identity|(.equal_moment//.uncorrected_adam//.softsign_lion//.rmsprop//.muon).peak),
+   candidate_peak:($p[0].candidate.identity|(.equal_moment//.uncorrected_adam//.normalized_adamw//.softsign_lion//.rmsprop//.muon).peak),
    candidate:$candidate,control:($pairs|map(.control)|counts),
    candidate_null_tail_at_three_quarters:(if $candidate.evaluated==($seeds|length) then
       tail(($seeds|length);$candidate.hits;0.75) else null end),

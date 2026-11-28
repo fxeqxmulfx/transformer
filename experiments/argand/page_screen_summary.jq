@@ -10,10 +10,12 @@ if length != 2*($cells|length) then error("incomplete optimizer screen") else . 
   if $r.identity.case != $c.task.name or $r.identity.seed != $c.seed or
      $r.identity.optimizer != $records[0].identity.optimizer or $r.identity.correction != $records[0].identity.correction or
      $r.identity.stop_on != $records[0].identity.stop_on or
-     (if $r.identity.optimizer=="equal-moment-wsd" or $r.identity.optimizer=="uncorrected-adam-wsd" then
+     (if ($r.identity.optimizer|IN("equal-moment-wsd","uncorrected-adam-wsd","normalized-adamw-wsd")) then
+        ($r.identity.optimizer=="normalized-adamw-wsd") as $normalized |
         (if $r.identity.optimizer=="equal-moment-wsd" then [$r.identity.equal_moment,0.9]
-         else [$r.identity.uncorrected_adam,0.95] end) | .[1] as $beta2 | .[0] |
-        .beta1!=0.9 or .beta2!=$beta2 or .bias_correction!=false or
+         elif $normalized then [$r.identity.normalized_adamw,0.95] else [$r.identity.uncorrected_adam,0.95] end) |
+        .[1] as $beta2 | .[0] | .beta1!=0.9 or .beta2!=$beta2 or .bias_correction!=$normalized or
+        ($normalized and .normalization!="recursive-gains") or
         .epsilon!=1e-8 or .weight_decay!=0.1 or .peak!=0.003 or .budget!=$c.task.case.max_updates
       else false end) or
      ($r.identity.stop_on=="first-strict-100-percent" and $r.step<$r.identity.budget and

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Run each canonical case in manifest order. The binary replays each endpoint.
 set -euo pipefail
-if (( $# < 2 || $# > 3 )) || [[ ! $1 =~ ^(short|long|all)$ ]] || [[ ! ${3:-single} =~ ^(single|sqrt|retry|adamw|equal-moment|uncorrected-adam|first-noise|first-noise-perfect)$ ]]; then
-    echo 'usage: bash run_page_screen.sh TIER RUN_DIRECTORY [single|sqrt|retry|adamw|equal-moment|uncorrected-adam|first-noise|first-noise-perfect]' >&2
+if (( $# < 2 || $# > 3 )) || [[ ! $1 =~ ^(short|long|all)$ ]] || [[ ! ${3:-single} =~ ^(single|sqrt|retry|adamw|equal-moment|uncorrected-adam|normalized-adamw|first-noise|first-noise-perfect)$ ]]; then
+    echo 'usage: bash run_page_screen.sh TIER RUN_DIRECTORY [single|sqrt|retry|adamw|equal-moment|uncorrected-adam|normalized-adamw|first-noise|first-noise-perfect]' >&2
     exit 2
 fi
 dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
@@ -12,7 +12,7 @@ case ${3:-single} in
     single) op=page-run ;;
     sqrt|retry) op=page-run-$3 ;;
     adamw) op=adamw-run ;;
-    equal-moment|uncorrected-adam) op=$3-until-perfect; settings=(3) ;;
+    equal-moment|uncorrected-adam|normalized-adamw) op=$3-until-perfect; settings=(3) ;;
     first-noise) op=adamw-first-noise-screen ;;
     first-noise-perfect) op=adamw-first-noise-until-perfect ;;
 esac

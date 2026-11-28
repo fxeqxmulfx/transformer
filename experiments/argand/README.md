@@ -118,6 +118,7 @@ bash run_page_screen.sh all runs/gpt-page
 bash run_page_screen.sh all runs/gpt-adamw adamw
 bash run_page_screen.sh all runs/gpt-equal-decay equal-moment
 bash run_page_screen.sh all runs/gpt-uncorrected-adam uncorrected-adam
+bash run_page_screen.sh all runs/gpt-normalized-adamw normalized-adamw
 jq -n --slurpfile control runs/gpt-page/all-summary.json \
   --slurpfile candidate runs/gpt-adamw/all-summary.json -f compare_optimizer_screens.jq
 repair=runs/sum8-page-sqrt-2048
@@ -460,7 +461,11 @@ hidden equations at update 1,536 with minimum reloaded gap 0.620017.
 It solved 4,653 of the 4,656 observed equations at that checkpoint.
 Stock AdamW first solved the hidden split at 2,816 on the same schedule.
 The native fast reductions and the different FP32 operations can affect
-first-hit times.
+first-hit times. The paired replication reuses each stock control and
+checks its recorded weights digest, step, replay and observed-data
+certificate. All eleven seeds were fixed before their first recursive-gain
+run. The same implementation also runs on the original GPT short and long cases.
+[Paired replication](division-normalized-validation.json)
 
 The step-2,816 equal-decay and step-2,304 unequal-decay checkpoints
 were also checked from their recorded FP32 logits.
@@ -546,6 +551,8 @@ bash plot_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fr
 ARGAND_BIN="$REPAIR_BINARY" ARGAND_CONTROL_BIN="$CONTROL_BINARY" \
     bash run_division_uncorrected_pairs.sh runs/division-fresh-high "runs/division-uncorrected/$task/seed0" runs/division-repair-pairs
 bash report_division_optimizer_pairs.sh runs/division-repair-pairs
+ARGAND_BIN="$NORMALIZED_BINARY" bash run_division_normalized_pairs.sh runs/division-repair-pairs \
+    runs/division-fresh-high "runs/division-normalized/$task/seed0" runs/division-normalized-pairs
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
 $bin division-recorded-lean "runs/division-equal/$task/seed0" terminal
 bash check_recorded_division.sh "runs/division-equal/$task/seed0" terminal

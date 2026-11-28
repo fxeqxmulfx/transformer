@@ -22,6 +22,7 @@ counts=$(jq -r --arg ctrl "$control" --argjson n "$#" '"Candidate "+(.candidate.
     (if $n==2 then "     AdamW 0.003 "+(.higher_rate_control.hits|tostring)+"/"+(.higher_rate_control.evaluated|tostring) else "" end)' "$tmp/report.json")
 name=$(jq -r '(if .candidate_optimizer|startswith("equal-moment") then "Equal-decay Adam"
     elif .candidate_optimizer=="uncorrected-adam-wsd" then "Uncorrected Adam"
+    elif .candidate_optimizer=="normalized-adamw-wsd" then "Normalized AdamW"
     elif .candidate_optimizer|contains("softsign") then "Softsign Lion"
     elif .candidate_optimizer|contains("rmsprop") then "RMSPropW" else "Complex Muon" end)
     +" "+(.candidate_peak|tostring)' "$tmp/report.json")
