@@ -42,3 +42,16 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.integral_majorant_le
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.expected_residual_gap_le
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.widthError_vanishes
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.abs_direction_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.step_weights
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.abs_step_weights_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.abs_step_sub_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.abs_weights_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.abs_displacement_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.meanField_eq_smul_sum
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.hasFDerivAt_meanField
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.fderiv_certificate
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.clampDisp_of_abs_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_residual
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_residual_system
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_residual_of_init

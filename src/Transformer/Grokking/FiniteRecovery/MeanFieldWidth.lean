@@ -6,6 +6,8 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Residual
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Grid
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.ErrorBound
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Transfer
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
 
 /-! A mean-field approximation of AdamW training in width. The particles
 are width units carrying their weights and both moment buffers; they
@@ -16,4 +18,7 @@ by C/√N under the product of the initialization laws. `Residual` and
 `Grid` bound the gap between the residual of a mean-field certificate and
 its limiting counterpart pathwise; `ErrorBound` and `Transfer` give the
 explicit error `widthError` for its expected maximum over updates and
-fractions, and its vanishing in width at a fixed horizon. -/
+fractions, and its vanishing in width at a fixed horizon. `Bounds` keeps weights and
+displacements in a box fixed by the initial weights, and `Certificate`
+identifies, by the chain rule, the recovery residual of a certificate
+F ∘ mean ψ with the `residual` of the transfer theorem. -/
