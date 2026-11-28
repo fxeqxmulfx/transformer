@@ -133,6 +133,20 @@ impl Counts {
     }
 }
 
+/// The probability of drawing any rival from the unscaled output softmax.
+/// Sum the rival masses directly to preserve small errors at confident cells.
+fn probability_of_rival(scores: &[f32], target: usize) -> f64 {
+    let peak = f64::from(scores.iter().copied().reduce(f32::max).unwrap());
+    let mass = |z: f32| (f64::from(z) - peak).exp();
+    let rivals: f64 = scores
+        .iter()
+        .enumerate()
+        .filter(|(i, _)| *i != target)
+        .map(|(_, &z)| mass(z))
+        .sum();
+    rivals / (rivals + mass(scores[target]))
+}
+
 fn checkpoint(dir: &Path, first: bool) -> Result<(Value, Engine)> {
     checkpoint_with_batch(dir, first, division::shape().max_batch)
 }
@@ -173,6 +187,7 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
     let examples = completion.examples();
     let order: Vec<_> = (0..examples.len() as u32).collect();
     let mut counts = [Counts::default(), Counts::default()];
+    let mut errors = [0.0_f64; 2];
     let mut phases = spectrum::PhaseTable::new();
     let mut batch = metrics::Packed::default();
     for indices in order.chunks(engine.config.max_batch) {
@@ -187,20 +202,22 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
         {
             let i = i as usize;
             let (a, b) = (i / N, i % N + 1);
+            let start = eq::ANSWER_POS * vocab;
+            let scores = &scores[start..start + vocab];
+            let label = completion.label(a, b);
+            let split = usize::from(completion.observed[i]);
+            errors[split] += probability_of_rival(scores, eq::NUM0 + label);
             if a > 0 {
-                let start = eq::ANSWER_POS * vocab;
-                phases.observe(
-                    &scores[start..start + vocab],
-                    completion.label(a, b),
-                    row.gap,
-                );
+                phases.observe(scores, label, row.gap);
             }
-            counts[usize::from(completion.observed[i])].add(row);
+            counts[split].add(row);
         }
     }
     let report = json!({"case":division::NAME,"seed":id["seed"],"step":record["step"],
         "weights_sha256":record["weights_sha256"],"observed_sha256":division::TRAIN_HASH,
         "accept":counts.iter().all(|c| c.correct==c.total),"observed":counts[1].json(),"hidden":counts[0].json(),
+        "observed_rule_risk":{"inverse_temperature":1,"observed_error_sum":errors[1],
+            "all_error_sum":errors[0]+errors[1],"upper_bound":errors[0]+2.0*errors[1]},
         "output_tokens_compared":engine.config.vocab,"observed_unit_cells":completion.graph.observed_cells,
         "unit_graph_components":completion.graph.connected_components,"zero_row_label":completion.zero,
         "phase_generator":5,"row_phases":completion.graph.row_phases,"column_phases":completion.graph.column_phases,
@@ -217,6 +234,14 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn softmax_rival_probability_handles_ties_and_confident_predictions() {
+        assert_eq!(probability_of_rival(&[4.0, 4.0], 1), 0.5);
+        let p = probability_of_rival(&[40.0, 0.0], 0);
+        assert!(p > 0.0 && (p - (-40.0_f64).exp()).abs() < 1e-30);
+        assert_eq!(probability_of_rival(&[-2000.0, 2000.0], 0), 1.0);
+    }
 
     #[test]
     fn original_mask_identifies_division_and_unknown_unit_factors() -> Result<()> {

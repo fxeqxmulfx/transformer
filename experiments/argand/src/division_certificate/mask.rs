@@ -65,7 +65,7 @@ pub(crate) fn lean_source() -> Result<String> {
         inverse[j] = i;
     }
     let mut out = String::from(
-        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\n\n",
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\nimport Transformer.Grokking.FiniteRecovery.ArgandObservedJacobian\n\n",
     );
     writeln!(
         out,
@@ -169,6 +169,41 @@ theorem original_mask_certifies (score : DivisionInput → Fin 239 → ℝ) :
     classCertificate (bitDivisionMask rows) (factorClass unitToken) (fun x => divisionAnswer x) score ↔
       StrictOn score divisionAnswer :=
   division_certificate_iff _ original_graph.1 original_graph.2 score
+
+noncomputable def riskSites : Finset DivisionInput := (bitDivisionMask rows).toFinite.toFinset
+def quotientRule (_ : Unit) : Set (DivisionInput → Fin 239) := factorClass unitToken
+
+theorem original_rule_identified : Set.InjOn (fun g : DivisionInput → Fin 239 => fun x : riskSites => g x)
+    (⋂ j, quotientRule j) := by
+  simp only [quotientRule,Set.iInter_const]
+  intro f hf g hg eq
+  apply factorClass_identified unitToken (bitDivisionMask rows) original_graph.1 original_graph.2 hf hg
+  exact funext fun x => congrFun eq ⟨x.val, (bitDivisionMask rows).toFinite.mem_toFinset.mpr x.property⟩
+
+section
+-- Keep specialization from reducing the entire six-layer forward pass.
+attribute [local irreducible] Model.logits ObservedDrift.marginalBound
+
+/-- The quotient-factor class contributes a single structural rule. -/
+theorem original_marginal_certificate (w : Weights (Fin 239) 4 16 6) :
+    ObservedDrift.marginalBound (H := 4) (d := 16) (L := 6) 1 (Fintype.card Unit) riskSites
+      (fun x => divisionAnswer x.val) divisionAnswer divisionPrompt (fun _ => Fin.last 4) w < (1/2 : ℝ) →
+      StrictOn (fun x => (Model.fromWeights w).logits 1 (divisionPrompt x) (Fin.last 4)) divisionAnswer :=
+  ObservedDrift.strict_of_marginalBound (H := 4) (d := 16) (L := 6) 1 riskSites divisionAnswer
+    quotientRule (fun _ => divisionAnswer_mem) original_rule_identified divisionPrompt (fun _ => Fin.last 4) w
+#print axioms original_marginal_certificate
+end
+
+/-- With the original mask, Gaussian start and WSD, the remaining hypothesis
+is on the Jacobian along the actual observed minibatch steps and its excess. -/
+example (correct : Bool) (batches : OrdinaryDivision.Draw → ℕ → List riskSites) (B : ℕ)
+    {ρ r : ℝ} (hρ : 0 ≤ ρ) (hlt : ρ < 1) (hr : r < 1/2) (e : OrdinaryDivision.Draw → ℝ)
+    (hm : Measurable e) (hi : Integrable e (independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2)))
+    (hp : ∀ᵐ z ∂independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2), 0 ≤ e z)
+    (mean : ∫ z, e z ∂independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2) < (1-ρ)*(1/2-r)/4) :=
+  ObservedDrift.three_quarters_of_marginal_jacobian _ correct 1 riskSites (fun x => divisionAnswer x)
+    quotientRule divisionAnswer (fun _ => divisionAnswer_mem) (fun _ => rfl) original_rule_identified
+    divisionPrompt (fun _ => Fin.last 4) batches (fun t => 3*wsdRate 20000 t) B hρ hlt hr e hm hi hp mean
 
 theorem original_factor_label_orbit {X : Type*} [Finite X] (G : Subgroup (Equiv.Perm (Fin 239)))
     (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)

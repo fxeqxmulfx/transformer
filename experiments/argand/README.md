@@ -679,6 +679,13 @@ permanent correctness from $N$ implies correctness at $N$. These tail
 events increase with $N$, so their union inherits the single-step bound.
 [Two hidden answers](../../src/Transformer/Grokking/FiniteRecovery/TwoHiddenAnswers.lean)
 
+The same 1/2,756 ceiling holds for uncorrected AdamW, including the
+validated 0.9/0.95 rule. Changing the moment decays, weight decay, or rate
+schedule preserves the relabeling argument for every fixed stream of the
+five observed cells and positive epsilon. Identifiability of the phase
+table and its strict representability by Argand both hold in this example.
+[Uncorrected dynamics](../../src/Transformer/Grokking/FiniteRecovery/TwoHiddenUncorrected.lean)
+
 Short qualification runs keep the 20,000-step WSD but stop at 4,096 updates
 or the first perfect checkpoint. The equal-moment rate multipliers are 2
 then 3 after a miss. For softsign at peak 0.0003 the stronger decay values
@@ -1311,6 +1318,53 @@ cell=runs/division-stock-first-hit-replay/trial-0/grok-division-p97/seed14561538
 target/release/argand division-recorded-lean "$cell" terminal
 LAKE_ARTIFACT_CACHE=false bash check_recorded_division.sh "$cell" terminal
 ```
+
+#### A sufficient condition on ordinary updates
+
+Let $Y$ be a table sampled independently across inputs from a fixed
+model's output softmax. Sum the probabilities of an observed-label error
+at each observed input and of violating each rule defining the known
+class. Call this sum $V(w)$. When the observations identify the target,
+every other sampled table violates at least one check. Thus $V(w)<1/2$
+implies a strict correct winner at every input. For any strictly correct
+finite score table, positive scaling of the verification logits can make
+$V$ smaller than $1/2$. Scaling preserves the winners.
+[Finite-table certificate](../../src/Transformer/Grokking/FiniteRecovery/ObservedConstraints.lean)
+
+For the division experiment there is one rule, membership in the
+quotient-factor class. From the 4,656 observations, reconstruct its
+feasible member $g$. Put $e_x=1-p_w(g(x)\mid x)$. A violation of the
+class rule requires at least one sampled token to differ from $g$, so
+$U(w)=\sum_{x\in S}e_x+\sum_{x\in X}e_x$ bounds $V(w)$ from above.
+The certificate command computes these two sums on the original FP32
+logits using FP64 arithmetic and the ordinary, unscaled softmax.
+
+| First strict hidden checkpoint | Runs | Correct on all 9,312 | $U<1/2$ | Range of $U$ |
+| --- | ---: | ---: | ---: | ---: |
+| Stock AdamW, fresh first-hit cohort | 11 | 11 | 3 | 0.12564–33.96015 |
+| Uncorrected AdamW, registered paired cohort | 11 | 9 | 2 | 0.26201–60.04099 |
+
+All 22 saved models solved the 4,656 hidden equations. For ordinary
+seed 1456153842 at step 2,048 the two sums were 0.104412 and 0.215318,
+giving $U=0.319731$. Run `division-certificate CELL terminal` and read
+`observed_rule_risk` to reproduce a checkpoint's values. The stock cells
+are under `runs/division-stock-first-hit-20261128/trial-*/grok-division-p97`.
+The uncorrected cells are under
+`runs/division-uncorrected-pairs-20261128/candidate/grok-division-p97`.
+
+For the single-run theorem let $\Delta_t$ be the actual AdamW displacement,
+including clipped minibatch moments and decoupled weight decay. Suppose
+that after a fixed update, at every $0<u<1$, its directional derivative
+satisfies $DU(w_t+u\Delta_t)[\Delta_t]\le -(1-\rho)(U(w_t)-r)+e$,
+where $0\le\rho<1$, $r<1/2$, and $e\ge0$ can vary between runs.
+If $\mathbb E[e]<(1-\rho)(1/2-r)/4$, with probability above $3/4$ the
+entire table is strictly correct at every sufficiently late update. This
+uses one ordinary trajectory with or without bias correction. Establishing
+the derivative and mean bounds for stock modular division remains open.
+The checkpoint counts measure the static certificate at first hit.
+[Ordinary Argand Jacobian theorem](../../src/Transformer/Grokking/FiniteRecovery/ArgandObservedJacobian.lean)
+
+#### Restart schedules
 
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
