@@ -33,6 +33,19 @@ jq -s --slurpfile p "$primary/protocol.json" '
       both_censored:($x|map(select(.status=="both_censored"))|length),
       interrupted:($x|map(select(.status=="interrupted"))|length),pending:($x|map(select(.status=="pending"))|length),
       median_step_difference_both_hit:($x|map(select(.difference!=null)|.difference)|median)};
+  def time_to_hit($miss): if .success then .step else $miss end;
+  def upper_median($registered): if $registered==11 and length==11 then sort|.[8] else null end;
+  def budget_comparison($arm;$miss;$n):
+    [.[] | select(.candidate!=null and .[$arm]!=null) | [.candidate,.[$arm]]] as $recorded |
+    [$recorded[] | select(all(.[];.first_attempt=="complete")) |
+      (.[0]|time_to_hit($miss))-(.[1]|time_to_hit($miss))] as $complete |
+    [$recorded[] |
+      (.[0]|if .first_attempt=="complete" then time_to_hit($miss) else $miss end) -
+      (.[1]|if .first_attempt=="complete" then time_to_hit($miss) else 0 end)] as $upper |
+    {complete:{completed_pairs:($complete|length),median_difference:($complete|median),
+       upper_median_difference_one_sided:($complete|upper_median($n))},
+     conservative:{recorded_pairs:($recorded|length),interrupted_pairs:(($recorded|length)-($complete|length)),
+       upper_median_difference_one_sided:($upper|upper_median($n))}};
   . as $arms | $p[0].registration.seeds as $seeds |
   if any($arms[]; .seed as $s | ($seeds|index($s))==null) or
     (($arms|map([.seed,.arm])|unique|length)!=($arms|length)) then error("duplicate or unregistered arm") else . end |
@@ -40,6 +53,8 @@ jq -s --slurpfile p "$primary/protocol.json" '
     {index:$i,seed:$seed} + ($arms | map(select(.seed==$seed)|{key:.arm,value:
       {step,success,first_attempt,min_gap:.hidden.minimum_gap,selected}}) | from_entries)] as $pairs |
   ($pairs|map(.candidate)|counts) as $candidate |
+  ($seeds|length) as $n | ($p[0].registration.first_budget+$p[0].registration.evaluation_interval) as $miss |
+  ($pairs|budget_comparison("control";$miss;$n)) as $primary_budget |
   {registered:($seeds|length),primary_rate:$p[0].control.identity.adamw.peak,
    candidate_optimizer:$p[0].candidate.identity.optimizer,
    candidate_peak:($p[0].candidate.identity|(.equal_moment//.uncorrected_adam//.normalized_adamw//.softsign_lion//.rmsprop//.muon).peak),
@@ -48,19 +63,7 @@ jq -s --slurpfile p "$primary/protocol.json" '
       tail(($seeds|length);$candidate.hits;0.75) else null end),
    higher_rate_control:($pairs|map(.higher_rate_control)|counts),
    against_primary:($pairs|compare("control")),against_higher_rate:($pairs|compare("higher_rate_control")),
-   paired_budget:(($p[0].registration.first_budget+$p[0].registration.evaluation_interval) as $miss |
-     [ $pairs[]|select(.candidate.first_attempt=="complete" and .control.first_attempt=="complete")|
-       (if .candidate.success then .candidate.step else $miss end) -
-       (if .control.success then .control.step else $miss end)]|sort|
-     {completed_pairs:length,median_difference:median,
-      upper_median_difference_one_sided:(if length==11 and ($seeds|length)==11 then .[8] else null end)}),
-   conservative_paired_budget:(($p[0].registration.first_budget+$p[0].registration.evaluation_interval) as $miss |
-     [$pairs[] | select(.candidate!=null and .control!=null)] as $recorded |
-     {recorded_pairs:($recorded|length),
-      interrupted_pairs:($recorded|map(select(.candidate.first_attempt!="complete" or .control.first_attempt!="complete"))|length),
-      upper_median_difference_one_sided:(if ($recorded|length)==11 and ($seeds|length)==11 then
-        [$recorded[] |
-          (if .candidate.first_attempt=="complete" and .candidate.success then .candidate.step else $miss end) -
-          (if .control.first_attempt!="complete" then 0 elif .control.success then .control.step else $miss end)]
-        | sort | .[8] else null end)}),
+   paired_budget:$primary_budget.complete,conservative_paired_budget:$primary_budget.conservative,
+   higher_rate_paired_budget:(if any($pairs[]; .higher_rate_control!=null) then
+      $pairs|budget_comparison("higher_rate_control";$miss;$n) else null end),
    pairs:$pairs}' "${files[@]}" < /dev/null
