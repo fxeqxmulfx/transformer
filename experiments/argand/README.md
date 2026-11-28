@@ -324,6 +324,13 @@ and decay 0.1. Both components of a complex coefficient count in the
 same row. The tied embedding, scores, learned position frequencies and
 residual gates receive the ordinary update. [Per-row clipping experiments in a different architecture](https://github.com/NiftyliuS/cliptogrok)
 
+At peak 0.001, decay 0.1, the final checkpoint tied the correct target with
+a competitor on every one of the 9,312 legal equations. At peak 0.0003,
+raising decay from 0.1 to 2/3 reduced the first strict hit from 17,920 to
+7,168 updates. The reloaded minimum hidden gap was 4.411. That hit preceded
+the first eligible noise proposal at 8,192. The scaled AdamW control still
+needed only 4,096 updates.
+
 Projecting the three previously saved solutions once gives the following
 independent check on feasibility. Scores use all 239 candidate tokens and
 labels reconstructed from the 4,656 observed equations.
@@ -382,6 +389,39 @@ transposes, and scales each matrix direction by $0.2\sqrt{\max(m,n)}$.
 The tied embedding, residual gates, scores and frequencies use the control's
 bias-corrected AdamW. [Muon reference implementation](https://github.com/KellerJordan/Muon)
 
+Complex Muon reached all 4,656 strict hidden answers at update 15,616,
+with minimum gap 1.817 after independent replay.
+
+Another comparison uses Adam with a common decay of 0.9 for both moments,
+no bias corrections, epsilon $10^{-8}$, and decoupled weight decay 0.1.
+For each clipped gradient $g$, the new moments satisfy
+$v'-(m')^2=0.9(v-m^2)+0.09(m-g)^2$. Hence the direction
+$m'/(\sqrt{v'}+10^{-8})$ has magnitude at most one in each coordinate.
+At peak 0.002 the 4,096-update prefix reached 4,651 strict hidden answers,
+with minimum gap −5.649. At peak 0.003 ordinary training reached 4,656
+strict hidden answers at update 2,816, with minimum reloaded gap 0.742.
+This is 31.25% fewer updates than the frozen 0.002 AdamW control on
+discovery seed 0. WSD was fixed at 20,000 throughout. A separate stock
+AdamW arm at 0.003 tests the effect of the larger peak.
+[Exact update and moment invariant](../../src/Transformer/Grokking/FiniteRecovery/EqualMoment.lean)
+
+For either ordinary optimizer, a common limit $G$ of the actual clipped
+minibatch gradients on the positive WSD floor gives the limiting weight
+$-G_i/[\lambda(|G_i|+\epsilon)]$ in each coordinate. A strict winner table
+at these limiting weights generalizes if it belongs to an identifiable class
+and fits the observed labels. Both the common gradient and the class test
+are hypotheses for the ordinary division dynamics.
+[One-moment limit](../../src/Transformer/Grokking/FiniteRecovery/SoftsignLimit.lean) · [Equal-moment limit](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentLimit.lean)
+
+Short qualification runs keep the 20,000-step WSD but stop at 4,096 updates
+or the first perfect checkpoint. The equal-moment rate multipliers are 2
+then 3 after a miss. For softsign at peak 0.0003 the stronger decay values
+are 2 then 4 after a miss. Among qualifiers from these two screens, use the
+earliest hit for the fresh paired comparison, breaking ties in favor of
+one-buffer softsign. The protocol records the two discovery digests, the
+validation binary digest, and alternate arm order before the first new run.
+The eleven paired seeds remain reserved until an arm qualifies.
+
 ```sh
 task=grok-division-p97
 bin=target/release/argand
@@ -392,6 +432,8 @@ $bin muon-until-perfect "$task" 0 runs/division-muon 20000 1
 $bin rmsprop-checkpoint-proposals "$task" 0 719 runs/division-rms 20000 8192 1 20000 0.2
 $bin softsign-checkpoint-proposals "$task" 0 719 runs/division-row-clip 20000 8192 0.3 20000 0.1 1.75
 $bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
+$bin equal-moment-until-perfect "$task" 0 runs/division-equal 4096 2 20000
+bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
 bash plot_division_optimizers.sh runs/division-comparison "runs/division-x2/$task/seed0" "runs/division-lion/$task/seed0"
 ```

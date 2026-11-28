@@ -46,6 +46,10 @@ pub(crate) enum Rule {
         scale: f64,
         decay: f64,
     },
+    EqualMoment {
+        scale: f64,
+        decay: f64,
+    },
     Muon(f64),
 }
 
@@ -63,6 +67,7 @@ impl Rule {
             } => "row-clipped-softsign-lion-wsd",
             Self::Softsign { .. } => "softsign-lion-wsd",
             Self::RmsProp { .. } => "rmsprop-wsd",
+            Self::EqualMoment { .. } => "equal-moment-wsd",
             Self::Muon(_) => "complex-muon-wsd",
         }
     }
@@ -85,6 +90,10 @@ impl Optimizer {
         schedule: Schedule,
     ) -> Result<Self> {
         Ok(match rule {
+            Rule::EqualMoment { scale, decay } => Self::RmsProp(
+                crate::engine::rmsprop::RmsProp::new(engine, schedule, scale, decay)?
+                    .with_equal_moments(engine)?,
+            ),
             Rule::RmsProp { scale, decay } => Self::RmsProp(crate::engine::rmsprop::RmsProp::new(
                 engine, schedule, scale, decay,
             )?),
@@ -317,6 +326,11 @@ impl Job {
                 identity["optimizer"] = rule.label().into();
                 identity["rmsprop"] = crate::engine::rmsprop::settings(scale, decay, schedule);
             }
+            Rule::EqualMoment { scale, decay } => {
+                identity["optimizer"] = rule.label().into();
+                identity["equal_moment"] =
+                    crate::engine::rmsprop::equal_moment_settings(scale, decay, schedule);
+            }
             Rule::Muon(scale) => {
                 identity["optimizer"] = rule.label().into();
                 identity["muon"] = crate::engine::muon::settings(scale, schedule);
@@ -356,9 +370,6 @@ impl Job {
         }
         let division = self.row["name"] == division::NAME;
         let mut proposals = if let Stop::CheckpointProposal { seed, first } = stop {
-            if first > self.until {
-                return Err("first proposal exceeds the effective observation cap".into());
-            }
             identity["optimizer"] = format!("{}-checkpoint-proposals", rule.label()).into();
             identity["checkpoint_proposals"] = json!({"seed":seed,"first_eligible_update":first,
                 "stddev":crate::engine::adamw::FIRST_NOISE_STDDEV,
@@ -380,7 +391,7 @@ impl Job {
             engine.order_shared_gradients()?;
         }
         let train = &self.task.splits["train"];
-        let reconstructed = if proposals.is_some() && division {
+        let reconstructed = if division {
             Some(crate::division_certificate::reconstructed_hidden()?)
         } else {
             None

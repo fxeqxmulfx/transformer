@@ -1,7 +1,7 @@
 module
 
 public import Transformer.Grokking.FiniteRecovery.ArgandAdamW
-public import Transformer.Grokking.AdamW.MomentLimits
+public import Transformer.Grokking.FiniteRecovery.DecoupledDecay
 
 /-! The original WSD schedule holds its final positive rate indefinitely if
 called beyond the finite experiment. For ordinary AdamW, a common limit of
@@ -11,18 +11,8 @@ the clipped gradients determines the full weight limit explicitly. -/
 
 namespace Transformer.Grokking.FiniteRecovery.AdamW
 
-open Filter
+open Filter DecoupledDecay
 open scoped Topology
-
-private theorem moving_average_limit {q l : ℝ} {x z : ℕ → ℝ}
-    (hq : 0 ≤ q) (hq' : q < 1) (hz : Tendsto z atTop (𝓝 l))
-    (h : ∀ t, x (t+1) = q*x t + (1-q)*z t) : Tendsto x atTop (𝓝 l) := by
-  have he (t : ℕ) : x t = Grokking.AdamW.momentAt q z (x 0) t := by
-    induction t with
-    | zero => rfl
-    | succ t ih => rw [h, ih]; rfl
-  exact (Grokking.AdamW.moment_tendsto_of_input_tendsto q (x 0) l z hq hq' hz).congr
-    (fun t => (he t).symm)
 
 variable {ι : Type*} [Fintype ι]
 

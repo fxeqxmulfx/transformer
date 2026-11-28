@@ -45,7 +45,7 @@ pub(crate) fn lean_source() -> Result<String> {
     for (i, &j) in matching.iter().enumerate() {
         inverse[j] = i;
     }
-    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\n\n");
+    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\n\n");
     writeln!(
         out,
         "/- Observed equations SHA-256: {} -/",
@@ -147,6 +147,32 @@ theorem original_projected_and_rmsProp_recovery (f : DivisionInput → Fin 239)
 
 example := original_projected_and_rmsProp_recovery divisionAnswer divisionAnswer_mem
 #print axioms original_projected_and_rmsProp_recovery
+
+theorem original_equalMoment_checkpoint_recovery (scale : ℝ) (hs : 0 ≤ scale) (hcap : scale ≤ 10000)
+    (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)
+    (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :
+    let S := bitDivisionMask rows
+    let hidden : {x : DivisionInput // x ∉ S} → DivisionInput := Subtype.val
+    PathCheckpointRecovery 1 (fun j => (equalMomentRun 1 (1/10) batch (fun t => scale*wsdRate 20000 t)
+      draw (256*(32+j))).weights) (divisionPrompt ∘ hidden) (f ∘ hidden)
+      (hiddenCertificate S (factorClass unitToken) (fun x => f x) hidden) ((1/1000000 : ℝ≥0)^2) :=
+  factor_equalMoment_checkpoint_recovers scale hs hcap _ _ original_graph.1 original_graph.2 f hf batch draw
+
+example := original_equalMoment_checkpoint_recovery 3 (by norm_num) (by norm_num) divisionAnswer divisionAnswer_mem
+#print axioms original_equalMoment_checkpoint_recovery
+
+/-- For both ordinary optimizers the graph hypotheses are discharged on
+the observed split. The common-gradient and structural limit hypotheses
+remain explicit in the returned implications. -/
+example (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :=
+  equalMoment_wsd_generalizes 1 2 (by norm_num) (by norm_num) batch draw divisionPrompt (bitDivisionMask rows)
+    (factorClass unitToken) (factorClass_identified _ _ original_graph.1 original_graph.2)
+    divisionAnswer divisionAnswer_mem
+
+example (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :=
+  softsign_wsd_generalizes 1 (3/10) (2/3) (by norm_num) (by norm_num) (by norm_num)
+    batch draw divisionPrompt (bitDivisionMask rows) (factorClass unitToken)
+    (factorClass_identified _ _ original_graph.1 original_graph.2) divisionAnswer divisionAnswer_mem
 
 example := original_nuclear_completion (u := fun _ => 1) (v := fun _ => 1) (by simp [vecMulVec_apply])
 example := original_factor_class_stabilizes 12 (fun _ => 100000) (fun _ => 1) (by intro; norm_num)

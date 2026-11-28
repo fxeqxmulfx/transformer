@@ -1,6 +1,7 @@
 module
 
 public import Transformer.AMSGradW.Kernite
+public import Transformer.Grokking.AdamW.MomentLimits
 
 /-! A uniform coordinate bound for decoupled weight decay with any bounded
 optimizer direction. It is independent of clipping, data order and model. -/
@@ -8,6 +9,42 @@ optimizer direction. It is independent of clipping, data order and model. -/
 @[expose] public section
 
 namespace Transformer.Grokking.FiniteRecovery.DecoupledDecay
+
+open Filter
+open scoped Topology
+
+/-- A scalar exponential moving average inherits the limit of its inputs. -/
+theorem moving_average_limit {q l : ℝ} {x z : ℕ → ℝ}
+    (hq : 0 ≤ q) (hq' : q < 1) (hz : Tendsto z atTop (𝓝 l))
+    (h : ∀ t, x (t+1) = q*x t + (1-q)*z t) : Tendsto x atTop (𝓝 l) := by
+  have he (t : ℕ) : x t = Grokking.AdamW.momentAt q z (x 0) t := by
+    induction t with
+    | zero => rfl
+    | succ t ih => rw [h, ih]; rfl
+  exact (Grokking.AdamW.moment_tendsto_of_input_tendsto q (x 0) l z hq hq' hz).congr
+    (fun t => (he t).symm)
+
+/-- On a positive constant tail the weights of any decoupled update converge
+to minus the limiting direction divided by decay. All earlier rates may vary. -/
+theorem tendsto_of_direction_limit {I : Type*} (w d : ℕ → I → ℝ) (D : I → ℝ)
+    {decay η : ℝ} (hd : 0 < decay) (hη : 0 < η) (hc : η*decay ≤ 1)
+    (rate : ℕ → ℝ) (hr : ∀ᶠ t in atTop, rate t = η)
+    (hs : ∀ t i, w (t+1) i = (1-rate t*decay)*w t i-rate t*d t i)
+    (hD : Tendsto d atTop (𝓝 D)) : Tendsto w atTop (𝓝 fun i => -D i / decay) := by
+  obtain ⟨N,hN⟩ := eventually_atTop.mp hr
+  apply tendsto_pi_nhds.mpr
+  intro i
+  apply (tendsto_add_atTop_iff_nat N).mp
+  apply moving_average_limit (q := 1-η*decay) (sub_nonneg.mpr hc) (by nlinarith [mul_pos hη hd])
+    ((tendsto_add_atTop_iff_nat N).2 ((tendsto_pi_nhds.mp hD i).neg.div_const decay))
+  intro t
+  rw [show t+1+N = (t+N)+1 by omega,hs,hN (t+N) (Nat.le_add_left _ _)]
+  field_simp [hd.ne']
+  ring
+
+example := tendsto_of_direction_limit (fun _ _ : ℕ => (0:ℝ)) (fun _ _ => 0) (fun _ => 0)
+  (decay := 1) (η := 1/2) (by norm_num) (by norm_num) (by norm_num) (fun _ => 1/2)
+  (Eventually.of_forall fun _ => rfl) (by intros; norm_num) tendsto_const_nhds
 
 variable {ι : Type*} [Fintype ι]
 

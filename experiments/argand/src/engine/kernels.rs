@@ -93,6 +93,42 @@ pub(super) mod device {
         sub.rn.f32(w, w, t);
         put(weights, i, w);
     }
+    // Uncorrected Adam with shared decay. Both buffers see the same clipped
+    // sample and use identical coefficients. In exact reals, m*m <= v.
+    pub unsafe extern "ptx-kernel" fn equal_moment_decay(
+        weights: *mut f32, first: *mut f32, second: *mut f32,
+        grad: *const f32, norm: *const f32, count: u32, rate: f32, shrink: f32,
+    ) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past { ret(); }
+        let (m, v, g, w, s, t): (f32, f32, f32, f32, f32, f32);
+        ld.global.f32(s, [norm]);
+        max.f32(s, s, 1.0);
+        load(g, grad, i);
+        div.rn.f32(g, g, s);
+        load(m, first, i);
+        mul.rn.f32(m, m, 0.9);
+        mul.rn.f32(t, g, 0.1);
+        add.rn.f32(m, m, t);
+        put(first, i, m);
+        load(v, second, i);
+        mul.rn.f32(v, v, 0.9);
+        mul.rn.f32(t, g, g);
+        mul.rn.f32(t, t, 0.1);
+        add.rn.f32(v, v, t);
+        put(second, i, v);
+        sqrt.rn.f32(s, v);
+        add.rn.f32(s, s, 1e-8);
+        div.rn.f32(t, m, s);
+        mul.rn.f32(t, t, rate);
+        load(w, weights, i);
+        mul.rn.f32(w, w, shrink);
+        sub.rn.f32(w, w, t);
+        put(weights, i, w);
+    }
     pub unsafe extern "ptx-kernel" fn clip_complex_rows(
         w: *mut f32, rows: *const u32, radius: f32,
     ) {
