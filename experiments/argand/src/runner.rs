@@ -25,7 +25,7 @@ const USAGE: &str = concat!(
     "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
-    "division-certificate CELL (terminal|first-strict) | division-recorded-lean CELL (terminal|first-strict) | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
+    "division-certificate CELL (terminal|first-strict) | division-recorded-lean CELL (terminal|first-strict) [--hidden] | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
 );
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
@@ -235,14 +235,16 @@ pub fn command(args: &[String]) -> Result<()> {
             );
             Ok(())
         }
-        ("division-recorded-lean", [cell, kind])
-            if kind == "terminal" || kind == "first-strict" =>
+        ("division-recorded-lean", [cell, kind, scope @ ..])
+            if (kind == "terminal" || kind == "first-strict")
+                && (scope.is_empty() || matches!(scope, [flag] if flag == "--hidden")) =>
         {
             println!(
                 "{}",
                 crate::division_certificate::recorded_scores::export(
                     Path::new(cell),
-                    kind == "first-strict"
+                    kind == "first-strict",
+                    !scope.is_empty()
                 )?
             );
             Ok(())

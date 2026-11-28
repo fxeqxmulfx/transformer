@@ -476,6 +476,11 @@ round-trips each value to its original bits, including the sign of zero.
 The Lean kernel checks 97 blocks of 96 inputs and proves that the token
 for division in the field with 97 elements strictly beats every rival.
 The numerical forward pass and the training trajectory are supplied by Kernite.
+At the normalized AdamW first hit, three observed predictions are still
+wrong. The hidden-only checker retains all 2,225,568 recorded FP32
+logits and checks all 238 rival inequalities on each complementary
+input. Lean checks the original training mask and proves that its
+complement contains exactly 4,656 equations.
 [Proof for recorded logits](../../src/Transformer/Grokking/FiniteRecovery/Binary32Scores.lean)
 
 For either ordinary optimizer, a common limit $G$ of the actual clipped
@@ -556,6 +561,8 @@ ARGAND_BIN="$NORMALIZED_BINARY" bash run_division_normalized_pairs.sh runs/divis
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
 $bin division-recorded-lean "runs/division-equal/$task/seed0" terminal
 bash check_recorded_division.sh "runs/division-equal/$task/seed0" terminal
+$bin division-recorded-lean "runs/division-normalized/$task/seed0" terminal --hidden
+bash check_recorded_division.sh "runs/division-normalized/$task/seed0" terminal --hidden
 bash plot_division_optimizers.sh runs/division-comparison "runs/division-x2/$task/seed0" "runs/division-lion/$task/seed0"
 ```
 
