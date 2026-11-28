@@ -436,6 +436,19 @@ The paired time is measured in updates through the first strict hidden
 success, with the penalty for missing the cutoff specified in the protocol.
 [Repair validation protocol](division-uncorrected-paired-registration.json)
 
+All eleven uncorrected 0.9/0.95 first attempts started at 0/4,656 and
+reached 4,656/4,656 in 1,792–3,328 updates (median 2,560). Nine of the
+eleven also solved every observed input at the first hidden hit. Across
+ten uninterrupted matched pairs the candidate was earlier four times,
+tied twice and later four times. The paired median difference was zero.
+One stock control ran out of GPU memory before recording its first check
+and reached 100% at 3,072 on retry. Accounting conservatively for that
+interruption gives an upper confidence bound of +768 updates for the
+population median difference. A speed advantage is unresolved at this
+sample size. The one-sided exact binomial tail for eleven successes
+under a 0.75 success probability is 0.04224. The corresponding one-sided
+95% lower confidence limit is 0.7616 for this prespecified candidate.
+
 For eleven complete independent pairs, let $D$ be candidate time minus
 control time. If $m$ is a population median, $P(D<m)\leq 1/2$. For the
 ninth-smallest observed difference to fall below $m$, at least nine of
@@ -483,14 +496,15 @@ coordinate stays within $\max(\|w_0\|_\infty,10\sqrt{19/14})$ in both
 real recurrences.
 [Normalized moment and weight bounds](../../src/Transformer/Grokking/FiniteRecovery/NormalizedMomentBound.lean)
 
-A single normalized AdamW run can also check perturbed copies after a chosen
+A single normalized or uncorrected Adam run can check perturbed copies after a chosen
 update. The ordinary checkpoint is evaluated first. After a miss, the
 verifier may test one copy with independent Gaussian noise on its weights.
 A rejection restores the ordinary weights and training continues with the
 same moments and minibatch order. Division uses labels reconstructed from
 the observations. A hit before the first proposal has exactly the ordinary
-first-hit index. On every real trajectory, a successful stock AdamW check
+first-hit index. On every real trajectory, a successful ordinary check
 guarantees a verified hit by the same index, for every choice of the noise.
+For recursive normalization the ordinary path coincides with stock AdamW.
 
 For each fixed initialization, a finite set of hidden prompts, an
 identifiable class and a strictly representable target, the bounded
@@ -503,6 +517,8 @@ practical value of $m$. The native finite-precision generator is tested
 separately. On the Boolean shift task with ordered reductions, a proposal
 at zero was rejected. Ordinary training, proposals from zero and proposals
 from update 8,192 all saved the same weight bytes at update four.
+The uncorrected rule rejected copies at zero and four and saved the
+same bytes as its ordinary run at update eight.
 [Delayed checkpoints and the general convergence theorem](../../src/Transformer/Grokking/FiniteRecovery/DelayedCheckpoints.lean)
 
 For any hidden set of more than 288 division inputs, stock Gaussian
@@ -525,6 +541,14 @@ checks its recorded weights digest, step, replay and observed-data
 certificate. All eleven seeds were fixed before their first recursive-gain
 run. The same implementation also runs on the original GPT short and long cases.
 [Paired replication](division-normalized-validation.json)
+
+The recursive-gain implementation reached strict perfection on all eleven
+first attempts from 0/4,656, at 1,536–3,584 updates (median 2,560).
+It was earlier in two complete pairs, tied in one, and later in seven.
+The paired median was +256 updates and the conservative one-sided upper
+median bound including the interrupted control was +512. The two variants
+reuse these seeds and controls, so their confidence limits are per
+candidate and share the same eleven experimental units.
 
 The step-2,816 equal-decay and step-2,304 unequal-decay checkpoints
 were also checked from their recorded FP32 logits.
@@ -648,6 +672,7 @@ $bin equal-moment-until-perfect "$task" 0 runs/division-equal 20000 3 20000
 $bin uncorrected-adam-until-perfect "$task" 0 runs/division-uncorrected 20000 3 20000
 $bin normalized-adamw-until-perfect "$task" 0 runs/division-normalized 20000 3 20000
 $bin normalized-adamw-checkpoint-proposals "$task" 0 719 runs/division-normalized-delayed 20000 8192 3 20000
+$bin uncorrected-adam-checkpoint-proposals "$task" 0 719 runs/division-uncorrected-delayed 20000 8192 3 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high

@@ -95,6 +95,28 @@ namespace Argand
 variable {A X Z : Type*} [Fintype A] [Finite Z] {H d L T : ℕ}
 local notation "Draw" => (ComplexParameter A H d L → ℂ)
 
+/-- Verify each hidden prediction from the observation restriction, using
+independent Gaussian weights for the post-prefix forward proposals. -/
+def DelayedHiddenRecovery (r B : ℕ) (center : ℕ → Weights A H d L) (prompt : Z → Word A (T+1))
+    (hidden : Z → X) (S : Set X) (family : Set (X → A)) (f : X → A) (v : ℝ≥0) : Prop :=
+  let score (w : Weights A H d L) x := (Model.fromWeights w).logits r (prompt x) (Fin.last T)
+  DelayedRecovery B (Measure.infinitePi (fun _ : ℕ => Measure.pi (fun _ : Parameter A H d L => gaussianReal 0 v)))
+    center (fun w => hiddenCertificate S family (fun x => f x) hidden (score w)) (fun w => StrictOn (score w) (f ∘ hidden))
+
+/-- Every bounded sequence of full-Argand checkpoints can use the same
+observation verifier and delayed proposals, independently of the optimizer. -/
+theorem bounded_delayed_hidden_recovery (r B : ℕ) (center : ℕ → Weights A H d L) {R : ℝ} (hC : ∀ j, ‖center j‖ ≤ R)
+    (prompt : Z → Word A (T+1)) (hidden : Z → X) (S : Set X) (family : Set (X → A))
+    (hid : InjOn (fun g : X → A => fun x : S => g x) family) (f : X → A) (hf : f ∈ family)
+    (v : ℝ≥0) (hv : 0 < v)
+    (hrep : ∃ w : Weights A H d L, StrictOn (fun x => (Model.fromWeights w).logits r (prompt x) (Fin.last T)) (f ∘ hidden)) :
+    DelayedHiddenRecovery r B center prompt hidden S family f v := by
+  let : (gaussianReal 0 v).IsOpenPosMeasure := (gaussianReal_absolutelyContinuous' 0 hv.ne').isOpenPosMeasure
+  apply delayed_compact_recovery _ B center (isCompact_closedBall 0 R) _ _ _ _ (strict_prompt_weights_open r prompt _) hrep
+  · simpa only [mem_closedBall,dist_zero_right] using hC
+  · intro w
+    exact identified_property_iff S family hid f hf _
+
 /-- From an arbitrary fixed initialization, all hidden answers are eventually
 certified on a single continuing normalized AdamW path. Each ordinary
 center agrees with stock AdamW under the same updates. -/
@@ -112,17 +134,44 @@ theorem normalizedAdam_delayed_recovery (r B : ℕ) (schedule : ℕ → ℕ) (ra
   intro score center
   refine ⟨fun j => normalizedAdam_weights ..,?_⟩
   let w := sgdInitialWeights (H := H) (d := d) (layers := L) true draw
-  let R := max ‖w‖ (10*Real.sqrt (19/14))
-  let : (gaussianReal 0 v).IsOpenPosMeasure := (gaussianReal_absolutelyContinuous' 0 hv.ne').isOpenPosMeasure
-  apply delayed_compact_recovery _ B center (isCompact_closedBall 0 R) _ _ _ _ (strict_prompt_weights_open r prompt _) hrep
-  · intro j
-    rw [mem_closedBall,dist_zero_right]
-    apply (pi_norm_le_iff_of_nonneg ((norm_nonneg w).trans (le_max_left _ _))).2
-    exact fun i => NormalizedAdam.corrected_weight_bound rate hr (fun t => batchGradient r (batch t)) w (schedule j) i
-  · intro w
-    exact identified_property_iff S family hid f hf (fun g => StrictOn (score w) (g ∘ hidden))
+  apply bounded_delayed_hidden_recovery r B center (R := max ‖w‖ (10*Real.sqrt (19/14))) _ prompt hidden S family hid f hf v hv hrep
+  intro j
+  apply (pi_norm_le_iff_of_nonneg ((norm_nonneg w).trans (le_max_left _ _))).2
+  exact fun i => NormalizedAdam.corrected_weight_bound rate hr (fun t => batchGradient r (batch t)) w (schedule j) i
+
+/-- The operationally simpler two-buffer rule has no bias clock. Positive
+decoupled decay provides the compact bound for every possible batch stream. -/
+theorem uncorrectedAdam_delayed_recovery (r B : ℕ) (schedule : ℕ → ℕ) (ε decay : ℝ) (hε : 0 < ε) (hd : 0 < decay)
+    (rate : ℕ → ℝ) (hr : ∀ t, 0 ≤ rate t ∧ rate t*decay ≤ 1) (batch : ℕ → List (LabeledPosition A)) (draw : Draw)
+    (prompt : Z → Word A (T+1)) (hidden : Z → X) (S : Set X) (family : Set (X → A))
+    (hid : InjOn (fun g : X → A => fun x : S => g x) family) (f : X → A) (hf : f ∈ family)
+    (v : ℝ≥0) (hv : 0 < v)
+    (hrep : ∃ w : Weights A H d L, StrictOn (fun x => (Model.fromWeights w).logits r (prompt x) (Fin.last T)) (f ∘ hidden)) :
+    DelayedHiddenRecovery r B (fun j => (uncorrectedAdamRun r (9/10) (19/20) ε decay batch rate draw (schedule j)).weights)
+      prompt hidden S family f v := by
+  let w := sgdInitialWeights (H := H) (d := d) (layers := L) true draw
+  apply bounded_delayed_hidden_recovery r B _ (R := max ‖w‖ (Real.sqrt (19/14)/decay)) _ prompt hidden S family hid f hf v hv hrep
+  intro j
+  apply (pi_norm_le_iff_of_nonneg ((norm_nonneg w).trans (le_max_left _ _))).2
+  exact fun i => EqualMoment.uncorrected_weight_bound ε hε decay hd rate hr (fun t => batchGradient r (batch t)) w (schedule j) i
 
 open Division.Factors
+
+/-- Apply the distinct-decay rule to every quotient-factor target, for every
+initial draw and any connected unit mask with an observed zero row. -/
+theorem factor_delayed_uncorrectedAdam (B : ℕ) (hidden : Z → DivisionInput) (S : Set DivisionInput)
+    (hc : (FlatSpectrum.patternGraph (unitMask S)).Preconnected) (hz : ∃ j, (none,j) ∈ S)
+    (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken) (batch : ℕ → List (LabeledPosition (Fin 239)))
+    (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :
+    DelayedHiddenRecovery 1 B (fun j => (uncorrectedAdamRun 1 (9/10) (19/20) (1/100000000) (1/10)
+      batch (fun k => 3*wsdRate 20000 k) draw (256*j)).weights) (divisionPrompt ∘ hidden) hidden S
+      (factorClass unitToken) f ((1/1000000 : ℝ≥0)^2) := by
+  obtain ⟨w,hw⟩ := class_native_realization f hf
+  apply uncorrectedAdam_delayed_recovery 1 B _ _ _ (by norm_num) (by norm_num) _ _ batch draw _ hidden S _
+    (factorClass_identified _ _ hc hz) f hf _ (by norm_num) ⟨sgdInitialWeights true w,fun x => hw (hidden x)⟩
+  intro t
+  obtain ⟨lo,hi⟩ := wsdRate_bounds 20000 t
+  exact ⟨by linarith,by linarith⟩
 
 /-- Native 4 × 16 width, six layers, peak 0.003, decay 0.1, 256 updates
 per check. Starting proposals at check 32 permits 8,192 ordinary updates. -/
