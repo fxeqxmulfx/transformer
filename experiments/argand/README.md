@@ -983,8 +983,16 @@ the observable risk along the actual updates and the mean bound on its
 excess. `original_learned_three_quarters` takes the stock Gaussian law and
 the true quotient table and removes the runs whose step-0 hidden table is
 already strict. Under the same hypotheses the remaining mass exceeds
-3/4 − 1/73!.
-[Mask witnesses](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean) · [Necessary conditions](../../src/Transformer/Grokking/FiniteRecovery/HiddenLearnability.lean) · [Division case](../../src/Transformer/Grokking/FiniteRecovery/ArgandHiddenLearnability.lean)
+3/4 − 1/73!. `original_seed_kernel_three_quarters` states the bound for the
+CUDA runner's own law and update. The probability is over a uniform u32
+seed, which fixes the initialization and the shuffle. From step `B` on the
+stored weights follow the binary32 AdamW kernel at rates up to 2⁻²², the
+WSD floor included. At those rates the decay factor rounds to one, so the
+Jacobian bound is assumed along the kernel's displacement fl(p − step) − p,
+which carries no decay. The logits are those of the real forward pass at
+the stored weights. That Jacobian bound and the mean of its excess over all
+2³² seeds are again assumptions.
+[Mask witnesses](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean) · [Necessary conditions](../../src/Transformer/Grokking/FiniteRecovery/HiddenLearnability.lean) · [Division case](../../src/Transformer/Grokking/FiniteRecovery/ArgandHiddenLearnability.lean) · [Seed law and kernel](../../src/Transformer/Grokking/FiniteRecovery/ArgandSeedKernel.lean)
 
 A bijection of the token vocabulary preserves the probability that ordinary
 AdamW gets every hidden answer strictly right at a fixed step in real

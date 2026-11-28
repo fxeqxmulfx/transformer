@@ -65,7 +65,7 @@ pub(crate) fn lean_source() -> Result<String> {
         inverse[j] = i;
     }
     let mut out = String::from(
-        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\nimport Transformer.Grokking.FiniteRecovery.ArgandObservedJacobian\nimport Transformer.Grokking.FiniteRecovery.ArgandHiddenLearnability\n\n",
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\nimport Transformer.Grokking.FiniteRecovery.ArgandObservedJacobian\nimport Transformer.Grokking.FiniteRecovery.ArgandHiddenLearnability\nimport Transformer.Grokking.FiniteRecovery.ArgandSeedKernel\n\n",
     );
     writeln!(
         out,
@@ -272,6 +272,43 @@ theorem original_learned_three_quarters (batches : OrdinaryDivision.Draw → ℕ
 example (batches : OrdinaryDivision.Draw → ℕ → List riskSites) :=
   original_learned_three_quarters batches 20000 (ρ := 0) (floor := 0) le_rfl one_pos (by norm_num)
     (fun _ => 0) measurable_const (integrable_const 0) (ae_of_all _ fun _ => le_rfl) (by norm_num)
+
+/-- **Three quarters for the CUDA runner on the original split, conditionally.** The
+seed is uniform on u32 and fixes the initialization and the shuffle; from step `B` on
+the stored binary32 weights follow the binary32 AdamW kernel at rates in `[0, 2^{-22}]`,
+the WSD floor included, where no decay is applied. The logits are real at the stored
+weights. The Jacobian bound along the kernel's displacement and the mean of its excess,
+the average over all seeds (`integral_uniform_seed`), are hypotheses. -/
+theorem original_seed_kernel_three_quarters {F : DivisionInput → Fin 239} (hF : F ∈ factorClass unitToken)
+    {Q : ℝ → ℝ} (hQ : Transformer.Precision.IsNearest (Transformer.Precision.grid 8 23) Q)
+    (p first second grad : Fin (2^32) → ℕ → Weights (Fin 239) 4 16 6) (rate bc1 bc2 : ℕ → ℝ) (B : ℕ)
+    (small : ∀ t, B ≤ t → 0 ≤ rate t ∧ rate t ≤ 1/2^22)
+    (stored : ∀ z t i, p z t i ∈ Transformer.Precision.grid 8 23)
+    (kernel : ∀ z t, B ≤ t → ∀ i, p z (t+1) i = (Transformer.Precision.adamKernel Q (p z t i)
+      (first z t i) (second z t i) (grad z t i) (rate t) Transformer.Precision.tenth32 (bc1 t) (bc2 t)).1)
+    {ρ floor : ℝ} (hρ : 0 ≤ ρ) (hlt : ρ < 1) (hr : floor < 1/2) (e : Fin (2^32) → ℝ) (hp : ∀ z, 0 ≤ e z)
+    (mean : ∫ z, e z ∂(ProbabilityTheory.uniformOn Set.univ : Measure (Fin (2^32))) < (1-ρ)*(1/2-floor)/4) :
+    let U := ObservedDrift.marginalBound (H := 4) (d := 16) (L := 6) 1 1 riskSites (fun x => F x) F
+      divisionPrompt (fun _ => Fin.last 4)
+    (∀ z t, B ≤ t → ∀ u ∈ Set.Ioo (0:ℝ) 1,
+      let Δ : Weights (Fin 239) 4 16 6 := fun i => Q (p z t i - Transformer.Precision.kernelStep Q
+        (first z t i) (second z t i) (grad z t i) (rate t) (bc1 t) (bc2 t)) - p z t i
+      fderiv ℝ U (p z t + u • Δ) Δ ≤ -(1-ρ)*(U (p z t)-floor)+e z) →
+    3/4 < (ProbabilityTheory.uniformOn Set.univ : Measure (Fin (2^32))).real {z | HiddenSuccess
+      (bitDivisionMask rows) (fun t x => (Model.fromWeights (p z t)).logits 1 (divisionPrompt x) (Fin.last 4)) F} := by
+  intro U jac
+  rw [← riskSites_coe]
+  exact ObservedDrift.seed_kernel_three_quarters riskSites (by rw [riskSites_coe]; exact original_graph.1)
+    (original_graph.2.imp fun _ h => (Set.Finite.mem_toFinset _).mpr h) hF hQ p first second grad rate bc1 bc2 B
+    small stored kernel hρ hlt hr e hp (by rwa [ObservedDrift.integral_uniform_seed] at mean) jac
+#print axioms original_seed_kernel_three_quarters
+
+example (first second grad : Fin (2^32) → ℕ → Weights (Fin 239) 4 16 6) (bc1 bc2 : ℕ → ℝ) :=
+  original_seed_kernel_three_quarters divisionAnswer_mem nearest32_spec
+    (ObservedDrift.kernelRun first second grad (fun _ => Transformer.Precision.floorRate32) bc1 bc2) first second
+    grad (fun _ => Transformer.Precision.floorRate32) bc1 bc2 19999 (fun _ _ => floorRate32_small)
+    (ObservedDrift.kernelRun_stored first second grad _ bc1 bc2) (fun _ _ _ _ => rfl) (ρ := 0) (floor := 0)
+    le_rfl one_pos (by norm_num) (fun _ => 0) (fun _ => le_rfl) (by norm_num)
 
 theorem original_factor_label_orbit {X : Type*} [Finite X] (G : Subgroup (Equiv.Perm (Fin 239)))
     (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)
