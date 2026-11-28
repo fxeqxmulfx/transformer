@@ -37,6 +37,25 @@ pub(crate) fn lean_source() -> Result<String> {
                 .ok_or("unobserved unit column")?,
         );
     }
+    // Choose one hidden input for each quotient whose token we will permute.
+    // Both operands stay outside the entire set of permuted quotients.
+    let free = 10..=82;
+    let mut probes = Vec::new();
+    for q in free.clone() {
+        let (a, b) = (1..=N)
+            .filter(|b| !free.contains(b))
+            .find_map(|b| {
+                (1..=N)
+                    .find(|&a| {
+                        !free.contains(&a)
+                            && observed[a] >> (b - 1) & 1 == 0
+                            && completion.label(a, b) == q
+                    })
+                    .map(|a| (a, b))
+            })
+            .ok_or("missing hidden probe for output permutation")?;
+        probes.push(format!("({}, {})", a - 1, b - 1));
+    }
     let matching = completion
         .graph
         .perfect_matching
@@ -46,7 +65,7 @@ pub(crate) fn lean_source() -> Result<String> {
         inverse[j] = i;
     }
     let mut out = String::from(
-        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\n\n",
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\n\n",
     );
     writeln!(
         out,
@@ -67,6 +86,58 @@ pub(crate) fn lean_source() -> Result<String> {
         writeln!(out, "def {name} : Array (Fin 96) := #[{values}]")?;
     }
     out.push_str("def rows (i : Fin 97) := observed[i.val]!\ndef bridge (i : Fin 96) := bridges[i.val]!\ndef cover (i : Fin 96) := covers[i.val]!\n");
+    writeln!(
+        out,
+        "def massProbes : Array (Fin 96 × Fin 96) := #[{}]",
+        array(&probes)
+    )?;
+    out.push_str(r#"
+def probeIndices (i : Fin 73) := massProbes[i.val]!
+def probe (i : Fin 73) : DivisionInput :=
+  (some (divisionUnitIndex.symm (probeIndices i).1), divisionUnitIndex.symm (probeIndices i).2)
+
+theorem original_probe_hidden (i : Fin 73) : probe i ∉ bitDivisionMask rows := by
+  have h : ∀ j : Fin 73, (rows (probeIndices j).1.succ).testBit (probeIndices j).2.val = false := by decide
+  simpa [bitDivisionMask,probe] using h i
+
+theorem original_probe_answers (i : Fin 73) : (divisionAnswer (probe i)).val = 32+i.val := by
+  let q : Fin 96 := ⟨9+i.val,by omega⟩
+  have table : ∀ j : Fin 73, (probeIndices j).1.val+1 =
+      ((10+j.val)*((probeIndices j).2.val+1))%97 := by decide
+  have product : divisionUnitIndex.symm (probeIndices i).1 =
+      divisionUnitIndex.symm q * divisionUnitIndex.symm (probeIndices i).2 := by
+    apply Units.ext
+    apply ZMod.val_injective 97
+    change (probeIndices i).1.val+1 = ((9+i.val+1)*((probeIndices i).2.val+1))%97
+    simpa only [show 9+i.val+1 = 10+i.val by omega] using table i
+  change 22+((divisionUnitIndex.symm (probeIndices i).1 / divisionUnitIndex.symm (probeIndices i).2).val.val) = _
+  rw [div_eq_iff_eq_mul.mpr product]
+  change 22+(9+i.val+1) = 32+i.val
+  omega
+
+theorem original_zero_proposal_ceiling (variance : ℝ≥0) :
+    let law := Measure.pi (fun _ : Parameter (Fin 239) 4 16 6 => ProbabilityTheory.gaussianReal 0 variance)
+    law.real {z | ∀ x ∈ (bitDivisionMask rows)ᶜ, ∀ b, b ≠ divisionAnswer x →
+      (Model.fromWeights z).logits 1 (divisionPrompt x) (Fin.last 4) b <
+        (Model.fromWeights z).logits 1 (divisionPrompt x) (Fin.last 4) (divisionAnswer x)} ≤
+          1/(Nat.factorial 73 : ℝ) :=
+  division_zero_proposal_ceiling _ probe original_probe_hidden original_probe_answers (by decide) variance
+
+#print axioms original_zero_proposal_ceiling
+
+theorem original_uniform_proposal_range (R : ℝ) (hR : 0 ≤ R) :
+    let law := Measure.pi (fun _ : Parameter (Fin 239) 4 16 6 =>
+      ProbabilityTheory.gaussianReal 0 ((1/1000000 : ℝ≥0)^2))
+    let U := {w : Weights (Fin 239) 4 16 6 | ∀ x ∈ (bitDivisionMask rows)ᶜ, ∀ b, b ≠ divisionAnswer x →
+      (Model.fromWeights w).logits 1 (divisionPrompt x) (Fin.last 4) b <
+        (Model.fromWeights w).logits 1 (divisionPrompt x) (Fin.last 4) (divisionAnswer x)}
+    let p := uniformProposalMass law (Metric.closedBall 0 R) U
+    0 < p ∧ p ≤ ENNReal.ofReal (1/(Nat.factorial 73 : ℝ)) :=
+  division_uniform_proposal_range (bitDivisionMask rows)ᶜ probe original_probe_hidden
+    original_probe_answers (by decide) ((1/1000000 : ℝ≥0)^2) (by norm_num) R hR
+
+#print axioms original_uniform_proposal_range
+"#);
     out.push_str("def matching (i : Fin 96) := matchCols[i.val]!\ndef inverse (j : Fin 96) := inverseRows[j.val]!\n");
     out.push_str("theorem observed_matching : (∀ i, (rows i.succ).testBit (matching i).val = true) ∧ (∀ i, inverse (matching i) = i) ∧ (∀ j, matching (inverse j) = j) := by decide\n");
     out.push_str("theorem original_graph : (patternGraph (unitMask (bitDivisionMask rows))).Preconnected ∧ ∃ j, (none,j) ∈ bitDivisionMask rows :=\n");

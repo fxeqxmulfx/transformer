@@ -1,0 +1,11 @@
+{
+  "case": "grok-division-p97",
+  "event": "After a single perturbation, all 4656 reconstructed hidden labels strictly beat all 238 rivals.",
+  "noise": {"implementation":"checkpoint_proposal::add_gaussian", "stddev":0.000001, "seed_law":"uniform u32 with replacement", "seed_file":"division-proposal-mass-seeds.txt", "seed_file_sha256":"14a74669c04785a961264809a6a1bdaed1110f12c31c2045b106adb62af517f2"},
+  "fixed_centers": [
+    {"name":"uncorrected-failed", "optimizer":"uncorrected-adam-wsd", "seed":69270091, "peak":0.003, "wsd":20000, "choose":"first failed terminal among caps 2048, 1536, 1024 before any perturbation", "draws":1000},
+    {"name":"stock-failed-at-8192", "cell":"division-adamw-wsd-8192-20261128/grok-division-p97/seed0", "draws":1000},
+    {"name":"strict-positive-control", "cell":"division-uncorrected-pairs-20261128/candidate/grok-division-p97/seed69270091", "draws":128}
+  ],
+  "inference":"Per-center one-sided 95% exact binomial bounds. The three bounds jointly use Bonferroni alpha=0.05/3. Use the beginning of the same independently sampled seed file for each center. Center selection uses only ordinary scores."
+}

@@ -25,7 +25,7 @@ const USAGE: &str = concat!(
     "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals | uncorrected-adam-checkpoint-proposals | normalized-adamw-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE [RATE_MULTIPLIER [WSD_BUDGET]] | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
-    "division-certificate CELL (terminal|first-strict) | division-recorded-lean CELL (terminal|first-strict) [--hidden] | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
+    "division-certificate CELL (terminal|first-strict) | division-proposal-mass CELL SEED_FILE DRAWS | division-recorded-lean CELL (terminal|first-strict) [--hidden] | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
 );
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
@@ -239,6 +239,17 @@ pub fn command(args: &[String]) -> Result<()> {
         }
         ("division-mask-lean", []) => {
             print!("{}", crate::division_certificate::mask::lean_source()?);
+            Ok(())
+        }
+        ("division-proposal-mass", [cell, seeds, draws]) => {
+            println!(
+                "{}",
+                crate::division_certificate::proposal_mass::measure(
+                    Path::new(cell),
+                    Path::new(seeds),
+                    draws.parse()?
+                )?
+            );
             Ok(())
         }
         ("division-certificate", [cell, kind]) if kind == "terminal" || kind == "first-strict" => {

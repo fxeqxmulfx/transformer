@@ -1209,9 +1209,57 @@ real-arithmetic AdamW trajectory, conditional on any initialization. The
 0.1 weight decay bounds every checkpoint in the same compact ball.
 Full-support independent Gaussian copies then give a common positive
 conditional hit probability, so the chance of missing all of the first
-$m$ checks tends to zero. The native FP32 pseudorandom generator has
-finite support. Its actual success probability and the number of checks
-needed to exceed 75% on hardware remain unknown. [Single-trajectory proof and the modular tasks](../../src/Transformer/Grokking/FiniteRecovery/ArgandCheckpointProposals.lean)
+$m$ checks tends to zero. [Single-trajectory proof and the modular tasks](../../src/Transformer/Grokking/FiniteRecovery/ArgandCheckpointProposals.lean)
+
+#### Probability of a single perturbed copy
+
+For the division task, let $U$ be the weights that strictly solve all
+4,656 hidden equations, and let $q(c)=P(c+Z\in U)$ for independent
+Gaussian noise of standard deviation $10^{-6}$ per coordinate. The
+largest uniform lower bound over the compact weight ball $C$ used in
+the proof is $p_C=\inf_{c\in C}q(c)$. On the original mask Lean proves
+$0<p_C\le 1/73!\approx 2.24\times10^{-106}$. The certificate supplies a
+hidden prompt for each quotient from 10 through 82. None of those 73
+answer tokens occurs in any supplied prompt. At zero weights, permuting
+their embedding rows preserves the perturbed law. The $73!$ assignments
+on the selected prompts have equal probability and disjoint strict
+success events. The ball contains zero, so this limits a guarantee
+uniform over the ball. Trained checkpoints can have much larger $q(c)$.
+[Uniform bound for division](../../src/Transformer/Grokking/FiniteRecovery/ProposalMass.lean)
+
+A quantitative lower bound is also available when a sup-norm box of
+radius $\rho$ around a strict representative lies in $U$. If every center
+is within sup distance $\Delta$ of this representative, the bound is
+$[2\rho\,\exp(-(\Delta+\rho)^2/(2\sigma^2))/(\sigma\sqrt{2\pi})]^N$ for
+$N$ real weights. It follows by lower-bounding the density on each
+coordinate interval. Using this number for a particular trained path
+requires a certified radius and a bound on its center distances.
+[Gaussian box and finite-check bounds](../../src/Transformer/Grokking/FiniteRecovery/GaussianBox.lean)
+
+The FP32 experiment used fresh uniformly sampled 32-bit noise seeds with
+replacement at each fixed checkpoint. Each copy starts from the original
+weights. All accepted copies pass all 4,656 hidden equations against all
+238 alternatives, using labels reconstructed from the observed graph.
+
+| Fixed checkpoint | Update | Ordinary strict / 4,656 | Ordinary minimum gap | Perfect perturbed copies |
+| --- | ---: | ---: | ---: | ---: |
+| Uncorrected Adam, 0.003 peak | 1,536 | 4,633 | −4.16167 | 0 / 1,000 |
+| Stock AdamW, 0.001 peak | 8,192 | 2,604 | −14.36133 | 0 / 1,000 |
+| Strict uncorrected Adam control, 0.003 peak | 2,304 | 4,656 | +0.07770 | 128 / 128 |
+
+At each failed center the exact one-sided 95% upper bound for its native
+single-copy success probability is $1-0.05^{1/1000}=0.2991\%$. At the
+strict center the lower bound is $0.05^{1/128}=97.69\%$. Simultaneous
+95% bounds for all three centers are 0.409% and 96.85% using Bonferroni.
+The raw failed center precedes the ordinary eligibility threshold. The
+0.001 stock control is an actual failure at that threshold. All eleven
+registered 0.003 uncorrected runs solved division before step 8,192, so
+they supplied no failed center at that step. [Sampling protocol](division-proposal-mass-protocol.json)
+
+Run `division-proposal-mass CELL division-proposal-mass-seeds.txt DRAWS`
+with the Argand binary. The report identifies the saved weights by SHA-256
+and records every successful seed. `division-mask-lean` exports the
+corresponding mathematical certificate for the original training mask.
 
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent

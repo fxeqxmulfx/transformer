@@ -12,6 +12,7 @@ use std::{fs, path::Path};
 
 mod bitplanes;
 pub(crate) mod mask;
+pub(crate) mod proposal_mass;
 pub(crate) mod recorded_scores;
 pub(crate) mod relabel;
 pub(crate) mod row_projection;
