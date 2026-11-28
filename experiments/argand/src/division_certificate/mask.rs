@@ -65,7 +65,7 @@ pub(crate) fn lean_source() -> Result<String> {
         inverse[j] = i;
     }
     let mut out = String::from(
-        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\n\n",
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\n\n",
     );
     writeln!(
         out,
@@ -137,6 +137,24 @@ theorem original_uniform_proposal_range (R : ℝ) (hR : 0 ≤ R) :
     original_probe_answers (by decide) ((1/1000000 : ℝ≥0)^2) (by norm_num) R hR
 
 #print axioms original_uniform_proposal_range
+
+theorem original_ordinary_finite_hit (B : ℕ) (batch : OrdinaryDivision.Draw → OrdinaryDivision.Batches) :
+    let μ := independentGaussianDraws (fun _ : ComplexParameter (Fin 239) 4 16 6 => (1/50 : ℝ≥0)^2)
+    let p := μ (OrdinaryDivision.hit B (fun t => 3*wsdRate 20000 t) batch (bitDivisionMask rows)ᶜ)
+    0 < p ∧ p < 1 :=
+  OrdinaryDivision.tuned_wsd_finite_hit B batch _ (probe 0) (original_probe_hidden 0)
+    (Fin.ext (by simpa using original_probe_answers 0))
+
+example (batch : OrdinaryDivision.Draw → OrdinaryDivision.Batches) := original_ordinary_finite_hit 8192 batch
+#print axioms original_ordinary_finite_hit
+theorem original_ordinary_learned_mass (B : ℕ) (batch : OrdinaryDivision.Draw → OrdinaryDivision.Batches) :
+    let μ := independentGaussianDraws (fun _ : ComplexParameter (Fin 239) 4 16 6 => (1/50 : ℝ≥0)^2)
+    let E := OrdinaryDivision.hit B (fun t => 3*wsdRate 20000 t) batch (bitDivisionMask rows)ᶜ
+    let I := OrdinaryDivision.initialSuccess (bitDivisionMask rows)ᶜ
+    μ.real (E \ I) = μ.real E - μ.real I ∧ μ.real I ≤ 1/(Nat.factorial 73 : ℝ) :=
+  ⟨OrdinaryDivision.learned_mass _ _ _ _ _, OrdinaryDivision.initial_success_ceiling _ probe
+    original_probe_hidden original_probe_answers (by decide) _⟩
+#print axioms original_ordinary_learned_mass
 "#);
     out.push_str("def matching (i : Fin 96) := matchCols[i.val]!\ndef inverse (j : Fin 96) := inverseRows[j.val]!\n");
     out.push_str("theorem observed_matching : (∀ i, (rows i.succ).testBit (matching i).val = true) ∧ (∀ i, inverse (matching i) = i) ∧ (∀ j, matching (inverse j) = j) := by decide\n");

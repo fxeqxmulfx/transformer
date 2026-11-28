@@ -41,6 +41,25 @@ theorem proposal_relabel_preimage (μ : Measure ℝ) [IsProbabilityMeasure μ] (
 
 variable [DecidableEq A]
 
+omit [Fintype A] in
+/-- Distinct assignments of absent labels have disjoint strict-win events.
+This uses only invariance of the draw law and equivariance of the scores. -/
+theorem symmetric_assignment_mass {D : Type*} [MeasurableSpace D] (law : Measure D)
+    [IsProbabilityMeasure law] (free : Finset A) (score : D → free → A → ℝ)
+    (meas : ∀ f, MeasurableSet {z | StrictOn (score z) f})
+    (move : Equiv.Perm free → D → D)
+    (invariant : ∀ σ U, law U = law (move σ ⁻¹' U))
+    (equivariant : ∀ σ z x a, score (move σ z) x (Equiv.Perm.ofSubtype σ a) = score z x a) :
+    law.real {z | StrictOn (score z) (fun x : free => x.val)} ≤ 1/(free.card.factorial : ℝ) := by
+  classical
+  let label (σ : Equiv.Perm free) (x : free) : A := σ x
+  have hinj : Function.Injective label := fun _ _ eq => Equiv.ext fun x => Subtype.ext (congrFun eq x)
+  have h := strict_assignment_first_hit law ({0} : Finset ℕ) Finset.univ (Equiv.refl free)
+    (Finset.mem_univ _) label hinj.injOn (fun z _ => score z) (fun _ σ => meas (label σ))
+    (fun σ _ => ⟨Equiv.Perm.ofSubtype σ,move σ,Equiv.Perm.ofSubtype_apply_coe σ,invariant σ,
+      fun z _ => equivariant σ z⟩)
+  simpa [label,Fintype.card_perm] using h
+
 /-- One hidden prompt for each of k distinct correct tokens, none of those
 tokens in any of the selected prompts. At a center invariant under their
 permutations, at most one of k! equally probable strict assignments wins. -/
@@ -53,17 +72,12 @@ theorem symmetric_proposal_mass (μ : Measure ℝ) [IsProbabilityMeasure μ] (r 
     law.real {z | StrictOn (score z) (fun x : free => x.val)} ≤ 1/(free.card.factorial : ℝ) := by
   classical
   intro law score
-  let label (σ : Equiv.Perm free) (x : free) : A := σ x
-  have hinj : Function.Injective label := fun _ _ eq => Equiv.ext fun x => Subtype.ext (congrFun eq x)
-  have h := strict_assignment_first_hit law ({0} : Finset ℕ) Finset.univ (Equiv.refl free)
-    (Finset.mem_univ _) label hinj.injOn (fun z _ => score z) (fun _ σ =>
-    ((strict_prompt_weights_open (H := H) (d := d) (L := L) r prompt (label σ)).preimage
-      (continuous_const.add continuous_id)).measurableSet) ?_
-  · simpa [label,Fintype.card_perm] using h
-  · intro σ _
+  apply symmetric_assignment_mass law free score (fun f =>
+    ((strict_prompt_weights_open (H := H) (d := d) (L := L) r prompt f).preimage
+      (continuous_const.add continuous_id)).measurableSet) (fun σ => relabelWeights (Equiv.Perm.ofSubtype σ))
+    (fun σ => proposal_relabel_preimage μ (Equiv.Perm.ofSubtype σ))
+  · intro σ z x a
     let e := Equiv.Perm.ofSubtype σ
-    refine ⟨e,relabelWeights e,Equiv.Perm.ofSubtype_apply_coe σ,proposal_relabel_preimage μ e,?_⟩
-    intro z _ x a
     have pr : e ∘ prompt x = prompt x := funext fun j =>
       Equiv.Perm.ofSubtype_apply_of_not_mem σ (unused x j)
     have shift : center + relabelWeights e z = relabelWeights e (center+z) := by
@@ -77,12 +91,35 @@ theorem symmetric_proposal_mass (μ : Measure ℝ) [IsProbabilityMeasure μ] (r 
 /-- Residues 10 through 82 have token IDs 32 through 104. -/
 def divisionProbeTokens : Finset (Fin 239) := Finset.Icc 32 104
 
-private def probeIndex (x : divisionProbeTokens) : Fin 73 :=
+def divisionProbeIndex (x : divisionProbeTokens) : Fin 73 :=
   ⟨x.val.val-32,by
     obtain ⟨lo,hi⟩ := Finset.mem_Icc.mp x.property
     change 32 ≤ x.val.val at lo
     change x.val.val ≤ 104 at hi
     omega⟩
+
+/-- Every perfect hidden table also solves the selected prompt for each
+of the 73 different quotient tokens. -/
+theorem division_probe_ceiling {D : Type*} [MeasurableSpace D] (law : Measure D) [IsProbabilityMeasure law]
+    (score : D → DivisionInput → Fin 239 → ℝ) (hidden : Set DivisionInput) (probe : Fin 73 → DivisionInput)
+    (inHidden : ∀ i, probe i ∈ hidden) (answers : ∀ i, (divisionAnswer (probe i)).val = 32+i.val)
+    (bound : law.real {z | StrictOn (fun x => score z (probe (divisionProbeIndex x))) (fun x => x.val)} ≤
+      1/(divisionProbeTokens.card.factorial : ℝ)) :
+    law.real {z | ∀ x ∈ hidden, ∀ b, b ≠ divisionAnswer x → score z x b < score z x (divisionAnswer x)} ≤
+      1/(Nat.factorial 73 : ℝ) := by
+  have answer (x : divisionProbeTokens) : divisionAnswer (probe (divisionProbeIndex x)) = x.val := by
+    apply Fin.ext
+    rw [answers]
+    have lo := (Finset.mem_Icc.mp x.property).1
+    change 32 ≤ x.val.val at lo
+    change 32+(x.val.val-32) = x.val.val
+    omega
+  refine (measureReal_mono (μ := law) (s₂ := {z | StrictOn
+    (fun x => score z (probe (divisionProbeIndex x))) (fun x => x.val)}) ?_).trans ?_
+  · intro z hz x b hb
+    simpa only [answer] using
+      (hz (probe (divisionProbeIndex x)) (inHidden _) b (fun eq => hb (eq.trans (answer x))))
+  · simpa only [show divisionProbeTokens.card = 73 by decide] using bound
 
 /-- A finite witness verifies the actual split without using a trained
 checkpoint. Any uniform lower bound valid on a set containing the zero
@@ -96,22 +133,11 @@ theorem division_zero_proposal_ceiling (hidden : Set DivisionInput) (probe : Fin
         (Model.fromWeights z).logits 1 (divisionPrompt x) (Fin.last 4) (divisionAnswer x)} ≤
         1/(Nat.factorial 73 : ℝ) := by
   intro law
-  let prompt (x : divisionProbeTokens) := divisionPrompt (probe (probeIndex x))
-  have h := symmetric_proposal_mass (H := 4) (d := 16) (L := 6) (gaussianReal 0 variance) 1
-    divisionProbeTokens prompt (fun x => unused (probeIndex x)) 0 (fun _ => rfl)
-  have answer (x : divisionProbeTokens) : divisionAnswer (probe (probeIndex x)) = x.val := by
-    apply Fin.ext
-    rw [answers]
-    have lo := (Finset.mem_Icc.mp x.property).1
-    change 32 ≤ x.val.val at lo
-    change 32+(x.val.val-32) = x.val.val
-    omega
-  refine (measureReal_mono (μ := law) (s₂ := {z | StrictOn
-    (fun x => (Model.fromWeights z).logits 1 (prompt x) (Fin.last 4)) (fun x => x.val)}) ?_).trans ?_
-  · intro z hz x b hb
-    simpa only [prompt,answer] using
-      (hz (probe (probeIndex x)) (inHidden _) b (fun eq => hb (eq.trans (answer x))))
-  · simpa only [zero_add,show divisionProbeTokens.card = 73 by decide] using h
+  apply division_probe_ceiling law (fun z x => (Model.fromWeights z).logits 1 (divisionPrompt x) (Fin.last 4))
+    hidden probe inHidden answers
+  simpa only [zero_add] using symmetric_proposal_mass (H := 4) (d := 16) (L := 6) (gaussianReal 0 variance) 1
+    divisionProbeTokens (fun x => divisionPrompt (probe (divisionProbeIndex x)))
+    (fun x => unused (divisionProbeIndex x)) 0 (fun _ => rfl)
 
 /-- The original compact-ball proof supplies a strictly positive p. The
 largest possible p for that proof is already bounded by the zero center,
