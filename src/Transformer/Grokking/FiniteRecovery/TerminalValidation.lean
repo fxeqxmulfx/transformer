@@ -35,6 +35,28 @@ theorem iid_allPassWindow (μ : Measure D) [IsProbabilityMeasure μ] {U : Set D}
   rw [Measure.infinitePi_pi _ (fun _ _ => hU)]
   simp
 
+/-- A decision to extend an all-success series can depend on the results
+already seen. At a fixed budget, rejection still requires success on
+every draw of the original window, including any continuation. -/
+theorem continued_all_pass_bound (μ : Measure D) [IsProbabilityMeasure μ]
+    {U : Set D} (hU : MeasurableSet U) (start n : ℕ) (report : Set (ℕ → D))
+    (h : report ⊆ allPassWindow U start n) {q : ℝ≥0∞} (hq : μ U ≤ q) :
+    Measure.infinitePi (fun _ : ℕ => μ) report ≤ q ^ n := by
+  calc
+    _ ≤ _ := measure_mono h
+    _ = _ := iid_allPassWindow μ hU start n
+    _ ≤ _ := pow_le_pow_left' hq n
+
+/-- Eleven consecutive first-attempt hits at a single budget reject
+a single-draw hit probability of at most three quarters at 5%. -/
+theorem eleven_hit_three_quarters (μ : Measure D) [IsProbabilityMeasure μ]
+    {U : Set D} (hU : MeasurableSet U) (start : ℕ) (report : Set (ℕ → D))
+    (h : report ⊆ allPassWindow U start 11) (hq : μ U ≤ 3/4) :
+    Measure.infinitePi (fun _ : ℕ => μ) report < 1/20 := by
+  apply lt_of_le_of_lt (continued_all_pass_bound μ hU start 11 report h hq)
+  apply (ENNReal.toReal_lt_toReal (by finiteness) (by finiteness)).mp
+  norm_num
+
 theorem selected_event_bound {Z : Type*} [MeasurableSpace Z] (P : Measure Z)
     (budgets : Finset B) (weak : B → Prop) (event : B → Set Z) (q : ℝ≥0∞)
     (h : ∀ b ∈ budgets, weak b → P (event b) ≤ q) :

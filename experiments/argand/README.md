@@ -350,6 +350,22 @@ stays in the denominator and a successful rerun contributes only to
 the descriptive count. The seed list and the prospective cutoff are
 recorded in [the first-hit analysis plan](division-first-hit-registration.json).
 
+At the fixed 100,000-update schedule the eight prospective draws can
+be followed by three additional seeds. They were registered after three
+of the eight had finished. The extension runs only after eight credited
+first-attempt hits and ends at its first miss or interrupted attempt.
+Each seed stops at its first strictly perfect evaluation. Rejection
+requires all eleven first attempts to succeed in this one series. For
+independent runs, the unconditional probability of that event under
+$p\leq3/4$ is at most $(3/4)^{11}=0.04224$. Conditional on the three
+successes already seen when the extension was chosen, the probability
+of eight more at $p=3/4$ is $0.10011$. A 200,000-update diagnostic
+does not contribute to this test. [All-success series in Lean](../../src/Transformer/Grokking/FiniteRecovery/TerminalValidation.lean)
+
+```sh
+bash run_division_probability_extension.sh runs/division-first100-100k runs/division-first100-extension
+```
+
 For ordinary AdamW under ideal Gaussian initialization, the probability
 of hitting a strict hidden score from an open set of starts is positive
 exactly when one real trajectory from that set hits. The set can require
