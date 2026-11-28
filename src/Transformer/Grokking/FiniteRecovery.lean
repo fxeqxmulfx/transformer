@@ -45,6 +45,7 @@ public import Transformer.Grokking.FiniteRecovery.SoftsignLimit
 public import Transformer.Grokking.FiniteRecovery.EqualMomentConfidence
 public import Transformer.Grokking.FiniteRecovery.UncorrectedAdam
 public import Transformer.Grokking.FiniteRecovery.HiddenCorner
+public import Transformer.Grokking.FiniteRecovery.FirstHitSymmetry
 public import Transformer.Grokking.FiniteRecovery.Binary32Scores
 public import Transformer.Grokking.FiniteRecovery.ProjectedSoftsign
 public import Transformer.Grokking.FiniteRecovery.DivisionNative

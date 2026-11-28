@@ -46,19 +46,27 @@ variable {A B X : Type*} [Fintype A] [Fintype B] {H d L T : ℕ}
 
 /-- The predicted score is unchanged when the prompt, answer and batches
 are transported with the native initialization, at every position and update. -/
+theorem uncorrectedAdam_logits_relabel (e : A ≃ B) (r t : ℕ) (first second ε decay : ℝ) (rate : ℕ → ℝ)
+    (batch : ℕ → List (LabeledPosition A)) (z : ComplexParameter A H d L → ℂ)
+    (x : Word A T) (i : Fin T) (a : A) :
+    (Model.fromWeights (uncorrectedAdamRun r first second ε decay (fun k => (batch k).map (relabelPosition e))
+      rate (relabelDraw e z) t).weights).logits r (e ∘ x) i (e a) =
+      (Model.fromWeights (uncorrectedAdamRun r first second ε decay batch rate z t).weights).logits r x i a := by
+  unfold uncorrectedAdamRun
+  rw [initialWeights_relabel]
+  unfold relabelWeights
+  rw [EqualMoment.uncorrectedRun_reindex (parameterTokenEquiv e) first second ε decay rate
+    (fun k => batchGradient r (batch k)) _ (fun k => batchGradient_relabel e r (batch k))]
+  change (Model.fromWeights (relabelWeights e _)).logits _ _ _ _ = _
+  rw [fromWeights_relabel,Model.logits_relabel]
+
 theorem equalMoment_logits_relabel (e : A ≃ B) (r t : ℕ) (decay : ℝ) (rate : ℕ → ℝ)
     (batch : ℕ → List (LabeledPosition A)) (z : ComplexParameter A H d L → ℂ)
     (x : Word A T) (i : Fin T) (a : A) :
     (Model.fromWeights (equalMomentRun r decay (fun k => (batch k).map (relabelPosition e))
       rate (relabelDraw e z) t).weights).logits r (e ∘ x) i (e a) =
-      (Model.fromWeights (equalMomentRun r decay batch rate z t).weights).logits r x i a := by
-  unfold equalMomentRun
-  rw [initialWeights_relabel]
-  unfold relabelWeights
-  rw [EqualMoment.run_reindex (parameterTokenEquiv e) (9/10) (1/100000000) decay rate
-    (fun k => batchGradient r (batch k)) _ (fun k => batchGradient_relabel e r (batch k))]
-  change (Model.fromWeights (relabelWeights e _)).logits _ _ _ _ = _
-  rw [fromWeights_relabel,Model.logits_relabel]
+      (Model.fromWeights (equalMomentRun r decay batch rate z t).weights).logits r x i a :=
+  uncorrectedAdam_logits_relabel e r t (9/10) (9/10) (1/100000000) decay rate batch z x i a
 
 noncomputable def equalMomentHit (r : ℕ) (grid : Finset ℕ) (decay : ℝ) (rate : ℕ → ℝ)
     (batch : ℕ → List (LabeledPosition A)) (prompt : X → Word A (T+1)) (f : X → A)

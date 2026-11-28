@@ -475,7 +475,13 @@ update the chance of strictly predicting 2 is at most one half. The
 same bound holds for all sufficiently late updates being strictly correct.
 Across different token encodings, transporting the data and initialization
 also preserves the full distribution of the first strict hit.
-[Hidden-corner example](../../src/Transformer/Grokking/FiniteRecovery/HiddenCorner.lean) · [First-hit distribution](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentRelabeling.lean)
+At a single update all 58 unused tokens are exchangeable and at most one
+can strictly win. On a grid of $k$ evaluations, the probability of hitting
+the hidden answer anywhere on that grid is at most $k/58$. Checking every
+256 updates from zero through 4,096 gives an upper bound of $17/58$ for
+either choice of the second-moment decay. The bound allows dependence
+between checks and uses the same early stopping rule as the division pilots.
+[Hidden-corner example](../../src/Transformer/Grokking/FiniteRecovery/HiddenCorner.lean) · [First-hit distribution](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentRelabeling.lean) · [Finite-grid bound](../../src/Transformer/Grokking/FiniteRecovery/FirstHitSymmetry.lean)
 
 Short qualification runs keep the 20,000-step WSD but stop at 4,096 updates
 or the first perfect checkpoint. The equal-moment rate multipliers are 2
