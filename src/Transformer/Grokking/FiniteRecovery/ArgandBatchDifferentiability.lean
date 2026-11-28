@@ -51,14 +51,17 @@ theorem c1Lipschitz_logits_fromWeights (repeats : ℕ) (word : Word A T) (i : Fi
   ((C1Lipschitz.of_contDiff Complex.reCLM.contDiff).comp ((c1Lipschitz_embedding_fromWeights a).inner ℂ
     (c1Lipschitz_hidden_fromWeights repeats word i))).div_const 2
 
-theorem c1Lipschitz_labelLoss_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
-    C1Lipschitz (fun w : Weights A H d layers =>
-      -Real.log ((Model.fromWeights w).probability repeats word i a)) := by
+theorem c1Lipschitz_probability_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
+    C1Lipschitz (fun w : Weights A H d layers => (Model.fromWeights w).probability repeats word i a) := by
   have hp (t : A) := (c1Lipschitz_logits_fromWeights (H := H) (d := d) (layers := layers) repeats word i t).exp
   have hsum (w : Weights A H d layers) : 0 < ∑ t, Real.exp ((Model.fromWeights w).logits repeats word i t) :=
     Finset.sum_pos' (fun _ _ => (Real.exp_pos _).le) ⟨a, Finset.mem_univ _, Real.exp_pos _⟩
-  have hprob : C1Lipschitz (fun w : Weights A H d layers => (Model.fromWeights w).probability repeats word i a) :=
-    (hp a).div (C1Lipschitz.sum fun t _ => hp t) (fun w => (hsum w).ne')
+  exact (hp a).div (C1Lipschitz.sum fun t _ => hp t) (fun w => (hsum w).ne')
+
+theorem c1Lipschitz_labelLoss_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :
+    C1Lipschitz (fun w : Weights A H d layers =>
+      -Real.log ((Model.fromWeights w).probability repeats word i a)) := by
+  have hprob := c1Lipschitz_probability_fromWeights (H := H) (d := d) (layers := layers) repeats word i a
   exact (hprob.log fun w => ((Model.fromWeights w).probability_pos repeats word i a).ne').neg
 
 theorem contDiff_logits_fromWeights (repeats : ℕ) (word : Word A T) (i : Fin T) (a : A) :

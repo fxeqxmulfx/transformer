@@ -102,11 +102,26 @@ def batch (stream : ℕ → List (Fin 5)) (t : ℕ) := (stream t).map observatio
 noncomputable def score (stream : ℕ → List (Fin 5)) (z : Draw) (t : ℕ) (x : Cell) : Token → ℝ :=
   (Model.fromWeights (normalizedAdamRun 1 (batch stream) (fun k => 3*wsdRate 20000 k) z t).weights).logits 1 (prompt x) 0
 
-/-- Strict success on just the two designated hidden inputs has at most
-the number of checks divided by 2,756 as its mass, for any batch stream. -/
-theorem two_hit_bound (stream : ℕ → List (Fin 5)) (grid : Finset ℕ) :
+/-- Every permutation fixing the used tokens fixes the complete observed
+gradient stream's labeled examples and the hidden prompts. -/
+theorem fixed_data (e : Equiv.Perm Token) (fix : ∀ a ∈ used, e a = a) (stream : ℕ → List (Fin 5)) :
+    (∀ x, e ∘ prompt x = prompt x) ∧ (fun k => (batch stream k).map (relabelPosition e)) = batch stream := by
+  have token_used (x : Cell) : token x ∈ used := by obtain ⟨i,j⟩ := x; fin_cases i <;> fin_cases j <;> decide
+  have pr (x : Cell) : e ∘ prompt x = prompt x := funext fun _ => fix _ (token_used x)
+  have obs (j : Fin 5) : relabelPosition e (observation j) = observation j := by
+    have hy : label (observedCell j) ∈ used := by fin_cases j <;> decide
+    simp only [observation,relabelPosition,pr,fix _ hy]
+  exact ⟨pr,funext fun k => by simp only [batch,List.map_map,
+    show relabelPosition e ∘ observation = observation from funext obs]⟩
+
+/-- The pair count applies to any update equivariant under the 53 unused
+tokens. The score process may have dependent successive evaluations. -/
+theorem equivariant_probe_bound (s : Draw → ℕ → Cell → Token → ℝ) (grid : Finset ℕ)
+    (meas : ∀ t p, MeasurableSet {z | StrictOn (fun k => s z t (probe k)) (pairLabels p)})
+    (equiv : ∀ (e : Equiv.Perm Token), (∀ a ∈ used, e a = a) →
+      ∀ z t k a, s (relabelDraw e z) t (probe k) (e a) = s z t (probe k) a) :
     let μ := independentGaussianDraws (fun _ : ComplexParameter Token 4 16 6 => (1/50 : ℝ≥0)^2)
-    μ.real {z | ∃ t ∈ grid, StrictOn (fun k => score stream z t (probe k)) (label ∘ probe)} ≤ (grid.card : ℝ)/2756 := by
+    μ.real {z | ∃ t ∈ grid, StrictOn (fun k => s z t (probe k)) (label ∘ probe)} ≤ (grid.card : ℝ)/2756 := by
   intro μ
   have labels : label ∘ probe = pairLabels (2,3) := by funext k; fin_cases k <;> decide
   rw [labels]
@@ -116,30 +131,26 @@ theorem two_hit_bound (stream : ℕ → List (Fin 5)) (grid : Finset ℕ) :
     intro p q h
     exact Prod.ext (congrFun h 0) (congrFun h 1)
   apply strict_assignment_first_hit μ grid unused.offDiag (2,3) (by decide) pairLabels hi.injOn
-    (fun z t k => score stream z t (probe k))
+    (fun z t k => s z t (probe k)) meas
+  intro p hp
+  obtain ⟨e,answers,fix⟩ := move_pair p hp
+  exact ⟨e,relabelDraw e,labels ▸ answers,gaussian_relabel_preimage e (fun _ => (1/50 : ℝ≥0)^2),equiv e fix⟩
+
+/-- Strict success on just the two designated hidden inputs has at most
+the number of checks divided by 2,756 as its mass, for any batch stream. -/
+theorem two_hit_bound (stream : ℕ → List (Fin 5)) (grid : Finset ℕ) :
+    let μ := independentGaussianDraws (fun _ : ComplexParameter Token 4 16 6 => (1/50 : ℝ≥0)^2)
+    μ.real {z | ∃ t ∈ grid, StrictOn (fun k => score stream z t (probe k)) (label ∘ probe)} ≤ (grid.card : ℝ)/2756 := by
+  apply equivariant_probe_bound
   · intro t p
     simpa only [score,normalizedAdam_weights,Fin.last_zero,Function.comp_apply] using (adamW_strict_open (H := 4) (d := 16) (L := 6)
       1 t (fun k => 3*wsdRate 20000 k) (batch stream) (prompt ∘ probe) (pairLabels p)).measurableSet
-  · intro p hp
-    obtain ⟨e,answers,fix⟩ := move_pair p hp
-    have token_used (x : Cell) : token x ∈ used := by obtain ⟨i,j⟩ := x; fin_cases i <;> fin_cases j <;> decide
-    have prompt_eq (x : Cell) : e ∘ prompt x = prompt x := funext fun _ => fix _ (token_used x)
-    have obs (j : Fin 5) : relabelPosition e (observation j) = observation j := by
-      have hy : label (observedCell j) ∈ used := by fin_cases j <;> decide
-      simp only [observation,relabelPosition,prompt_eq,fix _ hy]
-    have batches : (fun k => (batch stream k).map (relabelPosition e)) = batch stream := by
-      funext k
-      simp only [batch,List.map_map,show relabelPosition e ∘ observation = observation from funext obs]
-    refine ⟨e,relabelDraw e,?_,gaussian_relabel_preimage e (fun _ => (1/50 : ℝ≥0)^2),?_⟩
-    · intro k
-      rw [← labels]
-      exact answers k
-    · intro z t k a
-      simp only [score,normalizedAdam_weights]
-      simpa only [batches,prompt_eq] using adamW_logits_relabel e 1 t (batch stream) (fun k => 3*wsdRate 20000 k)
-        z (prompt (probe k)) 0 a
+  · intro e fix z t k a
+    obtain ⟨pr,bs⟩ := fixed_data e fix stream
+    simpa only [score,normalizedAdam_weights,bs,pr] using adamW_logits_relabel e 1 t (batch stream)
+      (fun j => 3*wsdRate 20000 j) z (prompt (probe k)) 0 a
 
-private theorem two_probes_strict {s : Cell → Token → ℝ}
+theorem two_probes_strict {s : Cell → Token → ℝ}
     (h : ∀ x ∉ range observedCell, ∀ a, a ≠ label x → s x a < s x (label x)) :
     StrictOn (fun k => s (probe k)) (label ∘ probe) := by
   have hne : ∀ i : Fin 2, ∀ j : Fin 5, observedCell j ≠ probe i := by decide

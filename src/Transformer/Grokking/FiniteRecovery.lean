@@ -55,6 +55,7 @@ public import Transformer.Grokking.FiniteRecovery.FirstHitSymmetry
 public import Transformer.Grokking.FiniteRecovery.LabelOrbit
 public import Transformer.Grokking.FiniteRecovery.ProposalMass
 public import Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation
+public import Transformer.Grokking.FiniteRecovery.ArgandObservedJacobian
 public import Transformer.Grokking.FiniteRecovery.TwoHiddenAnswers
 public import Transformer.Grokking.FiniteRecovery.Binary32Scores
 public import Transformer.Grokking.FiniteRecovery.ProjectedSoftsign
