@@ -42,10 +42,16 @@ jq -s --slurpfile p "$primary/protocol.json" '
   ($pairs|map(.candidate)|counts) as $candidate |
   {registered:($seeds|length),primary_rate:$p[0].control.identity.adamw.peak,
    candidate_optimizer:$p[0].candidate.identity.optimizer,
-   candidate_peak:($p[0].candidate.identity|(.equal_moment//.softsign_lion//.rmsprop//.muon).peak),
+   candidate_peak:($p[0].candidate.identity|(.equal_moment//.uncorrected_adam//.softsign_lion//.rmsprop//.muon).peak),
    candidate:$candidate,control:($pairs|map(.control)|counts),
    candidate_null_tail_at_three_quarters:(if $candidate.evaluated==($seeds|length) then
       tail(($seeds|length);$candidate.hits;0.75) else null end),
    higher_rate_control:($pairs|map(.higher_rate_control)|counts),
    against_primary:($pairs|compare("control")),against_higher_rate:($pairs|compare("higher_rate_control")),
+   paired_budget:(($p[0].registration.first_budget+$p[0].registration.evaluation_interval) as $miss |
+     [ $pairs[]|select(.candidate.first_attempt=="complete" and .control.first_attempt=="complete")|
+       (if .candidate.success then .candidate.step else $miss end) -
+       (if .control.success then .control.step else $miss end)]|sort|
+     {completed_pairs:length,median_difference:median,
+      upper_median_difference_one_sided:(if length==11 and ($seeds|length)==11 then .[8] else null end)}),
    pairs:$pairs}' "${files[@]}" < /dev/null

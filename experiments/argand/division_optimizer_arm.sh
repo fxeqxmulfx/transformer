@@ -6,12 +6,13 @@ run_arm() {
     root="$out/$arm"; output="$out/$index-$arm.json"
     expected=$(jq -c --arg arm "$arm" '.[$arm].identity' "$out/protocol.json")
     rule=$(jq -r .optimizer <<< "$expected")
-    scale=$(jq -r '(.adamw//.softsign_lion//.equal_moment//.muon//.rmsprop).peak*1000' <<< "$expected")
-    decay=$(jq -r '(.adamw//.softsign_lion//.equal_moment//.muon//.rmsprop).weight_decay' <<< "$expected")
+    scale=$(jq -r '(.adamw//.softsign_lion//.equal_moment//.uncorrected_adam//.muon//.rmsprop).peak*1000' <<< "$expected")
+    decay=$(jq -r '(.adamw//.softsign_lion//.equal_moment//.uncorrected_adam//.muon//.rmsprop).weight_decay' <<< "$expected")
     cell="$root/$task/seed$seed"
     case "$rule" in
       adamw-scaled-wsd) args=(adamw-scaled-until-perfect) ;;
       equal-moment-wsd) args=(equal-moment-until-perfect) ;;
+      uncorrected-adam-wsd) args=(uncorrected-adam-until-perfect) ;;
       softsign-lion-wsd) args=(softsign-until-perfect) ;;
       complex-muon-wsd) args=(muon-until-perfect) ;;
       softsign-lion-wsd-checkpoint-proposals|row-clipped-softsign-lion-wsd-checkpoint-proposals) args=(softsign-checkpoint-proposals) ;;

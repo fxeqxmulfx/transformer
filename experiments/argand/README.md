@@ -422,6 +422,11 @@ hit at update 2,304 on discovery seed zero, with minimum hidden gap
 7.999755 on replay. Stock AdamW and the equal-decay pilot first hit at
 2,816. The historical validation seeds that motivated the repair are
 excluded from its registered eleven-seed comparison.
+Six of the controls are shared with the predeclared 0.003 comparison.
+Each reused result is checked against the original weights, replay and
+observation certificate. The remaining five controls run on fresh seeds.
+The paired time is measured in updates through the first strict hidden
+success, with the penalty for missing the cutoff specified in the protocol.
 [Repair validation protocol](division-uncorrected-paired-registration.json)
 
 For moment decays $a,b$ with $a^2<b<1$, the two uncorrected buffers
@@ -512,6 +517,9 @@ bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
 bash plot_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
+ARGAND_BIN="$REPAIR_BINARY" ARGAND_CONTROL_BIN="$CONTROL_BINARY" \
+    bash run_division_uncorrected_pairs.sh runs/division-fresh-high "runs/division-uncorrected/$task/seed0" runs/division-repair-pairs
+bash report_division_optimizer_pairs.sh runs/division-repair-pairs
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
 $bin division-recorded-lean "runs/division-equal/$task/seed0" terminal
 bash check_recorded_division.sh "runs/division-equal/$task/seed0" terminal

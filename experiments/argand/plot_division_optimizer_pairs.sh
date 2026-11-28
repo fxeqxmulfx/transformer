@@ -16,10 +16,12 @@ ticks=$(jq -r '[.pairs[]|select(.control!=null or .candidate!=null or .higher_ra
     "\""+(.seed|tostring)+"\" "+(.index|tostring)]|join(", ")' "$tmp/report.json")
 read -r last max < <(awk 'BEGIN{x=0;y=0}{if($1>x)x=$1;if($2>y)y=$2}END{print y,x}' "$tmp/points.tsv")
 arms=$(awk '{seen[$3]=1} END{for(i=0;i<3;i++) if(seen[i]) printf "%d ",i}' "$tmp/points.tsv")
-counts=$(jq -r '"Candidate "+(.candidate.hits|tostring)+"/"+(.candidate.evaluated|tostring)+
-    "     AdamW 0.002 "+(.control.hits|tostring)+"/"+(.control.evaluated|tostring)+
-    "     AdamW 0.003 "+(.higher_rate_control.hits|tostring)+"/"+(.higher_rate_control.evaluated|tostring)' "$tmp/report.json")
+control=$(jq -r '"AdamW "+(.primary_rate|tostring)' "$tmp/report.json")
+counts=$(jq -r --arg ctrl "$control" --argjson n "$#" '"Candidate "+(.candidate.hits|tostring)+"/"+(.candidate.evaluated|tostring)+
+    "     "+$ctrl+" "+(.control.hits|tostring)+"/"+(.control.evaluated|tostring)+
+    (if $n==2 then "     AdamW 0.003 "+(.higher_rate_control.hits|tostring)+"/"+(.higher_rate_control.evaluated|tostring) else "" end)' "$tmp/report.json")
 name=$(jq -r '(if .candidate_optimizer|startswith("equal-moment") then "Equal-decay Adam"
+    elif .candidate_optimizer=="uncorrected-adam-wsd" then "Uncorrected Adam"
     elif .candidate_optimizer|contains("softsign") then "Softsign Lion"
     elif .candidate_optimizer|contains("rmsprop") then "RMSPropW" else "Complex Muon" end)
     +" "+(.candidate_peak|tostring)' "$tmp/report.json")
@@ -40,7 +42,7 @@ set tics out nomirror
 set key outside below center horizontal
 set label 1 '$counts' at graph 0.02,0.97 font ',9'
 colors='#3774a1 #16715d #c25628'
-array names[3] = ['AdamW 0.002','$name','AdamW 0.003']
+array names[3] = ['$control','$name','AdamW 0.003']
 do for [i=1:3] {set style line i lc rgb word(colors,i)}
 set datafile missing 'NaN'
 plot for [arm in '$arms'] 'points.tsv' u (\$3==int(arm) ? \$1/1000. : 1/0):(\$2+(int(arm)-1)*0.19):(\$4==1?7:(\$4==0?2:4)) \
