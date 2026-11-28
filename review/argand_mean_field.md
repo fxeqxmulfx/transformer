@@ -397,6 +397,9 @@ Bochner and lower integrals and $L^2$; from the repository,
    - It has the form $F\circ\mathrm{mean}\,\psi$, with $F$ the sums of
      $1-\mathrm{softmax}$ and $\psi$ the per-unit logit contributions, exactly
      when the logits are width averages. By item 1 this fails for Argand.
+   - **Made precise by board #247, §8:** `marginalBound` is the smooth
+     `softmaxBound` of the logits, and width-average scores recover with
+     softmaxBound ∘ mean ψ. The gap now lies wholly in item 1.
 3. **Unbounded initialization.**
    - `certificate_residual_of_init` needs $|\mathrm{init}_{i,p}|\le C_0$ for every
      $i,p$. The division run draws each part from $\mathcal N(0,0.02^2)$, which
@@ -544,4 +547,46 @@ Checks at `2449271f`, run with `LAKE_ARTIFACT_CACHE=false`:
 | `lake env lean scripts/MeanFieldWidthAxioms.lean` | 130 lines, each `depends on axioms: [propext, Classical.choice, Quot.sound]` |
 | `lake env lean scripts/Axioms.lean` | `87 sorry · 0 resting on a sorry · 0 extra axioms` |
 | `cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml -- --check` | `INDEX.md: 6105 modules, 32929 theorems, 87 sorry, 0 vacuous, 0 placeholder` |
+| `grep -rnE '^\s*(private \|protected )?axiom \|native_decide\|set_option linter\.\|autoImplicit' src` | empty |
+
+## 8. The softmax certificate (board #247)
+
+This section makes §4 item 2 precise. Every statement below is proved and
+applied in an example; the declarations are in `MeanFieldWidth/Softmax.lean`.
+
+| Declaration | Statement |
+|---|---|
+| `softmaxBound` (`:27`) | for a score table $s:X\times A\to\mathbb R$, $\sum_{x\in S}(1-\mathrm{softmax}\,s(x,\cdot)_{y_x})+\mathrm{count}\sum_x(1-\mathrm{softmax}\,s(x,\cdot)_{g_x})$ |
+| `risk_le_softmaxBound` (`:35`) | for a completion $g$ that every rule admits and that fits the observations, the risk of the table law of $s$ is at most `softmaxBound` $(\|R\|)$ of $s$ |
+| `contDiff_softmaxBound` (`:52`) | `softmaxBound` is $C^n$ in $s$ for every $n$ |
+| `certificateMap_lipschitz` (`:66`) | for every $C^2$ map $F$ and every box $\|a_q\|\le C_\chi$ there is $L_\Gamma\ge0$ with $\Gamma(a)-\Gamma(a')\le L_\Gamma\,\ell^1(a-a')$, $\Gamma=$ `certificateMap F ρ c`: the field `Regular.map` |
+| `marginalBound_eq_softmaxBound` (`:93`) | Argand's `marginalBound` is `softmaxBound` of the logit table $(x,a)\mapsto\mathrm{logits}_w(x)_a$, by definition |
+| `permanent_of_softmax_certificate` (`:105`) | for a training whose scores are width averages $\mathrm{mean}\,\psi$, recovery with the certificate $\mathrm{softmaxBound}\circ\mathrm{mean}\,\psi$, probability above $q-N\|P\|\delta$ |
+
+**What this settles.** Argand's certificate depends on the weights only
+through the logits, and as a function of the logits it is smooth, dominates
+the risk and meets `Regular.map`. Of the certificate class it misses only one
+property: the logits are not width averages. The tied readout
+$\mathrm{Re}\langle e_a,h\rangle/2$ (`Argand.lean:81`) sums over width indices $k$
+products of an embedding coordinate with a final-state coordinate $h_k$. That
+coordinate depends on all weights through the $c\times c$ mixing matrices, so
+item 2 reduces to item 1. Under a parametrization in which every logit is
+$\frac1N\sum_i\psi(w_i)$, §7 and §2 apply unchanged.
+
+**Scope.** The theorem proves one direction: width-average scores give a
+certificate $F\circ\mathrm{mean}\,\psi$. A converse is not claimed, since
+`softmaxBound` sees the logits only up to a shift per input.
+`certificateMap_lipschitz` gives $L_\Gamma$ by compactness, not as a number. That
+suffices for `widthError_vanishes`. A numerical $\varepsilon$ would need an
+explicit bound on the second derivatives of `softmaxBound`, and at $W=64$ the
+bound is vacuous anyway (§2).
+
+Checks at `2e6ec04e`, run with `LAKE_ARTIFACT_CACHE=false`:
+
+| Command | Result |
+|---|---|
+| `lake build` | `Build completed successfully (30576 jobs).`, no warning |
+| `lake env lean scripts/MeanFieldWidthAxioms.lean` | 138 lines, each `depends on axioms: [propext, Classical.choice, Quot.sound]` |
+| `lake env lean scripts/Axioms.lean` | `87 sorry · 0 resting on a sorry · 0 extra axioms` |
+| `cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml -- --check` | `INDEX.md: 6106 modules, 32936 theorems, 87 sorry, 0 vacuous, 0 placeholder` |
 | `grep -rnE '^\s*(private \|protected )?axiom \|native_decide\|set_option linter\.\|autoImplicit' src` | empty |
