@@ -120,7 +120,7 @@ bash run_page_screen.sh all runs/gpt-adamw-matched adamw-scaled
 bash run_page_screen.sh all runs/gpt-equal-decay equal-moment
 bash run_page_screen.sh all runs/gpt-uncorrected-adam uncorrected-adam
 bash run_page_screen.sh all runs/gpt-normalized-adamw normalized-adamw
-bash plot_stress_accuracy.sh runs/gpt-comparison runs/gpt-adamw/all-summary.json runs/gpt-adamw-matched/all-summary.json \
+bash plot_stress_accuracy.sh runs/gpt-comparison runs/gpt-page/all-summary.json runs/gpt-adamw/all-summary.json runs/gpt-adamw-matched/all-summary.json \
     runs/gpt-equal-decay/all-summary.json runs/gpt-uncorrected-adam/all-summary.json runs/gpt-normalized-adamw/all-summary.json
 jq -n --slurpfile control runs/gpt-page/all-summary.json \
   --slurpfile candidate runs/gpt-adamw/all-summary.json -f compare_optimizer_screens.jq
@@ -402,13 +402,25 @@ bias-corrected AdamW. [Muon reference implementation](https://github.com/KellerJ
 Complex Muon reached all 4,656 strict hidden answers at update 15,616,
 with minimum gap 1.817 after independent replay.
 
-The two uncorrected Adam GPT screens transfer their division hyperparameters to
-all 35 canonical short and long cases and their three seeds. Each case
-keeps its own vocabulary, model shape and WSD budget. The run stops on
-strict 100% accuracy or at the 1,000-update screening cap. Each terminal
-checkpoint is reloaded, and the summary reports 99% and strict 100%.
-The recorded coefficients distinguish the equal-decay run from the
-0.9/0.95 repair.
+The GPT screen uses each of the 35 tasks' original vocabulary, model shape
+and WSD horizon, with three seeds per task. All four optimizers below use
+peak 0.003 and weight decay 0.1. Each run stops at its first strict 100%
+or at the task's screening budget of at most 1,000 updates. The counts
+come from reloading the terminal weights. The 105 initial losses, numbers
+of correct answers and case configurations matched across these four
+screens and the historical PAGE and AdamW screens.
+
+| Optimizer | Short ≥99% (75 runs) | Short strict 100% | Long ≥99% (30 runs) | Long strict 100% |
+| --- | ---: | ---: | ---: | ---: |
+| Stock AdamW | 54 | 46 | 2 | 0 |
+| Uncorrected Adam, 0.9/0.95 | 55 | 42 | 2 | 0 |
+| Uncorrected Adam, 0.9/0.9 | 53 | 42 | 1 | 0 |
+| Recursively normalized AdamW | 53 | 45 | 2 | 0 |
+
+The 0.9/0.95 rule crossed 99% in two short runs where stock AdamW missed
+and missed in one where stock AdamW passed. Stock AdamW solved four more
+short runs exactly. Every long run that reached 99% came from the same
+task, `associative-divisor-n2-l1-w0`.
 
 Another comparison uses Adam with a common decay of 0.9 for both moments,
 no bias corrections, epsilon $10^{-8}$, and decoupled weight decay 0.1.
