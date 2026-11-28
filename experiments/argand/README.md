@@ -441,7 +441,29 @@ $\sqrt{19/14}$ per coordinate. The ordinary-restart theorem and the
 common-gradient limit both allow these two different decays.
 [Moment bound for unequal decays](../../src/Transformer/Grokking/FiniteRecovery/UncorrectedAdam.lean)
 
-The step-2,816 checkpoint was also checked from its recorded FP32 logits.
+Stock AdamW admits another implementation that retains its bias correction.
+For each decay $\beta$ start a scalar gain at $h_0=1$ and update it by
+$h_{t+1}=h_t/(\beta+h_t)$. The normalized moment uses
+$(1-h_t)m_t+h_tg_t$ and the second moment uses the same rule on $g_t^2$
+with its own decay. Lean proves $h_t=(1-\beta)/(1-\beta^{t+1})$ and equality
+of every weight with stock AdamW for arbitrary starting weights, rates and
+state-dependent gradient sequences. Thus every finite-grid first-hit time
+and its probability agree in real arithmetic. On an identifying mask,
+ordinary independent restarts retain a strictly correct checkpoint almost
+surely if one real run reaches one. The whole quotient-factor family
+satisfies the witness condition when the grid includes initialization.
+The FP32 implementation rounds at different intermediate operations.
+[Trajectory equivalence](../../src/Transformer/Grokking/FiniteRecovery/NormalizedAdam.lean) · [Hidden recovery](../../src/Transformer/Grokking/FiniteRecovery/NormalizedRecovery.lean)
+
+On discovery seed zero, the recursive-gain kernel first solved all 4,656
+hidden equations at update 1,536 with minimum reloaded gap 0.620017.
+It solved 4,653 of the 4,656 observed equations at that checkpoint.
+Stock AdamW first solved the hidden split at 2,816 on the same schedule.
+The native fast reductions and the different FP32 operations can affect
+first-hit times.
+
+The step-2,816 equal-decay and step-2,304 unequal-decay checkpoints
+were also checked from their recorded FP32 logits.
 The exporter reloads the weights, reconstructs the labels from the 4,656
 observations, and saves all 239 scores for each of the 9,312 legal prompts.
 Every finite FP32 score is an integer multiple of $2^{-149}$. The exporter
@@ -516,6 +538,7 @@ $bin softsign-checkpoint-proposals "$task" 0 719 runs/division-row-clip 20000 81
 $bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
 $bin equal-moment-until-perfect "$task" 0 runs/division-equal 20000 3 20000
 $bin uncorrected-adam-until-perfect "$task" 0 runs/division-uncorrected 20000 3 20000
+$bin normalized-adamw-until-perfect "$task" 0 runs/division-normalized 20000 3 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high

@@ -13,10 +13,11 @@ max=0
 for cell in "$@"; do
     cell=$(realpath -e -- "$cell")
     id=$(head -n 1 "$cell/observations.jsonl" | jq -ce '.identity | select(.case=="grok-division-p97")')
-    paired=$(jq -cS '(.adamw // .softsign_lion // .muon // .rmsprop // .equal_moment // .uncorrected_adam) as $o | {case,seed,order_seed,wsd_budget:$o.budget,warmup:$o.warmup,cooldown:$o.cooldown_start,observe,split_sha256,suite_sha256,model,repeat,width,heads,layers,vocab,batch,kernite,gradient_reduction}' <<< "$id")
+    settings=$(jq -ce '.adamw // .softsign_lion // .muon // .rmsprop // .equal_moment // .uncorrected_adam // .normalized_adamw' <<< "$id")
+    paired=$(jq -cS --argjson o "$settings" '{case,seed,order_seed,wsd_budget:$o.budget,warmup:$o.warmup,cooldown:$o.cooldown_start,observe,split_sha256,suite_sha256,model,repeat,width,heads,layers,vocab,batch,kernite,gradient_reduction}' <<< "$id")
     if [[ -z "$ref" ]]; then ref=$paired; elif [[ $paired != "$ref" ]]; then echo "unpaired trajectory: $cell" >&2; exit 1; fi
-    peak=$(jq -er '(.adamw // .softsign_lion // .muon // .rmsprop // .equal_moment // .uncorrected_adam).peak' <<< "$id")
-    decay=$(jq -er '(.adamw // .softsign_lion // .muon // .rmsprop // .equal_moment // .uncorrected_adam).weight_decay' <<< "$id")
+    peak=$(jq -er .peak <<< "$settings")
+    decay=$(jq -er .weight_decay <<< "$settings")
     case $(jq -r .optimizer <<< "$id") in
         adamw-wsd|adamw-scaled-wsd) name=AdamW ;;
         softsign-lion-wsd) name='Softsign Lion' ;;
@@ -25,6 +26,7 @@ for cell in "$@"; do
         rmsprop-wsd-checkpoint-proposals) name='RMSPropW + verifier' ;;
         equal-moment-wsd|equal-moment-wsd-checkpoint-proposals) name='AdamW, equal decay, uncorrected' ;;
         uncorrected-adam-wsd) name='AdamW, longer second moment, uncorrected' ;;
+        normalized-adamw-wsd) name='AdamW, recursively normalized' ;;
         complex-muon-wsd) name='Complex Muon' ;;
         *) echo "unknown optimizer in $cell" >&2; exit 1 ;;
     esac

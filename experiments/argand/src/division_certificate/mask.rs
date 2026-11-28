@@ -45,7 +45,7 @@ pub(crate) fn lean_source() -> Result<String> {
     for (i, &j) in matching.iter().enumerate() {
         inverse[j] = i;
     }
-    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.EqualMomentConfidence\n\n");
+    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.NormalizedRecovery\n\n");
     writeln!(
         out,
         "/- Observed equations SHA-256: {} -/",
@@ -177,11 +177,15 @@ example (batch : ℕ → List (LabeledPosition (Fin 239))) :=
   factor_uncorrectedAdam_ordinary_restarts 20000 (bitDivisionMask rows) original_graph.1 original_graph.2
     (fun x : ((bitDivisionMask rows)ᶜ : Set DivisionInput) => x.val) divisionAnswer divisionAnswer_mem batch (19/20)
 
+example (batch : ℕ → List (LabeledPosition (Fin 239))) :=
+  factor_normalizedAdam_restarts 20000 (bitDivisionMask rows) original_graph.1 original_graph.2
+    (fun x : ((bitDivisionMask rows)ᶜ : Set DivisionInput) => x.val) divisionAnswer divisionAnswer_mem batch
+
 example := equalMoment_uniform_observed_confidence 1 (evaluationGrid 256 20000) (by simp [evaluationGrid])
   divisionPrompt id (bitDivisionMask rows) (factorClass unitToken)
   (factorClass_identified _ _ original_graph.1 original_graph.2)
   (fun _ : ComplexParameter (Fin 239) 4 16 6 => (1/50 : ℝ≥0)^2) (by intro; norm_num)
-  class_native_realization (failure := (1/4 : ℝ≥0∞)) (by norm_num)
+  Division.Factors.class_native_realization (failure := (1/4 : ℝ≥0∞)) (by norm_num)
 
 example (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :=
   softsign_wsd_generalizes 1 (3/10) (2/3) (by norm_num) (by norm_num) (by norm_num)

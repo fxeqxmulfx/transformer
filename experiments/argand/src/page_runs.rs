@@ -47,7 +47,7 @@ pub(crate) enum Rule {
         scale: f64,
         decay: f64,
     },
-    UncorrectedAdam {
+    MomentAdam {
         scale: f64,
         decay: f64,
         rates: MomentRates,
@@ -69,7 +69,7 @@ impl Rule {
             } => "row-clipped-softsign-lion-wsd",
             Self::Softsign { .. } => "softsign-lion-wsd",
             Self::RmsProp { .. } => "rmsprop-wsd",
-            Self::UncorrectedAdam { rates, .. } => rates.label(),
+            Self::MomentAdam { rates, .. } => rates.label(),
             Self::Muon(_) => "complex-muon-wsd",
         }
     }
@@ -92,7 +92,7 @@ impl Optimizer {
         schedule: Schedule,
     ) -> Result<Self> {
         Ok(match rule {
-            Rule::UncorrectedAdam {
+            Rule::MomentAdam {
                 scale,
                 decay,
                 rates,
@@ -332,7 +332,7 @@ impl Job {
                 identity["optimizer"] = rule.label().into();
                 identity["rmsprop"] = crate::engine::rmsprop::settings(scale, decay, schedule);
             }
-            Rule::UncorrectedAdam {
+            Rule::MomentAdam {
                 scale,
                 decay,
                 rates,
@@ -341,6 +341,7 @@ impl Job {
                 let key = match rates {
                     MomentRates::Equal => "equal_moment",
                     MomentRates::HalfSecondGain => "uncorrected_adam",
+                    MomentRates::Normalized { .. } => "normalized_adamw",
                 };
                 identity[key] =
                     crate::engine::rmsprop::moment_settings(scale, decay, schedule, rates);

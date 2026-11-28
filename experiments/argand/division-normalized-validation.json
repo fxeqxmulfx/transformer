@@ -1,0 +1,21 @@
+{
+  "case": "grok-division-p97",
+  "source_registration_sha256": "988220db7155b0a93fced1bd264ca55106670ec8b53a026c33a2cc856390b138",
+  "binary_sha256": "19dd8e275ac33cf8945b8aae01fe72c6ef3b2d4383156b56f50a116d90a7a481",
+  "optimizer": "normalized-adamw-wsd",
+  "normalization": "recursive-gains",
+  "peak": 0.003,
+  "weight_decay": 0.1,
+  "beta1": 0.9,
+  "beta2": 0.95,
+  "schedule_budget": 20000,
+  "first_budget": 20000,
+  "evaluation_interval": 256,
+  "seeds": [69270091, 19185160, 2867231574, 1121120751, 3242140199, 377325082, 2803254475, 3495561993, 2766144757, 640462556, 771009942],
+  "discovery_seed": 0,
+  "discovery_step": 1536,
+  "discovery_weights_sha256": "56200a66333587d18e86d6dc6e66b97c80c543900a7779eb83197a9843dc46e9",
+  "cohort": "Run the recursive-gain implementation once on every seed of the already registered repair cohort, in its fixed order. The matching stock AdamW controls are reused. No recursive-gain results on these eleven seeds were available when this record was written. The discovery seed is excluded. Earlier control and other optimizer outcomes on part of this cohort were known. This is a paired replication for a mathematically specified implementation.",
+  "endpoint": "First evaluation with a unique correct winner on every one of the 4656 hidden equations. Report observed accuracy separately. Count interrupted first attempts against the candidate success rate. The cap, observation interval and paired rank summaries are the same as for the source cohort.",
+  "inference": "Report the observed success frequency, all paired differences and within-cohort one-sided binomial and median summaries. Testing several implementations on overlapping seeds does not furnish an independent optimizer-selection confidence bound."
+}

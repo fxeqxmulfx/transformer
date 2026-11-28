@@ -93,12 +93,11 @@ pub(super) mod device {
         sub.rn.f32(w, w, t);
         put(weights, i, w);
     }
-    // Uncorrected Adam. The host supplies both second-moment coefficients
-    // rounded from the real constants, including 0.1 in the matched case.
-    pub unsafe extern "ptx-kernel" fn uncorrected_moments_decay(
+    // Shared moving-average update with fixed or recursively normalized gains.
+    pub unsafe extern "ptx-kernel" fn moving_moments_decay(
         weights: *mut f32, first: *mut f32, second: *mut f32,
         grad: *const f32, norm: *const f32, count: u32, rate: f32, shrink: f32,
-        beta2: f32, second_gain: f32,
+        beta1: f32, first_gain: f32, beta2: f32, second_gain: f32,
     ) {
         let i: u32;
         index(i);
@@ -111,8 +110,8 @@ pub(super) mod device {
         load(g, grad, i);
         div.rn.f32(g, g, s);
         load(m, first, i);
-        mul.rn.f32(m, m, 0.9);
-        mul.rn.f32(t, g, 0.1);
+        mul.rn.f32(m, m, beta1);
+        mul.rn.f32(t, g, first_gain);
         add.rn.f32(m, m, t);
         put(first, i, m);
         load(v, second, i);
