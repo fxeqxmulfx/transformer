@@ -1,7 +1,6 @@
 module
 
-public import Transformer.Grokking.FiniteRecovery.FirstHitSymmetry
-public import Transformer.Grokking.FiniteRecovery.NormalizedRecovery
+public import Transformer.Grokking.FiniteRecovery.LabelOrbit
 
 /-! A five-cell staircase identifies a rank-one phase table with nine
 entries. Two hidden inputs need different, unobserved answer tokens.
@@ -13,24 +12,6 @@ ordered pairs of these winners at each evaluation. -/
 namespace Transformer.Grokking.FiniteRecovery
 
 open Set MeasureTheory Filter
-
-/-- A uniform bound on success at every update also bounds the probability
-of success at every sufficiently late update. No independence is needed. -/
-theorem eventual_success_mass_le {D : Type*} [MeasurableSpace D] (μ : Measure D) [IsFiniteMeasure μ]
-    (E : ℕ → Set D) (p : ℝ) (hp : 0 ≤ p) (h : ∀ t, μ.real (E t) ≤ p) :
-    μ.real {z | ∀ᶠ t in atTop, z ∈ E t} ≤ p := by
-  let tail (n : ℕ) := {z | ∀ t ≥ n, z ∈ E t}
-  have mono : Monotone tail := fun _ _ hnm _ hz t hmt => hz t (hnm.trans hmt)
-  have he : {z | ∀ᶠ t in atTop, z ∈ E t} = ⋃ n, tail n := by
-    ext z
-    simp only [mem_ofPred_eq,eventually_atTop,mem_iUnion,tail]
-  have bound : μ (⋃ n, tail n) ≤ ENNReal.ofReal p := by
-    rw [mono.measure_iUnion]
-    refine iSup_le fun n => (measure_mono (show tail n ⊆ E n from fun _ hz => hz n le_rfl)).trans ?_
-    rw [← ofReal_measureReal (μ := μ) (s := E n)]
-    exact ENNReal.ofReal_le_ofReal (h n)
-  rw [he,measureReal_def]
-  exact (ENNReal.toReal_mono ENNReal.ofReal_ne_top bound).trans (ENNReal.toReal_ofReal hp).le
 
 /-- The native rule also evaluates the cap when it falls between two
 regular checks. This upper bound includes initialization and that endpoint. -/
@@ -127,23 +108,19 @@ theorem two_hit_bound (stream : ℕ → List (Fin 5)) (grid : Finset ℕ) :
     let μ := independentGaussianDraws (fun _ : ComplexParameter Token 4 16 6 => (1/50 : ℝ≥0)^2)
     μ.real {z | ∃ t ∈ grid, StrictOn (fun k => score stream z t (probe k)) (label ∘ probe)} ≤ (grid.card : ℝ)/2756 := by
   intro μ
-  let W t p := {z : Draw | StrictOn (fun k => score stream z t (probe k)) (pairLabels p)}
   have labels : label ∘ probe = pairLabels (2,3) := by funext k; fin_cases k <;> decide
   rw [labels]
   have card : unused.offDiag.card = 2756 := by decide +kernel
   rw [← show (unused.offDiag.card : ℝ) = 2756 by exact_mod_cast card]
-  apply first_hit_mass_le_checks_div_card μ grid unused.offDiag ⟨(2,3),by decide⟩ (2,3) W
+  have hi : Function.Injective pairLabels := by
+    intro p q h
+    exact Prod.ext (congrFun h 0) (congrFun h 1)
+  apply strict_assignment_first_hit μ grid unused.offDiag (2,3) (by decide) pairLabels hi.injOn
+    (fun z t k => score stream z t (probe k))
   · intro t p
-    simpa only [W,score,normalizedAdam_weights,Fin.last_zero,Function.comp_apply] using (adamW_strict_open (H := 4) (d := 16) (L := 6)
+    simpa only [score,normalizedAdam_weights,Fin.last_zero,Function.comp_apply] using (adamW_strict_open (H := 4) (d := 16) (L := 6)
       1 t (fun k => 3*wsdRate 20000 k) (batch stream) (prompt ∘ probe) (pairLabels p)).measurableSet
-  · intro t p _ q _ hne
-    apply Set.disjoint_left.mpr
-    intro z h g
-    have eq (k : Fin 2) : pairLabels p k = pairLabels q k := by
-      by_contra hn
-      exact lt_asymm (h k _ (Ne.symm hn)) (g k _ hn)
-    exact hne (Prod.ext (eq 0) (eq 1))
-  · intro t p hp
+  · intro p hp
     obtain ⟨e,answers,fix⟩ := move_pair p hp
     have token_used (x : Cell) : token x ∈ used := by obtain ⟨i,j⟩ := x; fin_cases i <;> fin_cases j <;> decide
     have prompt_eq (x : Cell) : e ∘ prompt x = prompt x := funext fun _ => fix _ (token_used x)
@@ -153,24 +130,14 @@ theorem two_hit_bound (stream : ℕ → List (Fin 5)) (grid : Finset ℕ) :
     have batches : (fun k => (batch stream k).map (relabelPosition e)) = batch stream := by
       funext k
       simp only [batch,List.map_map,show relabelPosition e ∘ observation = observation from funext obs]
-    have perm (z : Draw) (k : Fin 2) (a : Token) : score stream (relabelDraw e z) t (probe k) (e a) =
-        score stream z t (probe k) a := by
+    refine ⟨e,relabelDraw e,?_,gaussian_relabel_preimage e (fun _ => (1/50 : ℝ≥0)^2),?_⟩
+    · intro k
+      rw [← labels]
+      exact answers k
+    · intro z t k a
       simp only [score,normalizedAdam_weights]
       simpa only [batches,prompt_eq] using adamW_logits_relabel e 1 t (batch stream) (fun k => 3*wsdRate 20000 k)
         z (prompt (probe k)) 0 a
-    have pre : (relabelDraw e) ⁻¹' W t p = W t (2,3) := by
-      ext z
-      change (∀ k b, b ≠ pairLabels p k → _ < _) ↔ ∀ k b, b ≠ pairLabels (2,3) k → _ < _
-      have target (k : Fin 2) : e (pairLabels (2,3) k) = pairLabels p k := by rw [← labels]; exact answers k
-      constructor
-      · intro h k b hb
-        have v := h k (e b) (fun he => hb (e.injective (he.trans (target k).symm)))
-        simpa only [← target,perm] using v
-      · intro h k v hv
-        obtain ⟨b,rfl⟩ := e.surjective v
-        simp only [← target,perm]
-        exact h k b (fun he => hv ((congrArg e he).trans (target k)))
-    exact (gaussian_relabel_preimage e (fun _ => (1/50 : ℝ≥0)^2) (W t p)).trans (congrArg μ pre)
 
 private theorem two_probes_strict {s : Cell → Token → ℝ}
     (h : ∀ x ∉ range observedCell, ∀ a, a ≠ label x → s x a < s x (label x)) :

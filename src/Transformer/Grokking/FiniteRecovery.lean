@@ -50,6 +50,7 @@ public import Transformer.Grokking.FiniteRecovery.NormalizedRecovery
 public import Transformer.Grokking.FiniteRecovery.NormalizedMomentBound
 public import Transformer.Grokking.FiniteRecovery.HiddenCorner
 public import Transformer.Grokking.FiniteRecovery.FirstHitSymmetry
+public import Transformer.Grokking.FiniteRecovery.LabelOrbit
 public import Transformer.Grokking.FiniteRecovery.TwoHiddenAnswers
 public import Transformer.Grokking.FiniteRecovery.Binary32Scores
 public import Transformer.Grokking.FiniteRecovery.ProjectedSoftsign

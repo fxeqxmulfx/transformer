@@ -45,7 +45,9 @@ pub(crate) fn lean_source() -> Result<String> {
     for (i, &j) in matching.iter().enumerate() {
         inverse[j] = i;
     }
-    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.NormalizedRecovery\n\n");
+    let mut out = String::from(
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\n\n",
+    );
     writeln!(
         out,
         "/- Observed equations SHA-256: {} -/",
@@ -78,6 +80,13 @@ theorem original_mask_certifies (score : DivisionInput → Fin 239 → ℝ) :
     classCertificate (bitDivisionMask rows) (factorClass unitToken) (fun x => divisionAnswer x) score ↔
       StrictOn score divisionAnswer :=
   division_certificate_iff _ original_graph.1 original_graph.2 score
+
+theorem original_factor_label_orbit {X : Type*} [Finite X] (G : Subgroup (Equiv.Perm (Fin 239)))
+    (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)
+    (inputs : ∀ (e : G) x, x ∈ bitDivisionMask rows → e.val ∘ divisionPrompt x = divisionPrompt x)
+    (answers : ∀ (e : G) x, x ∈ bitDivisionMask rows → e.val (f x) = f x) (hidden : X → DivisionInput) :
+    (hiddenLabelOrbit G (f ∘ hidden)).card = 1 :=
+  factor_hidden_orbit_singleton _ original_graph.1 original_graph.2 G f hf inputs answers hidden
 
 theorem original_nuclear_completion {u v : DivisionUnit → ℂ}
     (h : ∀ i j, ‖vecMulVec u v i j‖ = 1) :
@@ -201,6 +210,7 @@ example {D : Type*} [MeasurableSpace D] [MeasurableSingletonClass D] [Countable 
     divisionAnswer divisionAnswer_mem batch draw
 
 #print axioms original_mask_certifies
+#print axioms original_factor_label_orbit
 #print axioms original_nuclear_completion
 #print axioms original_factor_class_stabilizes
 #print axioms original_firstNoise_factor_recovery

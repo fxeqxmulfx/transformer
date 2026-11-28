@@ -537,6 +537,26 @@ count for any required confidence, even with seed-dependent minibatches.
 The theorem leaves the numerical size of that count open.
 [Ordinary restarts and uniform confidence](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentConfidence.lean)
 
+Let $H$ be the hidden inputs and $G$ a group of vocabulary permutations
+that fix each observed example and each hidden prompt. Count the distinct
+assignments $x\mapsto\sigma(F(x))$ on $H$ as $\sigma$ ranges over $G$,
+and call their number $M$. At any update these assignments have equal
+probability under an equivariant optimizer and initialization law. At
+most one can win strictly on all of $H$. A first hit in $k$ checks
+therefore has probability at most $\min(1,k/M)$, and eventual permanent
+correctness has probability at most $1/M$. In particular, a probability
+above one half of eventual permanent correctness requires every symmetry
+to fix every hidden answer. The bounds apply to ordinary and recursively
+normalized AdamW for any fixed stream of observed minibatches.
+
+For division, a connected unit observation graph puts every denominator
+in at least one observed prompt. Fixing those prompts fixes every unit
+token. One observed zero-row label fixes the remaining constant answer
+of each member of the quotient-factor family. Consequently $M=1$ for
+every member on the original 4,656-example mask. Here the orbit bound
+leaves the one-run success probability open.
+[Hidden answer orbits](../../src/Transformer/Grokking/FiniteRecovery/LabelOrbit.lean)
+
 For a fixed horizon, identifiability and strict representability alone
 permit single-run success probabilities at or below one half. Consider
 the two rows $(1,0)$ and $(2,1)$ with the lower left label hidden, using
