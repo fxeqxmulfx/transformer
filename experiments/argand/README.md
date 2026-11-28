@@ -325,6 +325,7 @@ FP64 singular-value decompositions of $X$ and $X-Y$ on the saved weights.
 | AdamW | 889832341 | 18,432 | 4,656/4,656 | 96.496897 | 0.526854 |
 | AdamW | 889832341 | 100,000 | 4,656/4,656 | 95.9999972 | 0.00002388 |
 | AdamW | 2849388409 | 100,000 | 4,656/4,656 | 95.9999970 | 0.00002399 |
+| AdamW | 2434973590 | 100,000 | 4,656/4,656 | 95.9999971 | 0.00002360 |
 
 For any $m$ by $s$ table with $n$ candidate tokens, codes in the closed
 unit disk, and minimum correct-token gap $\gamma$, the nuclear distance
@@ -357,6 +358,9 @@ draws in its sample size. A restarted seed still contributes its terminal
 result to the requested twelve-seed fraction. The first attempt at seed
 2434973590 reached a strict 4,656/4,656 at update 25,600 and stopped after
 the recorded evaluation at 36,864. The rerun uses the same seed and schedule.
+It first solved all hidden equations at update 24,064, fell to 4,319 at
+52,992 and returned to 4,656 at 55,040. At update 100,000 its replay
+verified all 4,656 hidden equations with a minimum logit gap of 20.379.
 [Terminal validation theorem](../../src/Transformer/Grokking/FiniteRecovery/TerminalValidation.lean)
 
 Two independent ordinary AdamW runs of seed 113 on the same 256-update
