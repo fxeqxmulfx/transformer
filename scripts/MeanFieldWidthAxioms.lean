@@ -116,3 +116,4 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityTraining
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityTraining_grad
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityTraining_field
+#print axioms Transformer.Grokking.FiniteRecovery.ObservedConstraints.permanent_of_observed_drift_on
