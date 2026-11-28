@@ -12,6 +12,7 @@ horizon=$(jq -er '.protocol.updates' summary.json)
 optimizer=$(jq -er '.protocol.protocol | {
   "argand-sum8-adamw-wsd-v1":"AdamW + WSD", "argand-sum8-adaptive-page-v1":"PAGE",
   "argand-sum8-adamw-first-noise-v1":"AdamW + WSD, first-update noise",
+  "argand-sum8-adamw-first-perfect-v1":"AdamW + WSD, first 100% retained",
   "argand-sum8-adaptive-page-sqrt-v1":"PAGE (square root)", "argand-sum8-adaptive-page-retry-v1":"PAGE (retry)"}[.]' summary.json)
 gnuplot -e "horizon=$horizon; optimizer='$optimizer'" - <<'PLOT'
 set terminal pdfcairo color size 9.2in,4.0in font "DejaVu Sans,10"

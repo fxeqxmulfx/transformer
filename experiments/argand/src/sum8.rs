@@ -25,7 +25,7 @@ const UPDATES: usize = 20_480;
 pub(crate) enum Method {
     Page(PageRule),
     AdamW,
-    AdamWFirstNoise,
+    AdamWFirstNoise { until_perfect: bool },
 }
 impl Method {
     fn protocol_id(self) -> &'static str {
@@ -34,14 +34,19 @@ impl Method {
             Self::Page(PageRule::SquareRoot) => "argand-sum8-adaptive-page-sqrt-v1",
             Self::Page(PageRule::Retry) => "argand-sum8-adaptive-page-retry-v1",
             Self::AdamW => "argand-sum8-adamw-wsd-v1",
-            Self::AdamWFirstNoise => "argand-sum8-adamw-first-noise-v1",
+            Self::AdamWFirstNoise {
+                until_perfect: false,
+            } => "argand-sum8-adamw-first-noise-v1",
+            Self::AdamWFirstNoise {
+                until_perfect: true,
+            } => "argand-sum8-adamw-first-perfect-v1",
         }
     }
     fn rule(self, sampling_seed: u32) -> Rule {
         match self {
             Self::Page(correction) => Rule::Page(correction),
             Self::AdamW => Rule::AdamW(RatePlan::Wsd),
-            Self::AdamWFirstNoise => Rule::AdamWFirstNoise {
+            Self::AdamWFirstNoise { .. } => Rule::AdamWFirstNoise {
                 seed: sampling_seed,
             },
         }
@@ -169,9 +174,13 @@ fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], method: Method) -> Value {
         "layers":6,"repeat":1,"vocab":2,"sigma":0.02,"open_words":31,"hidden_words":225,
         "mask":"big-endian nibbles; col == row or col == row + 1, without wrap",
         "success":"positive terminal true-class logit gap on all 225 hidden words"});
-    if matches!(method, Method::AdamW | Method::AdamWFirstNoise) {
-        let second = if matches!(method, Method::AdamWFirstNoise) {
+    if matches!(method, Method::AdamW | Method::AdamWFirstNoise { .. }) {
+        let second = if let Method::AdamWFirstNoise { until_perfect } = method {
             plan["gaussian_weight_noise"] = json!({"after_update":1,"stddev":FIRST_NOISE_STDDEV});
+            if until_perfect {
+                plan["stop_on"] = "first-strict-100-percent".into();
+                plan["observation_grid"] = "initial, powers of two, every 256, and budget".into();
+            }
             "first_update_noise"
         } else {
             "unused"
@@ -209,7 +218,7 @@ fn manifest(
     }
     let updates = requested.unwrap_or(UPDATES);
     let seeds = match method {
-        Method::AdamW | Method::AdamWFirstNoise => {
+        Method::AdamW | Method::AdamWFirstNoise { .. } => {
             let paired: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
             serde_json::from_value(paired["seeds"].clone())?
         }
@@ -259,20 +268,43 @@ fn train(
     let mut history = fs::File::create(dir.join("training.jsonl"))?;
     writeln!(history, "{}", optimizer.metrics())?;
     let start = Instant::now();
-    let mut reason = "budget";
+    let until_perfect = matches!(
+        method,
+        Method::AdamWFirstNoise {
+            until_perfect: true
+        }
+    );
+    let mut reason = if until_perfect && initial["hidden"]["all_strict"] == true {
+        "first_strict_100_percent"
+    } else {
+        "budget"
+    };
     let mut milestones = Vec::new();
     for t in 1..=updates {
+        if reason == "first_strict_100_percent" {
+            break;
+        }
         if !optimizer.step(&mut model, observed.observations(), false)? {
             reason = "no_resolvable_full_step";
             break;
         }
-        if t.is_power_of_two() || t.is_multiple_of(256) || t == updates {
+        let observe = t.is_power_of_two() || t.is_multiple_of(256) || t == updates;
+        if observe {
             writeln!(history, "{}", optimizer.metrics())?;
             history.flush()?;
+            if until_perfect && hidden.score(&mut model)?["all_strict"] == true {
+                reason = "first_strict_100_percent";
+                break;
+            }
         }
-        // Capture weights on the same uninterrupted trajectory. Intermediate
-        // predictions are evaluated only after the terminal weights are saved.
-        if t < updates && ((t <= 512 && t.is_power_of_two()) || t.is_multiple_of(1024)) {
+        // Saving each stopping evaluation allows independent replay on a
+        // shared grid even when different draws finish at different steps.
+        let snapshot = if until_perfect {
+            observe
+        } else {
+            (t <= 512 && t.is_power_of_two()) || t.is_multiple_of(1024)
+        };
+        if t < updates && snapshot {
             let (_, digest) = save_weights(dir, &format!("weights-{t}.f32"), &model)?;
             milestones.push(json!({"step":t,"weights_sha256":digest}));
         }
@@ -396,11 +428,26 @@ mod tests {
         assert_eq!(adamw["adamw"]["warmup"], 409);
         assert_eq!(adamw["adamw"]["cooldown_start"], 16384);
         assert_eq!(adamw["adamw"]["budget"], UPDATES);
-        let noisy = protocol(UPDATES, pairs, Method::AdamWFirstNoise);
+        let noisy = protocol(
+            UPDATES,
+            pairs,
+            Method::AdamWFirstNoise {
+                until_perfect: false,
+            },
+        );
         assert_eq!(noisy["seeds"], adamw["seeds"]);
         assert_eq!(noisy["adamw"], adamw["adamw"]);
         assert_eq!(noisy["seed_order"][1], "first_update_noise");
         assert_eq!(noisy["gaussian_weight_noise"]["stddev"], FIRST_NOISE_STDDEV);
+        let early = protocol(
+            UPDATES,
+            pairs,
+            Method::AdamWFirstNoise {
+                until_perfect: true,
+            },
+        );
+        assert_eq!(early["adamw"], noisy["adamw"]);
+        assert_eq!(early["stop_on"], "first-strict-100-percent");
         Ok(())
     }
 

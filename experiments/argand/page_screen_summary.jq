@@ -9,6 +9,9 @@ if length != 2*($cells|length) then error("incomplete optimizer screen") else . 
   $v.splits[$c.task.selection] as $p |
   if $r.identity.case != $c.task.name or $r.identity.seed != $c.seed or
      $r.identity.optimizer != $records[0].identity.optimizer or $r.identity.correction != $records[0].identity.correction or
+     $r.identity.stop_on != $records[0].identity.stop_on or
+     ($r.identity.stop_on=="first-strict-100-percent" and $r.step<$r.identity.budget and
+       ($r.strict.all_strict!=true or $r.correct!=$r.total)) or
      ($r.identity.optimizer=="adamw-wsd-first-noise" and
        ($r.identity.fixed_horizon or $r.identity.gaussian_weight_noise!={after_update:1,seed:(371+$c.seed),stddev:1e-6})) or
      $r.identity.tier != $c.task.tier or $r.identity != $v.identity or
@@ -28,4 +31,5 @@ def counts: {runs:length, passed_99:map(select(.passed))|length,
 {optimizer:.[0].identity.optimizer,correction:.[0].identity.correction,
  overall:counts,tiers:(group_by(.identity.tier) | map({key:.[0].identity.tier,value:counts}) | from_entries),
  cases:group_by(.identity.case) | map({name:.[0].identity.case, tier:.[0].identity.tier, total:.[0].total,
-   cells:sort_by(.identity.seed) | map({seed:.identity.seed,step,correct,passed,strict:.strict.all_strict})})}
+   cells:sort_by(.identity.seed) | map({seed:.identity.seed,step,correct,passed,strict:.strict.all_strict})})} +
+  (if .[0].identity.stop_on then {stop_on:.[0].identity.stop_on} else {} end)

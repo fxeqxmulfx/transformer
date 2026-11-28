@@ -302,13 +302,45 @@ hidden evaluation was at 63,232. Both measurements used a learning rate
 of 0.001. At update 100,000 this seed again scored 4,656/4,656 on each
 split. Independent replay gave a minimum hidden gap of 19.092. The
 observed-label certificate accepted all 9,312 predictions and gave a
-minimum training gap of 19.225. Terminal success for the replication is determined
-solely by all 4,656 strict hidden answers at update 100,000. All twelve
-preregistered seeds use this horizon, including early successes. The
-horizon was selected after seeing the first seed's 20,000-step result.
-If any terminal replay fails, all twelve repeat from the same seeds with
-a 200,000-step WSD schedule. The empirical fractions use separate
-denominators of twelve for the two budgets.
+minimum training gap of 19.225. The original replication specified all
+4,656 strict hidden answers at exactly update 100,000 and registered
+twelve seeds. Three seeds completed that protocol before the stopping
+rule changed. All three succeeded. The horizon was selected after seeing
+the first seed's 20,000-step result.
+
+#### Stop at the first perfect evaluation
+
+The active protocol ends a seed immediately when its primary hidden
+score is 4,656/4,656 and every correct logit gap is positive. It checks
+every 256 updates and at the budget. The saved weights are reloaded and
+independently checked against the quotient table reconstructed from the
+observed labels. The WSD schedule still spans 100,000 updates. If any
+seed exhausts that budget, the twelve seeds start a separate 200,000-step
+schedule with the same stopping rule.
+
+The first four registered seeds already had verified successes at 18,432,
+23,808, 25,600 and 23,808 on their original attempts. Seed 2434973590
+reached 100% before its process interruption. The first hit of the
+original attempt counts once. The remaining eight seeds were unrun when
+the new rule was chosen. All twelve are included in the descriptive
+fraction at each cap. A prospective analysis of this new event uses
+the eight. Its probability is the chance of reaching 100% at a recorded
+evaluation by the cap. Under independent runs, even eight successes in
+eight have probability $0.75^8=0.10011$ at the three-quarters null
+boundary for one budget. A population probability above three quarters
+therefore cannot be established at the 5% level from these eight alone.
+The first-hit event contains the fixed endpoint event on the same path
+when the cap is evaluated. The observations within a run can be arbitrarily
+dependent. [Stopping time and certified recovery](../../src/Transformer/Grokking/FiniteRecovery/FirstPerfect.lean)
+
+```sh
+bash run_division_to_perfect.sh runs/division-confirm-100k runs/division-first100-100k 100000
+bash plot_division_to_perfect.sh runs/division-first100-100k runs/division-comparison
+```
+
+Each completed seed has a draw record giving its first successful update
+or the exhausted cap, the replay digest and the certificate's minimum
+gap. The plot truncates the historical curves at the selected checkpoint.
 
 The certificate also measures the learned character table on the 9,216
 unit pairs. It averages the faithful character of generator 5 over the
@@ -543,6 +575,11 @@ and 373 accompany model seeds 0, 1 and 2 respectively across all cases.
 The terminal scorer reloads the saved weights, and the summary verifies
 all 105 identities, endpoint scores and replay digests.
 
+The current `first-noise-perfect` screen uses the same 35 cases, seeds
+and caps. Each cell stops at its first strictly perfect primary evaluation
+or exhausts its cap. Its endpoint report retains both the 99% and exact
+scores. The historical 99%-stopped controls may have ended earlier.
+
 `sum8-adamw-first-noise OUT 20480` uses the eight registered pairs of the
 31-observation modular-sum experiment. In each pair the first seed sets the
 native weights and the second sets the one-time noise. The stock AdamW
@@ -550,6 +587,12 @@ control uses the same starting weights, complete observed gradient and WSD
 schedule. `sum8-adamw-first-noise-replay OUT` verifies the saved terminal
 weights and intermediate snapshots. Run `bash plot_sum8_accuracy.sh OUT`
 to render their strict accuracies on all 31 observed and 225 hidden words.
+For the current early-stopping protocol, use
+`sum8-adamw-first-noise-until-perfect OUT 20480`. It checks all 225 hidden
+words at initialization, powers of two, multiples of 256 and the budget.
+Only the 31 observed words contribute to gradients. The first perfect
+checkpoint ends its seed. The plotted mean retains that checkpoint for
+the remaining comparison times.
 
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent

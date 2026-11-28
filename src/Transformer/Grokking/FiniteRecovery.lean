@@ -34,6 +34,7 @@ public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
 public import Transformer.Grokking.FiniteRecovery.TerminalBinomial
 public import Transformer.Grokking.FiniteRecovery.TerminalTail
+public import Transformer.Grokking.FiniteRecovery.FirstPerfect
 public import Transformer.Grokking.FiniteRecovery.DivisionNative
 public import Transformer.Grokking.FiniteRecovery.FactorObservations
 public import Transformer.Grokking.FiniteRecovery.FactorNative

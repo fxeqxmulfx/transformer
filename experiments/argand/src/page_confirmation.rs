@@ -91,7 +91,7 @@ pub fn run(name: &str, dir: &Path, cap: usize, rule: Rule, plan_only: bool) -> R
     let (mut k, mut native, mut full) = (0, 0, 0);
     for (i, [model, sampler]) in pairs.into_iter().enumerate() {
         let cell = dir.join(format!("draw-{i}"));
-        let r = job.run(&cell, model, sampler, rule, true)?;
+        let r = job.run(&cell, model, sampler, rule, crate::page_runs::Stop::Horizon)?;
         let success = r["strict"]["all_strict"] == true && r["correct"] == r["total"];
         k += usize::from(success);
         if audit_and {

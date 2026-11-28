@@ -4,6 +4,7 @@ use crate::{
     data::{Example, Task},
     engine::{self, Engine, MODEL, PENALTY, adamw::RatePlan},
     hash, metrics,
+    page_runs::Stop,
     schedule::Schedule,
     suite::{self, Shape, publish, suite_hash},
 };
@@ -16,9 +17,9 @@ use std::{
 const USAGE: &str = concat!(
     "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | ",
     "replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | ",
-    "sum8-adamw[-first-noise][-replay] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
+    "sum8-adamw[-first-noise[-until-perfect]][-replay] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
-    "adamw-first-noise-(run|screen) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
+    "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
     "division-certificate CELL (terminal|first-strict) | division-relabel CELL | division-mask-lean"
 );
@@ -41,6 +42,8 @@ pub fn command(args: &[String]) -> Result<()> {
                 && matches!(
                     op.as_str(),
                     "adamw-run"
+                        | "adamw-until-perfect"
+                        | "adamw-first-noise-until-perfect"
                         | "adamw-first-noise-run"
                         | "adamw-first-noise-screen"
                         | "adamw-restart-run"
@@ -81,7 +84,7 @@ pub fn command(args: &[String]) -> Result<()> {
                 budget: budget.parse()?,
             });
             let dir = Path::new(out).join(name).join(format!("seed{seed}"));
-            println!("{}", job.run(&dir, seed, 0, rule, true)?);
+            println!("{}", job.run(&dir, seed, 0, rule, Stop::Horizon)?);
             Ok(())
         }
         ("adamw-restart-run", [name, seed, out, cap, stock, index, first]) => {
@@ -100,11 +103,13 @@ pub fn command(args: &[String]) -> Result<()> {
                 first_budget,
             });
             let dir = Path::new(out).join(name).join(format!("draw-{trial}"));
-            println!("{}", job.run(&dir, seed.parse()?, 0, rule, true)?);
+            println!("{}", job.run(&dir, seed.parse()?, 0, rule, Stop::Horizon)?);
             Ok(())
         }
         (
-            "adamw-first-noise-run" | "adamw-first-noise-screen",
+            "adamw-first-noise-run"
+            | "adamw-first-noise-screen"
+            | "adamw-first-noise-until-perfect",
             [name, seed, noise_seed, out, cap],
         ) => {
             let seed: u32 = seed.parse()?;
@@ -115,10 +120,12 @@ pub fn command(args: &[String]) -> Result<()> {
                 .join(name)
                 .join(format!("seed{seed}-noise{noise_seed}"));
             let rule = crate::page_runs::Rule::AdamWFirstNoise { seed: noise_seed };
-            println!(
-                "{}",
-                job.run(&dir, seed, 0, rule, op == "adamw-first-noise-run")?
-            );
+            let stop = match op.as_str() {
+                "adamw-first-noise-run" => Stop::Horizon,
+                "adamw-first-noise-screen" => Stop::Pass99,
+                _ => Stop::Perfect,
+            };
+            println!("{}", job.run(&dir, seed, 0, rule, stop)?);
             Ok(())
         }
         ("check", []) => engine::check(),
@@ -128,7 +135,10 @@ pub fn command(args: &[String]) -> Result<()> {
             println!("{}", crate::and_audit::run(Path::new(cell))?);
             Ok(())
         }
-        ("adamw-run" | "page-run" | "page-run-sqrt" | "page-run-retry", [name, seed, out, cap]) => {
+        (
+            "adamw-run" | "adamw-until-perfect" | "page-run" | "page-run-sqrt" | "page-run-retry",
+            [name, seed, out, cap],
+        ) => {
             let seed: u32 = seed.parse()?;
             let job = crate::page_runs::Job::new(name, cap.parse()?)?
                 .with_ordered_gradients(ordered_gradients);
@@ -138,7 +148,13 @@ pub fn command(args: &[String]) -> Result<()> {
                 seed,
                 seed.wrapping_add(30000),
                 training_rule(op),
-                name == crate::division::NAME,
+                if op == "adamw-until-perfect" {
+                    Stop::Perfect
+                } else if name == crate::division::NAME {
+                    Stop::Horizon
+                } else {
+                    Stop::Pass99
+                },
             )?;
             println!("{record}");
             Ok(())
@@ -159,6 +175,8 @@ pub fn command(args: &[String]) -> Result<()> {
             | "sum8-adamw-replay"
             | "sum8-adamw-first-noise"
             | "sum8-adamw-first-noise-replay"
+            | "sum8-adamw-first-noise-until-perfect"
+            | "sum8-adamw-first-noise-until-perfect-replay"
             | "sum8-page"
             | "sum8-replay"
             | "sum8-page-sqrt"
@@ -171,7 +189,9 @@ pub fn command(args: &[String]) -> Result<()> {
             steps.first().map(|s| s.parse()).transpose()?,
             op.contains("replay"),
             if op.starts_with("sum8-adamw-first-noise") {
-                crate::sum8::Method::AdamWFirstNoise
+                crate::sum8::Method::AdamWFirstNoise {
+                    until_perfect: op.contains("until-perfect"),
+                }
             } else if op.starts_with("sum8-adamw") {
                 crate::sum8::Method::AdamW
             } else {

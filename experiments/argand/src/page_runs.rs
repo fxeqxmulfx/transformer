@@ -16,6 +16,13 @@ use crate::{
 use serde_json::{Value, json};
 use std::{fs, io::Write, path::Path, time::Instant};
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Stop {
+    Horizon,
+    Pass99,
+    Perfect,
+}
+
 #[derive(Clone, Copy)]
 pub(crate) enum Rule {
     Page(PageRule),
@@ -191,14 +198,13 @@ impl Job {
         )
     }
 
-    /// With a fixed horizon, intermediate scores never stop or change training.
     pub fn run(
         &self,
         dir: &Path,
         seed: u32,
         sampler: u32,
         rule: Rule,
-        fixed: bool,
+        stop: Stop,
     ) -> Result<Value> {
         fs::create_dir_all(dir)?;
         let lock = fs::File::options()
@@ -210,8 +216,11 @@ impl Job {
         let mut identity = json!({"case":self.row["name"],"tier":self.row["tier"],"model":"argand-skip-write-tied-score-init-one",
             "seed":seed,"order_seed":seed.wrapping_add(10000),"split_sha256":self.row["split_sha256"],
             "suite_sha256":suite::suite_hash(),"kernite":KERNITE_VERSION,"repeat":1,"budget":self.until,
-            "fixed_horizon":fixed,"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
+            "fixed_horizon":stop==Stop::Horizon,"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
             "batch":self.batch,"observe":self.every,"vocab":self.shape.vocab});
+        if stop == Stop::Perfect {
+            identity["stop_on"] = "first-strict-100-percent".into();
+        }
         if self.ordered_gradients {
             identity["gradient_reduction"] = "ordered-f32-v1".into();
         }
@@ -293,7 +302,7 @@ impl Job {
                 let score = metrics::evaluate(&mut engine, hidden, true)?;
                 let correct = score["exact"].as_u64().ok_or("missing exact score")? as usize;
                 let passed = correct * 100 >= 99 * hidden.len();
-                let finish = step == self.until || (!fixed && passed);
+                let mut finish = step == self.until || (stop == Stop::Pass99 && passed);
                 let train_correct = if division {
                     Some(metrics::evaluate(&mut engine, train, false)?["exact"].clone())
                 } else {
@@ -303,13 +312,18 @@ impl Job {
                     "correct":correct,"total":hidden.len(),"passed":passed,"loss":score["loss"],
                     "segment_seconds":start.elapsed().as_secs_f64(),"gpu":engine.cuda.name(),"skipped_batches":skipped,
                     "optimizer":optimizer.as_ref().map(Optimizer::metrics)});
-                let check_first = fixed
+                let check_first = stop == Stop::Horizon
                     && division
                     && first_strict.is_none()
                     && step > 0
                     && correct == hidden.len();
-                if finish || check_first {
+                let check_perfect = stop == Stop::Perfect && correct == hidden.len();
+                if finish || check_first || check_perfect {
                     record["strict"] = strict(&mut engine, hidden)?;
+                }
+                if check_perfect && record["strict"]["all_strict"] == true {
+                    first_strict = Some(step);
+                    finish = true;
                 }
                 if check_first && record["strict"]["all_strict"] == true {
                     first_strict = Some(step);

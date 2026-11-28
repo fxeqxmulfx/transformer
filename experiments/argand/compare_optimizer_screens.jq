@@ -10,6 +10,7 @@ def cells:
     then . else error("missing or duplicated case and seed") end;
 def design: {case, tier, total, seed};
 def outcome: {step, correct, passed, strict};
+def training_rule: {optimizer,correction} + (if .stop_on then {stop_on} else {} end);
 def counts:
   {runs:length,
    control_99:map(select(.control.passed))|length,
@@ -23,6 +24,6 @@ def counts:
 if ($a|map(design)) != ($b|map(design)) then error("unmatched evaluation cells") else . end |
 [range($a|length) as $i | ($a[$i]|design) +
   {control:($a[$i]|outcome),candidate:($b[$i]|outcome)}] as $pairs |
-{control:($control[0]|{optimizer,correction}),candidate:($candidate[0]|{optimizer,correction}),
+{control:($control[0]|training_rule),candidate:($candidate[0]|training_rule),
  overall:($pairs|counts),tiers:($pairs|group_by(.tier)|map({key:.[0].tier,value:counts})|from_entries),
  pairs:$pairs}
