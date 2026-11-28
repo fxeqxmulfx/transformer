@@ -117,3 +117,12 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityTraining_grad
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityTraining_field
 #print axioms Transformer.Grokking.FiniteRecovery.ObservedConstraints.permanent_of_observed_drift_on
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.hasDerivAt_segmentRisk
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_slope
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_width_transfer_on
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.box
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.measurableSet_box
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.box_compl_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_certificate
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificateFeatures_zero
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityCertificateRegular

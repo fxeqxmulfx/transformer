@@ -9,6 +9,7 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Transfer
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Recovery
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Initialization
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Literal
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Obstruction
 
@@ -32,6 +33,10 @@ interact through finitely many empirical averages.
   of the coupled distance and run-wise bounds on the later fluctuations and
   segment errors, and permanent recovery once
   max(r̄, 0) + widthError + E[tail] is below the recovery margin.
+* `Initialization` needs the slope hypothesis only on the box of starts
+  within C₀ and loses at most N · |P| · δ by the union bound, so a
+  certificate F ∘ mean ψ recovers from an unbounded initialization law
+  whose coordinates leave [-C₀, C₀] with probability at most δ.
 * `Literal` identifies the literal `AdamW.run` with floor 10⁻⁸, clipping
   and decoupled weight decay on N width units with the system of floor
   N · 10⁻⁸ while clipping does not act.

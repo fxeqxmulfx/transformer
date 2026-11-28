@@ -2,6 +2,7 @@ module
 
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Transfer
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds
+public import Transformer.Grokking.FiniteRecovery.ObservedDrift
 
 /-! Certificates read through width averages. For U(w) = F(mean_i ψ(w_i))
 the chain rule writes the residual DU(w + uΔ)[Δ] + (1-ρ)(U(w) - c) of the
@@ -10,7 +11,9 @@ of segment features: ψ at the point u of the segment, its derivative along
 the displacement there, and ψ at the start. The features clamp the fraction
 to [0,1] and each displacement coordinate to [-D, D]; neither clamp acts on
 an update whose displacements lie within D, which `Bounds` guarantees for
-D = η · (max(C₀, 120)/10 + 12) when every initial weight lies within C₀. -/
+D = η · (max(C₀, 120)/10 + 12) when every initial weight lies within C₀. On
+such starts `certificate_slope` gives the slope hypothesis of the width
+transfer at every update. -/
 
 @[expose] public section
 
@@ -123,6 +126,39 @@ theorem certificate_residual_of_init [Fintype P] [Fintype J] (A : Training P K)
         mul_le_mul_of_nonneg_right (hr t).2 hpos
     _ ≤ _ := by gcongr; exact (hr t).1.trans (hr t).2
 
+/-- Along a segment of a differentiable risk the derivative is its Fréchet
+derivative along the displacement. -/
+theorem hasDerivAt_segmentRisk {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {V : E → ℝ}
+    (hV : Differentiable ℝ V) (w Δ : E) (u : ℝ) :
+    HasDerivAt (ObservedConstraints.segmentRisk V w Δ) (fderiv ℝ V (w + u • Δ) Δ) u := by
+  have hγ : HasDerivAt (fun s : ℝ => w + s • Δ) Δ u := by
+    simpa using ((hasDerivAt_id u).smul_const Δ).const_add w
+  exact (hV _).hasFDerivAt.comp_hasDerivAt u hγ
+
+/-- When every initial weight lies within C₀, the certificate F ∘ mean ψ meets
+the slope hypothesis of the width transfer at every update: its segment is
+differentiable, and the derivative plus the contraction term equals the
+`residual` of `certificateMap` with the features clamped at
+D = η · (max(C₀, 120)/10 + 12). -/
+theorem certificate_slope [Fintype P] [Fintype J] (A : Training P K) (F : (J → ℝ) → ℝ)
+    (ψ : (P → ℝ) → J → ℝ) (hF : Differentiable ℝ F) (hψ : Differentiable ℝ ψ) (he : 0 ≤ A.eps)
+    {η : ℝ} (hr : ∀ t, 0 ≤ A.rate t ∧ A.rate t ≤ η) (hη : η ≤ 10) {N : ℕ}
+    (init : Fin N → P → ℝ) {C₀ : ℝ} (hinit : ∀ i p, |init i p| ≤ C₀) (ρ c : ℝ) (t : ℕ) :
+    let V := fun v : Fin N → P → ℝ => F (meanField ψ v)
+    let w := fun i => (system A init t i).weights
+    let line := ObservedConstraints.segmentRisk V w
+      ((fun i => (system A init (t+1) i).weights) - w)
+    ContinuousOn line (Set.Icc 0 1) ∧ DifferentiableOn ℝ line (Set.Ioo 0 1) ∧
+      ∀ u ∈ Set.Ioo (0:ℝ) 1, deriv line u + (1-ρ)*(V w - c) ≤ residual A (certificateMap F ρ c)
+        (certificateFeatures ψ (η * (max C₀ 120 / 10 + 12))) init t u := by
+  intro V w line
+  have hV : Differentiable ℝ V := hF.comp fun x => (hasFDerivAt_meanField hψ x).differentiableAt
+  have hd (u : ℝ) := hasDerivAt_segmentRisk hV w ((fun i => (system A init (t+1) i).weights) - w) u
+  refine ⟨fun u _ => (hd u).continuousAt.continuousWithinAt,
+    fun u _ => (hd u).differentiableAt.differentiableWithinAt, fun u hu => ?_⟩
+  rw [(hd u).deriv]
+  exact (certificate_residual_of_init A F ψ hF hψ he hr hη init hinit t hu.1.le hu.2.le ρ c).le
+
 section Examples
 
 example := meanField_eq_smul_sum (P := Fin 1) (J := Fin 1) (N := 2) (fun θ _ => θ 0) (fun _ => 0)
@@ -143,6 +179,10 @@ example := certificate_residual_of_init identityTraining (fun a : Fin 1 → ℝ 
   (fun θ _ => θ 0) (by fun_prop) (by fun_prop) zero_le_one (η := 1)
   (fun _ => ⟨zero_le_one, le_rfl⟩) (by norm_num) (N := 2) (fun _ => 0) (C₀ := 0)
   (fun _ _ => by simp) 3 (u := 1/2) (by norm_num) (by norm_num) (1/2) 0
+example := hasDerivAt_segmentRisk (E := ℝ) differentiable_id 0 1 (1/2)
+example := certificate_slope identityTraining (fun a : Fin 1 → ℝ => a 0) (fun θ _ => θ 0)
+  (by fun_prop) (by fun_prop) zero_le_one (η := 1) (fun _ => ⟨zero_le_one, le_rfl⟩) (by norm_num)
+  (N := 2) (fun _ => 0) (C₀ := 0) (fun _ _ => by simp) (1/2) 0 3
 
 end Examples
 
