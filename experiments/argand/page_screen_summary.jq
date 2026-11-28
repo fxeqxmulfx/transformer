@@ -10,12 +10,15 @@ if length != 2*($cells|length) then error("incomplete optimizer screen") else . 
   if $r.identity.case != $c.task.name or $r.identity.seed != $c.seed or
      $r.identity.optimizer != $records[0].identity.optimizer or $r.identity.correction != $records[0].identity.correction or
      $r.identity.stop_on != $records[0].identity.stop_on or
-     (if ($r.identity.optimizer|IN("equal-moment-wsd","uncorrected-adam-wsd","normalized-adamw-wsd")) then
-        ($r.identity.optimizer=="normalized-adamw-wsd") as $normalized |
-        (if $r.identity.optimizer=="equal-moment-wsd" then [$r.identity.equal_moment,0.9]
-         elif $normalized then [$r.identity.normalized_adamw,0.95] else [$r.identity.uncorrected_adam,0.95] end) |
-        .[1] as $beta2 | .[0] | .beta1!=0.9 or .beta2!=$beta2 or .bias_correction!=$normalized or
-        ($normalized and .normalization!="recursive-gains") or
+     (if ($r.identity.optimizer|IN("adamw-scaled-wsd","equal-moment-wsd","uncorrected-adam-wsd","normalized-adamw-wsd")) then
+        $r.identity as $id |
+        (if $id.optimizer=="adamw-scaled-wsd" then $id.adamw
+         elif $id.optimizer=="equal-moment-wsd" then $id.equal_moment
+         elif $id.optimizer=="normalized-adamw-wsd" then $id.normalized_adamw else $id.uncorrected_adam end) |
+        $id.stop_on!="first-strict-100-percent" or .clip_norm!=1 or .beta1!=0.9 or
+        .beta2!=(if $id.optimizer=="equal-moment-wsd" then 0.9 else 0.95 end) or
+        ($id.optimizer!="adamw-scaled-wsd" and .bias_correction!=($id.optimizer=="normalized-adamw-wsd")) or
+        ($id.optimizer=="normalized-adamw-wsd" and .normalization!="recursive-gains") or
         .epsilon!=1e-8 or .weight_decay!=0.1 or .peak!=0.003 or .budget!=$c.task.case.max_updates
       else false end) or
      ($r.identity.stop_on=="first-strict-100-percent" and $r.step<$r.identity.budget and

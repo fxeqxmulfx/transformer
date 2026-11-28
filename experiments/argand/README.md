@@ -116,9 +116,12 @@ bash plot_sum8_pair.sh "$sum" runs/sum8-adamw-20480 runs/sum8-optimizer-comparis
 "$bin" page-run grok-division-p97 0 runs/division-page 8192
 bash run_page_screen.sh all runs/gpt-page
 bash run_page_screen.sh all runs/gpt-adamw adamw
+bash run_page_screen.sh all runs/gpt-adamw-matched adamw-scaled
 bash run_page_screen.sh all runs/gpt-equal-decay equal-moment
 bash run_page_screen.sh all runs/gpt-uncorrected-adam uncorrected-adam
 bash run_page_screen.sh all runs/gpt-normalized-adamw normalized-adamw
+bash plot_stress_accuracy.sh runs/gpt-comparison runs/gpt-adamw/all-summary.json runs/gpt-adamw-matched/all-summary.json \
+    runs/gpt-equal-decay/all-summary.json runs/gpt-uncorrected-adam/all-summary.json runs/gpt-normalized-adamw/all-summary.json
 jq -n --slurpfile control runs/gpt-page/all-summary.json \
   --slurpfile candidate runs/gpt-adamw/all-summary.json -f compare_optimizer_screens.jq
 repair=runs/sum8-page-sqrt-2048
