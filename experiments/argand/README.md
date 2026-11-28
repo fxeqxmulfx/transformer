@@ -179,6 +179,7 @@ completion of the character table. The optimizer runs use the original
 | Accepted updates | Runs fitting 31/31 | Mean hidden accuracy | Hidden correct per run (of 225) | Exact hidden recoveries |
 |---:|---:|---:|---|---:|
 | 2,048, original run | 5/8 | 43.61% | 100, 103, 99, 98, 94, 97, 99, 95 | 0/8 |
+| 2,048, six-position PAGE correction | 7/8 | 43.22% | 92, 102, 99, 98, 94, 96, 98, 99 | 0/8 |
 | 2,048, checkpoint in the long run | 5/8 | 43.44% | 100, 102, 98, 98, 93, 97, 99, 95 | 0/8 |
 | 20,480 | 8/8 | 43.28% | 97, 100, 96, 100, 94, 96, 97, 99 | 0/8 |
 
@@ -192,6 +193,13 @@ calibration gave $\lambda$ between 0.0001243 and 0.0001303. On average,
 horizons reuse the same seed pairs. Zero exact successes in eight
 independent initializations at a fixed horizon gives a one-sided 95%
 upper confidence limit of $1-0.05^{1/8}=0.3123$.
+
+With the same eight seed pairs and initial scores, increasing the
+correction sample from one to six positions reduced forced gradient
+refreshes from 9,506 to 7,081 across 16,384 accepted updates. The
+six-position runs produced 778 correct hidden answers across 1,800
+predictions, compared with 785 in the original short runs. Their
+terminal phase-table nuclear norms ranged from 23.10 to 30.41.
 
 ### Modular division with AdamW and WSD
 
