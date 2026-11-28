@@ -511,6 +511,13 @@ correct answers on all 130,763 hidden binary strings of lengths 8 through
 ordered shared-gradient reductions scored 60/4,656 for stock AdamW and
 59/4,656 for each of noise seeds 371 and 372.
 
+`bash run_page_screen.sh all runs/first-noise-screen first-noise` uses the
+ordinary 99% stopping rule and at most 1,000 updates for each of the 35
+canonical stress cases and its three model seeds. Noise seeds 371, 372
+and 373 accompany model seeds 0, 1 and 2 respectively across all cases.
+The terminal scorer reloads the saved weights, and the summary verifies
+all 105 identities, endpoint scores and replay digests.
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by

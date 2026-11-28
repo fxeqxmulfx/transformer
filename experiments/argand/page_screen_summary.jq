@@ -9,6 +9,8 @@ if length != 2*($cells|length) then error("incomplete optimizer screen") else . 
   $v.splits[$c.task.selection] as $p |
   if $r.identity.case != $c.task.name or $r.identity.seed != $c.seed or
      $r.identity.optimizer != $records[0].identity.optimizer or $r.identity.correction != $records[0].identity.correction or
+     ($r.identity.optimizer=="adamw-wsd-first-noise" and
+       ($r.identity.fixed_horizon or $r.identity.gaussian_weight_noise!={after_update:1,seed:(371+$c.seed),stddev:1e-6})) or
      $r.identity.tier != $c.task.tier or $r.identity != $v.identity or
      $r.weights_sha256 != $v.weights_sha256 or $r.step != $v.step or
      $r.strict != $v.strict or $p.correct != $r.correct or $p.loss != $r.loss or
