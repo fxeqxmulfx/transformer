@@ -35,6 +35,25 @@ theorem iid_allPassWindow (μ : Measure D) [IsProbabilityMeasure μ] {U : Set D}
   rw [Measure.infinitePi_pi _ (fun _ _ => hU)]
   simp
 
+private theorem selected_event_bound {Z : Type*} [MeasurableSpace Z] (P : Measure Z)
+    (budgets : Finset B) (weak : B → Prop) (event : B → Set Z) (q : ℝ≥0∞)
+    (h : ∀ b ∈ budgets, weak b → P (event b) ≤ q) :
+    P {z | ∃ b ∈ budgets, weak b ∧ z ∈ event b} ≤ (budgets.card : ℝ≥0∞) * q := by
+  classical
+  let W (b : B) := if weak b then event b else ∅
+  have bound (b) (hb : b ∈ budgets) : P (W b) ≤ q := by
+    by_cases hw : weak b
+    · simpa [W,hw] using h b hb hw
+    · simp [W,hw]
+  calc
+    _ ≤ P (⋃ b ∈ budgets, W b) := by
+      apply measure_mono
+      rintro z ⟨b,hb,h,hz⟩
+      exact mem_iUnion₂.mpr ⟨b,hb,by simpa [W,h] using hz⟩
+    _ ≤ ∑ b ∈ budgets, P (W b) := measure_biUnion_finset_le _ _
+    _ ≤ ∑ _b ∈ budgets, q := Finset.sum_le_sum bound
+    _ = _ := by simp
+
 /-- Even when the reported budget is chosen using the validation results,
 the probability that some candidate with single-run success at most p
 passes every validation draw is bounded by the number of candidates
@@ -45,21 +64,66 @@ theorem selected_budget_all_pass_bound (μ : Measure D) [IsProbabilityMeasure μ
     Measure.infinitePi (fun _ : ℕ => μ)
       {z | ∃ b ∈ budgets, μ (U b) ≤ p ∧ z ∈ allPassWindow (U b) start n}
       ≤ (budgets.card : ℝ≥0∞) * p^n := by
+  apply selected_event_bound
+  intro b hb hw
+  rw [iid_allPassWindow μ (hU b hb)]
+  exact pow_le_pow_left' hw n
+
+/-- Number of strictly successful terminal evaluations on the chosen trial indices. -/
+noncomputable def terminalPassCount (U : Set D) (I : Finset ℕ) (z : ℕ → D) : ℕ := by
+  classical exact (I.filter fun i => z i ∈ U).card
+
+/-- At least k successes contain a k-element subset of successes. Each
+such subset has probability p^k. This bound also applies when some of
+the terminal checkpoints fail. -/
+theorem iid_terminal_count_bound (μ : Measure D) [IsProbabilityMeasure μ] {U : Set D}
+    (hU : MeasurableSet U) (I : Finset ℕ) (k : ℕ) :
+    Measure.infinitePi (fun _ : ℕ => μ) {z | k ≤ terminalPassCount U I z}
+      ≤ (I.card.choose k : ℝ≥0∞) * (μ U)^k := by
   classical
   let P := Measure.infinitePi (fun _ : ℕ => μ)
-  let W (b : B) : Set (ℕ → D) := if μ (U b) ≤ p then allPassWindow (U b) start n else ∅
-  have bound (b) (hb : b ∈ budgets) : P (W b) ≤ p^n := by
-    by_cases h : μ (U b) ≤ p
-    · simpa [P,W,h,iid_allPassWindow μ (hU b hb)] using pow_le_pow_left' h n
-    · simp [W,h]
+  let E (T : Finset ℕ) := Set.pi (T : Set ℕ) (fun _ => U)
+  have bound (T) (hT : T ∈ I.powersetCard k) : P (E T) = (μ U)^k := by
+    dsimp only [P,E]
+    rw [Measure.infinitePi_pi _ (fun _ _ => hU)]
+    simp [(Finset.mem_powersetCard.mp hT).2]
   calc
-    _ ≤ P (⋃ b ∈ budgets, W b) := by
+    _ ≤ P (⋃ T ∈ I.powersetCard k, E T) := by
       apply measure_mono
-      rintro z ⟨b,hb,h,hz⟩
-      exact mem_iUnion₂.mpr ⟨b,hb,by simpa [W,h] using hz⟩
-    _ ≤ ∑ b ∈ budgets, P (W b) := measure_biUnion_finset_le _ _
-    _ ≤ ∑ _b ∈ budgets, p^n := Finset.sum_le_sum bound
+      intro z hz
+      change k ≤ (I.filter fun i => z i ∈ U).card at hz
+      obtain ⟨T,ht,he⟩ := Finset.exists_subset_card_eq hz
+      exact mem_iUnion₂.mpr ⟨T,Finset.mem_powersetCard.mpr
+        ⟨fun _ hi => (Finset.mem_filter.mp (ht hi)).1,he⟩,fun _ hi => (Finset.mem_filter.mp (ht hi)).2⟩
+    _ ≤ ∑ T ∈ I.powersetCard k, P (E T) := measure_biUnion_finset_le _ _
+    _ = ∑ _T ∈ I.powersetCard k, (μ U)^k := Finset.sum_congr rfl bound
     _ = _ := by simp
+
+theorem selected_budget_count_bound (μ : Measure D) [IsProbabilityMeasure μ]
+    (budgets : Finset B) (U : B → Set D) (hU : ∀ b ∈ budgets, MeasurableSet (U b))
+    (p : ℝ≥0∞) (I : Finset ℕ) (k : ℕ) :
+    Measure.infinitePi (fun _ : ℕ => μ)
+      {z | ∃ b ∈ budgets, μ (U b) ≤ p ∧ k ≤ terminalPassCount (U b) I z}
+      ≤ (budgets.card : ℝ≥0∞) * ((I.card.choose k : ℝ≥0∞) * p^k) := by
+  refine selected_event_bound _ budgets (fun b => μ (U b) ≤ p)
+    (fun b => {z | k ≤ terminalPassCount (U b) I z}) _ ?_
+  intro b hb hw
+  exact (iid_terminal_count_bound μ (hU b hb) I k).trans (mul_le_mul' le_rfl (pow_le_pow_left' hw k))
+
+/-- With ten fresh independent draws and two candidate budgets, even
+nine successes reject a single-run probability at most one half at 5%. -/
+theorem nine_of_ten_two_budgets (μ : Measure D) [IsProbabilityMeasure μ]
+    (U : ℕ → Set D) (hU : ∀ b, MeasurableSet (U b)) :
+    Measure.infinitePi (fun _ : ℕ => μ)
+      {z | ∃ b ∈ ({100000,200000} : Finset ℕ), μ (U b) ≤ 1/2 ∧
+        9 ≤ terminalPassCount (U b) (Finset.Ico 2 12) z} ≤ 5/128 := by
+  apply (selected_budget_count_bound μ ({100000,200000} : Finset ℕ) U
+    (fun b _ => hU b) (1/2) (Finset.Ico 2 12) 9).trans
+  norm_num [Nat.choose]
+  apply (ENNReal.toReal_le_toReal (by finiteness) (by finiteness)).mp
+  norm_num
+
+example := nine_of_ten_two_budgets (Measure.dirac (0 : ℕ)) (fun _ => Set.univ) (fun _ => MeasurableSet.univ)
 
 example (μ : Measure D) [IsProbabilityMeasure μ] (U : ℕ → Set D) (hU : ∀ b, MeasurableSet (U b)) :
     Measure.infinitePi (fun _ : ℕ => μ)

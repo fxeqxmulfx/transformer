@@ -39,8 +39,14 @@ done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
     def count_at($n):
         (map(select(.success))|length) as $k |
         {registered:$n,evaluated:length,successes:$k,empirical_fraction:(if length==$n then $k/$n else null end)};
+    def choose($n;$k): reduce range(1;$k+1) as $i (1; . * ($n-$k+$i) / $i);
+    def tail_bound($k;$p): [1,2*choose(10;$k)*pow($p;$k)]|min;
     ($rows|count_at(12)) as $all |
     if $summary[0]!=null and ($summary[0].protocol!=$p or ($all.evaluated==12 and $summary[0].successes!=$all.successes))
     then error("confirmation disagrees with verified terminal outcomes") else . end |
-    {updates:$p.updates,all_draws:$all,unseen_in_pilot:($rows|map(select(.index>=2))|count_at(10)),
+    ($rows|map(select(.index>=2))|count_at(10)) as $fresh |
+    {updates:$p.updates,all_draws:$all,unseen_in_pilot:$fresh,
+     two_budget_iid_null_tail_upper_bounds:(if $fresh.evaluated==10 then
+       {at_least_successes:$fresh.successes,single_run_at_most_half:tail_bound($fresh.successes;0.5),
+        single_run_at_most_three_quarters:tail_bound($fresh.successes;0.75)} else null end),
      draws:$rows}'

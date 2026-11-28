@@ -251,6 +251,10 @@ reported, the corresponding bound is $2(3/4)^{10}=0.11263$ even when
 the same seeds are used for both. The twelve-seed fractions describe
 the registered cohort. The generic confirmation command's binomial
 fields assume one fixed budget and twelve fresh trials.
+For the original one-half question, nine of the ten fresh draws suffice
+at the 5% level. Across two candidate budgets the upper bound under the
+null is $2\binom{10}{9}2^{-9}=5/128$. The verified report includes the
+corresponding bounds for the final number of successful validation draws.
 [Terminal validation theorem](../../src/Transformer/Grokking/FiniteRecovery/TerminalValidation.lean)
 
 Two independent ordinary AdamW runs of seed 113 on the same 256-update
