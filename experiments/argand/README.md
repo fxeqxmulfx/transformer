@@ -972,7 +972,19 @@ nuclear-norm completion for every unit-modulus rank-one table on the
 96 by 96 block. The constant-row observation extends identification to
 all 9,312 inputs. The generated `original_factor_class_stabilizes`
 specializes certified AdamW restarts to this mask for every table in the
-class. [Mask witnesses](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean)
+class. `original_answers_seen` shows that every hidden answer of every table
+in the class is a token the observed equations show. No relabeling symmetry
+of the run can then cap success at one half, as it does for the 3×3 phase
+table. `original_division_three_quarters` gives eventual strict hidden
+success above 3/4 for every table in the class under one uninterrupted
+ordinary AdamW run at the registered WSD, in real arithmetic and under any
+law of the draw and minibatch order. It still assumes the Jacobian bound on
+the observable risk along the actual updates and the mean bound on its
+excess. `original_learned_three_quarters` takes the stock Gaussian law and
+the true quotient table and removes the runs whose step-0 hidden table is
+already strict. Under the same hypotheses the remaining mass exceeds
+3/4 − 1/73!.
+[Mask witnesses](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean) · [Necessary conditions](../../src/Transformer/Grokking/FiniteRecovery/HiddenLearnability.lean) · [Division case](../../src/Transformer/Grokking/FiniteRecovery/ArgandHiddenLearnability.lean)
 
 A bijection of the token vocabulary preserves the probability that ordinary
 AdamW gets every hidden answer strictly right at a fixed step in real

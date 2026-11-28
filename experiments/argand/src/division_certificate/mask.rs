@@ -65,7 +65,7 @@ pub(crate) fn lean_source() -> Result<String> {
         inverse[j] = i;
     }
     let mut out = String::from(
-        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\nimport Transformer.Grokking.FiniteRecovery.ArgandObservedJacobian\n\n",
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\nimport Transformer.Grokking.FiniteRecovery.ProposalMass\nimport Transformer.Grokking.FiniteRecovery.OrdinaryDivisionValidation\nimport Transformer.Grokking.FiniteRecovery.ArgandObservedJacobian\nimport Transformer.Grokking.FiniteRecovery.ArgandHiddenLearnability\n\n",
     );
     writeln!(
         out,
@@ -204,6 +204,74 @@ example (correct : Bool) (batches : OrdinaryDivision.Draw → ℕ → List riskS
   ObservedDrift.three_quarters_of_marginal_jacobian _ correct 1 riskSites (fun x => divisionAnswer x)
     quotientRule divisionAnswer (fun _ => divisionAnswer_mem) (fun _ => rfl) original_rule_identified
     divisionPrompt (fun _ => Fin.last 4) batches (fun t => 3*wsdRate 20000 t) B hρ hlt hr e hm hi hp mean
+
+theorem riskSites_coe : (riskSites : Set DivisionInput) = bitDivisionMask rows :=
+  (bitDivisionMask rows).toFinite.coe_toFinset
+
+/-- Each answer of each member of the class is an observed denominator token
+or the observed zero-row answer, so no relabeling symmetry of the run moves it. -/
+theorem original_answers_seen {f : DivisionInput → Fin 239} (hf : f ∈ factorClass unitToken)
+    (x : DivisionInput) : f x ∈ divisionSeen (bitDivisionMask rows) f :=
+  division_answers_seen _ original_graph.1 original_graph.2 hf x
+#print axioms original_answers_seen
+
+/-- **Three quarters on the original split, conditionally.** Any law of the
+draw and the minibatch order, ordinary AdamW in real arithmetic at the
+registered WSD, every member of the class. The Jacobian bound along the
+actual updates and the mean of its excess are hypotheses. -/
+theorem original_division_three_quarters (μ : Measure OrdinaryDivision.Draw) [IsProbabilityMeasure μ]
+    {F : DivisionInput → Fin 239} (hF : F ∈ factorClass unitToken)
+    (batches : OrdinaryDivision.Draw → ℕ → List riskSites) (B : ℕ) {ρ floor : ℝ}
+    (hρ : 0 ≤ ρ) (hlt : ρ < 1) (hr : floor < 1/2) (e : OrdinaryDivision.Draw → ℝ)
+    (hm : Measurable e) (hi : Integrable e μ) (hp : ∀ᵐ z ∂μ, 0 ≤ e z)
+    (mean : ∫ z, e z ∂μ < (1-ρ)*(1/2-floor)/4) :
+    let s z := ObservedDrift.state true 1 (fun t => ObservedDrift.labeledBatch riskSites (fun x => F x)
+      divisionPrompt (fun _ => Fin.last 4) (batches z t)) (fun t => 3*wsdRate 20000 t) z
+    let U := ObservedDrift.marginalBound (H := 4) (d := 16) (L := 6) 1 1 riskSites (fun x => F x) F
+      divisionPrompt (fun _ => Fin.last 4)
+    (∀ z t, B ≤ t → ∀ u ∈ Set.Ioo (0:ℝ) 1,
+      let w := (s z t).weights
+      let Δ := ObservedDrift.displacement true (3*wsdRate 20000 t) t (s z t) (s z (t+1))
+      fderiv ℝ U (w + u • Δ) Δ ≤ -(1-ρ)*(U w-floor)+e z) →
+    3/4 < μ.real {z | HiddenSuccess (bitDivisionMask rows) (fun t x =>
+      (Model.fromWeights (s z t).weights).logits 1 (divisionPrompt x) (Fin.last 4)) F} := by
+  intro s U jac
+  rw [← riskSites_coe]
+  exact ObservedDrift.division_three_quarters μ riskSites (by rw [riskSites_coe]; exact original_graph.1)
+    (original_graph.2.imp fun _ h => (Set.Finite.mem_toFinset _).mpr h) hF batches B hρ hlt hr e hm hi hp
+    mean jac
+#print axioms original_division_three_quarters
+
+/-- **Learned, conditionally.** Under the stock Gaussian law, the runs that
+become strict on every hidden input for good although their initial hidden
+table is not strict have mass above 3/4 - 1/73!. -/
+theorem original_learned_three_quarters (batches : OrdinaryDivision.Draw → ℕ → List riskSites) (B : ℕ)
+    {ρ floor : ℝ} (hρ : 0 ≤ ρ) (hlt : ρ < 1) (hr : floor < 1/2) (e : OrdinaryDivision.Draw → ℝ)
+    (hm : Measurable e) (hi : Integrable e (independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2)))
+    (hp : ∀ᵐ z ∂independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2), 0 ≤ e z)
+    (mean : ∫ z, e z ∂independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2) < (1-ρ)*(1/2-floor)/4) :
+    let s z := ObservedDrift.state true 1 (fun t => ObservedDrift.labeledBatch riskSites
+      (fun x => divisionAnswer x) divisionPrompt (fun _ => Fin.last 4) (batches z t)) (fun t => 3*wsdRate 20000 t) z
+    let U := ObservedDrift.marginalBound (H := 4) (d := 16) (L := 6) 1 1 riskSites (fun x => divisionAnswer x)
+      divisionAnswer divisionPrompt (fun _ => Fin.last 4)
+    (∀ z t, B ≤ t → ∀ u ∈ Set.Ioo (0:ℝ) 1,
+      let w := (s z t).weights
+      let Δ := ObservedDrift.displacement true (3*wsdRate 20000 t) t (s z t) (s z (t+1))
+      fderiv ℝ U (w + u • Δ) Δ ≤ -(1-ρ)*(U w-floor)+e z) →
+    3/4 - 1/(Nat.factorial 73 : ℝ) < (independentGaussianDraws (fun _ => (1/50 : ℝ≥0)^2)).real
+      ({z | HiddenSuccess (bitDivisionMask rows) (fun t x =>
+        (Model.fromWeights (s z t).weights).logits 1 (divisionPrompt x) (Fin.last 4)) divisionAnswer} \
+        OrdinaryDivision.initialSuccess (bitDivisionMask rows)ᶜ) := by
+  intro s U jac
+  have hP := original_division_three_quarters _ divisionAnswer_mem batches B hρ hlt hr e hm hi hp mean jac
+  have hI := OrdinaryDivision.initial_success_ceiling (bitDivisionMask rows)ᶜ probe original_probe_hidden
+    original_probe_answers (by decide) ((1/50 : ℝ≥0)^2)
+  exact ((sub_lt_sub_right hP _).trans_le (sub_le_sub_left hI _)).trans_le le_measureReal_sdiff
+#print axioms original_learned_three_quarters
+
+example (batches : OrdinaryDivision.Draw → ℕ → List riskSites) :=
+  original_learned_three_quarters batches 20000 (ρ := 0) (floor := 0) le_rfl one_pos (by norm_num)
+    (fun _ => 0) measurable_const (integrable_const 0) (ae_of_all _ fun _ => le_rfl) (by norm_num)
 
 theorem original_factor_label_orbit {X : Type*} [Finite X] (G : Subgroup (Equiv.Perm (Fin 239)))
     (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)
