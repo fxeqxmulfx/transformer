@@ -126,3 +126,7 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_certificate
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificateFeatures_zero
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identityCertificateRegular
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.gaussianReal_abs_gt_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.gaussian_coordinate_tail
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_gaussian_init
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.argand_gaussian_tail

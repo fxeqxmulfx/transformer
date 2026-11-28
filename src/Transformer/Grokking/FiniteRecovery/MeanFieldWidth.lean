@@ -10,6 +10,7 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Recovery
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Initialization
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Gaussian
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Literal
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Obstruction
 
@@ -37,6 +38,10 @@ interact through finitely many empirical averages.
   within C₀ and loses at most N · |P| · δ by the union bound, so a
   certificate F ∘ mean ψ recovers from an unbounded initialization law
   whose coordinates leave [-C₀, C₀] with probability at most δ.
+* `Gaussian` bounds that probability for N(0, v) coordinates by
+  2 · exp(-C₀²/(2v)), so recovery from Gaussian initialization loses at most
+  2 · N · |P| · exp(-C₀²/(2v)); at Argand's σ = 0.02 and C₀ = 120 the
+  exponent is -1.8 · 10⁷.
 * `Literal` identifies the literal `AdamW.run` with floor 10⁻⁸, clipping
   and decoupled weight decay on N width units with the system of floor
   N · 10⁻⁸ while clipping does not act.
