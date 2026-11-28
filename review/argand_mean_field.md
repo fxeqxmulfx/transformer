@@ -405,6 +405,9 @@ Bochner and lower integrals and $L^2$; from the repository,
    - **Missing:** either an almost-everywhere version of the recovery theorem,
      or its application to the initialization law conditioned on the box. The
      conditioning moves $\mu$ by $P(\max|\mathrm{init}|>C_0)$ in total variation.
+   - **Closed by board #246, §7:** the recovery theorem now needs its slope
+     bound only on the box, and Gaussian starts lose at most
+     $2N|P|e^{-C_0^2/(2v)}$ of probability. No conditioning is needed.
 4. **No Lipschitz stability estimate at $W=64$.**
    - The upper bound $12\eta/\epsilon$ per update is within a factor 24 of the
      first update's Lipschitz constant, which is at least
@@ -498,3 +501,47 @@ Run from the repository root with `LAKE_ARTIFACT_CACHE=false`:
 | `lake env lean scripts/Axioms.lean` | `87 sorry · 0 resting on a sorry · 0 extra axioms` |
 | `cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml -- --check` | `INDEX.md: 6103 modules, 32916 theorems, 87 sorry, 0 vacuous, 0 placeholder` |
 | `grep -rn 'native_decide\|^axiom \|linter\..* false' src` | empty |
+
+## 7. Unbounded initialization (board #246)
+
+This section closes §4 item 3. Every statement below is proved and applied in
+an example.
+
+| Declaration | Statement |
+|---|---|
+| `permanent_of_observed_drift_on` (`ObservedDrift.lean:57`) | The recovery theorem with its drift bound required only for starts in a measurable set $E$. The recovered set lies in $E$ and has probability above $q-\mu(E^c)$. The original theorem is the case $E=\mathrm{univ}$, and an almost-everywhere version is the case $\mu(E^c)=0$. |
+| `permanent_of_width_transfer_on` (`MeanFieldWidth/Initialization.lean:24`) | `permanent_of_width_transfer` with the slope hypothesis only for starts in $E$ |
+| `box`, `measurableSet_box` (`Initialization.lean:58`, `:60`) | the measurable set of starts with $\|z_{i,p}\|\le C_0$ for every unit $i$ and coordinate $p$ |
+| `box_compl_le` (`Initialization.lean:72`) | union bound: if each coordinate of $\mu$ leaves $[-C_0,C_0]$ with probability at most $\delta$, then $\mu^{\otimes N}(\mathrm{box}^c)\le N\|P\|\delta$ |
+| `hasDerivAt_segmentRisk`, `certificate_slope` (`MeanFieldWidth/Certificate.lean:131`, `:143`) | on a start in the box, the segment of $F\circ\mathrm{mean}\,\psi$ is differentiable at every update, and its derivative plus the contraction term equals the `residual` of `certificateMap` |
+| `permanent_of_certificate` (`Initialization.lean:103`) | recovery for the certificate $F\circ\mathrm{mean}\,\psi$ with probability above $q-N\|P\|\delta$, on starts in the box |
+| `gaussianReal_abs_gt_le` (`MeanFieldWidth/Gaussian.lean:28`) | $P(\|X\|>C)\le2e^{-C^2/(2v)}$ for $X\sim\mathcal N(0,v)$ and $C\ge0$, by the Chernoff bound at $t=C/v$ on either side |
+| `gaussian_coordinate_tail` (`Gaussian.lean:62`) | the same bound for each coordinate of the product of $\mathcal N(0,v)$ |
+| `permanent_of_gaussian_init` (`Gaussian.lean:75`) | recovery from Gaussian initialization with probability above $q-2N\|P\|e^{-C_0^2/(2v)}$ |
+| `argand_gaussian_tail` (`Gaussian.lean:110`) | at Argand's $\sigma=0.02$ ($v=1/2500$) and $C_0=120$, one coordinate leaves the box with probability at most $2e^{-1.8\cdot10^7}$ |
+
+**Choice of $C_0$.** The clamp of `certificate_residual_of_init` is
+$D=\eta(\max(C_0,120)/10+12)$, so it is the same for every $C_0\le120$. Taking
+$C_0=120$ costs the certificate features nothing. The loss
+$2N\|P\|e^{-1.8\cdot10^7}=N\|P\|\cdot10^{-7817300.37\ldots}<N\|P\|\cdot10^{-7817300}$ (`bc`) is
+negligible for every model size.
+
+**No conditioning.** The limiting bound `hlim`, the width error and the tail
+are all taken under the unconditioned law $\mu^{\otimes N}$. The box enters
+only through the slope identity, so the change of law in total variation that
+§4 item 3 anticipated is not needed.
+
+**What remains.** These theorems apply to certificates $F\circ\mathrm{mean}\,\psi$
+of mean-field systems. For Argand, §4 items 1 and 2 still block the
+application. The probability loss from the initialization is not the
+bottleneck. The drift bound is (§4 items 1, 4 and 5).
+
+Checks at `2449271f`, run with `LAKE_ARTIFACT_CACHE=false`:
+
+| Command | Result |
+|---|---|
+| `lake build` | `Build completed successfully (30574 jobs).`, no warning |
+| `lake env lean scripts/MeanFieldWidthAxioms.lean` | 130 lines, each `depends on axioms: [propext, Classical.choice, Quot.sound]` |
+| `lake env lean scripts/Axioms.lean` | `87 sorry · 0 resting on a sorry · 0 extra axioms` |
+| `cargo run --offline --release --manifest-path scripts/native_index/Cargo.toml -- --check` | `INDEX.md: 6105 modules, 32929 theorems, 87 sorry, 0 vacuous, 0 placeholder` |
+| `grep -rnE '^\s*(private \|protected )?axiom \|native_decide\|set_option linter\.\|autoImplicit' src` | empty |
