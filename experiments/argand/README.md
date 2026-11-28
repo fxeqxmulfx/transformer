@@ -121,6 +121,17 @@ repair=runs/sum8-page-sqrt-2048
 mkdir -p "$repair"
 jq '.updates=2048 | .protocol="argand-sum8-adaptive-page-sqrt-v1"' sum8-page-protocol.json > "$repair/protocol.json"
 "$bin" sum8-page-sqrt "$repair" 2048
+retry=runs/sum8-page-retry-2048
+mkdir -p "$retry"
+jq '.updates=2048 | .protocol="argand-sum8-adaptive-page-retry-v1"' sum8-page-protocol.json > "$retry/protocol.json"
+"$bin" sum8-page-retry "$retry" 2048
+for rule in sqrt retry; do
+    out="runs/page-paired-$rule"
+    "$bin" "page-run-$rule" grok-division-p97 0 "$out" 2048
+    for case in suite-boolean-and-shift arithmetic-div arithmetic-abs-diff-blind; do
+        for seed in 0 1 2; do "$bin" "page-run-$rule" "$case" "$seed" "$out" 1000; done
+    done
+done
 ```
 
 The paired AdamW sum experiment reads the same eight initialization seeds
@@ -201,6 +212,7 @@ completion of the character table. The optimizer runs use the original
 |---:|---:|---:|---|---:|
 | 2,048, original run | 5/8 | 43.61% | 100, 103, 99, 98, 94, 97, 99, 95 | 0/8 |
 | 2,048, six-position PAGE correction | 7/8 | 43.22% | 92, 102, 99, 98, 94, 96, 98, 99 | 0/8 |
+| 2,048, retry at the last accepted rate | 5/8 | 43.44% | 97, 103, 98, 98, 93, 98, 99, 96 | 0/8 |
 | 2,048, checkpoint in the long run | 5/8 | 43.44% | 100, 102, 98, 98, 93, 97, 99, 95 | 0/8 |
 | 20,480 | 8/8 | 43.28% | 97, 100, 96, 100, 94, 96, 97, 99 | 0/8 |
 
@@ -221,6 +233,22 @@ refreshes from 9,506 to 7,081 across 16,384 accepted updates. The
 six-position runs produced 778 correct hidden answers across 1,800
 predictions, compared with 785 in the original short runs. Their
 terminal phase-table nuclear norms ranged from 23.10 to 30.41.
+
+Retrying a rejected estimated direction once at the previous accepted
+rate succeeded on 1,065 of 10,098 retries. This variant forced 9,033
+gradient refreshes and solved 782/1,800 hidden sum predictions. Its
+phase-table nuclear norms ranged from 22.46 to 30.21.
+
+The two repairs also used matched initial scores and losses on three
+stress tasks and modular division. At update 988 the baseline and both
+repairs all scored 96, 172 and 81 out of 4,656 on `arithmetic-div` and
+317, 271 and 519 out of 4,705 on `arithmetic-abs-diff-blind`. Across
+these six runs the retry rule rejected all 5,922 attempts at the
+previous rate and recomputed the current minibatch gradient each time.
+All three rules reached 7/7 on the Boolean AND shift test for every seed.
+On `grok-division-p97` at update 2,048, the original rule, square-root
+sample and retry scored 88, 90 and 85 out of 4,656. The first count is
+the recorded intermediate evaluation of the 8,192-update baseline.
 
 ### Modular division with AdamW and WSD
 
