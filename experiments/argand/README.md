@@ -505,6 +505,12 @@ the observations. A hit before the first proposal has exactly the ordinary
 first-hit index. On every real trajectory, a successful ordinary check
 guarantees a verified hit by the same index, for every choice of the noise.
 For recursive normalization the ordinary path coincides with stock AdamW.
+The same proof also permits running the stock fused GPU update directly.
+Passing rate multiplier 3 and WSD budget 20,000 to the stock checkpoint
+command uses the tuned control kernel, its operation order and its rate
+schedule until a candidate is accepted. With ordered reductions the
+ordinary, early-proposal and delayed-proposal runs on Boolean shift all
+saved identical weight bytes at update four using this stock kernel.
 
 For each fixed initialization, a finite set of hidden prompts, an
 identifiable class and a strictly representable target, the bounded
@@ -676,6 +682,7 @@ $bin uncorrected-adam-until-perfect "$task" 0 runs/division-uncorrected 20000 3 
 $bin normalized-adamw-until-perfect "$task" 0 runs/division-normalized 20000 3 20000
 $bin normalized-adamw-checkpoint-proposals "$task" 0 719 runs/division-normalized-delayed 20000 8192 3 20000
 $bin uncorrected-adam-checkpoint-proposals "$task" 0 719 runs/division-uncorrected-delayed 20000 8192 3 20000
+$bin adamw-checkpoint-proposals "$task" 0 719 runs/division-stock-delayed 20000 8192 3 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high

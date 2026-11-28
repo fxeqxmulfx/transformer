@@ -23,7 +23,7 @@ const USAGE: &str = concat!(
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
     "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect | equal-moment-until-perfect | uncorrected-adam-until-perfect | normalized-adamw-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [WSD_BUDGET] [--ordered-gradients] | ",
     "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals | uncorrected-adam-checkpoint-proposals | normalized-adamw-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
-    "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
+    "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE [RATE_MULTIPLIER [WSD_BUDGET]] | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
     "division-certificate CELL (terminal|first-strict) | division-recorded-lean CELL (terminal|first-strict) [--hidden] | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
 );
@@ -191,9 +191,19 @@ pub fn command(args: &[String]) -> Result<()> {
             println!("{}", job.run(&dir, seed, 0, rule, stop)?);
             Ok(())
         }
-        ("adamw-checkpoint-proposals", [name, seed, noise_seed, out, cap, first]) => {
-            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+        (
+            "adamw-checkpoint-proposals",
+            [name, seed, noise_seed, out, cap, first, settings @ ..],
+        ) if settings.len() <= 2 => {
+            let mut job = crate::page_runs::Job::new(name, cap.parse()?)?
                 .with_ordered_gradients(ordered_gradients);
+            let plan = match settings.first() {
+                Some(scale) => RatePlan::Scaled(rate_multiplier(scale)?),
+                None => RatePlan::Wsd,
+            };
+            if let Some(budget) = settings.get(1) {
+                job = job.with_schedule_budget(budget.parse()?)?;
+            }
             let seed = seed.parse()?;
             let proposal = noise_seed.parse()?;
             let first = first.parse()?;
@@ -206,7 +216,7 @@ pub fn command(args: &[String]) -> Result<()> {
                     &dir,
                     seed,
                     0,
-                    crate::page_runs::Rule::AdamW(RatePlan::Wsd),
+                    crate::page_runs::Rule::AdamW(plan),
                     Stop::CheckpointProposal {
                         seed: proposal,
                         first
