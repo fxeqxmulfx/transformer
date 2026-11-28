@@ -14,10 +14,15 @@ case ${3:-single} in
 esac
 rows=$(jq -er --arg tier "$1" '.seeds as $s | .tasks[] | select($tier == "all" or .tier == $tier) | .name as $name | $s[] | [$name,.] | @tsv' "$dir/../convex_stress/suite.json")
 files=()
-while IFS=$'\t' read -r name seed; do
-    "$bin" "$op" "$name" "$seed" "$2" 1000
-    files+=("$2/$name/seed$seed/result.json" "$2/$name/seed$seed/replay.json")
-done <<< "$rows"
-jq -es --slurpfile suite "$dir/../convex_stress/suite.json" --arg tier "$1" \
-    -f "$dir/page_screen_summary.jq" "${files[@]}" > "$2/$1-summary.pending"
-mv -- "$2/$1-summary.pending" "$2/$1-summary.json"
+# Bash reads the training and aggregation commands together before the
+# first GPU job, so a later edit of this script cannot interrupt the report.
+{
+    while IFS=$'\t' read -r name seed; do
+        "$bin" "$op" "$name" "$seed" "$2" 1000
+        files+=("$2/$name/seed$seed/result.json" "$2/$name/seed$seed/replay.json")
+    done <<< "$rows"
+    jq -es --slurpfile suite "$dir/../convex_stress/suite.json" --arg tier "$1" \
+        -f "$dir/page_screen_summary.jq" "${files[@]}" > "$2/$1-summary.pending"
+    mv -- "$2/$1-summary.pending" "$2/$1-summary.json"
+    exit 0
+}

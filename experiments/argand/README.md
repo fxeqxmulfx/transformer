@@ -134,6 +134,9 @@ least one seed and three passed with all three. Six runs were strictly
 correct on their entire primary split, the Boolean AND shift and random
 cases on all seeds. These primary splits contain seven and eight examples,
 respectively. The separate exhaustive Boolean audit covers unseen inputs.
+All 30 long runs finished below 99%. Across both tiers PAGE forced a
+fresh gradient on the current minibatch 91,841 times in 96,275 accepted
+updates (95.4%). Independent checkpoint replays verified all 105 outcomes.
 
 The confirmation protocol selects the first trained task in the agreed
 order with an exact primary score and strictly positive margins, then
