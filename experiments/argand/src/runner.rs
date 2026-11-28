@@ -22,10 +22,10 @@ const USAGE: &str = concat!(
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
     "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [--ordered-gradients] | ",
-    "softsign-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY]] | ",
+    "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
-    "division-certificate CELL (terminal|first-strict) | division-relabel CELL | division-mask-lean"
+    "division-certificate CELL (terminal|first-strict) | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
 );
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
@@ -62,6 +62,7 @@ pub fn command(args: &[String]) -> Result<()> {
                         | "adamw-scaled-until-perfect"
                         | "softsign-until-perfect"
                         | "muon-until-perfect"
+                        | "rmsprop-checkpoint-proposals"
                         | "softsign-checkpoint-proposals"
                         | "adamw-checkpoint-proposals"
                         | "adamw-first-noise-until-perfect"
@@ -89,7 +90,11 @@ pub fn command(args: &[String]) -> Result<()> {
                 .with_ordered_gradients(ordered_gradients);
             let dir = Path::new(out).join(name).join(format!("seed{seed}"));
             let rule = match op.as_str() {
-                "softsign-until-perfect" => crate::page_runs::Rule::Softsign { scale, decay: 0.1 },
+                "softsign-until-perfect" => crate::page_runs::Rule::Softsign {
+                    scale,
+                    decay: 0.1,
+                    row_norm: None,
+                },
                 "muon-until-perfect" => crate::page_runs::Rule::Muon(scale),
                 _ => crate::page_runs::Rule::AdamW(RatePlan::Scaled(scale)),
             };
@@ -97,13 +102,19 @@ pub fn command(args: &[String]) -> Result<()> {
             Ok(())
         }
         (
-            "softsign-checkpoint-proposals",
+            "softsign-checkpoint-proposals" | "rmsprop-checkpoint-proposals",
             [name, seed, noise_seed, out, cap, first, scale, budget @ ..],
-        ) if budget.len() <= 2 => {
+        ) if budget.len() <= 2 || (op == "softsign-checkpoint-proposals" && budget.len() == 3) => {
             let seed = seed.parse()?;
             let proposal = noise_seed.parse()?;
             let first = first.parse()?;
             let cap = cap.parse()?;
+            let row_norm: Option<f64> = budget.get(2).map(|s| s.parse()).transpose()?;
+            if row_norm
+                .is_some_and(|r| !r.is_finite() || (r as f32) <= 0.0 || r > f64::from(f32::MAX))
+            {
+                return Err("expected a positive finite projection row radius".into());
+            }
             let decay: f64 = budget.get(1).map(|s| s.parse()).transpose()?.unwrap_or(0.1);
             if !decay.is_finite() || decay < 0.0 || decay > f64::from(f32::MAX) {
                 return Err("expected a finite nonnegative weight decay".into());
@@ -119,9 +130,15 @@ pub fn command(args: &[String]) -> Result<()> {
             let dir = Path::new(out)
                 .join(name)
                 .join(format!("seed{seed}-proposal{proposal}-from{first}"));
-            let rule = crate::page_runs::Rule::Softsign {
-                scale: rate_multiplier(scale)?,
-                decay,
+            let scale = rate_multiplier(scale)?;
+            let rule = if op == "rmsprop-checkpoint-proposals" {
+                crate::page_runs::Rule::RmsProp { scale, decay }
+            } else {
+                crate::page_runs::Rule::Softsign {
+                    scale,
+                    decay,
+                    row_norm,
+                }
             };
             let stop = Stop::CheckpointProposal {
                 seed: proposal,
@@ -181,6 +198,19 @@ pub fn command(args: &[String]) -> Result<()> {
             println!(
                 "{}",
                 crate::division_certificate::relabel::check(Path::new(cell))?
+            );
+            Ok(())
+        }
+        ("division-project-rows", [cell, kind, radius])
+            if kind == "terminal" || kind == "first-strict" =>
+        {
+            println!(
+                "{}",
+                crate::division_certificate::row_projection::check(
+                    Path::new(cell),
+                    kind == "first-strict",
+                    radius.parse()?
+                )?
             );
             Ok(())
         }

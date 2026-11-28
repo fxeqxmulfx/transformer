@@ -34,8 +34,18 @@ impl Stop {
 pub(crate) enum Rule {
     Page(PageRule),
     AdamW(RatePlan),
-    AdamWFirstNoise { seed: u32 },
-    Softsign { scale: f64, decay: f64 },
+    AdamWFirstNoise {
+        seed: u32,
+    },
+    Softsign {
+        scale: f64,
+        decay: f64,
+        row_norm: Option<f64>,
+    },
+    RmsProp {
+        scale: f64,
+        decay: f64,
+    },
     Muon(f64),
 }
 
@@ -48,7 +58,11 @@ impl Rule {
             Self::AdamW(RatePlan::Geometric { .. }) => "adamw-wsd-geometric-tail",
             Self::AdamW(RatePlan::Restart { .. }) => "adamw-wsd-restart",
             Self::AdamWFirstNoise { .. } => "adamw-wsd-first-noise",
+            Self::Softsign {
+                row_norm: Some(_), ..
+            } => "row-clipped-softsign-lion-wsd",
             Self::Softsign { .. } => "softsign-lion-wsd",
+            Self::RmsProp { .. } => "rmsprop-wsd",
             Self::Muon(_) => "complex-muon-wsd",
         }
     }
@@ -58,6 +72,7 @@ pub(crate) enum Optimizer {
     Page(AdaptivePage),
     AdamW(AdamW),
     Softsign(crate::engine::softsign::Softsign),
+    RmsProp(crate::engine::rmsprop::RmsProp),
     Muon(crate::engine::muon::Muon),
 }
 
@@ -70,12 +85,19 @@ impl Optimizer {
         schedule: Schedule,
     ) -> Result<Self> {
         Ok(match rule {
+            Rule::RmsProp { scale, decay } => Self::RmsProp(crate::engine::rmsprop::RmsProp::new(
+                engine, schedule, scale, decay,
+            )?),
             Rule::Muon(scale) => {
                 Self::Muon(crate::engine::muon::Muon::new(engine, schedule, scale)?)
             }
-            Rule::Softsign { scale, decay } => Self::Softsign(
-                crate::engine::softsign::Softsign::new(engine, schedule, scale, decay)?,
-            ),
+            Rule::Softsign {
+                scale,
+                decay,
+                row_norm,
+            } => Self::Softsign(crate::engine::softsign::Softsign::new(
+                engine, schedule, scale, decay, row_norm,
+            )?),
             Rule::Page(correction) => {
                 Self::Page(AdaptivePage::new(engine, batch, sampler, correction)?)
             }
@@ -94,6 +116,10 @@ impl Optimizer {
     ) -> Result<bool> {
         match self {
             Self::Page(page) => page.step(engine, batch, changed),
+            Self::RmsProp(opt) => {
+                opt.step(engine, batch)?;
+                Ok(true)
+            }
             Self::Muon(opt) => {
                 opt.step(engine, batch)?;
                 Ok(true)
@@ -114,6 +140,7 @@ impl Optimizer {
             Self::Page(page) => page.metrics(),
             Self::AdamW(adamw) => adamw.metrics(),
             Self::Softsign(opt) => opt.metrics(),
+            Self::RmsProp(opt) => opt.metrics(),
             Self::Muon(opt) => opt.metrics(),
         }
     }
@@ -286,14 +313,22 @@ impl Job {
         };
         let schedule = wsd(budget);
         match rule {
+            Rule::RmsProp { scale, decay } => {
+                identity["optimizer"] = rule.label().into();
+                identity["rmsprop"] = crate::engine::rmsprop::settings(scale, decay, schedule);
+            }
             Rule::Muon(scale) => {
                 identity["optimizer"] = rule.label().into();
                 identity["muon"] = crate::engine::muon::settings(scale, schedule);
             }
-            Rule::Softsign { scale, decay } => {
+            Rule::Softsign {
+                scale,
+                decay,
+                row_norm,
+            } => {
                 identity["optimizer"] = rule.label().into();
                 identity["softsign_lion"] =
-                    crate::engine::softsign::settings(scale, decay, schedule);
+                    crate::engine::softsign::settings(scale, decay, row_norm, schedule);
             }
             Rule::Page(correction) => {
                 identity["optimizer"] = "batch-reference-adaptive-page-v1".into();

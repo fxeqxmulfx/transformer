@@ -23,23 +23,25 @@ noncomputable def squaredError (u w : ι → ℝ) : ℝ := ∑ i, (w i - u i)^2
 noncomputable def force (decay : ℝ) (s : State ι) (g : ι → ℝ) (i : ι) : ℝ :=
   decay*s.weights i + direction (9/10*s.moment i + 1/10*clip g i)
 
+/-- Exact energy balance for one step from arbitrary weights and momentum. -/
+theorem step_error (decay η : ℝ) (g u : ι → ℝ) (s : State ι) :
+    squaredError u (step decay η g s).weights = squaredError u s.weights
+      - 2*η * ∑ i, (s.weights i-u i)*force decay s g i + η^2*∑ i, (force decay s g i)^2 := by
+  simp only [squaredError, Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  dsimp only [step,force]
+  ring
+
 variable (decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ) (initial u : ι → ℝ)
 
-/-- Exact finite-dimensional energy balance for the native clipped update. -/
+/-- Exact finite-dimensional energy balance along the ordinary trajectory. -/
 theorem squaredError_step (t : ℕ) :
     let s := run decay rate grad initial t
     let h := force decay s (grad t s.weights)
     squaredError u (run decay rate grad initial (t+1)).weights = squaredError u s.weights
-      - 2*rate t * ∑ i, (s.weights i - u i)*h i + (rate t)^2 * ∑ i, (h i)^2 := by
-  intro s h
-  simp only [squaredError, Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
-  apply Finset.sum_congr rfl
-  intro i _
-  change ((1-rate t*decay)*s.weights i - rate t * direction _ - u i)^2 =
-    (s.weights i-u i)^2 - 2*rate t*((s.weights i-u i)*force decay s (grad t s.weights) i) +
-      (rate t)^2*(force decay s (grad t s.weights) i)^2
-  unfold force
-  ring
+      - 2*rate t * ∑ i, (s.weights i - u i)*h i + (rate t)^2 * ∑ i, (h i)^2 :=
+  step_error ..
 
 /-- A bound for the quadratic term is available from the update itself for
 every gradient stream. A tighter problem-specific bound can replace it. -/
@@ -59,6 +61,25 @@ theorem force_squared_bound (hdc : 0 < decay) (hr : ∀ t, 0 ≤ rate t ∧ rate
       simpa only [sq_abs] using (sq_le_sq₀ (abs_nonneg _) hK).2 hab)
     _ = _ := by simp [K]
 
+/-- Any sequence satisfying the one-step squared-error estimate obeys this
+finite bound. Projected and ordinary trajectories can satisfy the same estimate. -/
+theorem geometric_error_bound (E : ℕ → ℝ) {η μ M : ℝ} (hη : 0 < η) (hμ : 0 < μ) (hM : 0 ≤ M)
+    (hc : 2*η*μ ≤ 1) (hstep : ∀ j, E (j+1) ≤ (1-2*η*μ)*E j+η^2*M) (k : ℕ) :
+    E k ≤ (1-2*η*μ)^k*E 0 + η*M/(2*μ) := by
+  let r := 1-2*η*μ
+  let b := η*M/(2*μ)
+  have hb : 0 ≤ b := by dsimp [b]; positivity
+  have hr : 0 ≤ r := sub_nonneg.mpr hc
+  have hfix : r*b+η^2*M=b := by dsimp [r,b]; field_simp; ring
+  induction k with
+  | zero => simpa using hb
+  | succ k ih =>
+    change E (k+1) ≤ r^(k+1)*E 0+b
+    calc
+      _ ≤ r*(r^k*E 0+b)+η^2*M :=
+        (hstep k).trans (add_le_add (mul_le_mul_of_nonneg_left ih hr) le_rfl)
+      _ = _ := by rw [mul_add,add_assoc,hfix,pow_succ']; ring
+
 /-- On a constant-rate part of WSD, alignment with a representative gives an
 explicit geometric term plus a residual. This involves only the direction
 computed from the training batch, decay and the previous momentum. -/
@@ -71,29 +92,16 @@ theorem aligned_error_bound (B : ℕ) {η μ M : ℝ} (hη : 0 < η) (hμ : 0 < 
     squaredError u (run decay rate grad initial (B+k)).weights ≤
       (1-2*η*μ)^k * squaredError u (run decay rate grad initial B).weights + η*M/(2*μ) := by
   let e j := squaredError u (run decay rate grad initial (B+j)).weights
-  let r := 1-2*η*μ
-  let b := η*M/(2*μ)
-  have hb : 0 ≤ b := by dsimp [b]; positivity
-  have hr0 : 0 ≤ r := sub_nonneg.mpr hημ
-  have hfix : r*b+η^2*M=b := by dsimp [r,b]; field_simp; ring
-  induction k with
-  | zero => simpa using hb
-  | succ k ih =>
-    have hs := squaredError_step decay rate grad initial u (B+k)
+  have hstep (j : ℕ) : e (j+1) ≤ (1-2*η*μ)*e j + η^2*M := by
+    have hs := squaredError_step decay rate grad initial u (B+j)
     dsimp only at hs
-    rw [hr k] at hs
-    have ha := mul_le_mul_of_nonneg_left (halign k) (by positivity : 0 ≤ 2*η)
-    have hm := mul_le_mul_of_nonneg_left (hforce k) (sq_nonneg η)
-    have hd : e (k+1) ≤ r*e k+η^2*M := by
-      change squaredError u (run decay rate grad initial (B+k+1)).weights ≤ _
-      rw [hs]
-      exact (add_le_add (sub_le_sub_left ha _) hm).trans_eq (by dsimp [e,r]; ring)
-    change e (k+1) ≤ r^(k+1)*_+b
-    change e k ≤ r^k*_+b at ih
-    calc
-      _ ≤ r*(r^k*squaredError u (run decay rate grad initial B).weights + b)+η^2*M :=
-        hd.trans (add_le_add (mul_le_mul_of_nonneg_left ih hr0) le_rfl)
-      _ = _ := by rw [mul_add, add_assoc, hfix, pow_succ']; ring
+    rw [hr j] at hs
+    have ha := mul_le_mul_of_nonneg_left (halign j) (by positivity : 0 ≤ 2*η)
+    have hm := mul_le_mul_of_nonneg_left (hforce j) (sq_nonneg η)
+    change squaredError u (run decay rate grad initial (B+j+1)).weights ≤ _
+    rw [hs]
+    exact (add_le_add (sub_le_sub_left ha _) hm).trans_eq (by dsimp [e]; ring)
+  simpa only [e,Nat.add_zero] using geometric_error_bound e hη hμ hM hημ hstep k
 
 /-- Every open success set around the representative contains a squared-error
 neighborhood, including in the empty-coordinate case. -/

@@ -63,6 +63,105 @@ pub(super) mod device {
         sub.rn.f32(w, w, t);
         put(weights, i, w);
     }
+    pub unsafe extern "ptx-kernel" fn rmsprop_decay(
+        weights: *mut f32, mean_square: *mut f32, grad: *const f32, norm: *const f32,
+        count: u32, rate: f32, shrink: f32, sqrt_bias: f32,
+    ) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past { ret(); }
+        let (g, v, w, s, t): (f32, f32, f32, f32, f32);
+        ld.global.f32(s, [norm]);
+        max.f32(s, s, 1.0);
+        load(g, grad, i);
+        div.rn.f32(g, g, s);
+        load(v, mean_square, i);
+        mul.rn.f32(v, v, 0.95);
+        mul.rn.f32(t, g, g);
+        mul.rn.f32(t, t, 0.05);
+        add.rn.f32(v, v, t);
+        put(mean_square, i, v);
+        sqrt.rn.f32(s, v);
+        div.rn.f32(s, s, sqrt_bias);
+        add.rn.f32(s, s, 1e-8);
+        div.rn.f32(t, g, s);
+        mul.rn.f32(t, t, rate);
+        load(w, weights, i);
+        mul.rn.f32(w, w, shrink);
+        sub.rn.f32(w, w, t);
+        put(weights, i, w);
+    }
+    pub unsafe extern "ptx-kernel" fn clip_complex_rows(
+        w: *mut f32, rows: *const u32, radius: f32,
+    ) {
+        let (lane, row, start, stride, count, i, j): (u32,u32,u32,u32,u32,u32,u32);
+        let descriptor: u64;
+        mov.u32(lane, tid.x);
+        mov.u32(row, ctaid.x);
+        mad.wide.u32(descriptor, row, 12, rows);
+        ld.global.u32(start, [descriptor]);
+        ld.global.u32(stride, [descriptor+4]);
+        ld.global.u32(count, [descriptor+8]);
+        let (a,b,amax,ssq,ratio): (f32,f32,f32,f32,f32);
+        let stop: pred;
+        mov.f32(amax, 0.0);
+        mov.u32(i, lane);
+        label(maxloop);
+        setp.ge.u32(stop, i, count);
+        if stop { bra(maxdone); }
+        mad.lo.u32(j, i, stride, start);
+        load(a, w, j);
+        add.u32(j, j, 1);
+        load(b, w, j);
+        abs.f32(a, a);
+        abs.f32(b, b);
+        max.f32(amax, amax, a);
+        max.f32(amax, amax, b);
+        add.u32(i, i, 32);
+        bra(maxloop);
+        label(maxdone);
+        reduce_max(amax);
+        setp.eq.f32(stop, amax, 0.0);
+        if stop { ret(); }
+        mov.f32(ssq, 0.0);
+        mov.u32(i, lane);
+        label(normloop);
+        setp.ge.u32(stop, i, count);
+        if stop { bra(normdone); }
+        mad.lo.u32(j, i, stride, start);
+        load(a, w, j);
+        add.u32(j, j, 1);
+        load(b, w, j);
+        div.rn.f32(a, a, amax);
+        div.rn.f32(b, b, amax);
+        fma.rn.f32(ssq, a, a, ssq);
+        fma.rn.f32(ssq, b, b, ssq);
+        add.u32(i, i, 32);
+        bra(normloop);
+        label(normdone);
+        reduce_sum(ssq);
+        sqrt.rn.f32(ssq, ssq);
+        div.rn.f32(ratio, radius, amax);
+        div.rn.f32(ratio, ratio, ssq);
+        setp.ge.f32(stop, ratio, 1.0);
+        if stop { ret(); }
+        mov.u32(i, lane);
+        label(rescale);
+        setp.ge.u32(stop, i, count);
+        if stop { ret(); }
+        mad.lo.u32(j, i, stride, start);
+        load(a, w, j);
+        mul.rn.f32(a, a, ratio);
+        put(w, j, a);
+        add.u32(j, j, 1);
+        load(b, w, j);
+        mul.rn.f32(b, b, ratio);
+        put(w, j, b);
+        add.u32(i, i, 32);
+        bra(rescale);
+    }
     fn complex_load(re: f32, im: f32, base: u64, i: u32) {
         let ptr: u64;
         mad.wide.u32(ptr, i, 8, base);

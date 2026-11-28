@@ -56,6 +56,14 @@ pub(super) struct Layer {
     pub skip_gates: [usize; 2],
 }
 
+impl Layer {
+    pub(super) fn projections(&self) -> [&Projection; 7] {
+        [
+            &self.q, &self.k, &self.v, &self.o, &self.gate, &self.up, &self.down,
+        ]
+    }
+}
+
 pub(super) struct Parameters {
     pub value: F,
     pub grad: F,

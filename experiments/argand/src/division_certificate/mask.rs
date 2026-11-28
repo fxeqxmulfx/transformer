@@ -45,7 +45,7 @@ pub(crate) fn lean_source() -> Result<String> {
     for (i, &j) in matching.iter().enumerate() {
         inverse[j] = i;
     }
-    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ArgandSoftsign\n\n");
+    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\n\n");
     writeln!(
         out,
         "/- Observed equations SHA-256: {} -/",
@@ -128,6 +128,25 @@ example (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParame
     (by norm_num) (by norm_num) (by norm_num)
 
 #print axioms original_softsign_checkpoint_recovery
+
+/-- The exact observed mask also identifies the target for the projected
+softsign and RMSProp checkpoint searches at their pilot hyperparameters. -/
+theorem original_projected_and_rmsProp_recovery (f : DivisionInput → Fin 239)
+    (hf : f ∈ factorClass unitToken) (batch : ℕ → List (LabeledPosition (Fin 239)))
+    (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :
+    let S := bitDivisionMask rows
+    let hidden : {x : DivisionInput // x ∉ S} → DivisionInput := Subtype.val
+    let recover := fun (path : ℕ → Weights (Fin 239) 4 16 6) =>
+      PathCheckpointRecovery 1 path (divisionPrompt ∘ hidden) (f ∘ hidden)
+        (hiddenCertificate S (factorClass unitToken) (fun x => f x) hidden) ((1/1000000 : ℝ≥0)^2)
+    recover (fun j => (projectedSoftsignRun 1 (7/4) (1/10) batch (fun t => 3/10*wsdRate 20000 t)
+      draw (256*(32+j))).weights) ∧
+    recover (fun j => (rmsPropRun 1 (1/5) batch (wsdRate 20000) draw (256*(32+j))).weights) :=
+  ⟨factor_projectedSoftsign_checkpoint_recovers _ _ original_graph.1 original_graph.2 f hf batch draw,
+   factor_rmsProp_checkpoint_recovers _ _ original_graph.1 original_graph.2 f hf batch draw⟩
+
+example := original_projected_and_rmsProp_recovery divisionAnswer divisionAnswer_mem
+#print axioms original_projected_and_rmsProp_recovery
 
 example := original_nuclear_completion (u := fun _ => 1) (v := fun _ => 1) (by simp [vecMulVec_apply])
 example := original_factor_class_stabilizes 12 (fun _ => 100000) (fun _ => 1) (by intro; norm_num)

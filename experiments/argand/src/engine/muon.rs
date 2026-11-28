@@ -184,15 +184,7 @@ impl Muon {
         let mut matrix_indices = BTreeMap::<(usize, usize), Vec<u32>>::new();
         let mut used = vec![false; model.parameters.len()];
         for layer in &model.parameters.layers {
-            for projection in [
-                &layer.q,
-                &layer.k,
-                &layer.v,
-                &layer.o,
-                &layer.gate,
-                &layer.up,
-                &layer.down,
-            ] {
+            for projection in layer.projections() {
                 let (start, input, output) = projection.layout();
                 let (r, c) = (input.min(output), input.max(output));
                 let group = matrix_indices.entry((r, c)).or_default();

@@ -13,6 +13,8 @@ mod muon_kernels;
 pub(crate) mod page;
 mod reduction;
 mod residual;
+pub(crate) mod rmsprop;
+mod row_clip;
 mod scores;
 pub(crate) mod softsign;
 mod tape;

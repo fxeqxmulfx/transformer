@@ -8,21 +8,35 @@ const EPSILON: f32 = 1e-6;
 
 pub(crate) struct Softsign {
     moment: F,
+    row_clip: Option<super::row_clip::RowClip>,
     schedule: Schedule,
     scale: f64,
     decay: f64,
     completed: usize,
 }
 
-pub(crate) fn settings(scale: f64, decay: f64, schedule: Schedule) -> Value {
-    json!({"peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":schedule.budget,
+pub(crate) fn settings(scale: f64, decay: f64, row_norm: Option<f64>, schedule: Schedule) -> Value {
+    let mut settings = json!({"peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":schedule.budget,
         "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start,"weight_decay":decay,
-        "direction_beta":0.9,"moment_beta":0.99,"epsilon":1e-6,"clip_norm":1,"direction":"c/(abs(c)+epsilon)"})
+        "direction_beta":0.9,"moment_beta":0.99,"epsilon":1e-6,"clip_norm":1,"direction":"c/(abs(c)+epsilon)"});
+    if let Some(radius) = row_norm {
+        settings["max_projection_row_norm"] = radius.into();
+    }
+    settings
 }
 
 impl Softsign {
-    pub fn new(engine: &Engine, schedule: Schedule, scale: f64, decay: f64) -> Result<Self> {
+    pub fn new(
+        engine: &Engine,
+        schedule: Schedule,
+        scale: f64,
+        decay: f64,
+        row_norm: Option<f64>,
+    ) -> Result<Self> {
         Ok(Self {
+            row_clip: row_norm
+                .map(|r| super::row_clip::RowClip::new(engine, r as f32))
+                .transpose()?,
             moment: engine.cuda.upload(&vec![0.0; engine.parameters.len()])?,
             schedule,
             scale,
@@ -55,6 +69,9 @@ impl Softsign {
                 EPSILON,
             )?;
         }
+        if let Some(clip) = &self.row_clip {
+            clip.apply(engine)?;
+        }
         self.completed += 1;
         Ok(())
     }
@@ -81,7 +98,7 @@ mod tests {
         };
         let mut engine = Engine::new(shape, 1, 3)?;
         let schedule = super::super::adamw::wsd(20);
-        let mut opt = Softsign::new(&engine, schedule, 0.3, 0.65)?;
+        let mut opt = Softsign::new(&engine, schedule, 0.3, 0.65, None)?;
         let mut expected = engine.weights()?;
         let mut moment = 0.0_f32;
         for (i, raw) in [3.0_f32, 0.0, -2.0, 1e-6].into_iter().enumerate() {

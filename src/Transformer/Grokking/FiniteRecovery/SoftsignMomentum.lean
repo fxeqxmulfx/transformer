@@ -1,6 +1,7 @@
 module
 
 public import Transformer.Grokking.FiniteRecovery.AdamWTrials
+public import Transformer.Grokking.FiniteRecovery.DecoupledDecay
 
 /-! One-moment softsign training. The two coefficients correspond to the blend
 and the stored moving average in Chen et al., *Symbolic Discovery of Optimization
@@ -31,16 +32,19 @@ structure State (ι : Type*) where
   moment : ι → ℝ
 
 /-- Both blends read the previous momentum. Clipping spans all real coordinates
-of the minibatch gradient; decay acts on every trainable weight. -/
+of the minibatch gradient and decay acts on every trainable weight. -/
+noncomputable def step (decay rate : ℝ) (grad : ι → ℝ) (s : State ι) : State ι :=
+  let g := clip grad
+  let c i := (9/10 : ℝ)*s.moment i + (1/10 : ℝ)*g i
+  ⟨fun i => (1-rate*decay)*s.weights i-rate*direction (c i),
+   fun i => (99/100 : ℝ)*s.moment i+(1/100 : ℝ)*g i⟩
+
 noncomputable def run (decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ) (initial : ι → ℝ) :
     ℕ → State ι
-  | 0 => ⟨initial, 0⟩
+  | 0 => ⟨initial,0⟩
   | t+1 =>
     let s := run decay rate grad initial t
-    let g := clip (grad t s.weights)
-    let c i := (9/10 : ℝ)*s.moment i + (1/10 : ℝ)*g i
-    ⟨fun i => (1-rate t*decay)*s.weights i-rate t*direction (c i),
-     fun i => (99/100 : ℝ)*s.moment i+(1/100 : ℝ)*g i⟩
+    step decay (rate t) (grad t s.weights) s
 
 variable (decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ)
 
@@ -48,24 +52,12 @@ variable (decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι 
 and any WSD budget, even with the positive indefinitely continued WSD floor. -/
 theorem weight_bound (initial : ι → ℝ) (hdc : 0 < decay) (hr : ∀ t, 0 ≤ rate t ∧ rate t*decay ≤ 1) (i : ι) (n : ℕ) :
     |(run decay rate grad initial n).weights i| ≤ max ‖initial‖ decay⁻¹ := by
-  let B := max ‖initial‖ decay⁻¹
-  have hB : 1 ≤ decay*B := (mul_inv_cancel₀ hdc.ne').ge.trans
-    (mul_le_mul_of_nonneg_left (le_max_right _ _) hdc.le)
-  induction n with
-  | zero => exact (norm_le_pi_norm initial i).trans (le_max_left _ _)
-  | succ t ih =>
-    let s := run decay rate grad initial t
-    let c := (9/10 : ℝ)*s.moment i + 1/10 * clip (grad t s.weights) i
-    have hd : 0 ≤ 1-rate t*decay := by linarith [(hr t).2]
-    change |(1-rate t*decay)*s.weights i - rate t*direction c| ≤ B
-    calc
-      _ ≤ |(1-rate t*decay)*s.weights i| + |rate t*direction c| := abs_sub _ _
-      _ = (1-rate t*decay)*|s.weights i| + rate t*|direction c| := by
-        rw [abs_mul, abs_mul, abs_of_nonneg hd, abs_of_nonneg (hr t).1]
-      _ ≤ (1-rate t*decay)*B + rate t*(decay*B) :=
-        add_le_add (mul_le_mul_of_nonneg_left ih hd) (mul_le_mul_of_nonneg_left
-          ((direction_bound c).trans hB) (hr t).1)
-      _ = B := by ring
+  let s := run decay rate grad initial
+  let d t i := direction (9/10*(s t).moment i + 1/10*clip (grad t (s t).weights) i)
+  have h := DecoupledDecay.coordinate_bound (fun t => (s t).weights) d rate hdc hr
+    (fun _ _ => rfl) (fun _ _ => direction_bound _) i n
+  rw [show (s 0).weights = initial from rfl, one_div] at h
+  exact h
 
 /-- Finite ordinary training is continuous in its initial weights. Each of the
 two buffers follows the implemented recurrence, including at zero gradient. -/

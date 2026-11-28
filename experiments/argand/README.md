@@ -312,8 +312,46 @@ $2/3$ matches the per-update shrink factor of the AdamW control at peak
 0.002 and decay 0.1 throughout WSD.
 The native sampler is seeded and its weights are FP32. [Lion, Algorithm 2](https://arxiv.org/abs/2302.06675)
 
+On seed 0 the 0.0003 peak reached all 4,656 strict hidden answers at
+update 17,920, with minimum gap 7.094 on replay. This took 4.375 times
+as many updates as the 0.002 AdamW run on the same seed. Across the
+4,992 complex matrix output rows the median Euclidean norms at first
+success were 1.934 for softsign Lion and 0.870 for the faster AdamW.
+The observed-label certificate records these row statistics. A projected
+pilot caps each hidden projection's output-row norm at 1.75 after every
+update, with the same unrestricted stock initialization, rate 0.0003
+and decay 0.1. Both components of a complex coefficient count in the
+same row. The tied embedding, scores, learned position frequencies and
+residual gates receive the ordinary update. [Per-row clipping experiments in a different architecture](https://github.com/NiftyliuS/cliptogrok)
+
+Projecting the three previously saved solutions once gives the following
+independent check on feasibility. Scores use all 239 candidate tokens and
+labels reconstructed from the 4,656 observed equations.
+
+| Source checkpoint | Hidden strict before | Hidden strict after radius 1.75 | Minimum hidden gap after |
+|---|---:|---:|---:|
+| AdamW, peak 0.001, step 12,800 | 4,656 | 4,656 | 10.273 |
+| AdamW, peak 0.002, step 4,096 | 4,656 | 4,656 | 8.276 |
+| Softsign Lion, peak 0.0003, step 17,920 | 4,656 | 4,474 | −13.270 |
+
+Projection throughout training is a separate experiment. For any feasible
+representative, Lean proves that radial row projection can only decrease
+squared distance to it relative to the unprojected update. The FP32
+post-projection row maxima in this check were at most 1.7500003.
+[Row projection and squared error](../../src/Transformer/Grokking/FiniteRecovery/ProjectionRows.lean)
+
+An independent one-buffer pilot uses uncentered bias-corrected RMSPropW.
+It retains $v'=0.95v+0.05g^2$ and updates with the current clipped gradient
+divided by $\sqrt{v'}/\sqrt{1-0.95^{t+1}}+10^{-8}$. It uses peak 0.001 and
+decay 0.2 so the per-update shrinkage matches AdamW with peak 0.002 and
+decay 0.1. The GPU regression compares mixed-sign and zero gradients with
+a host reference. Its coordinate direction has magnitude at most five in
+the formal real recurrence. The exact division observation graph gives the
+same almost-sure recovery result for independent Gaussian checkpoint copies.
+[RMSProp update and bounds](../../src/Transformer/Grokking/FiniteRecovery/RmsProp.lean)
+
 For any positive decay $\lambda$ and $0\leq\eta_t\lambda\leq 1$, the
-coordinate direction has magnitude at most one. Every ordinary checkpoint
+softsign direction has magnitude at most one. Every ordinary softsign checkpoint
 therefore satisfies $\|w_t\|_\infty\leq\max(\|w_0\|_\infty,1/\lambda)$.
 For an identifiable, strictly representable finite task this gives almost-sure
 hidden recovery when fresh ideal Gaussian copies are checked indefinitely.
@@ -351,6 +389,9 @@ $bin adamw-scaled-until-perfect "$task" 0 runs/division-x2 20000 2
 $bin softsign-until-perfect "$task" 0 runs/division-lion 20000 0.3
 $bin softsign-checkpoint-proposals "$task" 0 719 runs/division-lion-checked 20000 8192 1 20000
 $bin muon-until-perfect "$task" 0 runs/division-muon 20000 1
+$bin rmsprop-checkpoint-proposals "$task" 0 719 runs/division-rms 20000 8192 1 20000 0.2
+$bin softsign-checkpoint-proposals "$task" 0 719 runs/division-row-clip 20000 8192 0.3 20000 0.1 1.75
+$bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
 bash plot_division_optimizers.sh runs/division-comparison "runs/division-x2/$task/seed0" "runs/division-lion/$task/seed0"
 ```

@@ -12,6 +12,7 @@ use std::{fs, path::Path};
 
 pub(crate) mod mask;
 pub(crate) mod relabel;
+pub(crate) mod row_projection;
 mod spectrum;
 
 const N: usize = eq::P - 1;
@@ -130,6 +131,10 @@ impl Counts {
 }
 
 fn checkpoint(dir: &Path, first: bool) -> Result<(Value, Engine)> {
+    checkpoint_with_batch(dir, first, division::shape().max_batch)
+}
+
+fn checkpoint_with_batch(dir: &Path, first: bool, eval_batch: usize) -> Result<(Value, Engine)> {
     let (metadata, weights) = if first {
         ("first-strict.json", "first-strict.f32")
     } else {
@@ -137,7 +142,8 @@ fn checkpoint(dir: &Path, first: bool) -> Result<(Value, Engine)> {
     };
     let record: Value = serde_json::from_slice(&fs::read(dir.join(metadata))?)?;
     let id = &record["identity"];
-    let spec = division::shape();
+    let mut spec = division::shape();
+    spec.max_batch = eval_batch;
     if id["case"] != division::NAME
         || id["split_sha256"][0] != division::TRAIN_HASH
         || id["width"] != spec.width
@@ -195,7 +201,7 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
         "output_tokens_compared":engine.config.vocab,"observed_unit_cells":completion.graph.observed_cells,
         "unit_graph_components":completion.graph.connected_components,"zero_row_label":completion.zero,
         "phase_generator":5,"row_phases":completion.graph.row_phases,"column_phases":completion.graph.column_phases,
-        "matching":completion.graph.perfect_matching,"unit_character_spectrum":phases.report()?});
+        "matching":completion.graph.perfect_matching,"unit_character_spectrum":phases.report()?, "projection_row_norms":engine.projection_row_norms()?});
     let output = if first {
         "first-strict-certificate.json"
     } else {

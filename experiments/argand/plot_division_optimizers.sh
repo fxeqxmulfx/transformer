@@ -13,14 +13,16 @@ max=0
 for cell in "$@"; do
     cell=$(realpath -e -- "$cell")
     id=$(head -n 1 "$cell/observations.jsonl" | jq -ce '.identity | select(.case=="grok-division-p97")')
-    paired=$(jq -cS '(.adamw // .softsign_lion // .muon) as $o | {case,seed,order_seed,budget,wsd_budget:$o.budget,warmup:$o.warmup,cooldown:$o.cooldown_start,observe,split_sha256,suite_sha256,model,repeat,width,heads,layers,vocab,batch,kernite,gradient_reduction}' <<< "$id")
+    paired=$(jq -cS '(.adamw // .softsign_lion // .muon // .rmsprop) as $o | {case,seed,order_seed,wsd_budget:$o.budget,warmup:$o.warmup,cooldown:$o.cooldown_start,observe,split_sha256,suite_sha256,model,repeat,width,heads,layers,vocab,batch,kernite,gradient_reduction}' <<< "$id")
     if [[ -z "$ref" ]]; then ref=$paired; elif [[ $paired != "$ref" ]]; then echo "unpaired trajectory: $cell" >&2; exit 1; fi
-    peak=$(jq -er '(.adamw // .softsign_lion // .muon).peak' <<< "$id")
-    decay=$(jq -er '(.adamw // .softsign_lion // .muon).weight_decay' <<< "$id")
+    peak=$(jq -er '(.adamw // .softsign_lion // .muon // .rmsprop).peak' <<< "$id")
+    decay=$(jq -er '(.adamw // .softsign_lion // .muon // .rmsprop).weight_decay' <<< "$id")
     case $(jq -r .optimizer <<< "$id") in
         adamw-wsd|adamw-scaled-wsd) name=AdamW ;;
         softsign-lion-wsd) name='Softsign Lion' ;;
         softsign-lion-wsd-checkpoint-proposals) name='Softsign Lion + verifier' ;;
+        row-clipped-softsign-lion-wsd-checkpoint-proposals) name="Softsign Lion, row norm $(jq -r '.softsign_lion.max_projection_row_norm' <<< "$id")" ;;
+        rmsprop-wsd-checkpoint-proposals) name='RMSPropW + verifier' ;;
         complex-muon-wsd) name='Complex Muon' ;;
         *) echo "unknown optimizer in $cell" >&2; exit 1 ;;
     esac
@@ -39,12 +41,12 @@ for cell in "$@"; do
     fi
     if [[ -s "$cell/$checkpoint" ]]; then
         stop=$(jq -er .step "$cell/$checkpoint")
-        status='budget exhausted'
+        status="stopped at $stop"
         if jq -e '.strict.all_strict' "$cell/$checkpoint" > /dev/null; then
             status='awaiting replay'
             if [[ -s "$cell/$cert" && -s "$cell/$replay" ]]; then
                 jq -es '.[0] as $c | [.[1],.[2]] | all(.step==$c.step and .weights_sha256==$c.weights_sha256) and
-                    .[0].strict.all_strict and .[1].accept and .[1].hidden.strict_correct==4656 and .[1].hidden.minimum_gap>0' \
+                    .[0].strict.all_strict and .[1].hidden.total==4656 and .[1].hidden.strict_correct==4656 and .[1].hidden.minimum_gap>0' \
                     "$cell/$checkpoint" "$cell/$replay" "$cell/$cert" > /dev/null
                 status="100% at $stop"
                 hit=$stop
