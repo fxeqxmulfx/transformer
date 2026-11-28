@@ -681,8 +681,16 @@ successes already seen when the extension was chosen, the probability
 of eight more at $p=3/4$ is $0.10011$. A 200,000-update diagnostic
 does not contribute to this test. [All-success series in Lean](../../src/Transformer/Grokking/FiniteRecovery/TerminalValidation.lean)
 
+All eight original prospective seeds and all three additional seeds
+started with zero of 4,656 hidden equations correct. All eleven reached
+strictly perfect predictions on their first attempt. The first-hit range
+was 16,640–23,040 updates, with median 19,968. The three extension hits
+were at 17,664, 22,784 and 19,968. The four earlier retrospective hits
+appear only in the original twelve-draw figure.
+
 ```sh
 bash run_division_probability_extension.sh runs/division-first100-100k runs/division-first100-extension
+bash plot_division_to_perfect.sh runs/division-first100-100k runs/division-comparison runs/division-first100-extension
 ```
 
 For ordinary AdamW under ideal Gaussian initialization, the probability

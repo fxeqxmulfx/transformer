@@ -1,11 +1,23 @@
 #!/usr/bin/env bash
 # Display completed first-passage trajectories and the latest active seed.
 set -euo pipefail
-if (( $# != 2 )); then echo 'usage: bash plot_division_to_perfect.sh COHORT OUTPUT_DIRECTORY' >&2; exit 2; fi
+if (( $# < 2 || $# > 3 )); then echo 'usage: bash plot_division_to_perfect.sh COHORT OUTPUT_DIRECTORY [PROSPECTIVE_EXTENSION]' >&2; exit 2; fi
 dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 cohort=$(realpath -e -- "$1")
 mkdir -p -- "$2"
 out=$(cd -- "$2" && pwd)
+extension=''
+first=0
+end=12
+title='Argand on division modulo 97'
+if (( $# == 3 )); then
+    extension=$(realpath -e -- "$3")
+    cmp -- "$dir/division-first-hit-registration.json" "$extension/registration.json"
+    jq -ne --slurpfile a "$extension/registration.json" --slurpfile p "$cohort/protocol.json" '
+      $a[0].model_seeds==($p[0].seeds|map(.[0])) and $a[0].three_quarters_test.wsd_budget==$p[0].updates' >/dev/null
+    read -r first end < <(jq -r '[.first_prospective_index, ((.model_seeds|length)+(.three_quarters_test.additional_model_seeds|length))]|@tsv' "$extension/registration.json")
+    title='Argand on division modulo 97  |  prospective seeds and extension'
+fi
 tmp=$(mktemp -d "$out/.division-first100.XXXXXX")
 trap 'rm -f -- "$tmp"/*.tsv "$tmp"/figure.{pdf,png} "$tmp/report.json"; rmdir -- "$tmp"' EXIT
 cd -- "$tmp"
@@ -17,12 +29,23 @@ done_count=0
 started=0
 last=0
 max=0
-for ((i=0;i<12;i++)); do
-    draw=$((i+1))
-    seed=$(jq -er --argjson i "$i" '.seeds[$i][0]' "$cohort/protocol.json")
+for ((i=first;i<end;i++)); do
+    draw=$((i-first+1))
+    if (( i<12 )); then
+        seed=$(jq -er --argjson i "$i" '.seeds[$i][0]' "$cohort/protocol.json")
+        cell="$cohort/grok-division-p97/seed$seed"
+        record="$cohort/draw-$i.json"
+    else
+        j=$((i-12))
+        seed=$(jq -er --argjson j "$j" '.three_quarters_test.additional_model_seeds[$j]' "$extension/registration.json")
+        cell="$extension/wsd-$cap/grok-division-p97/seed$seed"
+        record="$extension/draw-$j.json"
+    fi
+    if [[ -s "$record" ]] && jq -e '.status=="interrupted"' "$record" >/dev/null; then
+        labels+="${labels:+,}'$draw    $seed (interrupted)' $draw"
+        continue
+    fi
     labels+="${labels:+,}'$draw    $seed' $draw"
-    cell="$cohort/grok-division-p97/seed$seed"
-    record="$cohort/draw-$i.json"
     stop=$cap
     if [[ -s "$record" ]]; then
         if [[ $(jq -er --argjson seed "$seed" 'select(.seed==$seed and .total==4656)|.checkpoint' "$record") == first-strict ]]; then
@@ -48,12 +71,12 @@ done
 ((started > 0))
 hits=$(wc -l < successes.tsv)
 for f in successes.tsv running.tsv missed.tsv; do [[ -s $f ]] || echo '1 NaN' > "$f"; done
-gnuplot -e "series='$series'; labels=\"$labels\"; cap=$cap; hits=$hits; done_count=$done_count; xmax=$max" - <<'GP'
+gnuplot -e "series='$series'; labels=\"$labels\"; cap=$cap; hits=$hits; done_count=$done_count; xmax=$max; n=$((end-first)); heading='$title'" - <<'GP'
 set terminal pdfcairo color size 11.5in,5.1in font 'DejaVu Sans,10'
 set output 'figure.pdf'
 set multiplot
-set label 1 'Argand on division modulo 97' at screen 0.072,0.937 font ',17' tc rgb '#203340'
-set label 2 sprintf('First strictly correct answer on all 4,656 held-out equations   |   AdamW, decay 0.1   |   WSD cap %d',cap) at screen 0.072,0.872 tc rgb '#425b6b'
+set label 1 heading at screen 0.072,0.937 font ',17' tc rgb '#203340'
+set label 2 sprintf('First evaluation with all 4,656 held-out answers strictly correct   |   AdamW, decay 0.1   |   WSD cap %d',cap) at screen 0.072,0.872 tc rgb '#425b6b'
 set border 3 lc rgb '#86959f'
 set tics nomirror out scale 0.4
 set grid ytics lc rgb '#dee5e9'
@@ -75,7 +98,7 @@ set lmargin at screen 0.70
 set rmargin at screen 0.965
 set title sprintf('Verified first hits: %d of %d evaluated',hits,done_count)
 unset ylabel
-set yrange [12.65:0.35]
+set yrange [n+0.65:0.35]
 eval 'set ytics ('.labels.') font ",8"'
 set label 3 'Draw      Seed' at graph -0.05,1.04 right font ',8'
 set label 4 'Diamond = first 100%     Circle = in progress     Cross = budget exhausted' at screen 0.53,0.045 font ',8'
@@ -86,11 +109,17 @@ unset multiplot
 GP
 pdftoppm -singlefile -r 140 -png figure.pdf figure
 base="division-first100-$cap"
-tag="$base-draw-$started-step-$last-done-$done_count"
-if [[ -s "$cohort/summary.json" ]]; then
+if [[ -n "$extension" ]]; then
+    base="division-first100-prospective-$cap"
+    if [[ -s "$extension/summary.json" ]]; then
+        cp -- "$extension/summary.json" report.json
+        mv -- report.json "$out/$base-inference.json"
+    fi
+elif [[ -s "$cohort/summary.json" ]]; then
     bash "$dir/report_division_first_hits.sh" "$cohort" > report.json
     mv -- report.json "$out/$base-inference.json"
 fi
+tag="$base-draw-$started-step-$last-done-$done_count"
 for ext in pdf png; do
     if [[ ${ARGAND_PLOT_SNAPSHOT:-1} == 1 && ! -e "$out/$tag.$ext" ]]; then
         cp -- "figure.$ext" "$out/$tag.$ext"
