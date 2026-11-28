@@ -35,6 +35,8 @@ pub(crate) enum Rule {
     Page(PageRule),
     AdamW(RatePlan),
     AdamWFirstNoise { seed: u32 },
+    Softsign(f64),
+    Muon(f64),
 }
 
 impl Rule {
@@ -42,9 +44,12 @@ impl Rule {
         match self {
             Self::Page(correction) => correction.label(),
             Self::AdamW(RatePlan::Wsd) => "adamw-wsd",
+            Self::AdamW(RatePlan::Scaled(_)) => "adamw-scaled-wsd",
             Self::AdamW(RatePlan::Geometric { .. }) => "adamw-wsd-geometric-tail",
             Self::AdamW(RatePlan::Restart { .. }) => "adamw-wsd-restart",
             Self::AdamWFirstNoise { .. } => "adamw-wsd-first-noise",
+            Self::Softsign(_) => "softsign-lion-wsd",
+            Self::Muon(_) => "complex-muon-wsd",
         }
     }
 }
@@ -52,6 +57,8 @@ impl Rule {
 pub(crate) enum Optimizer {
     Page(AdaptivePage),
     AdamW(AdamW),
+    Softsign(crate::engine::softsign::Softsign),
+    Muon(crate::engine::muon::Muon),
 }
 
 impl Optimizer {
@@ -63,6 +70,12 @@ impl Optimizer {
         schedule: Schedule,
     ) -> Result<Self> {
         Ok(match rule {
+            Rule::Muon(scale) => {
+                Self::Muon(crate::engine::muon::Muon::new(engine, schedule, scale)?)
+            }
+            Rule::Softsign(scale) => Self::Softsign(crate::engine::softsign::Softsign::new(
+                engine, schedule, scale,
+            )?),
             Rule::Page(correction) => {
                 Self::Page(AdaptivePage::new(engine, batch, sampler, correction)?)
             }
@@ -81,6 +94,14 @@ impl Optimizer {
     ) -> Result<bool> {
         match self {
             Self::Page(page) => page.step(engine, batch, changed),
+            Self::Muon(opt) => {
+                opt.step(engine, batch)?;
+                Ok(true)
+            }
+            Self::Softsign(opt) => {
+                opt.step(engine, batch)?;
+                Ok(true)
+            }
             Self::AdamW(adamw) => {
                 adamw.step(engine, batch)?;
                 Ok(true)
@@ -92,6 +113,8 @@ impl Optimizer {
         match self {
             Self::Page(page) => page.metrics(),
             Self::AdamW(adamw) => adamw.metrics(),
+            Self::Softsign(opt) => opt.metrics(),
+            Self::Muon(opt) => opt.metrics(),
         }
     }
 }
@@ -125,6 +148,7 @@ pub struct Job {
     batch: usize,
     every: usize,
     pub until: usize,
+    schedule_budget: Option<usize>,
     ordered_gradients: bool,
 }
 
@@ -160,6 +184,7 @@ impl Job {
             batch,
             every,
             until,
+            schedule_budget: None,
             ordered_gradients: false,
         })
     }
@@ -167,6 +192,14 @@ impl Job {
     pub fn with_ordered_gradients(mut self, ordered: bool) -> Self {
         self.ordered_gradients = ordered;
         self
+    }
+
+    pub fn with_schedule_budget(mut self, budget: usize) -> Result<Self> {
+        if budget == 0 {
+            return Err("WSD budget must be positive".into());
+        }
+        self.schedule_budget = Some(budget);
+        Ok(self)
     }
 
     fn verify(
@@ -240,7 +273,7 @@ impl Job {
                 "geometric continuation requires a WSD prefix between 10 and the cutoff".into(),
             );
         }
-        let budget = if let Some(budget) = geometric_after {
+        let budget = if let Some(budget) = geometric_after.or(self.schedule_budget) {
             budget
         } else if self.row["name"] == division::NAME
             || matches!(rule, Rule::AdamW(RatePlan::Restart { .. }))
@@ -253,6 +286,14 @@ impl Job {
         };
         let schedule = wsd(budget);
         match rule {
+            Rule::Muon(scale) => {
+                identity["optimizer"] = rule.label().into();
+                identity["muon"] = crate::engine::muon::settings(scale, schedule);
+            }
+            Rule::Softsign(scale) => {
+                identity["optimizer"] = rule.label().into();
+                identity["softsign_lion"] = crate::engine::softsign::settings(scale, schedule);
+            }
             Rule::Page(correction) => {
                 identity["optimizer"] = "batch-reference-adaptive-page-v1".into();
                 identity["correction"] = correction.label().into();
@@ -282,7 +323,7 @@ impl Job {
             if first > self.until {
                 return Err("first proposal exceeds the effective observation cap".into());
             }
-            identity["optimizer"] = "adamw-wsd-checkpoint-proposals".into();
+            identity["optimizer"] = format!("{}-checkpoint-proposals", rule.label()).into();
             identity["checkpoint_proposals"] = json!({"seed":seed,"first_eligible_update":first,
                 "stddev":crate::engine::adamw::FIRST_NOISE_STDDEV,
                 "labels":if division {"reconstructed-from-observations"} else {"primary-validation-split"}});

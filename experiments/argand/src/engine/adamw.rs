@@ -18,6 +18,7 @@ pub(crate) fn wsd(budget: usize) -> Schedule {
 #[derive(Clone, Copy)]
 pub(crate) enum RatePlan {
     Wsd,
+    Scaled(f64),
     Geometric {
         budget: usize,
     },
@@ -38,6 +39,7 @@ impl RatePlan {
 
     pub fn scale(self, budget: usize) -> f64 {
         match self {
+            Self::Scaled(multiplier) => multiplier,
             Self::Restart {
                 stock_runs,
                 trial,
@@ -51,7 +53,7 @@ impl RatePlan {
         }
     }
 
-    fn rate(self, schedule: Schedule, completed: usize) -> f32 {
+    pub(super) fn rate(self, schedule: Schedule, completed: usize) -> f32 {
         if let Self::Geometric { budget } = self
             && completed >= budget
         {

@@ -290,6 +290,43 @@ replayed with minimum gap 10.273. All 30 evaluations from 12,800 through
 The observation spacing was 256 updates, with a separate evaluation at
 the declared endpoint. The discovery run took 719 seconds on the RTX 3050.
 
+#### Optimizer comparison on the same division inputs
+
+Seed 0, order seed 10000, a WSD budget of 20,000 and decay 0.1 were held
+fixed. Multiplying the entire AdamW rate schedule by two, including its floor,
+moved the first independently verified strict hit from 12,800 to 4,096 updates.
+The minimum hidden margins at these first hits were 10.273 and 8.347. Timing
+across the two runs includes different amounts of GPU contention.
+
+The one-moment variant of Lion uses the globally clipped gradient $g$ and
+the previous coordinate momentum $m$. Its direction is $c/(|c|+10^{-6})$
+for $c=0.9m+0.1g$, and the new buffer is $0.99m+0.01g$. The update applies
+decoupled decay to the entire weight vector. At a peak of 0.0003 the first
+4,096 updates produced 111 correct hidden answers. The checkpoint-proposal
+command tests the ordinary weights first. On division it derives the expected
+tokens only from the observed equations. From the first eligible update it
+also tests a Gaussian-perturbed copy after ordinary misses. The optional
+last argument fixes the WSD budget when extending the observation cutoff.
+The native sampler is seeded and its weights are FP32. [Lion, Algorithm 2](https://arxiv.org/abs/2302.06675)
+
+Complex Muon applies Nesterov momentum 0.95 and five quintic Newton–Schulz
+steps to each complex Q, K, V, O, gate, up and down projection. It normalizes
+the starting matrix by its Frobenius norm with floor $10^{-8}$, uses conjugate
+transposes, and scales each matrix direction by $0.2\sqrt{\max(m,n)}$.
+The tied embedding, residual gates, scores and frequencies use the control's
+bias-corrected AdamW. [Muon reference implementation](https://github.com/KellerJordan/Muon)
+
+```sh
+task=grok-division-p97
+bin=target/release/argand
+$bin adamw-scaled-until-perfect "$task" 0 runs/division-x2 20000 2
+$bin softsign-until-perfect "$task" 0 runs/division-lion 20000 0.3
+$bin softsign-checkpoint-proposals "$task" 0 719 runs/division-lion-checked 20000 8192 1 20000
+$bin muon-until-perfect "$task" 0 runs/division-muon 20000 1
+$bin division-certificate "runs/division-lion/$task/seed0" terminal
+bash plot_division_optimizers.sh runs/division-comparison "runs/division-x2/$task/seed0" "runs/division-lion/$task/seed0"
+```
+
 The first fresh seed, 889832341, fit every training equation by the
 20,000-step endpoint and scored 4,287/4,656 on hidden prompts (92.07%).
 With a new 100,000-step WSD schedule and identical initialization and

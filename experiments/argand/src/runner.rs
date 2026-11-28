@@ -21,6 +21,8 @@ const USAGE: &str = concat!(
     "sum8-adamw-rank-one[-margin][-replay] RUN_DIR UPDATES [DRAW_INDEX] | sum8-rectangle-certificate CELL | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
+    "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [--ordered-gradients] | ",
+    "softsign-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
     "division-certificate CELL (terminal|first-strict) | division-relabel CELL | division-mask-lean"
@@ -34,6 +36,18 @@ fn training_rule(op: &str) -> crate::page_runs::Rule {
     }
 }
 
+fn rate_multiplier(scale: &str) -> Result<f64> {
+    let scale: f64 = scale.parse()?;
+    if !scale.is_finite()
+        || scale <= 0.0
+        || crate::schedule::PEAK * scale >= f64::from(f32::MAX)
+        || (1e-8 * scale) as f32 == 0.0
+    {
+        return Err("expected a positive finite WSD rate multiplier".into());
+    }
+    Ok(scale)
+}
+
 pub fn command(args: &[String]) -> Result<()> {
     let Some((op, args)) = args.split_first() else {
         return Err(USAGE.into());
@@ -45,6 +59,10 @@ pub fn command(args: &[String]) -> Result<()> {
                     op.as_str(),
                     "adamw-run"
                         | "adamw-until-perfect"
+                        | "adamw-scaled-until-perfect"
+                        | "softsign-until-perfect"
+                        | "muon-until-perfect"
+                        | "softsign-checkpoint-proposals"
                         | "adamw-checkpoint-proposals"
                         | "adamw-first-noise-until-perfect"
                         | "adamw-first-noise-run"
@@ -61,6 +79,50 @@ pub fn command(args: &[String]) -> Result<()> {
         _ => (args, false),
     };
     match (op.as_str(), args) {
+        (
+            "adamw-scaled-until-perfect" | "softsign-until-perfect" | "muon-until-perfect",
+            [name, seed, out, cap, scale],
+        ) => {
+            let scale = rate_multiplier(scale)?;
+            let seed: u32 = seed.parse()?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+                .with_ordered_gradients(ordered_gradients);
+            let dir = Path::new(out).join(name).join(format!("seed{seed}"));
+            let rule = match op.as_str() {
+                "softsign-until-perfect" => crate::page_runs::Rule::Softsign(scale),
+                "muon-until-perfect" => crate::page_runs::Rule::Muon(scale),
+                _ => crate::page_runs::Rule::AdamW(RatePlan::Scaled(scale)),
+            };
+            println!("{}", job.run(&dir, seed, 0, rule, Stop::Perfect)?);
+            Ok(())
+        }
+        (
+            "softsign-checkpoint-proposals",
+            [name, seed, noise_seed, out, cap, first, scale, budget @ ..],
+        ) if budget.len() <= 1 => {
+            let seed = seed.parse()?;
+            let proposal = noise_seed.parse()?;
+            let first = first.parse()?;
+            let cap = cap.parse()?;
+            let budget = budget
+                .first()
+                .map(|s| s.parse())
+                .transpose()?
+                .unwrap_or(cap);
+            let job = crate::page_runs::Job::new(name, cap)?
+                .with_schedule_budget(budget)?
+                .with_ordered_gradients(ordered_gradients);
+            let dir = Path::new(out)
+                .join(name)
+                .join(format!("seed{seed}-proposal{proposal}-from{first}"));
+            let rule = crate::page_runs::Rule::Softsign(rate_multiplier(scale)?);
+            let stop = Stop::CheckpointProposal {
+                seed: proposal,
+                first,
+            };
+            println!("{}", job.run(&dir, seed, 0, rule, stop)?);
+            Ok(())
+        }
         ("adamw-checkpoint-proposals", [name, seed, noise_seed, out, cap, first]) => {
             let job = crate::page_runs::Job::new(name, cap.parse()?)?
                 .with_ordered_gradients(ordered_gradients);

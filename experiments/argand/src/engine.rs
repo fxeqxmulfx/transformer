@@ -8,10 +8,13 @@
 pub(crate) mod adamw;
 mod gemm;
 mod kernels;
+pub(crate) mod muon;
+mod muon_kernels;
 pub(crate) mod page;
 mod reduction;
 mod residual;
 mod scores;
+pub(crate) mod softsign;
 mod tape;
 mod weights;
 

@@ -30,6 +30,39 @@ pub(super) mod device {
         let old: f32;
         atom.global.add.f32(old, [ptr], x);
     }
+    pub unsafe extern "ptx-kernel" fn softsign_momentum(
+        weights: *mut f32, moment: *mut f32, grad: *const f32, norm: *const f32,
+        count: u32, rate: f32, epsilon: f32,
+    ) {
+        let i: u32;
+        index(i);
+        let past: pred;
+        setp.ge.u32(past, i, count);
+        if past { ret(); }
+        let (g, m, c, w, d, t): (f32, f32, f32, f32, f32, f32);
+        ld.global.f32(d, [norm]);
+        max.f32(d, d, 1.0);
+        load(g, grad, i);
+        div.rn.f32(g, g, d);
+        load(m, moment, i);
+        mul.rn.f32(c, m, 0.9);
+        mul.rn.f32(t, g, 0.1);
+        add.rn.f32(c, c, t);
+        abs.f32(d, c);
+        add.rn.f32(d, d, epsilon);
+        div.rn.f32(c, c, d);
+        mul.rn.f32(m, m, 0.99);
+        mul.rn.f32(t, g, 0.01);
+        add.rn.f32(m, m, t);
+        put(moment, i, m);
+        load(w, weights, i);
+        mul.rn.f32(t, rate, 0.1);
+        sub.rn.f32(t, 1.0, t);
+        mul.rn.f32(w, w, t);
+        mul.rn.f32(t, rate, c);
+        sub.rn.f32(w, w, t);
+        put(weights, i, w);
+    }
     fn complex_load(re: f32, im: f32, base: u64, i: u32) {
         let ptr: u64;
         mad.wide.u32(ptr, i, 8, base);

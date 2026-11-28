@@ -12,6 +12,10 @@ pub(super) struct Projection {
 }
 
 impl Projection {
+    pub(super) fn layout(&self) -> (usize, usize, usize) {
+        (self.at, self.input, self.output)
+    }
+
     fn new(weights: &mut Vec<f32>, rng: &mut Random, input: usize, output: usize) -> Self {
         let at = weights.len();
         weights.extend((0..2 * input * output).map(|_| rng.gauss(0.0, 0.02) as f32));
