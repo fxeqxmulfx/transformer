@@ -173,6 +173,10 @@ example (batch : ℕ → List (LabeledPosition (Fin 239))) :=
   factor_equalMoment_ordinary_restarts 20000 (bitDivisionMask rows) original_graph.1 original_graph.2
     (fun x : ((bitDivisionMask rows)ᶜ : Set DivisionInput) => x.val) divisionAnswer divisionAnswer_mem batch
 
+example (batch : ℕ → List (LabeledPosition (Fin 239))) :=
+  factor_uncorrectedAdam_ordinary_restarts 20000 (bitDivisionMask rows) original_graph.1 original_graph.2
+    (fun x : ((bitDivisionMask rows)ᶜ : Set DivisionInput) => x.val) divisionAnswer divisionAnswer_mem batch (19/20)
+
 example := equalMoment_uniform_observed_confidence 1 (evaluationGrid 256 20000) (by simp [evaluationGrid])
   divisionPrompt id (bitDivisionMask rows) (factorClass unitToken)
   (factorClass_identified _ _ original_graph.1 original_graph.2)

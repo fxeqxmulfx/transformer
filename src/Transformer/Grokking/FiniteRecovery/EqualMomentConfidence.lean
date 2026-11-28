@@ -58,6 +58,32 @@ omit [Finite X] in
 almost-sure strictly correct retention. The witness may be at a positive
 step after a wrong initialization. The stopping test uses only observations
 and the known class. No auxiliary noise is added to any optimizer step. -/
+theorem uncorrectedAdam_ordinary_restarts (r : ℕ) (grid : Finset ℕ) (a b ε decay : ℝ) (hε : 0 < ε) (rate : ℕ → ℝ)
+    (batch : ℕ → List (LabeledPosition A)) (prompt : Z → Word A (T+1)) (hidden : Z → X)
+    (S : Set X) (family : Set (X → A)) (hid : InjOn (fun g : X → A => fun x : S => g x) family)
+    (f : X → A) (hf : f ∈ family) (variance : ComplexParameter A H d L → ℝ≥0) (hv : ∀ i, 0 < variance i) :
+    let score (z : Draw) t x := (Model.fromWeights (uncorrectedAdamRun r a b ε decay batch rate z t).weights).logits
+      r (prompt x) (Fin.last T)
+    let μ := independentGaussianDraws variance
+    let first z := firstPerfect grid (fun t => hiddenCertificate S family (fun x => f x) hidden (score z t))
+    let ok z := first z ≠ none
+    let p := μ {z | ∃ t ∈ grid, StrictOn (score z t) (f ∘ hidden)}
+    (∃ z, ∃ t ∈ grid, StrictOn (score z t) (f ∘ hidden)) →
+      0 < p ∧ (∀ m, Measure.infinitePi (fun _ : ℕ => μ) {ω | retained ok ω m = none} = (1-p)^m) ∧
+      ∀ᵐ ω ∂Measure.infinitePi (fun _ : ℕ => μ), ∃ j t, first (ω j) = some t ∧
+        StrictOn (score (ω j) t) (f ∘ hidden) ∧ ∀ k, retained ok ω (j+1+k) = some (ω j) := by
+  intro score μ first ok p witness
+  have ho (t : ℕ) : IsOpen {z | StrictOn (score z t) (f ∘ hidden)} :=
+    (strict_prompt_weights_open r prompt (f ∘ hidden)).preimage
+      ((EqualMoment.continuous_uncorrectedRun decay rate (fun t => batchGradient r (batch t)) a b
+        hε (fun t => continuous_batchGradient r (batch t)) t).1.comp
+        (continuous_sgdInitialWeights true))
+  let := independentGaussianDraws_openPos variance hv
+  obtain ⟨z,t,ht,hz⟩ := witness
+  have hp : 0 < p := ((ho t).measure_pos μ ⟨z,hz⟩).trans_le (measure_mono fun w hw => ⟨t,ht,hw⟩)
+  exact ⟨hp,certified_grid_restarts μ grid S family hid f hf hidden score (fun t _ => (ho t).measurableSet) hp⟩
+
+omit [Finite X] in
 theorem equalMoment_ordinary_restarts (r : ℕ) (grid : Finset ℕ) (decay : ℝ) (rate : ℕ → ℝ)
     (batch : ℕ → List (LabeledPosition A)) (prompt : Z → Word A (T+1)) (hidden : Z → X)
     (S : Set X) (family : Set (X → A)) (hid : InjOn (fun g : X → A => fun x : S => g x) family)
@@ -71,33 +97,26 @@ theorem equalMoment_ordinary_restarts (r : ℕ) (grid : Finset ℕ) (decay : ℝ
     (∃ z, ∃ t ∈ grid, StrictOn (score z t) (f ∘ hidden)) →
       0 < p ∧ (∀ m, Measure.infinitePi (fun _ : ℕ => μ) {ω | retained ok ω m = none} = (1-p)^m) ∧
       ∀ᵐ ω ∂Measure.infinitePi (fun _ : ℕ => μ), ∃ j t, first (ω j) = some t ∧
-        StrictOn (score (ω j) t) (f ∘ hidden) ∧ ∀ k, retained ok ω (j+1+k) = some (ω j) := by
-  intro score μ first ok p witness
-  have ho (t : ℕ) : IsOpen {z | StrictOn (score z t) (f ∘ hidden)} :=
-    (strict_prompt_weights_open r prompt (f ∘ hidden)).preimage
-      ((EqualMoment.continuous_run decay rate (fun t => batchGradient r (batch t)) (9/10)
-        (by norm_num : (0:ℝ) < 1/100000000) (fun t => continuous_batchGradient r (batch t)) t).1.comp
-        (continuous_sgdInitialWeights true))
-  let := independentGaussianDraws_openPos variance hv
-  obtain ⟨z,t,ht,hz⟩ := witness
-  have hp : 0 < p := ((ho t).measure_pos μ ⟨z,hz⟩).trans_le (measure_mono fun w hw => ⟨t,ht,hw⟩)
-  exact ⟨hp,certified_grid_restarts μ grid S family hid f hf hidden score (fun t _ => (ho t).measurableSet) hp⟩
+        StrictOn (score (ω j) t) (f ∘ hidden) ∧ ∀ k, retained ok ω (j+1+k) = some (ω j) :=
+  uncorrectedAdam_ordinary_restarts r grid (9/10) (9/10) (1/100000000) decay (by norm_num) rate batch
+    prompt hidden S family hid f hf variance hv
 
 /-- One restart count works for the whole finite class at any requested
 confidence, even when the minibatch order depends on all draws. The lower
 bound comes from the mass of strictly correct native starts; it gives no
 numerical estimate of how often ordinary training learns from wrong starts. -/
-theorem equalMoment_uniform_observed_confidence (r : ℕ) (grid : Finset ℕ) (h0 : 0 ∈ grid)
+theorem uncorrectedAdam_uniform_observed_confidence (r : ℕ) (grid : Finset ℕ) (h0 : 0 ∈ grid)
     (prompt : Z → Word A (T+1)) (hidden : Z → X) (S : Set X) (family : Set (X → A))
     (hid : InjOn (fun g : X → A => fun x : S => g x) family)
     (variance : ComplexParameter A H d L → ℝ≥0) (hv : ∀ i, 0 < variance i)
     (hnative : ∀ f ∈ family, ∃ z : Draw, StrictOn (fun x => (Model.fromWeights (sgdInitialWeights true z)).logits
-      r (prompt x) (Fin.last T)) (f ∘ hidden)) {failure : ℝ≥0∞} (hfailure : 0 < failure) :
+      r (prompt x) (Fin.last T)) (f ∘ hidden)) {failure : ℝ≥0∞} (hfailure : 0 < failure)
+    (secondDecay : ℝ := 9/10) :
     let μ := independentGaussianDraws variance
     ∃ n, ∀ m ≥ n, ∀ f ∈ family, ∀ decay : ℝ, ∀ rate : ℕ → ℝ,
       ∀ batch : (ℕ → Draw) → ℕ → ℕ → List (LabeledPosition A),
       let score (ω : ℕ → Draw) j t x := (Model.fromWeights
-        (equalMomentRun r decay (batch ω j) rate (ω j) t).weights).logits r (prompt x) (Fin.last T)
+        (uncorrectedAdamRun r (9/10) secondDecay (1/100000000) decay (batch ω j) rate (ω j) t).weights).logits r (prompt x) (Fin.last T)
       let first ω j := firstPerfect grid (fun t => hiddenCertificate S family (fun x => f x) hidden (score ω j t))
       (∀ ω j t, first ω j = some t → StrictOn (score ω j t) (f ∘ hidden)) ∧
       Measure.infinitePi (fun _ : ℕ => μ) {ω | ∀ j ∈ Finset.range m, first ω j = none} < failure := by
@@ -123,18 +142,20 @@ theorem equalMoment_uniform_observed_confidence (r : ℕ) (grid : Finset ℕ) (h
   intro ω h j hj hwin
   exact (firstPerfect_eq_none _ _).1 (h j hj) ⟨0,h0,f,hf,fun _ => rfl,hwin⟩
 
+alias equalMoment_uniform_observed_confidence := uncorrectedAdam_uniform_observed_confidence
+
 open Division.Factors
 
 /-- Every quotient-factor table at stock width 64, depth six and one pass
 has a native strict realization. It therefore satisfies ordinary-restart
 convergence on every identifying mask, for every fixed minibatch order
 and the practical WSD peak 0.003. The grid checks the initialization. -/
-theorem factor_equalMoment_ordinary_restarts (cap : ℕ) (S : Set DivisionInput)
+theorem factor_uncorrectedAdam_ordinary_restarts (cap : ℕ) (S : Set DivisionInput)
     (hc : (FlatSpectrum.patternGraph (unitMask S)).Preconnected) (hz : ∃ j, (none,j) ∈ S)
     (hidden : Z → DivisionInput) (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)
-    (batch : ℕ → List (LabeledPosition (Fin 239))) :
+    (batch : ℕ → List (LabeledPosition (Fin 239))) (secondDecay : ℝ := 9/10) :
     let score (z : ComplexParameter (Fin 239) 4 16 6 → ℂ) t x := (Model.fromWeights
-      (equalMomentRun 1 (1/10) batch (fun k => 3*wsdRate 20000 k) z t).weights).logits
+      (uncorrectedAdamRun 1 (9/10) secondDecay (1/100000000) (1/10) batch (fun k => 3*wsdRate 20000 k) z t).weights).logits
       1 (divisionPrompt (hidden x)) (Fin.last 4)
     let μ := independentGaussianDraws (fun _ : ComplexParameter (Fin 239) 4 16 6 => (1/50 : ℝ≥0)^2)
     let grid := evaluationGrid 256 cap
@@ -145,9 +166,11 @@ theorem factor_equalMoment_ordinary_restarts (cap : ℕ) (S : Set DivisionInput)
       ∀ᵐ ω ∂Measure.infinitePi (fun _ : ℕ => μ), ∃ j t, first (ω j) = some t ∧
         StrictOn (score (ω j) t) (f ∘ hidden) ∧ ∀ k, retained ok ω (j+1+k) = some (ω j) := by
   obtain ⟨w,hw⟩ := class_native_realization f hf
-  apply equalMoment_ordinary_restarts 1 _ _ _ batch _ hidden S _ (factorClass_identified _ _ hc hz)
+  apply uncorrectedAdam_ordinary_restarts 1 _ _ _ _ _ (by norm_num) _ batch _ hidden S _ (factorClass_identified _ _ hc hz)
     f hf _ (by intro; norm_num)
   exact ⟨w,0,by simp [evaluationGrid],fun z => hw (hidden z)⟩
+
+alias factor_equalMoment_ordinary_restarts := factor_uncorrectedAdam_ordinary_restarts
 
 example (batch : ℕ → List (LabeledPosition (Fin 239))) :=
   factor_equalMoment_ordinary_restarts 20000 (factorMask (1 : DivisionUnit))

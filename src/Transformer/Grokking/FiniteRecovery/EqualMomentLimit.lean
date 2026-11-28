@@ -19,14 +19,15 @@ variable {ι : Type*} [Fintype ι]
 /-- On a positive constant tail, a common limiting clipped gradient G gives
 the exact equilibrium in every coordinate. The start and minibatch sequence
 are arbitrary. Changing epsilon or decay changes the equilibrium. -/
-theorem limit_of_common_gradient {β ε decay η : ℝ} (hβ : 0 ≤ β) (hβ' : β < 1) (hε : 0 < ε)
+theorem uncorrected_limit_of_common_gradient {β γ ε decay η : ℝ} (hβ : 0 ≤ β) (hβ' : β < 1)
+    (hγ : 0 ≤ γ) (hγ' : γ < 1) (hε : 0 < ε)
     (hd : 0 < decay) (hη : 0 < η) (hc : η*decay ≤ 1)
     (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ) (initial G : ι → ℝ)
     (hr : ∀ᶠ t in atTop, rate t = η)
-    (hg : Tendsto (fun t => clip (grad t (run β ε decay rate grad initial t).weights)) atTop (𝓝 G)) :
-    Tendsto (fun t => (run β ε decay rate grad initial t).weights) atTop
+    (hg : Tendsto (fun t => clip (grad t (uncorrectedRun β γ ε decay rate grad initial t).weights)) atTop (𝓝 G)) :
+    Tendsto (fun t => (uncorrectedRun β γ ε decay rate grad initial t).weights) atTop
       (𝓝 (fun i => -(G i / (|G i| + ε)) / decay)) := by
-  let s := run β ε decay rate grad initial
+  let s := uncorrectedRun β γ ε decay rate grad initial
   let g t := clip (grad t (s t).weights)
   apply DecoupledDecay.tendsto_of_direction_limit (fun t => (s t).weights)
     (fun t i => direction ε ((s (t+1)).first i) ((s (t+1)).second i)) _ hd hη hc rate hr (fun _ _ => rfl)
@@ -36,10 +37,18 @@ theorem limit_of_common_gradient {β ε decay η : ℝ} (hβ : 0 ≤ β) (hβ' :
   have hm : Tendsto (fun t => (s t).first i) atTop (𝓝 (G i)) :=
     DecoupledDecay.moving_average_limit hβ hβ' hgi (fun _ => rfl)
   have hv : Tendsto (fun t => (s t).second i) atTop (𝓝 ((G i)^2)) :=
-    DecoupledDecay.moving_average_limit hβ hβ' (hgi.pow 2) (fun _ => rfl)
+    DecoupledDecay.moving_average_limit hγ hγ' (hgi.pow 2) (fun _ => rfl)
   have hden := (Real.continuous_sqrt.continuousAt.tendsto.comp ((tendsto_add_atTop_iff_nat 1).2 hv)).add_const ε
   rw [Real.sqrt_sq_eq_abs] at hden
   exact ((tendsto_add_atTop_iff_nat 1).2 hm).div hden (add_pos_of_nonneg_of_pos (abs_nonneg _) hε).ne'
+
+theorem limit_of_common_gradient {β ε decay η : ℝ} (hβ : 0 ≤ β) (hβ' : β < 1) (hε : 0 < ε)
+    (hd : 0 < decay) (hη : 0 < η) (hc : η*decay ≤ 1) (rate : ℕ → ℝ)
+    (grad : ℕ → (ι → ℝ) → ι → ℝ) (initial G : ι → ℝ) (hr : ∀ᶠ t in atTop, rate t = η)
+    (hg : Tendsto (fun t => clip (grad t (run β ε decay rate grad initial t).weights)) atTop (𝓝 G)) :
+    Tendsto (fun t => (run β ε decay rate grad initial t).weights) atTop
+      (𝓝 (fun i => -(G i / (|G i| + ε)) / decay)) :=
+  uncorrected_limit_of_common_gradient hβ hβ' hβ hβ' hε hd hη hc rate grad initial G hr hg
 
 example (w c : ι → ℝ) := limit_of_common_gradient (β := 9/10) (ε := 1/100000000)
   (decay := 1/10) (η := 1/50000000) (by norm_num) (by norm_num) (by norm_num)

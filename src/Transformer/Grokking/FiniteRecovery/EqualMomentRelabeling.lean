@@ -15,15 +15,21 @@ variable {I J : Type*} [Fintype I] [Fintype J]
 
 /-- The two moving averages, global clipping and decoupled shrinkage
 commute with every reindexing of trainable coordinates. -/
-theorem run_reindex (e : I ≃ J) (β ε decay : ℝ) (rate : ℕ → ℝ)
+theorem uncorrectedRun_reindex (e : I ≃ J) (β γ ε decay : ℝ) (rate : ℕ → ℝ)
     (g : ℕ → (I → ℝ) → I → ℝ) (h : ℕ → (J → ℝ) → J → ℝ)
     (hg : ∀ t w, h t (w ∘ e.symm) = g t w ∘ e.symm) (w : I → ℝ) (n : ℕ) :
-    run β ε decay rate h (w ∘ e.symm) n = (run β ε decay rate g w n).reindex e := by
+    uncorrectedRun β γ ε decay rate h (w ∘ e.symm) n = (uncorrectedRun β γ ε decay rate g w n).reindex e := by
   induction n with
   | zero => rfl
   | succ n ih =>
-    simp only [run,ih,AdamW.State.reindex,hg,AdamW.clip_reindex,Function.comp_apply]
+    simp only [uncorrectedRun,ih,AdamW.State.reindex,hg,AdamW.clip_reindex,Function.comp_apply]
     rfl
+
+theorem run_reindex (e : I ≃ J) (β ε decay : ℝ) (rate : ℕ → ℝ)
+    (g : ℕ → (I → ℝ) → I → ℝ) (h : ℕ → (J → ℝ) → J → ℝ)
+    (hg : ∀ t w, h t (w ∘ e.symm) = g t w ∘ e.symm) (w : I → ℝ) (n : ℕ) :
+    run β ε decay rate h (w ∘ e.symm) n = (run β ε decay rate g w n).reindex e :=
+  uncorrectedRun_reindex e β β ε decay rate g h hg w n
 
 example (e : Fin 7 ≃ Fin 7) (w : Fin 7 → ℝ) (t : ℕ) :=
   run_reindex e (9/10) (1/100000000) (1/10) (fun _ => 3/1000)

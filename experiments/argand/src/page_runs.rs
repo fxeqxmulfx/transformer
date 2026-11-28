@@ -7,6 +7,7 @@ use crate::{
         Engine,
         adamw::{AdamW, RatePlan, wsd},
         page::{AdaptivePage, Observations, PageRule},
+        rmsprop::MomentRates,
     },
     metrics,
     random::Random,
@@ -46,9 +47,10 @@ pub(crate) enum Rule {
         scale: f64,
         decay: f64,
     },
-    EqualMoment {
+    UncorrectedAdam {
         scale: f64,
         decay: f64,
+        rates: MomentRates,
     },
     Muon(f64),
 }
@@ -67,7 +69,7 @@ impl Rule {
             } => "row-clipped-softsign-lion-wsd",
             Self::Softsign { .. } => "softsign-lion-wsd",
             Self::RmsProp { .. } => "rmsprop-wsd",
-            Self::EqualMoment { .. } => "equal-moment-wsd",
+            Self::UncorrectedAdam { rates, .. } => rates.label(),
             Self::Muon(_) => "complex-muon-wsd",
         }
     }
@@ -90,9 +92,13 @@ impl Optimizer {
         schedule: Schedule,
     ) -> Result<Self> {
         Ok(match rule {
-            Rule::EqualMoment { scale, decay } => Self::RmsProp(
+            Rule::UncorrectedAdam {
+                scale,
+                decay,
+                rates,
+            } => Self::RmsProp(
                 crate::engine::rmsprop::RmsProp::new(engine, schedule, scale, decay)?
-                    .with_equal_moments(engine)?,
+                    .with_first_moment(engine, rates)?,
             ),
             Rule::RmsProp { scale, decay } => Self::RmsProp(crate::engine::rmsprop::RmsProp::new(
                 engine, schedule, scale, decay,
@@ -326,10 +332,18 @@ impl Job {
                 identity["optimizer"] = rule.label().into();
                 identity["rmsprop"] = crate::engine::rmsprop::settings(scale, decay, schedule);
             }
-            Rule::EqualMoment { scale, decay } => {
+            Rule::UncorrectedAdam {
+                scale,
+                decay,
+                rates,
+            } => {
                 identity["optimizer"] = rule.label().into();
-                identity["equal_moment"] =
-                    crate::engine::rmsprop::equal_moment_settings(scale, decay, schedule);
+                let key = match rates {
+                    MomentRates::Equal => "equal_moment",
+                    MomentRates::HalfSecondGain => "uncorrected_adam",
+                };
+                identity[key] =
+                    crate::engine::rmsprop::moment_settings(scale, decay, schedule, rates);
             }
             Rule::Muon(scale) => {
                 identity["optimizer"] = rule.label().into();

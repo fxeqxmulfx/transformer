@@ -25,17 +25,20 @@ theorem variance_step (β m v g : ℝ) :
 
 noncomputable def direction (ε m v : ℝ) : ℝ := m / (Real.sqrt v + ε)
 
-/-- One matched moving average of gradients and one of squared gradients.
-The native pilot has β = 9/10 and ε = 10⁻⁸. -/
-noncomputable def run (β ε decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ)
+/-- Ordinary uncorrected Adam with two exponential moving averages.
+Both native comparisons share the first decay, rate and epsilon. -/
+noncomputable def uncorrectedRun (β γ ε decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ)
     (initial : ι → ℝ) : ℕ → AdamW.State ι
   | 0 => ⟨initial,0,0⟩
   | t+1 =>
-    let s := run β ε decay rate grad initial t
+    let s := uncorrectedRun β γ ε decay rate grad initial t
     let g := clip (grad t s.weights)
     let m i := blend β (s.first i) (g i)
-    let v i := blend β (s.second i) ((g i)^2)
+    let v i := blend γ (s.second i) ((g i)^2)
     ⟨fun i => (1-rate t*decay)*s.weights i-rate t*direction ε (m i) (v i),m,v⟩
+
+/-- Matched decay in both moment buffers. -/
+noncomputable abbrev run (β : ℝ) := @uncorrectedRun ι _ β β
 
 variable {β ε : ℝ} (decay : ℝ) (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ) (initial : ι → ℝ)
 
@@ -43,7 +46,7 @@ theorem moment_bounds (hβ : β ∈ Set.Icc 0 1) (t : ℕ) (i : ι) :
     let s := run β ε decay rate grad initial t
     (s.first i)^2 ≤ s.second i := by
   induction t with
-  | zero => norm_num [run]
+  | zero => norm_num [run,uncorrectedRun]
   | succ t ih =>
     let s := run β ε decay rate grad initial t
     let g := clip (grad t s.weights) i
@@ -73,24 +76,30 @@ theorem weight_bound (hβ : β ∈ Set.Icc 0 1) (hε : 0 < ε) {decay : ℝ} (hd
 
 /-- Ordinary training at a fixed horizon depends continuously on the native
 start when each observed minibatch gradient does. -/
-theorem continuous_run (β : ℝ) (hε : 0 < ε) (hg : ∀ t, Continuous (grad t)) (t : ℕ) :
-    Continuous (fun w => (run β ε decay rate grad w t).weights) ∧
-    Continuous (fun w => (run β ε decay rate grad w t).first) ∧
-    Continuous (fun w => (run β ε decay rate grad w t).second) := by
+theorem continuous_uncorrectedRun (β γ : ℝ) (hε : 0 < ε) (hg : ∀ t, Continuous (grad t)) (t : ℕ) :
+    Continuous (fun w => (uncorrectedRun β γ ε decay rate grad w t).weights) ∧
+    Continuous (fun w => (uncorrectedRun β γ ε decay rate grad w t).first) ∧
+    Continuous (fun w => (uncorrectedRun β γ ε decay rate grad w t).second) := by
   induction t with
   | zero => exact ⟨continuous_id,continuous_const,continuous_const⟩
   | succ t ih =>
-    let s w := run β ε decay rate grad w t
+    let s w := uncorrectedRun β γ ε decay rate grad w t
     let g w := clip (grad t (s w).weights)
     have hg' : Continuous g := AdamW.continuous_clip.comp ((hg t).comp ih.1)
     have hm (i : ι) : Continuous (fun w => blend β ((s w).first i) (g w i)) :=
       (((continuous_apply i).comp ih.2.1).const_mul β).add (((continuous_apply i).comp hg').const_mul _)
-    have hv (i : ι) : Continuous (fun w => blend β ((s w).second i) ((g w i)^2)) :=
-      (((continuous_apply i).comp ih.2.2).const_mul β).add ((((continuous_apply i).comp hg').pow 2).const_mul _)
+    have hv (i : ι) : Continuous (fun w => blend γ ((s w).second i) ((g w i)^2)) :=
+      (((continuous_apply i).comp ih.2.2).const_mul γ).add ((((continuous_apply i).comp hg').pow 2).const_mul _)
     refine ⟨continuous_pi fun i => ?_, continuous_pi hm, continuous_pi hv⟩
     have hd := (hm i).div ((Real.continuous_sqrt.comp (hv i)).add_const ε)
       (fun w => (add_pos_of_nonneg_of_pos (Real.sqrt_nonneg _) hε).ne')
     exact (((continuous_apply i).comp ih.1).const_mul _).sub (hd.const_mul _)
+
+theorem continuous_run (β : ℝ) (hε : 0 < ε) (hg : ∀ t, Continuous (grad t)) (t : ℕ) :
+    Continuous (fun w => (run β ε decay rate grad w t).weights) ∧
+    Continuous (fun w => (run β ε decay rate grad w t).first) ∧
+    Continuous (fun w => (run β ε decay rate grad w t).second) :=
+  continuous_uncorrectedRun decay rate grad β β hε hg t
 
 example (i : Fin 3) (t : ℕ) := weight_bound (β := 9/10) (ε := 1/100000000)
   (fun _ => 2/1000) (fun _ w => w) (fun _ => 2) (by norm_num [Set.mem_Icc]) (by norm_num)

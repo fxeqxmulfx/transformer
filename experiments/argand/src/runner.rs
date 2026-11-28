@@ -21,7 +21,7 @@ const USAGE: &str = concat!(
     "sum8-adamw-rank-one[-margin][-replay] RUN_DIR UPDATES [DRAW_INDEX] | sum8-rectangle-certificate CELL | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
-    "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect | equal-moment-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [WSD_BUDGET] [--ordered-gradients] | ",
+    "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect | equal-moment-until-perfect | uncorrected-adam-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [WSD_BUDGET] [--ordered-gradients] | ",
     "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
@@ -65,6 +65,7 @@ pub fn command(args: &[String]) -> Result<()> {
                         | "rmsprop-checkpoint-proposals"
                         | "equal-moment-checkpoint-proposals"
                         | "equal-moment-until-perfect"
+                        | "uncorrected-adam-until-perfect"
                         | "softsign-checkpoint-proposals"
                         | "adamw-checkpoint-proposals"
                         | "adamw-first-noise-until-perfect"
@@ -86,7 +87,8 @@ pub fn command(args: &[String]) -> Result<()> {
             "adamw-scaled-until-perfect"
             | "softsign-until-perfect"
             | "muon-until-perfect"
-            | "equal-moment-until-perfect",
+            | "equal-moment-until-perfect"
+            | "uncorrected-adam-until-perfect",
             [name, seed, out, cap, scale, budget @ ..],
         ) if budget.len() <= 1 => {
             let scale = rate_multiplier(scale)?;
@@ -104,8 +106,16 @@ pub fn command(args: &[String]) -> Result<()> {
                     row_norm: None,
                 },
                 "muon-until-perfect" => crate::page_runs::Rule::Muon(scale),
-                "equal-moment-until-perfect" => {
-                    crate::page_runs::Rule::EqualMoment { scale, decay: 0.1 }
+                "equal-moment-until-perfect" | "uncorrected-adam-until-perfect" => {
+                    crate::page_runs::Rule::UncorrectedAdam {
+                        scale,
+                        decay: 0.1,
+                        rates: if op == "equal-moment-until-perfect" {
+                            crate::engine::rmsprop::MomentRates::Equal
+                        } else {
+                            crate::engine::rmsprop::MomentRates::HalfSecondGain
+                        },
+                    }
                 }
                 _ => crate::page_runs::Rule::AdamW(RatePlan::Scaled(scale)),
             };
@@ -147,7 +157,11 @@ pub fn command(args: &[String]) -> Result<()> {
             let rule = if op == "rmsprop-checkpoint-proposals" {
                 crate::page_runs::Rule::RmsProp { scale, decay }
             } else if op == "equal-moment-checkpoint-proposals" {
-                crate::page_runs::Rule::EqualMoment { scale, decay }
+                crate::page_runs::Rule::UncorrectedAdam {
+                    scale,
+                    decay,
+                    rates: crate::engine::rmsprop::MomentRates::Equal,
+                }
             } else {
                 crate::page_runs::Rule::Softsign {
                     scale,

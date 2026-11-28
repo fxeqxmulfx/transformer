@@ -1,14 +1,36 @@
 //! Bias-corrected uncentered RMSProp with decoupled weight decay. Only the
 //! mean square of each globally clipped gradient coordinate is retained.
-//! The equal-decay comparison retains the first moment as well and omits
-//! both bias corrections. Its coordinate direction then has magnitude ≤ 1.
+//! The two uncorrected Adam variants retain a first moment. The second
+//! moment uses either the same gain or half the first moment's gain.
 use super::{Engine, F, Result, adamw::RatePlan, grid, page::Observations};
 use crate::schedule::Schedule;
 use serde_json::{Value, json};
 
+#[derive(Clone, Copy)]
+pub(crate) enum MomentRates {
+    Equal,
+    HalfSecondGain,
+}
+
+impl MomentRates {
+    fn second(self) -> (f64, f64) {
+        match self {
+            Self::Equal => (0.9, 0.1),
+            Self::HalfSecondGain => (0.95, 0.05),
+        }
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Equal => "equal-moment-wsd",
+            Self::HalfSecondGain => "uncorrected-adam-wsd",
+        }
+    }
+}
+
 pub(crate) struct RmsProp {
     mean_square: F,
-    first: Option<F>,
+    first: Option<(F, MomentRates)>,
     schedule: Schedule,
     scale: f64,
     decay: f64,
@@ -21,10 +43,15 @@ pub(crate) fn settings(scale: f64, decay: f64, schedule: Schedule) -> Value {
         "beta2":0.95,"epsilon":1e-8,"clip_norm":1,"bias_correction":true,"centered":false})
 }
 
-pub(crate) fn equal_moment_settings(scale: f64, decay: f64, schedule: Schedule) -> Value {
+pub(crate) fn moment_settings(
+    scale: f64,
+    decay: f64,
+    schedule: Schedule,
+    rates: MomentRates,
+) -> Value {
     json!({"peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":schedule.budget,
         "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start,"weight_decay":decay,
-        "beta1":0.9,"beta2":0.9,"epsilon":1e-8,"clip_norm":1,"bias_correction":false})
+        "beta1":0.9,"beta2":rates.second().0,"epsilon":1e-8,"clip_norm":1,"bias_correction":false})
 }
 
 impl RmsProp {
@@ -39,8 +66,11 @@ impl RmsProp {
         })
     }
 
-    pub fn with_equal_moments(mut self, engine: &Engine) -> Result<Self> {
-        self.first = Some(engine.cuda.upload(&vec![0.0; engine.parameters.len()])?);
+    pub fn with_first_moment(mut self, engine: &Engine, rates: MomentRates) -> Result<Self> {
+        self.first = Some((
+            engine.cuda.upload(&vec![0.0; engine.parameters.len()])?,
+            rates,
+        ));
         Ok(self)
     }
 
@@ -57,8 +87,9 @@ impl RmsProp {
         let shrink = 1.0 - rate * self.decay as f32;
         // SAFETY: one thread per coordinate in equally sized weights, gradients and EMA buffers.
         unsafe {
-            if let Some(first) = &self.first {
-                engine.kernel.equal_moment_decay(
+            if let Some((first, rates)) = &self.first {
+                let (beta2, gain) = rates.second();
+                engine.kernel.uncorrected_moments_decay(
                     grid(p.len()),
                     p.value.ptr(),
                     first.ptr(),
@@ -68,6 +99,8 @@ impl RmsProp {
                     p.len() as u32,
                     rate,
                     shrink,
+                    beta2 as f32,
+                    gain as f32,
                 )?;
             } else {
                 let bias = (1.0 - 0.95_f64.powf((self.completed + 1) as f64)).sqrt() as f32;
@@ -142,7 +175,12 @@ mod tests {
 
     #[test]
     #[ignore = "requires CUDA"]
-    fn equal_decay_preserves_moment_inequality_without_bias_correction() -> Result<()> {
+    fn uncorrected_moment_updates_match_scalar_recurrences() -> Result<()> {
+        check_uncorrected(MomentRates::Equal, 0.9, 0.1, 1.0)?;
+        check_uncorrected(MomentRates::HalfSecondGain, 0.95, 0.05, 19.0 / 14.0)
+    }
+
+    fn check_uncorrected(rates: MomentRates, beta2: f32, gain: f32, bound: f32) -> Result<()> {
         let shape = crate::suite::Shape {
             width: 16,
             heads: 2,
@@ -153,7 +191,8 @@ mod tests {
         };
         let mut engine = Engine::new(shape, 1, 8)?;
         let schedule = super::super::adamw::wsd(20);
-        let mut opt = RmsProp::new(&engine, schedule, 2.0, 0.1)?.with_equal_moments(&engine)?;
+        let mut opt =
+            RmsProp::new(&engine, schedule, 2.0, 0.1)?.with_first_moment(&engine, rates)?;
         let mut w = engine.weights()?[0];
         let (mut m, mut v) = (0.0_f32, 0.0_f32);
         for (t, pair) in [
@@ -172,15 +211,15 @@ mod tests {
             opt.apply(&engine)?;
             let g = pair[0] / pair[0].hypot(pair[1]).max(1.0);
             m = 0.9 * m + 0.1 * g;
-            v = 0.9 * v + 0.1 * (g * g);
+            v = beta2 * v + gain * (g * g);
             let d = m / (v.sqrt() + 1e-8);
-            assert!(d.abs() <= 1.0);
+            assert!(d * d <= bound + 1e-6);
             let rate = RatePlan::Scaled(2.0).rate(schedule, t);
             w = (1.0 - rate * 0.1) * w - rate * d;
-            let actual_m = opt.first.as_ref().unwrap().read()?[0];
+            let actual_m = opt.first.as_ref().unwrap().0.read()?[0];
             let actual_v = opt.mean_square.read()?[0];
             assert!((actual_m - m).abs() < 1e-7 && (actual_v - v).abs() < 1e-7);
-            assert!(actual_m * actual_m <= actual_v + 1e-8);
+            assert!(actual_m * actual_m <= bound * actual_v + 1e-8);
             assert!((engine.weights()?[0] - w).abs() < 2e-7);
         }
         Ok(())

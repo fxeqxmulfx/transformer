@@ -414,6 +414,25 @@ also used 0.003, it reached the same first perfect checkpoint at update
 2,816 with a larger minimum gap of 6.406.
 [Exact update and moment invariant](../../src/Transformer/Grokking/FiniteRecovery/EqualMoment.lean)
 
+A second pilot changes the fraction of each new squared gradient from
+0.1 to 0.05, keeping the first-moment gain 0.1. This matches the stock
+AdamW moment decays. Both runs use peak 0.003, weight decay 0.1 and the
+20,000-step WSD. Removing the two bias corrections gave a first strict
+hit at update 2,304 on discovery seed zero, with minimum hidden gap
+7.999755 on replay. Stock AdamW and the equal-decay pilot first hit at
+2,816. The historical validation seeds that motivated the repair are
+excluded from its registered eleven-seed comparison.
+[Repair validation protocol](division-uncorrected-paired-registration.json)
+
+For moment decays $a,b$ with $a^2<b<1$, the two uncorrected buffers
+satisfy $m_t^2\leq K v_t$ for all clipped gradient histories, where
+$K=b(1-a)^2/[(1-b)(b-a^2)]$. Taking the second gain to be half the
+first gives $b=(1+a)/2$ and $K=2(1+a)/(1+2a)$. The pilot therefore has
+$K=19/14$. The corresponding update direction has magnitude at most
+$\sqrt{19/14}$ per coordinate. The ordinary-restart theorem and the
+common-gradient limit both allow these two different decays.
+[Moment bound for unequal decays](../../src/Transformer/Grokking/FiniteRecovery/UncorrectedAdam.lean)
+
 The step-2,816 checkpoint was also checked from its recorded FP32 logits.
 The exporter reloads the weights, reconstructs the labels from the 4,656
 observations, and saves all 239 scores for each of the 9,312 legal prompts.
@@ -482,6 +501,7 @@ $bin rmsprop-checkpoint-proposals "$task" 0 719 runs/division-rms 20000 8192 1 2
 $bin softsign-checkpoint-proposals "$task" 0 719 runs/division-row-clip 20000 8192 0.3 20000 0.1 1.75
 $bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
 $bin equal-moment-until-perfect "$task" 0 runs/division-equal 20000 3 20000
+$bin uncorrected-adam-until-perfect "$task" 0 runs/division-uncorrected 20000 3 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high

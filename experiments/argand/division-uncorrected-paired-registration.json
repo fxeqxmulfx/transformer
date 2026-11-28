@@ -1,0 +1,18 @@
+{
+  "case": "grok-division-p97",
+  "seeds": [69270091, 19185160, 2867231574, 1121120751, 3242140199, 377325082, 2803254475, 3495561993, 2766144757, 640462556, 771009942],
+  "shared_control_indices": [5, 6, 7, 8, 9, 10],
+  "seed_selection": "The first six seeds are the untouched suffix of the frozen 0.003 AdamW comparison. No run in either original comparison had started at those seeds when the repair was frozen. Five further independent uniformly drawn 32-bit seeds complete the cohort. The first five seeds of the earlier comparison and discovery seed zero are excluded.",
+  "schedule_budget": 20000,
+  "first_budget": 20000,
+  "evaluation_interval": 256,
+  "peak": 0.003,
+  "weight_decay": 0.1,
+  "beta1": 0.9,
+  "beta2": 0.95,
+  "candidate": {"optimizer":"uncorrected-adam-wsd","bias_correction":false,"discovery_step":2304,"discovery_weights_sha256":"c3bb1e7e4b08934cb310ee8324998b3127b17f07eee04c759e603dd4c140db44","binary_sha256":"5f69d21d340eb5f753cc3256aae882026b8c8fa6c6028a4abbb055bcc9783a82"},
+  "control": {"optimizer":"adamw-scaled-wsd","bias_correction":true,"discovery_step":2816,"binary_sha256":"b7894e5bea8b8752882df482cf6801c12d8cd9c58db1c081b0bf670be65739f1"},
+  "endpoint": "At each evaluation compare the target with all 238 rivals on all 4656 hidden equations. Stop at the first strict 100 percent. Reload the saved weights and reconstruct the labels from the observation graph. Use all registered first attempts; count interrupted attempts as failures for the success-probability test.",
+  "comparison": "Retain the original trained controls for six shared seeds. For the five new seeds alternate which arm trains first. Report successes, first-hit steps, all paired differences, and the median. For the finite-budget paired speed measure, assign misses cap plus one interval; early interruptions have no paired time and remain visible. If all 11 pairs complete, the ninth smallest difference is a distribution-free one-sided upper confidence bound for a population median difference (coverage at least 96.7 percent under independent, identically distributed pairs).",
+  "probability": "If all eleven independent first attempts of the candidate succeed, the exact one-sided tail at success probability 0.75 is 0.75^11. This is a within-cohort test of the repaired candidate; earlier tuning or claims across multiple tested optimizers are separate."
+}

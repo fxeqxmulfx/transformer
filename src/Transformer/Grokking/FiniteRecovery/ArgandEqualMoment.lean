@@ -17,6 +17,11 @@ open scoped ENNReal NNReal
 
 variable {A X Z : Type*} [Fintype A] {H d L T : ℕ}
 
+noncomputable def uncorrectedAdamRun (r : ℕ) (firstDecay secondDecay ε decay : ℝ)
+    (batch : ℕ → List (LabeledPosition A)) (rate : ℕ → ℝ) (draw : ComplexParameter A H d L → ℂ) :=
+  EqualMoment.uncorrectedRun firstDecay secondDecay ε decay rate (fun t => batchGradient r (batch t))
+    (sgdInitialWeights true draw)
+
 noncomputable def equalMomentRun (r : ℕ) (decay : ℝ) (batch : ℕ → List (LabeledPosition A))
     (rate : ℕ → ℝ) (draw : ComplexParameter A H d L → ℂ) :=
   EqualMoment.run (9/10) (1/100000000) decay rate (fun t => batchGradient r (batch t))

@@ -93,11 +93,12 @@ pub(super) mod device {
         sub.rn.f32(w, w, t);
         put(weights, i, w);
     }
-    // Uncorrected Adam with shared decay. Both buffers see the same clipped
-    // sample and use identical coefficients. In exact reals, m*m <= v.
-    pub unsafe extern "ptx-kernel" fn equal_moment_decay(
+    // Uncorrected Adam. The host supplies both second-moment coefficients
+    // rounded from the real constants, including 0.1 in the matched case.
+    pub unsafe extern "ptx-kernel" fn uncorrected_moments_decay(
         weights: *mut f32, first: *mut f32, second: *mut f32,
         grad: *const f32, norm: *const f32, count: u32, rate: f32, shrink: f32,
+        beta2: f32, second_gain: f32,
     ) {
         let i: u32;
         index(i);
@@ -115,9 +116,9 @@ pub(super) mod device {
         add.rn.f32(m, m, t);
         put(first, i, m);
         load(v, second, i);
-        mul.rn.f32(v, v, 0.9);
+        mul.rn.f32(v, v, beta2);
         mul.rn.f32(t, g, g);
-        mul.rn.f32(t, t, 0.1);
+        mul.rn.f32(t, t, second_gain);
         add.rn.f32(v, v, t);
         put(second, i, v);
         sqrt.rn.f32(s, v);
