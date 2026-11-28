@@ -352,7 +352,14 @@ For the original one-half question, nine of the ten fresh draws suffice
 at the 5% level. Across two candidate budgets the upper bound under the
 null is $2\binom{10}{9}2^{-9}=5/128$. The verified report includes the
 corresponding bounds for the number of fresh successes on uninterrupted
-first attempts. Even if interruption depends on the trajectory, removing
+first attempts. It also evaluates the exact single-budget binomial tail
+at the null boundary and doubles it for the two budgets. With nine
+credited successes in ten fresh trials the latter bounds would be
+$11/512=0.02148$ under $p\le1/2$ and $0.48805$ under $p\le3/4$.
+The report releases these numbers after all ten fresh endpoints have been
+verified. [Binomial comparison and budget selection](../../src/Transformer/Grokking/FiniteRecovery/TerminalTail.lean)
+
+Even if interruption depends on the trajectory, removing
 a success can only decrease the count. The bound keeps all ten registered
 draws in its sample size. A restarted seed still contributes its terminal
 result to the requested twelve-seed fraction. The first attempt at seed

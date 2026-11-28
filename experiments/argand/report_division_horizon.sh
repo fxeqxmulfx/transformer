@@ -46,6 +46,9 @@ done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
         {registered:$n,evaluated:length,successes:$k,empirical_fraction:(if length==$n then $k/$n else null end)};
     def choose($n;$k): reduce range(1;$k+1) as $i (1; . * ($n-$k+$i) / $i);
     def tail_bound($k;$p): [1,2*choose(10;$k)*pow($p;$k)]|min;
+    def binomial_two_budget_bound($k;$p):
+        [range($k;11) as $j | choose(10;$j)*pow($p;$j)*pow(1-$p;10-$j)] |
+        [1,2*add] | min;
     ($rows|count_at(12)) as $all |
     if $summary[0]!=null and ($summary[0].protocol!=$p or ($all.evaluated==12 and $summary[0].successes!=$all.successes))
     then error("confirmation disagrees with verified terminal outcomes") else . end |
@@ -57,5 +60,8 @@ done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
        {registered:10,at_least_successes:$original,
         interrupted_draws:($new|map(select(.interrupted_attempts>0))|length),
         single_run_at_most_half:tail_bound($original;0.5),
-        single_run_at_most_three_quarters:tail_bound($original;0.75)} else null end),
+        single_run_at_most_three_quarters:tail_bound($original;0.75),
+        exact_binomial_with_two_budget_correction:{
+          single_run_at_most_half:binomial_two_budget_bound($original;0.5),
+          single_run_at_most_three_quarters:binomial_two_budget_bound($original;0.75)}} else null end),
      draws:$rows}'

@@ -35,7 +35,7 @@ theorem iid_allPassWindow (μ : Measure D) [IsProbabilityMeasure μ] {U : Set D}
   rw [Measure.infinitePi_pi _ (fun _ _ => hU)]
   simp
 
-private theorem selected_event_bound {Z : Type*} [MeasurableSpace Z] (P : Measure Z)
+theorem selected_event_bound {Z : Type*} [MeasurableSpace Z] (P : Measure Z)
     (budgets : Finset B) (weak : B → Prop) (event : B → Set Z) (q : ℝ≥0∞)
     (h : ∀ b ∈ budgets, weak b → P (event b) ≤ q) :
     P {z | ∃ b ∈ budgets, weak b ∧ z ∈ event b} ≤ (budgets.card : ℝ≥0∞) * q := by
