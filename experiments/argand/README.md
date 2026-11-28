@@ -1384,6 +1384,89 @@ the derivative and mean bounds for stock modular division remains open.
 The checkpoint counts measure the static certificate at first hit.
 [Ordinary Argand Jacobian theorem](../../src/Transformer/Grokking/FiniteRecovery/ArgandObservedJacobian.lean)
 
+#### Continued training past the WSD budget
+
+The first-hit cohort stopped at the first strict hidden table. The Lean
+conclusion requires strict hidden predictions at every update after some
+finite one. Eleven further uniform 32-bit seeds were drawn from
+`/dev/urandom` and registered before training. Each was to receive one
+uninterrupted ordinary run that did not stop at its first hit. The run
+trains through the WSD budget to update 40,960, at the floor rate
+$3\cdot10^{-8}$ after update 19,999. Its hidden predictions are scored
+every 256 updates.
+
+| Cohort | Seeds | Stops at | Updates | Primary endpoint |
+| --- | ---: | --- | ---: | --- |
+| First hit | 11 | First strict hidden table | at most 8,192 | Strict at some scored update |
+| Persistence | 11 registered, 7 run | Horizon | 40,960 | Strict at every scored update from 19,968 |
+
+Both cohorts use peak 0.003, warmup to update 400, cosine cooldown from
+16,000 to 19,999, weight decay 0.1, moment coefficients 0.9 and 0.95 and
+clip norm 1. In the persistence runs the seed fixes the stock Gaussian
+initialization, and the seed plus 10,000 modulo $2^{32}$ fixes the
+minibatch shuffle. Gradients are reduced in a fixed order, so each seed
+determines its whole trajectory. A trial is learned if three things hold.
+Its step-0 hidden table is imperfect. Every scored update from 19,968
+through 40,960 is strict. The reloaded final weights strictly solve all
+4,656 hidden equations, with all 239 output tokens compared.
+
+Trials 0–5 were learned. Each started at 0/4,656 hidden answers correct
+and first became strict at updates 1,792–4,096. None kept that first
+table. Each failed again at the peak rate, first at updates
+10,240–13,824, and for the last time at updates 15,360–17,664, near the
+start of the cooldown. The deepest relapses fell to near chance: trials
+0 and 3 kept only 91 and 50 hidden answers, with loss up to 4.9 and 6.8,
+where uniform output gives $\ln 239=5.48$. All six relearned before the
+floor and were strict at every later scored update.
+
+| Seed | First strict | Failed scored updates after it | Last failure | Least gap after first strict | Final gap | Final $U$ |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1831168203 | 2,304 | 9 | 16,384 | −10.49 | 17.59 | 0.00218 |
+| 1634773071 | 4,096 | 16 | 17,664 | −7.78 | 18.14 | 0.00273 |
+| 1145751978 | 2,816 | 14 | 15,360 | −7.14 | 19.03 | 0.00197 |
+| 1405009868 | 3,328 | 18 | 16,640 | −12.15 | 17.42 | 0.00202 |
+| 2641923752 | 1,792 | 27 | 16,896 | −10.89 | 18.46 | 0.00203 |
+| 3062357798 | 2,048 | 27 | 17,664 | −9.11 | 18.11 | 0.00271 |
+
+Trial 6, seed 4200482209, failed. It was strict at every scored update
+from 2,560 through 11,776. At the next one, 12,032, its training loss
+had risen from $1.4\cdot10^{-7}$ to 5.25. It then fit only 49 of the
+4,656 observed and 43 of the 4,656 hidden equations, and it never fit
+more than 78 of either again. At the floor its predictions barely
+changed. From update 20,224 to the last scored update, 34,560, it held
+41–46 hidden answers, and its least gap stayed between −4.81 and −4.79.
+
+The cohort was stopped by hand during trial 6, after that trial had
+failed the endpoint, so trials 7–10 did not run. Because the stop came
+after the failure was seen, the seven runs are not a sample of fixed
+size. No outcome of the remaining trials could have reached the 11/11
+that the registered test needs. Even 10/11 leaves probability 0.19710
+of at least ten passes when $p=3/4$, and the exact one-sided 95% lower
+bound 0.63564. The cohort therefore does not show that permanent hidden
+success has probability above 3/4. Each learned trial started imperfect,
+so the six passes count learning, not initial success.
+
+The endpoint is checked over one finite horizon, at scored updates only.
+It says nothing about the updates between them or after 40,960. The
+Lean conclusion covers every later update. The seeds follow the uniform
+u32 law of `seed_kernel_three_quarters`, not the real Gaussian law of
+the real-arithmetic theorems. After 19,978 updates every rate is at
+most $2^{-22}$. The FP32 kernel then multiplies each weight by exactly 1,
+because $1-0.1\eta$ rounds to 1, whereas real AdamW would keep decaying.
+The margins and $U$ come from the FP32 forward pass, while the Lean
+logits are exact at the stored weights. The cohort tests the conclusion
+of the conditional theorem, not its derivative and mean hypotheses,
+which remain unproved.
+[Persistence protocol](division-stock-persistence-protocol.json)
+· [Seed law and FP32 updates](../../src/Transformer/Grokking/FiniteRecovery/ArgandSeedKernel.lean)
+
+From this directory, the archived binary replays all eleven registered
+runs, about 25 minutes each.
+
+```bash
+ARGAND_BIN=runs/division-stock-persistence-20261128/argand bash run_division_stock_persistence.sh runs/division-stock-persistence-replay
+```
+
 #### Restart schedules
 
 An optional restart schedule applies to any task. For zero-indexed trial
