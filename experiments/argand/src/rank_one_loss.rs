@@ -21,6 +21,22 @@ pub(crate) fn value_gradient(x: &[f64], rows: usize, cols: usize) -> Result<(f64
     Ok((loss / (2.0 * count), gradient))
 }
 
+/// Adds the half-mean squared shortfall of absolute gaps below one. At
+/// an exact tie the two one-sided derivatives have mean zero.
+pub(crate) fn add_unit_margin(x: &[f64], gradient: &mut [f64]) -> f64 {
+    assert!(!x.is_empty() && gradient.len() == x.len());
+    let n = x.len() as f64;
+    let mut sum = 0.0;
+    for (&gap, grad) in x.iter().zip(gradient) {
+        let shortfall = (1.0 - gap.abs()).max(0.0);
+        sum += shortfall * shortfall;
+        if gap != 0.0 {
+            *grad -= gap.signum() * shortfall / n;
+        }
+    }
+    sum / (2.0 * n)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -44,5 +60,21 @@ mod tests {
         let (loss, grad) = value_gradient(&[1., -1., -1., -1., 1., 1.], 2, 3)?;
         assert!(loss < 1e-28 && grad.iter().all(|v| v.abs() < 1e-14));
         Ok(())
+    }
+
+    #[test]
+    fn margin_adds_only_below_unit_magnitude_and_preserves_existing_adjoints() {
+        let x = [-2.0, -0.25, 0.0, 0.5, 1.0];
+        let mut gradient = [3.0; 5];
+        let loss = add_unit_margin(&x, &mut gradient);
+        assert!((loss - (0.75 * 0.75 + 1.0 + 0.25) / 10.0).abs() < 1e-12);
+        for i in 0..x.len() {
+            let (mut lo, mut hi) = (x, x);
+            lo[i] -= 1e-6;
+            hi[i] += 1e-6;
+            let numeric =
+                (add_unit_margin(&hi, &mut [0.0; 5]) - add_unit_margin(&lo, &mut [0.0; 5])) / 2e-6;
+            assert!((gradient[i] - 3.0 - numeric).abs() < 1e-7);
+        }
     }
 }

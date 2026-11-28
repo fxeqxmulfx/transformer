@@ -691,11 +691,30 @@ at the saved weights. The eight ordinary 20,480-update controls fit
 all 31 observations and violated 4,864 to 5,589 identities. The first
 paired seed violated 5,212. These counts use logits alone.
 
+On that first seed, the rank-one penalty reduced the full table's
+half-mean-square residual from 87.8043 to 0.05553 and violations from
+5,212 to 3,328. The smallest absolute gap also fell from 0.18234 to
+0.0004533. Both runs fit 31/31 observed words at 20,480 updates.
+Hidden accuracy moved from 95/225 to 99/225. The sampled penalty can
+therefore become small while many signs are still incorrect.
+
+The margin variant adds $\sum_{ij}\max(0,1-|P_{ij}|)^2/50$ on the
+same sampled patch. It uses the same native seed, rectangle stream,
+architecture, WSD and stopped-checkpoint rule. For any binary factor
+class, identifying mask and rectangular design, Lean bounds recovery
+from the sum of the two penalties and the observed cross-entropies.
+For these 31 observations a total observed CE plus **expected** patch
+penalty below $1/28800$ guarantees correct strict gaps on all 256 words.
+The bound requires no separate margin assumption or hidden labels.
+Whether the optimizer reaches the bound is an empirical question here.
+[Objective threshold and general mask theorem](../../src/Transformer/Grokking/FiniteRecovery/RectangleMargin.lean)
+
 ```
 target/release/argand sum8-adamw-rank-one runs/sum8-rank-one 20480 0
 target/release/argand sum8-adamw-rank-one-replay runs/sum8-rank-one 20480 0
 target/release/argand sum8-rectangle-certificate runs/sum8-rank-one/draw-0
 bash plot_sum8_rank_one.sh runs/sum8-adamw/draw-0 runs/sum8-rank-one/draw-0 runs/sum8-comparison
+target/release/argand sum8-adamw-rank-one-margin runs/sum8-margin 20480 0
 ```
 
 #### Checked proposals on a single training trajectory

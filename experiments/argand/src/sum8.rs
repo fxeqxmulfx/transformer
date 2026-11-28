@@ -31,7 +31,7 @@ pub(crate) enum Method {
     Page(PageRule),
     AdamW,
     AdamWFirstNoise { until_perfect: bool },
-    AdamWRankOne,
+    AdamWRankOne { margin: bool },
 }
 impl Method {
     fn protocol_id(self) -> &'static str {
@@ -40,7 +40,8 @@ impl Method {
             Self::Page(PageRule::SquareRoot) => "argand-sum8-adaptive-page-sqrt-v1",
             Self::Page(PageRule::Retry) => "argand-sum8-adaptive-page-retry-v1",
             Self::AdamW => "argand-sum8-adamw-wsd-v1",
-            Self::AdamWRankOne => "argand-sum8-adamw-rank-one-gap-v1",
+            Self::AdamWRankOne { margin: false } => "argand-sum8-adamw-rank-one-gap-v1",
+            Self::AdamWRankOne { margin: true } => "argand-sum8-adamw-rank-one-margin-v1",
             Self::AdamWFirstNoise {
                 until_perfect: false,
             } => "argand-sum8-adamw-first-noise-v1",
@@ -52,7 +53,7 @@ impl Method {
     fn rule(self, sampling_seed: u32) -> Rule {
         match self {
             Self::Page(correction) => Rule::Page(correction),
-            Self::AdamW | Self::AdamWRankOne => Rule::AdamW(RatePlan::Wsd),
+            Self::AdamW | Self::AdamWRankOne { .. } => Rule::AdamW(RatePlan::Wsd),
             Self::AdamWFirstNoise { .. } => Rule::AdamWFirstNoise {
                 seed: sampling_seed,
             },
@@ -62,7 +63,7 @@ impl Method {
     fn until_perfect(self) -> bool {
         matches!(
             self,
-            Self::AdamWRankOne
+            Self::AdamWRankOne { .. }
                 | Self::AdamWFirstNoise {
                     until_perfect: true
                 }
@@ -201,10 +202,14 @@ fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], method: Method) -> Value {
         let second = if let Method::AdamWFirstNoise { .. } = method {
             plan["gaussian_weight_noise"] = json!({"after_update":1,"stddev":FIRST_NOISE_STDDEV});
             "first_update_noise"
-        } else if matches!(method, Method::AdamWRankOne) {
+        } else if let Method::AdamWRankOne { margin } = method {
             plan["penalty"] = json!({"table":"last-position z0-z1","rectangle":[rank_one::SIDE,rank_one::SIDE],
                 "sample":"independent uniform row and column subsets without replacement",
                 "loss":"half the mean squared residual of the leading singular component","coefficient":1});
+            if margin {
+                plan["penalty"]["absolute_gap_floor"] =
+                    json!({"margin":1,"loss":"half the mean squared shortfall","coefficient":1});
+            }
             "rectangle_sampling"
         } else {
             "unused"
@@ -246,7 +251,7 @@ fn manifest(
     }
     let updates = requested.unwrap_or(UPDATES);
     let seeds = match method {
-        Method::AdamW | Method::AdamWFirstNoise { .. } | Method::AdamWRankOne => {
+        Method::AdamW | Method::AdamWFirstNoise { .. } | Method::AdamWRankOne { .. } => {
             let paired: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
             serde_json::from_value(paired["seeds"].clone())?
         }
@@ -309,12 +314,12 @@ fn train(
             break;
         }
         let mut penalty = None;
-        if matches!(method, Method::AdamWRankOne) {
+        if let Method::AdamWRankOne { margin } = method {
             let Optimizer::AdamW(adam) = &mut optimizer else {
                 return Err("rank-one loss requires AdamW".into());
             };
             adam.step_with_penalty(&mut model, observed.observations(), |m| {
-                penalty = Some(rank_one::accumulate(m, &mut sampler)?);
+                penalty = Some(rank_one::accumulate(m, &mut sampler, margin)?);
                 Ok(())
             })?;
         } else if !optimizer.step(&mut model, observed.observations(), false)? {
@@ -425,7 +430,7 @@ pub fn run(
     lock.lock()?;
     let (updates, plan) = manifest(dir, requested, replay_only, method)?;
     let (observed, hidden) = (Split::new(true), Split::new(false));
-    let certificate = matches!(method, Method::AdamWRankOne).then(|| {
+    let certificate = matches!(method, Method::AdamWRankOne { .. }).then(|| {
         let (diagonal, edge) = observed_phase_labels();
         let signs = crate::sum8_spectrum::staircase_signs(&diagonal, &edge);
         Split::with_labels(false, |w| u32::from(signs[w as usize] < 0.0))
@@ -517,11 +522,15 @@ mod tests {
         );
         assert_eq!(early["adamw"], noisy["adamw"]);
         assert_eq!(early["stop_on"], "first-strict-100-percent");
-        let rank_one = protocol(UPDATES, pairs, Method::AdamWRankOne);
+        let rank_one = protocol(UPDATES, pairs, Method::AdamWRankOne { margin: false });
         assert_eq!(rank_one["adamw"], adamw["adamw"]);
         assert_eq!(rank_one["seeds"], adamw["seeds"]);
         assert_eq!(rank_one["stop_on"], early["stop_on"]);
         assert_eq!(rank_one["penalty"]["rectangle"], json!([5, 5]));
+        let margin = protocol(UPDATES, pairs, Method::AdamWRankOne { margin: true });
+        assert_eq!(margin["seeds"], rank_one["seeds"]);
+        assert_eq!(margin["adamw"], rank_one["adamw"]);
+        assert_eq!(margin["penalty"]["absolute_gap_floor"]["margin"], 1);
         Ok(())
     }
 

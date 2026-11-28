@@ -7,7 +7,7 @@ use std::{fs, path::Path};
 
 pub(super) const SIDE: usize = 5;
 
-pub(super) fn accumulate(model: &mut Engine, rng: &mut Pcg) -> Result<f64> {
+pub(super) fn accumulate(model: &mut Engine, rng: &mut Pcg, margin: bool) -> Result<f64> {
     let mut rows: [u32; 16] = std::array::from_fn(|i| i as u32);
     let mut cols = rows;
     rng.shuffle(&mut rows);
@@ -29,7 +29,10 @@ pub(super) fn accumulate(model: &mut Engine, rng: &mut Pcg) -> Result<f64> {
         .chunks_exact(2 * LENGTH)
         .map(|word| f64::from(word[2 * LENGTH - 2]) - f64::from(word[2 * LENGTH - 1]))
         .collect();
-    let (loss, dgap) = rank_one_loss::value_gradient(&gaps, SIDE, SIDE)?;
+    let (mut loss, mut dgap) = rank_one_loss::value_gradient(&gaps, SIDE, SIDE)?;
+    if margin {
+        loss += rank_one_loss::add_unit_margin(&gaps, &mut dgap);
+    }
     let mut dlogits = vec![0.0; logits.len()];
     for (word, grad) in dlogits.chunks_exact_mut(2 * LENGTH).zip(dgap) {
         word[2 * LENGTH - 2] = grad as f32;

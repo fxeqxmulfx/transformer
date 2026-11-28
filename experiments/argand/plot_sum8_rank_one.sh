@@ -13,7 +13,8 @@ tmp=$(mktemp -d)
 trap 'rm -r -- "$tmp"' EXIT
 cd -- "$tmp"
 jq -en --slurpfile a "$stock/result.json" --slurpfile b "$cell/../protocol.json" --argjson i "$idx" '
-    $a[0].protocol=="argand-sum8-adamw-wsd-v1" and $b[0].protocol=="argand-sum8-adamw-rank-one-gap-v1" and
+    $a[0].protocol=="argand-sum8-adamw-wsd-v1" and
+    ($b[0].protocol|IN("argand-sum8-adamw-rank-one-gap-v1","argand-sum8-adamw-rank-one-margin-v1")) and
     $a[0].seeds==$b[0].seeds[$i] and $a[0].updates==$b[0].updates' >/dev/null
 jq -r '([.initial+{step:0}] + .milestones + [. + {step:.optimizer.step}])
     | .[] | [.step,.observed.correct,.hidden.correct] | @tsv' "$stock/result.json" > ordinary.tsv
@@ -27,7 +28,13 @@ jq -r '([.initial+{step:0}] + .milestones + [. + {step:.optimizer.step}])
 last=$(tail -1 penalty.tsv | cut -f1)
 (( last > 0 ))
 seed=$(jq -r '.seeds[0]' "$stock/result.json")
-gnuplot -e "last=$last; seed='$seed'" - <<'PLOT'
+loss='CE + rank-one loss'
+base="sum8-rank-one-draw-$idx-step-$last"
+if jq -e '.penalty.absolute_gap_floor!=null' "$cell/../protocol.json" >/dev/null; then
+    loss='CE + rank-one loss + margin'
+    base="sum8-rank-one-margin-draw-$idx-step-$last"
+fi
+gnuplot -e "last=$last; seed='$seed'; loss='$loss'" - <<'PLOT'
 set terminal pdfcairo color size 9in,3.9in font 'DejaVu Sans,10'
 set output 'figure.pdf'
 set multiplot layout 1,2 margins 0.08,0.975,0.18,0.76 spacing 0.09,0.05 title sprintf('Argand on the eight-bit sum   |   seed %s   |   through update %d',seed,last)
@@ -41,7 +48,7 @@ set ylabel 'Strict accuracy (%)'
 set key bottom left font ',9' samplen 1.5
 set title '31 observed words'
 plot 'ordinary.tsv' u 1:(100*$2/31) w lines lw 1.8 lc rgb '#596974' title 'Observed CE', \
-     'penalty.tsv' u 1:(100*$2/31) w lines lw 2.2 lc rgb '#b6552c' title 'CE + rank-one loss'
+     'penalty.tsv' u 1:(100*$2/31) w lines lw 2.2 lc rgb '#b6552c' title loss
 set title '225 hidden words'
 unset ylabel
 unset key
@@ -52,6 +59,6 @@ unset multiplot
 PLOT
 pdftoppm -r 150 -png -singlefile figure.pdf figure
 for ext in pdf png; do
-    cp -- "figure.$ext" "$out/sum8-rank-one-draw-$idx-step-$last.$ext"
+    cp -- "figure.$ext" "$out/$base.$ext"
 done
-echo "sum8-rank-one-draw-$idx-step-$last"
+echo "$base"
