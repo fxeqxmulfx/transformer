@@ -20,6 +20,7 @@ use std::{fs, io::Write, path::Path, time::Instant};
 pub(crate) enum Rule {
     Page(PageRule),
     AdamW(RatePlan),
+    AdamWFirstNoise { seed: u32 },
 }
 
 impl Rule {
@@ -29,6 +30,7 @@ impl Rule {
             Self::AdamW(RatePlan::Wsd) => "adamw-wsd",
             Self::AdamW(RatePlan::Geometric { .. }) => "adamw-wsd-geometric-tail",
             Self::AdamW(RatePlan::Restart { .. }) => "adamw-wsd-restart",
+            Self::AdamWFirstNoise { .. } => "adamw-wsd-first-noise",
         }
     }
 }
@@ -51,6 +53,9 @@ impl Optimizer {
                 Self::Page(AdaptivePage::new(engine, batch, sampler, correction)?)
             }
             Rule::AdamW(plan) => Self::AdamW(AdamW::new(engine, schedule, plan)?),
+            Rule::AdamWFirstNoise { seed } => {
+                Self::AdamW(AdamW::new(engine, schedule, RatePlan::Wsd)?.with_first_noise(seed))
+            }
         })
     }
 
@@ -248,6 +253,12 @@ impl Job {
                 {
                     identity["restart"] = json!({"stock_runs":stock_runs,"trial":trial,"first_budget":first_budget,"rate_scale":plan.scale(budget)});
                 }
+            }
+            Rule::AdamWFirstNoise { seed } => {
+                identity["optimizer"] = rule.label().into();
+                identity["adamw"] = RatePlan::Wsd.settings(schedule);
+                identity["gaussian_weight_noise"] = json!({"after_update":1,"seed":seed,
+                    "stddev":crate::engine::adamw::FIRST_NOISE_STDDEV});
             }
         }
         let mut engine = Engine::new(self.shape.clone(), 1, seed)?;

@@ -1,10 +1,11 @@
 //! The clipped, bias-corrected AdamW update of Argand at 7399c3bb.
 use super::{Engine, F, Result, grid, page::Observations};
-use crate::schedule::Schedule;
+use crate::{random::Random, schedule::Schedule};
 use kernite_cuda::Buffer;
 use serde_json::{Value, json};
 
 pub(crate) const DECAY: f32 = 0.1;
+pub(crate) const FIRST_NOISE_STDDEV: f64 = 1e-6;
 
 pub(crate) fn wsd(budget: usize) -> Schedule {
     Schedule {
@@ -75,6 +76,7 @@ pub(crate) struct AdamW {
     schedule: Schedule,
     plan: RatePlan,
     completed: usize,
+    first_noise_seed: Option<u32>,
 }
 
 impl AdamW {
@@ -94,7 +96,16 @@ impl AdamW {
             schedule,
             plan,
             completed: 0,
+            first_noise_seed: None,
         })
+    }
+
+    /// Add independent Gaussian noise to the weights once, immediately
+    /// after update one. The native start, both moment buffers and all
+    /// scheduled rates are shared with ordinary AdamW.
+    pub fn with_first_noise(mut self, seed: u32) -> Self {
+        self.first_noise_seed = Some(seed);
+        self
     }
 
     pub fn step(&mut self, engine: &mut Engine, batch: Observations<'_>) -> Result<()> {
@@ -107,8 +118,8 @@ impl AdamW {
         self.plan.rate(self.schedule, completed)
     }
 
-    fn apply(&mut self, engine: &Engine) -> Result<()> {
-        let p = &engine.parameters;
+    fn apply(&mut self, engine: &mut Engine) -> Result<()> {
+        let p = &mut engine.parameters;
         let norm = p.reduce_norm(&engine.optimizer, &p.grad)?;
         let t = (self.completed + 1) as f64;
         // SAFETY: the identity ownership table covers every coordinate once;
@@ -130,6 +141,14 @@ impl AdamW {
             )?;
         }
         self.completed += 1;
+        if let Some(seed) = self.first_noise_seed.take() {
+            let mut rng = Random::new(seed);
+            let mut weights = p.value.read()?;
+            for x in &mut weights {
+                *x += rng.gauss(0.0, FIRST_NOISE_STDDEV) as f32;
+            }
+            p.value.write(&weights)?;
+        }
         Ok(())
     }
 
@@ -174,6 +193,47 @@ mod tests {
 
     #[test]
     #[ignore = "requires CUDA"]
+    fn first_noise_changes_only_weights_once_after_the_native_update() -> Result<()> {
+        let shape = Shape {
+            width: 16,
+            heads: 2,
+            layers: 1,
+            vocab: 4,
+            max_batch: 2,
+            max_length: 3,
+        };
+        let mut plain = Engine::new(shape.clone(), 1, 5)?;
+        let mut noisy = Engine::new(shape, 1, 5)?;
+        let mut a = AdamW::new(&plain, wsd(8), RatePlan::Wsd)?;
+        let mut b = AdamW::new(&noisy, wsd(8), RatePlan::Wsd)?.with_first_noise(73);
+        assert_eq!(plain.weights()?, noisy.weights()?);
+        let mut grad = vec![0.0; noisy.parameters.len()];
+        grad[0] = 3.0;
+        grad[1] = -4.0;
+        for t in 0..3 {
+            plain.parameters.grad.write(&grad)?;
+            noisy.parameters.grad.write(&grad)?;
+            a.apply(&mut plain)?;
+            b.apply(&mut noisy)?;
+            assert_eq!(a.first.read()?, b.first.read()?);
+            assert_eq!(a.second.read()?, b.second.read()?);
+            let mut expected = plain.weights()?;
+            if t == 0 {
+                let mut rng = Random::new(73);
+                for x in &mut expected {
+                    *x += rng.gauss(0.0, FIRST_NOISE_STDDEV) as f32;
+                }
+                assert_ne!(plain.weights()?, expected);
+                plain.restore(&expected)?;
+            }
+            assert_eq!(noisy.weights()?, expected);
+            grad.swap(0, 1);
+        }
+        Ok(())
+    }
+
+    #[test]
+    #[ignore = "requires CUDA"]
     fn clipped_moments_decay_and_wsd_match_scalar_coordinates() -> Result<()> {
         let shape = Shape {
             width: 16,
@@ -199,7 +259,7 @@ mod tests {
             grad[i] = if t % 2 == 0 { 4.0 } else { -0.4 };
             grad[i + 1] = if t % 2 == 0 { -3.0 } else { 0.2 };
             e.parameters.grad.write(&grad)?;
-            opt.apply(&e)?;
+            opt.apply(&mut e)?;
             let norm = grad.iter().map(|g| g * g).sum::<f32>().sqrt().max(1.0);
             let rate = if t < 10 {
                 wsd.rate(t)

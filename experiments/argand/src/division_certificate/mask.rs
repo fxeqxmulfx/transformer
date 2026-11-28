@@ -45,7 +45,7 @@ pub(crate) fn lean_source() -> Result<String> {
     for (i, &j) in matching.iter().enumerate() {
         inverse[j] = i;
     }
-    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorNative\n\n");
+    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\n\n");
     writeln!(
         out,
         "/- Observed equations SHA-256: {} -/",
@@ -98,12 +98,28 @@ theorem original_factor_class_stabilizes (stockRuns : ℕ) (K : ℕ → ℕ)
         ∃ j, StrictOn (scores j) f.val ∧ ∀ k, retained ok id (j+1+k) = some j :=
   Division.Factors.class_restartWsd_stabilizes stockRuns K _ original_graph.1 original_graph.2 variance hv
 
+theorem original_firstNoise_factor_recovery (n : ℕ) (f : DivisionInput → Fin 239)
+    (hf : f ∈ factorClass unitToken) (batch : ℕ → List (LabeledPosition (Fin 239)))
+    (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :
+    let μ := Measure.pi (fun _ : Parameter (Fin 239) 4 16 6 => ProbabilityTheory.gaussianReal 0 ((1/1000000 : ℝ≥0)^2))
+    let scores := firstNoiseScores 1 (n+1) (wsdRate (n+1)) batch divisionPrompt draw
+    let ok z := classCertificate (bitDivisionMask rows) (factorClass unitToken) (fun x => f x) (scores z)
+    ∀ᵐ z ∂Measure.infinitePi (fun _ : ℕ => μ), ∃ j, StrictOn (scores (z j)) f ∧
+      ∀ k, retained ok z (j+1+k) = some (z j) :=
+  (Division.Factors.class_firstNoise_wsd_restarts n _ original_graph.1 original_graph.2 f hf batch draw).2.2
+
 example := original_nuclear_completion (u := fun _ => 1) (v := fun _ => 1) (by simp [vecMulVec_apply])
 example := original_factor_class_stabilizes 12 (fun _ => 100000) (fun _ => 1) (by intro; norm_num)
+example {D : Type*} [MeasurableSpace D] [MeasurableSingletonClass D] [Countable D]
+    (π : Measure D) [IsProbabilityMeasure π] (batch : D → ℕ → List (LabeledPosition (Fin 239)))
+    (draw : D → ComplexParameter (Fin 239) 4 16 6 → ℂ) :=
+  Division.Factors.class_firstNoise_seeded_wsd π 99999 _ original_graph.1 original_graph.2
+    divisionAnswer divisionAnswer_mem batch draw
 
 #print axioms original_mask_certifies
 #print axioms original_nuclear_completion
 #print axioms original_factor_class_stabilizes
+#print axioms original_firstNoise_factor_recovery
 #print axioms observed_matching
 end OriginalDivisionMask
 "#);

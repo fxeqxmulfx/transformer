@@ -473,6 +473,44 @@ coordinates gives strict answers throughout that box, an open set of
 native Gaussian draws strictly generalizes at the original WSD rates.
 [Endpoint reachability](../../src/Transformer/Grokking/FiniteRecovery/ArgandReachability.lean)
 
+#### AdamW with one Gaussian perturbation
+
+`adamw-first-noise-run CASE MODEL_SEED NOISE_SEED OUT CAP` performs the
+ordinary first AdamW update, adds a centered Gaussian draw with standard
+deviation $10^{-6}$ to each real weight, and continues with the same WSD
+schedule. The model seed determines the native initialization and batch
+order. The separate noise seed drives a single host draw and upload. The
+two moment buffers retain the values from the first, unperturbed gradient.
+The rule has the same parameters for every task. The twelve-seed division
+confirmation uses ordinary AdamW.
+
+In real arithmetic, fix any initialization, minibatch stream and positive
+finite WSD horizon. Varying the single perturbation reaches every terminal
+weight vector, including the trained gates and frequencies. A strictly
+representable target therefore has a positive one-trial success probability
+$p$ by openness and full Gaussian support. When the observation mask
+identifies the target in its class, the probability that all $m$ independent
+endpoints fail its observation-only certificate is exactly $(1-p)^m$.
+The first accepted model is almost surely eventually retained. The result
+also covers fresh native seeds that determine both initialization and batch
+order. The argument supplies no practical lower bound on $p$ for a given
+noise scale. For noise amplitudes tending to zero, every threshold strictly
+below the stock real-arithmetic success probability is eventually exceeded.
+The FP32 trainer samples a finite pseudorandom stream. [Finite-horizon dynamics](../../src/Transformer/Grokking/FiniteRecovery/AdamWFirstNoise.lean) · [Random seeds and batch orders](../../src/Transformer/Grokking/FiniteRecovery/FirstNoiseRandomStart.lean) · [Small-noise probability](../../src/Transformer/Grokking/FiniteRecovery/FirstNoiseConfidence.lean)
+
+The theorem gives strict generalization with certified restarts for every
+unknown group-factor table on the 192-observation mask and the actual
+4,656-observation division mask. For binary sums of 8, 16 and 32 variables
+it applies on their exact Flat Spectrum masks of 31, 511 and 131,071
+observations. These instances use four heads of width 16, six layers and
+one pass at the original rates. [Factor tables](../../src/Transformer/Grokking/FiniteRecovery/FactorFirstNoise.lean) · [Flat Spectrum and modular sums](../../src/Transformer/Grokking/FiniteRecovery/FlatFirstNoise.lean)
+
+On Boolean AND, model/noise seed pairs 0/371 and 1/372 each gave strict
+correct answers on all 130,763 hidden binary strings of lengths 8 through
+16 at update 1,000. A 256-update division control with model seed 113 and
+ordered shared-gradient reductions scored 60/4,656 for stock AdamW and
+59/4,656 for each of noise seeds 371 and 372.
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by

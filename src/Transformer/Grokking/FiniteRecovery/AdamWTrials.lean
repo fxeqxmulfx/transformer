@@ -26,29 +26,30 @@ private theorem continuous_clip : Continuous (Transformer.AMSGradW.Kernite.clip 
   exact (continuous_apply i).div (hn.max continuous_const)
     (fun g => ((zero_lt_one.trans_le (le_max_right _ _)) : (0:ℝ) < max _ 1).ne')
 
-/-- All three buffers depend continuously on their initial weights through
-the actual finite composition of clipped, bias-corrected AdamW steps. -/
-theorem continuous_run (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ)
-    (hg : ∀ t, Continuous (grad t)) (n : ℕ) :
-    Continuous (fun x => (run rate grad x n).weights) ∧
-    Continuous (fun x => (run rate grad x n).first) ∧
-    Continuous (fun x => (run rate grad x n).second) := by
+/-- Joint continuity when both the start and the gradient stream depend
+continuously on auxiliary data, such as the original initialization. -/
+theorem continuous_run_with_data {D : Type*} [TopologicalSpace D] (rate : ℕ → ℝ)
+    (grad : ℕ → D → (ι → ℝ) → ι → ℝ) (hg : ∀ t, Continuous (fun p : D × (ι → ℝ) => grad t p.1 p.2))
+    (start : D → ι → ℝ) (hs : Continuous start) (n : ℕ) :
+    Continuous (fun x => (run rate (fun t => grad t x) (start x) n).weights) ∧
+    Continuous (fun x => (run rate (fun t => grad t x) (start x) n).first) ∧
+    Continuous (fun x => (run rate (fun t => grad t x) (start x) n).second) := by
   induction n with
-  | zero => exact ⟨continuous_id,continuous_const,continuous_const⟩
+  | zero => exact ⟨hs,continuous_const,continuous_const⟩
   | succ t ih =>
-    let s x := run rate grad x t
-    let g x := Transformer.AMSGradW.Kernite.clip (grad t (s x).weights)
-    have hc : Continuous g := continuous_clip.comp ((hg t).comp ih.1)
-    have hm (i : ι) : Continuous fun x => (run rate grad x (t+1)).first i := by
+    let s x := run rate (fun j => grad j x) (start x) t
+    let g x := Transformer.AMSGradW.Kernite.clip (grad t x (s x).weights)
+    have hc : Continuous g := continuous_clip.comp ((hg t).comp (continuous_id.prodMk ih.1))
+    have hm (i : ι) : Continuous fun x => (run rate (fun j => grad j x) (start x) (t+1)).first i := by
       change Continuous fun x => (9/10:ℝ)*(s x).first i + (1/10:ℝ)*g x i
       exact ((continuous_apply i |>.comp ih.2.1).const_mul _).add
         ((continuous_apply i |>.comp hc).const_mul _)
-    have hv (i : ι) : Continuous fun x => (run rate grad x (t+1)).second i := by
+    have hv (i : ι) : Continuous fun x => (run rate (fun j => grad j x) (start x) (t+1)).second i := by
       change Continuous fun x => (95/100:ℝ)*(s x).second i + (5/100:ℝ)*(g x i)^2
       exact ((continuous_apply i |>.comp ih.2.2).const_mul _).add
         (((continuous_apply i |>.comp hc).pow 2).const_mul _)
     refine ⟨continuous_pi fun i => ?_,continuous_pi hm,continuous_pi hv⟩
-    let u x := run rate grad x (t+1)
+    let u x := run rate (fun j => grad j x) (start x) (t+1)
     have hd : Continuous fun x => scale t ((u x).second i) :=
       (((Real.continuous_sqrt.comp (hv i)).div_const _).add_const _)
     have hdir : Continuous fun x => direction t ((u x).first i) ((u x).second i) := by
@@ -58,6 +59,15 @@ theorem continuous_run (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι 
       have hz : 0 < scale t ((u x).second i) := by unfold scale; positivity
       exact (mul_pos (by linarith) hz).ne'
     exact (((continuous_apply i).comp ih.1).const_mul _).sub (hdir.const_mul _)
+
+/-- All three buffers depend continuously on their initial weights through
+the actual finite composition of clipped, bias-corrected AdamW steps. -/
+theorem continuous_run (rate : ℕ → ℝ) (grad : ℕ → (ι → ℝ) → ι → ℝ)
+    (hg : ∀ t, Continuous (grad t)) (n : ℕ) :
+    Continuous (fun x => (run rate grad x n).weights) ∧
+    Continuous (fun x => (run rate grad x n).first) ∧
+    Continuous (fun x => (run rate grad x n).second) :=
+  continuous_run_with_data rate (fun t _ => grad t) (fun t => (hg t).comp continuous_snd) id continuous_id n
 
 end Transformer.Grokking.FiniteRecovery.AdamW
 

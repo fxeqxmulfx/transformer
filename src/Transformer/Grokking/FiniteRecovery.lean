@@ -38,6 +38,9 @@ public import Transformer.Grokking.FiniteRecovery.FactorObservations
 public import Transformer.Grokking.FiniteRecovery.FactorNative
 public import Transformer.Grokking.FiniteRecovery.DivisionRelabeling
 public import Transformer.Grokking.FiniteRecovery.ArgandReachability
+public import Transformer.Grokking.FiniteRecovery.FirstNoiseConfidence
+public import Transformer.Grokking.FiniteRecovery.FactorFirstNoise
+public import Transformer.Grokking.FiniteRecovery.FlatFirstNoise
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -106,4 +109,11 @@ The ordinary WSD probability of strict generalization on a hidden mask
 is identical across encodings under the transported Gaussian law.
 At any finite stock WSD horizon, the projected endpoint map is onto all
 embedding and attention/FFN projection coordinates simultaneously. The
-remaining trainable coordinates lie in an explicit decay-dependent box. -/
+remaining trainable coordinates lie in an explicit decay-dependent box.
+A centered Gaussian perturbation of all weights after the first ordinary
+update makes the full endpoint map surjective at every positive WSD
+horizon in real arithmetic. For any identifiable, strictly representable
+target, each trial has positive strict success mass. Independent trials
+eventually retain a verified model almost surely. This applies to the
+whole group-factor class and to binary sums of 8, 16 and 32 variables
+on their minimum Flat Spectrum masks. -/
