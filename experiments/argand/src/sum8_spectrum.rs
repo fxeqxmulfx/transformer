@@ -8,9 +8,6 @@ use crate::{
 use serde_json::{Value, json};
 use std::{fs, path::Path};
 
-#[path = "../../signed_transport/src/svd.rs"]
-mod svd;
-
 fn table(engine: &mut Engine) -> Result<Vec<f64>> {
     let mut table = Vec::with_capacity(256);
     for start in (0..256u32).step_by(engine.config.max_batch) {
@@ -44,7 +41,7 @@ fn table(engine: &mut Engine) -> Result<Vec<f64>> {
 }
 
 fn analyze(x: &[f64], diagonal: &[f64; 16], edge: &[f64; 15]) -> Value {
-    let s = svd::thin(x, 16, 16);
+    let s = crate::svd::thin(x, 16, 16);
     let (mut residual, mut min_factor) = (0.0_f64, f64::INFINITY);
     let mut min_slack = f64::INFINITY;
     let mut worst_decoded = 0.0_f64;

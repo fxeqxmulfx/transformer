@@ -18,12 +18,12 @@ open scoped BigOperators Topology
 def phaseExpectation {A : Type*} [Fintype A] (code : A → ℂ) (prob : A → ℝ) : ℂ :=
   ∑ a, (prob a : ℂ) * code a
 
-/-- Cross-entropy bounds phase error at the same labeled input. -/
-theorem phaseError_le_crossEntropy {A : Type*} [Fintype A] [DecidableEq A]
+/-- The remaining token mass bounds the phase error for any code in the closed unit disk. -/
+theorem phaseError_le_wrongMass {A : Type*} [Fintype A] [DecidableEq A]
     (prob : A → ℝ) (code : A → ℂ) (target : A)
     (hnonneg : ∀ a, 0 ≤ prob a) (hmass : ∑ a, prob a = 1)
-    (hunit : ∀ a, ‖code a‖ = 1) (htarget : 0 < prob target) :
-    ‖phaseExpectation code prob - code target‖ ≤ -2 * Real.log (prob target) := by
+    (hcode : ∀ a, ‖code a‖ ≤ 1) :
+    ‖phaseExpectation code prob - code target‖ ≤ 2 * (1 - prob target) := by
   have hmassC : ∑ a, (prob a : ℂ) = 1 := by exact_mod_cast hmass
   have hcenter : (∑ a, (prob a : ℂ) * (code a - code target)) =
       phaseExpectation code prob - code target := by
@@ -48,11 +48,19 @@ theorem phaseError_le_crossEntropy {A : Type*} [Fintype A] [DecidableEq A]
           apply mul_le_mul_of_nonneg_left _ (hnonneg a)
           calc
             ‖code a - code target‖ ≤ ‖code a‖ + ‖code target‖ := norm_sub_le _ _
-            _ = 2 := by rw [hunit a, hunit target]; norm_num
+            _ ≤ 2 := by linarith only [hcode a, hcode target]
     _ = 2 * (1 - prob target) := by
           rw [← Finset.sum_mul]
           linarith
-    _ ≤ -2 * Real.log (prob target) := by linarith [Real.log_le_sub_one_of_pos htarget]
+
+/-- Cross-entropy bounds phase error at the same labeled input. -/
+theorem phaseError_le_crossEntropy {A : Type*} [Fintype A] [DecidableEq A]
+    (prob : A → ℝ) (code : A → ℂ) (target : A)
+    (hnonneg : ∀ a, 0 ≤ prob a) (hmass : ∑ a, prob a = 1)
+    (hunit : ∀ a, ‖code a‖ = 1) (htarget : 0 < prob target) :
+    ‖phaseExpectation code prob - code target‖ ≤ -2 * Real.log (prob target) := by
+  apply (phaseError_le_wrongMass prob code target hnonneg hmass (fun a => (hunit a).le)).trans
+  linarith [Real.log_le_sub_one_of_pos htarget]
 
 namespace Argand
 

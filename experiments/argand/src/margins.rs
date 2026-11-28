@@ -9,6 +9,11 @@ pub(crate) struct RowMargin {
 }
 
 pub(crate) fn rows(engine: &mut Engine, packed: &Packed) -> Result<Vec<RowMargin>> {
+    let logits = masked_logits(engine, packed)?;
+    rows_from_logits(&logits, engine.config.vocab, packed)
+}
+
+pub(crate) fn masked_logits(engine: &mut Engine, packed: &Packed) -> Result<Vec<f32>> {
     let vocab = engine.config.vocab;
     let masked = vec![u32::MAX; packed.labels.len()];
     engine.forward(
@@ -22,6 +27,17 @@ pub(crate) fn rows(engine: &mut Engine, packed: &Packed) -> Result<Vec<RowMargin
         .part(..vocab * masked.len())
         .ok_or("logit capacity")?
         .read()?;
+    Ok(logits)
+}
+
+pub(crate) fn rows_from_logits(
+    logits: &[f32],
+    vocab: usize,
+    packed: &Packed,
+) -> Result<Vec<RowMargin>> {
+    if logits.len() != vocab * packed.labels.len() {
+        return Err("logit count does not match the packed labels".into());
+    }
     let mut rows = Vec::new();
     for (row, targets) in logits
         .chunks_exact(vocab * packed.length)

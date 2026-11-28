@@ -250,6 +250,30 @@ If any terminal replay fails, all twelve repeat from the same seeds with
 a 200,000-step WSD schedule. The empirical fractions use separate
 denominators of twelve for the two budgets.
 
+The certificate also measures the learned character table on the 9,216
+unit pairs. It averages the faithful character of generator 5 over the
+softmax of all 239 logits, assigning code zero to nonunit tokens.
+The target $Y$ is the character table recovered from the training labels
+and has nuclear norm 96. The two measured norms below come from separate
+FP64 singular-value decompositions of $X$ and $X-Y$ on the saved weights.
+
+| Optimizer | Seed | Updates | Hidden correct | $\lVert X\rVert_*$ | $\lVert X-Y\rVert_*$ |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| PAGE | 0 | 8,192 | 85/4,656 | 0.4563 | 96.4550 |
+| AdamW | 0 | 8,192 | 2,604/4,656 | 608.4275 | 581.8333 |
+| AdamW | 0 | 20,000 | 4,656/4,656 | 95.9999995 | 0.00002668 |
+| AdamW | 889832341 | 18,432 | 4,656/4,656 | 96.496897 | 0.526854 |
+| AdamW | 889832341 | 100,000 | 4,656/4,656 | 95.9999972 | 0.00002388 |
+
+For any $m$ by $s$ table with $n$ candidate tokens, codes in the closed
+unit disk, and minimum correct-token gap $\gamma$, the nuclear distance
+is at most $\sqrt{ms\min(m,s)}\,2(n-1)e^{-\gamma}$. At the first
+100,000-update endpoint $\gamma=19.0915989876$ gives an upper bound of
+0.00229. Lean proves both $\lVert X-Y\rVert_*<3/1000$ and
+$|\lVert X\rVert_*-96|<3/1000$ whenever the unit-row gap is at least 19.
+It applies to every choice of the unknown row and column factors on
+these dimensions. [Checkpoint margin and nuclear norm](../../src/Transformer/Grokking/FiniteRecovery/CheckpointMarginNorm.lean)
+
 The 20,000-update pilot had records for the first two seeds before the
 100,000 cohort was registered. The other ten seeds had no training
 results at registration. For a fixed budget with single-run success at

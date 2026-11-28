@@ -21,6 +21,8 @@ mod runner;
 mod suite;
 mod sum8;
 mod sum8_spectrum;
+#[path = "../../signed_transport/src/svd.rs"]
+mod svd;
 
 /// The error type shared with the pinned modules.
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;

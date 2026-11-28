@@ -29,6 +29,7 @@ public import Transformer.Grokking.FiniteRecovery.ArgandModularSum
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGESchedule
 public import Transformer.Grokking.FiniteRecovery.ArgandPAGERestarts
 public import Transformer.Grokking.FiniteRecovery.CheckpointFactors
+public import Transformer.Grokking.FiniteRecovery.CheckpointMarginNorm
 public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
 public import Transformer.Grokking.FiniteRecovery.TerminalValidation

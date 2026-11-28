@@ -11,6 +11,7 @@ use serde_json::{Value, json};
 use std::{fs, path::Path};
 
 pub(crate) mod mask;
+mod spectrum;
 
 const N: usize = eq::P - 1;
 
@@ -138,11 +139,29 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
         .collect();
     let order: Vec<_> = (0..examples.len() as u32).collect();
     let mut counts = [Counts::default(), Counts::default()];
+    let mut phases = spectrum::PhaseTable::new();
     let mut batch = metrics::Packed::default();
     for indices in order.chunks(engine.config.max_batch) {
         batch.fill(&examples, indices);
-        for (&i, row) in indices.iter().zip(margins::rows(&mut engine, &batch)?) {
-            counts[usize::from(completion.observed[i as usize])].add(row);
+        let vocab = engine.config.vocab;
+        let logits = margins::masked_logits(&mut engine, &batch)?;
+        let rows = margins::rows_from_logits(&logits, vocab, &batch)?;
+        for ((&i, row), scores) in indices
+            .iter()
+            .zip(rows)
+            .zip(logits.chunks_exact(vocab * batch.length))
+        {
+            let i = i as usize;
+            let (a, b) = (i / N, i % N + 1);
+            if a > 0 {
+                let start = eq::ANSWER_POS * vocab;
+                phases.observe(
+                    &scores[start..start + vocab],
+                    completion.label(a, b),
+                    row.gap,
+                );
+            }
+            counts[usize::from(completion.observed[i])].add(row);
         }
     }
     let report = json!({"case":division::NAME,"seed":id["seed"],"step":record["step"],
@@ -151,7 +170,7 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
         "output_tokens_compared":engine.config.vocab,"observed_unit_cells":completion.graph.observed_cells,
         "unit_graph_components":completion.graph.connected_components,"zero_row_label":completion.zero,
         "phase_generator":5,"row_phases":completion.graph.row_phases,"column_phases":completion.graph.column_phases,
-        "matching":completion.graph.perfect_matching});
+        "matching":completion.graph.perfect_matching,"unit_character_spectrum":phases.report()?});
     publish(dir, output, &serde_json::to_vec_pretty(&report)?)?;
     Ok(report)
 }
