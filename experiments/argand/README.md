@@ -138,6 +138,16 @@ All 30 long runs finished below 99%. Across both tiers PAGE forced a
 fresh gradient on the current minibatch 91,841 times in 96,275 accepted
 updates (95.4%). Independent checkpoint replays verified all 105 outcomes.
 
+At the same 1,000-update cutoff, AdamW with WSD passed 34/75 short runs
+and 0/30 long runs. Fifteen short endpoints were strictly correct on all
+primary examples. The two optimizers shared 11 short passes. AdamW gained
+23 and lost three, all three seeds on `arithmetic-cube-plus`. The shapes,
+initial scores and losses matched for all 105 pairs. With the standard
+per-task schedule, 21 of 25 short and nine of ten long cases reached
+their cutoff during warmup. On long tasks, the best score for each
+optimizer came from `associative-divisor-n2-l1-w0`. AdamW scored
+3,807/4,656 and PAGE scored 2,525/4,656.
+
 The confirmation protocol selects the first trained task in the agreed
 order with an exact primary score and strictly positive margins, then
 draws 12 fresh pairs of initialization and sampler seeds. All 12 train
