@@ -439,6 +439,20 @@ all 9,312 inputs. The generated `original_factor_class_stabilizes`
 specializes certified AdamW restarts to this mask for every table in the
 class. [Mask witnesses](../../src/Transformer/Grokking/FiniteRecovery/DivisionMask.lean)
 
+A bijection of the token vocabulary preserves the probability that ordinary
+AdamW gets every hidden answer strictly right at a fixed step in real
+arithmetic. Rename the tokens in each prompt and label, and apply the same
+permutation to the native embedding rows. The tied logits, batch gradients
+and both moment buffers then match at every update after reindexing. All
+sampled real and imaginary entries have the same standard deviation, 0.02,
+so the ideal Gaussian initializer has the same law in each encoding. This
+holds on the 100,000- and 200,000-step schedules for division with the
+correspondingly renamed minibatches. For independent trials with a fixed
+batch order and an identifying mask, one strictly successful real training
+trajectory gives the same positive single-run mass $p$ and the same
+miss probability $(1-p)^m$ after $m$ trials in every encoding.
+[Full training dynamics](../../src/Transformer/Grokking/FiniteRecovery/AdamWRelabeling.lean) · [Division and other factor tables](../../src/Transformer/Grokking/FiniteRecovery/DivisionRelabeling.lean)
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by
