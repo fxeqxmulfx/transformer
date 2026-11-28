@@ -117,6 +117,7 @@ bash plot_sum8_pair.sh "$sum" runs/sum8-adamw-20480 runs/sum8-optimizer-comparis
 bash run_page_screen.sh all runs/gpt-page
 bash run_page_screen.sh all runs/gpt-adamw adamw
 bash run_page_screen.sh all runs/gpt-equal-decay equal-moment
+bash run_page_screen.sh all runs/gpt-uncorrected-adam uncorrected-adam
 jq -n --slurpfile control runs/gpt-page/all-summary.json \
   --slurpfile candidate runs/gpt-adamw/all-summary.json -f compare_optimizer_screens.jq
 repair=runs/sum8-page-sqrt-2048
@@ -394,11 +395,13 @@ bias-corrected AdamW. [Muon reference implementation](https://github.com/KellerJ
 Complex Muon reached all 4,656 strict hidden answers at update 15,616,
 with minimum gap 1.817 after independent replay.
 
-The equal-moment GPT screen transfers the division hyperparameters to
+The two uncorrected Adam GPT screens transfer their division hyperparameters to
 all 35 canonical short and long cases and their three seeds. Each case
 keeps its own vocabulary, model shape and WSD budget. The run stops on
 strict 100% accuracy or at the 1,000-update screening cap. Each terminal
 checkpoint is reloaded, and the summary reports 99% and strict 100%.
+The recorded coefficients distinguish the equal-decay run from the
+0.9/0.95 repair.
 
 Another comparison uses Adam with a common decay of 0.9 for both moments,
 no bias corrections, epsilon $10^{-8}$, and decoupled weight decay 0.1.
