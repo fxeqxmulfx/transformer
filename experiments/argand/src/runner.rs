@@ -24,7 +24,7 @@ const USAGE: &str = concat!(
     "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect | equal-moment-until-perfect | uncorrected-adam-until-perfect | normalized-adamw-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [WSD_BUDGET] [--ordered-gradients] | ",
     "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals | uncorrected-adam-checkpoint-proposals | normalized-adamw-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE [RATE_MULTIPLIER [WSD_BUDGET]] | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
-    "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
+    "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | adamw-scaled-run CASE SEED RUN_DIR CAP RATE_MULTIPLIER WSD_BUDGET [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
     "division-certificate CELL (terminal|first-strict) | division-proposal-mass CELL SEED_FILE DRAWS | division-recorded-lean CELL (terminal|first-strict) [--hidden] | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
 );
 
@@ -76,6 +76,7 @@ pub fn command(args: &[String]) -> Result<()> {
                         | "adamw-first-noise-screen"
                         | "adamw-restart-run"
                         | "adamw-tail-run"
+                        | "adamw-scaled-run"
                         | "page-run"
                         | "page-run-sqrt"
                         | "page-run-retry"
@@ -291,6 +292,17 @@ pub fn command(args: &[String]) -> Result<()> {
                     radius.parse()?
                 )?
             );
+            Ok(())
+        }
+        ("adamw-scaled-run", [name, seed, out, cap, scale, budget]) => {
+            let scale = rate_multiplier(scale)?;
+            let seed: u32 = seed.parse()?;
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+                .with_schedule_budget(budget.parse()?)?
+                .with_ordered_gradients(ordered_gradients);
+            let rule = crate::page_runs::Rule::AdamW(RatePlan::Scaled(scale));
+            let dir = Path::new(out).join(name).join(format!("seed{seed}"));
+            println!("{}", job.run(&dir, seed, 0, rule, Stop::Persistence)?);
             Ok(())
         }
         ("adamw-tail-run", [name, seed, out, budget, cap]) => {

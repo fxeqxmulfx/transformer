@@ -20,9 +20,14 @@ use std::{fs, io::Write, path::Path, time::Instant};
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(crate) enum Stop {
     Horizon,
+    /// Fixed horizon with strict hidden margins scored at every observation.
+    Persistence,
     Pass99,
     Perfect,
-    CheckpointProposal { seed: u32, first: usize },
+    CheckpointProposal {
+        seed: u32,
+        first: usize,
+    },
 }
 
 impl Stop {
@@ -183,6 +188,43 @@ fn strict(engine: &mut Engine, examples: &[Example]) -> Result<Value> {
     )
 }
 
+/// Strict hidden correctness on the observation grid of one fixed-horizon run.
+/// The run counts as persistent when every observation from the first strict
+/// one through the horizon is strict. Steps between observations are not scored.
+#[derive(Default)]
+struct Persistence {
+    initial: Option<(bool, f64)>,
+    first: Option<usize>,
+    later: usize,
+    failures: usize,
+    last_failure: Option<usize>,
+    least_gap: Option<f64>,
+}
+
+impl Persistence {
+    fn observe(&mut self, step: usize, all_strict: bool, gap: f64, after_first: bool) {
+        self.initial.get_or_insert((all_strict, gap));
+        if !after_first {
+            return;
+        }
+        self.first.get_or_insert(step);
+        self.later += 1;
+        if !all_strict {
+            self.failures += 1;
+            self.last_failure = Some(step);
+        }
+        self.least_gap = Some(self.least_gap.map_or(gap, |g| g.min(gap)));
+    }
+
+    fn summary(&self) -> Value {
+        json!({"initial_all_strict":self.initial.map(|i| i.0),"initial_min_gap":self.initial.map(|i| i.1),
+            "first_strict_observation":self.first,"observations_from_first":self.later,
+            "non_strict_after_first":self.failures,"last_non_strict_after_first":self.last_failure,
+            "least_gap_from_first":self.least_gap,
+            "persistent_through_horizon":self.first.is_some() && self.failures == 0})
+    }
+}
+
 pub struct Job {
     row: Value,
     task: Task,
@@ -298,10 +340,13 @@ impl Job {
         let mut identity = json!({"case":self.row["name"],"tier":self.row["tier"],"model":"argand-skip-write-tied-score-init-one",
             "seed":seed,"order_seed":seed.wrapping_add(10000),"split_sha256":self.row["split_sha256"],
             "suite_sha256":suite::suite_hash(),"kernite":KERNITE_VERSION,"repeat":1,"budget":self.until,
-            "fixed_horizon":stop==Stop::Horizon,"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
+            "fixed_horizon":matches!(stop, Stop::Horizon | Stop::Persistence),"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
             "batch":self.batch,"observe":self.every,"vocab":self.shape.vocab});
         if stop.on_perfect() {
             identity["stop_on"] = "first-strict-100-percent".into();
+        }
+        if stop == Stop::Persistence {
+            identity["strict_every_observation"] = true.into();
         }
         if self.ordered_gradients {
             identity["gradient_reduction"] = "ordered-f32-v1".into();
@@ -421,6 +466,7 @@ impl Job {
         let mut optimizer: Option<Optimizer> = None;
         let mut skipped = 0;
         let mut first_strict = None;
+        let mut persistence = Persistence::default();
         let mut log = fs::File::create(dir.join("observations.jsonl"))?;
         let start = Instant::now();
         for step in 0..=self.until {
@@ -452,7 +498,7 @@ impl Job {
                     "correct":correct,"total":hidden.len(),"passed":passed,"loss":score["loss"],
                     "segment_seconds":start.elapsed().as_secs_f64(),"gpu":engine.cuda.name(),"skipped_batches":skipped,
                     "optimizer":optimizer.as_ref().map(Optimizer::metrics)});
-                let check_first = stop == Stop::Horizon
+                let check_first = matches!(stop, Stop::Horizon | Stop::Persistence)
                     && division
                     && first_strict.is_none()
                     && step > 0
@@ -461,8 +507,15 @@ impl Job {
                 if let Some(d) = decision {
                     record["checkpoint_proposal"] = d;
                 }
-                if finish || check_first || check_perfect {
+                if finish || check_first || check_perfect || stop == Stop::Persistence {
                     record["strict"] = strict(&mut engine, hidden)?;
+                }
+                if stop == Stop::Persistence {
+                    let all = record["strict"]["all_strict"] == true;
+                    let gap = record["strict"]["min_gap"]
+                        .as_f64()
+                        .unwrap_or(f64::NEG_INFINITY);
+                    persistence.observe(step, all, gap, first_strict.is_some() || all);
                 }
                 if record["checkpoint_proposal"]["accepted"] == true
                     && (!check_perfect || record["strict"]["all_strict"] != true)
@@ -496,6 +549,9 @@ impl Job {
                 if finish {
                     if division {
                         record["first_strict_step"] = first_strict.into();
+                    }
+                    if stop == Stop::Persistence {
+                        record["persistence"] = persistence.summary();
                     }
                     let (_, digest) = save_weights(dir, "weights.f32", &engine)?;
                     record["weights_sha256"] = digest.into();
