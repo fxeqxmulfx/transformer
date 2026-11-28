@@ -1,0 +1,29 @@
+{
+  "case": "grok-division-p97",
+  "algorithm": "ordinary bias-corrected AdamW, stock Gaussian initialization, production minibatches",
+  "binary_sha256": "7e3f8b59765ef69a33b92c7e300a9a4ee0ed0af6383b0ddecc7b826e0eca4b57",
+  "seeds": [
+    1456153842,
+    1263036240,
+    3390817312,
+    225371207,
+    2763295079,
+    364261934,
+    1804540361,
+    2519975300,
+    2970880859,
+    4155634404,
+    2570946986
+  ],
+  "seed_law": "11 fresh independent uniform u32 draws with replacement, fixed before training",
+  "peak": 0.003,
+  "weight_decay": 0.1,
+  "beta1": 0.9,
+  "beta2": 0.95,
+  "wsd": 20000,
+  "cap": 8192,
+  "observe": 256,
+  "outcome": "From an imperfect initial hidden table to the first strict 4656/4656 hidden predictions by the cap. Independently reload weights and verify every rival using labels reconstructed from the 4656 observed equations.",
+  "handling": "One trajectory per seed. Count a miss or a hardware interruption as failure. Count the first hit once, then stop. No noise, restart or between-seed selection. Report all 11 trials.",
+  "inference": "Single prespecified primary endpoint. Under independent identically distributed whole trials and success probability at most 3/4, the probability of eleven passes is at most (3/4)^11."
+}

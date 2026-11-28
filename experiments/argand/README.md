@@ -1261,6 +1261,57 @@ with the Argand binary. The report identifies the saved weights by SHA-256
 and records every successful seed. `division-mask-lean` exports the
 corresponding mathematical certificate for the original training mask.
 
+#### Ordinary AdamW on the original division mask
+
+Let $H_B$ be the event that one ordinary Argand trajectory strictly solves
+all 4,656 hidden equations at a scheduled check through update $B$. The
+grid includes initialization, every 256th update and the budget endpoint.
+For the full six-layer model with stock Gaussian initialization, the
+original mask and bias-corrected AdamW, Lean proves $0<P(H_B)<1$ for every
+finite $B$. The lower bound comes from an open set of starts that already
+solve division. For the upper bound, the readout for quotient 10 can lie
+strictly inside a simplex of 129 competing embedding rows. The AdamW
+displacement bound supplies a nonempty open set of initial embeddings for
+which this answer cannot win at any update through $B$, for every
+minibatch order. This set can depend on $B$.
+[Finite-budget theorem](../../src/Transformer/Grokking/FiniteRecovery/OrdinaryDivision.lean)
+
+Write $I$ for strict success at initialization. The probability that a run
+starts imperfect and learns is exactly $P(H_B)-P(I)$. The same 73 hidden
+prompts bound $P(I)$ by $1/73!$ under the stock initialization, including
+the prescribed gate and frequency initializers. A lower bound above $3/4$
+for learning from the ordinary update dynamics is open on this split.
+[Initial success and learned success](../../src/Transformer/Grokking/FiniteRecovery/OrdinaryDivisionValidation.lean)
+
+Eleven fresh independent uniform 32-bit seeds were registered before
+training. Each received one ordinary FP32 run with a cap of 8,192,
+WSD budget 20,000, peak 0.003, weight decay 0.1, and moment coefficients
+0.9 and 0.95. All eleven started at 0/4,656 hidden answers correct.
+They reached strict 4,656/4,656 at updates 1,536–2,560 (median 2,304).
+Each first-hit checkpoint also solved all 4,656 observed equations.
+After reloading the weights, the smallest hidden logit gap across the
+cohort was 1.17152. All registered runs completed on their first attempt.
+[Sampling and stopping protocol](division-stock-first-hit-protocol.json)
+
+For independent executions with the same success probability $p$, the
+exact one-sided 95% lower bound from 11/11 is $0.05^{1/11}=0.76160$.
+If $p\le 3/4$, the chance of observing eleven successes is at most
+$(3/4)^{11}=0.04224$. For the first registered seed, 1456153842, at
+update 2,048, the Lean kernel also checked the recorded 239 FP32 logits
+on each of the 9,312 inputs. The certificate covers that checkpoint's
+output table. The training updates were executed on the GPU.
+
+From this directory, the archived binary reproduces the registered protocol.
+The second command plots the hidden accuracy curves and the first strict hits.
+
+```bash
+ARGAND_BIN=runs/division-stock-first-hit-20261128/argand bash run_division_stock_first_hit.sh runs/division-stock-first-hit-replay
+bash plot_stock_first_hit.sh runs/division-stock-first-hit-replay
+cell=runs/division-stock-first-hit-replay/trial-0/grok-division-p97/seed1456153842
+target/release/argand division-recorded-lean "$cell" terminal
+LAKE_ARTIFACT_CACHE=false bash check_recorded_division.sh "$cell" terminal
+```
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by
