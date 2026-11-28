@@ -35,7 +35,7 @@ pub(crate) enum Rule {
     Page(PageRule),
     AdamW(RatePlan),
     AdamWFirstNoise { seed: u32 },
-    Softsign(f64),
+    Softsign { scale: f64, decay: f64 },
     Muon(f64),
 }
 
@@ -48,7 +48,7 @@ impl Rule {
             Self::AdamW(RatePlan::Geometric { .. }) => "adamw-wsd-geometric-tail",
             Self::AdamW(RatePlan::Restart { .. }) => "adamw-wsd-restart",
             Self::AdamWFirstNoise { .. } => "adamw-wsd-first-noise",
-            Self::Softsign(_) => "softsign-lion-wsd",
+            Self::Softsign { .. } => "softsign-lion-wsd",
             Self::Muon(_) => "complex-muon-wsd",
         }
     }
@@ -73,9 +73,9 @@ impl Optimizer {
             Rule::Muon(scale) => {
                 Self::Muon(crate::engine::muon::Muon::new(engine, schedule, scale)?)
             }
-            Rule::Softsign(scale) => Self::Softsign(crate::engine::softsign::Softsign::new(
-                engine, schedule, scale,
-            )?),
+            Rule::Softsign { scale, decay } => Self::Softsign(
+                crate::engine::softsign::Softsign::new(engine, schedule, scale, decay)?,
+            ),
             Rule::Page(correction) => {
                 Self::Page(AdaptivePage::new(engine, batch, sampler, correction)?)
             }
@@ -290,9 +290,10 @@ impl Job {
                 identity["optimizer"] = rule.label().into();
                 identity["muon"] = crate::engine::muon::settings(scale, schedule);
             }
-            Rule::Softsign(scale) => {
+            Rule::Softsign { scale, decay } => {
                 identity["optimizer"] = rule.label().into();
-                identity["softsign_lion"] = crate::engine::softsign::settings(scale, schedule);
+                identity["softsign_lion"] =
+                    crate::engine::softsign::settings(scale, decay, schedule);
             }
             Rule::Page(correction) => {
                 identity["optimizer"] = "batch-reference-adaptive-page-v1".into();

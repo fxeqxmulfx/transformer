@@ -13,12 +13,14 @@ max=0
 for cell in "$@"; do
     cell=$(realpath -e -- "$cell")
     id=$(head -n 1 "$cell/observations.jsonl" | jq -ce '.identity | select(.case=="grok-division-p97")')
-    paired=$(jq -cS '{case,seed,order_seed,budget,observe,split_sha256,suite_sha256,model,repeat,width,heads,layers,vocab,batch,kernite,gradient_reduction}' <<< "$id")
+    paired=$(jq -cS '(.adamw // .softsign_lion // .muon) as $o | {case,seed,order_seed,budget,wsd_budget:$o.budget,warmup:$o.warmup,cooldown:$o.cooldown_start,observe,split_sha256,suite_sha256,model,repeat,width,heads,layers,vocab,batch,kernite,gradient_reduction}' <<< "$id")
     if [[ -z "$ref" ]]; then ref=$paired; elif [[ $paired != "$ref" ]]; then echo "unpaired trajectory: $cell" >&2; exit 1; fi
     peak=$(jq -er '(.adamw // .softsign_lion // .muon).peak' <<< "$id")
+    decay=$(jq -er '(.adamw // .softsign_lion // .muon).weight_decay' <<< "$id")
     case $(jq -r .optimizer <<< "$id") in
         adamw-wsd|adamw-scaled-wsd) name=AdamW ;;
-        softsign-lion-wsd|softsign-lion-wsd-checkpoint-proposals) name='Softsign Lion' ;;
+        softsign-lion-wsd) name='Softsign Lion' ;;
+        softsign-lion-wsd-checkpoint-proposals) name='Softsign Lion + verifier' ;;
         complex-muon-wsd) name='Complex Muon' ;;
         *) echo "unknown optimizer in $cell" >&2; exit 1 ;;
     esac
@@ -54,13 +56,13 @@ for cell in "$@"; do
         else select(.step<=$stop) | [.step,100*.correct/.total] | @tsv end' > "$tmp/$idx.tsv"
     read -r last _ < <(tail -n 1 "$tmp/$idx.tsv")
     if (( last > max )); then max=$last; fi
-    curves+=("'$idx.tsv' u (\$1/1000.):2 w l ls $((idx+1)) lw 2.5 title '$name   $peak   ($status)'")
+    curves+=("'$idx.tsv' u (\$1/1000.):2 w l ls $((idx+1)) lw 2.5 title '$name   η=$peak   λ=$decay   ($status)'")
     if [[ -n $hit ]]; then
         echo "$hit 100" > "$tmp/hit-$idx.tsv"
     fi
 done
 seed=$(jq -r .seed <<< "$ref")
-cap=$(jq -r .budget <<< "$ref")
+cap=$(jq -r .wsd_budget <<< "$ref")
 (
 cd -- "$tmp"
 cat > plot.gp <<GP
@@ -76,7 +78,7 @@ set border 3 lc rgb '#6e7d80'
 set tics out nomirror scale 0.4
 set grid ytics lc rgb '#dce4e6'
 set key outside below left Left reverse horizontal maxcols 2
-set label 1 '4,656 held-out equations    |    WSD budget $cap    |    weight decay 0.1' at graph 0.02,0.98 font ',9'
+set label 1 '4,656 held-out equations    |    WSD budget $cap' at graph 0.02,0.98 font ',9'
 colors='#3774a1 #c25628 #16715d #7955a4 #956400 #536f47 #a03e77'
 do for [i=1:words(colors)] {set style line i lc rgb word(colors,i) dt 1}
 GP

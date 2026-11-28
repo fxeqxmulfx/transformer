@@ -32,7 +32,7 @@ pub(super) mod device {
     }
     pub unsafe extern "ptx-kernel" fn softsign_momentum(
         weights: *mut f32, moment: *mut f32, grad: *const f32, norm: *const f32,
-        count: u32, rate: f32, epsilon: f32,
+        count: u32, rate: f32, decay: f32, epsilon: f32,
     ) {
         let i: u32;
         index(i);
@@ -56,7 +56,7 @@ pub(super) mod device {
         add.rn.f32(m, m, t);
         put(moment, i, m);
         load(w, weights, i);
-        mul.rn.f32(t, rate, 0.1);
+        mul.rn.f32(t, rate, decay);
         sub.rn.f32(t, 1.0, t);
         mul.rn.f32(w, w, t);
         mul.rn.f32(t, rate, c);

@@ -306,8 +306,16 @@ decoupled decay to the entire weight vector. At a peak of 0.0003 the first
 command tests the ordinary weights first. On division it derives the expected
 tokens only from the observed equations. From the first eligible update it
 also tests a Gaussian-perturbed copy after ordinary misses. The optional
-last argument fixes the WSD budget when extending the observation cutoff.
+WSD budget can be fixed when extending the observation cutoff. A further
+argument sets decoupled weight decay. At a peak of 0.0003, a decay of
+$2/3$ matches the per-update shrink factor of the AdamW control at peak
+0.002 and decay 0.1 throughout WSD.
 The native sampler is seeded and its weights are FP32. [Lion, Algorithm 2](https://arxiv.org/abs/2302.06675)
+
+Eleven independent 32-bit model seeds were drawn before running comparisons
+on them. Seed 0 is reserved for choosing the candidate. The comparison
+uses paired first hits and carries forward every miss and interruption.
+[Paired division protocol and seeds](division-optimizer-paired-registration.json)
 
 Complex Muon applies Nesterov momentum 0.95 and five quintic Newton–Schulz
 steps to each complex Q, K, V, O, gate, up and down projection. It normalizes

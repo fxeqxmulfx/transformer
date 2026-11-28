@@ -10,21 +10,23 @@ pub(crate) struct Softsign {
     moment: F,
     schedule: Schedule,
     scale: f64,
+    decay: f64,
     completed: usize,
 }
 
-pub(crate) fn settings(scale: f64, schedule: Schedule) -> Value {
+pub(crate) fn settings(scale: f64, decay: f64, schedule: Schedule) -> Value {
     json!({"peak":crate::schedule::PEAK*scale,"min_rate":1e-8*scale,"budget":schedule.budget,
-        "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start,"weight_decay":0.1,
+        "warmup":schedule.warmup,"cooldown_start":schedule.cooldown_start,"weight_decay":decay,
         "direction_beta":0.9,"moment_beta":0.99,"epsilon":1e-6,"clip_norm":1,"direction":"c/(abs(c)+epsilon)"})
 }
 
 impl Softsign {
-    pub fn new(engine: &Engine, schedule: Schedule, scale: f64) -> Result<Self> {
+    pub fn new(engine: &Engine, schedule: Schedule, scale: f64, decay: f64) -> Result<Self> {
         Ok(Self {
             moment: engine.cuda.upload(&vec![0.0; engine.parameters.len()])?,
             schedule,
             scale,
+            decay,
             completed: 0,
         })
     }
@@ -49,6 +51,7 @@ impl Softsign {
                 norm.ptr(),
                 p.len() as u32,
                 rate,
+                self.decay as f32,
                 EPSILON,
             )?;
         }
@@ -78,7 +81,7 @@ mod tests {
         };
         let mut engine = Engine::new(shape, 1, 3)?;
         let schedule = super::super::adamw::wsd(20);
-        let mut opt = Softsign::new(&engine, schedule, 0.3)?;
+        let mut opt = Softsign::new(&engine, schedule, 0.3, 0.65)?;
         let mut expected = engine.weights()?;
         let mut moment = 0.0_f32;
         for (i, raw) in [3.0_f32, 0.0, -2.0, 1e-6].into_iter().enumerate() {
@@ -90,7 +93,7 @@ mod tests {
             let dir = 0.9 * moment + 0.1 * g;
             moment = 0.99 * moment + 0.01 * g;
             let rate = RatePlan::Scaled(0.3).rate(schedule, i);
-            expected[0] = (1.0 - rate * 0.1) * expected[0] - rate * dir / (dir.abs() + EPSILON);
+            expected[0] = (1.0 - rate * 0.65) * expected[0] - rate * dir / (dir.abs() + EPSILON);
             assert!((opt.moment.read()?[0] - moment).abs() < 1e-8);
             assert!((engine.weights()?[0] - expected[0]).abs() < 2e-7);
         }

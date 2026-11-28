@@ -1,0 +1,33 @@
+{
+  "case": "grok-division-p97",
+  "discovery_seed": 0,
+  "seeds": [
+    2851368691,
+    3767282553,
+    375488319,
+    1269555746,
+    2456396629,
+    69270091,
+    19185160,
+    2867231574,
+    1121120751,
+    3242140199,
+    377325082
+  ],
+  "baseline": {
+    "optimizer": "adamw-scaled-wsd",
+    "rate_multiplier": 2,
+    "weight_decay": 0.1
+  },
+  "schedule_budget": 20000,
+  "first_budget": 20000,
+  "evaluation_interval": 256,
+  "first_hit": "all 4656 reconstructed hidden labels strictly win against the other 238 logits, reloaded and independently checked",
+  "comparison": "use seed 0 for optimizer selection; lock the candidate configuration before training the paired seeds; retain misses, interruptions and censored runs",
+  "measures": [
+    "paired first-hit updates",
+    "success counts at this schedule",
+    "elapsed training time with GPU concurrency recorded separately"
+  ],
+  "longer_budget": "An extended or changed schedule is reported separately."
+}
