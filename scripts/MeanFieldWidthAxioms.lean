@@ -75,3 +75,10 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_succ_second
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_succ_weights
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_literal
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.growth_width64_peak
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.growth_width64_floor
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.forcing_width64_peak
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.widthError_width64_ge
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.widthError_width64
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.first_direction
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.first_direction_lipschitz
