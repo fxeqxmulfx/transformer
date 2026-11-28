@@ -139,9 +139,9 @@ theorem certificateFeatures_zero (D : ℝ) :
   fin_cases k <;> simp [certificateFeatures]
 
 /-- The identity training with the zero certificate is regular. -/
-theorem identityCertificateRegular (ρ r D : ℝ) :
-    Regular identityTraining (certificateMap (fun _ : Fin 1 → ℝ => (0:ℝ)) ρ r)
-      (certificateFeatures (fun _ (_ : Fin 1) => (0:ℝ)) D) 1 1 0 0 0 0 0 0 where
+theorem identityCertificateRegular [Fintype J] (ρ r D : ℝ) :
+    Regular identityTraining (certificateMap (fun _ : J → ℝ => (0:ℝ)) ρ r)
+      (certificateFeatures (fun _ (_ : J) => (0:ℝ)) D) 1 1 0 0 0 0 0 0 where
   eps_pos := one_pos
   rate _ := ⟨zero_le_one, le_rfl⟩
   rate_le := by norm_num

@@ -130,3 +130,11 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.gaussian_coordinate_tail
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_gaussian_init
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.argand_gaussian_tail
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.softmaxBound
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.risk_le_softmaxBound
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.contDiff_softmaxBound
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificateMap_lipschitz
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.marginalBound_eq_softmaxBound
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_softmax_certificate
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.softmaxBound_unit
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.softmaxRegular

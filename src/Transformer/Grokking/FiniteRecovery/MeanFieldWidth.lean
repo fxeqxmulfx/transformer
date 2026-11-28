@@ -11,6 +11,7 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Recovery
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Initialization
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Gaussian
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Softmax
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Literal
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Obstruction
 
@@ -42,6 +43,11 @@ interact through finitely many empirical averages.
   2 · exp(-C₀²/(2v)), so recovery from Gaussian initialization loses at most
   2 · N · |P| · exp(-C₀²/(2v)); at Argand's σ = 0.02 and C₀ = 120 the
   exponent is -1.8 · 10⁷.
+* `Softmax` writes the certificate `marginalBound` of the Argand recovery
+  theorem as the smooth `softmaxBound` of the logit table, which dominates
+  the risk; `certificateMap` of every C² map meets `Regular.map` on every
+  box, so a training with width-average scores mean ψ recovers with the
+  certificate softmaxBound ∘ mean ψ. Argand's logits are not width averages.
 * `Literal` identifies the literal `AdamW.run` with floor 10⁻⁸, clipping
   and decoupled weight decay on N width units with the system of floor
   N · 10⁻⁸ while clipping does not act.
