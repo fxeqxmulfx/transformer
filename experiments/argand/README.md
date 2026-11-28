@@ -342,6 +342,20 @@ Each completed seed has a draw record giving its first successful update
 or the exhausted cap, the replay digest and the certificate's minimum
 gap. The plot truncates the historical curves at the selected checkpoint.
 
+For ordinary AdamW under ideal Gaussian initialization, the probability
+of hitting a strict hidden score from an open set of starts is positive
+exactly when one real trajectory from that set hits. The set can require
+that a rival initially beats the correct token on some hidden input.
+If initialization itself is evaluated, native strict representability
+already gives positive hit probability for every WSD budget. This
+applies to every division-factor table and the 8-, 16- and 32-variable
+binary sums. For a fixed number of trained updates, a sufficiently long
+ordinary WSD warmup also preserves an open set of initially correct
+draws, uniformly in minibatch order. Through update 256 the sums of the
+actual rates are 0.01632 at budget 100,000 and 0.00816 at 200,000.
+The probability of learning from an initially wrong draw and its size
+require additional evidence. [Ordinary AdamW first-hit probability](../../src/Transformer/Grokking/FiniteRecovery/NativeFirstPerfect.lean)
+
 The certificate also measures the learned character table on the 9,216
 unit pairs. It averages the faithful character of generator 5 over the
 softmax of all 239 logits, assigning code zero to nonunit tokens.
