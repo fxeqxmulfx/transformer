@@ -525,6 +525,17 @@ correct answers on all 130,763 hidden binary strings of lengths 8 through
 ordered shared-gradient reductions scored 60/4,656 for stock AdamW and
 59/4,656 for each of noise seeds 371 and 372.
 
+At a matched 20,000-update WSD horizon, model seed 0 and order seed
+10000, stock AdamW first reached 4,656 strict hidden answers at update
+12,800. The perturbed run with noise seed 371 first reached them at 13,312.
+The independently reloaded endpoints both got all 4,656 equations right.
+Their minimum hidden logit gaps were 17.4530 and 18.4390 respectively.
+The training-only quotient reconstruction accepted both checkpoints.
+This is one matched pair with the native atomic gradient reductions.
+Run `bash plot_division_first_noise.sh STOCK_CELL NOISE_CELL OUT` to
+compare the two trajectories, after checking their initial scores, data
+identities, schedules and terminal replays.
+
 `bash run_page_screen.sh all runs/first-noise-screen first-noise` uses the
 ordinary 99% stopping rule and at most 1,000 updates for each of the 35
 canonical stress cases and its three model seeds. Noise seeds 371, 372
