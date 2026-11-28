@@ -10,6 +10,9 @@ if length != 2*($cells|length) then error("incomplete optimizer screen") else . 
   if $r.identity.case != $c.task.name or $r.identity.seed != $c.seed or
      $r.identity.optimizer != $records[0].identity.optimizer or $r.identity.correction != $records[0].identity.correction or
      $r.identity.stop_on != $records[0].identity.stop_on or
+     ($r.identity.optimizer=="equal-moment-wsd" and
+       ($r.identity.equal_moment|.beta1!=0.9 or .beta2!=0.9 or .bias_correction!=false or
+        .epsilon!=1e-8 or .weight_decay!=0.1 or .peak!=0.003 or .budget!=$c.task.case.max_updates)) or
      ($r.identity.stop_on=="first-strict-100-percent" and $r.step<$r.identity.budget and
        ($r.strict.all_strict!=true or $r.correct!=$r.total)) or
      ($r.identity.optimizer=="adamw-wsd-first-noise" and
