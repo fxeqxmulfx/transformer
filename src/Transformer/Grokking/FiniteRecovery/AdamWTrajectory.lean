@@ -6,7 +6,8 @@ public import Mathlib.Topology.Algebra.InfiniteSum.Real
 /-! The ordinary AdamW kernel used for the Argand control in
 `experiments/argand/src/engine/adamw.rs`, in real arithmetic. The two moment
 decays are 0.9 and 0.95. The second moment is used directly. A quadratic
-invariant bounds the normalized update independently of the epsilon floor. -/
+invariant bounds the normalized update independently of the epsilon floor.
+At a zero gradient the decay alone acts and sends every weight to zero. -/
 
 @[expose] public section
 
@@ -138,5 +139,27 @@ example (g : ℕ → (Fin 2 → ℝ) → Fin 2 → ℝ) (w : Fin 2 → ℝ) :=
   limit_and_tail (fun t => (1/2 : ℝ)^t) g w
     (fun t => ⟨by positivity, (pow_le_one₀ (by norm_num) (by norm_num)).trans (by norm_num)⟩)
     (summable_geometric_of_lt_one (by norm_num) (by norm_num))
+
+/-- At a zero gradient and a constant rate, real AdamW only decays: both moments stay
+zero and every weight is multiplied by `1 - η/10` per step. -/
+theorem run_zero_gradient (η : ℝ) (w₀ : ι → ℝ) (t : ℕ) :
+    run (fun _ => η) (fun _ _ => 0) w₀ t = ⟨fun i => (1 - η/10)^t * w₀ i, 0, 0⟩ := by
+  induction t with
+  | zero => simp [run]
+  | succ t ih =>
+    have hc : clip (0 : ι → ℝ) = 0 := funext fun i => by simp [clip]
+    simp only [run, ih, hc, Pi.zero_apply, mul_zero, add_zero, direction, zero_div, sub_zero]
+    congr 1
+    · funext i; ring
+    · funext i; simp
+
+/-- At a zero gradient the decay drives every weight to zero, at every constant rate
+`0 < η ≤ 10`, the WSD floor `3·10⁻⁸` included. -/
+theorem run_zero_gradient_tendsto {η : ℝ} (h0 : 0 < η) (h : η ≤ 10) (w₀ : ι → ℝ) (i : ι) :
+    Tendsto (fun t => (run (fun _ => η) (fun _ _ => 0) w₀ t).weights i) atTop (𝓝 0) := by
+  simp only [run_zero_gradient]
+  simpa using (tendsto_pow_atTop_nhds_zero_of_lt_one (by linarith) (by linarith)).mul_const (w₀ i)
+
+example := run_zero_gradient_tendsto (η := 3/100000000) (by norm_num) (by norm_num) (fun _ : Unit => 1) ()
 
 end Transformer.Grokking.FiniteRecovery.AdamW

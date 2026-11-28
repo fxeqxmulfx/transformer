@@ -72,6 +72,7 @@ public import Transformer.Grokking.FiniteRecovery.TransitionFirstNoise
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 public import Transformer.Grokking.FiniteRecovery.HiddenLearnability
 public import Transformer.Grokking.FiniteRecovery.ArgandHiddenLearnability
+public import Transformer.Grokking.FiniteRecovery.ArgandSeedKernel
 
 /-! Finite recovery from observed labeled words. The full single-stream
 Argand forward pass and Flat Spectrum share the same targets and observation
@@ -153,4 +154,6 @@ representability and seen hidden answers are necessary for eventual hidden
 success above one half. The 3×3 phase table fails the third condition, which
 modular division satisfies on every identifying mask. There, for every member
 of the division class, the observed-Jacobian theorem gives three quarters
-under ordinary AdamW, but its Jacobian bound and mean excess remain hypotheses. -/
+under ordinary AdamW, but its Jacobian bound and mean excess remain hypotheses.
+The same holds along any weight sequence, so under the uniform u32 seed for
+binary32 kernel weights, whose decay factor rounds to one at the WSD floor. -/
