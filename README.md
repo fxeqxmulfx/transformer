@@ -12,3 +12,7 @@ on AdamW training imply the recovery guarantee above. The two open milestones
 are to bound the change in the recovery certificate along actual AdamW updates
 after burn-in and to bound the expected error in that estimate under the stock
 training law.
+
+For multivariable tasks, it remains open which dependencies among individual
+input coordinates Argand learns to recover from the observed input–output pairs
+under its stock AdamW training protocol.
