@@ -22,7 +22,7 @@ const USAGE: &str = concat!(
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
     "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect | equal-moment-until-perfect | uncorrected-adam-until-perfect | normalized-adamw-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [WSD_BUDGET] [--ordered-gradients] | ",
-    "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
+    "(softsign-checkpoint-proposals | rmsprop-checkpoint-proposals | equal-moment-checkpoint-proposals | normalized-adamw-checkpoint-proposals) CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE RATE_MULTIPLIER [WSD_BUDGET [WEIGHT_DECAY [SOFTSIGN_ROW_NORM]]] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
     "division-certificate CELL (terminal|first-strict) | division-recorded-lean CELL (terminal|first-strict) [--hidden] | division-project-rows CELL (terminal|first-strict) RADIUS | division-relabel CELL | division-mask-lean"
@@ -64,6 +64,7 @@ pub fn command(args: &[String]) -> Result<()> {
                         | "muon-until-perfect"
                         | "rmsprop-checkpoint-proposals"
                         | "equal-moment-checkpoint-proposals"
+                        | "normalized-adamw-checkpoint-proposals"
                         | "equal-moment-until-perfect"
                         | "uncorrected-adam-until-perfect"
                         | "normalized-adamw-until-perfect"
@@ -130,7 +131,8 @@ pub fn command(args: &[String]) -> Result<()> {
         (
             "softsign-checkpoint-proposals"
             | "rmsprop-checkpoint-proposals"
-            | "equal-moment-checkpoint-proposals",
+            | "equal-moment-checkpoint-proposals"
+            | "normalized-adamw-checkpoint-proposals",
             [name, seed, noise_seed, out, cap, first, scale, budget @ ..],
         ) if budget.len() <= 2 || (op == "softsign-checkpoint-proposals" && budget.len() == 3) => {
             let seed = seed.parse()?;
@@ -159,20 +161,22 @@ pub fn command(args: &[String]) -> Result<()> {
                 .join(name)
                 .join(format!("seed{seed}-proposal{proposal}-from{first}"));
             let scale = rate_multiplier(scale)?;
-            let rule = if op == "rmsprop-checkpoint-proposals" {
-                crate::page_runs::Rule::RmsProp { scale, decay }
-            } else if op == "equal-moment-checkpoint-proposals" {
-                crate::page_runs::Rule::MomentAdam {
-                    scale,
-                    decay,
-                    rates: crate::engine::rmsprop::MomentRates::Equal,
-                }
-            } else {
-                crate::page_runs::Rule::Softsign {
+            let rule = match op.as_str() {
+                "rmsprop-checkpoint-proposals" => crate::page_runs::Rule::RmsProp { scale, decay },
+                "softsign-checkpoint-proposals" => crate::page_runs::Rule::Softsign {
                     scale,
                     decay,
                     row_norm,
-                }
+                },
+                _ => crate::page_runs::Rule::MomentAdam {
+                    scale,
+                    decay,
+                    rates: if op == "equal-moment-checkpoint-proposals" {
+                        crate::engine::rmsprop::MomentRates::Equal
+                    } else {
+                        crate::engine::rmsprop::MomentRates::NORMALIZED
+                    },
+                },
             };
             let stop = Stop::CheckpointProposal {
                 seed: proposal,

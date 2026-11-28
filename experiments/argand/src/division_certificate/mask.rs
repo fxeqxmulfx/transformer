@@ -46,7 +46,7 @@ pub(crate) fn lean_source() -> Result<String> {
         inverse[j] = i;
     }
     let mut out = String::from(
-        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\n\n",
+        "import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ProjectedSoftsign\nimport Transformer.Grokking.FiniteRecovery.ArgandRmsProp\nimport Transformer.Grokking.FiniteRecovery.SoftsignLimit\nimport Transformer.Grokking.FiniteRecovery.LabelOrbit\nimport Transformer.Grokking.FiniteRecovery.DelayedCheckpoints\n\n",
     );
     writeln!(
         out,
@@ -190,6 +190,17 @@ example (batch : ℕ → List (LabeledPosition (Fin 239))) :=
   factor_normalizedAdam_restarts 20000 (bitDivisionMask rows) original_graph.1 original_graph.2
     (fun x : ((bitDivisionMask rows)ᶜ : Set DivisionInput) => x.val) divisionAnswer divisionAnswer_mem batch
 
+theorem original_delayed_normalizedAdam (f : DivisionInput → Fin 239) (hf : f ∈ factorClass unitToken)
+    (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :
+    let hidden := fun x : ((bitDivisionMask rows)ᶜ : Set DivisionInput) => x.val
+    let score (w : Weights (Fin 239) 4 16 6) x := (Model.fromWeights w).logits 1 (divisionPrompt (hidden x)) (Fin.last 4)
+    let center j := (normalizedAdamRun 1 batch (fun k => 3*wsdRate 20000 k) draw (256*j)).weights
+    DelayedRecovery 32 (Measure.infinitePi (fun _ : ℕ => Measure.pi (fun _ : Parameter (Fin 239) 4 16 6 =>
+      ProbabilityTheory.gaussianReal 0 ((1/1000000 : ℝ≥0)^2)))) center
+      (fun w => hiddenCertificate (bitDivisionMask rows) (factorClass unitToken) (fun x => f x) hidden (score w))
+      (fun w => StrictOn (score w) (f ∘ hidden)) :=
+  factor_delayed_normalizedAdam 32 _ _ original_graph.1 original_graph.2 f hf batch draw
+
 example := equalMoment_uniform_observed_confidence 1 (evaluationGrid 256 20000) (by simp [evaluationGrid])
   divisionPrompt id (bitDivisionMask rows) (factorClass unitToken)
   (factorClass_identified _ _ original_graph.1 original_graph.2)
@@ -211,6 +222,7 @@ example {D : Type*} [MeasurableSpace D] [MeasurableSingletonClass D] [Countable 
 
 #print axioms original_mask_certifies
 #print axioms original_factor_label_orbit
+#print axioms original_delayed_normalizedAdam
 #print axioms original_nuclear_completion
 #print axioms original_factor_class_stabilizes
 #print axioms original_firstNoise_factor_recovery

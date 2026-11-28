@@ -483,6 +483,28 @@ coordinate stays within $\max(\|w_0\|_\infty,10\sqrt{19/14})$ in both
 real recurrences.
 [Normalized moment and weight bounds](../../src/Transformer/Grokking/FiniteRecovery/NormalizedMomentBound.lean)
 
+A single normalized AdamW run can also check perturbed copies after a chosen
+update. The ordinary checkpoint is evaluated first. After a miss, the
+verifier may test one copy with independent Gaussian noise on its weights.
+A rejection restores the ordinary weights and training continues with the
+same moments and minibatch order. Division uses labels reconstructed from
+the observations. A hit before the first proposal has exactly the ordinary
+first-hit index. On every real trajectory, a successful stock AdamW check
+guarantees a verified hit by the same index, for every choice of the noise.
+
+For each fixed initialization, a finite set of hidden prompts, an
+identifiable class and a strictly representable target, the bounded
+ordinary weights and full-support real proposals give some $p>0$. After
+$m$ eligible checks the miss probability is at most $(1-p)^m$, and the
+first accepted checkpoint almost surely remains strictly correct on the
+entire hidden set. This result covers every member of the quotient-factor
+family on the original division mask. The mathematical bound gives no
+practical value of $m$. The native finite-precision generator is tested
+separately. On the Boolean shift task with ordered reductions, a proposal
+at zero was rejected. Ordinary training, proposals from zero and proposals
+from update 8,192 all saved the same weight bytes at update four.
+[Delayed checkpoints and the general convergence theorem](../../src/Transformer/Grokking/FiniteRecovery/DelayedCheckpoints.lean)
+
 For any hidden set of more than 288 division inputs, stock Gaussian
 initialization strictly solves the whole set with probability at most
 $1/234$. There are at most 288 equations on which the answer occurs
@@ -625,6 +647,7 @@ $bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
 $bin equal-moment-until-perfect "$task" 0 runs/division-equal 20000 3 20000
 $bin uncorrected-adam-until-perfect "$task" 0 runs/division-uncorrected 20000 3 20000
 $bin normalized-adamw-until-perfect "$task" 0 runs/division-normalized 20000 3 20000
+$bin normalized-adamw-checkpoint-proposals "$task" 0 719 runs/division-normalized-delayed 20000 8192 3 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
