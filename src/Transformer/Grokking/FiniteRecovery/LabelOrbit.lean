@@ -179,4 +179,22 @@ theorem factor_hidden_orbit_singleton (S : Set DivisionInput)
   | some i => exact units (r i+c b).toMul
 
 end Argand
+namespace Argand.HiddenCorner
+
+/-- The same three-observation corner obstructs permanent correctness for
+every second-moment decay, including the 0.95 uncorrected validation rule. -/
+theorem uncorrected_eventual_bound (stream : ℕ → List (Fin 3)) (second : ℝ) :
+    let μ := independentGaussianDraws (fun _ : ComplexParameter (Fin 64) 4 16 6 => (1/50 : ℝ≥0)^2)
+    let score (z : ComplexParameter (Fin 64) 4 16 6 → ℂ) t := (Model.fromWeights (uncorrectedAdamRun 1
+      (9/10) second (1/100000000) (1/10) (fun k => (stream k).map observation)
+      (fun k => 3*wsdRate 20000 k) z t).weights).logits 1 (prompt (1,0)) 0
+    μ.real {z | ∀ᶠ t in atTop, ∀ b, b ≠ label (1,0) → score z t b < score z t (label (1,0))} ≤ 1/58 := by
+  intro μ score
+  apply eventual_success_mass_le μ (fun t => {z | ∀ b, b ≠ label (1,0) → score z t b < score z t (label (1,0))}) _ (by norm_num)
+  intro t
+  simpa [cornerFirstHitProbability,μ,score] using corner_first_hit_bound stream second {t}
+
+example (stream : ℕ → List (Fin 3)) := uncorrected_eventual_bound stream (19/20)
+
+end Argand.HiddenCorner
 end Transformer.Grokking.FiniteRecovery

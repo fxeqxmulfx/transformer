@@ -624,6 +624,9 @@ the hidden answer anywhere on that grid is at most $k/58$. Checking every
 256 updates from zero through 4,096 gives an upper bound of $17/58$ for
 either choice of the second-moment decay. The bound allows dependence
 between checks and uses the same early stopping rule as the division pilots.
+For the validated uncorrected 0.9/0.95 rule, the probability of an
+eventually permanent strict hidden winner is at most $1/58$, even with
+unlimited updates. The proof applies the single-check bound to each tail.
 [Hidden-corner example](../../src/Transformer/Grokking/FiniteRecovery/HiddenCorner.lean) · [First-hit distribution](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentRelabeling.lean) · [Finite-grid bound](../../src/Transformer/Grokking/FiniteRecovery/FirstHitSymmetry.lean)
 
 The same limitation reaches the 200,000-update budget for ordinary AdamW
