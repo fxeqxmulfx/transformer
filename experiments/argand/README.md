@@ -341,6 +341,14 @@ bash plot_division_to_perfect.sh runs/division-first100-100k runs/division-compa
 Each completed seed has a draw record giving its first successful update
 or the exhausted cap, the replay digest and the certificate's minimum
 gap. The plot truncates the historical curves at the selected checkpoint.
+The adjacent `division-first100-<budget>-inference.json` counts the
+updates omitted after actual early stops. Once the eight prospective
+draws finish, it gives exact binomial upper tails for single-run hit
+probabilities of at most one half and three quarters, along with bounds
+allowing either registered budget. An interrupted prospective attempt
+stays in the denominator and a successful rerun contributes only to
+the descriptive count. The seed list and the prospective cutoff are
+recorded in [the first-hit analysis plan](division-first-hit-registration.json).
 
 For ordinary AdamW under ideal Gaussian initialization, the probability
 of hitting a strict hidden score from an open set of starts is positive

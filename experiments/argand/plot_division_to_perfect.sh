@@ -2,11 +2,12 @@
 # Display completed first-passage trajectories and the latest active seed.
 set -euo pipefail
 if (( $# != 2 )); then echo 'usage: bash plot_division_to_perfect.sh COHORT OUTPUT_DIRECTORY' >&2; exit 2; fi
+dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 cohort=$(realpath -e -- "$1")
 mkdir -p -- "$2"
 out=$(cd -- "$2" && pwd)
 tmp=$(mktemp -d "$out/.division-first100.XXXXXX")
-trap 'rm -f -- "$tmp"/*.tsv "$tmp"/figure.{pdf,png}; rmdir -- "$tmp"' EXIT
+trap 'rm -f -- "$tmp"/*.tsv "$tmp"/figure.{pdf,png} "$tmp/report.json"; rmdir -- "$tmp"' EXIT
 cd -- "$tmp"
 touch successes.tsv running.tsv missed.tsv
 cap=$(jq -er 'select(.stop=="first-strict-100-percent" and .n==12) | .updates' "$cohort/protocol.json")
@@ -24,7 +25,9 @@ for ((i=0;i<12;i++)); do
     record="$cohort/draw-$i.json"
     stop=$cap
     if [[ -s "$record" ]]; then
-        cell=$(jq -er --argjson seed "$seed" 'select(.seed==$seed and .total==4656)|.cell' "$record")
+        if [[ $(jq -er --argjson seed "$seed" 'select(.seed==$seed and .total==4656)|.checkpoint' "$record") == first-strict ]]; then
+            cell=$(jq -er '.cell' "$record")
+        fi
         stop=$(jq -r '.step' "$record")
         if jq -e '.success' "$record" >/dev/null; then file=successes.tsv; else file=missed.tsv; fi
         echo "$draw $stop" >> "$file"
@@ -84,6 +87,10 @@ GP
 pdftoppm -singlefile -r 140 -png figure.pdf figure
 base="division-first100-$cap"
 tag="$base-draw-$started-step-$last-done-$done_count"
+if [[ -s "$cohort/summary.json" ]]; then
+    bash "$dir/report_division_first_hits.sh" "$cohort" > report.json
+    mv -- report.json "$out/$base-inference.json"
+fi
 for ext in pdf png; do
     if [[ ${ARGAND_PLOT_SNAPSHOT:-1} == 1 && ! -e "$out/$tag.$ext" ]]; then
         cp -- "figure.$ext" "$out/$tag.$ext"

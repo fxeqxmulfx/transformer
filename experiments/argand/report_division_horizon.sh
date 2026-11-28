@@ -3,6 +3,7 @@
 # reconstruction of the entire label table from the training equations.
 set -euo pipefail
 if (( $# != 1 )); then echo 'usage: bash report_division_horizon.sh COHORT' >&2; exit 2; fi
+dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 cd -- "$1"
 summary=/dev/null
 if [[ -s confirmation.json ]]; then summary=confirmation.json; fi
@@ -16,7 +17,8 @@ for ((i=0; i<12; i++)); do
     jq -cn --argjson i "$i" --argjson interrupted "$interrupted" \
         --slurpfile r "$cell/replay.json" --slurpfile c "$cell/observed-certificate.json" \
         '{index:$i,interrupted:$interrupted,replay:$r[0],certificate:$c[0]}'
-done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
+done | jq -es -L "$dir" --slurpfile plan protocol.json --slurpfile summary "$summary" '
+    include "division_binomial";
     $plan[0] as $p |
     if $p.case!="grok-division-p97" or $p.correction!="adamw-wsd" or $p.n!=12 or
        ($p.seeds|length)!=12 or ($p.updates|IN(100000,200000)|not)
@@ -44,11 +46,9 @@ done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
     def count_at($n):
         (map(select(.success))|length) as $k |
         {registered:$n,evaluated:length,successes:$k,empirical_fraction:(if length==$n then $k/$n else null end)};
-    def choose($n;$k): reduce range(1;$k+1) as $i (1; . * ($n-$k+$i) / $i);
     def tail_bound($k;$p): [1,2*choose(10;$k)*pow($p;$k)]|min;
     def binomial_two_budget_bound($k;$p):
-        [range($k;11) as $j | choose(10;$j)*pow($p;$j)*pow(1-$p;10-$j)] |
-        [1,2*add] | min;
+        [1,2*binomial_upper_tail(10;$k;$p)] | min;
     ($rows|count_at(12)) as $all |
     if $summary[0]!=null and ($summary[0].protocol!=$p or ($all.evaluated==12 and $summary[0].successes!=$all.successes))
     then error("confirmation disagrees with verified terminal outcomes") else . end |

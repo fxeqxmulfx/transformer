@@ -9,7 +9,7 @@ dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 bin=${ARGAND_BIN:-"$dir/target/release/argand"}
 registered=$(realpath -e -- "$1")
 mkdir -p -- "$2"
-out=$(cd -- "$2" && pwd)
+out=$(cd -- "$2" && pwd -P)
 cap=$3
 case_name=grok-division-p97
 exec 9>"$out/cohort.lock"
