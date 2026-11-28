@@ -19,6 +19,8 @@ const USAGE: &str = concat!(
     "replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | ",
     "sum8-adamw[-first-noise[-until-perfect]][-replay] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
     "sum8-adamw-rank-one[-margin][-replay] RUN_DIR UPDATES [DRAW_INDEX] | sum8-rectangle-certificate CELL | ",
+    "sum8-adamw-half[-replay] RUN_DIR [UPDATES] | sum8-half-control BASELINE_DIR | ",
+    "sum8-half-inspect RUN_DIR DRAW FIRST_STEP LAST_STEP | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
     "(adamw-scaled-until-perfect | softsign-until-perfect | muon-until-perfect | equal-moment-until-perfect | uncorrected-adam-until-perfect | normalized-adamw-until-perfect) CASE SEED RUN_DIR CAP RATE_MULTIPLIER [WSD_BUDGET] [--ordered-gradients] | ",
@@ -360,6 +362,20 @@ pub fn command(args: &[String]) -> Result<()> {
         ("check", []) => engine::check(),
         ("peak", []) => bench::peak(),
         ("sum8-spectrum", [out]) => crate::sum8_spectrum::run(Path::new(out)),
+        ("sum8-half-control", [out]) => {
+            println!("{}", crate::sum8::score_half_control(Path::new(out))?);
+            Ok(())
+        }
+        ("sum8-half-inspect", [out, draw, first, last]) => {
+            let report = crate::sum8::inspect_half_checkpoints(
+                Path::new(out),
+                draw.parse()?,
+                first.parse()?,
+                last.parse()?,
+            )?;
+            println!("{report}");
+            Ok(())
+        }
         ("sum8-rectangle-certificate", [cell]) => {
             println!("{}", crate::sum8::audit_rectangles(Path::new(cell))?);
             Ok(())
@@ -421,6 +437,8 @@ pub fn command(args: &[String]) -> Result<()> {
         (
             "sum8-adamw"
             | "sum8-adamw-replay"
+            | "sum8-adamw-half"
+            | "sum8-adamw-half-replay"
             | "sum8-adamw-first-noise"
             | "sum8-adamw-first-noise-replay"
             | "sum8-adamw-first-noise-until-perfect"
@@ -436,7 +454,9 @@ pub fn command(args: &[String]) -> Result<()> {
             Path::new(out),
             steps.first().map(|s| s.parse()).transpose()?,
             op.contains("replay"),
-            if op.starts_with("sum8-adamw-first-noise") {
+            if op.starts_with("sum8-adamw-half") {
+                crate::sum8::Method::AdamWHalf
+            } else if op.starts_with("sum8-adamw-first-noise") {
                 crate::sum8::Method::AdamWFirstNoise {
                     until_perfect: op.contains("until-perfect"),
                 }

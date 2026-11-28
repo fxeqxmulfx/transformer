@@ -53,7 +53,7 @@ impl RatePlan {
         }
     }
 
-    pub(super) fn rate(self, schedule: Schedule, completed: usize) -> f32 {
+    pub(crate) fn rate(self, schedule: Schedule, completed: usize) -> f32 {
         if let Self::Geometric { budget } = self
             && completed >= budget
         {

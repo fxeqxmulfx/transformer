@@ -351,6 +351,19 @@ impl Engine {
         self.add_backward()
     }
 
+    /// The raw mean cross-entropy gradient, before clipping or an optimizer step.
+    pub(crate) fn mean_loss_gradient(
+        &mut self,
+        tokens: &[u32],
+        labels: &[u32],
+        batch: usize,
+        length: usize,
+    ) -> Result<Vec<f32>> {
+        self.forward(tokens, labels, batch, length)?;
+        self.backward()?;
+        Ok(self.parameters.grad.read()?)
+    }
+
     /// Clears the parameter gradient before a full-batch accumulation.
     pub fn zero_gradient(&mut self) -> Result<()> {
         let p = &self.parameters;

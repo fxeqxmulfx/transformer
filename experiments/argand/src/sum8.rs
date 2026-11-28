@@ -18,8 +18,11 @@ use std::{
     time::Instant,
 };
 
+mod half;
 mod proposals;
 mod rank_one;
+pub(crate) use half::inspect_checkpoints as inspect_half_checkpoints;
+pub(crate) use half::score_control as score_half_control;
 pub(crate) use proposals::checkpoint_proposals;
 pub(crate) use rank_one::audit as audit_rectangles;
 
@@ -30,6 +33,7 @@ const UPDATES: usize = 20_480;
 pub(crate) enum Method {
     Page(PageRule),
     AdamW,
+    AdamWHalf,
     AdamWFirstNoise { until_perfect: bool },
     AdamWRankOne { margin: bool },
 }
@@ -40,6 +44,7 @@ impl Method {
             Self::Page(PageRule::SquareRoot) => "argand-sum8-adaptive-page-sqrt-v1",
             Self::Page(PageRule::Retry) => "argand-sum8-adaptive-page-retry-v1",
             Self::AdamW => "argand-sum8-adamw-wsd-v1",
+            Self::AdamWHalf => "argand-sum8-adamw-half-v1",
             Self::AdamWRankOne { margin: false } => "argand-sum8-adamw-rank-one-gap-v1",
             Self::AdamWRankOne { margin: true } => "argand-sum8-adamw-rank-one-margin-v1",
             Self::AdamWFirstNoise {
@@ -53,7 +58,7 @@ impl Method {
     fn rule(self, sampling_seed: u32) -> Rule {
         match self {
             Self::Page(correction) => Rule::Page(correction),
-            Self::AdamW | Self::AdamWRankOne { .. } => Rule::AdamW(RatePlan::Wsd),
+            Self::AdamW | Self::AdamWHalf | Self::AdamWRankOne { .. } => Rule::AdamW(RatePlan::Wsd),
             Self::AdamWFirstNoise { .. } => Rule::AdamWFirstNoise {
                 seed: sampling_seed,
             },
@@ -63,7 +68,8 @@ impl Method {
     fn until_perfect(self) -> bool {
         matches!(
             self,
-            Self::AdamWRankOne { .. }
+            Self::AdamWHalf
+                | Self::AdamWRankOne { .. }
                 | Self::AdamWFirstNoise {
                     until_perfect: true
                 }
@@ -75,6 +81,15 @@ fn word_tokens(word: u32) -> impl Iterator<Item = u32> {
     (0..LENGTH).rev().map(move |bit| (word >> bit) & 1)
 }
 
+fn staircase(word: u32) -> bool {
+    let (row, col) = (word >> 4, word & 15);
+    col == row || col == row + 1
+}
+
+fn parity(word: u32) -> u32 {
+    word.count_ones() % 2
+}
+
 struct Split {
     tokens: Vec<u32>,
     labels: Vec<u32>,
@@ -82,21 +97,22 @@ struct Split {
 
 impl Split {
     fn new(observed: bool) -> Self {
-        Self::with_labels(observed, |word| word.count_ones() % 2)
+        Self::with_labels(observed, parity)
     }
 
     fn with_labels(observed: bool, label: impl Fn(u32) -> u32) -> Self {
+        Self::from_words((0..256).filter(|&word| staircase(word) == observed), label)
+    }
+
+    fn from_words(words: impl Iterator<Item = u32>, label: impl Fn(u32) -> u32) -> Self {
         let mut split = Self {
             tokens: Vec::new(),
             labels: Vec::new(),
         };
-        for word in 0..256u32 {
-            let (row, col) = (word >> 4, word & 15);
-            if (col == row || col == row + 1) == observed {
-                split.tokens.extend(word_tokens(word));
-                split.labels.extend([u32::MAX; LENGTH - 1]);
-                split.labels.push(label(word));
-            }
+        for word in words {
+            split.tokens.extend(word_tokens(word));
+            split.labels.extend([u32::MAX; LENGTH - 1]);
+            split.labels.push(label(word));
         }
         split
     }
@@ -155,6 +171,10 @@ impl Split {
 }
 
 pub(crate) fn new_engine(seed: u32) -> Result<Engine> {
+    engine_with_batch(seed, 32)
+}
+
+fn engine_with_batch(seed: u32, max_batch: usize) -> Result<Engine> {
     Engine::new(
         Shape {
             width: 64,
@@ -162,7 +182,7 @@ pub(crate) fn new_engine(seed: u32) -> Result<Engine> {
             layers: 6,
             vocab: 2,
             max_length: LENGTH,
-            max_batch: 32,
+            max_batch,
         },
         1,
         seed,
@@ -198,6 +218,16 @@ fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], method: Method) -> Value {
         "layers":6,"repeat":1,"vocab":2,"sigma":0.02,"open_words":31,"hidden_words":225,
         "mask":"big-endian nibbles; col == row or col == row + 1, without wrap",
         "success":"positive terminal true-class logit gap on all 225 hidden words"});
+    if matches!(method, Method::AdamWHalf) {
+        plan["open_words"] = 128.into();
+        plan["hidden_words"] = 128.into();
+        plan["mask"] =
+            "staircase plus the first 97 of the ascending complement shuffled with MT19937 seed 0"
+                .into();
+        plan["train_ids"] = json!(half::words());
+        plan["success"] =
+            "strictly correct on all 128 hidden words at a scheduled observation".into();
+    }
     if !matches!(method, Method::Page(_)) {
         let second = if let Method::AdamWFirstNoise { .. } = method {
             plan["gaussian_weight_noise"] = json!({"after_update":1,"stddev":FIRST_NOISE_STDDEV});
@@ -251,7 +281,10 @@ fn manifest(
     }
     let updates = requested.unwrap_or(UPDATES);
     let seeds = match method {
-        Method::AdamW | Method::AdamWFirstNoise { .. } | Method::AdamWRankOne { .. } => {
+        Method::AdamW
+        | Method::AdamWHalf
+        | Method::AdamWFirstNoise { .. }
+        | Method::AdamWRankOne { .. } => {
             let paired: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
             serde_json::from_value(paired["seeds"].clone())?
         }
@@ -288,7 +321,7 @@ fn train(
 ) -> Result<()> {
     let seed = read_seed(pair, 0)?;
     let sampling_seed = read_seed(pair, 1)?;
-    let mut model = new_engine(seed)?;
+    let mut model = engine_with_batch(seed, 32.max(observed.tokens.len() / LENGTH))?;
     let initial =
         json!({"observed":observed.score(&mut model)?, "hidden":hidden.score(&mut model)?});
     let mut optimizer = Optimizer::new(
@@ -336,6 +369,8 @@ fn train(
             let mut metrics = optimizer.metrics();
             if let Some(loss) = penalty {
                 metrics["sampled_penalty_before_update"] = loss.into();
+            }
+            if penalty.is_some() || matches!(method, Method::AdamWHalf) {
                 metrics["observed"] = observed.score(&mut model)?;
                 metrics["hidden"] = score.clone().unwrap_or(Value::Null);
             }
@@ -393,7 +428,7 @@ fn replay(
     {
         return Err("invalid experiment checkpoint".into());
     }
-    let mut model = new_engine(read_seed(pair, 0)?)?;
+    let mut model = engine_with_batch(read_seed(pair, 0)?, 32.max(observed.tokens.len() / LENGTH))?;
     let mut verify = |file: &str, point: &Value| -> Result<()> {
         load_weights(dir, file, &point["weights_sha256"], &mut model)?;
         for (name, split) in [("observed", observed), ("hidden", hidden)] {
@@ -429,7 +464,11 @@ pub fn run(
         .open(dir.join("run.lock"))?;
     lock.lock()?;
     let (updates, plan) = manifest(dir, requested, replay_only, method)?;
-    let (observed, hidden) = (Split::new(true), Split::new(false));
+    let (observed, hidden) = if matches!(method, Method::AdamWHalf) {
+        (half::split(true), half::split(false))
+    } else {
+        (Split::new(true), Split::new(false))
+    };
     let certificate = matches!(method, Method::AdamWRankOne { .. }).then(|| {
         let (diagonal, edge) = observed_phase_labels();
         let signs = crate::sum8_spectrum::staircase_signs(&diagonal, &edge);
@@ -457,10 +496,12 @@ pub fn run(
         }
         let record = replay(&cell, pair, updates, &observed, &hidden, method)?;
         println!(
-            "draw {i}: {} updates, {}/31 observed, {}/225 hidden, {:.2} s",
+            "draw {i}: {} updates, {}/{} observed, {}/{} hidden, {:.2} s",
             record["optimizer"]["step"],
             record["observed"]["correct"],
+            record["observed"]["total"],
             record["hidden"]["correct"],
+            record["hidden"]["total"],
             record["seconds"].as_f64().ok_or("missing runtime")?
         );
         records.push(record);
@@ -477,7 +518,7 @@ pub fn run(
         .map(|r| r["hidden"]["correct"].as_u64().unwrap() as usize)
         .sum();
     let summary = json!({"protocol":plan,"runs":records.len(),"joint_successes":successes,
-        "mean_hidden_accuracy":correct as f64 / (225*records.len()) as f64,"replayed":true,"records":records});
+        "mean_hidden_accuracy":correct as f64 / ((hidden.tokens.len() / LENGTH)*records.len()) as f64,"replayed":true,"records":records});
     publish(dir, "summary.json", &serde_json::to_vec_pretty(&summary)?)?;
     Ok(())
 }

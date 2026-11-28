@@ -213,6 +213,48 @@ a perfect matching, so the same unit mask also gives unique nuclear-norm
 completion of the character table. The optimizer runs use the original
 4,656-observation split. [Proof of the exact minimum](../../src/Transformer/Grokking/FiniteRecovery/FactorObservations.lean)
 
+### Eight-bit sum with 50% of the words observed
+
+The paired half-table experiment keeps the 31 staircase words and adds 97
+from the ascending complement after an MT19937 shuffle with seed zero.
+The split is selected without labels. The protocol saves all 128 training
+IDs before the first update. All eight native initializations, the architecture,
+the full-batch mean loss and the AdamW settings match the 31-word control.
+Each update sees all 128 training words. The WSD budget is 20,480 steps,
+with a peak rate of 0.001 and decoupled weight decay of 0.1.
+
+The run stops at the first scheduled check with strictly correct predictions
+on all 128 hidden words, or at the budget. Checks are at initialization,
+powers of two, every 256 updates and the budget. The control command reloads
+the eight original terminal checkpoints and scores the same 128 hidden words.
+The accuracy plot ends each trajectory at its last measured checkpoint.
+
+```sh
+out=runs/sum8-adamw-half-20261128
+bin=target/release/argand
+"$bin" sum8-adamw-half "$out" 20480
+"$bin" sum8-adamw-half-replay "$out" 20480
+"$bin" sum8-half-control runs/sum8-adamw-20480-20261128 > "$out/control-common.json"
+bash plot_sum8_half.sh "$out" --live 0
+bash plot_sum8_half.sh "$out"
+"$bin" sum8-half-inspect "$out" 0 1536 3072
+```
+
+The inspection command loads the two checkpoints into a separate model.
+It compares their FP32 weights and lists the exact held-out mistakes.
+It measures the train and hidden mean cross-entropy gradients separately
+and checks the train derivative along the unit train-gradient direction
+by central differences. Held-out gradients are used only in this diagnostic.
+
+In the first paired run, steps 1,536 and 3,072 missed the same 11 words.
+All 789,788 parameter coordinates changed. Their Euclidean displacement
+was 13.92% of the starting weight norm over this interval. At step 3,072
+the train gradient norm was 3.89624 × 10⁻⁹, and the central difference
+with step size 0.001 gave 3.89621 × 10⁻⁹. All 102 held-out words with
+three through six set bits were correct. At step 20,480, train accuracy
+was 128/128 and hidden accuracy was 117/128. Ten of the eleven final
+errors were also present at step 3,072.
+
 ### Eight-bit sum on the 31-word staircase
 
 | Accepted updates | Runs fitting 31/31 | Mean hidden accuracy | Hidden correct per run (of 225) | Exact hidden recoveries |
