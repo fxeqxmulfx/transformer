@@ -264,6 +264,7 @@ FP64 singular-value decompositions of $X$ and $X-Y$ on the saved weights.
 | AdamW | 0 | 20,000 | 4,656/4,656 | 95.9999995 | 0.00002668 |
 | AdamW | 889832341 | 18,432 | 4,656/4,656 | 96.496897 | 0.526854 |
 | AdamW | 889832341 | 100,000 | 4,656/4,656 | 95.9999972 | 0.00002388 |
+| AdamW | 2849388409 | 100,000 | 4,656/4,656 | 95.9999970 | 0.00002399 |
 
 For any $m$ by $s$ table with $n$ candidate tokens, codes in the closed
 unit disk, and minimum correct-token gap $\gamma$, the nuclear distance
@@ -275,7 +276,10 @@ It applies to every choice of the unknown row and column factors on
 these dimensions. [Checkpoint margin and nuclear norm](../../src/Transformer/Grokking/FiniteRecovery/CheckpointMarginNorm.lean)
 
 The 20,000-update pilot had records for the first two seeds before the
-100,000 cohort was registered. The other ten seeds had no training
+100,000 cohort was registered. Both passed the strict 100,000-update
+test. The second seed, 2849388409, first reached 4,656/4,656 at 23,808.
+Its final minimum gaps were 20.249 on hidden and 20.262 on observed
+equations. The other ten seeds had no training
 results at registration. For a fixed budget with single-run success at
 most $3/4$, the probability of ten independent successes is at most
 $(3/4)^{10}=0.05631$. If either of two prespecified budgets can be
