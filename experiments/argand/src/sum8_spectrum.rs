@@ -8,7 +8,7 @@ use crate::{
 use serde_json::{Value, json};
 use std::{fs, path::Path};
 
-fn table(engine: &mut Engine) -> Result<Vec<f64>> {
+pub(crate) fn logit_gaps(engine: &mut Engine) -> Result<Vec<f64>> {
     let mut table = Vec::with_capacity(256);
     for start in (0..256u32).step_by(engine.config.max_batch) {
         let stop = (start + engine.config.max_batch as u32).min(256);
@@ -31,11 +31,11 @@ fn table(engine: &mut Engine) -> Result<Vec<f64>> {
                 .as_chunks::<16>()
                 .0
                 .iter()
-                .map(|z| ((f64::from(z[14]) - f64::from(z[15])) * 0.5).tanh()),
+                .map(|z| f64::from(z[14]) - f64::from(z[15])),
         );
     }
     if table.iter().any(|v| !v.is_finite()) {
-        return Err("nonfinite phase table".into());
+        return Err("nonfinite binary logit gap".into());
     }
     Ok(table)
 }
@@ -102,7 +102,11 @@ pub fn run(dir: &Path) -> Result<()> {
             &r["weights_sha256"],
             &mut engine,
         )?;
-        let spectrum = analyze(&table(&mut engine)?, &diagonal, &edge);
+        let table: Vec<_> = logit_gaps(&mut engine)?
+            .into_iter()
+            .map(|g| (g * 0.5).tanh())
+            .collect();
+        let spectrum = analyze(&table, &diagonal, &edge);
         if spectrum["unit_factor_strict_cells"].as_u64()
             != Some(
                 r["observed"]["correct"]

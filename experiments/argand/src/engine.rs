@@ -372,6 +372,22 @@ impl Engine {
         self.add_backward()
     }
 
+    /// Adds the gradient of a caller-supplied logit loss for the most
+    /// recent forward batch to the current parameter gradient.
+    pub(crate) fn accumulate_logit_gradient(&mut self, gradient: &[f32]) -> Result<()> {
+        let (_, _, batch, length) = self.last.ok_or("logit gradient requires a forward batch")?;
+        if gradient.len() != batch * length * self.config.vocab
+            || gradient.iter().any(|value| !value.is_finite())
+        {
+            return Err("invalid external logit gradient".into());
+        }
+        self.logit_grad
+            .part_mut(..gradient.len())
+            .ok_or("logit gradient capacity")?
+            .write(gradient)?;
+        self.add_backward()
+    }
+
     /// One update of `fullGradientMomentumRun` from the accumulated data
     /// gradient: adds `PENALTY * x`, then the clipped momentum step.
     pub fn full_step(&mut self, rate: f32) -> Result<()> {
@@ -458,6 +474,42 @@ impl Engine {
         }
         self.last = None;
         Ok(self.parameters.value.write(weights)?)
+    }
+}
+
+#[cfg(test)]
+mod logit_gradient_tests {
+    use super::*;
+
+    #[test]
+    #[ignore = "requires CUDA"]
+    fn external_ce_adjoint_matches_the_builtin_parameter_gradient() -> Result<()> {
+        let shape = Shape {
+            width: 16,
+            heads: 2,
+            layers: 1,
+            vocab: 4,
+            max_batch: 2,
+            max_length: 2,
+        };
+        let mut net = Engine::new(shape, 1, 23)?;
+        net.order_shared_gradients()?;
+        let tokens = [0, 3, 1, 2];
+        net.forward(&tokens, &[u32::MAX, 2, u32::MAX, 0], 2, 2)?;
+        let dz = net.logit_grad.read()?;
+        net.backward()?;
+        let expected = net.parameters.grad.read()?;
+        assert!(expected.iter().any(|x| x.abs() > 1e-3));
+        net.zero_gradient()?;
+        net.forward(&tokens, &[u32::MAX; 4], 2, 2)?;
+        assert!(net.accumulate_logit_gradient(&dz[..4]).is_err());
+        net.accumulate_logit_gradient(&dz)?;
+        assert_eq!(net.parameters.grad.read()?, expected);
+        assert!(net.accumulate_logit_gradient(&dz).is_err());
+        net.forward(&tokens, &[u32::MAX; 4], 2, 2)?;
+        net.accumulate_logit_gradient(&[0.0; 16])?;
+        assert_eq!(net.parameters.grad.read()?, expected);
+        Ok(())
     }
 }
 

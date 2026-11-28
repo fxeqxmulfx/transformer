@@ -655,6 +655,49 @@ Only the 31 observed words contribute to gradients. The first perfect
 checkpoint ends its seed. The plotted mean retains that checkpoint for
 the remaining comparison times.
 
+All eight first-update-noise runs reached 20,480 updates. Every final
+checkpoint fit 31/31 observed words. The strict hidden counts were 95,
+103, 98, 98, 96, 99, 102 and 97 out of 225, or 788/1,800 in total.
+None reached 225/225 at any scheduled check. The paired ordinary
+AdamW endpoints had 790/1,800. All noisy endpoints and saved
+intermediate measurements were independently replayed.
+
+#### Rank-one loss on unlabeled inputs
+
+The binary factor class admits a rank-one table of signs. On the same
+31 labeled words, this experiment adds a penalty to the observed mean
+cross-entropy. Each AdamW update draws five rows and five columns
+independently without replacement from the 16-by-16 cut. The resulting
+25 **unlabeled** words supply a matrix $P$ of last-position gaps
+$z_0-z_1$. For its leading singular component $P_1$, the penalty is
+$\|P-P_1\|_F^2/50$. Its selected logit adjoint is $(P-P_1)/25$ on
+token zero and its negative on token one. Both losses contribute before
+the ordinary clipping, moment update and 0.1 decoupled decay. All model
+parameters train from their paired native initialization. Strict
+stopping uses the sign table reconstructed from the observed staircase.
+An independent held-out replay checks the saved weights.
+
+For any additive binary row and column labels, correct observed signs,
+minimum absolute logit gap $m>0$, and expected patch loss below
+$m^2/7200$ imply strict recovery everywhere. Each sign-inconsistent
+two-by-two rectangle appears in exactly $1/144$ of the sampled
+patches. Every such patch has squared residual at least $m^2$.
+This gives a sufficient condition on the trajectory of the full model.
+A single sampled loss value does not estimate its population mean
+with a guaranteed error. [Rectangle loss and strict recovery](../../src/Transformer/Grokking/FiniteRecovery/RectangleLoss.lean)
+
+The certificate command checks all 14,400 four-corner sign identities
+at the saved weights. The eight ordinary 20,480-update controls fit
+all 31 observations and violated 4,864 to 5,589 identities. The first
+paired seed violated 5,212. These counts use logits alone.
+
+```
+target/release/argand sum8-adamw-rank-one runs/sum8-rank-one 20480 0
+target/release/argand sum8-adamw-rank-one-replay runs/sum8-rank-one 20480 0
+target/release/argand sum8-rectangle-certificate runs/sum8-rank-one/draw-0
+bash plot_sum8_rank_one.sh runs/sum8-adamw/draw-0 runs/sum8-rank-one/draw-0 runs/sum8-comparison
+```
+
 #### Checked proposals on a single training trajectory
 
 `adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE`

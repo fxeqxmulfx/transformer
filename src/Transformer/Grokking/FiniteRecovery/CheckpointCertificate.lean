@@ -17,7 +17,8 @@ namespace Transformer.Grokking.FiniteRecovery
 Strict recovery also requires a nonzero expectation. -/
 noncomputable def negativeBit (x : ℝ) : ZMod 2 := if x < 0 then 1 else 0
 
-private theorem negativeBit_mul {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) :
+/-- The sign bit of a product adds the bits of its nonzero factors. -/
+theorem negativeBit_mul {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) :
     negativeBit (a * b) = negativeBit a + negativeBit b := by
   rcases lt_or_gt_of_ne ha with ha | ha <;> rcases lt_or_gt_of_ne hb with hb | hb
   · simp [negativeBit, ha, hb, (mul_pos_of_neg_of_neg ha hb).not_gt]
@@ -26,7 +27,8 @@ private theorem negativeBit_mul {a b : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) :
   · simp [negativeBit, ha.not_gt, hb, mul_neg_of_pos_of_neg ha hb]
   · simp [negativeBit, ha.not_gt, hb.not_gt, (mul_pos ha hb).not_gt]
 
-private theorem strict_sign_of_residual {x y : ℝ} (h : |x-y| < |y|) :
+/-- An entrywise perturbation smaller than a nonzero magnitude preserves its sign. -/
+theorem strict_sign_of_residual {x y : ℝ} (h : |x-y| < |y|) :
     y ≠ 0 ∧ x ≠ 0 ∧ negativeBit x = negativeBit y := by
   rcases lt_trichotomy y 0 with hy | rfl | hy
   · rw [abs_of_neg hy, abs_lt] at h

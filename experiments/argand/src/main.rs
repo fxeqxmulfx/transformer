@@ -18,6 +18,7 @@ mod margins;
 mod mt;
 mod page_confirmation;
 mod page_runs;
+mod rank_one_loss;
 mod runner;
 mod suite;
 mod sum8;

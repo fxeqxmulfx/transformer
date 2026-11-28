@@ -1,7 +1,7 @@
 if .replayed != true or .runs != 8 or (.records | length) != 8 or
    (.protocol.protocol | IN("argand-sum8-adaptive-page-v1","argand-sum8-adaptive-page-sqrt-v1",
      "argand-sum8-adaptive-page-retry-v1","argand-sum8-adamw-wsd-v1","argand-sum8-adamw-first-noise-v1",
-     "argand-sum8-adamw-first-perfect-v1") | not)
+     "argand-sum8-adamw-first-perfect-v1","argand-sum8-adamw-rank-one-gap-v1") | not)
 then error("expected the replayed eight-run sum8 cohort") else . end |
 .records | map(. as $r |
   ([.initial + {step:0}] + (.milestones // []) +

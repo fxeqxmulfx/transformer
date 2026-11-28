@@ -109,8 +109,20 @@ impl AdamW {
     }
 
     pub fn step(&mut self, engine: &mut Engine, batch: Observations<'_>) -> Result<()> {
+        self.step_with_penalty(engine, batch, |_| Ok(()))
+    }
+
+    /// The supervised mean and the optional penalty contribute to the
+    /// same gradient before a single clipping and AdamW moment update.
+    pub(crate) fn step_with_penalty(
+        &mut self,
+        engine: &mut Engine,
+        batch: Observations<'_>,
+        add_penalty: impl FnOnce(&mut Engine) -> Result<()>,
+    ) -> Result<()> {
         batch.forward(engine)?;
         engine.backward()?;
+        add_penalty(engine)?;
         self.apply(engine)
     }
 

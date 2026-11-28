@@ -1,5 +1,5 @@
 //! Eight-bit modular addition on a 16-by-16 staircase. Only the observed
-//! split is passed to training. Held-out logits are scored on the host.
+//! labels enter training. The rank-one variant also uses unlabeled words.
 use crate::{
     KERNITE_VERSION, Result,
     engine::{
@@ -19,7 +19,9 @@ use std::{
 };
 
 mod proposals;
+mod rank_one;
 pub(crate) use proposals::checkpoint_proposals;
+pub(crate) use rank_one::audit as audit_rectangles;
 
 const LENGTH: usize = 8;
 const RUNS: usize = 8;
@@ -29,6 +31,7 @@ pub(crate) enum Method {
     Page(PageRule),
     AdamW,
     AdamWFirstNoise { until_perfect: bool },
+    AdamWRankOne,
 }
 impl Method {
     fn protocol_id(self) -> &'static str {
@@ -37,6 +40,7 @@ impl Method {
             Self::Page(PageRule::SquareRoot) => "argand-sum8-adaptive-page-sqrt-v1",
             Self::Page(PageRule::Retry) => "argand-sum8-adaptive-page-retry-v1",
             Self::AdamW => "argand-sum8-adamw-wsd-v1",
+            Self::AdamWRankOne => "argand-sum8-adamw-rank-one-gap-v1",
             Self::AdamWFirstNoise {
                 until_perfect: false,
             } => "argand-sum8-adamw-first-noise-v1",
@@ -48,12 +52,26 @@ impl Method {
     fn rule(self, sampling_seed: u32) -> Rule {
         match self {
             Self::Page(correction) => Rule::Page(correction),
-            Self::AdamW => Rule::AdamW(RatePlan::Wsd),
+            Self::AdamW | Self::AdamWRankOne => Rule::AdamW(RatePlan::Wsd),
             Self::AdamWFirstNoise { .. } => Rule::AdamWFirstNoise {
                 seed: sampling_seed,
             },
         }
     }
+
+    fn until_perfect(self) -> bool {
+        matches!(
+            self,
+            Self::AdamWRankOne
+                | Self::AdamWFirstNoise {
+                    until_perfect: true
+                }
+        )
+    }
+}
+
+fn word_tokens(word: u32) -> impl Iterator<Item = u32> {
+    (0..LENGTH).rev().map(move |bit| (word >> bit) & 1)
 }
 
 struct Split {
@@ -74,9 +92,7 @@ impl Split {
         for word in 0..256u32 {
             let (row, col) = (word >> 4, word & 15);
             if (col == row || col == row + 1) == observed {
-                split
-                    .tokens
-                    .extend((0..LENGTH).rev().map(|bit| (word >> bit) & 1));
+                split.tokens.extend(word_tokens(word));
                 split.labels.extend([u32::MAX; LENGTH - 1]);
                 split.labels.push(label(word));
             }
@@ -181,17 +197,22 @@ fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], method: Method) -> Value {
         "layers":6,"repeat":1,"vocab":2,"sigma":0.02,"open_words":31,"hidden_words":225,
         "mask":"big-endian nibbles; col == row or col == row + 1, without wrap",
         "success":"positive terminal true-class logit gap on all 225 hidden words"});
-    if matches!(method, Method::AdamW | Method::AdamWFirstNoise { .. }) {
-        let second = if let Method::AdamWFirstNoise { until_perfect } = method {
+    if !matches!(method, Method::Page(_)) {
+        let second = if let Method::AdamWFirstNoise { .. } = method {
             plan["gaussian_weight_noise"] = json!({"after_update":1,"stddev":FIRST_NOISE_STDDEV});
-            if until_perfect {
-                plan["stop_on"] = "first-strict-100-percent".into();
-                plan["observation_grid"] = "initial, powers of two, every 256, and budget".into();
-            }
             "first_update_noise"
+        } else if matches!(method, Method::AdamWRankOne) {
+            plan["penalty"] = json!({"table":"last-position z0-z1","rectangle":[rank_one::SIDE,rank_one::SIDE],
+                "sample":"independent uniform row and column subsets without replacement",
+                "loss":"half the mean squared residual of the leading singular component","coefficient":1});
+            "rectangle_sampling"
         } else {
             "unused"
         };
+        if method.until_perfect() {
+            plan["stop_on"] = "first-strict-100-percent".into();
+            plan["observation_grid"] = "initial, powers of two, every 256, and budget".into();
+        }
         plan["seed_order"] = json!(["native_initialization", second]);
         plan["adamw"] = RatePlan::Wsd.settings(wsd(updates));
     }
@@ -225,7 +246,7 @@ fn manifest(
     }
     let updates = requested.unwrap_or(UPDATES);
     let seeds = match method {
-        Method::AdamW | Method::AdamWFirstNoise { .. } => {
+        Method::AdamW | Method::AdamWFirstNoise { .. } | Method::AdamWRankOne => {
             let paired: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
             serde_json::from_value(paired["seeds"].clone())?
         }
@@ -275,12 +296,8 @@ fn train(
     let mut history = fs::File::create(dir.join("training.jsonl"))?;
     writeln!(history, "{}", optimizer.metrics())?;
     let start = Instant::now();
-    let until_perfect = matches!(
-        method,
-        Method::AdamWFirstNoise {
-            until_perfect: true
-        }
-    );
+    let until_perfect = method.until_perfect();
+    let mut sampler = crate::pcg::Pcg::new(&[sampling_seed]);
     let mut reason = if until_perfect && initial["hidden"]["all_strict"] == true {
         "first_strict_100_percent"
     } else {
@@ -291,15 +308,35 @@ fn train(
         if reason == "first_strict_100_percent" {
             break;
         }
-        if !optimizer.step(&mut model, observed.observations(), false)? {
+        let mut penalty = None;
+        if matches!(method, Method::AdamWRankOne) {
+            let Optimizer::AdamW(adam) = &mut optimizer else {
+                return Err("rank-one loss requires AdamW".into());
+            };
+            adam.step_with_penalty(&mut model, observed.observations(), |m| {
+                penalty = Some(rank_one::accumulate(m, &mut sampler)?);
+                Ok(())
+            })?;
+        } else if !optimizer.step(&mut model, observed.observations(), false)? {
             reason = "no_resolvable_full_step";
             break;
         }
         let observe = t.is_power_of_two() || t.is_multiple_of(256) || t == updates;
         if observe {
-            writeln!(history, "{}", optimizer.metrics())?;
+            let score = if until_perfect {
+                Some(hidden.score(&mut model)?)
+            } else {
+                None
+            };
+            let mut metrics = optimizer.metrics();
+            if let Some(loss) = penalty {
+                metrics["sampled_penalty_before_update"] = loss.into();
+                metrics["observed"] = observed.score(&mut model)?;
+                metrics["hidden"] = score.clone().unwrap_or(Value::Null);
+            }
+            writeln!(history, "{}", metrics)?;
             history.flush()?;
-            if until_perfect && hidden.score(&mut model)?["all_strict"] == true {
+            if score.is_some_and(|s| s["all_strict"] == true) {
                 reason = "first_strict_100_percent";
                 break;
             }
@@ -369,7 +406,16 @@ fn replay(
     Ok(record)
 }
 
-pub fn run(dir: &Path, requested: Option<usize>, replay_only: bool, method: Method) -> Result<()> {
+pub fn run(
+    dir: &Path,
+    requested: Option<usize>,
+    replay_only: bool,
+    method: Method,
+    only: Option<usize>,
+) -> Result<()> {
+    if only.is_some_and(|i| i >= RUNS) {
+        return Err("draw index is outside the registered cohort".into());
+    }
     fs::create_dir_all(dir)?;
     let lock = fs::File::options()
         .write(true)
@@ -379,17 +425,30 @@ pub fn run(dir: &Path, requested: Option<usize>, replay_only: bool, method: Meth
     lock.lock()?;
     let (updates, plan) = manifest(dir, requested, replay_only, method)?;
     let (observed, hidden) = (Split::new(true), Split::new(false));
+    let certificate = matches!(method, Method::AdamWRankOne).then(|| {
+        let (diagonal, edge) = observed_phase_labels();
+        let signs = crate::sum8_spectrum::staircase_signs(&diagonal, &edge);
+        Split::with_labels(false, |w| u32::from(signs[w as usize] < 0.0))
+    });
     let mut records = Vec::new();
     for (i, pair) in plan["seeds"]
         .as_array()
         .ok_or("missing run seeds")?
         .iter()
         .enumerate()
+        .filter(|(i, _)| only.is_none_or(|wanted| wanted == *i))
     {
         let cell = dir.join(format!("draw-{i}"));
         fs::create_dir_all(&cell)?;
         if !replay_only && !cell.join("result.json").try_exists()? {
-            train(&cell, pair, updates, &observed, &hidden, method)?;
+            train(
+                &cell,
+                pair,
+                updates,
+                &observed,
+                certificate.as_ref().unwrap_or(&hidden),
+                method,
+            )?;
         }
         let record = replay(&cell, pair, updates, &observed, &hidden, method)?;
         println!(
@@ -400,6 +459,9 @@ pub fn run(dir: &Path, requested: Option<usize>, replay_only: bool, method: Meth
             record["seconds"].as_f64().ok_or("missing runtime")?
         );
         records.push(record);
+    }
+    if only.is_some() {
+        return Ok(());
     }
     let successes = records
         .iter()
@@ -455,6 +517,11 @@ mod tests {
         );
         assert_eq!(early["adamw"], noisy["adamw"]);
         assert_eq!(early["stop_on"], "first-strict-100-percent");
+        let rank_one = protocol(UPDATES, pairs, Method::AdamWRankOne);
+        assert_eq!(rank_one["adamw"], adamw["adamw"]);
+        assert_eq!(rank_one["seeds"], adamw["seeds"]);
+        assert_eq!(rank_one["stop_on"], early["stop_on"]);
+        assert_eq!(rank_one["penalty"]["rectangle"], json!([5, 5]));
         Ok(())
     }
 

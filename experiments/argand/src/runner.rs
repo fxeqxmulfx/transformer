@@ -18,6 +18,7 @@ const USAGE: &str = concat!(
     "usage: argand check | peak | bench CASE UPDATES | run CASE SEED REPEAT RUN_DIR [LAST_OBSERVATION] | ",
     "replay CASE SEED REPEAT RUN_DIR | (sum8-page | sum8-replay)[-sqrt|-retry] RUN_DIR [UPDATES] | ",
     "sum8-adamw[-first-noise[-until-perfect]][-replay] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
+    "sum8-adamw-rank-one[-replay] RUN_DIR UPDATES [DRAW_INDEX] | sum8-rectangle-certificate CELL | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
     "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
@@ -169,6 +170,21 @@ pub fn command(args: &[String]) -> Result<()> {
         ("check", []) => engine::check(),
         ("peak", []) => bench::peak(),
         ("sum8-spectrum", [out]) => crate::sum8_spectrum::run(Path::new(out)),
+        ("sum8-rectangle-certificate", [cell]) => {
+            println!("{}", crate::sum8::audit_rectangles(Path::new(cell))?);
+            Ok(())
+        }
+        ("sum8-adamw-rank-one" | "sum8-adamw-rank-one-replay", [out, cap, draw @ ..])
+            if draw.len() <= 1 =>
+        {
+            crate::sum8::run(
+                Path::new(out),
+                Some(cap.parse()?),
+                op.ends_with("-replay"),
+                crate::sum8::Method::AdamWRankOne,
+                draw.first().map(|v| v.parse()).transpose()?,
+            )
+        }
         ("page-and-audit", [cell]) => {
             println!("{}", crate::and_audit::run(Path::new(cell))?);
             Ok(())
@@ -235,6 +251,7 @@ pub fn command(args: &[String]) -> Result<()> {
             } else {
                 crate::sum8::Method::Page(correction(op))
             },
+            None,
         ),
         ("bench", [name, updates]) => bench::bench(name, updates.parse()?),
         ("run", [name, seed, repeat, out, cutoff @ ..]) if cutoff.len() <= 1 => run(
