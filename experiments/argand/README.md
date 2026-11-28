@@ -328,8 +328,9 @@ At peak 0.001, decay 0.1, the final checkpoint tied the correct target with
 a competitor on every one of the 9,312 legal equations. At peak 0.0003,
 raising decay from 0.1 to 2/3 reduced the first strict hit from 17,920 to
 7,168 updates. The reloaded minimum hidden gap was 4.411. That hit preceded
-the first eligible noise proposal at 8,192. The scaled AdamW control still
-needed only 4,096 updates.
+the first eligible noise proposal at 8,192. Increasing decay to 2 left
+4,645 strict hidden answers at the 4,096-update cutoff. Decay 4 reached
+4,656 at step 3,072 with minimum gap 6.272 on the same seed and peak.
 
 Projecting the three previously saved solutions once gives the following
 independent check on feasibility. Scores use all 239 candidate tokens and
@@ -401,8 +402,9 @@ At peak 0.002 the 4,096-update prefix reached 4,651 strict hidden answers,
 with minimum gap −5.649. At peak 0.003 ordinary training reached 4,656
 strict hidden answers at update 2,816, with minimum reloaded gap 0.742.
 This is 31.25% fewer updates than the frozen 0.002 AdamW control on
-discovery seed 0. WSD was fixed at 20,000 throughout. A separate stock
-AdamW arm at 0.003 tests the effect of the larger peak.
+discovery seed 0. WSD was fixed at 20,000 throughout. When stock AdamW
+also used 0.003, it reached the same first perfect checkpoint at update
+2,816 with a larger minimum gap of 6.406.
 [Exact update and moment invariant](../../src/Transformer/Grokking/FiniteRecovery/EqualMoment.lean)
 
 For either ordinary optimizer, a common limit $G$ of the actual clipped
@@ -420,7 +422,11 @@ are 2 then 4 after a miss. Among qualifiers from these two screens, use the
 earliest hit for the fresh paired comparison, breaking ties in favor of
 one-buffer softsign. The protocol records the two discovery digests, the
 validation binary digest, and alternate arm order before the first new run.
-The eleven paired seeds remain reserved until an arm qualifies.
+The equal-decay candidate at 0.003 qualified at update 2,816 and was
+locked for the eleven fresh seeds. A secondary 0.003 stock AdamW arm was
+registered before validating the first seed. It uses the same trained
+candidate checkpoints as the primary comparison.
+[Secondary control protocol](division-optimizer-higher-rate-registration.json)
 
 ```sh
 task=grok-division-p97
@@ -434,6 +440,9 @@ $bin softsign-checkpoint-proposals "$task" 0 719 runs/division-row-clip 20000 81
 $bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
 $bin equal-moment-until-perfect "$task" 0 runs/division-equal 4096 2 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
+bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
+bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
+bash plot_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
 bash plot_division_optimizers.sh runs/division-comparison "runs/division-x2/$task/seed0" "runs/division-lion/$task/seed0"
 ```
