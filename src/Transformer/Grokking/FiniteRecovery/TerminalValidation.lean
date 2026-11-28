@@ -110,6 +110,27 @@ theorem selected_budget_count_bound (μ : Measure D) [IsProbabilityMeasure μ]
   intro b hb hw
   exact (iid_terminal_count_bound μ (hU b hb) I k).trans (mul_le_mul' le_rfl (pow_le_pow_left' hw k))
 
+/-- Credit only successful original executions retained by an arbitrary audit.
+The retained indices may depend on every outcome and on the budget. Keeping
+the full registered sample size in the tail bound also covers interruptions
+whose cause or dependence on the training trajectory is unknown. -/
+theorem selected_budget_retained_count_bound (μ : Measure D) [IsProbabilityMeasure μ]
+    (budgets : Finset B) (U : B → Set D) (hU : ∀ b ∈ budgets, MeasurableSet (U b))
+    (p : ℝ≥0∞) (I : Finset ℕ) (retain : B → (ℕ → D) → Finset ℕ) (k : ℕ) :
+    Measure.infinitePi (fun _ : ℕ => μ)
+      {z | ∃ b ∈ budgets, μ (U b) ≤ p ∧ k ≤ terminalPassCount (U b) (I ∩ retain b z) z}
+      ≤ (budgets.card : ℝ≥0∞) * ((I.card.choose k : ℝ≥0∞) * p^k) := by
+  classical
+  refine le_trans ?_ (selected_budget_count_bound μ budgets U hU p I k)
+  apply measure_mono
+  rintro z ⟨b,hb,hp,hk⟩
+  exact ⟨b,hb,hp,hk.trans (Finset.card_le_card
+    (Finset.filter_subset_filter _ Finset.inter_subset_left))⟩
+
+example := selected_budget_retained_count_bound (Measure.dirac (0 : ℕ))
+  ({100000,200000} : Finset ℕ) (fun _ => Set.univ) (fun _ _ => MeasurableSet.univ)
+  (1/2) (Finset.Ico 2 12) (fun _ _ => Finset.Ico 3 12) 9
+
 /-- With ten fresh independent draws and two candidate budgets, even
 nine successes reject a single-run probability at most one half at 5%. -/
 theorem nine_of_ten_two_budgets (μ : Measure D) [IsProbabilityMeasure μ]

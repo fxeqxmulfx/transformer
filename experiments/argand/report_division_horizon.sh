@@ -9,8 +9,13 @@ if [[ -s confirmation.json ]]; then summary=confirmation.json; fi
 for ((i=0; i<12; i++)); do
     cell="draw-$i"
     [[ -s "$cell/replay.json" && -s "$cell/observed-certificate.json" ]] || continue
-    jq -cn --argjson i "$i" --slurpfile r "$cell/replay.json" --slurpfile c "$cell/observed-certificate.json" \
-        '{index:$i,replay:$r[0],certificate:$c[0]}'
+    interrupted=0
+    for prefix in "$cell"/interrupted/step-*/observations.jsonl; do
+        if [[ -s "$prefix" ]]; then ((interrupted+=1)); fi
+    done
+    jq -cn --argjson i "$i" --argjson interrupted "$interrupted" \
+        --slurpfile r "$cell/replay.json" --slurpfile c "$cell/observed-certificate.json" \
+        '{index:$i,interrupted:$interrupted,replay:$r[0],certificate:$c[0]}'
 done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
     $plan[0] as $p |
     if $p.case!="grok-division-p97" or $p.correction!="adamw-wsd" or $p.n!=12 or
@@ -33,7 +38,7 @@ done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
            $s.all_strict!=($c.hidden.minimum_gap>0) or ($s.all_strict and $r.splits.hidden.correct!=4656) or
            $c.accept!=($s.all_strict and $c.observed.strict_correct==4656)
         then error("inconsistent terminal evidence for draw \($i)") else
-           {index:$i,seed:$c.seed,weights_sha256:$c.weights_sha256,success:$s.all_strict,
+           {index:$i,seed:$c.seed,interrupted_attempts:.interrupted,weights_sha256:$c.weights_sha256,success:$s.all_strict,
             hidden_correct:$s.strict_correct,hidden_min_gap:$s.min_gap,
             observed_correct:$c.observed.strict_correct,all_inputs_certificate:$c.accept} end) as $rows |
     def count_at($n):
@@ -44,9 +49,13 @@ done | jq -es --slurpfile plan protocol.json --slurpfile summary "$summary" '
     ($rows|count_at(12)) as $all |
     if $summary[0]!=null and ($summary[0].protocol!=$p or ($all.evaluated==12 and $summary[0].successes!=$all.successes))
     then error("confirmation disagrees with verified terminal outcomes") else . end |
-    ($rows|map(select(.index>=2))|count_at(10)) as $fresh |
+    ($rows|map(select(.index>=2))) as $new |
+    ($new|count_at(10)) as $fresh |
+    ($new|map(select(.interrupted_attempts==0 and .success))|length) as $original |
     {updates:$p.updates,all_draws:$all,unseen_in_pilot:$fresh,
      two_budget_iid_null_tail_upper_bounds:(if $fresh.evaluated==10 then
-       {at_least_successes:$fresh.successes,single_run_at_most_half:tail_bound($fresh.successes;0.5),
-        single_run_at_most_three_quarters:tail_bound($fresh.successes;0.75)} else null end),
+       {registered:10,at_least_successes:$original,
+        interrupted_draws:($new|map(select(.interrupted_attempts>0))|length),
+        single_run_at_most_half:tail_bound($original;0.5),
+        single_run_at_most_three_quarters:tail_bound($original;0.75)} else null end),
      draws:$rows}'

@@ -311,7 +311,13 @@ fields assume one fixed budget and twelve fresh trials.
 For the original one-half question, nine of the ten fresh draws suffice
 at the 5% level. Across two candidate budgets the upper bound under the
 null is $2\binom{10}{9}2^{-9}=5/128$. The verified report includes the
-corresponding bounds for the final number of successful validation draws.
+corresponding bounds for the number of fresh successes on uninterrupted
+first attempts. Even if interruption depends on the trajectory, removing
+a success can only decrease the count. The bound keeps all ten registered
+draws in its sample size. A restarted seed still contributes its terminal
+result to the requested twelve-seed fraction. The first attempt at seed
+2434973590 reached a strict 4,656/4,656 at update 25,600 and stopped after
+the recorded evaluation at 36,864. The rerun uses the same seed and schedule.
 [Terminal validation theorem](../../src/Transformer/Grokking/FiniteRecovery/TerminalValidation.lean)
 
 Two independent ordinary AdamW runs of seed 113 on the same 256-update
