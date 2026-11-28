@@ -1,0 +1,33 @@
+{
+  "case": "grok-division-p97",
+  "algorithm": "ordinary bias-corrected AdamW, stock Gaussian initialization from the u32 seed, production minibatches shuffled by the seed plus 10000, ordered FP32 gradient reductions",
+  "source_commit": "869e3518",
+  "binary_sha256": "27388112f8fa7779dc1081ffa85ec4dd8121b48e2ef5ff134d41ffb41b198903",
+  "seeds": [
+    1831168203,
+    1634773071,
+    1145751978,
+    1405009868,
+    2641923752,
+    3062357798,
+    4200482209,
+    424248970,
+    3313640337,
+    3309871335,
+    3296335073
+  ],
+  "seed_law": "11 fresh independent uniform u32 draws with replacement from /dev/urandom, committed before training",
+  "peak": 0.003,
+  "weight_decay": 0.1,
+  "beta1": 0.9,
+  "beta2": 0.95,
+  "wsd": 20000,
+  "horizon": 40960,
+  "observe": 256,
+  "gradient_reduction": "ordered-f32-v1",
+  "latest_entry": 20000,
+  "primary": "Learned and persistent: the step-0 hidden table is not 4656/4656 exact, and some observation at or before the WSD budget starts a run of strict 4656/4656 hidden predictions at every later observation through the horizon. The final checkpoint is reloaded and all 239 output tokens are compared against labels reconstructed from the 4656 observed equations.",
+  "secondary": "No relapse: every observation from the first strict one through the horizon is strict. Also report the first strict step, the last non-strict step after it, and the least hidden gap from the first strict observation.",
+  "handling": "One uninterrupted trajectory per seed. Count a hardware interruption as failure. No noise, restart, checkpoint selection or between-seed selection. Report all 11 trials.",
+  "inference": "Single prespecified primary endpoint. Under independent identically distributed whole trials and success probability at most 3/4, the probability of eleven passes is at most (3/4)^11 < 0.05. Steps between observations are not scored."
+}
