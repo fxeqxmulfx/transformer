@@ -41,6 +41,7 @@ public import Transformer.Grokking.FiniteRecovery.ArgandReachability
 public import Transformer.Grokking.FiniteRecovery.FirstNoiseConfidence
 public import Transformer.Grokking.FiniteRecovery.FactorFirstNoise
 public import Transformer.Grokking.FiniteRecovery.FlatFirstNoise
+public import Transformer.Grokking.FiniteRecovery.TransitionFirstNoise
 public import Transformer.Grokking.FiniteRecovery.FlatAnchoredRecovery
 
 /-! Finite recovery from observed labeled words. The full single-stream
@@ -116,4 +117,6 @@ horizon in real arithmetic. For any identifiable, strictly representable
 target, each trial has positive strict success mass. Independent trials
 eventually retain a verified model almost surely. This applies to the
 whole group-factor class and to binary sums of 8, 16 and 32 variables
-on their minimum Flat Spectrum masks. -/
+on their minimum Flat Spectrum masks. Any shared deterministic transition
+on 64 states is recovered across all series sites once the observed
+histories cover every occurring final state. -/

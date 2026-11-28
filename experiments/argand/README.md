@@ -505,6 +505,13 @@ it applies on their exact Flat Spectrum masks of 31, 511 and 131,071
 observations. These instances use four heads of width 16, six layers and
 one pass at the original rates. [Factor tables](../../src/Transformer/Grokking/FiniteRecovery/FactorFirstNoise.lean) · [Flat Spectrum and modular sums](../../src/Transformer/Grokking/FiniteRecovery/FlatFirstNoise.lean)
 
+For series with any shared deterministic next-state law on 64 states, the
+same architecture realizes every transition table at the native RMS
+offset. The minimum number of labeled histories is the number of distinct
+final states occurring across all sites. A covering mask suffices for
+certified recovery at the stock WSD rates. For example, the 64 constant
+histories cover all $64^{32}$ histories of length 32. [Multi-series transition recovery](../../src/Transformer/Grokking/FiniteRecovery/TransitionFirstNoise.lean)
+
 On Boolean AND, model/noise seed pairs 0/371 and 1/372 each gave strict
 correct answers on all 130,763 hidden binary strings of lengths 8 through
 16 at update 1,000. A 256-update division control with model seed 113 and

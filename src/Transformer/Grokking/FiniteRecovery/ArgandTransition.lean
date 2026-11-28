@@ -19,15 +19,19 @@ namespace Transition
 noncomputable def basis {c : ℕ} (a : Fin c) : CSpace c :=
   EuclideanSpace.single a 1
 
-noncomputable def rmsAmplitude (c : ℕ) (a : ℝ) : ℝ :=
-  Real.sqrt c / (a + 1) * a
+noncomputable def rmsAmplitude (c : ℕ) (a : ℝ) (eps : ℝ := 1) : ℝ :=
+  Real.sqrt c / (a + eps) * a
+
+theorem rmsAmplitude_pos_at {eps : ℝ} (he : 0 < eps) {c : ℕ} (hc : 0 < c) {a : ℝ} (ha : 0 < a) :
+    0 < rmsAmplitude c a eps :=
+  mul_pos (div_pos (Real.sqrt_pos.mpr (Nat.cast_pos.mpr hc)) (add_pos ha he)) ha
 
 private theorem rmsAmplitude_pos {c : ℕ} (hc : 0 < c) {a : ℝ} (ha : 0 < a) :
     0 < rmsAmplitude c a :=
-  mul_pos (div_pos (Real.sqrt_pos.mpr (Nat.cast_pos.mpr hc)) (by positivity)) ha
+  rmsAmplitude_pos_at zero_lt_one hc ha
 
-private theorem argandRMS_basis {c : ℕ} (i : Fin c) {a : ℝ} (ha : 0 ≤ a) :
-    argandRMS 1 ((a : ℂ) • basis i) = ((rmsAmplitude c a : ℝ) : ℂ) • basis i := by
+theorem argandRMS_basis_at (eps : ℝ) {c : ℕ} (i : Fin c) {a : ℝ} (ha : 0 ≤ a) :
+    argandRMS eps ((a : ℂ) • basis i) = ((rmsAmplitude c a eps : ℝ) : ℂ) • basis i := by
   have hnorm : ‖basis i‖ = 1 := by simp [basis, PiLp.norm_single]
   rw [argandRMS, norm_smul, hnorm, mul_one, Complex.norm_real, Real.norm_of_nonneg ha, smul_smul]
   rw [← Complex.ofReal_mul]
@@ -71,39 +75,39 @@ noncomputable def transitionLayer {H d : ℕ}
   ⟨⟨0, 0, 0, 0⟩, ⟨project, project, sendBasis next⟩, 1,
     ⟨0, 0⟩, ⟨(-(u : ℂ)⁻¹) • coordinates (H * d), 0⟩⟩
 
-private theorem transitionLayer_forward {P : Type*} [Fintype P] {H d : ℕ}
+theorem transitionLayer_forward_at {P : Type*} [Fintype P] {H d : ℕ} (eps : ℝ) (he : 0 < eps)
     (hc : 0 < H * d) (next : Fin (H * d) → Fin (H * d)) (geometry : AttentionGeometry P d)
     (scale : ℝ) {a : ℝ} (ha : 0 < a) (word : P → Fin (H * d)) :
-    (transitionLayer next (rmsAmplitude (H * d) a)).forwardWith 1 scale geometry
+    (transitionLayer next (rmsAmplitude (H * d) a eps)).forwardWith eps scale geometry
       (fun i => (a : ℂ) • basis (word i)) =
-        fun i => ((scale * rmsAmplitude (H * d) 1 : ℝ) : ℂ) • basis (next (word i)) := by
+        fun i => ((scale * rmsAmplitude (H * d) 1 eps : ℝ) : ℂ) • basis (next (word i)) := by
   let c := H * d
-  let u := rmsAmplitude c a
+  let u := rmsAmplitude c a eps
   let x : P → CSpace c := fun i => (a : ℂ) • basis (word i)
-  have huv : (u : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (rmsAmplitude_pos hc ha).ne'
-  have hx : sublayer ⟨0, 0⟩ 1 scale
-      (attentionWith geometry (⟨0, 0, 0, 0⟩ : Attention c H d) 1 1) x = x := by
+  have huv : (u : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (rmsAmplitude_pos_at he hc ha).ne'
+  have hx : sublayer ⟨0, 0⟩ eps scale
+      (attentionWith geometry (⟨0, 0, 0, 0⟩ : Attention c H d) eps 1) x = x := by
     funext i
     simp [sublayer, attentionWith, argandRMS]
-  have hnormalized (i : P) : argandRMS 1 (x i) = (u : ℂ) • basis (word i) :=
-    argandRMS_basis (word i) ha.le
+  have hnormalized (i : P) : argandRMS eps (x i) = (u : ℂ) • basis (word i) :=
+    argandRMS_basis_at eps (word i) ha.le
   have hproject (i : P) :
-      (((u : ℂ)⁻¹) • liftBasis c) (argandRMS 1 (x i)) = Pi.single (slot (word i)) 1 := by
+      (((u : ℂ)⁻¹) • liftBasis c) (argandRMS eps (x i)) = Pi.single (slot (word i)) 1 := by
     rw [hnormalized, LinearMap.smul_apply, map_smul, smul_smul, inv_mul_cancel₀ huv,
       one_smul, liftBasis_basis]
-  have hskip (i : P) : ((-(u : ℂ)⁻¹) • coordinates c) (argandRMS 1 (x i)) = -1 := by
+  have hskip (i : P) : ((-(u : ℂ)⁻¹) • coordinates c) (argandRMS eps (x i)) = -1 := by
     rw [hnormalized, LinearMap.smul_apply, map_smul, coordinates_basis, smul_eq_mul, smul_eq_mul,
       mul_one, neg_mul, inv_mul_cancel₀ huv]
   funext i
-  change sublayer ⟨(-(u : ℂ)⁻¹) • coordinates c, 0⟩ 1 scale
+  change sublayer ⟨(-(u : ℂ)⁻¹) • coordinates c, 0⟩ eps scale
     (fun z j => sendBasis next
       ((((u : ℂ)⁻¹) • liftBasis c) (z j) * (((u : ℂ)⁻¹) • liftBasis c) (z j)))
-    (sublayer ⟨0, 0⟩ 1 scale
-      (attentionWith geometry (⟨0, 0, 0, 0⟩ : Attention c H d) 1 1) x) i = _
+    (sublayer ⟨0, 0⟩ eps scale
+      (attentionWith geometry (⟨0, 0, 0, 0⟩ : Attention c H d) eps 1) x) i = _
   rw [hx]
   simp only [sublayer, hskip, hproject, single_mul_single_one, sendBasis_single, add_neg_cancel,
     zero_smul, LinearMap.zero_apply, add_zero, mul_one, zero_add]
-  have hout := argandRMS_basis (next (word i)) (a := 1) zero_le_one
+  have hout := argandRMS_basis_at eps (next (word i)) (a := 1) zero_le_one
   rw [Complex.ofReal_one, one_smul] at hout
   rw [hout, smul_smul, ← Complex.ofReal_mul]
 
@@ -145,7 +149,7 @@ theorem transitionModel_logits {H d T : ℕ} (hc : 0 < H * d)
   have hnorm : (fun j => argandRMS 1 ((a : ℂ) • basis (word j))) =
       fun j => ((rmsAmplitude c a : ℝ) : ℂ) • basis (word j) := by
     funext j
-    exact argandRMS_basis (word j) ha.le
+    exact argandRMS_basis_at 1 (word j) ha.le
   have hhidden : (transitionModel next margin).hidden 1 word i =
       ((outputAmplitude c : ℝ) : ℂ) • basis (next (word i)) := by
     unfold Model.hidden Model.hiddenWith transitionModel
@@ -155,8 +159,8 @@ theorem transitionModel_logits {H d T : ℕ} (hc : 0 < H * d)
       Nat.cast_one, mul_one]
     change argandRMS 1 ((transitionLayer next (rmsAmplitude c (rmsAmplitude c a))).forwardWith
       1 transitionScale (causalGeometry 0) (fun j => argandRMS 1 ((a : ℂ) • basis (word j))) i) = _
-    rw [hnorm, transitionLayer_forward hc next _ _ (rmsAmplitude_pos hc ha)]
-    exact argandRMS_basis _ (mul_pos transitionScale_pos (rmsAmplitude_pos hc one_pos)).le
+    rw [hnorm, transitionLayer_forward_at 1 zero_lt_one hc next _ _ (rmsAmplitude_pos hc ha)]
+    exact argandRMS_basis_at 1 _ (mul_pos transitionScale_pos (rmsAmplitude_pos hc one_pos)).le
   rw [Model.logits, hhidden, Model.readout]
   change (⟪(a : ℂ) • basis token, ((outputAmplitude c : ℝ) : ℂ) • basis (next (word i))⟫_ℂ).re / 2 = _
   rw [inner_smul_left, inner_smul_right]
