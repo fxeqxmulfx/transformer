@@ -433,6 +433,14 @@ The paired time is measured in updates through the first strict hidden
 success, with the penalty for missing the cutoff specified in the protocol.
 [Repair validation protocol](division-uncorrected-paired-registration.json)
 
+For eleven complete independent pairs, let $D$ be candidate time minus
+control time. If $m$ is a population median, $P(D<m)\leq 1/2$. For the
+ninth-smallest observed difference to fall below $m$, at least nine of
+the eleven values must be strictly smaller. The binomial upper tail is
+at most $67/2048$, giving one-sided coverage of at least $1981/2048$
+even when a grid produces ties. Both arms on a given seed may be dependent.
+[Paired median bound](../../src/Transformer/Grokking/FiniteRecovery/PairedFirstHitValidation.lean)
+
 For moment decays $a,b$ with $a^2<b<1$, the two uncorrected buffers
 satisfy $m_t^2\leq K v_t$ for all clipped gradient histories, where
 $K=b(1-a)^2/[(1-b)(b-a^2)]$. Taking the second gain to be half the

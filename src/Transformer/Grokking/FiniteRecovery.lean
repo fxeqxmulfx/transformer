@@ -36,6 +36,7 @@ public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
 public import Transformer.Grokking.FiniteRecovery.TerminalBinomial
 public import Transformer.Grokking.FiniteRecovery.TerminalTail
+public import Transformer.Grokking.FiniteRecovery.PairedFirstHitValidation
 public import Transformer.Grokking.FiniteRecovery.FirstPerfect
 public import Transformer.Grokking.FiniteRecovery.NativeFirstPerfect
 public import Transformer.Grokking.FiniteRecovery.ArgandCheckpointProposals
