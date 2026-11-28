@@ -453,6 +453,13 @@ trajectory gives the same positive single-run mass $p$ and the same
 miss probability $(1-p)^m$ after $m$ trials in every encoding.
 [Full training dynamics](../../src/Transformer/Grokking/FiniteRecovery/AdamWRelabeling.lean) · [Division and other factor tables](../../src/Transformer/Grokking/FiniteRecovery/DivisionRelabeling.lean)
 
+`division-relabel CELL` checks the finite-precision forward pass of the
+saved weights under the vocabulary reversal $e(t)=238-t$. It compares all
+239 logits at all five positions of all 9,312 prompts. Labels for the strict
+answer check are reconstructed from the training split. At update 100,000
+the first three completed checkpoints matched bit for bit on all 33,383,520
+logit comparisons combined. Each retained 4,656 strict hidden answers.
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by

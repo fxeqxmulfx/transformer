@@ -19,7 +19,7 @@ const USAGE: &str = concat!(
     "(sum8-adamw | sum8-adamw-replay) RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
-    "division-certificate CELL (terminal|first-strict) | division-mask-lean"
+    "division-certificate CELL (terminal|first-strict) | division-relabel CELL | division-mask-lean"
 );
 
 fn training_rule(op: &str) -> crate::page_runs::Rule {
@@ -60,6 +60,13 @@ pub fn command(args: &[String]) -> Result<()> {
             println!(
                 "{}",
                 crate::division_certificate::check(Path::new(cell), kind == "first-strict")?
+            );
+            Ok(())
+        }
+        ("division-relabel", [cell]) => {
+            println!(
+                "{}",
+                crate::division_certificate::relabel::check(Path::new(cell))?
             );
             Ok(())
         }

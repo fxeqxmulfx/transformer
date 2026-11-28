@@ -11,6 +11,7 @@ use serde_json::{Value, json};
 use std::{fs, path::Path};
 
 pub(crate) mod mask;
+pub(crate) mod relabel;
 mod spectrum;
 
 const N: usize = eq::P - 1;
@@ -23,6 +24,14 @@ struct Completion {
 }
 
 impl Completion {
+    fn original_split() -> Result<Self> {
+        let open = eq::split(0, 4656).0;
+        if eq::fingerprint(&open) != division::TRAIN_HASH {
+            return Err("training fingerprint mismatch".into());
+        }
+        Self::from_observations(&open)
+    }
+
     fn from_observations(rows: &[eq::Equation]) -> Result<Self> {
         let mut observed = vec![false; eq::P * N];
         let mut zero = None;
@@ -75,6 +84,15 @@ impl Completion {
             1 + self.units[a - 1 + N * (b - 1)]
         }
     }
+
+    fn examples(&self) -> Vec<crate::data::Example> {
+        (0..eq::P * N)
+            .map(|i| {
+                let (a, b) = (i / N, i % N + 1);
+                division::example(a, b, self.label(a, b))
+            })
+            .collect()
+    }
 }
 
 #[derive(Default)]
@@ -97,15 +115,11 @@ impl Counts {
     }
 }
 
-pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
-    let (metadata, weights, output) = if first {
-        (
-            "first-strict.json",
-            "first-strict.f32",
-            "first-strict-certificate.json",
-        )
+fn checkpoint(dir: &Path, first: bool) -> Result<(Value, Engine)> {
+    let (metadata, weights) = if first {
+        ("first-strict.json", "first-strict.f32")
     } else {
-        ("result.json", "weights.f32", "observed-certificate.json")
+        ("result.json", "weights.f32")
     };
     let record: Value = serde_json::from_slice(&fs::read(dir.join(metadata))?)?;
     let id = &record["identity"];
@@ -124,19 +138,16 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
                 .into(),
         );
     }
-    let open = eq::split(0, 4656).0;
-    if eq::fingerprint(&open) != division::TRAIN_HASH {
-        return Err("training fingerprint mismatch".into());
-    }
-    let completion = Completion::from_observations(&open)?;
     let mut engine = Engine::new(spec, 1, 0)?;
     load_weights(dir, weights, &record["weights_sha256"], &mut engine)?;
-    let examples: Vec<_> = (0..eq::P * N)
-        .map(|i| {
-            let (a, b) = (i / N, i % N + 1);
-            division::example(a, b, completion.label(a, b))
-        })
-        .collect();
+    Ok((record, engine))
+}
+
+pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
+    let (record, mut engine) = checkpoint(dir, first)?;
+    let id = &record["identity"];
+    let completion = Completion::original_split()?;
+    let examples = completion.examples();
     let order: Vec<_> = (0..examples.len() as u32).collect();
     let mut counts = [Counts::default(), Counts::default()];
     let mut phases = spectrum::PhaseTable::new();
@@ -171,6 +182,11 @@ pub(crate) fn check(dir: &Path, first: bool) -> Result<Value> {
         "unit_graph_components":completion.graph.connected_components,"zero_row_label":completion.zero,
         "phase_generator":5,"row_phases":completion.graph.row_phases,"column_phases":completion.graph.column_phases,
         "matching":completion.graph.perfect_matching,"unit_character_spectrum":phases.report()?});
+    let output = if first {
+        "first-strict-certificate.json"
+    } else {
+        "observed-certificate.json"
+    };
     publish(dir, output, &serde_json::to_vec_pretty(&report)?)?;
     Ok(report)
 }
