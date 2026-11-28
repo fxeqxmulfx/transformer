@@ -1,0 +1,13 @@
+{
+  "case": "grok-division-p97",
+  "primary_registration_sha256": "55c171b9b2e4d8a0a72bfc55ced4fd4a9cb8fe14ad40c0462f33fe92d61bacc9",
+  "seeds": "Reuse all eleven seeds in division-optimizer-paired-registration.json in their frozen order.",
+  "candidate": "Reuse each existing candidate checkpoint from the primary comparison. Select the candidate on discovery seed 0 only.",
+  "control": {"optimizer": "adamw-scaled-wsd", "rate_multiplier": 3, "weight_decay": 0.1, "beta1": 0.9, "beta2": 0.95},
+  "schedule_budget": 20000,
+  "first_budget": 20000,
+  "evaluation_interval": 256,
+  "first_hit": "The saved model has all 4656 hidden answers strictly correct against all 239 logits on replay and observed-label reconstruction.",
+  "report": "Report success totals, paired first-hit steps, earlier/tied/later counts and the median paired step difference. Keep interruptions and right-censored misses visible. The 0.002 primary control retains its original status.",
+  "discovery": "At peak 0.003, both ordinary AdamW and the uncorrected equal-decay candidate first attained strict perfection at update 2816 on seed 0. This secondary arm was registered before opening any primary validation seed."
+}
