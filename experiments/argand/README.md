@@ -639,6 +639,44 @@ Only the 31 observed words contribute to gradients. The first perfect
 checkpoint ends its seed. The plotted mean retains that checkpoint for
 the remaining comparison times.
 
+#### Checked proposals on a single training trajectory
+
+`adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE`
+runs ordinary AdamW and stops at the first strictly perfect primary score.
+At eligible measurements, a failed ordinary checkpoint gets one forward
+evaluation of a copy with independent Gaussian coordinate perturbations
+at standard deviation `1e-6`. A rejection restores the exact weight
+buffer. The ordinary optimizer retains its moments and minibatch position.
+A perfect ordinary checkpoint ends training immediately. Setting the first
+eligible update to the effective cap reserves the extra check for failures
+at that cap. Division obtains its verification labels from the observed
+factor graph. Other GPT tasks use their specified primary validation split.
+
+With ordered gradient reductions, the checked and ordinary Boolean AND shift
+runs on seed 0 both selected byte-identical weights at update 48 (7/7).
+On division, seed 113 at update 256 retained byte-identical ordinary weights
+and replayed 60/4,656 after rejected proposals. In particular the two
+forward checks did not change the next AdamW update.
+
+`sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE`
+evaluates the saved checkpoints from one ordinary eight-bit sum training
+trajectory. It reconstructs all labels from the 31 observed staircase signs
+and independently replays the selected weights on the 225 hidden words.
+With proposal seeds 371 through 378 on the eight paired stock trajectories,
+none of 248 proposed copies passed. The original weights were preserved
+on all eight. Only one proposal changed the number of correct hidden
+answers, from 99 to 98 at update 13,312 for model seed 4195447240.
+
+For a finite native task with an identifying mask and a strict full-model
+realization, Lean proves almost-sure finite success on one continuing
+real-arithmetic AdamW trajectory, conditional on any initialization. The
+0.1 weight decay bounds every checkpoint in the same compact ball.
+Full-support independent Gaussian copies then give a common positive
+conditional hit probability, so the chance of missing all of the first
+$m$ checks tends to zero. The native FP32 pseudorandom generator has
+finite support. Its actual success probability and the number of checks
+needed to exceed 75% on hardware remain unknown. [Single-trajectory proof and the modular tasks](../../src/Transformer/Grokking/FiniteRecovery/ArgandCheckpointProposals.lean)
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by

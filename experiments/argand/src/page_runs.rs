@@ -21,6 +21,13 @@ pub(crate) enum Stop {
     Horizon,
     Pass99,
     Perfect,
+    CheckpointProposal { seed: u32, first: usize },
+}
+
+impl Stop {
+    fn on_perfect(self) -> bool {
+        matches!(self, Self::Perfect | Self::CheckpointProposal { .. })
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -218,7 +225,7 @@ impl Job {
             "suite_sha256":suite::suite_hash(),"kernite":KERNITE_VERSION,"repeat":1,"budget":self.until,
             "fixed_horizon":stop==Stop::Horizon,"width":self.shape.width,"heads":self.shape.heads,"layers":self.shape.layers,
             "batch":self.batch,"observe":self.every,"vocab":self.shape.vocab});
-        if stop == Stop::Perfect {
+        if stop.on_perfect() {
             identity["stop_on"] = "first-strict-100-percent".into();
         }
         if self.ordered_gradients {
@@ -270,6 +277,19 @@ impl Job {
                     "stddev":crate::engine::adamw::FIRST_NOISE_STDDEV});
             }
         }
+        let division = self.row["name"] == division::NAME;
+        let mut proposals = if let Stop::CheckpointProposal { seed, first } = stop {
+            if first > self.until {
+                return Err("first proposal exceeds the effective observation cap".into());
+            }
+            identity["optimizer"] = "adamw-wsd-checkpoint-proposals".into();
+            identity["checkpoint_proposals"] = json!({"seed":seed,"first_eligible_update":first,
+                "stddev":crate::engine::adamw::FIRST_NOISE_STDDEV,
+                "labels":if division {"reconstructed-from-observations"} else {"primary-validation-split"}});
+            Some((Random::new(seed), first))
+        } else {
+            None
+        };
         let mut engine = Engine::new(self.shape.clone(), 1, seed)?;
         if dir.join("result.json").try_exists()? {
             let record: Value = serde_json::from_slice(&fs::read(dir.join("result.json"))?)?;
@@ -283,7 +303,14 @@ impl Job {
             engine.order_shared_gradients()?;
         }
         let train = &self.task.splits["train"];
-        let hidden = &self.task.splits[&self.task.selection];
+        let reconstructed = if proposals.is_some() && division {
+            Some(crate::division_certificate::reconstructed_hidden()?)
+        } else {
+            None
+        };
+        let hidden = reconstructed
+            .as_ref()
+            .unwrap_or(&self.task.splits[&self.task.selection]);
         let mut rng = Random::new(seed.wrapping_add(10000));
         let mut epoch: Vec<u32> = (0..u32::try_from(train.len())?).collect();
         let batches = epoch.len().div_ceil(self.batch);
@@ -293,12 +320,22 @@ impl Job {
         let mut first_strict = None;
         let mut log = fs::File::create(dir.join("observations.jsonl"))?;
         let start = Instant::now();
-        let division = self.row["name"] == division::NAME;
         for step in 0..=self.until {
             if step.is_multiple_of(self.every)
                 || step == self.until
                 || Some(step) == geometric_after
             {
+                let decision = match &mut proposals {
+                    Some((rng, first)) if step >= *first => {
+                        Some(crate::checkpoint_proposal::evaluate(
+                            &mut engine,
+                            rng,
+                            crate::engine::adamw::FIRST_NOISE_STDDEV,
+                            |m| strict(m, hidden),
+                        )?)
+                    }
+                    _ => None,
+                };
                 let score = metrics::evaluate(&mut engine, hidden, true)?;
                 let correct = score["exact"].as_u64().ok_or("missing exact score")? as usize;
                 let passed = correct * 100 >= 99 * hidden.len();
@@ -317,9 +354,19 @@ impl Job {
                     && first_strict.is_none()
                     && step > 0
                     && correct == hidden.len();
-                let check_perfect = stop == Stop::Perfect && correct == hidden.len();
+                let check_perfect = stop.on_perfect() && correct == hidden.len();
+                if let Some(d) = decision {
+                    record["checkpoint_proposal"] = d;
+                }
                 if finish || check_first || check_perfect {
                     record["strict"] = strict(&mut engine, hidden)?;
+                }
+                if record["checkpoint_proposal"]["accepted"] == true
+                    && (!check_perfect || record["strict"]["all_strict"] != true)
+                {
+                    return Err(
+                        "accepted checkpoint disagrees with the selected model score".into(),
+                    );
                 }
                 if check_perfect && record["strict"]["all_strict"] == true {
                     first_strict = Some(step);

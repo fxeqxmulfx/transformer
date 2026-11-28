@@ -144,9 +144,7 @@ impl AdamW {
         if let Some(seed) = self.first_noise_seed.take() {
             let mut rng = Random::new(seed);
             let mut weights = p.value.read()?;
-            for x in &mut weights {
-                *x += rng.gauss(0.0, FIRST_NOISE_STDDEV) as f32;
-            }
+            crate::checkpoint_proposal::add_gaussian(&mut weights, &mut rng, FIRST_NOISE_STDDEV);
             p.value.write(&weights)?;
         }
         Ok(())

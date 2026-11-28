@@ -18,6 +18,9 @@ use std::{
     time::Instant,
 };
 
+mod proposals;
+pub(crate) use proposals::checkpoint_proposals;
+
 const LENGTH: usize = 8;
 const RUNS: usize = 8;
 const UPDATES: usize = 20_480;
@@ -60,6 +63,10 @@ struct Split {
 
 impl Split {
     fn new(observed: bool) -> Self {
+        Self::with_labels(observed, |word| word.count_ones() % 2)
+    }
+
+    fn with_labels(observed: bool, label: impl Fn(u32) -> u32) -> Self {
         let mut split = Self {
             tokens: Vec::new(),
             labels: Vec::new(),
@@ -71,7 +78,7 @@ impl Split {
                     .tokens
                     .extend((0..LENGTH).rev().map(|bit| (word >> bit) & 1));
                 split.labels.extend([u32::MAX; LENGTH - 1]);
-                split.labels.push(word.count_ones() % 2);
+                split.labels.push(label(word));
             }
         }
         split

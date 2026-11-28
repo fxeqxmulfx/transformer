@@ -103,6 +103,20 @@ struct Counts {
     min_gap: Option<f64>,
 }
 
+/// Keep the frozen held-out input order and reconstruct every label from
+/// observed factors. The verifier reads only the operands of a hidden row.
+pub(crate) fn reconstructed_hidden() -> Result<Vec<crate::data::Example>> {
+    let completion = Completion::original_split()?;
+    Ok(eq::split(0, 4656)
+        .1
+        .iter()
+        .map(|e| {
+            let (a, b) = (usize::from(e.num), usize::from(e.den));
+            division::example(a, b, completion.label(a, b))
+        })
+        .collect())
+}
+
 impl Counts {
     fn add(&mut self, row: margins::RowMargin) {
         self.correct += usize::from(row.gap > 0.0);

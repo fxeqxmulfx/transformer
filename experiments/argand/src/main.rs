@@ -5,6 +5,7 @@ use arithmetic::{hash, reference as arithmetic_data};
 include!(concat!(env!("OUT_DIR"), "/upstream.rs"));
 mod and_audit;
 mod bench;
+mod checkpoint_proposal;
 mod division;
 mod division_certificate;
 #[allow(dead_code)]

@@ -40,17 +40,22 @@ fn table(engine: &mut Engine) -> Result<Vec<f64>> {
     Ok(table)
 }
 
+/// Reconstruct the sign table from the observed diagonal and superdiagonal.
+pub(crate) fn staircase_signs(diagonal: &[f64; 16], edge: &[f64; 15]) -> [f64; 256] {
+    let mut cols = [1.0; 16];
+    for i in 0..15 {
+        cols[i + 1] = cols[i] * diagonal[i] * edge[i];
+    }
+    std::array::from_fn(|i| diagonal[i / 16] * cols[i / 16] * cols[i % 16])
+}
+
 fn analyze(x: &[f64], diagonal: &[f64; 16], edge: &[f64; 15]) -> Value {
     let s = crate::svd::thin(x, 16, 16);
     let (mut residual, mut min_factor) = (0.0_f64, f64::INFINITY);
     let mut min_slack = f64::INFINITY;
     let mut worst_decoded = 0.0_f64;
     let mut certified_cells = 0;
-    // Fix the first column sign and propagate the 31 supplied signs along the path.
-    let mut cols = [1.0; 16];
-    for i in 0..15 {
-        cols[i + 1] = cols[i] * diagonal[i] * edge[i];
-    }
+    let signs = staircase_signs(diagonal, edge);
     let mut observed_signs = true;
     let mut worst_seen = 0.0_f64;
     for (i, &value) in x.iter().enumerate() {
@@ -59,7 +64,7 @@ fn analyze(x: &[f64], diagonal: &[f64; 16], edge: &[f64; 15]) -> Value {
         residual = residual.max((value - rank_one).abs());
         min_factor = min_factor.min(rank_one.abs());
         min_slack = min_slack.min(rank_one.abs() - (value - rank_one).abs());
-        let decoded = diagonal[row] * cols[row] * cols[col];
+        let decoded = signs[i];
         worst_decoded = worst_decoded.max((value - decoded).abs());
         certified_cells += usize::from(value * decoded > 0.0);
         if col == row || col == row + 1 {

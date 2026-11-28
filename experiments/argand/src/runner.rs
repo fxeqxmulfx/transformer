@@ -20,6 +20,7 @@ const USAGE: &str = concat!(
     "sum8-adamw[-first-noise[-until-perfect]][-replay] RUN_DIR [UPDATES] | (adamw-run | page-run[-sqrt|-retry]) CASE SEED RUN_DIR CAP [--ordered-gradients] | ",
     "adamw-restart-run CASE SEED RUN_DIR CAP STOCK_RUNS TRIAL FIRST_BUDGET [--ordered-gradients] | ",
     "adamw-until-perfect CASE SEED RUN_DIR CAP | adamw-first-noise-(run|screen|until-perfect) CASE SEED NOISE_SEED RUN_DIR CAP [--ordered-gradients] | ",
+    "adamw-checkpoint-proposals CASE SEED PROPOSAL_SEED OUT CAP FIRST_PROPOSAL_UPDATE | sum8-checkpoint-proposals STOCK_CELL PROPOSAL_SEED OUT FIRST_PROPOSAL_UPDATE | ",
     "adamw-tail-run CASE SEED RUN_DIR WSD_BUDGET CAP [--ordered-gradients] | (adamw-confirm | page-confirm[-sqrt|-retry]) CASE RUN_DIR CAP | ",
     "division-certificate CELL (terminal|first-strict) | division-relabel CELL | division-mask-lean"
 );
@@ -43,6 +44,7 @@ pub fn command(args: &[String]) -> Result<()> {
                     op.as_str(),
                     "adamw-run"
                         | "adamw-until-perfect"
+                        | "adamw-checkpoint-proposals"
                         | "adamw-first-noise-until-perfect"
                         | "adamw-first-noise-run"
                         | "adamw-first-noise-screen"
@@ -58,6 +60,42 @@ pub fn command(args: &[String]) -> Result<()> {
         _ => (args, false),
     };
     match (op.as_str(), args) {
+        ("adamw-checkpoint-proposals", [name, seed, noise_seed, out, cap, first]) => {
+            let job = crate::page_runs::Job::new(name, cap.parse()?)?
+                .with_ordered_gradients(ordered_gradients);
+            let seed = seed.parse()?;
+            let proposal = noise_seed.parse()?;
+            let first = first.parse()?;
+            let dir = Path::new(out)
+                .join(name)
+                .join(format!("seed{seed}-proposal{proposal}-from{first}"));
+            println!(
+                "{}",
+                job.run(
+                    &dir,
+                    seed,
+                    0,
+                    crate::page_runs::Rule::AdamW(RatePlan::Wsd),
+                    Stop::CheckpointProposal {
+                        seed: proposal,
+                        first
+                    }
+                )?
+            );
+            Ok(())
+        }
+        ("sum8-checkpoint-proposals", [cell, seed, out, first]) => {
+            println!(
+                "{}",
+                crate::sum8::checkpoint_proposals(
+                    Path::new(cell),
+                    seed.parse()?,
+                    Path::new(out),
+                    first.parse()?
+                )?
+            );
+            Ok(())
+        }
         ("division-mask-lean", []) => {
             print!("{}", crate::division_certificate::mask::lean_source()?);
             Ok(())
