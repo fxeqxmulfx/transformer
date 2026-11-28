@@ -8,6 +8,8 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.ErrorBound
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Transfer
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Bounds
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Handoff
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Recovery
 
 /-! A mean-field approximation of AdamW training in width. The particles
 are width units carrying their weights and both moment buffers; they
@@ -21,4 +23,7 @@ explicit error `widthError` for its expected maximum over updates and
 fractions, and its vanishing in width at a fixed horizon. `Bounds` keeps weights and
 displacements in a box fixed by the initial weights, and `Certificate`
 identifies, by the chain rule, the recovery residual of a certificate
-F ∘ mean ψ with the `residual` of the transfer theorem. -/
+F ∘ mean ψ with the `residual` of the transfer theorem. `Handoff` turns the
+majorant into the excess of the recovery theorem, and `Recovery` gives
+permanent recovery once max(r̄, 0) + widthError + E[tail] is below the
+recovery margin. -/

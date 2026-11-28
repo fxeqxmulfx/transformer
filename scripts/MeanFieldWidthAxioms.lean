@@ -55,3 +55,9 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_residual
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_residual_system
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.certificate_residual_of_init
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.continuous_l1_meanField_sub
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.continuous_fluctuation
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.continuous_segmentError
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.measurable_majorant
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.drift_excess
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.permanent_of_width_transfer
