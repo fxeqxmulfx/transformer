@@ -18,3 +18,10 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.coupling_succ_le
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.gronwall
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.coupling_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.integral_abs_le_sqrt
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.integral_abs_empirical_sub_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.integrable_abs_empirical_sub
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.continuous_of_l1
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.continuous_direction
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.continuous_flow
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.integral_fluctuation_le
