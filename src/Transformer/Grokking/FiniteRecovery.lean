@@ -34,6 +34,7 @@ public import Transformer.Grokking.FiniteRecovery.RectangleMargin
 public import Transformer.Grokking.FiniteRecovery.CheckpointMarginNorm
 public import Transformer.Grokking.FiniteRecovery.AdamWNativeBasin
 public import Transformer.Grokking.FiniteRecovery.DivisionMask
+public import Transformer.Grokking.FiniteRecovery.DivisionInitialAccuracy
 public import Transformer.Grokking.FiniteRecovery.TerminalBinomial
 public import Transformer.Grokking.FiniteRecovery.TerminalTail
 public import Transformer.Grokking.FiniteRecovery.PairedFirstHitValidation

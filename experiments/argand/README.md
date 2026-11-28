@@ -464,6 +464,16 @@ satisfies the witness condition when the grid includes initialization.
 The FP32 implementation rounds at different intermediate operations.
 [Trajectory equivalence](../../src/Transformer/Grokking/FiniteRecovery/NormalizedAdam.lean) · [Hidden recovery](../../src/Transformer/Grokking/FiniteRecovery/NormalizedRecovery.lean)
 
+For any hidden set of more than 288 division inputs, stock Gaussian
+initialization strictly solves the whole set with probability at most
+$1/234$. There are at most 288 equations on which the answer occurs
+in the five-token prompt. On any other equation at least 234 absent
+tokens, including the correct answer, are exchangeable before training.
+Consequently, if a training procedure succeeds with probability $p$,
+the probability of success after starting with an imperfect hidden set is
+at least $p-1/234$. This is a joint probability over all draws.
+[Initialization and learned division success](../../src/Transformer/Grokking/FiniteRecovery/DivisionInitialAccuracy.lean)
+
 On discovery seed zero, the recursive-gain kernel first solved all 4,656
 hidden equations at update 1,536 with minimum reloaded gap 0.620017.
 It solved 4,653 of the 4,656 observed equations at that checkpoint.
