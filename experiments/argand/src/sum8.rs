@@ -4,7 +4,7 @@ use crate::{
     KERNITE_VERSION, Result,
     engine::{
         Engine,
-        adamw::{RatePlan, wsd},
+        adamw::{FIRST_NOISE_STDDEV, RatePlan, wsd},
         page::{Observations, PageRule},
     },
     page_runs::{Optimizer, Rule},
@@ -25,6 +25,7 @@ const UPDATES: usize = 20_480;
 pub(crate) enum Method {
     Page(PageRule),
     AdamW,
+    AdamWFirstNoise,
 }
 impl Method {
     fn protocol_id(self) -> &'static str {
@@ -33,12 +34,16 @@ impl Method {
             Self::Page(PageRule::SquareRoot) => "argand-sum8-adaptive-page-sqrt-v1",
             Self::Page(PageRule::Retry) => "argand-sum8-adaptive-page-retry-v1",
             Self::AdamW => "argand-sum8-adamw-wsd-v1",
+            Self::AdamWFirstNoise => "argand-sum8-adamw-first-noise-v1",
         }
     }
-    fn rule(self) -> Rule {
+    fn rule(self, sampling_seed: u32) -> Rule {
         match self {
             Self::Page(correction) => Rule::Page(correction),
             Self::AdamW => Rule::AdamW(RatePlan::Wsd),
+            Self::AdamWFirstNoise => Rule::AdamWFirstNoise {
+                seed: sampling_seed,
+            },
         }
     }
 }
@@ -164,8 +169,14 @@ fn protocol(updates: usize, seeds: [[u32; 2]; RUNS], method: Method) -> Value {
         "layers":6,"repeat":1,"vocab":2,"sigma":0.02,"open_words":31,"hidden_words":225,
         "mask":"big-endian nibbles; col == row or col == row + 1, without wrap",
         "success":"positive terminal true-class logit gap on all 225 hidden words"});
-    if matches!(method, Method::AdamW) {
-        plan["seed_order"] = json!(["native_initialization", "unused"]);
+    if matches!(method, Method::AdamW | Method::AdamWFirstNoise) {
+        let second = if matches!(method, Method::AdamWFirstNoise) {
+            plan["gaussian_weight_noise"] = json!({"after_update":1,"stddev":FIRST_NOISE_STDDEV});
+            "first_update_noise"
+        } else {
+            "unused"
+        };
+        plan["seed_order"] = json!(["native_initialization", second]);
         plan["adamw"] = RatePlan::Wsd.settings(wsd(updates));
     }
     plan
@@ -198,7 +209,7 @@ fn manifest(
     }
     let updates = requested.unwrap_or(UPDATES);
     let seeds = match method {
-        Method::AdamW => {
+        Method::AdamW | Method::AdamWFirstNoise => {
             let paired: Value = serde_json::from_str(include_str!("../sum8-page-protocol.json"))?;
             serde_json::from_value(paired["seeds"].clone())?
         }
@@ -234,14 +245,15 @@ fn train(
     method: Method,
 ) -> Result<()> {
     let seed = read_seed(pair, 0)?;
+    let sampling_seed = read_seed(pair, 1)?;
     let mut model = new_engine(seed)?;
     let initial =
         json!({"observed":observed.score(&mut model)?, "hidden":hidden.score(&mut model)?});
     let mut optimizer = Optimizer::new(
         &mut model,
-        method.rule(),
+        method.rule(sampling_seed),
         observed.observations(),
-        read_seed(pair, 1)?,
+        sampling_seed,
         wsd(updates),
     )?;
     let mut history = fs::File::create(dir.join("training.jsonl"))?;
@@ -384,6 +396,11 @@ mod tests {
         assert_eq!(adamw["adamw"]["warmup"], 409);
         assert_eq!(adamw["adamw"]["cooldown_start"], 16384);
         assert_eq!(adamw["adamw"]["budget"], UPDATES);
+        let noisy = protocol(UPDATES, pairs, Method::AdamWFirstNoise);
+        assert_eq!(noisy["seeds"], adamw["seeds"]);
+        assert_eq!(noisy["adamw"], adamw["adamw"]);
+        assert_eq!(noisy["seed_order"][1], "first_update_noise");
+        assert_eq!(noisy["gaussian_weight_noise"]["stddev"], FIRST_NOISE_STDDEV);
         Ok(())
     }
 

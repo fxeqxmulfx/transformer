@@ -525,6 +525,14 @@ and 373 accompany model seeds 0, 1 and 2 respectively across all cases.
 The terminal scorer reloads the saved weights, and the summary verifies
 all 105 identities, endpoint scores and replay digests.
 
+`sum8-adamw-first-noise OUT 20480` uses the eight registered pairs of the
+31-observation modular-sum experiment. In each pair the first seed sets the
+native weights and the second sets the one-time noise. The stock AdamW
+control uses the same starting weights, complete observed gradient and WSD
+schedule. `sum8-adamw-first-noise-replay OUT` verifies the saved terminal
+weights and intermediate snapshots. Run `bash plot_sum8_accuracy.sh OUT`
+to render their strict accuracies on all 31 observed and 225 hidden words.
+
 An optional restart schedule applies to any task. For zero-indexed trial
 $j$ and horizon $K_j$, the first $M$ trials use ordinary WSD. Subsequent
 trials multiply every rate by
