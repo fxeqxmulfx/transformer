@@ -112,6 +112,7 @@ bash plot_sum8_accuracy.sh "$sum"
 "$bin" sum8-adamw-replay runs/sum8-adamw-20480 20480
 "$bin" sum8-spectrum runs/sum8-adamw-20480
 bash plot_sum8_accuracy.sh runs/sum8-adamw-20480
+bash plot_sum8_pair.sh "$sum" runs/sum8-adamw-20480 runs/sum8-optimizer-comparison
 "$bin" page-run grok-division-p97 0 runs/division-page 8192
 bash run_page_screen.sh all runs/gpt-page
 bash run_page_screen.sh all runs/gpt-adamw adamw
