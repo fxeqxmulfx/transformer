@@ -12,6 +12,26 @@ ordered pairs of these winners at each evaluation. -/
 
 namespace Transformer.Grokking.FiniteRecovery
 
+open Set MeasureTheory Filter
+
+/-- A uniform bound on success at every update also bounds the probability
+of success at every sufficiently late update. No independence is needed. -/
+theorem eventual_success_mass_le {D : Type*} [MeasurableSpace D] (μ : Measure D) [IsFiniteMeasure μ]
+    (E : ℕ → Set D) (p : ℝ) (hp : 0 ≤ p) (h : ∀ t, μ.real (E t) ≤ p) :
+    μ.real {z | ∀ᶠ t in atTop, z ∈ E t} ≤ p := by
+  let tail (n : ℕ) := {z | ∀ t ≥ n, z ∈ E t}
+  have mono : Monotone tail := fun _ _ hnm _ hz t hmt => hz t (hnm.trans hmt)
+  have he : {z | ∀ᶠ t in atTop, z ∈ E t} = ⋃ n, tail n := by
+    ext z
+    simp only [mem_ofPred_eq,eventually_atTop,mem_iUnion,tail]
+  have bound : μ (⋃ n, tail n) ≤ ENNReal.ofReal p := by
+    rw [mono.measure_iUnion]
+    refine iSup_le fun n => (measure_mono (show tail n ⊆ E n from fun _ hz => hz n le_rfl)).trans ?_
+    rw [← ofReal_measureReal (μ := μ) (s := E n)]
+    exact ENNReal.ofReal_le_ofReal (h n)
+  rw [he,measureReal_def]
+  exact (ENNReal.toReal_mono ENNReal.ofReal_ne_top bound).trans (ENNReal.toReal_ofReal hp).le
+
 /-- The native rule also evaluates the cap when it falls between two
 regular checks. This upper bound includes initialization and that endpoint. -/
 theorem evaluationGrid_card_bound {interval : ℕ} (hi : 0 < interval) (cap : ℕ) :
@@ -152,6 +172,26 @@ theorem two_hit_bound (stream : ℕ → List (Fin 5)) (grid : Finset ℕ) :
         exact h k b (fun he => hv ((congrArg e he).trans (target k)))
     exact (gaussian_relabel_preimage e (fun _ => (1/50 : ℝ≥0)^2) (W t p)).trans (congrArg μ pre)
 
+private theorem two_probes_strict {s : Cell → Token → ℝ}
+    (h : ∀ x ∉ range observedCell, ∀ a, a ≠ label x → s x a < s x (label x)) :
+    StrictOn (fun k => s (probe k)) (label ∘ probe) := by
+  have hne : ∀ i : Fin 2, ∀ j : Fin 5, observedCell j ≠ probe i := by decide
+  exact fun k => h (probe k) (fun ⟨j,he⟩ => hne k j he)
+
+/-- The probability of strict correctness on the hidden table from some
+update onward is at most 1/2756, over the full infinite trajectory. -/
+theorem hidden_eventually_correct (stream : ℕ → List (Fin 5)) :
+    let μ := independentGaussianDraws (fun _ : ComplexParameter Token 4 16 6 => (1/50 : ℝ≥0)^2)
+    μ.real {z | ∀ᶠ t in atTop, ∀ x ∉ range observedCell, ∀ a, a ≠ label x →
+        score stream z t x a < score stream z t x (label x)} ≤ 1/2756 := by
+  intro μ
+  apply eventual_success_mass_le μ (fun t => {z | ∀ x ∉ range observedCell, ∀ a, a ≠ label x →
+      score stream z t x a < score stream z t x (label x)}) _ (by norm_num)
+  intro t
+  have sub : {z | ∀ x ∉ range observedCell, ∀ a, a ≠ label x → score stream z t x a < score stream z t x (label x)}
+      ⊆ {z | StrictOn (fun k => score stream z t (probe k)) (label ∘ probe)} := fun _ hz => two_probes_strict hz
+  exact (measureReal_mono (μ := μ) sub).trans (by simpa [μ] using two_hit_bound stream {t})
+
 /-- Even 200,000 updates and stopping at the first perfect evaluation
 have success probability below one half on this identifiable table. -/
 theorem hidden_hit_200000 (stream : ℕ → List (Fin 5)) :
@@ -163,9 +203,7 @@ theorem hidden_hit_200000 (stream : ℕ → List (Fin 5)) :
       score stream z t x a < score stream z t x (label x)} ⊆ {z | ∃ t ∈ evaluationGrid 256 200000,
       StrictOn (fun k => score stream z t (probe k)) (label ∘ probe)} := by
     rintro z ⟨t,ht,hw⟩
-    refine ⟨t,ht,fun k => hw (probe k) ?_⟩
-    have hne : ∀ i : Fin 2, ∀ j : Fin 5, observedCell j ≠ probe i := by decide
-    exact fun ⟨j,h⟩ => hne k j h
+    exact ⟨t,ht,two_probes_strict hw⟩
   apply (measureReal_mono (μ := μ) hsub).trans ((two_hit_bound stream _).trans ?_)
   have h : (evaluationGrid 256 200000).card ≤ 783 := evaluationGrid_card_bound (by decide) _
   exact div_le_div_of_nonneg_right (by exact_mod_cast h) (by norm_num)

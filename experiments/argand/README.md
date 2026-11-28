@@ -559,7 +559,11 @@ of distinct unused tokens have equal probability under stock Gaussian
 initialization. At most one pair strictly wins. Including initialization,
 every 256th step and the final step, there are 783 evaluations. The
 chance of any checkpoint answering the entire hidden set correctly is
-therefore at most $783/2756$ (28.41%).
+therefore at most $783/2756$ (28.41%). On the infinite trajectory, the
+probability of all hidden predictions being strictly correct from some
+step onward is at most $1/2756$ (0.0363%). For each starting step $N$,
+permanent correctness from $N$ implies correctness at $N$. These tail
+events increase with $N$, so their union inherits the single-step bound.
 [Two hidden answers](../../src/Transformer/Grokking/FiniteRecovery/TwoHiddenAnswers.lean)
 
 Short qualification runs keep the 20,000-step WSD but stop at 4,096 updates
