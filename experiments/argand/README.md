@@ -160,6 +160,17 @@ deduplicates the training prompts and scores both the answer and EOS.
 It records generator support and unseen multi-zero strings separately.
 `page-confirm CASE RUN_DIR CAP` records the seed pairs before training.
 
+On Boolean AND with a position shift, PAGE scored 7/7 on the primary
+split at update 1,000 in all twelve fresh runs. All twelve also solved
+the 40 unseen prompts on the training generator's support. Eleven
+solved every one of the 130,763 unseen strings. Seed 3433824017 missed nine
+strings with at least two zero bits. The one-sided 95% binomial lower
+limit for exhaustive success is 0.6613. For this endpoint the upper-tail
+probabilities under single-run success at most one half and three
+quarters are 0.003174 and 0.158382. The 0.7791 lower limit applies to
+the twelve-for-twelve endpoints. Each reported outcome uses the seed
+draw as its trial. [Fixed-horizon binomial law](../../src/Transformer/Grokking/FiniteRecovery/TerminalBinomial.lean)
+
 The training-only graph audit is an independent control for division. Among
 the 4,656 observed equations, 4,611 have a nonzero numerator. Their
 96-by-96 bipartite mask is connected and contains a perfect matching. In

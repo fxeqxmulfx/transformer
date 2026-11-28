@@ -104,8 +104,19 @@ pub fn run(name: &str, dir: &Path, cap: usize, rule: Rule, plan_only: bool) -> R
             r["correct"], r["total"], r["strict"]["min_gap"]
         );
     }
-    let report = json!({"protocol":plan(pairs),"successes":k,"lower_95":lower_bound(k),"p_value_at_3_4":binomial_tail(0.75,k),
+    let mut report = json!({"protocol":plan(pairs),"successes":k,"lower_95":lower_bound(k),"p_value_at_3_4":binomial_tail(0.75,k),
         "native_support_successes":audit_and.then_some(native),"all_hidden_bit_strings_successes":audit_and.then_some(full)});
+    if audit_and {
+        let estimate = |successes| {
+            json!({"trials":N, "successes":successes, "fraction":successes as f64 / N as f64,
+                "lower_95":lower_bound(successes), "p_value_at_half":binomial_tail(0.5,successes),
+                "p_value_at_3_4":binomial_tail(0.75,successes)})
+        };
+        report["strict_hidden_trials"] = json!({
+            "unseen_generator_support":estimate(native),
+            "all_unseen_bit_strings":estimate(full),
+        });
+    }
     publish(
         dir,
         "confirmation.json",
@@ -120,6 +131,8 @@ mod tests {
     #[test]
     fn all_twelve_are_needed_to_exclude_three_quarters_at_five_percent() {
         assert!(binomial_tail(0.75, 11) > 0.05 && binomial_tail(0.75, 12) < 0.05);
+        assert_eq!(binomial_tail(0.5, 11), 13.0 / 4096.0);
+        assert!((binomial_tail(lower_bound(11), 11) - 0.05).abs() < 1e-12);
         assert!((lower_bound(12) - 0.05_f64.powf(1.0 / 12.0)).abs() < 1e-12);
         assert_eq!(lower_bound(0), 0.0);
     }
