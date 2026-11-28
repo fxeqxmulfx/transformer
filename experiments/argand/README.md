@@ -362,6 +362,9 @@ decay 0.1. The GPU regression compares mixed-sign and zero gradients with
 a host reference. Its coordinate direction has magnitude at most five in
 the formal real recurrence. The exact division observation graph gives the
 same almost-sure recovery result for independent Gaussian checkpoint copies.
+On discovery seed zero, the ordinary RMSPropW checkpoint at update 3,584
+strictly solved all 9,312 equations. Its minimum hidden gap was 4.498.
+The first permitted proposal would have been at update 8,192.
 [RMSProp update and bounds](../../src/Transformer/Grokking/FiniteRecovery/RmsProp.lean)
 
 For any positive decay $\lambda$ and $0\leq\eta_t\lambda\leq 1$, the
@@ -525,6 +528,11 @@ at zero was rejected. Ordinary training, proposals from zero and proposals
 from update 8,192 all saved the same weight bytes at update four.
 The uncorrected rule rejected copies at zero and four and saved the
 same bytes as its ordinary run at update eight.
+With the full division model and seed zero, the delayed native commands
+stopped at update 1,536 for the uncorrected rule and 2,304 for recursive
+normalization. Both solved all 9,312 equations with ordinary weights.
+No noisy copy was evaluated. The minimum hidden gaps were 6.740 and
+0.699 respectively. These are separate pilot reruns.
 [Delayed checkpoints and the general convergence theorem](../../src/Transformer/Grokking/FiniteRecovery/DelayedCheckpoints.lean)
 
 For any hidden set of more than 288 division inputs, stock Gaussian
@@ -570,6 +578,11 @@ wrong. The hidden-only checker retains all 2,225,568 recorded FP32
 logits and checks all 238 rival inequalities on each complementary
 input. Lean checks the original training mask and proves that its
 complement contains exactly 4,656 equations.
+The uncorrected validation run with the smallest hidden margin was seed
+69,270,091 at update 2,304. Its minimum hidden margin was 0.077697 and
+two observed predictions were wrong. The Lean kernel independently
+checked every hidden answer against the other 238 tokens in its recorded
+logits.
 [Proof for recorded logits](../../src/Transformer/Grokking/FiniteRecovery/Binary32Scores.lean)
 
 For either ordinary optimizer, a common limit $G$ of the actual clipped
@@ -665,6 +678,14 @@ The equal-decay candidate at 0.003 qualified at update 2,816 and was
 locked for the eleven fresh seeds. A secondary 0.003 stock AdamW arm was
 registered before validating the first seed. It uses the same trained
 candidate checkpoints as the primary comparison.
+The equal-decay candidate reached its first strict hidden hit in all
+eleven runs from 0/4,656, at 1,792–4,096 updates (median 2,560). Five
+of these checkpoints were also strict on all observations. Against the
+0.002 control, ten paired hits were earlier and one later, with median
+difference −2,560 updates and one-sided upper median bound −1,536.
+Against the matched 0.003 control there were five earlier and five later
+in the uninterrupted pairs, with median +256. The conservative upper
+bound including the interrupted control was +1,024.
 [Secondary control protocol](division-optimizer-higher-rate-registration.json)
 
 ```sh
