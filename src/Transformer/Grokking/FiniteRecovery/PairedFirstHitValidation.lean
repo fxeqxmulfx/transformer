@@ -49,17 +49,34 @@ theorem rank_le_below_count {n : ℕ} (value : D → α) (z : ℕ → D) (rank :
   have hr : lift i ≤ rank := by change i.val ≤ rank.val; omega
   exact ((Tuple.monotone_sort sample) hr).trans_lt h
 
-/-- With eleven iid pairs, the ninth-smallest observed difference is a
-distribution-free upper confidence bound for any population median m.
-The chance of undershooting m is at most 67/2048, including ties. -/
-theorem paired_upper_median_eleven [MeasurableSpace D] (μ : Measure D) [IsProbabilityMeasure μ]
+/-- Replacing an unavailable candidate time by the largest possible
+penalty and an unavailable control by zero bounds the latent difference above. -/
+theorem upper_difference_of_interruption (penalty candidate control : ℕ) (hc : candidate ≤ penalty)
+    (candidateKnown controlKnown : Bool) :
+    (candidate : ℤ)-control ≤ (if candidateKnown then (candidate : ℤ) else penalty) -
+      (if controlKnown then (control : ℤ) else 0) := by
+  cases candidateKnown <;> cases controlKnown <;> simp <;> omega
+
+/-- The ninth-smallest upper bound still covers the population median
+when interruption of either arm depends on the entire collection of draws.
+Only the latent pairs must be iid. -/
+theorem paired_upper_median_eleven_with_interruptions [MeasurableSpace D] (μ : Measure D) [IsProbabilityMeasure μ]
     (value : D → α) (m : α) (hm : MeasurableSet {d | value d < m})
-    (hlower : μ {d | value d < m} ≤ 1/2) :
-    Measure.infinitePi (fun _ : ℕ => μ) {z | pairedOrderStatistic value z (8 : Fin 11) < m} ≤ 67/2048 := by
+    (hlower : μ {d | value d < m} ≤ 1/2) (upper : (ℕ → D) → ℕ → α)
+    (dominates : ∀ z i, i < 11 → value (z i) ≤ upper z i) :
+    Measure.infinitePi (fun _ : ℕ => μ) {z | pairedOrderStatistic id (upper z) (8 : Fin 11) < m} ≤ 67/2048 := by
+  classical
   let U := {d | value d < m}
   calc
-    _ ≤ Measure.infinitePi (fun _ : ℕ => μ) {z | 9 ≤ terminalPassCount U (range 11) z} :=
-      measure_mono fun z hz => rank_le_below_count value z (8 : Fin 11) m hz
+    _ ≤ Measure.infinitePi (fun _ : ℕ => μ) {z | 9 ≤ terminalPassCount U (range 11) z} := by
+      apply measure_mono
+      intro z hz
+      apply (rank_le_below_count id (upper z) (8 : Fin 11) m hz).trans
+      unfold terminalPassCount
+      apply card_le_card
+      intro i hi
+      simp only [mem_filter] at hi ⊢
+      exact ⟨hi.1,(dominates z i (mem_range.mp hi.1)).trans_lt hi.2⟩
     _ = terminalTail 11 9 (μ U) := by rw [iid_terminal_count_tail μ hm,card_range,terminalTail]
     _ ≤ terminalTail 11 9 (1/2) := terminalTail_monotone _ _ hlower (by norm_num)
     _ = _ := by
@@ -72,6 +89,15 @@ theorem paired_upper_median_eleven [MeasurableSpace D] (μ : Measure D) [IsProba
       apply (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
       rw [ENNReal.toReal_add (by finiteness) (by finiteness),ENNReal.toReal_add (by finiteness) (by finiteness)]
       norm_num
+
+/-- With eleven iid pairs, the ninth-smallest observed difference is a
+distribution-free upper confidence bound for any population median m.
+The chance of undershooting m is at most 67/2048, including ties. -/
+theorem paired_upper_median_eleven [MeasurableSpace D] (μ : Measure D) [IsProbabilityMeasure μ]
+    (value : D → α) (m : α) (hm : MeasurableSet {d | value d < m})
+    (hlower : μ {d | value d < m} ≤ 1/2) :
+    Measure.infinitePi (fun _ : ℕ => μ) {z | pairedOrderStatistic value z (8 : Fin 11) < m} ≤ 67/2048 :=
+  paired_upper_median_eleven_with_interruptions μ value m hm hlower (fun z i => value (z i)) (fun _ _ _ => le_rfl)
 
 example : pairedHitDifference 20000 256 (some 1536) (some 2816) = -1280 ∧
     pairedHitDifference 20000 256 none (some 2816) = 17440 := by decide

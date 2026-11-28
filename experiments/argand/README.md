@@ -439,6 +439,12 @@ ninth-smallest observed difference to fall below $m$, at least nine of
 the eleven values must be strictly smaller. The binomial upper tail is
 at most $67/2048$, giving one-sided coverage of at least $1981/2048$
 even when a grid produces ties. Both arms on a given seed may be dependent.
+If an arm is interrupted, the conservative calculation uses zero for its
+unavailable control time or the maximum penalty for its unavailable
+candidate time. After all eleven pairs are accounted for, the ninth
+ordered upper difference has the same coverage, including when GPU
+interruptions depend on the outcomes. Retried hits remain visible
+separately from complete first attempts.
 [Paired median bound](../../src/Transformer/Grokking/FiniteRecovery/PairedFirstHitValidation.lean)
 
 For moment decays $a,b$ with $a^2<b<1$, the two uncorrected buffers

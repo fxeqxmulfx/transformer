@@ -54,4 +54,13 @@ jq -s --slurpfile p "$primary/protocol.json" '
        (if .control.success then .control.step else $miss end)]|sort|
      {completed_pairs:length,median_difference:median,
       upper_median_difference_one_sided:(if length==11 and ($seeds|length)==11 then .[8] else null end)}),
+   conservative_paired_budget:(($p[0].registration.first_budget+$p[0].registration.evaluation_interval) as $miss |
+     [$pairs[] | select(.candidate!=null and .control!=null)] as $recorded |
+     {recorded_pairs:($recorded|length),
+      interrupted_pairs:($recorded|map(select(.candidate.first_attempt!="complete" or .control.first_attempt!="complete"))|length),
+      upper_median_difference_one_sided:(if ($recorded|length)==11 and ($seeds|length)==11 then
+        [$recorded[] |
+          (if .candidate.first_attempt=="complete" and .candidate.success then .candidate.step else $miss end) -
+          (if .control.first_attempt!="complete" then 0 elif .control.success then .control.step else $miss end)]
+        | sort | .[8] else null end)}),
    pairs:$pairs}' "${files[@]}" < /dev/null
