@@ -1046,6 +1046,13 @@ The bound requires no separate margin assumption or hidden labels.
 Whether the optimizer reaches the bound is an empirical question here.
 [Objective threshold and general mask theorem](../../src/Transformer/Grokking/FiniteRecovery/RectangleMargin.lean)
 
+At update 20,480 the margin run on the same seed fit 31/31 observed
+answers and 102/225 hidden answers, up from 99/225 with the rank-one
+penalty alone. The minimum absolute gap rose to 0.78778 and sign
+violations fell from 3,328 to 1,105 out of 14,400 rectangles. The
+observed cross-entropy alone was 0.04967. Thus these weights still
+miss the sufficient objective threshold of $1/28800$.
+
 ```
 target/release/argand sum8-adamw-rank-one runs/sum8-rank-one 20480 0
 target/release/argand sum8-adamw-rank-one-replay runs/sum8-rank-one 20480 0
