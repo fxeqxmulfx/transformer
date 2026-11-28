@@ -108,16 +108,12 @@ theorem terminal_success_seeds_relabel {D : Type*} (e : A ≃ B) (r K : ℕ) (ra
     {s | draw s ∈ terminalStrictDraws r K rate (fun _ => batch s) prompt f} :=
   Set.ext fun s => mem_terminalStrictDraws_relabel e r K rate (fun _ => batch s) prompt f (draw s)
 
-/-- Transporting each native coordinate's variance preserves the exact
-one-run probability at the stated horizon, including an unscaled WSD run.
-No restriction on the cumulative learning rate is needed for this equality. -/
-theorem adamW_relabel_probability (e : A ≃ B) (r K : ℕ) (rate : ℕ → ℝ)
-    (batch : (ComplexParameter A H d L → ℂ) → ℕ → List (LabeledPosition A))
-    (prompt : X → Word A (T+1)) (f : X → A) (variance : ComplexParameter A H d L → ℝ≥0) :
-    independentGaussianDraws (variance ∘ (tensorTokenEquiv e).symm)
-      (terminalStrictDraws r K rate (fun y t => (batch (relabelDraw e.symm y) t).map (relabelPosition e))
-        (fun x => e ∘ prompt x) (e ∘ f)) =
-    independentGaussianDraws variance (terminalStrictDraws r K rate batch prompt f) := by
+/-- An alphabet bijection transports each Gaussian coordinate and its
+variance. The change of variables holds for every event of initial draws. -/
+theorem gaussian_relabel_preimage (e : A ≃ B) (variance : ComplexParameter A H d L → ℝ≥0)
+    (U : Set (ComplexParameter B H d L → ℂ)) :
+    independentGaussianDraws (variance ∘ (tensorTokenEquiv e).symm) U =
+      independentGaussianDraws variance ((relabelDraw e) ⁻¹' U) := by
   let E := tensorTokenEquiv (H := H) (d := d) (L := L) e
   let M := MeasurableEquiv.piCongrLeft (fun _ : ComplexParameter B H d L => ℂ) E
   have hm : MeasurePreserving M (independentGaussianDraws variance)
@@ -131,9 +127,21 @@ theorem adamW_relabel_probability (e : A ≃ B) (r K : ℕ) (rate : ℕ → ℝ)
     rw [MeasurableEquiv.piCongrLeft_apply_apply,E.symm_apply_apply]
   rw [← hm.measure_preimage_equiv]
   apply congrArg (independentGaussianDraws variance)
-  ext z
-  rw [Set.mem_preimage,fe]
-  exact mem_terminalStrictDraws_relabel e r K rate batch prompt f z
+  ext z; simp only [Set.mem_preimage,fe]
+
+/-- Transporting each native coordinate's variance preserves the exact
+one-run probability at the stated horizon, including an unscaled WSD run.
+No restriction on the cumulative learning rate is needed for this equality. -/
+theorem adamW_relabel_probability (e : A ≃ B) (r K : ℕ) (rate : ℕ → ℝ)
+    (batch : (ComplexParameter A H d L → ℂ) → ℕ → List (LabeledPosition A))
+    (prompt : X → Word A (T+1)) (f : X → A) (variance : ComplexParameter A H d L → ℝ≥0) :
+    independentGaussianDraws (variance ∘ (tensorTokenEquiv e).symm)
+      (terminalStrictDraws r K rate (fun y t => (batch (relabelDraw e.symm y) t).map (relabelPosition e))
+        (fun x => e ∘ prompt x) (e ∘ f)) =
+    independentGaussianDraws variance (terminalStrictDraws r K rate batch prompt f) := by
+  rw [gaussian_relabel_preimage]
+  exact congrArg (independentGaussianDraws variance)
+    (Set.ext fun z => mem_terminalStrictDraws_relabel e r K rate batch prompt f z)
 
 /-- Transport the admissible functions with the answer tokens. -/
 def relabelFamily (e : A ≃ B) (family : Set (X → A)) : Set (X → B) :=

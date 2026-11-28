@@ -425,6 +425,32 @@ and fits the observed labels. Both the common gradient and the class test
 are hypotheses for the ordinary division dynamics.
 [One-moment limit](../../src/Transformer/Grokking/FiniteRecovery/SoftsignLimit.lean) · [Equal-moment limit](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentLimit.lean)
 
+Independent stock initializations give a separate guarantee for ordinary
+equal-decay training. If its finite evaluation grid admits one strictly
+successful real trajectory, the open set of successful initializations has
+positive mass $p$. The observation-only certificate retains the first
+correct checkpoint almost surely and the exact failure probability after
+$m$ independent attempts with fixed batch order is $(1-p)^m$. Every table
+in the quotient-factor class has a strict representative at the stock
+initial gate settings. Including step zero gives a uniform finite restart
+count for any required confidence, even with seed-dependent minibatches.
+The theorem leaves the numerical size of that count open.
+[Ordinary restarts and uniform confidence](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentConfidence.lean)
+
+For a fixed horizon, identifiability and strict representability alone
+permit single-run success probabilities at or below one half. Consider
+the two rows $(1,0)$ and $(2,1)$ with the lower left label hidden, using
+input tokens 8 through 11. The character table on these labels has rank
+one. The three observed cells uniquely determine the minimum nuclear-norm
+completion, and six-layer Argand of width 64 can represent all four labels.
+Swapping unused vocabulary tokens 2 and 3 preserves the training data,
+the hidden prompt, and the Gaussian initialization law. At any fixed
+update the chance of strictly predicting 2 is at most one half. The
+same bound holds for all sufficiently late updates being strictly correct.
+Across different token encodings, transporting the data and initialization
+also preserves the full distribution of the first strict hit.
+[Hidden-corner example](../../src/Transformer/Grokking/FiniteRecovery/HiddenCorner.lean) · [First-hit distribution](../../src/Transformer/Grokking/FiniteRecovery/EqualMomentRelabeling.lean)
+
 Short qualification runs keep the 20,000-step WSD but stop at 4,096 updates
 or the first perfect checkpoint. The equal-moment rate multipliers are 2
 then 3 after a miss. For softsign at peak 0.0003 the stronger decay values

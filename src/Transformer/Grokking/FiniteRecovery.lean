@@ -42,6 +42,8 @@ public import Transformer.Grokking.FiniteRecovery.ArgandCheckpointProposals
 public import Transformer.Grokking.FiniteRecovery.ArgandSoftsign
 public import Transformer.Grokking.FiniteRecovery.ArgandRmsProp
 public import Transformer.Grokking.FiniteRecovery.SoftsignLimit
+public import Transformer.Grokking.FiniteRecovery.EqualMomentConfidence
+public import Transformer.Grokking.FiniteRecovery.HiddenCorner
 public import Transformer.Grokking.FiniteRecovery.Binary32Scores
 public import Transformer.Grokking.FiniteRecovery.ProjectedSoftsign
 public import Transformer.Grokking.FiniteRecovery.DivisionNative
