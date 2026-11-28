@@ -25,12 +25,10 @@ def hiddenCertificate (S : Set X) (family : Set (X → A)) (labels : S → A)
 
 /-- A finite-time miss bound, arbitrary prescribed confidence, and almost
 sure stabilization of the returned weights on a single native trajectory. -/
-def CheckpointRecovery (r : ℕ) (schedule : ℕ → ℕ) (rate : ℕ → ℝ)
-    (batch : ℕ → List (LabeledPosition A)) (draw : ComplexParameter A H d L → ℂ)
+def PathCheckpointRecovery (r : ℕ) (center : ℕ → Weights A H d L)
     (prompt : Z → Word A (T+1)) (target : Z → A) (verify : (Z → A → ℝ) → Prop) (v : ℝ≥0) : Prop :=
   let score (w : Weights A H d L) x := (Model.fromWeights w).logits r (prompt x) (Fin.last T)
   let ok w := verify (score w)
-  let center j := (adamWRun r batch rate draw (schedule j)).weights
   let trial (z : ℕ → Weights A H d L) j := checkpointCandidate ok (center j) (z j)
   let P := Measure.infinitePi (fun _ : ℕ => Measure.pi (fun _ : Parameter A H d L => gaussianReal 0 v))
   (∀ m z, (∃ j ∈ Finset.range m, StrictOn (score (center j)) target) →
@@ -39,6 +37,42 @@ def CheckpointRecovery (r : ℕ) (schedule : ℕ → ℕ) (rate : ℕ → ℝ)
     (∀ q > (0 : ℝ≥0∞), ∃ m, P {z | retained ok (trial z) m = none} < q) ∧
     ∀ᵐ z ∂P, ∃ j, StrictOn (score (trial z j)) target ∧
       ∀ k, retained ok (trial z) (j+1+k) = some (trial z j)
+
+/-- A compact path of full-model checkpoints suffices for certified recovery
+in any identifiable class with a strictly representable target. The verifier
+uses only the observed labels. The schedule and the optimizer are arbitrary. -/
+theorem bounded_path_checkpoint_recovers [Finite Z] (r : ℕ) (center : ℕ → Weights A H d L)
+    {R : ℝ} (hC : ∀ j, center j ∈ closedBall 0 R) (prompt : Z → Word A (T+1)) (hidden : Z → X)
+    (S : Set X) (family : Set (X → A)) (hid : InjOn (fun g : X → A => fun x : S => g x) family)
+    (f : X → A) (hf : f ∈ family) (hrep : ∃ w : Weights A H d L, StrictOn
+      (fun x => (Model.fromWeights w).logits r (prompt x) (Fin.last T)) (f ∘ hidden))
+    (v : ℝ≥0) (hv : 0 < v) :
+    PathCheckpointRecovery r center prompt (f ∘ hidden) (hiddenCertificate S family (fun x => f x) hidden) v := by
+  let score (w : Weights A H d L) x := (Model.fromWeights w).logits r (prompt x) (Fin.last T)
+  let U := {w | hiddenCertificate S family (fun x => f x) hidden (score w)}
+  have he w : w ∈ U ↔ StrictOn (score w) (f ∘ hidden) :=
+    identified_property_iff S family hid f hf (fun g => StrictOn (score w) (g ∘ hidden))
+  have hopen : IsOpen U := by
+    rw [show U = {w | StrictOn (score w) (f ∘ hidden)} from Set.ext he]
+    exact strict_prompt_weights_open r prompt (f ∘ hidden)
+  obtain ⟨w,hw⟩ := hrep
+  let μ := Measure.pi (fun _ : Parameter A H d L => gaussianReal 0 v)
+  let : (gaussianReal 0 v).IsOpenPosMeasure :=
+    (gaussianReal_absolutelyContinuous' 0 hv.ne').isOpenPosMeasure
+  obtain ⟨p,hp,h⟩ := compact_checkpoint_convergence μ (isCompact_closedBall (0 : Weights A H d L) R)
+    hopen ⟨w,(he w).2 hw⟩
+  obtain ⟨hb,hq,ha⟩ := h center hC
+  refine ⟨fun m z ⟨j,hj,hs⟩ => checkpoint_preserves_hit (· ∈ U) center z m ⟨j,hj,(he _).2 hs⟩,
+    p,hp,hb,hq,?_⟩
+  filter_upwards [ha] with z hz
+  obtain ⟨j,hj,hk⟩ := hz
+  exact ⟨j,(he _).1 hj,hk⟩
+
+/-- The ordinary bounded path specialized to native AdamW. -/
+def CheckpointRecovery (r : ℕ) (schedule : ℕ → ℕ) (rate : ℕ → ℝ)
+    (batch : ℕ → List (LabeledPosition A)) (draw : ComplexParameter A H d L → ℂ)
+    (prompt : Z → Word A (T+1)) (target : Z → A) (verify : (Z → A → ℝ) → Prop) (v : ℝ≥0) : Prop :=
+  PathCheckpointRecovery r (fun j => (adamWRun r batch rate draw (schedule j)).weights) prompt target verify v
 
 /-- Any strictly representable hidden target in an identifiable class.
 The 0.1 weight decay and clipped AdamW moments bound *every* ordinary
@@ -53,17 +87,6 @@ theorem adamW_checkpoint_recovers [Finite Z] (r : ℕ) (schedule : ℕ → ℕ) 
     (v : ℝ≥0) (hv : 0 < v) :
     CheckpointRecovery r schedule rate batch draw prompt (f ∘ hidden)
       (hiddenCertificate S family (fun x => f x) hidden) v := by
-  let score (w : Weights A H d L) x := (Model.fromWeights w).logits r (prompt x) (Fin.last T)
-  let U := {w | hiddenCertificate S family (fun x => f x) hidden (score w)}
-  have he w : w ∈ U ↔ StrictOn (score w) (f ∘ hidden) :=
-    identified_property_iff S family hid f hf (fun g => StrictOn (score w) (g ∘ hidden))
-  have hopen : IsOpen U := by
-    rw [show U = {w | StrictOn (score w) (f ∘ hidden)} from Set.ext he]
-    exact strict_prompt_weights_open r prompt (f ∘ hidden)
-  obtain ⟨w,hw⟩ := hrep
-  let μ := Measure.pi (fun _ : Parameter A H d L => gaussianReal 0 v)
-  let : (gaussianReal 0 v).IsOpenPosMeasure :=
-    (gaussianReal_absolutelyContinuous' 0 hv.ne').isOpenPosMeasure
   let x₀ := sgdInitialWeights (H := H) (d := d) (layers := L) true draw
   let R := max ‖x₀‖ 120
   let center j := (adamWRun r batch rate draw (schedule j)).weights
@@ -71,14 +94,7 @@ theorem adamW_checkpoint_recovers [Finite Z] (r : ℕ) (schedule : ℕ → ℕ) 
     rw [mem_closedBall,dist_zero_right]
     apply (pi_norm_le_iff_of_nonneg (le_trans (norm_nonneg x₀) (le_max_left _ _))).2
     exact fun i => AdamW.weight_bound rate (fun t => batchGradient r (batch t)) x₀ hr i (schedule j)
-  obtain ⟨p,hp,h⟩ := compact_checkpoint_convergence μ (isCompact_closedBall (0 : Weights A H d L) R)
-    hopen ⟨w,(he w).2 hw⟩
-  obtain ⟨hb,hq,ha⟩ := h center hC
-  refine ⟨fun m z ⟨j,hj,hs⟩ => checkpoint_preserves_hit (· ∈ U) center z m ⟨j,hj,(he _).2 hs⟩,
-    p,hp,hb,hq,?_⟩
-  filter_upwards [ha] with z hz
-  obtain ⟨j,hj,hk⟩ := hz
-  exact ⟨j,(he _).1 hj,hk⟩
+  exact bounded_path_checkpoint_recovers r center hC prompt hidden S family hid f hf hrep v hv
 
 open Division.Factors
 

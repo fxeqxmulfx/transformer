@@ -45,7 +45,7 @@ pub(crate) fn lean_source() -> Result<String> {
     for (i, &j) in matching.iter().enumerate() {
         inverse[j] = i;
     }
-    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\n\n");
+    let mut out = String::from("import Transformer.Grokking.FiniteRecovery.FactorFirstNoise\nimport Transformer.Grokking.FiniteRecovery.ArgandSoftsign\n\n");
     writeln!(
         out,
         "/- Observed equations SHA-256: {} -/",
@@ -107,6 +107,27 @@ theorem original_firstNoise_factor_recovery (n : ℕ) (f : DivisionInput → Fin
     ∀ᵐ z ∂Measure.infinitePi (fun _ : ℕ => μ), ∃ j, StrictOn (scores (z j)) f ∧
       ∀ k, retained ok z (j+1+k) = some (z j) :=
   (Division.Factors.class_firstNoise_wsd_restarts n _ original_graph.1 original_graph.2 f hf batch draw).2.2
+
+/-- The frozen 4,656 observed equations identify the class. After the first
+8,192 ordinary updates, independent real proposals at every 256th step
+give almost-sure certified recovery on the complementary inputs. -/
+theorem original_softsign_checkpoint_recovery (f : DivisionInput → Fin 239)
+    (hf : f ∈ factorClass unitToken) (batch : ℕ → List (LabeledPosition (Fin 239)))
+    (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) (decay scale : ℝ)
+    (hdc : 0 < decay) (hs : 0 ≤ scale) (hcap : scale*decay ≤ 1000) :
+    let S := bitDivisionMask rows
+    let hidden : {x : DivisionInput // x ∉ S} → DivisionInput := Subtype.val
+    PathCheckpointRecovery 1 (fun j =>
+      (softsignRun 1 decay batch (fun t => scale*wsdRate 20000 t) draw (256*(32+j))).weights)
+      (divisionPrompt ∘ hidden) (f ∘ hidden) (hiddenCertificate S (factorClass unitToken) (fun x => f x) hidden)
+      ((1/1000000 : ℝ≥0)^2) :=
+  factor_softsign_checkpoint_recovers 20000 32 decay scale hdc hs hcap _ _ original_graph.1 original_graph.2 f hf batch draw
+
+example (batch : ℕ → List (LabeledPosition (Fin 239))) (draw : ComplexParameter (Fin 239) 4 16 6 → ℂ) :=
+  original_softsign_checkpoint_recovery divisionAnswer divisionAnswer_mem batch draw (2/3) (3/10)
+    (by norm_num) (by norm_num) (by norm_num)
+
+#print axioms original_softsign_checkpoint_recovery
 
 example := original_nuclear_completion (u := fun _ => 1) (v := fun _ => 1) (by simp [vecMulVec_apply])
 example := original_factor_class_stabilizes 12 (fun _ => 100000) (fun _ => 1) (by intro; norm_num)

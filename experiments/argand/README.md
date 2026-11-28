@@ -312,6 +312,26 @@ $2/3$ matches the per-update shrink factor of the AdamW control at peak
 0.002 and decay 0.1 throughout WSD.
 The native sampler is seeded and its weights are FP32. [Lion, Algorithm 2](https://arxiv.org/abs/2302.06675)
 
+For any positive decay $\lambda$ and $0\leq\eta_t\lambda\leq 1$, the
+coordinate direction has magnitude at most one. Every ordinary checkpoint
+therefore satisfies $\|w_t\|_\infty\leq\max(\|w_0\|_\infty,1/\lambda)$.
+For an identifiable, strictly representable finite task this gives almost-sure
+hidden recovery when fresh ideal Gaussian copies are checked indefinitely.
+The finite miss bound $(1-p)^m$ has an unspecified $p>0$. On the actual
+division mask the generator proves this for the quotient-factor class, all
+native initial draws and the experimental six-layer model.
+[Certified softsign training in Lean](../../src/Transformer/Grokking/FiniteRecovery/ArgandSoftsign.lean)
+
+For ordinary updates write $h_t=\lambda w_t+c_t/(|c_t|+10^{-6})$ coordinatewise
+and let $u$ be a strictly realizing representative. If on a constant-rate
+tail $\langle w_t-u,h_t\rangle\geq\mu\|w_t-u\|_2^2$ and $\|h_t\|_2^2\leq M$,
+then for $0<2\eta\mu\leq 1$ the squared error is bounded by a term decaying
+as $(1-2\eta\mu)^k$ plus $\eta M/(2\mu)$. When that residual fits strictly
+inside the representative's margin neighborhood, every sufficiently late
+ordinary iterate predicts every hidden label correctly. Establishing the
+alignment and the required radius for the trained division trajectory remains
+open. [One-point alignment and finite-step bound](../../src/Transformer/Grokking/FiniteRecovery/SoftsignAlignment.lean)
+
 Eleven independent 32-bit model seeds were drawn before running comparisons
 on them. Seed 0 is reserved for choosing the candidate. The comparison
 uses paired first hits and carries forward every miss and interruption.

@@ -17,7 +17,7 @@ namespace Transformer.Grokking.FiniteRecovery.AdamW
 
 variable {ι : Type*} [Fintype ι]
 
-private theorem continuous_clip : Continuous (Transformer.AMSGradW.Kernite.clip (ι := ι)) := by
+theorem continuous_clip : Continuous (Transformer.AMSGradW.Kernite.clip (ι := ι)) := by
   let C := PiLp.continuousLinearEquiv 2 ℝ (fun _ : ι => ℝ)
   have hn : Continuous (fun g : ι → ℝ => ‖(WithLp.toLp 2 g : Transformer.AMSGradW.Kernite.Space ι)‖) :=
     C.symm.continuous.norm
