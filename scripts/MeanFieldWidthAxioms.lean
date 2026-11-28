@@ -67,3 +67,11 @@ import Transformer.Grokking.FiniteRecovery.MeanFieldWidth
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identity_system_zero
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identity_flow_zero
 #print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.identity_coupling_zero
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.direction_scale
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.abs_direction_le_floor
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.clip_of_sum_sq_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.sum_sq_literalGrad_le
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_succ_first
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_succ_second
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_succ_weights
+#print axioms Transformer.Grokking.FiniteRecovery.MeanFieldWidth.run_literal

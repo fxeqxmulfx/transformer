@@ -11,6 +11,7 @@ public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Certificate
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Handoff
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Recovery
 public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Tail
+public import Transformer.Grokking.FiniteRecovery.MeanFieldWidth.Literal
 
 /-! A mean-field approximation of AdamW training in width. The particles
 are width units carrying their weights and both moment buffers; they
@@ -29,4 +30,6 @@ majorant into the excess of the recovery theorem, and `Recovery` gives
 permanent recovery once max(r̄, 0) + widthError + E[tail] is below the
 recovery margin. `Tail` gives that allowance after the horizon from a
 contraction of the coupled distance and run-wise bounds on the later
-fluctuations and segment errors. -/
+fluctuations and segment errors. `Literal` identifies the literal
+`AdamW.run` with floor 10⁻⁸, clipping and decoupled weight decay on N
+width units with the system of floor N · 10⁻⁸ while clipping does not act. -/
