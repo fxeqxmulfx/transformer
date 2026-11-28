@@ -10,7 +10,9 @@ use convex_relabel_graph_audit::graph::{Pair, Structure, analyze};
 use serde_json::{Value, json};
 use std::{fs, path::Path};
 
+mod bitplanes;
 pub(crate) mod mask;
+pub(crate) mod recorded_scores;
 pub(crate) mod relabel;
 pub(crate) mod row_projection;
 mod spectrum;

@@ -407,6 +407,16 @@ also used 0.003, it reached the same first perfect checkpoint at update
 2,816 with a larger minimum gap of 6.406.
 [Exact update and moment invariant](../../src/Transformer/Grokking/FiniteRecovery/EqualMoment.lean)
 
+The step-2,816 checkpoint was also checked from its recorded FP32 logits.
+The exporter reloads the weights, reconstructs the labels from the 4,656
+observations, and saves all 239 scores for each of the 9,312 legal prompts.
+Every finite FP32 score is an integer multiple of $2^{-149}$. The exporter
+round-trips each value to its original bits, including the sign of zero.
+The Lean kernel checks 97 blocks of 96 inputs and proves that the token
+for division in the field with 97 elements strictly beats every rival.
+The numerical forward pass and the training trajectory are supplied by Kernite.
+[Proof for recorded logits](../../src/Transformer/Grokking/FiniteRecovery/Binary32Scores.lean)
+
 For either ordinary optimizer, a common limit $G$ of the actual clipped
 minibatch gradients on the positive WSD floor gives the limiting weight
 $-G_i/[\lambda(|G_i|+\epsilon)]$ in each coordinate. A strict winner table
@@ -438,12 +448,14 @@ $bin muon-until-perfect "$task" 0 runs/division-muon 20000 1
 $bin rmsprop-checkpoint-proposals "$task" 0 719 runs/division-rms 20000 8192 1 20000 0.2
 $bin softsign-checkpoint-proposals "$task" 0 719 runs/division-row-clip 20000 8192 0.3 20000 0.1 1.75
 $bin division-project-rows "runs/division-lion/$task/seed0" terminal 1.75
-$bin equal-moment-until-perfect "$task" 0 runs/division-equal 4096 2 20000
+$bin equal-moment-until-perfect "$task" 0 runs/division-equal 20000 3 20000
 bash run_division_optimizer_pairs.sh CONTROL_DISCOVERY_CELL QUALIFIED_DISCOVERY_CELL runs/division-fresh-pairs
 bash run_division_higher_rate.sh runs/division-fresh-pairs ADAMW_003_DISCOVERY_CELL runs/division-fresh-high
 bash report_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
 bash plot_division_optimizer_pairs.sh runs/division-fresh-pairs runs/division-fresh-high
 $bin division-certificate "runs/division-lion/$task/seed0" terminal
+$bin division-recorded-lean "runs/division-equal/$task/seed0" terminal
+bash check_recorded_division.sh "runs/division-equal/$task/seed0" terminal
 bash plot_division_optimizers.sh runs/division-comparison "runs/division-x2/$task/seed0" "runs/division-lion/$task/seed0"
 ```
 
