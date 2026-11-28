@@ -12,6 +12,7 @@ public import Transformer.Precision.FloatSum
 public import Transformer.Precision.Tail
 public import Transformer.Precision.BlockScale
 public import Transformer.Precision.ArithmeticError
+public import Transformer.Precision.AdamWKernel
 
 /-!
 # Numerical precision and context length
@@ -33,6 +34,7 @@ still read.
 | `Precision.BlockScale` | block scaling makes the dead zone relative: NVFP4 drops a key below `1/24` of its block maximum, but at most `255/384` of the mass, at any length |
 | `Precision.ContextLength` | past `2^{b+1} e^D` tokens a `b`-bit head outputs `0`; below `2^{b+1} e^{-D}` it reads every token |
 | `Precision.Binary32Error`, `ArithmeticError` | finite binary32 brackets, normal/subnormal error bounds, and explicit sequential or FMA product/reduction certificates |
+| `Precision.AdamWKernel` | the pinned binary32 AdamW kernel: at rates up to `2^{-22}`, the WSD floor `3·10⁻⁸` included, `1 - lr·0.1` rounds to `1`, so no weight decay is applied and coordinates of magnitude at least `1` stay fixed under Adam steps below `2^{-25}` |
 -/
 
 @[expose] public section
