@@ -215,10 +215,11 @@ completion of the character table. The optimizer runs use the original
 | 2,048, six-position PAGE correction | 7/8 | 43.22% | 92, 102, 99, 98, 94, 96, 98, 99 | 0/8 |
 | 2,048, retry at the last accepted rate | 5/8 | 43.44% | 97, 103, 98, 98, 93, 98, 99, 96 | 0/8 |
 | 2,048, checkpoint in the long run | 5/8 | 43.44% | 100, 102, 98, 98, 93, 97, 99, 95 | 0/8 |
-| 20,480 | 8/8 | 43.28% | 97, 100, 96, 100, 94, 96, 97, 99 | 0/8 |
+| 20,480, PAGE | 8/8 | 43.28% | 97, 100, 96, 100, 94, 96, 97, 99 | 0/8 |
+| 20,480, AdamW + WSD | 8/8 | 43.89% | 95, 102, 96, 99, 98, 101, 99, 100 | 0/8 |
 
 The 789,788-parameter decoder began with 107/225 strict hidden predictions
-on all eight seeds. The long runs averaged 263 seconds each. Mean observed
+on all eight seeds. The long PAGE runs averaged 263 seconds each. Mean observed
 cross-entropy at the endpoint was 0.00638 and mean hidden cross-entropy was
 3.844. The measured nuclear norm of the learned phase table ranged from
 28.78 to 35.38, compared with 16 for the rank-one target. The initial
@@ -227,6 +228,15 @@ calibration gave $\lambda$ between 0.0001243 and 0.0001303. On average,
 horizons reuse the same seed pairs. Zero exact successes in eight
 independent initializations at a fixed horizon gives a one-sided 95%
 upper confidence limit of $1-0.05^{1/8}=0.3123$.
+
+The 20,480-step AdamW control used decoupled weight decay 0.1, a WSD
+peak of 0.001, the same eight initial states and all 31 observed words
+per update. It scored 790/1,800 hidden predictions across the seeds,
+compared with 779/1,800 for PAGE. Both fitted all observed words in
+all eight runs. Mean hidden cross-entropy was 11.277 for AdamW and
+3.844 for PAGE. The AdamW phase-table nuclear norms ranged from 29.76
+to 40.66. The rank-one target has nuclear norm 16. All checkpoints
+were independently replayed.
 
 With the same eight seed pairs and initial scores, increasing the
 correction sample from one to six positions reduced forced gradient
