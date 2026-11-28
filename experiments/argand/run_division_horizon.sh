@@ -24,6 +24,8 @@ if [[ -e "$out/protocol.json" ]]; then
 else
     mv -- "$tmp" "$out/protocol.json"
 fi
+rm -f -- "$tmp"
+trap - EXIT
 "$bin" adamw-confirm-plan "$case_name" "$out" "$steps"
 if (( $# == 4 )); then
     # The ordinary single-run command and the confirmation trainer use the
@@ -40,4 +42,25 @@ if (( $# == 4 )); then
         ln -sr -- "$first" "$out/draw-0"
     fi
 fi
-"$bin" adamw-confirm "$case_name" "$out" "$steps"
+# The frozen trainer saves endpoint weights and observations, while AdamW's
+# moments and shuffle state live in memory. Keep interrupted prefixes as
+# separate attempts before starting the same registered draw from step zero.
+for ((i=0; i<12; i++)); do
+    cell="$out/draw-$i"
+    staging="$cell/interrupted/.moving"
+    [[ ! -e "$cell/result.json" && ( -s "$cell/observations.jsonl" || -d "$staging" ) ]] || continue
+    (
+        flock -n 8 || exit 0
+        [[ ! -e "$cell/result.json" ]] || exit 0
+        mkdir -p -- "$staging"
+        for file in "$cell"/first-strict* "$cell"/weights.f32 "$cell"/*.pending "$cell"/observations.jsonl; do
+            [[ -f "$file" ]] || continue
+            mv -- "$file" "$staging/"
+        done
+        last=$(sed '${/}$/!d;}' "$staging/observations.jsonl" | jq -sr 'last.step // 0')
+        archive=$(mktemp -d "$cell/interrupted/step-$last.XXXXXXXX")
+        mv -T -- "$staging" "$archive"
+        echo "Archived the interrupted draw $i through update $last in $archive"
+    ) 8>>"$cell/cell.lock"
+done
+exec "$bin" adamw-confirm "$case_name" "$out" "$steps"

@@ -355,6 +355,11 @@ the start of the WSD cooldown. The right panel distinguishes the latest measurem
 the strict score after reloading terminal weights. An empty row marks a
 seed awaiting training. Set `ARGAND_PLOT_SNAPSHOT=1` to keep a PNG and PDF
 named for the latest draw, update count and number of completed replays.
+After a process interruption the runner archives its recorded trajectory
+and first-strict checkpoint under the draw's `interrupted/` directory.
+The optimizer keeps its moments and batch order in memory, so the same
+registered seed starts again at step zero. Dashed gray curves show
+interrupted attempts. The right panel uses one endpoint per seed.
 The adjacent `*-cohort-verified.json` counts a seed when independent
 replay and the training-label certificate agree on its strict hidden
 score. It gives the twelve-seed fraction once all twelve have been
