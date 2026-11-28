@@ -35,7 +35,7 @@ run_cell() {
     local cell="$root/grok-division-p97/seed$seed"
     mkdir -p -- "$cell"
     (
-        flock -n 8 || exit 0
+        flock -x 8
         [[ ! -s "$cell/result.json" && -s "$cell/observations.jsonl" ]] || exit 0
         mkdir -p "$cell/interrupted"
         archive=$(mktemp -d "$cell/interrupted/attempt.XXXXXXXX")
@@ -43,12 +43,23 @@ run_cell() {
             [[ ! -f $f ]] || mv -- "$f" "$archive/"
         done
     ) 8>>"$cell/cell.lock"
-    "$bin" adamw-until-perfect grok-division-p97 "$seed" "$root" "$cap" >/dev/null
-    "$bin" division-certificate "$cell" terminal >/dev/null
     local clean=true
     for trace in "$cell"/interrupted/attempt.*/observations.jsonl; do
         if [[ -s $trace ]]; then clean=false; fi
     done
+    # An interruption can occur before the first score was written.
+    # An uncompleted first attempt already ends the fixed-budget test.
+    if [[ $cap == "$test_cap" && ! -s "$cell/result.json" ]]; then
+        if [[ -e "$cell/first-attempt-started" || $clean == false ]]; then
+            jq -n --argjson i "$i" --argjson seed "$seed" --arg cell "$cell" \
+                '{index:$i,seed:$seed,cell:$cell,status:"interrupted",success:null,first_attempt:false}' > "$record.pending"
+            mv -- "$record.pending" "$record"
+            return
+        fi
+        touch -- "$cell/first-attempt-started"
+    fi
+    "$bin" adamw-until-perfect grok-division-p97 "$seed" "$root" "$cap" >/dev/null
+    "$bin" division-certificate "$cell" terminal >/dev/null
     jq -en --argjson seed "$seed" --argjson i "$i" --argjson cap "$cap" --arg cell "$cell" --arg kind terminal \
         --slurpfile r "$cell/replay.json" --slurpfile c "$cell/observed-certificate.json" \
         -f "$dir/verify_division_first_hit.jq" |
@@ -61,8 +72,8 @@ if (( complete == 8 )); then
         record="$out/draw-$i.json"
         run_cell "$seed" "$test_cap" "$i" "$record"
         records+=("$record")
-        if ! jq -e '.success' "$record" >/dev/null; then missed=$seed; break; fi
         if ! jq -e '.first_attempt' "$record" >/dev/null; then break; fi
+        if ! jq -e '.success' "$record" >/dev/null; then missed=$seed; break; fi
         ((complete+=1))
     done < <(jq -r '.three_quarters_test.additional_model_seeds[]' "$plan")
 fi
