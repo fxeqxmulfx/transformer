@@ -591,8 +591,31 @@ all 105 identities, endpoint scores and replay digests.
 
 The current `first-noise-perfect` screen uses the same 35 cases, seeds
 and caps. Each cell stops at its first strictly perfect primary evaluation
-or exhausts its cap. Its endpoint report retains both the 99% and exact
-scores. The historical 99%-stopped controls may have ended earlier.
+or exhausts its cap. Reloaded weights verified all 105 outcomes. The
+initial scores, losses, model shapes, WSD schedules and data orders
+matched the ordinary AdamW controls in all 105 pairs.
+
+| Tier | Runs | Reached 99% | Reached strict 100% | Updates used / available |
+| --- | ---: | ---: | ---: | ---: |
+| Short | 75 | 34 | 23 | 59,457 / 73,716 |
+| Long | 30 | 0 | 0 | 29,820 / 29,820 |
+
+Both AdamW variants reached 99% on exactly the same 34 case/seed pairs.
+Their first 99% steps agreed in 32 pairs. On `basis-depth-hard` the
+perturbation reached 99% one evaluation earlier for seed 1 and one
+evaluation later for seed 2. The best long endpoint was 3,800/4,656
+on `associative-divisor-n2-l1-w0`, compared with 3,807/4,656 for stock
+AdamW. The historical control reached strict 100% in 15 short runs.
+It stopped another 17 short runs below 100% before the cap under its
+99% rule. Their possible later successes leave the control's by-cap
+strict count between 15 and 32 on those 75 original trajectories.
+
+```sh
+stock=runs/gpt-adamw-wsd-20261128
+candidate=runs/gpt-adamw-first100-20261128
+jq -es --slurpfile control "$stock/all-summary.json" --slurpfile candidate "$candidate/all-summary.json" \
+  -f compare_screen_first_hits.jq "$stock"/*/seed*/observations.jsonl "$candidate"/*/seed*/observations.jsonl
+```
 
 `sum8-adamw-first-noise OUT 20480` uses the eight registered pairs of the
 31-observation modular-sum experiment. In each pair the first seed sets the
